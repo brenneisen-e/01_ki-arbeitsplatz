@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { Sparkles, AlertTriangle, CheckCircle, XCircle, Shield } from 'lucide-react';
+import { Sparkles, AlertTriangle, CheckCircle, XCircle, Shield, Info } from 'lucide-react';
 import { DEMO_VERTRAGSDATEN } from '../data/demoData';
 
 const AMPEL_CONFIG = {
@@ -7,6 +7,7 @@ const AMPEL_CONFIG = {
   gelb: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', icon: AlertTriangle, label: 'Klärungsbedarf' },
   rot: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', icon: XCircle, label: 'Unbegründet' },
   orange: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', icon: AlertTriangle, label: 'Systemischer Fehler' },
+  blau: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', icon: Info, label: 'Fachliche Anfrage' },
 };
 
 export default function KiAnalysePanel({ vorgang, analyse, loading }) {
@@ -33,7 +34,13 @@ export default function KiAnalysePanel({ vorgang, analyse, loading }) {
   const AmpelIcon = ampel.icon;
   const vertragsdaten = DEMO_VERTRAGSDATEN[vorgang.vsNummer];
 
-  const formatEur = (val) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
+  const formatEur = (val) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val || 0);
+  const formatDatumDe = (iso) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
 
   return (
     <div className="space-y-4 animate-fade-in-up">
@@ -55,8 +62,8 @@ export default function KiAnalysePanel({ vorgang, analyse, loading }) {
             <VDRow label="Produkt" value={vertragsdaten.produkt} />
             <VDRow label="Tarif" value={vertragsdaten.tarif} />
             <VDRow label="VN" value={vorgang.vnName} />
-            <VDRow label="Vertragsbeginn" value={vorgang.vertragsbeginn} />
-            <VDRow label="Monatsbeitrag" value={`${vorgang.monatsbeitrag.toFixed(2)} EUR`} />
+            <VDRow label="Vertragsbeginn" value={formatDatumDe(vorgang.vertragsbeginn)} />
+            <VDRow label="Monatsbeitrag" value={formatEur(vorgang.monatsbeitrag)} />
             <VDRow label="Status" value={vertragsdaten.vertragsstatus} />
             <VDRow label="Dynamik" value={vertragsdaten.dynamik} />
             <VDRow label="Vermittler" value={`${vorgang.vermittler} (${vorgang.vermittlerNr})`} />
@@ -117,12 +124,12 @@ export default function KiAnalysePanel({ vorgang, analyse, loading }) {
           </h4>
         </div>
         <div className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">
-          {bewertung.analyse}
+          {renderMarkdownInline(bewertung.analyse)}
         </div>
         {bewertung.handlungsempfehlung && (
           <div className="mt-3 pt-3 border-t border-current/10">
             <p className="text-xs font-semibold text-slate-600 mb-1">Handlungsempfehlung:</p>
-            <p className="text-sm text-slate-700 whitespace-pre-line">{bewertung.handlungsempfehlung}</p>
+            <p className="text-sm text-slate-700 whitespace-pre-line">{renderMarkdownInline(bewertung.handlungsempfehlung)}</p>
           </div>
         )}
         {bewertung.auffaelligkeit?.erkannt && (
@@ -147,4 +154,17 @@ function VDRow({ label, value }) {
       <span className="text-slate-700 font-medium text-right truncate">{value}</span>
     </div>
   );
+}
+
+// Minimaler Inline-Markdown-Renderer: **fett** → <strong>fett</strong>.
+// Erhält Zeilenumbrüche (whitespace-pre-line) und ist XSS-sicher, weil nur
+// Textinhalte in <strong>/Fragmenten gerendert werden, kein raw HTML.
+function renderMarkdownInline(text) {
+  if (!text) return null;
+  const parts = String(text).split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    const match = part.match(/^\*\*(.+)\*\*$/);
+    if (match) return <strong key={i}>{match[1]}</strong>;
+    return <span key={i}>{part}</span>;
+  });
 }

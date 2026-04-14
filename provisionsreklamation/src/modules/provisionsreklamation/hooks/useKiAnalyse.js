@@ -105,6 +105,9 @@ function buildSynthAnalyse(vorgang) {
   const erwartet = Number(vorgang.erwartet) || 0;
   const erhalten = Number(vorgang.erhalten) || 0;
   const diff = erhalten - erwartet;
+  const eingangsdatumDe = vorgang.eingangsdatum
+    ? new Date(vorgang.eingangsdatum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    : '';
 
   const positionen = [
     { position: vorgang.typ || 'Reklamierte Position', soll: erwartet, ist: erhalten, differenz: diff },
@@ -141,6 +144,6 @@ function buildSynthAnalyse(vorgang) {
       gesamt_differenz: diff,
     },
     bewertung,
-    antwort_entwurf: `Sehr geehrte/r ${vorgang.vermittler || 'Vermittler/in'},\n\nvielen Dank für Ihre Reklamation vom ${vorgang.eingangsdatum} zu Vorgang ${vorgang.id} (VS-Nr. ${vorgang.vsNummer}, VN ${vorgang.vnName}).\n\nWir haben Ihren Vorgang aufgenommen und prüfen die Abrechnung. Sie erhalten eine Rückmeldung innerhalb der üblichen Bearbeitungsfrist von 5–10 Werktagen.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice`,
+    antwort_entwurf: `Sehr geehrte/r ${vorgang.vermittler || 'Vermittler/in'},\n\nvielen Dank für Ihre Reklamation vom ${eingangsdatumDe} zu Vorgang ${vorgang.id} (VS-Nr. ${vorgang.vsNummer}, VN ${vorgang.vnName}).\n\nWir haben Ihren Vorgang aufgenommen und prüfen die Abrechnung. Sie erhalten eine Rückmeldung innerhalb der üblichen Bearbeitungsfrist von 5–10 Werktagen.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice`,
   };
 }

@@ -118,6 +118,55 @@ export const DEMO_VORGAENGE = [
     beschreibung: 'Für meinen Kunden Stefan Krüger wurden zum 01.06.2024 und 01.06.2025 Dynamikerhöhungen wirksam. Für keine der beiden Erhöhungen wurde die fällige Abschlussprovision auf den Mehrbeitrag berechnet und ausgezahlt.',
     auffaellig: true,
     kiBewertung: 'orange',
+    clusterId: 'cluster-tfrv-dynamik',
+  },
+  {
+    id: 'RK-2026-0050',
+    status: 'Neu',
+    vermittler: 'Julia Westphal',
+    vermittlerNr: 'VM-55281',
+    agentur: 'Westphal & Kollegen',
+    email: 'j.westphal@westphal-vers.de',
+    vsNummer: 'LV-2023-610442',
+    sparte: 'Leben',
+    typ: 'Fehlende Dynamikprovision',
+    vnName: 'Andreas Brehm',
+    vertragsbeginn: '2023-04-01',
+    monatsbeitrag: 180.00,
+    differenz: -194.40,
+    erwartet: 194.40,
+    erhalten: 0.00,
+    eingangsdatum: '2026-03-26',
+    zeitraumVon: '2024-04',
+    zeitraumBis: '2026-03',
+    beschreibung: 'Bei meinem Kunden Andreas Brehm (VorsorgeFlex, Tarif T-FRV-2023) wurden zum 01.04.2024 und 01.04.2025 die 5%-Dynamikerhöhungen durchgeführt. Für beide Erhöhungen fehlt die Abschlussprovision auf den Mehrbeitrag in der Abrechnung. Der Vertrag und die Dynamik wurden ordnungsgemäß im System hinterlegt.',
+    auffaellig: true,
+    kiBewertung: 'orange',
+    clusterId: 'cluster-tfrv-dynamik',
+  },
+  {
+    id: 'RK-2026-0051',
+    status: 'Neu',
+    vermittler: 'Markus Dorn',
+    vermittlerNr: 'VM-60713',
+    agentur: 'Dorn Versicherungsservice',
+    email: 'm.dorn@dorn-versicherung.de',
+    vsNummer: 'LV-2022-488105',
+    sparte: 'Leben',
+    typ: 'Fehlende Dynamikprovision',
+    vnName: 'Rebecca Lange',
+    vertragsbeginn: '2022-11-01',
+    monatsbeitrag: 240.00,
+    differenz: -259.20,
+    erwartet: 259.20,
+    erhalten: 0.00,
+    eingangsdatum: '2026-03-27',
+    zeitraumVon: '2023-11',
+    zeitraumBis: '2026-03',
+    beschreibung: 'Für den Vertrag von Rebecca Lange (VorsorgeFlex, T-FRV-2022) wurden die Dynamikerhöhungen zum 01.11.2023, 01.11.2024 und 01.11.2025 jeweils vertragsgemäß umgesetzt, aber in keinem Fall wurde die fällige AP auf den Mehrbeitrag nachgebucht. Ich gehe von einem systemischen Fehler aus — identisches Bild wie bei weiteren Verträgen derselben Tarif-Familie.',
+    auffaellig: true,
+    kiBewertung: 'orange',
+    clusterId: 'cluster-tfrv-dynamik',
   },
   {
     id: 'RK-2026-0046',
@@ -188,6 +237,30 @@ export const DEMO_VORGAENGE = [
     auffaellig: false,
     kiBewertung: 'rot',
   },
+  // === VORGANG 9 — Fachliche Rückfrage ohne Buchungsbedarf ===
+  {
+    id: 'RK-2026-0049',
+    status: 'Beantwortet',
+    vermittler: 'Robert Krause',
+    vermittlerNr: 'VM-72940',
+    agentur: 'Krause Versicherungsberatung',
+    email: 'r.krause@krause-versicherung.de',
+    vsNummer: 'LV-2022-430119',
+    sparte: 'Leben',
+    typ: 'Fachliche Rückfrage (keine Reklamation)',
+    vnName: 'Heinrich Vogel',
+    vertragsbeginn: '2022-09-01',
+    monatsbeitrag: 120.00,
+    differenz: 0,
+    erwartet: 0,
+    erhalten: 0,
+    eingangsdatum: '2026-03-28',
+    zeitraumVon: '2026-01',
+    zeitraumBis: '2026-03',
+    beschreibung: 'Keine Reklamation — Rückfrage zur Staffelung der Bestandsprovision: In der Standard-Courtagevereinbarung steigt der Bestandsprovisionssatz laut meiner Lesart ab dem 5. Versicherungsjahr von 2,5 % auf 3,0 % JNB an. Bei meinem Kunden Herrn Vogel beginnt in diesem Jahr das 5. Vertragsjahr und die Abrechnung für Q1/2026 zeigt weiterhin 2,5 %. Könnten Sie mir kurz bestätigen, ob die Staffelerhöhung erst mit dem Beginn des nächsten vollen Kalenderjahres (also Q3/2026, Vertragsbeginn 01.09.) greift? Ich möchte nur für mich Klarheit haben — die Abrechnung stimmt aus meiner Sicht so, wie sie ist.',
+    auffaellig: false,
+    kiBewertung: 'blau',
+  },
 ];
 
 // === VERTRAGSDATEN (zugeordnet via vsNummer) ===
@@ -257,6 +330,32 @@ export const DEMO_VERTRAGSDATEN = {
     stornoreserveEinbehalt: '15%',
     beitragssumme: '67.200,00 EUR (Laufzeit 28J)',
   },
+  'LV-2023-610442': {
+    produkt: 'Fondsgebundene Rentenversicherung „VorsorgeFlex"',
+    tarif: 'T-FRV-2023',
+    vertragsstatus: 'Aktiv',
+    zahlungsweise: 'Monatlich',
+    dynamik: '5% p.a.',
+    courtagevereinbarung: 'Standard-Courtagevereinbarung',
+    apSatz: '40\u2030 der BWS',
+    bpSatz: '3,5% JNB',
+    stornohaftungszeit: '60 Monate',
+    stornoreserveEinbehalt: '15%',
+    beitragssumme: '60.480,00 EUR (Laufzeit 28J)',
+  },
+  'LV-2022-488105': {
+    produkt: 'Fondsgebundene Rentenversicherung „VorsorgeFlex"',
+    tarif: 'T-FRV-2022',
+    vertragsstatus: 'Aktiv',
+    zahlungsweise: 'Monatlich',
+    dynamik: '5% p.a.',
+    courtagevereinbarung: 'Standard-Courtagevereinbarung',
+    apSatz: '40\u2030 der BWS',
+    bpSatz: '3,5% JNB',
+    stornohaftungszeit: '60 Monate',
+    stornoreserveEinbehalt: '15%',
+    beitragssumme: '86.400,00 EUR (Laufzeit 30J)',
+  },
   'PKV-2024-667312': {
     produkt: 'PKV-Vollversicherung „KomfortMed"',
     tarif: 'PV-Komfort-2024',
@@ -296,6 +395,19 @@ export const DEMO_VERTRAGSDATEN = {
     stornoreserveEinbehalt: '15%',
     beitragssumme: '43.200,00 EUR (Laufzeit 20J)',
   },
+  'LV-2022-430119': {
+    produkt: 'Klassische Lebensversicherung „SicherPlus Basis"',
+    tarif: 'T-KLV-2022',
+    vertragsstatus: 'Aktiv',
+    zahlungsweise: 'Monatlich',
+    dynamik: 'Keine',
+    courtagevereinbarung: 'Standard-Courtagevereinbarung (Staffel-Modell)',
+    apSatz: '30\u2030 der BWS',
+    bpSatz: 'Staffel: 2,5% (J1–4) / 3,0% (ab J5)',
+    stornohaftungszeit: '60 Monate',
+    stornoreserveEinbehalt: '15%',
+    beitragssumme: '43.200,00 EUR (Laufzeit 30J)',
+  },
 };
 
 // === KI-ANALYSE FALLBACK-DATEN (für Demo ohne API) ===
@@ -318,7 +430,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Dynamikprovision nachbuchen. Bestandsprovision manuell gegen Abrechnungssystem prüfen — möglicher systemischer Fehler.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 18.03.2026 zu Ihrem Vorgang RK-2026-0041 (VS-Nr. LV-2024-738291, VN Markus Schäfer).\n\nWir haben Ihre Beanstandung geprüft und können Ihnen folgendes Ergebnis mitteilen:\n\n**1. Dynamikprovision (108,00 EUR)**\nSie haben Recht: Die zum 01.03.2025 wirksam gewordene Dynamikerhöhung hätte eine zusätzliche Abschlussprovision in Höhe von 108,00 EUR auslösen müssen. Dieser Betrag wird in der nächsten Abrechnungsperiode nachgebucht.\n\n**2. Bestandsprovision Q1/2026 (Differenz 41,75 EUR)**\nDie Differenz in der Bestandsprovision wird derzeit einer erweiterten Prüfung unterzogen. Wir werden Sie innerhalb von 5 Werktagen über das Ergebnis informieren.\n\nDie Nachbuchung der Dynamikprovision erfolgt mit der Abrechnung zum 01.04.2026.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 18.03.2026 zu Ihrem Vorgang RK-2026-0041 (VS-Nr. LV-2024-738291, VN Markus Schäfer).\n\nWir haben Ihre Beanstandung geprüft und können Ihnen folgendes Ergebnis mitteilen:\n\n1. Dynamikprovision (108,00 EUR)\nSie haben Recht: Die zum 01.03.2025 wirksam gewordene Dynamikerhöhung hätte eine zusätzliche Abschlussprovision in Höhe von 108,00 EUR auslösen müssen. Dieser Betrag wird in der nächsten Abrechnungsperiode nachgebucht.\n\n2. Bestandsprovision Q1/2026 (Differenz 41,75 EUR)\nDie Differenz in der Bestandsprovision wird derzeit einer erweiterten Prüfung unterzogen. Wir werden Sie innerhalb von 5 Werktagen über das Ergebnis informieren.\n\nDie Nachbuchung der Dynamikprovision erfolgt mit der Abrechnung zum 01.04.2026.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0042': {
     provisionsberechnung: {
@@ -337,7 +449,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Stornobuchung in Höhe von 4.320,00 EUR vollständig rückbuchen. Vermittlerin über Korrektur informieren.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrte Frau Krämer,\n\nvielen Dank für Ihre Reklamation vom 15.03.2026 zu Ihrem Vorgang RK-2026-0042 (VS-Nr. PKV-2023-119044, VN Julia Engel).\n\nNach eingehender Prüfung können wir Ihnen mitteilen, dass die Stornobuchung in Höhe von 4.320,00 EUR unberechtigt war. Die Vertragskündigung wurde durch eine fehlerhafte Beitragsanpassung unsererseits verursacht.\n\nDer Betrag von 4.320,00 EUR wird Ihnen vollständig gutgeschrieben und mit der nächsten Provisionsabrechnung ausgezahlt.\n\nWir bitten die Unannehmlichkeiten zu entschuldigen.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrte Frau Krämer,\n\nvielen Dank für Ihre Reklamation vom 15.03.2026 zu Ihrem Vorgang RK-2026-0042 (VS-Nr. PKV-2023-119044, VN Julia Engel).\n\nNach eingehender Prüfung können wir Ihnen mitteilen, dass die Stornobuchung in Höhe von 4.320,00 EUR unberechtigt war. Die Vertragskündigung wurde durch eine fehlerhafte Beitragsanpassung unsererseits verursacht.\n\nDer Betrag von 4.320,00 EUR wird Ihnen vollständig gutgeschrieben und mit der nächsten Provisionsabrechnung ausgezahlt.\n\nWir bitten die Unannehmlichkeiten zu entschuldigen.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0043': {
     provisionsberechnung: {
@@ -355,7 +467,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Vermittlerzuordnung im Bestandssystem auf VM-50123 korrigieren. Abschlussprovision von 890,00 EUR an VM-50123 nachbuchen.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Fink,\n\nvielen Dank für Ihre Reklamation vom 20.03.2026 zu Ihrem Vorgang RK-2026-0043 (VS-Nr. SHU-2025-882103, VN Peter Waldmann).\n\nWir haben den Sachverhalt geprüft und bestätigen, dass die Vermittlerzuordnung fehlerhaft war. Der Vertrag wird auf Ihre Vermittlernummer VM-50123 umgestellt. Die Abschlussprovision in Höhe von 890,00 EUR wird Ihnen mit der nächsten Abrechnung gutgeschrieben.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Fink,\n\nvielen Dank für Ihre Reklamation vom 20.03.2026 zu Ihrem Vorgang RK-2026-0043 (VS-Nr. SHU-2025-882103, VN Peter Waldmann).\n\nWir haben den Sachverhalt geprüft und bestätigen, dass die Vermittlerzuordnung fehlerhaft war. Der Vertrag wird auf Ihre Vermittlernummer VM-50123 umgestellt. Die Abschlussprovision in Höhe von 890,00 EUR wird Ihnen mit der nächsten Abrechnung gutgeschrieben.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0044': {
     provisionsberechnung: {
@@ -373,7 +485,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Stornoreserve von 1.240,00 EUR sofort zur Auszahlung freigeben.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 05.03.2026 zu Ihrem Vorgang RK-2026-0044 (VS-Nr. LV-2020-441928, VN Helga Breitner).\n\nSie haben Recht: Die Stornohaftungszeit von 60 Monaten ist am 01.02.2025 abgelaufen. Die einbehaltene Stornoreserve in Höhe von 1.240,00 EUR wird Ihnen umgehend freigegeben und mit der nächsten Provisionsabrechnung ausgezahlt.\n\nWir bitten die verspätete Freigabe zu entschuldigen.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 05.03.2026 zu Ihrem Vorgang RK-2026-0044 (VS-Nr. LV-2020-441928, VN Helga Breitner).\n\nSie haben Recht: Die Stornohaftungszeit von 60 Monaten ist am 01.02.2025 abgelaufen. Die einbehaltene Stornoreserve in Höhe von 1.240,00 EUR wird Ihnen umgehend freigegeben und mit der nächsten Provisionsabrechnung ausgezahlt.\n\nWir bitten die verspätete Freigabe zu entschuldigen.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0045': {
     provisionsberechnung: {
@@ -388,7 +500,7 @@ export const DEMO_KI_ANALYSEN = {
     bewertung: {
       ampel: 'orange',
       titel: 'AUFFÄLLIGKEIT — Systemischer Fehler vermutet',
-      analyse: 'Dieser Vorgang zeigt das **identische Fehlerbild** wie Vorgang RK-2026-0041 (Bergmann/Schäfer): Dynamikerhöhungen lösen keine Abschlussprovision aus.\n\n**Betroffener Vertrag:** Fondsgebundene RV „VorsorgeFlex", Tarif T-FRV-2023, Monatsbeitrag 200 EUR, 5% Dynamik p.a., Vertragsbeginn 01.06.2023. AP-Satz: 40\u2030 BWS.\n\nZum 01.06.2024 und 01.06.2025 wurden Dynamikerhöhungen wirksam. Für keine der beiden wurde eine Abschlussprovision berechnet.\n\n**Mustervergleich:** In den letzten 30 Tagen sind zwei unabhängige Reklamationen mit exakt diesem Fehlerbild eingegangen (verschiedene Vermittler, verschiedene VN, gleicher Tarif T-FRV). Dies deutet auf einen **systematischen Fehler in der Dynamik-Provisionskopplung für den Tarif T-FRV** hin.',
+      analyse: 'Dieser Vorgang ist Teil des von der KI erkannten **Clusters „T-FRV Dynamik-AP fehlend"** — zusammen mit RK-2026-0050 (Westphal/Brehm) und RK-2026-0051 (Dorn/Lange) liegen drei **inhaltlich identische** Reklamationen vor.\n\n**Betroffener Vertrag:** Fondsgebundene RV „VorsorgeFlex", Tarif T-FRV-2023, Monatsbeitrag 200 EUR, 5% Dynamik p.a., Vertragsbeginn 01.06.2023. AP-Satz: 40\u2030 BWS.\n\nZum 01.06.2024 und 01.06.2025 wurden Dynamikerhöhungen wirksam. Für keine der beiden wurde eine Abschlussprovision berechnet.\n\n**Mustervergleich:** Drei unabhängige Reklamationen aus verschiedenen Agenturen, verschiedene VN, derselbe Tarif T-FRV. Dies deutet auf einen **systematischen Fehler in der Dynamik-Provisionskopplung für den Tarif T-FRV** hin — kein Einzelfall.',
       handlungsempfehlung: '1. Sofortige Eskalation an IT/Provisionssystem-Team\n2. Bestandsanalyse: Alle aktiven Verträge mit Tarif T-FRV und Dynamik-Klausel prüfen\n3. Proaktive Nachbuchung für alle betroffenen Vermittler einleiten\n4. Vermittler über den systemischen Fehler und die Korrektur informieren',
       auffaelligkeit: {
         erkannt: true,
@@ -396,7 +508,7 @@ export const DEMO_KI_ANALYSEN = {
         geschaetzte_betroffene: 'ca. 150-200 Verträge im Bestand',
       },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Hartmann,\n\nvielen Dank für Ihre Reklamation vom 22.03.2026 zu Ihrem Vorgang RK-2026-0045 (VS-Nr. LV-2023-552847, VN Stefan Krüger).\n\nSie haben Recht: Die Dynamikerhöhungen zum 01.06.2024 und 01.06.2025 hätten jeweils eine zusätzliche Abschlussprovision auslösen müssen. Der Gesamtbetrag von 216,00 EUR wird Ihnen nachgebucht.\n\nWir haben festgestellt, dass es sich um einen systemischen Fehler handelt, der auch andere Vermittler betreffen kann. Wir arbeiten bereits an einer umfassenden Korrektur.\n\nDie Nachbuchung erfolgt mit der Abrechnung zum 01.04.2026.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Hartmann,\n\nvielen Dank für Ihre Reklamation vom 22.03.2026 zu Ihrem Vorgang RK-2026-0045 (VS-Nr. LV-2023-552847, VN Stefan Krüger).\n\nSie haben Recht: Die Dynamikerhöhungen zum 01.06.2024 und 01.06.2025 hätten jeweils eine zusätzliche Abschlussprovision auslösen müssen. Der Gesamtbetrag von 216,00 EUR wird Ihnen nachgebucht.\n\nWir haben festgestellt, dass es sich um einen systemischen Fehler handelt, der auch andere Vermittler betreffen kann. Wir arbeiten bereits an einer umfassenden Korrektur.\n\nDie Nachbuchung erfolgt mit der Abrechnung zum 01.04.2026.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0046': {
     provisionsberechnung: {
@@ -412,15 +524,15 @@ export const DEMO_KI_ANALYSEN = {
     bewertung: {
       ampel: 'orange',
       titel: 'AUFFÄLLIGKEIT — Systematischer Berechnungsfehler in PKV-Bestandsprovision',
-      analyse: 'Seit dem Systemupdate im Juli 2025 (Release 4.2.1) wird die Bestandsprovision für PKV-Verträge mit Beitragsanpassungsklausel (BAP) fehlerhaft berechnet.\n\n**Zwei Fehler überlagern sich:**\n1. Das System verwendet den **Alt-Beitrag** vor der Beitragsanpassung statt des aktuellen Beitrags (820 EUR statt 890 EUR)\n2. Der angewandte Provisionssatz weicht vom vereinbarten Satz ab (3,25% statt 4,0%) — möglicherweise wurde ein Standard-Satz statt des individuellen Courtagevereinbarungs-Satzes gezogen\n\n**Musteranalyse:** Dieses Fehlerbild könnte bei allen PKV-Verträgen mit BAP seit Release 4.2.1 auftreten. Potenzielle Betroffene: geschätzt 800–1.200 Verträge im Gesamtbestand.',
-      handlungsempfehlung: '1. Sofortige Eskalation an IT mit Priorität "Kritisch"\n2. Release 4.2.1 Changelog auf Änderungen im BAP-Provisionsmodul prüfen\n3. Vollständigen PKV-Bestand mit BAP-Klausel maschinell abgleichen\n4. Rückstellung für potenzielle Nachzahlungen bilden\n5. Betroffene Vermittler proaktiv informieren',
+      analyse: 'Seit dem Systemupdate im Juli 2025 (Release 4.2.1) wird die Bestandsprovision für PKV-Verträge mit Beitragsanpassungsklausel (BAP) fehlerhaft berechnet.\n\n**Zwei Fehler überlagern sich:**\n1. Das System verwendet den **Alt-Beitrag** vor der Beitragsanpassung statt des aktuellen Beitrags (820 EUR statt 890 EUR)\n2. Der angewandte Provisionssatz weicht vom vereinbarten Satz ab (3,25% statt 4,0%) — möglicherweise wurde ein Standard-Satz statt des individuellen Courtagevereinbarungs-Satzes gezogen\n\n**Musteranalyse — 5 weitere, bislang nicht reklamierte Verträge identifiziert:**\nDer Bestandsabgleich hat genau **5 identisch betroffene PKV-Verträge** bei anderen Vermittlern gefunden, die den Fehler bislang noch nicht gemeldet haben:\n\n- **PKV-2024-551209** (Dr. Tobias Reinhardt) · Vermittler Dr. Stefan Kuhn (VM-38204) · geschätzte Nachzahlung **231,60 EUR**\n- **PKV-2024-718330** (Jana Albrecht) · Vermittlerin Anna Lipp (VM-44906) · geschätzte Nachzahlung **198,40 EUR**\n- **PKV-2024-802451** (Familie Ostermeier) · Vermittler Benedikt Ostermeier (VM-51872) · geschätzte Nachzahlung **312,80 EUR**\n- **PKV-2025-110988** (Ingrid Falk) · Vermittlerin Ingrid Falk (VM-20345, Eigenvertrag) · geschätzte Nachzahlung **176,20 EUR**\n- **PKV-2024-609374** (Paul Rehberg) · Vermittler Paul Rehberg (VM-55710) · geschätzte Nachzahlung **249,50 EUR**\n\nAlle fünf Verträge zeigen exakt dasselbe Fehlerbild (Alt-Beitrag + Standard-Satz). Die Summe der ungemeldeten Nachzahlungen liegt bei **1.168,50 EUR**.',
+      handlungsempfehlung: '1. Fünf ungemeldete Verträge (PKV-2024-551209, -718330, -802451, PKV-2025-110988, PKV-2024-609374) sofort in die Korrektur aufnehmen\n2. Betroffene Vermittler (Kuhn, Lipp, Ostermeier, Falk, Rehberg) proaktiv über die Nachbuchung informieren\n3. IT-Ticket: Release 4.2.1 Changelog auf BAP-Provisionsmodul prüfen\n4. Rückstellung für die 6 Fälle (Weber + 5) in Höhe von ca. 1.403 EUR bilden',
       auffaelligkeit: {
         erkannt: true,
         muster: 'PKV-Bestandsprovision nach BAP fehlerhaft seit Release 4.2.1',
-        geschaetzte_betroffene: '800–1.200 Verträge',
+        geschaetzte_betroffene: '5 weitere Verträge bei anderen Vermittlern — noch nicht reklamiert',
       },
     },
-    antwort_entwurf: 'Sehr geehrte Frau Weber,\n\nvielen Dank für Ihre Reklamation vom 24.03.2026 zu Ihrem Vorgang RK-2026-0046 (VS-Nr. PKV-2024-667312, VN Frank Lehmann).\n\nWir haben einen systematischen Berechnungsfehler identifiziert, der die Bestandsprovision für PKV-Verträge mit Beitragsanpassungsklausel betrifft. Die Differenz von insgesamt 235,20 EUR (3 Quartale) wird Ihnen vollständig nachgebucht.\n\nWir prüfen derzeit, ob weitere Verträge in Ihrem Bestand betroffen sind und werden Sie proaktiv informieren.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrte Frau Weber,\n\nvielen Dank für Ihre Reklamation vom 24.03.2026 zu Ihrem Vorgang RK-2026-0046 (VS-Nr. PKV-2024-667312, VN Frank Lehmann).\n\nWir haben einen systematischen Berechnungsfehler identifiziert, der die Bestandsprovision für PKV-Verträge mit Beitragsanpassungsklausel betrifft. Die Differenz von insgesamt 235,20 EUR (3 Quartale) wird Ihnen vollständig nachgebucht.\n\nWir prüfen derzeit, ob weitere Verträge in Ihrem Bestand betroffen sind und werden Sie proaktiv informieren.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0047': {
     provisionsberechnung: {
@@ -438,7 +550,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Folge-AP von 560,00 EUR nachbuchen.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrte Frau Krämer,\n\nvielen Dank für Ihre Reklamation vom 25.03.2026 zu Ihrem Vorgang RK-2026-0047 (VS-Nr. GEW-2024-301847, VN Autohaus Schuster GmbH).\n\nSie haben Recht: Der Nachtrag zur Erweiterung der Betriebshaftpflicht hätte eine Folge-Abschlussprovision in Höhe von 560,00 EUR auslösen müssen. Dieser Betrag wird Ihnen mit der nächsten Abrechnung gutgeschrieben.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrte Frau Krämer,\n\nvielen Dank für Ihre Reklamation vom 25.03.2026 zu Ihrem Vorgang RK-2026-0047 (VS-Nr. GEW-2024-301847, VN Autohaus Schuster GmbH).\n\nSie haben Recht: Der Nachtrag zur Erweiterung der Betriebshaftpflicht hätte eine Folge-Abschlussprovision in Höhe von 560,00 EUR auslösen müssen. Dieser Betrag wird Ihnen mit der nächsten Abrechnung gutgeschrieben.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0048': {
     provisionsberechnung: {
@@ -456,6 +568,71 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Reklamation ablehnen mit Verweis auf fehlende vertragliche Grundlage.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 10.03.2026 zu Ihrem Vorgang RK-2026-0048 (VS-Nr. LV-2025-991204, VN Dirk Freiburg).\n\nNach Prüfung des Sachverhalts müssen wir Ihre Reklamation leider ablehnen. Ihr Vermittlervertrag enthält keine Superprovisionsklausel. Die Superprovision / Differenzprovision steht ausschließlich Vermittlern mit Agenturleiter-Status zu.\n\nSollten Sie hierzu Fragen haben, stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 10.03.2026 zu Ihrem Vorgang RK-2026-0048 (VS-Nr. LV-2025-991204, VN Dirk Freiburg).\n\nNach Prüfung des Sachverhalts müssen wir Ihre Reklamation leider ablehnen. Ihr Vermittlervertrag enthält keine Superprovisionsklausel. Die Superprovision / Differenzprovision steht ausschließlich Vermittlern mit Agenturleiter-Status zu.\n\nSollten Sie hierzu Fragen haben, stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
+  },
+  'RK-2026-0049': {
+    provisionsberechnung: {
+      positionen: [
+        { position: 'Bestandsprovision Q1/2026 (J4 lt. Staffel)', soll: 36.00, ist: 36.00, differenz: 0.00 },
+      ],
+      gesamt_soll: 36.00,
+      gesamt_ist: 36.00,
+      gesamt_differenz: 0.00,
+    },
+    bewertung: {
+      ampel: 'blau',
+      titel: 'Keine Reklamation — reine Fachfrage, kein Buchungsbedarf',
+      analyse: 'Es liegt **keine Reklamation** im eigentlichen Sinn vor. Der Vermittler bittet lediglich um Bestätigung der Staffelregelung der Bestandsprovision.\n\n**Sachverhalt:**\n- Vertrag LV-2022-430119, Vertragsbeginn 01.09.2022, klassische LV.\n- Standard-Courtagevereinbarung, Staffel-Modell: 2,5 % JNB in den Versicherungsjahren 1–4, 3,0 % JNB ab Versicherungsjahr 5.\n- Die Abrechnung Q1/2026 wurde korrekt mit 2,5 % berechnet, da sich der Vertrag zum Abrechnungsstichtag noch im 4. Versicherungsjahr befindet (Vertragsjahr 5 beginnt erst am 01.09.2026).\n- **Differenz SOLL vs. IST: 0,00 EUR.** Es besteht kein Buchungsbedarf.\n\nDie Annahme des Vermittlers ist sachlich richtig: Die Staffel greift nach vollendetem 4. Versicherungsjahr, also ab Q3/2026 anteilig bzw. ab Q4/2026 voll. Dies lässt sich ohne weitere Prüfung beantworten.',
+      handlungsempfehlung: 'Kurze fachliche Auskunft erteilen, Vorgang als „Beantwortet" schließen. Keine Nachbuchung, keine Korrektur, keine Eskalation erforderlich.',
+      auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
+    },
+    antwort_entwurf: 'Sehr geehrter Herr Krause,\n\nvielen Dank für Ihre Rückfrage vom 28.03.2026 zu Vorgang RK-2026-0049 (VS-Nr. LV-2022-430119, VN Heinrich Vogel).\n\nIhre Einschätzung ist korrekt: In der Standard-Courtagevereinbarung greift die Staffelerhöhung der Bestandsprovision von 2,5 % auf 3,0 % JNB nach Ablauf des 4. Versicherungsjahres. Bei Vertragsbeginn 01.09.2022 beginnt das 5. Versicherungsjahr am 01.09.2026. Die Abrechnung für Q1 und Q2/2026 mit 2,5 % ist daher korrekt. Ab Q3/2026 wird anteilig (September) und ab Q4/2026 vollständig mit 3,0 % abgerechnet.\n\nEs besteht kein Buchungsbedarf — es lag somit keine Reklamation vor, sondern eine reine Auslegungsfrage.\n\nSollten Sie weitere Rückfragen haben, stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
+  },
+  'RK-2026-0050': {
+    provisionsberechnung: {
+      positionen: [
+        { position: 'Dynamikprovision 2024', soll: 108.00, ist: 0.00, differenz: -108.00 },
+        { position: 'Dynamikprovision 2025', soll: 86.40, ist: 0.00, differenz: -86.40 },
+      ],
+      gesamt_soll: 194.40,
+      gesamt_ist: 0.00,
+      gesamt_differenz: -194.40,
+    },
+    bewertung: {
+      ampel: 'orange',
+      titel: 'AUFFÄLLIGKEIT — Identisches Fehlerbild wie RK-2026-0045 / RK-2026-0051',
+      analyse: 'Dieser Vorgang zeigt das **inhaltlich identische Fehlerbild** wie die Cluster-Fälle RK-2026-0045 (Hartmann/Krüger) und RK-2026-0051 (Dorn/Lange): Dynamikerhöhungen werden auf Tarif T-FRV korrekt im Vertrag umgesetzt, lösen aber keine Abschlussprovision auf den Mehrbeitrag aus.\n\n**Betroffener Vertrag:** VorsorgeFlex, Tarif T-FRV-2023, Monatsbeitrag 180 EUR, 5% Dynamik p.a., Vertragsbeginn 01.04.2023.\n\n**Clustermerkmale (identisch zu RK-2026-0045/0051):**\n- Tarif-Familie T-FRV\n- Reklamationstyp „Fehlende Dynamikprovision"\n- Dynamikerhöhung im Vertrag umgesetzt\n- AP auf Mehrbeitrag = 0,00 EUR\n- Unterschiedliche Vermittler, unterschiedliche VN — gleiches Systemverhalten.',
+      handlungsempfehlung: '1. Cluster-Sammelvorgang eröffnen: RK-2026-0045 + RK-2026-0050 + RK-2026-0051 gemeinsam eskalieren\n2. IT-Ticket zur Dynamik-AP-Kopplung bei T-FRV mit Priorität „Kritisch"\n3. Bestandsanalyse für alle aktiven T-FRV-Verträge mit Dynamik-Klausel\n4. Proaktive Nachbuchung für alle betroffenen Vermittler',
+      auffaelligkeit: {
+        erkannt: true,
+        muster: 'Dynamikerhöhungen lösen keine AP aus — Tarif-Familie T-FRV',
+        geschaetzte_betroffene: 'ca. 150–200 Verträge im Bestand',
+      },
+    },
+    antwort_entwurf: 'Sehr geehrte Frau Westphal,\n\nvielen Dank für Ihre Reklamation vom 26.03.2026 zu Vorgang RK-2026-0050 (VS-Nr. LV-2023-610442, VN Andreas Brehm).\n\nIhre Reklamation ist berechtigt: Die Dynamikerhöhungen zum 01.04.2024 und 01.04.2025 hätten eine Abschlussprovision auf den Mehrbeitrag auslösen müssen. Der Gesamtbetrag von 194,40 EUR wird Ihnen nachgebucht.\n\nIhr Vorgang wurde von unserer KI-Vorprüfung mit zwei weiteren inhaltlich identischen Reklamationen zu einem Cluster zusammengeführt. Wir haben einen systemischen Fehler in der Dynamik-Provisionskopplung für den Tarif T-FRV identifiziert und arbeiten bereits an einer bestandsweiten Korrektur. Sie werden informiert, sobald alle betroffenen Verträge in Ihrem Portfolio geprüft sind.\n\nDie Nachbuchung erfolgt mit der Abrechnung zum 01.05.2026.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
+  },
+  'RK-2026-0051': {
+    provisionsberechnung: {
+      positionen: [
+        { position: 'Dynamikprovision 2023', soll: 86.40, ist: 0.00, differenz: -86.40 },
+        { position: 'Dynamikprovision 2024', soll: 86.40, ist: 0.00, differenz: -86.40 },
+        { position: 'Dynamikprovision 2025', soll: 86.40, ist: 0.00, differenz: -86.40 },
+      ],
+      gesamt_soll: 259.20,
+      gesamt_ist: 0.00,
+      gesamt_differenz: -259.20,
+    },
+    bewertung: {
+      ampel: 'orange',
+      titel: 'AUFFÄLLIGKEIT — Identisches Fehlerbild wie RK-2026-0045 / RK-2026-0050',
+      analyse: 'Dieser Vorgang gehört zum **Cluster „T-FRV Dynamik-AP fehlend"** — zusammen mit RK-2026-0045 (Hartmann) und RK-2026-0050 (Westphal). Alle drei Reklamationen beschreiben ein inhaltlich identisches Systemverhalten: Dynamikerhöhungen werden im Vertrag korrekt umgesetzt, die fällige AP auf den Mehrbeitrag wird aber nicht gebucht.\n\n**Betroffener Vertrag:** VorsorgeFlex, Tarif T-FRV-2022, Monatsbeitrag 240 EUR, 5% Dynamik p.a., Vertragsbeginn 01.11.2022. Insgesamt **drei** übersprungene Dynamikstufen (11/2023, 11/2024, 11/2025).\n\n**Clustermerkmale:**\n- Tarif-Familie T-FRV (Jahrgänge 2022/2023)\n- Reklamationstyp „Fehlende Dynamikprovision"\n- Drei verschiedene Vermittler, drei verschiedene VN\n- Identisches Systemverhalten → deutet klar auf systemischen Fehler, keinen Einzelfall.',
+      handlungsempfehlung: '1. Vorgang gemeinsam mit RK-2026-0045 und RK-2026-0050 als Cluster eskalieren\n2. IT-Ticket: Dynamik-AP-Trigger für Tarif T-FRV (alle Jahrgänge) prüfen\n3. Bestandsabgleich für alle aktiven T-FRV-Verträge mit Dynamik-Klausel\n4. Cluster-Sammelantwort an betroffene Vermittler aufsetzen',
+      auffaelligkeit: {
+        erkannt: true,
+        muster: 'Dynamikerhöhungen lösen keine AP aus — Tarif-Familie T-FRV',
+        geschaetzte_betroffene: 'ca. 150–200 Verträge im Bestand',
+      },
+    },
+    antwort_entwurf: 'Sehr geehrter Herr Dorn,\n\nvielen Dank für Ihre Reklamation vom 27.03.2026 zu Vorgang RK-2026-0051 (VS-Nr. LV-2022-488105, VN Rebecca Lange).\n\nIhre Reklamation ist berechtigt und wurde von unserer KI-Vorprüfung zusammen mit zwei weiteren inhaltlich identischen Reklamationen zu einem Cluster zusammengeführt. Die Dynamikerhöhungen zum 01.11.2023, 01.11.2024 und 01.11.2025 hätten je eine Abschlussprovision auf den Mehrbeitrag auslösen müssen. Der Gesamtbetrag von 259,20 EUR wird Ihnen nachgebucht.\n\nWir haben einen systemischen Fehler in der Dynamik-Provisionskopplung für die Tarif-Familie T-FRV identifiziert und prüfen derzeit bestandsweit, welche Verträge in Ihrem Portfolio zusätzlich betroffen sind. Sie erhalten hierzu eine gesonderte Information.\n\nDie Nachbuchung erfolgt mit der Abrechnung zum 01.05.2026.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
 };

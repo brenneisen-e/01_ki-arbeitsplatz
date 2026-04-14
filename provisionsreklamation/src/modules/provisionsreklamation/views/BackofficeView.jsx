@@ -1,14 +1,14 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { clsx } from 'clsx';
 import { Search, Filter } from 'lucide-react';
-import { DEMO_VORGAENGE } from '../data/demoData';
 import useKiAnalyse from '../hooks/useKiAnalyse';
 import StatistikHeader from '../components/StatistikHeader';
 import PriorisierungsBanner from '../components/PriorisierungsBanner';
 import VorgangCard from '../components/VorgangCard';
 import VorgangDetail from '../components/VorgangDetail';
+import ClusterGroup from '../components/ClusterGroup';
 
-const STATUS_OPTIONS = ['Alle', 'Neu', 'In Bearbeitung', 'Geklärt', 'Abgelehnt', 'Eskaliert'];
+const STATUS_OPTIONS = ['Alle', 'Neu', 'In Bearbeitung', 'Geklärt', 'Beantwortet', 'Abgelehnt', 'Eskaliert'];
 const PRIO_OPTIONS = ['Alle', 'Normal', 'Auffällig'];
 const SORT_OPTIONS = [
   { value: 'datum', label: 'Eingangsdatum (neueste zuerst)' },
@@ -16,25 +16,16 @@ const SORT_OPTIONS = [
   { value: 'prioritaet', label: 'Priorität' },
 ];
 
-export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
-  const [vorgaenge, setVorgaenge] = useState(DEMO_VORGAENGE);
+// `vorgaenge` + Status-Änderungen werden vom `ProvisionsreklamationModule`
+// gehalten, damit auch das „Reklamation einreichen"-Tab (Vermittler-Inbox)
+// vom selben Datenstand liest.
+export default function BackofficeView({ vorgaenge, onStatusChange, onMarkVorgangSighted }) {
   const [selectedId, setSelectedId] = useState(null);
   const [statusFilter, setStatusFilter] = useState('Alle');
   const [prioFilter, setPrioFilter] = useState('Alle');
   const [suchtext, setSuchtext] = useState('');
   const [sortierung, setSortierung] = useState('datum');
   const { getAnalyse, isLoading, requestAnalyse } = useKiAnalyse();
-
-  // Zusätzliche Vorgänge (aus Formular) hinzufügen
-  useEffect(() => {
-    if (zusaetzlicheVorgaenge.length > 0) {
-      setVorgaenge(prev => {
-        const existingIds = new Set(prev.map(v => v.id));
-        const neueVorgaenge = zusaetzlicheVorgaenge.filter(v => !existingIds.has(v.id));
-        return [...neueVorgaenge, ...prev];
-      });
-    }
-  }, [zusaetzlicheVorgaenge]);
 
   // Filtern & Sortieren
   const gefilterteVorgaenge = useMemo(() => {
@@ -78,14 +69,11 @@ export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
 
   const handleSelect = useCallback((vorgang) => {
     setSelectedId(vorgang.id);
+    // „Neu eingereicht"- und „Rückmeldung vom Vermittler"-Flag entfernen,
+    // sobald der Sachbearbeiter den Vorgang aktiv auswählt.
+    if (onMarkVorgangSighted) onMarkVorgangSighted(vorgang.id);
     requestAnalyse(vorgang);
-  }, [requestAnalyse]);
-
-  const handleStatusChange = useCallback((vorgangId, newStatus) => {
-    setVorgaenge(prev => prev.map(v =>
-      v.id === vorgangId ? { ...v, status: newStatus } : v
-    ));
-  }, []);
+  }, [requestAnalyse, onMarkVorgangSighted]);
 
   const handleShowAuffaellig = useCallback(() => {
     setPrioFilter('Auffällig');
@@ -141,18 +129,49 @@ export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
         <span className="text-xs text-slate-400">{gefilterteVorgaenge.length} Vorgänge</span>
       </div>
 
-      {/* Zwei-Spalten-Layout */}
+      {/* Zwei-Spalten-Layout — solange nichts ausgewählt ist, nimmt die Liste
+          die komplette Breite ein (mehrspaltig) und das Detail-Panel ist
+          ausgeblendet. Sobald ein Vorgang ausgewählt ist, schrumpft die Liste
+          auf 380px und das Detail-Panel öffnet sich rechts. */}
       <div className="flex gap-4" style={{ minHeight: 'calc(100vh - 420px)' }}>
-        {/* Vorgangsliste (links) */}
-        <div className="w-[380px] shrink-0 space-y-2 overflow-y-auto max-h-[calc(100vh-420px)] pr-1">
-          {gefilterteVorgaenge.map(vorgang => (
-            <VorgangCard
-              key={vorgang.id}
-              vorgang={vorgang}
-              isActive={selectedId === vorgang.id}
-              onClick={() => handleSelect(vorgang)}
-            />
-          ))}
+        <div className={clsx(
+          'overflow-y-auto max-h-[calc(100vh-420px)] pr-1 space-y-2 shrink-0',
+          selectedVorgang ? 'w-[380px]' : 'w-[760px]'
+        )}>
+          {(() => {
+            const rendered = new Set();
+            const items = [];
+            gefilterteVorgaenge.forEach(vorgang => {
+              if (rendered.has(vorgang.id)) return;
+              const cid = vorgang.clusterId;
+              if (cid) {
+                const members = gefilterteVorgaenge.filter(v => v.clusterId === cid);
+                if (members.length >= 2) {
+                  members.forEach(m => rendered.add(m.id));
+                  items.push(
+                    <ClusterGroup
+                      key={`cluster-${cid}`}
+                      clusterId={cid}
+                      vorgaenge={members}
+                      selectedId={selectedId}
+                      onSelect={handleSelect}
+                    />
+                  );
+                  return;
+                }
+              }
+              rendered.add(vorgang.id);
+              items.push(
+                <VorgangCard
+                  key={vorgang.id}
+                  vorgang={vorgang}
+                  isActive={selectedId === vorgang.id}
+                  onClick={() => handleSelect(vorgang)}
+                />
+              );
+            });
+            return items;
+          })()}
           {gefilterteVorgaenge.length === 0 && (
             <div className="text-center py-8 text-sm text-slate-400">
               Keine Vorgänge gefunden.
@@ -160,15 +179,17 @@ export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
           )}
         </div>
 
-        {/* Detail-Panel (rechts) */}
-        <div className="flex-1 overflow-y-auto max-h-[calc(100vh-420px)] pr-1">
-          <VorgangDetail
-            vorgang={selectedVorgang}
-            analyse={selectedVorgang ? getAnalyse(selectedVorgang.id) : null}
-            analyseLoading={selectedVorgang ? isLoading(selectedVorgang.id) : false}
-            onStatusChange={handleStatusChange}
-          />
-        </div>
+        {/* Detail-Panel (rechts) — nur sichtbar, wenn ein Vorgang ausgewählt ist. */}
+        {selectedVorgang && (
+          <div className="flex-1 overflow-y-auto max-h-[calc(100vh-420px)] pr-1">
+            <VorgangDetail
+              vorgang={selectedVorgang}
+              analyse={getAnalyse(selectedVorgang.id)}
+              analyseLoading={isLoading(selectedVorgang.id)}
+              onStatusChange={onStatusChange}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

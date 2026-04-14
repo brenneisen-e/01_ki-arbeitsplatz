@@ -52,12 +52,16 @@ export default function ProvisionsreklamationModule() {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center">
-                <User size={24} className="text-white" strokeWidth={1.75} />
+              <div className="w-12 h-12 rounded-full border-2 border-white/50 overflow-hidden bg-white/20">
+                <img
+                  src="./images/lisa-neumann.png"
+                  alt="Lisa Neumann"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <div className="text-white text-sm font-medium">
-                  Sachbearbeiter/in: Lisa Neumann
+                  Sachbearbeiterin: Lisa Neumann
                 </div>
                 <div className="text-white/60 text-xs">
                   Abt. Provisionsservice | Aktiv

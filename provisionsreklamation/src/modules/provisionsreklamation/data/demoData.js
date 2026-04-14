@@ -318,7 +318,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Dynamikprovision nachbuchen. Bestandsprovision manuell gegen Abrechnungssystem prüfen — möglicher systemischer Fehler.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 18.03.2026 zu Ihrem Vorgang RK-2026-0041 (VS-Nr. LV-2024-738291, VN Markus Schäfer).\n\nWir haben Ihre Beanstandung geprüft und können Ihnen folgendes Ergebnis mitteilen:\n\n**1. Dynamikprovision (108,00 EUR)**\nSie haben Recht: Die zum 01.03.2025 wirksam gewordene Dynamikerhöhung hätte eine zusätzliche Abschlussprovision in Höhe von 108,00 EUR auslösen müssen. Dieser Betrag wird in der nächsten Abrechnungsperiode nachgebucht.\n\n**2. Bestandsprovision Q1/2026 (Differenz 41,75 EUR)**\nDie Differenz in der Bestandsprovision wird derzeit einer erweiterten Prüfung unterzogen. Wir werden Sie innerhalb von 5 Werktagen über das Ergebnis informieren.\n\nDie Nachbuchung der Dynamikprovision erfolgt mit der Abrechnung zum 01.04.2026.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 18.03.2026 zu Ihrem Vorgang RK-2026-0041 (VS-Nr. LV-2024-738291, VN Markus Schäfer).\n\nWir haben Ihre Beanstandung geprüft und können Ihnen folgendes Ergebnis mitteilen:\n\n**1. Dynamikprovision (108,00 EUR)**\nSie haben Recht: Die zum 01.03.2025 wirksam gewordene Dynamikerhöhung hätte eine zusätzliche Abschlussprovision in Höhe von 108,00 EUR auslösen müssen. Dieser Betrag wird in der nächsten Abrechnungsperiode nachgebucht.\n\n**2. Bestandsprovision Q1/2026 (Differenz 41,75 EUR)**\nDie Differenz in der Bestandsprovision wird derzeit einer erweiterten Prüfung unterzogen. Wir werden Sie innerhalb von 5 Werktagen über das Ergebnis informieren.\n\nDie Nachbuchung der Dynamikprovision erfolgt mit der Abrechnung zum 01.04.2026.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0042': {
     provisionsberechnung: {
@@ -337,7 +337,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Stornobuchung in Höhe von 4.320,00 EUR vollständig rückbuchen. Vermittlerin über Korrektur informieren.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrte Frau Krämer,\n\nvielen Dank für Ihre Reklamation vom 15.03.2026 zu Ihrem Vorgang RK-2026-0042 (VS-Nr. PKV-2023-119044, VN Julia Engel).\n\nNach eingehender Prüfung können wir Ihnen mitteilen, dass die Stornobuchung in Höhe von 4.320,00 EUR unberechtigt war. Die Vertragskündigung wurde durch eine fehlerhafte Beitragsanpassung unsererseits verursacht.\n\nDer Betrag von 4.320,00 EUR wird Ihnen vollständig gutgeschrieben und mit der nächsten Provisionsabrechnung ausgezahlt.\n\nWir bitten die Unannehmlichkeiten zu entschuldigen.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrte Frau Krämer,\n\nvielen Dank für Ihre Reklamation vom 15.03.2026 zu Ihrem Vorgang RK-2026-0042 (VS-Nr. PKV-2023-119044, VN Julia Engel).\n\nNach eingehender Prüfung können wir Ihnen mitteilen, dass die Stornobuchung in Höhe von 4.320,00 EUR unberechtigt war. Die Vertragskündigung wurde durch eine fehlerhafte Beitragsanpassung unsererseits verursacht.\n\nDer Betrag von 4.320,00 EUR wird Ihnen vollständig gutgeschrieben und mit der nächsten Provisionsabrechnung ausgezahlt.\n\nWir bitten die Unannehmlichkeiten zu entschuldigen.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0043': {
     provisionsberechnung: {
@@ -355,7 +355,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Vermittlerzuordnung im Bestandssystem auf VM-50123 korrigieren. Abschlussprovision von 890,00 EUR an VM-50123 nachbuchen.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Fink,\n\nvielen Dank für Ihre Reklamation vom 20.03.2026 zu Ihrem Vorgang RK-2026-0043 (VS-Nr. SHU-2025-882103, VN Peter Waldmann).\n\nWir haben den Sachverhalt geprüft und bestätigen, dass die Vermittlerzuordnung fehlerhaft war. Der Vertrag wird auf Ihre Vermittlernummer VM-50123 umgestellt. Die Abschlussprovision in Höhe von 890,00 EUR wird Ihnen mit der nächsten Abrechnung gutgeschrieben.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Fink,\n\nvielen Dank für Ihre Reklamation vom 20.03.2026 zu Ihrem Vorgang RK-2026-0043 (VS-Nr. SHU-2025-882103, VN Peter Waldmann).\n\nWir haben den Sachverhalt geprüft und bestätigen, dass die Vermittlerzuordnung fehlerhaft war. Der Vertrag wird auf Ihre Vermittlernummer VM-50123 umgestellt. Die Abschlussprovision in Höhe von 890,00 EUR wird Ihnen mit der nächsten Abrechnung gutgeschrieben.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0044': {
     provisionsberechnung: {
@@ -373,7 +373,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Stornoreserve von 1.240,00 EUR sofort zur Auszahlung freigeben.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 05.03.2026 zu Ihrem Vorgang RK-2026-0044 (VS-Nr. LV-2020-441928, VN Helga Breitner).\n\nSie haben Recht: Die Stornohaftungszeit von 60 Monaten ist am 01.02.2025 abgelaufen. Die einbehaltene Stornoreserve in Höhe von 1.240,00 EUR wird Ihnen umgehend freigegeben und mit der nächsten Provisionsabrechnung ausgezahlt.\n\nWir bitten die verspätete Freigabe zu entschuldigen.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 05.03.2026 zu Ihrem Vorgang RK-2026-0044 (VS-Nr. LV-2020-441928, VN Helga Breitner).\n\nSie haben Recht: Die Stornohaftungszeit von 60 Monaten ist am 01.02.2025 abgelaufen. Die einbehaltene Stornoreserve in Höhe von 1.240,00 EUR wird Ihnen umgehend freigegeben und mit der nächsten Provisionsabrechnung ausgezahlt.\n\nWir bitten die verspätete Freigabe zu entschuldigen.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0045': {
     provisionsberechnung: {
@@ -396,7 +396,7 @@ export const DEMO_KI_ANALYSEN = {
         geschaetzte_betroffene: 'ca. 150-200 Verträge im Bestand',
       },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Hartmann,\n\nvielen Dank für Ihre Reklamation vom 22.03.2026 zu Ihrem Vorgang RK-2026-0045 (VS-Nr. LV-2023-552847, VN Stefan Krüger).\n\nSie haben Recht: Die Dynamikerhöhungen zum 01.06.2024 und 01.06.2025 hätten jeweils eine zusätzliche Abschlussprovision auslösen müssen. Der Gesamtbetrag von 216,00 EUR wird Ihnen nachgebucht.\n\nWir haben festgestellt, dass es sich um einen systemischen Fehler handelt, der auch andere Vermittler betreffen kann. Wir arbeiten bereits an einer umfassenden Korrektur.\n\nDie Nachbuchung erfolgt mit der Abrechnung zum 01.04.2026.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Hartmann,\n\nvielen Dank für Ihre Reklamation vom 22.03.2026 zu Ihrem Vorgang RK-2026-0045 (VS-Nr. LV-2023-552847, VN Stefan Krüger).\n\nSie haben Recht: Die Dynamikerhöhungen zum 01.06.2024 und 01.06.2025 hätten jeweils eine zusätzliche Abschlussprovision auslösen müssen. Der Gesamtbetrag von 216,00 EUR wird Ihnen nachgebucht.\n\nWir haben festgestellt, dass es sich um einen systemischen Fehler handelt, der auch andere Vermittler betreffen kann. Wir arbeiten bereits an einer umfassenden Korrektur.\n\nDie Nachbuchung erfolgt mit der Abrechnung zum 01.04.2026.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0046': {
     provisionsberechnung: {
@@ -420,7 +420,7 @@ export const DEMO_KI_ANALYSEN = {
         geschaetzte_betroffene: '800–1.200 Verträge',
       },
     },
-    antwort_entwurf: 'Sehr geehrte Frau Weber,\n\nvielen Dank für Ihre Reklamation vom 24.03.2026 zu Ihrem Vorgang RK-2026-0046 (VS-Nr. PKV-2024-667312, VN Frank Lehmann).\n\nWir haben einen systematischen Berechnungsfehler identifiziert, der die Bestandsprovision für PKV-Verträge mit Beitragsanpassungsklausel betrifft. Die Differenz von insgesamt 235,20 EUR (3 Quartale) wird Ihnen vollständig nachgebucht.\n\nWir prüfen derzeit, ob weitere Verträge in Ihrem Bestand betroffen sind und werden Sie proaktiv informieren.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrte Frau Weber,\n\nvielen Dank für Ihre Reklamation vom 24.03.2026 zu Ihrem Vorgang RK-2026-0046 (VS-Nr. PKV-2024-667312, VN Frank Lehmann).\n\nWir haben einen systematischen Berechnungsfehler identifiziert, der die Bestandsprovision für PKV-Verträge mit Beitragsanpassungsklausel betrifft. Die Differenz von insgesamt 235,20 EUR (3 Quartale) wird Ihnen vollständig nachgebucht.\n\nWir prüfen derzeit, ob weitere Verträge in Ihrem Bestand betroffen sind und werden Sie proaktiv informieren.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0047': {
     provisionsberechnung: {
@@ -438,7 +438,7 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Folge-AP von 560,00 EUR nachbuchen.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrte Frau Krämer,\n\nvielen Dank für Ihre Reklamation vom 25.03.2026 zu Ihrem Vorgang RK-2026-0047 (VS-Nr. GEW-2024-301847, VN Autohaus Schuster GmbH).\n\nSie haben Recht: Der Nachtrag zur Erweiterung der Betriebshaftpflicht hätte eine Folge-Abschlussprovision in Höhe von 560,00 EUR auslösen müssen. Dieser Betrag wird Ihnen mit der nächsten Abrechnung gutgeschrieben.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrte Frau Krämer,\n\nvielen Dank für Ihre Reklamation vom 25.03.2026 zu Ihrem Vorgang RK-2026-0047 (VS-Nr. GEW-2024-301847, VN Autohaus Schuster GmbH).\n\nSie haben Recht: Der Nachtrag zur Erweiterung der Betriebshaftpflicht hätte eine Folge-Abschlussprovision in Höhe von 560,00 EUR auslösen müssen. Dieser Betrag wird Ihnen mit der nächsten Abrechnung gutgeschrieben.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
   'RK-2026-0048': {
     provisionsberechnung: {
@@ -456,6 +456,6 @@ export const DEMO_KI_ANALYSEN = {
       handlungsempfehlung: 'Reklamation ablehnen mit Verweis auf fehlende vertragliche Grundlage.',
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
-    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 10.03.2026 zu Ihrem Vorgang RK-2026-0048 (VS-Nr. LV-2025-991204, VN Dirk Freiburg).\n\nNach Prüfung des Sachverhalts müssen wir Ihre Reklamation leider ablehnen. Ihr Vermittlervertrag enthält keine Superprovisionsklausel. Die Superprovision / Differenzprovision steht ausschließlich Vermittlern mit Agenturleiter-Status zu.\n\nSollten Sie hierzu Fragen haben, stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice',
+    antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 10.03.2026 zu Ihrem Vorgang RK-2026-0048 (VS-Nr. LV-2025-991204, VN Dirk Freiburg).\n\nNach Prüfung des Sachverhalts müssen wir Ihre Reklamation leider ablehnen. Ihr Vermittlervertrag enthält keine Superprovisionsklausel. Die Superprovision / Differenzprovision steht ausschließlich Vermittlern mit Agenturleiter-Status zu.\n\nSollten Sie hierzu Fragen haben, stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
 };

@@ -141,6 +141,6 @@ function buildSynthAnalyse(vorgang) {
       gesamt_differenz: diff,
     },
     bewertung,
-    antwort_entwurf: `Sehr geehrte/r ${vorgang.vermittler || 'Vermittler/in'},\n\nvielen Dank für Ihre Reklamation vom ${vorgang.eingangsdatum} zu Vorgang ${vorgang.id} (VS-Nr. ${vorgang.vsNummer}, VN ${vorgang.vnName}).\n\nWir haben Ihren Vorgang aufgenommen und prüfen die Abrechnung. Sie erhalten eine Rückmeldung innerhalb der üblichen Bearbeitungsfrist von 5–10 Werktagen.\n\nMit freundlichen Grüßen\n[Sachbearbeiter/in]\nAbteilung Provisionsservice`,
+    antwort_entwurf: `Sehr geehrte/r ${vorgang.vermittler || 'Vermittler/in'},\n\nvielen Dank für Ihre Reklamation vom ${vorgang.eingangsdatum} zu Vorgang ${vorgang.id} (VS-Nr. ${vorgang.vsNummer}, VN ${vorgang.vnName}).\n\nWir haben Ihren Vorgang aufgenommen und prüfen die Abrechnung. Sie erhalten eine Rückmeldung innerhalb der üblichen Bearbeitungsfrist von 5–10 Werktagen.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice`,
   };
 }

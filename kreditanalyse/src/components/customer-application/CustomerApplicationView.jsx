@@ -33,6 +33,27 @@ import {
   DEMO_EXTRACTION_RESULT,
 } from '../../utils/demoPdfGenerator';
 import { MockPdfPreviewModal } from '../shared/MockPdfPreview';
+import KiSourceHint from '../shared/KiSourceHint';
+
+// Label mit optionalem KI-Quelle-Badge daneben — öffnet bei Klick
+// das Vorschaufenster und zeigt, aus welchem Dokument der Wert extrahiert wurde
+function LabelWithSource({ htmlFor, children, showHint, sourceCompany, field, value, sourceDoc = 'handelsregister' }) {
+  return (
+    <div className="flex items-center gap-2 mb-1">
+      <label className="text-xs font-medium font-body text-text-secondary" htmlFor={htmlFor}>
+        {children}
+      </label>
+      {showHint && value && (
+        <KiSourceHint
+          document={sourceDoc}
+          field={field}
+          value={value}
+          company={sourceCompany}
+        />
+      )}
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -195,9 +216,29 @@ export default function CustomerApplicationView() {
   // Preview modal state (for clicking on uploaded mock docs)
   const [previewDocId, setPreviewDocId] = useState(null);
 
-  // Simulate uploading a mock document — fügt Datei zur Upload-Liste hinzu
-  // UND öffnet sofort die Mock-PDF-Vorschau, damit der Nutzer direkt sieht
-  // welches Dokument "hochgeladen" wurde und woher die KI die Infos extrahiert.
+  // Für KI-Quelle-Vorschau: ein Company-Objekt aus den aktuellen Formularwerten
+  // bauen. Wird von den KI-Quelle-Badges und dem Mock-PDF-Modal genutzt.
+  const kundenCompany = {
+    firma: firma || 'Müller Maschinenbau GmbH',
+    rechtsform: rechtsform || 'GmbH',
+    hrb: 'HRB 12345',
+    amtsgericht: 'München',
+    gruendung: gruendung || 2005,
+    adresse: {
+      strasse: strasse || 'Industriestraße 42',
+      plz: plz || '80339',
+      ort: ort || 'München',
+    },
+    branche: branche || 'Maschinenbau',
+    stammkapital: 250000,
+    gf: [{ name: ansprechpartner || 'Stefan Müller', geb: '1975-06-12', anteil: 100 }],
+    mitarbeiter: mitarbeiter || 42,
+    ust_id: 'DE 123 456 789',
+  };
+
+  // Simulate uploading a mock document — fügt Datei zur Upload-Liste hinzu,
+  // triggert den KI-Extraktions-Ablauf (wie bei echtem Upload) und füllt
+  // damit die Stammdatenfelder sowie die KI-Quelle-Badges automatisch.
   const handleMockUpload = useCallback((doc) => {
     const fake = {
       name: doc.filename,
@@ -210,7 +251,6 @@ export default function CustomerApplicationView() {
       if (prev.some(f => f.mockDocId === doc.id)) return prev;
       return [...prev, fake];
     });
-    setPreviewDocId(doc.id);
   }, []);
 
   // Handle file upload (demo: accepts any file, simulates AI extraction)
@@ -621,7 +661,9 @@ export default function CustomerApplicationView() {
       <SectionCard icon={Building2} title="Unternehmensdaten" badge={extractionDone ? 'Vorbefüllt' : null}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-1">
-            <Label htmlFor="firma">Firmenname *</Label>
+            <LabelWithSource htmlFor="firma" showHint={extractionDone} sourceCompany={kundenCompany} field="firma" value={firma} sourceDoc="handelsregister">
+              Firmenname *
+            </LabelWithSource>
             <input
               id="firma"
               type="text"
@@ -632,7 +674,9 @@ export default function CustomerApplicationView() {
             />
           </div>
           <div>
-            <Label htmlFor="rechtsform">Rechtsform</Label>
+            <LabelWithSource htmlFor="rechtsform" showHint={extractionDone} sourceCompany={kundenCompany} field="rechtsform" value={rechtsform} sourceDoc="handelsregister">
+              Rechtsform
+            </LabelWithSource>
             <div className="relative">
               <select id="rechtsform" value={rechtsform} onChange={(e) => setRechtsform(e.target.value)} className={selectCls}>
                 {RECHTSFORMEN.map((r) => <option key={r} value={r}>{r}</option>)}
@@ -641,7 +685,9 @@ export default function CustomerApplicationView() {
             </div>
           </div>
           <div>
-            <Label htmlFor="branche">Branche *</Label>
+            <LabelWithSource htmlFor="branche" showHint={extractionDone} sourceCompany={kundenCompany} field="branche" value={branche} sourceDoc="handelsregister">
+              Branche *
+            </LabelWithSource>
             <input
               id="branche"
               type="text"
@@ -655,7 +701,9 @@ export default function CustomerApplicationView() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           <div>
-            <Label htmlFor="gruendung">Gründungsjahr</Label>
+            <LabelWithSource htmlFor="gruendung" showHint={extractionDone} sourceCompany={kundenCompany} field="gruendung" value={gruendung} sourceDoc="handelsregister">
+              Gründungsjahr
+            </LabelWithSource>
             <input
               id="gruendung"
               type="number"
@@ -680,7 +728,9 @@ export default function CustomerApplicationView() {
             />
           </div>
           <div>
-            <Label htmlFor="ort">Standort</Label>
+            <LabelWithSource htmlFor="ort" showHint={extractionDone} sourceCompany={kundenCompany} field="ort" value={ort} sourceDoc="handelsregister">
+              Standort
+            </LabelWithSource>
             <input
               id="ort"
               type="text"
@@ -854,28 +904,11 @@ export default function CustomerApplicationView() {
         Kreditantrag einreichen
       </button>
 
-      {/* Vorschau-Modal für Mock-Dokumente (Handelsregister, Gesellschaftsvertrag …).
-          Nutzt Müller-Maschinenbau-Demo-Daten (Kundenperspektive). */}
+      {/* Vorschau-Modal für Mock-Dokumente (Handelsregister, Gesellschaftsvertrag …). */}
       {previewDocId && (
         <MockPdfPreviewModal
           documentId={previewDocId}
-          company={{
-            firma: formData.firma || 'Müller Maschinenbau GmbH',
-            rechtsform: formData.rechtsform || 'GmbH',
-            hrb: formData.hrb || 'HRB 12345',
-            amtsgericht: formData.amtsgericht || 'München',
-            gruendung: formData.gruendung || 2005,
-            adresse: {
-              strasse: formData.strasse || 'Industriestraße 42',
-              plz: formData.plz || '80339',
-              ort: formData.ort || 'München',
-            },
-            branche: formData.branche || 'Maschinenbau',
-            stammkapital: 250000,
-            gf: [{ name: formData.ansprechpartner_name || 'Stefan Müller', geb: '1975-06-12', anteil: 100 }],
-            mitarbeiter: formData.mitarbeiter || 42,
-            ust_id: formData.ust_id || 'DE 123 456 789',
-          }}
+          company={kundenCompany}
           onClose={() => setPreviewDocId(null)}
         />
       )}

@@ -1,10 +1,16 @@
 import { useState, useCallback, useMemo } from 'react';
 import { clsx } from 'clsx';
-import { Home, User, Building2, FileText, AlertTriangle, Clock, Settings, Shield } from 'lucide-react';
+import { Home, User, Building2, FileText, AlertTriangle, Clock, Settings, Shield, Download } from 'lucide-react';
 import ReklamationFormView from './views/ReklamationFormView';
 import BackofficeView from './views/BackofficeView';
 import AdminView from './views/AdminView';
 import { DEMO_VORGAENGE } from './data/demoData';
+import lisaNeumannBild from './lisa-neumann.png';
+
+// Wird im Offline-Build (vite.config.offline.js) auf 'true' gesetzt. In diesem
+// Modus versteckt sich der Download-Button — die Datei liegt dem Kunden ja
+// bereits als offline-Demo vor.
+const IS_OFFLINE_BUILD = import.meta.env.VITE_OFFLINE_BUILD === 'true';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -131,7 +137,7 @@ export default function ProvisionsreklamationModule() {
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full border-2 border-white/50 overflow-hidden bg-white/20">
                 <img
-                  src="./images/lisa-neumann.png"
+                  src={lisaNeumannBild}
                   alt="Lisa Neumann"
                   className="w-full h-full object-cover"
                 />
@@ -163,6 +169,17 @@ export default function ProvisionsreklamationModule() {
           </div>
 
           <div className="flex items-center gap-3">
+            {!IS_OFFLINE_BUILD && (
+              <a
+                href="./provisionsreklamation-offline-demo.html"
+                download="provisionsreklamation-offline-demo.html"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition-colors"
+                title="Komplette Demo als einzelne HTML-Datei herunterladen (offline nutzbar)"
+              >
+                <Download size={14} strokeWidth={1.75} />
+                <span className="font-medium">Offline-Demo herunterladen</span>
+              </a>
+            )}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white text-xs">
               <FileText size={16} className="text-white/80" />
               <span className="font-medium">Provisionsreklamation</span>

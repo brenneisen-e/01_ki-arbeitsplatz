@@ -342,29 +342,156 @@ export default function CustomerApplicationView() {
     setValidationErrors([]);
 
     const newId = `CRED-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`;
-    dispatch({
-      type: 'ADD_CUSTOMER_APPLICATION',
-      company: {
-        id: newId,
-        firma,
-        rechtsform,
-        branche,
-        gruendung: gruendung ? parseInt(gruendung, 10) : '',
-        adresse: { strasse, plz, ort },
-        mitarbeiter: mitarbeiter ? parseInt(mitarbeiter, 10) : '',
-        ansprechpartner: { name: ansprechpartner, telefon, email, position },
-        kredit: {
-          art: kreditArt,
-          betrag: typeof betrag === 'number' ? betrag : parseInt(betrag, 10) || 0,
-          laufzeit: parseInt(laufzeit, 10) || 60,
-          verwendung,
-          verwendungKategorie,
-        },
-        sicherheiten_vorerfassung: sicherheiten,
-        uploadedDocuments: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type, uploadedAt: f.uploadedAt?.toISOString?.() || new Date().toISOString() })),
-        status: 'eingegangen',
-      },
+    const betragNum = typeof betrag === 'number' ? betrag : parseInt(betrag, 10) || 0;
+    const mitarbeiterNum = mitarbeiter ? parseInt(mitarbeiter, 10) : 0;
+
+    // Realistische Finanzzahlen für den End-to-End-Demo-Flow. Basis bildet
+    // DEMO_EXTRACTION_RESULT (z.B. Müller Maschinenbau: Umsatz 12,5 Mio €,
+    // EK-Quote 32 %). Bilanz wird 3 Jahre rückwärts entwickelt, damit der
+    // Bearbeiter in Rating, §18 KWG, Sicherheiten etc. sinnvolle Zahlen hat.
+    const fin = DEMO_EXTRACTION_RESULT.financialSummary;
+    const umsatz23 = fin.umsatz2023 || 12500000;
+    const umsatz22 = fin.umsatz2022 || Math.round(umsatz23 * 0.94);
+    const umsatz21 = fin.umsatz2021 || Math.round(umsatz23 * 0.82);
+    const bilanzsumme23 = fin.bilanzsumme2023 || Math.round(umsatz23 * 0.41);
+    const eigenkapital23 = fin.eigenkapital2023 || Math.round(bilanzsumme23 * 0.32);
+    const jue23 = fin.jahresueberschuss2023 || Math.round(umsatz23 * 0.039);
+
+    const bilanzJahr = (umsatz, bilanz, ek, jue) => ({
+      immateriell: Math.round(bilanz * 0.03),
+      sachanlagen: Math.round(bilanz * 0.45),
+      finanzanlagen: Math.round(bilanz * 0.02),
+      vorraete: Math.round(bilanz * 0.18),
+      forderungen: Math.round(bilanz * 0.22),
+      liquide: Math.round(bilanz * 0.10),
+      eigenkapital: ek,
+      rueckstellungen: Math.round(bilanz * 0.06),
+      verb_kurz: Math.round(bilanz * 0.32),
+      verb_lang: Math.round((bilanz - ek) * 0.42),
+      umsatz,
+      materialaufwand: Math.round(umsatz * 0.38),
+      personalaufwand: Math.round(umsatz * 0.34),
+      abschreibungen: Math.round(umsatz * 0.035),
+      sonstige_aufwendungen: Math.round(umsatz * 0.14),
+      zinsaufwand: Math.round(umsatz * 0.008),
+      steuern: Math.round(jue * 0.32),
+      jahresueberschuss: jue,
+      sonstige_ertraege: Math.round(umsatz * 0.01),
     });
+
+    const richCompany = {
+      id: newId,
+      firma,
+      rechtsform,
+      hrb: 'HRB 12345',
+      amtsgericht: ort || 'Köln',
+      branche,
+      wz_code: branche.toLowerCase().includes('maschinen') ? '28.41' : '70.22',
+      gruendung: gruendung ? parseInt(gruendung, 10) : 1998,
+      adresse: { strasse, plz, ort },
+      mitarbeiter: mitarbeiterNum,
+      steuer_id: 'DE' + Math.floor(Math.random() * 900000000 + 100000000),
+      ust_id: 'DE' + Math.floor(Math.random() * 900000000 + 100000000),
+      hauptbank: true,
+      gf: [
+        {
+          name: ansprechpartner || 'Thomas Müller',
+          geb: '1965-08-17',
+          funktion: 'GF/Gesellschafter',
+          anteil: 65,
+          seit: gruendung ? parseInt(gruendung, 10) : 1998,
+          erfahrung: 28,
+        },
+        {
+          name: 'Andrea Müller',
+          geb: '1970-04-23',
+          funktion: 'Gesellschafter',
+          anteil: 35,
+          seit: gruendung ? parseInt(gruendung, 10) : 1998,
+          erfahrung: 22,
+        },
+      ],
+      ansprechpartner: { name: ansprechpartner, telefon, email, position },
+      kredit: {
+        art: kreditArt,
+        betrag: betragNum,
+        laufzeit: parseInt(laufzeit, 10) || 84,
+        tilgungsfrei: 6,
+        verwendung,
+        verwendungKategorie,
+        auszahlung: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+      },
+      sicherheiten: [
+        {
+          art: 'Grundschuld (Gewerbeimmobilie)',
+          bezeichnung: `Grundschuld auf Betriebsgelände ${ort || 'Köln'}`,
+          wert: Math.round(betragNum * 1.2),
+          vorlasten: Math.round(betragNum * 0.15),
+          rang: 1,
+          bewertung: 'Verkehrswertgutachten',
+          datum: new Date().toISOString().slice(0, 10),
+        },
+        {
+          art: 'Sicherungsübereignung',
+          bezeichnung: 'Zu finanzierende Maschine (CNC-Bearbeitungszentrum)',
+          wert: Math.round(betragNum * 0.85),
+          vorlasten: 0,
+          rang: 1,
+          bewertung: 'Anschaffungswert',
+          datum: new Date().toISOString().slice(0, 10),
+        },
+        {
+          art: 'Globalzession (Forderungen)',
+          bezeichnung: 'Abtretung Kundenforderungen',
+          wert: Math.round(umsatz23 * 0.08),
+          vorlasten: 0,
+          rang: 1,
+          bewertung: 'Buchwert',
+          datum: new Date().toISOString().slice(0, 10),
+        },
+      ],
+      bestehende_verbindlichkeiten: [
+        {
+          glaeubiger: 'Sparkasse ' + (ort || 'Köln'),
+          art: 'Investitionsdarlehen',
+          ursprung: 800000,
+          restschuld: 320000,
+          rate: 9500,
+          zins: 3.8,
+          ende: '2028-03-31',
+          sicherheit: 'Grundschuld erstrangig',
+        },
+        {
+          glaeubiger: 'Commerzbank AG',
+          art: 'Kontokorrent',
+          ursprung: 500000,
+          restschuld: 180000,
+          rate: 0,
+          zins: 7.5,
+          ende: '2025-12-31',
+          sicherheit: 'keine',
+        },
+      ],
+      bilanz: {
+        2023: bilanzJahr(umsatz23, bilanzsumme23, eigenkapital23, jue23),
+        2022: bilanzJahr(umsatz22, Math.round(bilanzsumme23 * 0.93), Math.round(eigenkapital23 * 0.88), Math.round(jue23 * 0.82)),
+        2021: bilanzJahr(umsatz21, Math.round(bilanzsumme23 * 0.84), Math.round(eigenkapital23 * 0.74), Math.round(jue23 * 0.65)),
+      },
+      schufa: { gf1: 96.2, gf2: 94.8 },
+      creditreform_index: 245,
+      konto: {
+        auslastung_avg: 58,
+        ueberziehungen_12m: 1,
+        ruecklastschriften_12m: 0,
+        pfaendungen: false,
+        umsatztrend: 'steigend',
+      },
+      uploadedDocuments: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type, uploadedAt: f.uploadedAt?.toISOString?.() || new Date().toISOString() })),
+      sicherheiten_vorerfassung: sicherheiten,
+      status: 'eingegangen',
+    };
+
+    dispatch({ type: 'ADD_CUSTOMER_APPLICATION', company: richCompany });
 
     setSubmitted(true);
   }, [validateForm, firma, rechtsform, branche, gruendung, strasse, plz, ort,

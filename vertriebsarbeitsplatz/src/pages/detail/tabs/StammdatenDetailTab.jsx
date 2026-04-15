@@ -212,8 +212,8 @@ export default function StammdatenDetailTab({ kunde }) {
             </div>
           </div>
 
-          {/* KI-Zusammenfassung rechts neben den Stammdaten (Banking) */}
-          {modeId === 'banking' && (
+          {/* KI-Zusammenfassung rechts neben den Stammdaten (Banking + Versicherung) */}
+          {(modeId === 'banking' || modeId === 'versicherung') && (
             <div className="flex-1 min-w-0">
               <KIZusammenfassungInlay kunde={kunde} embedded />
             </div>
@@ -221,7 +221,7 @@ export default function StammdatenDetailTab({ kunde }) {
         </div>
       </div>
 
-      <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
+      <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
         {/* Persoenliche Daten */}
         <Card hover={false} className="h-full flex flex-col">
           <div
@@ -454,12 +454,12 @@ export default function StammdatenDetailTab({ kunde }) {
           </div>
         </Card>
 
-        {/* Aktivitäten – Banking only, in derselben Reihe wie Persönliche Daten + Finanzübersicht */}
-        {modeId === 'banking' && <AktivitaetenCard kunde={kunde} />}
+        {/* Aktivitäten – Banking + Versicherung, in derselben Reihe wie Persönliche Daten + Finanzübersicht */}
+        {(modeId === 'banking' || modeId === 'versicherung') && <AktivitaetenCard kunde={kunde} />}
       </div>
 
-      {/* Lebenszeitstrahl – Banking only (FIDA + Open Finance Kontext) */}
-      {modeId === 'banking' && <LebenszeitstrahlCard kunde={kunde} />}
+      {/* Lebenszeitstrahl – Banking + Versicherung (FIDA + Open Finance Kontext) */}
+      {(modeId === 'banking' || modeId === 'versicherung') && <LebenszeitstrahlCard kunde={kunde} />}
 
       {/* Produkte/Fremdprodukte sind in den Tabs "Produkte" und "Open Finance" */}
     </div>
@@ -939,8 +939,14 @@ function generateKISummary(kunde) {
   }
 
   let recommendation = null;
+  // Produktfamilie aus den eigenen Produkten ableiten, damit Banking- und
+  // Versicherungs-Kunden den jeweils passenden Handlungsimpuls bekommen.
+  const sparten = new Set((kunde.eigeneProdukte || []).map(p => p.sparte));
+  const istVersicherung = sparten.has('leben') || sparten.has('schaden') || sparten.has('kranken') || sparten.has('kfz');
   if (abwanderung === 'hoch' || abwanderung === 'mittel') {
-    recommendation = 'Persönliches Bindungsgespräch priorisieren und Depot-Wechsel-Prämie als konkretes Angebot positionieren.';
+    recommendation = istVersicherung
+      ? 'Persönliches Bindungsgespräch priorisieren und Cross-Sell-Angebot (z. B. BU-Upgrade oder Familien-Bundle) vorbereiten.'
+      : 'Persönliches Bindungsgespräch priorisieren und Depot-Wechsel-Prämie als konkretes Angebot positionieren.';
   } else if (offenePot > 2) {
     recommendation = 'Top-Potenzial aus dem Kanban-Board angehen — kurzfristig Termin vereinbaren.';
   } else {

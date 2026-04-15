@@ -176,6 +176,65 @@ function getBankingBrand(institut) {
   return BANKING_BRANDS[institut] || BANKING_BRANDS['Volksbank Mittelhessen'];
 }
 
+// Brand profile per insurance institut. Die Versicherungs-Marketingkampagnen-
+// Titel (und ein paar branded begründungen) werden daraus abgeleitet, damit
+// die Kampagnen immer die richtigen Produktnamen für die aktuell aktive
+// Gesellschaft zeigen – keine ERGO-Produktnamen leaken in Allianz/AXA etc.
+const INSURANCE_BRANDS = {
+  'ERGO': {
+    prefix: 'ERGO',
+    buBrand: 'ERGO BU Comfort',
+    rlvBrand: 'ERGO Risikoleben',
+    hausratBrand: 'ERGO Hausrat Premium',
+    krankenBrand: 'DKV Zahnzusatz',
+    altersvorsorge: 'ERGO Rente Garantie',
+  },
+  'Allianz': {
+    prefix: 'Allianz',
+    buBrand: 'Allianz SBU Privat',
+    rlvBrand: 'Allianz Risikoleben',
+    hausratBrand: 'Allianz Meine Sachen',
+    krankenBrand: 'Allianz Zahn Best',
+    altersvorsorge: 'Allianz PrivatRente',
+  },
+  'AXA': {
+    prefix: 'AXA',
+    buBrand: 'AXA Berufsunfähigkeit Premium',
+    rlvBrand: 'AXA Risikoleben',
+    hausratBrand: 'AXA Hausrat Komfort',
+    krankenBrand: 'DBV Zahnschutz',
+    altersvorsorge: 'AXA Relax Rente',
+  },
+  'Generali': {
+    prefix: 'Generali',
+    buBrand: 'Generali BU Protect',
+    rlvBrand: 'Generali Risikoleben',
+    hausratBrand: 'Generali DomusClassic',
+    krankenBrand: 'CosmosDirekt Zahn',
+    altersvorsorge: 'Generali Privatrente',
+  },
+  'Zurich': {
+    prefix: 'Zurich',
+    buBrand: 'Zurich BU Top-Schutz',
+    rlvBrand: 'Zurich Risikoleben',
+    hausratBrand: 'Zurich Hausrat Premium',
+    krankenBrand: 'Zurich Zahn Plus',
+    altersvorsorge: 'Zurich Garantie Rente',
+  },
+  'Zukunftsversicherung': {
+    prefix: 'ZV',
+    buBrand: 'ZV BU-Schutz',
+    rlvBrand: 'ZV Risikoleben',
+    hausratBrand: 'ZV HausratPlus',
+    krankenBrand: 'ZV Zahn Digital',
+    altersvorsorge: 'ZV FuturePension',
+  },
+};
+
+function getInsuranceBrand(institut) {
+  return INSURANCE_BRANDS[institut] || INSURANCE_BRANDS['ERGO'];
+}
+
 function buildBankingKampagnen(institut) {
   const b = getBankingBrand(institut);
   return [
@@ -243,6 +302,79 @@ function buildBankingKampagnen(institut) {
       photoAccent: '#fde68a',
       passendeKunden: [
         { kundeId: 'BK00002', name: 'Sandra Müller', match: 85, begruendung: 'Fressnapf-Umsätze erkannt, keine Tierhalterhaftpflicht', begruendungEn: 'Pet store purchases detected, no pet liability insurance' },
+      ],
+    },
+  ];
+}
+
+function buildVersicherungsKampagnen(institut) {
+  const b = getInsuranceBrand(institut);
+  return [
+    {
+      id: 'bu-upgrade',
+      titel: `${b.buBrand} Upgrade-Aktion`,
+      titelEn: `${b.buBrand} Upgrade Campaign`,
+      status: 'aktiv',
+      zeitraum: '01.03.–30.04.2026',
+      zielgruppe: 'Kunden mit BU unter 1.500€/Mon. Rente',
+      zielgruppeEn: 'Clients with disability cover below €1,500/mo',
+      photoGradient: 'linear-gradient(135deg, #7f1d1d 0%, #b91c1c 50%, #dc2626 100%)',
+      photoIcon: 'TrendingUp',
+      photoAccent: '#fecaca',
+      passendeKunden: [
+        { kundeId: 'KD00001', name: 'Peter Schmidt', match: 96, begruendung: `BU-Rente 1.800€/mtl. – unter dem 60%-Netto-Bedarf, ${b.buBrand}-Upgrade sinnvoll`, begruendungEn: `DI pension €1,800/mo – below 60% net-income need, ${b.buBrand} upgrade recommended` },
+        { kundeId: 'KD00004', name: 'Anna Hoffmann', match: 92, begruendung: 'Ärztin ohne BU, Einkommen 5.500€ – hohes Ausfallrisiko', begruendungEn: 'Physician without DI cover, €5,500 income – high risk' },
+        { kundeId: 'KD00002', name: 'Amira König', match: 84, begruendung: 'Designerin, keine BU, Altersneuabschluss lohnt sich', begruendungEn: 'Designer, no DI, new policy worthwhile at this age' },
+      ],
+    },
+    {
+      id: 'familien-bundle',
+      titel: `${b.rlvBrand} + ${b.hausratBrand} Familien-Bundle`,
+      titelEn: `${b.rlvBrand} + ${b.hausratBrand} Family Bundle`,
+      status: 'aktiv',
+      zeitraum: '15.03.–31.05.2026',
+      zielgruppe: 'Familien mit Kindern ohne Absicherung',
+      zielgruppeEn: 'Families with children without protection',
+      photoGradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1e40af 100%)',
+      photoIcon: 'Users',
+      photoAccent: '#bfdbfe',
+      passendeKunden: [
+        { kundeId: 'KD00001', name: 'Peter Schmidt', match: 94, begruendung: '2 Kinder, Hausrat unterversichert (65qm auf 145qm EFH)', begruendungEn: '2 kids, hausrat underinsured (65sqm on 145sqm house)' },
+        { kundeId: 'KD00004', name: 'Anna Hoffmann', match: 88, begruendung: 'Junge Familie, RLV-Deckung zu gering', begruendungEn: 'Young family, insufficient term life coverage' },
+        { kundeId: 'KD00005', name: 'Klaus Meier', match: 79, begruendung: 'Drei Kinder, RLV-Altbestand 150k€ aktualisieren', begruendungEn: 'Three children, term-life legacy 150k€ to refresh' },
+      ],
+    },
+    {
+      id: 'altersvorsorge-check',
+      titel: `${b.altersvorsorge} Check`,
+      titelEn: `${b.altersvorsorge} Check`,
+      status: 'aktiv',
+      zeitraum: '01.04.–30.06.2026',
+      zielgruppe: 'Kunden 45+ mit Versorgungslücke',
+      zielgruppeEn: 'Clients 45+ with pension gap',
+      photoGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #4338ca 100%)',
+      photoIcon: 'TrendingUp',
+      photoAccent: '#ddd6fe',
+      passendeKunden: [
+        { kundeId: 'KD00007', name: 'Michael Braun', match: 91, begruendung: 'Lehrer 62, in 3 Jahren Pension – Sofortrente prüfen', begruendungEn: 'Teacher 62, retirement in 3 years – immediate annuity worth checking' },
+        { kundeId: 'KD00005', name: 'Klaus Meier', match: 86, begruendung: 'Beamter A14, Versorgungslücke bei PKV-Beiträgen im Ruhestand', begruendungEn: 'Civil servant A14, pension gap with PKV premiums in retirement' },
+        { kundeId: 'KD00003', name: 'Thomas Weber', match: 81, begruendung: 'Handwerksmeister 55, Betriebsübergabe – private Altersvorsorge aufbauen', begruendungEn: 'Master craftsman 55, business transfer – build private pension' },
+      ],
+    },
+    {
+      id: 'zahnzusatz',
+      titel: `${b.krankenBrand} Frühbucher`,
+      titelEn: `${b.krankenBrand} Early-Bird`,
+      status: 'geplant',
+      zeitraum: 'Ab 01.05.2026',
+      zielgruppe: 'GKV-Versicherte ohne Zahnzusatz',
+      zielgruppeEn: 'Statutory health members without dental supplement',
+      photoGradient: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #9a3412 100%)',
+      photoIcon: 'Heart',
+      photoAccent: '#fde68a',
+      passendeKunden: [
+        { kundeId: 'KD00002', name: 'Amira König', match: 87, begruendung: 'GKV-versichert, Wunsch nach ästhetischer Zahnbehandlung', begruendungEn: 'Statutory health, demand for aesthetic dental treatment' },
+        { kundeId: 'KD00006', name: 'Lisa Bauer', match: 82, begruendung: 'Jung, keine Zahnzusatz – günstiger Frühbucher-Tarif', begruendungEn: 'Young, no dental supplement – favourable early-bird tariff' },
       ],
     },
   ];
@@ -351,6 +483,98 @@ const ABWANDERUNGS_RADAR_BANKING = [
   },
 ];
 
+/* ── Lebenslagen-Radar (versicherung) ──────────────────────────── */
+const LEBENSLAGEN_RADAR_VERSICHERUNG = [
+  {
+    kundeId: 'KD00004',
+    customerName: 'Anna Hoffmann',
+    initials: 'AH',
+    event: 'Zweites Kind erwartet',
+    signals: [
+      'Wiederkehrende Umsätze bei Babymarkt + DM seit 2 Mon.',
+      'Newsletter „Familienabsicherung" angeklickt',
+      'Hebammen-Rechnungen in den Kontoumsätzen erkannt',
+      'Termin beim Gynäkologen ohne Reise-Muster (Vorsorge)',
+    ],
+    signalCount: 4,
+    confidence: 93,
+    revenue: 2400,
+    category: 'familie',
+    isNew: true,
+  },
+  {
+    kundeId: 'KD00003',
+    customerName: 'Thomas Weber',
+    initials: 'TW',
+    event: 'Betriebsübergabe Handwerk',
+    signals: [
+      'Sohn Jan (25) tritt ins Unternehmen ein (LinkedIn)',
+      'Recherche „Betriebsnachfolge Handwerk" über die Webseite',
+      'Neuer Steuerberater-Dauerauftrag sichtbar',
+      'Anfrage Betriebshaftpflicht-Anpassung',
+    ],
+    signalCount: 4,
+    confidence: 87,
+    revenue: 3200,
+    category: 'beruf',
+    isNew: true,
+  },
+  {
+    kundeId: 'KD00007',
+    customerName: 'Michael Braun',
+    initials: 'MB',
+    event: 'Näherrückender Ruhestand',
+    signals: [
+      'Pension in 36 Monaten fällig (Beamter Gymnasium)',
+      'Recherche „Sofortrente vs. Auszahlplan" im Portal',
+      'Sparplan-Erhöhung um 200 €/Mon.',
+      'Newsletter „Ruhestandsplanung" aktiviert',
+    ],
+    signalCount: 4,
+    confidence: 82,
+    revenue: 1800,
+    category: 'ruhestand',
+    isNew: false,
+  },
+];
+
+/* ── Abwanderungsradar (versicherung) ──────────────────────────── */
+const ABWANDERUNGS_RADAR_VERSICHERUNG = [
+  {
+    kundeId: 'KD00006',
+    customerName: 'Lisa Bauer',
+    initials: 'LB',
+    riskLevel: 'high',
+    riskScore: 84,
+    riskType: 'KFZ-Wechsel zum Online-Versicherer',
+    summary: 'Check24-Rechnerbesuche · Kündigung KFZ angekündigt',
+    signals: [
+      'Check24-Vergleichsrechner für Kfz 3× in 4 Wochen aufgerufen',
+      'Kündigungsformular KFZ im Portal angefordert',
+      'Dauerauftrag „HUK24" auf Konto vorbereitet (PSD2)',
+      'Keine Reaktion auf letzte 2 Jahresgespräche-Einladungen',
+    ],
+    clvAtRisk: 14600,
+    trend: 'steigend',
+  },
+  {
+    kundeId: 'KD00003',
+    customerName: 'Thomas Weber',
+    initials: 'TW',
+    riskLevel: 'medium',
+    riskScore: 58,
+    riskType: 'Betriebshaftpflicht-Verlagerung',
+    summary: 'Konkurrenz-Angebot für Gewerbeversicherung angefragt',
+    signals: [
+      'Recherche „Handwerker-Versicherung Vergleich"',
+      'Kontakt zu Allianz-Agentur über Empfehlung',
+      'Jahresbeitrag als zu hoch kommentiert im NPS-Feedback',
+    ],
+    clvAtRisk: 8900,
+    trend: 'stabil',
+  },
+];
+
 const RISK_LEVEL_FARBEN = {
   high:   { stripe: '#dc2626', bg: '#fef2f2', text: '#991b1b', label: 'Hoch' },
   medium: { stripe: '#d97706', bg: '#fffbeb', text: '#92400e', label: 'Mittel' },
@@ -382,12 +606,25 @@ export default function UebersichtTab() {
   const [expandedKampagne, setExpandedKampagne] = useState('fruehlings-baufi');
   const [kampagneModal, setKampagneModal] = useState(null);
   // Marketingkampagnen are derived from the active institut so the campaign
-  // titles always reflect the current bank's brand (no Volksbank-only names
-  // leaking into Zukunftsbank, Sparkasse, Deutsche Bank etc.).
+  // titles always reflect the current institut's brand (no Volksbank-only
+  // names leaking into Zukunftsbank, Sparkasse etc. — and no ERGO-only names
+  // leaking into Allianz, AXA, Zurich etc. on the insurance side).
   const marketingKampagnen = useMemo(
-    () => buildBankingKampagnen(config.institut),
-    [config.institut]
+    () => modeId === 'versicherung'
+      ? buildVersicherungsKampagnen(config.institut)
+      : buildBankingKampagnen(config.institut),
+    [modeId, config.institut]
   );
+  // Radar-Daten (Lebenslagen + Abwanderung) sind pro Modus gepflegt, damit
+  // Versicherung und Banking jeweils ihre eigenen Signale und Risikokunden
+  // oben auf der Übersicht sehen.
+  const lebenslagenRadar = modeId === 'versicherung'
+    ? LEBENSLAGEN_RADAR_VERSICHERUNG
+    : LEBENSLAGEN_RADAR_BANKING;
+  const abwanderungsRadar = modeId === 'versicherung'
+    ? ABWANDERUNGS_RADAR_VERSICHERUNG
+    : ABWANDERUNGS_RADAR_BANKING;
+  const showRadarUndKampagnen = modeId === 'banking' || modeId === 'versicherung';
   const potentiale = useMemo(() => getAllPotentiale(modeId).sort((a, b) => {
     const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
     return (prio[a.prioritaet] || 3) - (prio[b.prioritaet] || 3);
@@ -431,30 +668,51 @@ export default function UebersichtTab() {
     return true;
   }), [vvKunden, mandatFilter]);
 
-  // Demo-Zeitmaschine: nach „Nacht simulieren" wird Klaus Fischers
-  // Beratungstermin oben mit „+1"-Badge in die Liste injiziert.
+  // Demo-Zeitmaschine: nach „Nacht simulieren" wird der Beratungstermin der
+  // Hero-Demo-Kundin bzw. des Hero-Demo-Kunden oben mit „+1"-Badge in die
+  // Liste injiziert. Banking: Klaus Fischer (Kreditgespräch). Versicherung:
+  // Peter Schmidt (BU-Nachversicherung).
   const dayAdvanced = useDayAdvanced();
   const baseTermine = TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung;
-  // Banking-Kunden frühzeitig dereferenzieren, damit die Daten geladen sind,
-  // wenn der "+1 Neu"-Termin angeklickt wird (Suspense-Promise).
-  const bankingKunden = modeId === 'banking' ? (KUNDEN_BY_MODE.banking || []) : [];
-  const klausFischerTermin = useMemo(() => {
-    if (!dayAdvanced || modeId !== 'banking') return null;
-    const klaus = bankingKunden.find(k => k.id === 'BK00001');
-    if (!klaus) return null;
-    const appt = getSimulatedAppointment();
-    return {
-      kundeId: klaus.id,
-      kunde: klaus.name,
-      foto: getKundeFoto(klaus.id),
-      datum: appt.toISOString().slice(0, 10),
-      zeit: formatAppointmentTime(appt),
-      betreff: 'Kreditgespräch Immobilienfinanzierung',
-      istNeuZugestimmt: true,
-    };
-  }, [dayAdvanced, modeId, bankingKunden]);
-  const termine = (klausFischerTermin
-    ? [klausFischerTermin, ...baseTermine]
+  // Kunden des aktiven Modus frühzeitig dereferenzieren, damit die Daten
+  // geladen sind, wenn der „+1 Neu"-Termin angeklickt wird (Suspense-Promise).
+  const modeKunden = (modeId === 'banking' || modeId === 'versicherung')
+    ? (KUNDEN_BY_MODE[modeId] || [])
+    : [];
+  const heroTermin = useMemo(() => {
+    if (!dayAdvanced) return null;
+    if (modeId === 'banking') {
+      const klaus = modeKunden.find(k => k.id === 'BK00001');
+      if (!klaus) return null;
+      const appt = getSimulatedAppointment();
+      return {
+        kundeId: klaus.id,
+        kunde: klaus.name,
+        foto: getKundeFoto(klaus.id),
+        datum: appt.toISOString().slice(0, 10),
+        zeit: formatAppointmentTime(appt),
+        betreff: 'Kreditgespräch Immobilienfinanzierung',
+        istNeuZugestimmt: true,
+      };
+    }
+    if (modeId === 'versicherung') {
+      const peter = modeKunden.find(k => k.id === 'KD00001');
+      if (!peter) return null;
+      const appt = getSimulatedAppointment();
+      return {
+        kundeId: peter.id,
+        kunde: peter.name,
+        foto: getKundeFoto(peter.id),
+        datum: appt.toISOString().slice(0, 10),
+        zeit: formatAppointmentTime(appt),
+        betreff: 'BU-Nachversicherung & Familien-Check',
+        istNeuZugestimmt: true,
+      };
+    }
+    return null;
+  }, [dayAdvanced, modeId, modeKunden]);
+  const termine = (heroTermin
+    ? [heroTermin, ...baseTermine]
     : baseTermine).slice(0, 5);
   const [terminPrep, setTerminPrep] = useState(null); // { kunde, termin }
   const allAufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;
@@ -669,9 +927,11 @@ export default function UebersichtTab() {
           </Card>
         )}
 
-        {/* Marketingkampagnen (Banking only) – 4 photo boxes, hover fades the
-            image so the campaign details + click action come forward */}
-        {modeId === 'banking' && (
+        {/* Marketingkampagnen (Banking + Versicherung) – 4 photo boxes, hover
+            fades the image so the campaign details + click action come
+            forward. Der Content stammt aus buildBankingKampagnen /
+            buildVersicherungsKampagnen und passt sich an das Institut an. */}
+        {showRadarUndKampagnen && (
           <Card hover={false}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -808,8 +1068,10 @@ export default function UebersichtTab() {
           </Card>
         )}
 
-        {/* Lebenslagen-Radar + Abwanderungsradar (banking) – just below Marketingkampagnen */}
-        {modeId === 'banking' && (
+        {/* Lebenslagen-Radar + Abwanderungsradar (Banking + Versicherung) –
+            just below Marketingkampagnen. Datenquellen pro Modus sind
+            lebenslagenRadar / abwanderungsRadar. */}
+        {showRadarUndKampagnen && (
           <div className="grid grid-cols-2 gap-4">
             {/* Lebenslagen-Radar */}
             <Card hover={false}>
@@ -817,7 +1079,7 @@ export default function UebersichtTab() {
                 <div className="flex items-center gap-2">
                   <div className="relative w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-50">
                     <Sparkles size={16} className="text-emerald-600" strokeWidth={2} />
-                    {LEBENSLAGEN_RADAR_BANKING.some((l) => l.isNew) && (
+                    {lebenslagenRadar.some((l) => l.isNew) && (
                       <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
@@ -827,11 +1089,11 @@ export default function UebersichtTab() {
                   <h3 className="font-semibold text-slate-800">Lebenslagen-Radar</h3>
                 </div>
                 <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-100">
-                  {LEBENSLAGEN_RADAR_BANKING.filter((l) => l.isNew).length} neue Signale
+                  {lebenslagenRadar.filter((l) => l.isNew).length} neue Signale
                 </span>
               </div>
               <div className="space-y-2">
-                {LEBENSLAGEN_RADAR_BANKING.slice(0, 3).map((l) => {
+                {lebenslagenRadar.slice(0, 3).map((l) => {
                   const stripe = LEBENSLAGEN_KATEGORIE_FARBEN[l.category] || '#64748b';
                   return (
                     <div
@@ -866,9 +1128,9 @@ export default function UebersichtTab() {
                 })}
               </div>
               <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-500">{LEBENSLAGEN_RADAR_BANKING.length} erkannt</span>
+                <span className="text-slate-500">{lebenslagenRadar.length} erkannt</span>
                 <span className="font-bold text-slate-800">
-                  {LEBENSLAGEN_RADAR_BANKING.reduce((s, l) => s + l.revenue, 0).toLocaleString('de-DE')}€ Gesamtpotenzial
+                  {lebenslagenRadar.reduce((s, l) => s + l.revenue, 0).toLocaleString('de-DE')}€ Gesamtpotenzial
                 </span>
               </div>
             </Card>
@@ -883,11 +1145,11 @@ export default function UebersichtTab() {
                   <h3 className="font-semibold text-slate-800">Abwanderungsradar</h3>
                 </div>
                 <span className="text-xs px-2.5 py-1 rounded-full bg-red-50 text-red-700 font-semibold border border-red-100">
-                  {ABWANDERUNGS_RADAR_BANKING.length} Risikokunden
+                  {abwanderungsRadar.length} Risikokunden
                 </span>
               </div>
               <div className="space-y-2">
-                {ABWANDERUNGS_RADAR_BANKING.map((r) => {
+                {abwanderungsRadar.map((r) => {
                   const risk = RISK_LEVEL_FARBEN[r.riskLevel] || RISK_LEVEL_FARBEN.medium;
                   const trendArrow = r.trend === 'steigend' ? '↑' : r.trend === 'fallend' ? '↓' : '→';
                   const trendColor = r.trend === 'steigend' ? '#dc2626' : r.trend === 'fallend' ? '#059669' : '#d97706';
@@ -921,9 +1183,9 @@ export default function UebersichtTab() {
                 })}
               </div>
               <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-500">{ABWANDERUNGS_RADAR_BANKING.length} Kunden</span>
+                <span className="text-slate-500">{abwanderungsRadar.length} Kunden</span>
                 <span className="font-bold text-red-700">
-                  {ABWANDERUNGS_RADAR_BANKING.reduce((s, r) => s + r.clvAtRisk, 0).toLocaleString('de-DE')}€ CLV at risk
+                  {abwanderungsRadar.reduce((s, r) => s + r.clvAtRisk, 0).toLocaleString('de-DE')}€ CLV at risk
                 </span>
               </div>
             </Card>
@@ -1066,7 +1328,7 @@ export default function UebersichtTab() {
                 // finden ist (z. B. VV-Pipeline-Stubs, KDB-Stubs), springen
                 // wir direkt auf die Detailseite — dann kümmert sich die
                 // Suspense-Logik um das Laden.
-                const k = bankingKunden.find(k => k.id === termin.kundeId);
+                const k = modeKunden.find(k => k.id === termin.kundeId);
                 if (k) {
                   setTerminPrep({ kunde: k, termin });
                 } else {

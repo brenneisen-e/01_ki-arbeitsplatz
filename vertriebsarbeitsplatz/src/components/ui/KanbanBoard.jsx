@@ -55,6 +55,10 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
   const [feedbackModal, setFeedbackModal] = useState(null); // { potential, targetStatus }
   const [closeModal, setCloseModal] = useState(null); // { potential }
   const [sortMode, setSortMode] = useState('prioritaet');
+  // Jede Spalte zeigt höchstens 5 Karten. Per „Mehr anzeigen" kann eine
+  // einzelne Spalte aufgeklappt werden — ein zweiter Klick blendet wieder ein.
+  const CARDS_PER_COLUMN = 5;
+  const [expandedColumns, setExpandedColumns] = useState({});
 
   // Filter Pipeline
   const filtered = useMemo(() => {
@@ -268,22 +272,50 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
 
               {/* Cards */}
               <div className="p-2 space-y-2 min-h-[150px]">
-                {cards.map(p => (
-                  <PotenzialCard
-                    key={p._id}
-                    p={p}
-                    columnColor={col.color}
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                    onReactivate={onReactivate}
-                    onCardClick={onCardClick}
-                  />
-                ))}
-                {cards.length === 0 && (
-                  <div className="text-center text-[11px] text-slate-400 italic py-4">
-                    {isDropTarget ? 'Hier ablegen' : '—'}
-                  </div>
-                )}
+                {(() => {
+                  const isExpanded = !!expandedColumns[col.id];
+                  const visibleCards = isExpanded
+                    ? cards
+                    : cards.slice(0, CARDS_PER_COLUMN);
+                  const hiddenCount = cards.length - visibleCards.length;
+                  return (
+                    <>
+                      {visibleCards.map(p => (
+                        <PotenzialCard
+                          key={p._id}
+                          p={p}
+                          columnColor={col.color}
+                          onDragStart={handleDragStart}
+                          onDragEnd={handleDragEnd}
+                          onReactivate={onReactivate}
+                          onCardClick={onCardClick}
+                        />
+                      ))}
+                      {cards.length === 0 && (
+                        <div className="text-center text-[11px] text-slate-400 italic py-4">
+                          {isDropTarget ? 'Hier ablegen' : '—'}
+                        </div>
+                      )}
+                      {cards.length > CARDS_PER_COLUMN && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedColumns(prev => ({
+                              ...prev,
+                              [col.id]: !prev[col.id],
+                            }))
+                          }
+                          className="w-full mt-1 py-2 rounded-lg text-[11px] font-semibold border border-dashed transition-colors hover:bg-white"
+                          style={{ color: col.color, borderColor: col.border }}
+                        >
+                          {isExpanded
+                            ? 'Weniger anzeigen'
+                            : `Mehr anzeigen (+${hiddenCount})`}
+                        </button>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
           );

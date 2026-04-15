@@ -7,7 +7,7 @@ import Avatar from '../../../components/ui/Avatar';
 import { SparteBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
-import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE, getAllPotentiale } from '../../../data';
+import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE } from '../../../data';
 import { VV_LEADS } from '../../../data/vvExtended';
 import { formatEur } from '../../../utils/formatters';
 import { getKundeFoto } from '../../../utils/kundenFotos';
@@ -625,34 +625,6 @@ export default function UebersichtTab() {
     ? ABWANDERUNGS_RADAR_VERSICHERUNG
     : ABWANDERUNGS_RADAR_BANKING;
   const showRadarUndKampagnen = modeId === 'banking' || modeId === 'versicherung';
-  const potentiale = useMemo(() => getAllPotentiale(modeId).sort((a, b) => {
-    const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
-    return (prio[a.prioritaet] || 3) - (prio[b.prioritaet] || 3);
-  }).slice(0, 5), [modeId]);
-
-  // Group potentials by customer for Versicherung/Banking
-  const kundenPotentiale = useMemo(() => {
-    if (modeId === 'vermoegensverwaltung') return [];
-    const allPots = getAllPotentiale(modeId);
-    const grouped = {};
-    const kundenMap = {};
-    (KUNDEN_BY_MODE[modeId] || []).forEach(k => { kundenMap[k.id] = k; });
-    allPots.forEach(p => {
-      if (!grouped[p.kundeId]) {
-        const k = kundenMap[p.kundeId];
-        const abgebrochen = (k?.produktabschluss || []).filter(a => a.status === 'abgebrochen').length;
-        const clv = (k?.eigeneProdukte?.reduce((s, p2) => s + (p2.praemie || 0), 0) || 0) * 10 || Math.round((k?.nettoeinkommen || 5000) * 12 * 0.03 * 10);
-        grouped[p.kundeId] = { kundeId: p.kundeId, kundeName: p.kundeName, nps: k?.nps, abgebrochenCount: abgebrochen, clv, potentiale: [], gesamtPraemie: 0, gesamtProvision: 0 };
-      }
-      grouped[p.kundeId].potentiale.push(p);
-      if (p.volumen > 0) {
-        grouped[p.kundeId].gesamtPraemie += p.volumen;
-        grouped[p.kundeId].gesamtProvision += Math.round(p.volumen * 0.75);
-      }
-    });
-    // Sort by total premium descending, then by number of potentials
-    return Object.values(grouped).sort((a, b) => b.gesamtPraemie - a.gesamtPraemie || b.potentiale.length - a.potentiale.length);
-  }, [modeId]);
 
   // VV: Kunden mit Mandatsinformationen
   const vvKunden = useMemo(() => modeId === 'vermoegensverwaltung' ? (KUNDEN_BY_MODE.vermoegensverwaltung || []).map(k => {
@@ -744,8 +716,15 @@ export default function UebersichtTab() {
             opened from there, so no separate Vertriebspotenziale card on the
             Übersicht itself. */}
         <div className="space-y-4">
-        {/* Vertriebspotenziale / Mandate & Potenziale (skipped for banking) */}
-        {modeId === 'banking' ? null : modeId === 'vermoegensverwaltung' ? (
+        {/* Vertriebspotenziale / Mandate & Potenziale
+            Im Banking- und Versicherungs-View liegen die Potenziale in ihrem
+            eigenen Tab (Potenziale-Kanban-Board + kann dort direkt geöffnet
+            werden) – dort stehen ausführlichere Spalten, Filter und das
+            Kanban-Layout zur Verfügung. Auf der Übersicht sparen wir den
+            Platz und zeigen stattdessen Marketingkampagnen + Radare.
+            Nur Vermögensverwaltung behält die kompakte Mandanten-Kachel,
+            weil es dort kein Kanban-Board gibt. */}
+        {modeId === 'vermoegensverwaltung' ? (
           <Card hover={false}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -851,81 +830,7 @@ export default function UebersichtTab() {
               {t('alleMandantenAnzeigen', { count: vvKunden.length })}
             </button>
           </Card>
-        ) : (
-          <Card hover={false}>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-                <h3 className="font-semibold text-slate-800">{t('vertriebspotenziale')}</h3>
-              </div>
-              <span className="text-sm text-slate-400">{t('kundenPotenzialeSummary', { kunden: kundenPotentiale.length, potenziale: getAllPotentiale(modeId).length })}</span>
-            </div>
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
-              <div className="grid py-2.5 px-3 items-center text-[10px] uppercase text-slate-500 font-bold bg-slate-50 border-b border-slate-200 divide-x divide-slate-200" style={{ gridTemplateColumns: '220px 80px 80px minmax(0, 1fr)' }}>
-                <span className="pr-2">{t('kunde')}</span>
-                <span className="text-center px-2">NPS</span>
-                <span className="text-center px-2">Leads</span>
-                <span className="pl-2">{t('topPotenziale')}</span>
-              </div>
-              {kundenPotentiale.slice(0, modeId === 'banking' ? 5 : 8).map((kp, i, arr) => {
-                const isLast = i === arr.length - 1;
-                return (
-                  <div
-                    key={kp.kundeId}
-                    className={`grid py-3 px-3 hover:bg-slate-50 cursor-pointer items-center transition-colors divide-x divide-slate-100 ${isLast ? '' : 'border-b border-slate-100'}`}
-                    style={{ gridTemplateColumns: '220px 80px 80px minmax(0, 1fr)' }}
-                    onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'stammdaten' })}
-                  >
-                    <div className="flex items-center gap-2 min-w-0 pr-2">
-                      <Avatar name={kp.kundeName} foto={getKundeFoto(kp.kundeId)} size={30} />
-                      <div className="min-w-0">
-                        <div className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>
-                          {tn(kp.kundeName)}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-center flex justify-center px-2">
-                      {kp.nps != null ? (
-                        <div className="flex items-center gap-px">
-                          {[1,2,3,4,5].map(s => {
-                            const filled = kp.nps >= s * 2;
-                            const half = !filled && kp.nps >= s * 2 - 1;
-                            return <Star key={s} size={11} className={filled ? 'text-amber-400 fill-amber-400' : half ? 'text-amber-400 fill-amber-400/50' : 'text-slate-200'} />;
-                          })}
-                        </div>
-                      ) : <span className="text-slate-300 text-xs">–</span>}
-                    </div>
-                    <div className="text-center px-2">
-                      <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--_fg, #334155)' }}>
-                        {kp.potentiale.length}
-                        {kp.abgebrochenCount > 0 && (
-                          <span className="rh-badge text-[9px] px-1.5 py-0.5 rounded-full bg-red-500 text-white font-bold">{kp.abgebrochenCount} Neu</span>
-                        )}
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-1 min-w-0 pl-2">
-                      {kp.potentiale.slice(0, 3).map((p, pi) => (
-                        <span key={pi} className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 whitespace-nowrap">{p.titel}</span>
-                      ))}
-                      {kp.potentiale.length > 3 && (
-                        <span className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-50 text-slate-400">+{kp.potentiale.length - 3}</span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            {kundenPotentiale.length > (modeId === 'banking' ? 5 : 8) && (
-              <button
-                className="mt-3 text-sm font-medium hover:underline"
-                style={{ color: 'var(--mode-primary-light)' }}
-                onClick={() => setActiveTab('potentiale')}
-              >
-                {t('weitereKundenAnzeigen', { count: kundenPotentiale.length - (modeId === 'banking' ? 5 : 8) })}
-              </button>
-            )}
-          </Card>
-        )}
+        ) : null}
 
         {/* Marketingkampagnen (Banking + Versicherung) – 4 photo boxes, hover
             fades the image so the campaign details + click action come

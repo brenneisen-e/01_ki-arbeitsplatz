@@ -195,20 +195,22 @@ export default function CustomerApplicationView() {
   // Preview modal state (for clicking on uploaded mock docs)
   const [previewDocId, setPreviewDocId] = useState(null);
 
-  // Simulate uploading a mock document
+  // Simulate uploading a mock document — fügt Datei zur Upload-Liste hinzu
+  // UND öffnet sofort die Mock-PDF-Vorschau, damit der Nutzer direkt sieht
+  // welches Dokument "hochgeladen" wurde und woher die KI die Infos extrahiert.
   const handleMockUpload = useCallback((doc) => {
     const fake = {
       name: doc.filename,
       size: doc.size,
       type: 'application/pdf',
       uploadedAt: new Date(),
-      mockDocId: doc.id, // → zur Preview-Modal-Nutzung
+      mockDocId: doc.id,
     };
     setUploadedFiles(prev => {
-      // Doppel-Uploads vermeiden
       if (prev.some(f => f.mockDocId === doc.id)) return prev;
       return [...prev, fake];
     });
+    setPreviewDocId(doc.id);
   }, []);
 
   // Handle file upload (demo: accepts any file, simulates AI extraction)

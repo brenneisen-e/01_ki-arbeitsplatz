@@ -365,10 +365,10 @@ function IdentifizierungTab({ checklist, setChecklist, expandedItem, setExpanded
                 {item.kiGeprueft && (
                   <span
                     className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold bg-violet-100 text-violet-700 border border-violet-200"
-                    title="Dokument wurde von der KI geprüft (OCR + Plausibilisierung) und wird durch einen Mitarbeiter freigegeben (Human-in-the-Loop)"
+                    title="Dokument wurde von der KI geprüft (OCR + Plausibilisierung). Die menschliche Freigabe erfolgt über den grünen 'Geprüft'-Badge."
                   >
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                    KI geprüft · menschliche Freigabe
+                    KI geprüft
                   </span>
                 )}
 

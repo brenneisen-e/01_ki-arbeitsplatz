@@ -38,12 +38,15 @@ export default function MainLayout() {
   return (
     <div className="flex h-screen overflow-hidden bg-surface">
       <Sidebar />
-      <div className={`flex flex-col flex-1 transition-all duration-200 ${state.sidebarCollapsed ? 'ml-16' : 'ml-60'}`}>
+      {/* min-w-0 verhindert, dass der flex-1-Inhalt über die verfügbare
+          Breite hinauswächst und so unter die (fixed positionierte)
+          Navigation rutscht. overflow-x-hidden kappt lange Kanban-Boards. */}
+      <div className={`flex flex-col flex-1 min-w-0 overflow-x-hidden transition-all duration-200 ${state.sidebarCollapsed ? 'ml-16' : 'ml-60'}`}>
         <Header />
         <ProcessBar />
-        <div className="flex flex-1 overflow-hidden">
-          <main className="flex-1 overflow-y-auto p-6 scrollbar-thin">
-            <div className="w-full">
+        <div className="flex flex-1 overflow-hidden min-w-0">
+          <main className="flex-1 min-w-0 overflow-y-auto p-6 scrollbar-thin">
+            <div className="w-full min-w-0">
               <ViewComponent />
             </div>
           </main>

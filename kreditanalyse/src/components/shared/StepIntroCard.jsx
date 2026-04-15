@@ -158,7 +158,7 @@ const STEP_INFO = {
       'Kreditvertrag aus Vorlage generieren und vorausfüllen',
       'Vertragsklauseln prüfen (Covenants, Kündigungsrechte, Sicherheitenverträge)',
       'Rechtsabteilung zur Freigabe vorlegen',
-      'Vertrag zur Unterzeichnung versenden',
+      'Vertrag bankseitig unterzeichnen und zur Gegenzeichnung an den Kreditnehmer versenden',
     ],
     ki: [
       'Automatisches Befüllen der LMA-Standardvorlage mit Antrags- und Entscheidungsdaten',
@@ -166,10 +166,27 @@ const STEP_INFO = {
       'Konsistenzprüfung: Auszahlungsbedingungen vs. festgelegte Auflagen',
     ],
   },
+  signature: {
+    icon: FileSignature,
+    title: 'Unterschrift / Rückläufer',
+    subtitle: 'Schritt 9 — Signature Management & Contract Return',
+    description: 'Der bankseitig unterschriebene Vertrag ist an den Kreditnehmer versandt. In diesem Schritt wird auf die Rücksendung des gegengezeichneten Vertrags gewartet und anschließend die Auszahlungsfreigabe vorbereitet.',
+    tasks: [
+      'Status des Rückläufers überwachen (14-Tage-Frist)',
+      'Unterzeichneten Vertrag vom Kreditnehmer entgegennehmen',
+      'Unterschriften und Anlagen auf Vollständigkeit prüfen',
+      'Auszahlungsvoraussetzungen final abgleichen und Vertrag archivieren',
+    ],
+    ki: [
+      'Automatische Fristen- und Erinnerungsüberwachung bei ausbleibendem Rückläufer',
+      'OCR- und Plausibilitätsprüfung der eingegangenen Unterschriften',
+      'Konsistenzabgleich zwischen versandtem und zurückgesandtem Vertragstext',
+    ],
+  },
   monitoring: {
     icon: Activity,
     title: 'Monitoring & Frühwarnung',
-    subtitle: 'Schritt 9 — Aftercare & Monitoring',
+    subtitle: 'Schritt 10 — Aftercare & Monitoring',
     description: 'Laufende Überwachung des Kreditengagements: Frühwarnindikatoren, Rating-Migration, Covenant-Einhaltung und Watchlist-Management.',
     tasks: [
       'Frühwarnindikatoren überwachen (Kontoumsätze, BWA, Branchennachrichten)',

@@ -76,29 +76,6 @@ const TABS = [
 const TODAY = new Date().toISOString().slice(0, 10);
 
 // =============================================================================
-// Helper: Begründungstexte anhand gewähltem Modus zusammenführen
-// =============================================================================
-//
-// mode:
-//   'overwrite' → bestehender Text wird durch die KI-Empfehlung ersetzt.
-//   'append'    → KI-Empfehlung wird unten angehängt (mit Trenner).
-//   'combine'   → bestehender Text und KI-Empfehlung werden beide übernommen
-//                 und klar beschriftet (Ursprüngliche Begründung /
-//                 Ergänzende KI-Einschätzung).
-function mergeBegruendung(existing, kiText, mode) {
-  const trimmedExisting = (existing || '').trim();
-  if (!trimmedExisting) return kiText;
-  if (mode === 'overwrite') return kiText;
-  if (mode === 'append') {
-    return `${trimmedExisting}\n\n--- Ergänzende KI-Kreditempfehlung ---\n\n${kiText}`;
-  }
-  if (mode === 'combine') {
-    return `Ursprüngliche Begründung:\n\n${trimmedExisting}\n\n--- Ergänzende KI-Kreditempfehlung ---\n\n${kiText}`;
-  }
-  return kiText;
-}
-
-// =============================================================================
 // Helper: generate annuity repayment schedule
 // =============================================================================
 
@@ -320,12 +297,18 @@ export default function DecisionView() {
   const kundenZins = refiSatz + liquiditaet + standardRisiko + eigenkapitalKosten + betriebsKosten + gewinnMarge;
 
   // Votierung result
+  // 'positiv'   – beide Voten positiv UND beide digital signiert
+  // 'pending'   – beide Voten positiv, aber (noch) nicht beide signiert
+  // 'negativ'   – mindestens ein Votum "Ablehnung"
+  // 'divergent' – Empfehlungen weichen voneinander ab
   const getVotierungsErgebnis = () => {
     const anyNeg = marktEmpfehlung === 'ablehnung' || marktfolgeEmpfehlung === 'ablehnung';
     const bothPos = (marktEmpfehlung === 'genehmigung' || marktEmpfehlung === 'auflagen') &&
                     (marktfolgeEmpfehlung === 'genehmigung' || marktfolgeEmpfehlung === 'auflagen');
+    const bothSigned = marktSigniert && marktfolgeSigniert;
     if (anyNeg) return 'negativ';
-    if (bothPos) return 'positiv';
+    if (bothPos && bothSigned) return 'positiv';
+    if (bothPos) return 'pending';
     return 'divergent';
   };
 
@@ -370,54 +353,57 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
   const [kiLoadingMarkt, setKiLoadingMarkt] = useState(false);
   const [kiLoadingMarktfolge, setKiLoadingMarktfolge] = useState(false);
 
-  // Kontextmenü, das nach Klick auf „KI-Kreditempfehlung generieren" erscheint,
-  // wenn die Begründung bereits befüllt ist. Der Benutzer wählt zwischen
-  // Überschreiben / Anhängen / Kombinieren. Bei leerem Feld wird direkt
-  // eingefügt (ohne Menü).
-  // Wert: null | 'markt' | 'marktfolge'
-  const [kiMenuTarget, setKiMenuTarget] = useState(null);
+  // Beim Klick auf "KI-Kreditempfehlung generieren" wird – falls die Begründung
+  // bereits befüllt ist – dieses Modal gezeigt: Überschreiben / Anhängen /
+  // Kombinieren. Bei leerer Begründung wird direkt befüllt.
+  const [kiModalTarget, setKiModalTarget] = useState(null); // 'markt' | 'marktfolge' | null
 
   // Kreditvertrag-Vorschau-Modal
   const [contractPreviewOpen, setContractPreviewOpen] = useState(false);
   const [contractPreviewText, setContractPreviewText] = useState('');
 
-  /**
-   * Einstieg: Klick auf „KI-Kreditempfehlung generieren".
-   * - Ist die Begründung leer → direktes Einfügen.
-   * - Ansonsten → Kontextmenü öffnen, damit der Benutzer entscheidet.
-   */
   const handleKiFillVotum = (target) => {
-    const currentBegruendung = target === 'markt' ? marktBegruendung : marktfolgeBegruendung;
-    if (!currentBegruendung || currentBegruendung.trim().length === 0) {
-      applyKiFill(target, 'overwrite');
-    } else {
-      setKiMenuTarget(target);
+    const current = target === 'markt' ? marktBegruendung : marktfolgeBegruendung;
+    if (current && current.trim().length > 0) {
+      // Nutzer fragen, ob überschrieben / angehängt / kombiniert werden soll
+      setKiModalTarget(target);
+      return;
     }
+    // Begründung leer → direkt einfügen
+    executeKiFillVotum(target, 'replace');
   };
 
-  /**
-   * Führt die KI-Generierung für ein Votum aus und wendet das Ergebnis
-   * entsprechend dem gewählten Modus an.
-   * mode: 'overwrite' | 'append' | 'combine'
-   */
-  const applyKiFill = (target, mode) => {
-    setKiMenuTarget(null);
+  const executeKiFillVotum = (target, mode) => {
+    setKiModalTarget(null);
     if (target === 'markt') setKiLoadingMarkt(true);
     else setKiLoadingMarktfolge(true);
 
     setTimeout(() => {
       const plainText = generateKiKreditempfehlung(company, kredit, betrag, bilanz, b23, simulatedRating, bestVerbind, kundenZins);
-      const existing = target === 'markt' ? marktBegruendung : marktfolgeBegruendung;
-      const merged = mergeBegruendung(existing, plainText, mode);
+      const current = target === 'markt' ? marktBegruendung : marktfolgeBegruendung;
+
+      let next;
+      if (mode === 'append') {
+        next = (current && current.trim().length > 0)
+          ? `${current.trimEnd()}\n\n${plainText}`
+          : plainText;
+      } else if (mode === 'combine') {
+        next = (current && current.trim().length > 0)
+          ? `${current.trimEnd()}\n\n—— KI-Ergänzung ——\n\n${plainText}`
+          : plainText;
+      } else {
+        // 'replace'
+        next = plainText;
+      }
 
       if (target === 'markt') {
-        setMarktBegruendung(merged);
+        setMarktBegruendung(next);
         if (!marktEindruck) {
           setMarktEindruck('Herr ' + (company.gf?.[0]?.name?.split(' ').pop() || 'Geschäftsführer') + ' machte im persönlichen Gespräch einen kompetenten und vertrauenswürdigen Eindruck.');
         }
         setKiLoadingMarkt(false);
       } else {
-        setMarktfolgeBegruendung(merged);
+        setMarktfolgeBegruendung(next);
         if (!marktfolgeEindruck) {
           setMarktfolgeEindruck('Die Unterlagen wurden vollständig und termingerecht eingereicht. Die wirtschaftlichen Verhältnisse wurden gemäß §18 KWG geprüft. Die Sicherheitenbewertung erfolgte nach den institutsinternen Beleihungswertrichtlinien.');
         }
@@ -474,6 +460,16 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
       {/* Tab content */}
       {activeTab === 'votierung' && renderVotierung()}
       {activeTab === 'workflow' && renderWorkflow()}
+
+      {/* Modal: KI-Begründung Einfüge-Modus wählen */}
+      {kiModalTarget && (
+        <KiFillModeModal
+          target={kiModalTarget}
+          currentText={kiModalTarget === 'markt' ? marktBegruendung : marktfolgeBegruendung}
+          onCancel={() => setKiModalTarget(null)}
+          onChoose={(mode) => executeKiFillVotum(kiModalTarget, mode)}
+        />
+      )}
     </div>
   );
 
@@ -772,9 +768,6 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
             signedAt={marktSignedAt}
             onKiFill={() => handleKiFillVotum('markt')}
             kiLoading={kiLoadingMarkt}
-            kiMenuOpen={kiMenuTarget === 'markt'}
-            onKiMenuSelect={(mode) => applyKiFill('markt', mode)}
-            onKiMenuClose={() => setKiMenuTarget(null)}
             accentColor="primary"
             readOnly={currentUser.id !== marktUser.id}
             readOnlyHint={`Nur ${marktUser.name} (${marktUser.role}) kann das Erstvotum bearbeiten.`}
@@ -799,9 +792,6 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
             signedAt={marktfolgeSignedAt}
             onKiFill={() => handleKiFillVotum('marktfolge')}
             kiLoading={kiLoadingMarktfolge}
-            kiMenuOpen={kiMenuTarget === 'marktfolge'}
-            onKiMenuSelect={(mode) => applyKiFill('marktfolge', mode)}
-            onKiMenuClose={() => setKiMenuTarget(null)}
             accentColor="primary-light"
             readOnly={currentUser.id !== marktfolgeUser.id}
             readOnlyHint={`Nur ${marktfolgeUser.name} (${marktfolgeUser.role}) kann das Zweitvotum bearbeiten.`}
@@ -812,6 +802,8 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
         <div className={`rounded-xl p-4 border flex items-center gap-3 ${
           ergebnis === 'positiv'
             ? 'bg-green-50 border-green-200 text-green-800'
+            : ergebnis === 'pending'
+            ? 'bg-amber-50 border-amber-200 text-amber-900'
             : ergebnis === 'divergent'
             ? 'bg-red-50 border-red-200 text-red-800'
             : 'bg-red-50 border-red-200 text-red-800'
@@ -822,6 +814,20 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
               <div className="flex-1">
                 <p className="font-semibold font-headline text-sm">Beide Voten positiv – Weiter zur Genehmigung</p>
                 <p className="text-xs mt-0.5 opacity-80">Die Kreditvorlage kann dem zuständigen Kompetenzträger vorgelegt werden.</p>
+              </div>
+            </>
+          ) : ergebnis === 'pending' ? (
+            <>
+              <Clock size={22} strokeWidth={1.5} className="text-amber-600 shrink-0" />
+              <div className="flex-1">
+                <p className="font-semibold font-headline text-sm">Votierung noch nicht abgeschlossen – Signaturen ausstehend</p>
+                <p className="text-xs mt-0.5 opacity-80">
+                  {!marktSigniert && !marktfolgeSigniert
+                    ? 'Beide Voten müssen noch digital signiert werden, bevor es weitergeht.'
+                    : !marktSigniert
+                    ? 'Das Erstvotum (Markt) muss noch digital signiert werden.'
+                    : 'Das Zweitvotum (Marktfolge) muss noch digital signiert werden.'}
+                </p>
               </div>
             </>
           ) : ergebnis === 'divergent' ? (
@@ -1226,9 +1232,6 @@ function VotumCard({
   signedAt,
   onKiFill,
   kiLoading = false,
-  kiMenuOpen = false,
-  onKiMenuSelect,
-  onKiMenuClose,
   accentColor,
   readOnly = false,
   readOnlyHint = '',
@@ -1402,73 +1405,20 @@ function VotumCard({
           </label>
 
           {!readOnly && onKiFill && (
-            <div className="relative">
-              <button
-                type="button"
-                onClick={onKiFill}
-                disabled={kiLoading || signiert}
-                title="Begründung automatisch aus KI-Kreditempfehlung befüllen"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold font-body bg-primary text-white hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {kiLoading ? (
-                  <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
-                ) : (
-                  <Sparkles size={14} strokeWidth={1.5} />
-                )}
-                {kiLoading ? 'Generiere …' : 'KI-Kreditempfehlung generieren'}
-              </button>
-
-              {kiMenuOpen && (
-                <>
-                  {/* Click-Outside-Overlay zum Schließen */}
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={onKiMenuClose}
-                  />
-                  {/* Kontextmenü */}
-                  <div className="absolute right-0 mt-1 w-72 z-50 bg-surface-card border border-border rounded-lg shadow-lg overflow-hidden">
-                    <div className="px-3 py-2 border-b border-border bg-surface">
-                      <p className="text-xs font-semibold font-body text-text-primary">
-                        Bestehende Begründung vorhanden
-                      </p>
-                      <p className="text-[11px] text-text-secondary mt-0.5">
-                        Wie soll die KI-Empfehlung eingefügt werden?
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => onKiMenuSelect('overwrite')}
-                      className="w-full text-left px-3 py-2 hover:bg-surface transition-colors border-b border-border/60"
-                    >
-                      <p className="text-xs font-semibold font-body text-text-primary">Überschreiben</p>
-                      <p className="text-[11px] text-text-secondary mt-0.5">
-                        Bestehender Text wird ersetzt.
-                      </p>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onKiMenuSelect('append')}
-                      className="w-full text-left px-3 py-2 hover:bg-surface transition-colors border-b border-border/60"
-                    >
-                      <p className="text-xs font-semibold font-body text-text-primary">Anhängen</p>
-                      <p className="text-[11px] text-text-secondary mt-0.5">
-                        KI-Empfehlung wird unten angefügt.
-                      </p>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onKiMenuSelect('combine')}
-                      className="w-full text-left px-3 py-2 hover:bg-surface transition-colors"
-                    >
-                      <p className="text-xs font-semibold font-body text-text-primary">Kombinieren</p>
-                      <p className="text-[11px] text-text-secondary mt-0.5">
-                        Beide Texte werden beschriftet zusammengeführt.
-                      </p>
-                    </button>
-                  </div>
-                </>
+            <button
+              type="button"
+              onClick={onKiFill}
+              disabled={kiLoading || signiert}
+              title="Begründung automatisch aus KI-Kreditempfehlung befüllen"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold font-body bg-primary text-white hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {kiLoading ? (
+                <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
+              ) : (
+                <Sparkles size={14} strokeWidth={1.5} />
               )}
-            </div>
+              {kiLoading ? 'Generiere …' : 'KI-Kreditempfehlung generieren'}
+            </button>
           )}
         </div>
 
@@ -1508,6 +1458,103 @@ function getApproverName(approver) {
     'Gesamtvorstand + AR': 'Gesamtvorstand + Aufsichtsrat',
   };
   return names[approver] || approver;
+}
+
+// =============================================================================
+// KI-Fill-Mode-Modal — Überschreiben / Anhängen / Kombinieren
+// =============================================================================
+
+function KiFillModeModal({ target, currentText, onCancel, onChoose }) {
+  const targetLabel = target === 'markt' ? 'Erstvotum (Markt)' : 'Zweitvotum (Marktfolge)';
+  const preview = (currentText || '').trim().slice(0, 220);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+      onClick={onCancel}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-xl w-full max-w-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start gap-3 px-6 py-5 border-b border-border">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <Sparkles size={18} strokeWidth={1.75} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base font-semibold font-headline text-text-primary">
+              KI-Begründung einfügen
+            </h3>
+            <p className="text-xs text-text-muted mt-0.5">
+              Das Feld „Begründung" im {targetLabel} ist bereits befüllt. Was soll passieren?
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface transition-colors shrink-0"
+            title="Abbrechen"
+          >
+            <X size={16} strokeWidth={1.5} />
+          </button>
+        </div>
+
+        {preview && (
+          <div className="px-6 py-3 border-b border-border bg-surface/60">
+            <p className="text-[10px] uppercase tracking-wider font-semibold text-text-muted mb-1">
+              Aktuelle Begründung (Auszug)
+            </p>
+            <p className="text-xs text-text-secondary font-body italic line-clamp-3">
+              {preview}{(currentText || '').length > preview.length ? '…' : ''}
+            </p>
+          </div>
+        )}
+
+        <div className="px-6 py-4 space-y-2">
+          <button
+            type="button"
+            onClick={() => onChoose('replace')}
+            className="w-full text-left px-4 py-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-colors group"
+          >
+            <p className="text-sm font-semibold font-headline text-text-primary">Überschreiben</p>
+            <p className="text-xs text-text-muted mt-0.5">
+              Der bestehende Text wird komplett durch die KI-Begründung ersetzt.
+            </p>
+          </button>
+          <button
+            type="button"
+            onClick={() => onChoose('append')}
+            className="w-full text-left px-4 py-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-colors group"
+          >
+            <p className="text-sm font-semibold font-headline text-text-primary">Anhängen</p>
+            <p className="text-xs text-text-muted mt-0.5">
+              Die KI-Begründung wird unverändert unter dem bestehenden Text eingefügt.
+            </p>
+          </button>
+          <button
+            type="button"
+            onClick={() => onChoose('combine')}
+            className="w-full text-left px-4 py-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-colors group"
+          >
+            <p className="text-sm font-semibold font-headline text-text-primary">Kombinieren</p>
+            <p className="text-xs text-text-muted mt-0.5">
+              Der bestehende Text bleibt erhalten, die KI-Ergänzung wird klar getrennt darunter eingefügt.
+            </p>
+          </button>
+        </div>
+
+        <div className="px-6 py-3 border-t border-border flex justify-end">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-body text-text-secondary border border-border hover:bg-surface transition-colors"
+          >
+            Abbrechen
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // =============================================================================

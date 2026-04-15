@@ -107,7 +107,18 @@ export default function ProcessBar() {
   const activePhaseKey = VIEW_TO_PHASE[currentView] || 'demand';
   const activePhaseIdx = PHASES.findIndex(p => p.key === activePhaseKey);
 
-  const currentStepIdx = FLAT_STEPS.findIndex(s => s.view === currentView);
+  // Für den Contract-View gibt es zwei Teilschritte (Kreditvertrag / Unterschrift-Rückläufer).
+  // Sobald der Vorgang im Status "signature_pending" (oder später) ist, soll nicht mehr
+  // der erste "contract"-Schritt als aktuell markiert werden, sondern der zweite.
+  let currentStepIdx = FLAT_STEPS.findIndex(s => s.view === currentView);
+  if (
+    currentView === 'contract' &&
+    (company?.status === 'signature_pending' || company?.status === 'active')
+  ) {
+    let last = -1;
+    FLAT_STEPS.forEach((s, i) => { if (s.view === 'contract') last = i; });
+    if (last !== -1) currentStepIdx = last;
+  }
   const reachedIdx = company ? (STATUS_REACHED_INDEX[company.status] ?? 0) : 0;
 
   return (

@@ -6,7 +6,7 @@
  * Includes demo document upload with simulated AI extraction.
  */
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useMemo } from 'react';
 import {
   Building2,
   Banknote,
@@ -216,25 +216,73 @@ export default function CustomerApplicationView() {
   // Preview modal state (for clicking on uploaded mock docs)
   const [previewDocId, setPreviewDocId] = useState(null);
 
-  // Für KI-Quelle-Vorschau: ein Company-Objekt aus den aktuellen Formularwerten
-  // bauen. Wird von den KI-Quelle-Badges und dem Mock-PDF-Modal genutzt.
-  const kundenCompany = {
-    firma: firma || 'Müller Maschinenbau GmbH',
-    rechtsform: rechtsform || 'GmbH',
-    hrb: 'HRB 12345',
-    amtsgericht: 'München',
-    gruendung: gruendung || 2005,
-    adresse: {
-      strasse: strasse || 'Industriestraße 42',
-      plz: plz || '80339',
-      ort: ort || 'München',
-    },
-    branche: branche || 'Maschinenbau',
-    stammkapital: 250000,
-    gf: [{ name: ansprechpartner || 'Stefan Müller', geb: '1975-06-12', anteil: 100 }],
-    mitarbeiter: mitarbeiter || 42,
-    ust_id: 'DE 123 456 789',
-  };
+  // Für KI-Quelle-Vorschau & Mock-PDFs: ein reichhaltiges Company-Objekt aus
+  // den aktuellen Formularwerten + DEMO_EXTRACTION_RESULT bauen. Die selbe
+  // Datenbasis wird beim Absenden ins globale State übertragen — dadurch
+  // sind die Zahlen in den Mock-PDFs, KI-Quelle-Badges und später im
+  // Bearbeiter-Flow (§18 KWG, Rating, Bilanz) identisch.
+  const kundenCompany = useMemo(() => {
+    const fin = DEMO_EXTRACTION_RESULT.financialSummary;
+    const umsatz23 = fin.umsatz2023 || 12500000;
+    const umsatz22 = fin.umsatz2022 || Math.round(umsatz23 * 0.94);
+    const umsatz21 = fin.umsatz2021 || Math.round(umsatz23 * 0.82);
+    const bilanzsumme23 = fin.bilanzsumme2023 || Math.round(umsatz23 * 0.41);
+    const eigenkapital23 = fin.eigenkapital2023 || Math.round(bilanzsumme23 * 0.32);
+    const jue23 = fin.jahresueberschuss2023 || Math.round(umsatz23 * 0.039);
+
+    const bilanzJahr = (umsatz, bilanz, ek, jue) => ({
+      immateriell: Math.round(bilanz * 0.03),
+      sachanlagen: Math.round(bilanz * 0.45),
+      finanzanlagen: Math.round(bilanz * 0.02),
+      vorraete: Math.round(bilanz * 0.18),
+      forderungen: Math.round(bilanz * 0.22),
+      liquide: Math.round(bilanz * 0.10),
+      eigenkapital: ek,
+      rueckstellungen: Math.round(bilanz * 0.06),
+      verb_kurz: Math.round(bilanz * 0.32),
+      verb_lang: Math.round((bilanz - ek) * 0.42),
+      umsatz,
+      materialaufwand: Math.round(umsatz * 0.38),
+      personalaufwand: Math.round(umsatz * 0.34),
+      abschreibungen: Math.round(umsatz * 0.035),
+      sonstige_aufwendungen: Math.round(umsatz * 0.14),
+      zinsaufwand: Math.round(umsatz * 0.008),
+      steuern: Math.round(jue * 0.32),
+      jahresueberschuss: jue,
+      sonstige_ertraege: Math.round(umsatz * 0.01),
+    });
+
+    return {
+      firma: firma || DEMO_EXTRACTION_RESULT.firma,
+      rechtsform: rechtsform || DEMO_EXTRACTION_RESULT.rechtsform,
+      hrb: 'HRB 67890',
+      amtsgericht: ort || DEMO_EXTRACTION_RESULT.ort,
+      gruendung: gruendung ? parseInt(gruendung, 10) : parseInt(DEMO_EXTRACTION_RESULT.gruendung, 10),
+      adresse: {
+        strasse: strasse || DEMO_EXTRACTION_RESULT.strasse,
+        plz: plz || DEMO_EXTRACTION_RESULT.plz,
+        ort: ort || DEMO_EXTRACTION_RESULT.ort,
+      },
+      branche: branche || DEMO_EXTRACTION_RESULT.branche,
+      stammkapital: 500000,
+      gf: [
+        {
+          name: ansprechpartner || DEMO_EXTRACTION_RESULT.ansprechpartner,
+          geb: '1965-08-17',
+          funktion: 'GF/Gesellschafter',
+          anteil: 65,
+        },
+        { name: 'Andrea Müller', geb: '1970-04-23', funktion: 'Gesellschafter', anteil: 35 },
+      ],
+      mitarbeiter: mitarbeiter ? parseInt(mitarbeiter, 10) : parseInt(DEMO_EXTRACTION_RESULT.mitarbeiter, 10),
+      ust_id: 'DE 298 765 431',
+      bilanz: {
+        2023: bilanzJahr(umsatz23, bilanzsumme23, eigenkapital23, jue23),
+        2022: bilanzJahr(umsatz22, Math.round(bilanzsumme23 * 0.93), Math.round(eigenkapital23 * 0.88), Math.round(jue23 * 0.82)),
+        2021: bilanzJahr(umsatz21, Math.round(bilanzsumme23 * 0.84), Math.round(eigenkapital23 * 0.74), Math.round(jue23 * 0.65)),
+      },
+    };
+  }, [firma, rechtsform, branche, gruendung, strasse, plz, ort, mitarbeiter, ansprechpartner]);
 
   // Simulate uploading a mock document — fügt Datei zur Upload-Liste hinzu,
   // triggert den KI-Extraktions-Ablauf (wie bei echtem Upload) und füllt
@@ -343,74 +391,22 @@ export default function CustomerApplicationView() {
 
     const newId = `CRED-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`;
     const betragNum = typeof betrag === 'number' ? betrag : parseInt(betrag, 10) || 0;
-    const mitarbeiterNum = mitarbeiter ? parseInt(mitarbeiter, 10) : 0;
+    const umsatz23 = kundenCompany.bilanz[2023].umsatz;
 
-    // Realistische Finanzzahlen für den End-to-End-Demo-Flow. Basis bildet
-    // DEMO_EXTRACTION_RESULT (z.B. Müller Maschinenbau: Umsatz 12,5 Mio €,
-    // EK-Quote 32 %). Bilanz wird 3 Jahre rückwärts entwickelt, damit der
-    // Bearbeiter in Rating, §18 KWG, Sicherheiten etc. sinnvolle Zahlen hat.
-    const fin = DEMO_EXTRACTION_RESULT.financialSummary;
-    const umsatz23 = fin.umsatz2023 || 12500000;
-    const umsatz22 = fin.umsatz2022 || Math.round(umsatz23 * 0.94);
-    const umsatz21 = fin.umsatz2021 || Math.round(umsatz23 * 0.82);
-    const bilanzsumme23 = fin.bilanzsumme2023 || Math.round(umsatz23 * 0.41);
-    const eigenkapital23 = fin.eigenkapital2023 || Math.round(bilanzsumme23 * 0.32);
-    const jue23 = fin.jahresueberschuss2023 || Math.round(umsatz23 * 0.039);
-
-    const bilanzJahr = (umsatz, bilanz, ek, jue) => ({
-      immateriell: Math.round(bilanz * 0.03),
-      sachanlagen: Math.round(bilanz * 0.45),
-      finanzanlagen: Math.round(bilanz * 0.02),
-      vorraete: Math.round(bilanz * 0.18),
-      forderungen: Math.round(bilanz * 0.22),
-      liquide: Math.round(bilanz * 0.10),
-      eigenkapital: ek,
-      rueckstellungen: Math.round(bilanz * 0.06),
-      verb_kurz: Math.round(bilanz * 0.32),
-      verb_lang: Math.round((bilanz - ek) * 0.42),
-      umsatz,
-      materialaufwand: Math.round(umsatz * 0.38),
-      personalaufwand: Math.round(umsatz * 0.34),
-      abschreibungen: Math.round(umsatz * 0.035),
-      sonstige_aufwendungen: Math.round(umsatz * 0.14),
-      zinsaufwand: Math.round(umsatz * 0.008),
-      steuern: Math.round(jue * 0.32),
-      jahresueberschuss: jue,
-      sonstige_ertraege: Math.round(umsatz * 0.01),
-    });
-
+    // kundenCompany ist die Quelle der Wahrheit für Stammdaten & Bilanz —
+    // identisch zu dem, was in den Mock-PDF-Vorschauen angezeigt wird.
+    // Hier kommen noch Credit-spezifische Ergänzungen dazu.
     const richCompany = {
+      ...kundenCompany,
       id: newId,
-      firma,
-      rechtsform,
-      hrb: 'HRB 12345',
-      amtsgericht: ort || 'Köln',
-      branche,
       wz_code: branche.toLowerCase().includes('maschinen') ? '28.41' : '70.22',
-      gruendung: gruendung ? parseInt(gruendung, 10) : 1998,
-      adresse: { strasse, plz, ort },
-      mitarbeiter: mitarbeiterNum,
       steuer_id: 'DE' + Math.floor(Math.random() * 900000000 + 100000000),
-      ust_id: 'DE' + Math.floor(Math.random() * 900000000 + 100000000),
       hauptbank: true,
-      gf: [
-        {
-          name: ansprechpartner || 'Thomas Müller',
-          geb: '1965-08-17',
-          funktion: 'GF/Gesellschafter',
-          anteil: 65,
-          seit: gruendung ? parseInt(gruendung, 10) : 1998,
-          erfahrung: 28,
-        },
-        {
-          name: 'Andrea Müller',
-          geb: '1970-04-23',
-          funktion: 'Gesellschafter',
-          anteil: 35,
-          seit: gruendung ? parseInt(gruendung, 10) : 1998,
-          erfahrung: 22,
-        },
-      ],
+      gf: kundenCompany.gf.map((g) => ({
+        ...g,
+        seit: kundenCompany.gruendung,
+        erfahrung: new Date().getFullYear() - (kundenCompany.gruendung || 1998) + 5,
+      })),
       ansprechpartner: { name: ansprechpartner, telefon, email, position },
       kredit: {
         art: kreditArt,
@@ -472,11 +468,6 @@ export default function CustomerApplicationView() {
           sicherheit: 'keine',
         },
       ],
-      bilanz: {
-        2023: bilanzJahr(umsatz23, bilanzsumme23, eigenkapital23, jue23),
-        2022: bilanzJahr(umsatz22, Math.round(bilanzsumme23 * 0.93), Math.round(eigenkapital23 * 0.88), Math.round(jue23 * 0.82)),
-        2021: bilanzJahr(umsatz21, Math.round(bilanzsumme23 * 0.84), Math.round(eigenkapital23 * 0.74), Math.round(jue23 * 0.65)),
-      },
       schufa: { gf1: 96.2, gf2: 94.8 },
       creditreform_index: 245,
       konto: {

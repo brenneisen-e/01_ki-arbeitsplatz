@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { useAI } from '../../hooks/useAI';
-import { X, Send, Bot, User, Loader2, Download } from 'lucide-react';
+import { X, Send, Bot, User, Loader2, Download, Sparkles } from 'lucide-react';
 
 const viewContextPrompts = {
   dashboard: 'Du hilfst bei der Übersicht über das Kreditportfolio und offene Anträge.',
@@ -84,29 +84,235 @@ const viewLabels = {
 };
 
 /**
- * Convert simple markdown-like formatting to HTML.
- * Handles **bold**, *italic*, and - / bullet lists.
+ * Rich formatter for KI-Assistent replies.
+ *
+ * Erkennt:
+ *  - **bold** / *italic*
+ *  - Nummerierte Abschnitte ("1. Titel")   → Sub-Headings
+ *  - Bereichsüberschriften ("Wichtige Punkte:", "Empfehlung:", ...)
+ *  - Quellen-Block (startet mit "Quellen:") → eigenständige Karte
+ *  - Bullet-Listen mit - / • / *
+ *  - "Label: Wert"-Zeilen innerhalb von Listen (Label bold)
+ *  - Hinweis-Tokens (Hohe Risiken, Mittlere Risiken, Geringe Risiken)
  */
-function formatMessageHtml(text) {
-  let html = text
-    // Escape HTML entities first
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    // **bold**
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    // *italic* (but not inside <strong>)
-    .replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>')
-    // Lines starting with - or • as list items
-    .replace(/^[\-•]\s+(.+)$/gm, '<li>$1</li>')
-    // Wrap consecutive <li> in <ul>
-    .replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul class="ai-list">$1</ul>')
-    // Double newlines → paragraph breaks
-    .replace(/\n\n/g, '</p><p>')
-    // Single newlines → line breaks (but not inside lists)
-    .replace(/\n/g, '<br/>');
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 
-  return `<p>${html}</p>`;
+// Inline bar-chart: [chart: Jan=12 Feb=15 Mär=18] or with colors [chart|accent: ...]
+function renderInlineBarChart(data) {
+  const values = data.map(d => d.value);
+  const max = Math.max(...values, 1);
+  const W = 320;
+  const H = 120;
+  const padLeft = 26;
+  const padBottom = 20;
+  const padTop = 6;
+  const barArea = W - padLeft - 6;
+  const barSlot = barArea / data.length;
+  const barW = barSlot * 0.68;
+  const barGap = barSlot * 0.32;
+  const chartH = H - padBottom - padTop;
+
+  let bars = '';
+  data.forEach((d, i) => {
+    const h = Math.max(2, (d.value / max) * chartH);
+    const x = padLeft + i * barSlot + barGap / 2;
+    const y = H - padBottom - h;
+    bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="url(#ai-bar-grad)" />`;
+    bars += `<text x="${(x + barW / 2).toFixed(1)}" y="${(H - padBottom + 12).toFixed(1)}" text-anchor="middle" font-size="9" fill="#64748B" font-family="IBM Plex Mono">${escapeHtml(d.label)}</text>`;
+    bars += `<text x="${(x + barW / 2).toFixed(1)}" y="${(y - 3).toFixed(1)}" text-anchor="middle" font-size="9" fill="#1B2B4B" font-family="IBM Plex Mono" font-weight="600">${escapeHtml(String(d.value))}</text>`;
+  });
+
+  return `<div class="ai-chart">
+    <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}">
+      <defs>
+        <linearGradient id="ai-bar-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2D4A7A" stop-opacity="0.95" />
+          <stop offset="100%" stop-color="#2D4A7A" stop-opacity="0.55" />
+        </linearGradient>
+      </defs>
+      <line x1="${padLeft}" y1="${H - padBottom}" x2="${W - 6}" y2="${H - padBottom}" stroke="#CBD5E1" stroke-width="1"/>
+      ${bars}
+    </svg>
+  </div>`;
+}
+
+function parseChartLine(raw) {
+  // Format: [chart: Label=Val Label=Val ...]
+  const m = raw.match(/^\s*\[chart:\s*(.+?)\s*\]\s*$/i);
+  if (!m) return null;
+  const pairs = m[1].split(/\s+/).filter(Boolean);
+  const data = [];
+  for (const p of pairs) {
+    const [label, val] = p.split('=');
+    const num = parseFloat(val);
+    if (label && isFinite(num)) data.push({ label, value: num });
+  }
+  return data.length ? data : null;
+}
+
+// Parses a markdown table block. Returns HTML table or null.
+function parseMarkdownTable(lines) {
+  if (lines.length < 2) return null;
+  const header = lines[0].trim();
+  const sep = lines[1].trim();
+  if (!header.startsWith('|') || !/^\|[\s:\-|]+\|$/.test(sep)) return null;
+
+  const splitRow = (l) => l.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+  const headers = splitRow(header);
+  const rows = lines.slice(2).filter(l => l.trim().startsWith('|')).map(splitRow);
+
+  let html = '<div class="ai-table-wrap"><table class="ai-table"><thead><tr>';
+  html += headers.map(h => `<th>${escapeHtml(h).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</th>`).join('');
+  html += '</tr></thead><tbody>';
+  for (const r of rows) {
+    html += '<tr>' + r.map(c => `<td>${escapeHtml(c).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</td>`).join('') + '</tr>';
+  }
+  html += '</tbody></table></div>';
+  return html;
+}
+
+function formatBlock(lines) {
+  // Turn consecutive bullets into <ul>, otherwise <p>
+  let html = '';
+  let listBuffer = [];
+  const flushList = () => {
+    if (listBuffer.length) {
+      html += `<ul class="ai-list">${listBuffer.map(l => `<li>${l}</li>`).join('')}</ul>`;
+      listBuffer = [];
+    }
+  };
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) continue;
+    const bullet = line.match(/^[\-•*]\s+(.+)$/);
+    if (bullet) {
+      let item = escapeHtml(bullet[1]);
+      // Label: Wert pattern inside bullet
+      item = item.replace(/^([A-Za-zÄÖÜäöüß0-9 .\-/()]+?):\s+(.+)$/, '<span class="ai-label">$1:</span> $2');
+      item = item.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      listBuffer.push(item);
+    } else {
+      flushList();
+      let p = escapeHtml(line);
+      p = p.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      p = p.replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>');
+      html += `<p>${p}</p>`;
+    }
+  }
+  flushList();
+  return html;
+}
+
+function formatMessageHtml(text) {
+  // Split into blocks by blank line
+  const rawBlocks = text.split(/\n{2,}/);
+  const out = [];
+  const risikoLevels = {
+    'Hohe Risiken': 'risk-high',
+    'Mittlere Risiken': 'risk-mid',
+    'Geringe Risiken': 'risk-low',
+  };
+
+  let inQuellen = false;
+  let quellenLines = [];
+
+  const flushQuellen = () => {
+    if (quellenLines.length) {
+      const body = formatBlock(quellenLines);
+      out.push(`<div class="ai-sources"><div class="ai-sources-title">Quellen</div><div class="ai-sources-body">${body}</div></div>`);
+      quellenLines = [];
+    }
+    inQuellen = false;
+  };
+
+  for (const block of rawBlocks) {
+    const lines = block.split('\n');
+    const first = lines[0].trim();
+
+    // Inline chart directive: block starts with "[chart: ...]"
+    if (lines.length === 1) {
+      const chartData = parseChartLine(first);
+      if (chartData) {
+        flushQuellen();
+        out.push(renderInlineBarChart(chartData));
+        continue;
+      }
+    }
+
+    // Markdown table (starts with "|" and has a separator row)
+    if (first.startsWith('|')) {
+      const tableHtml = parseMarkdownTable(lines);
+      if (tableHtml) {
+        flushQuellen();
+        out.push(tableHtml);
+        continue;
+      }
+    }
+
+    // Block starts with a heading line followed by a chart directive, e.g.
+    //   Umsatzentwicklung 2021–2023:
+    //   [chart: 2021=4100 2022=4420 2023=4980]
+    if (lines.length >= 2) {
+      const chartData = parseChartLine(lines[1]);
+      if (chartData && /:$/.test(first)) {
+        flushQuellen();
+        out.push(`<div class="ai-heading">${escapeHtml(first.replace(/:$/, ''))}</div>${renderInlineBarChart(chartData)}`);
+        continue;
+      }
+    }
+
+    // Check for "Quellen:" heading (alone on a line or with content below)
+    if (/^Quellen\s*:?\s*$/i.test(first)) {
+      flushQuellen();
+      inQuellen = true;
+      // If the block has further lines (sources listed in same block), collect them.
+      quellenLines.push(...lines.slice(1));
+      continue;
+    }
+    if (inQuellen) {
+      // Continue collecting source lines until non-list content breaks the context
+      const hasBullets = lines.some(l => /^\s*[\-•*]\s+/.test(l));
+      if (hasBullets || lines.every(l => l.trim() === '')) {
+        quellenLines.push(...lines);
+        continue;
+      }
+      flushQuellen();
+    }
+
+    // Numbered section: "1. Titel" / "2. Titel"
+    const numberedHeading = first.match(/^(\d+)\.\s+(.{2,80})$/);
+    if (numberedHeading && lines.length > 1) {
+      const idx = numberedHeading[1];
+      const title = escapeHtml(numberedHeading[2]);
+      const body = formatBlock(lines.slice(1));
+      out.push(`<div class="ai-section"><div class="ai-section-title"><span class="ai-section-num">${idx}</span>${title}</div><div class="ai-section-body">${body}</div></div>`);
+      continue;
+    }
+
+    // Risk-level heading ("Hohe Risiken:")
+    const cleanFirst = first.replace(/:$/, '').trim();
+    if (risikoLevels[cleanFirst] && lines.length > 1) {
+      const cls = risikoLevels[cleanFirst];
+      const body = formatBlock(lines.slice(1));
+      out.push(`<div class="ai-risk ${cls}"><div class="ai-risk-title">${escapeHtml(cleanFirst)}</div><div class="ai-risk-body">${body}</div></div>`);
+      continue;
+    }
+
+    // Generic section heading ending with ":" alone on first line
+    if (/^[A-ZÄÖÜ].{1,60}:$/.test(first) && lines.length > 1) {
+      const body = formatBlock(lines.slice(1));
+      out.push(`<div class="ai-heading">${escapeHtml(first.replace(/:$/, ''))}</div>${body}`);
+      continue;
+    }
+
+    // Default: format block normally
+    out.push(formatBlock(lines));
+  }
+
+  flushQuellen();
+  return out.join('');
 }
 
 export default function AIChatPanel() {
@@ -194,17 +400,18 @@ WICHTIG – Quellenangaben: Nenne immer transparent, woher du deine Informatione
           <p className="text-xs text-text-muted mb-4">Hier sind passende Fragen:</p>
         </>
       )}
-      <div className={intro ? 'space-y-2' : 'flex flex-wrap gap-1.5'}>
+      <div className={intro ? 'space-y-2' : 'flex flex-wrap gap-2'}>
         {suggestions.map((q) => (
           <button
             key={q}
             onClick={() => handleSend(q)}
             className={
               intro
-                ? 'block w-full text-left px-3 py-2 text-xs bg-surface rounded-lg hover:bg-border transition-colors'
-                : 'inline-block px-2.5 py-1.5 text-[11px] bg-surface text-text-secondary rounded-lg hover:bg-border transition-colors text-left leading-snug'
+                ? 'flex items-center gap-2 w-full text-left px-3.5 py-2.5 text-sm bg-violet-50 text-violet-800 border border-violet-200 rounded-lg hover:bg-violet-100 hover:border-violet-300 font-medium transition-colors'
+                : 'inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-violet-50 text-violet-800 border border-violet-200 rounded-lg hover:bg-violet-100 hover:border-violet-300 transition-colors text-left leading-snug'
             }
           >
+            <Sparkles size={13} strokeWidth={2} className="shrink-0 text-violet-600" />
             {q}
           </button>
         ))}
@@ -216,8 +423,14 @@ WICHTIG – Quellenangaben: Nenne immer transparent, woher du deine Informatione
   const lastMsg = state.aiMessages[state.aiMessages.length - 1];
   const showFollowUpSuggestions = lastMsg?.role === 'assistant' && !loading;
 
+  // Panel-Grundbreite: auch ohne Nachrichten 440px damit Vorschläge und
+  // Chips nicht abgeschnitten werden. Nach der ersten Assistenz-Antwort
+  // wird das Panel weiter aufgezogen, damit Tabellen & Charts lesbar bleiben.
+  const hasAssistantReply = state.aiMessages.some(m => m.role === 'assistant');
+  const panelWidth = hasAssistantReply ? 'w-[620px]' : 'w-[440px]';
+
   return (
-    <div className="w-96 bg-white border-l border-border flex flex-col h-full shrink-0">
+    <div className={`${panelWidth} bg-white border-l border-border flex flex-col h-full shrink-0 transition-[width] duration-200`}>
       {/* Header */}
       <div className="border-b border-border shrink-0">
         <div className="flex items-center justify-between px-4 h-14">
@@ -254,7 +467,7 @@ WICHTIG – Quellenangaben: Nenne immer transparent, woher du deine Informatione
                 <Bot size={12} className="text-white" />
               </div>
             )}
-            <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+            <div className={`${msg.role === 'user' ? 'max-w-[85%]' : 'max-w-[95%] flex-1'} rounded-lg px-3 py-2 text-sm ${
               msg.role === 'user'
                 ? 'bg-primary text-white'
                 : 'bg-surface text-text-primary'

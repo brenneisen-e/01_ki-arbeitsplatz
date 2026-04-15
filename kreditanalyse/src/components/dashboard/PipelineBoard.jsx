@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, Fragment } from 'react';
 import {
   Inbox,
   ShieldCheck,
@@ -84,8 +84,8 @@ const COLUMNS = [
   },
   {
     key: 'decided',
-    label: 'Entschieden',
-    statuses: ['approved', 'rejected'],
+    label: 'Genehmigt',
+    statuses: ['approved'],
     icon: CheckCircle2,
     headerColor: 'bg-green-50 text-green-700 border-green-200',
     badgeColor: 'bg-green-100 text-green-700',
@@ -99,6 +99,28 @@ const COLUMNS = [
     headerColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     badgeColor: 'bg-emerald-100 text-emerald-700',
     targetView: 'contract',
+  },
+  {
+    key: 'signature',
+    label: 'Unterschrift / Rückläufer',
+    statuses: ['signature_pending'],
+    icon: FileSignature,
+    headerColor: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+    badgeColor: 'bg-cyan-100 text-cyan-700',
+    targetView: 'contract',
+  },
+  // "Abgelehnt" ist keine Prozess-Weiterführung, sondern ein Abzweig. Deshalb
+  // steht diese Spalte ganz rechts und wird durch einen vertikalen Strich
+  // visuell vom restlichen Workflow getrennt.
+  {
+    key: 'rejected',
+    label: 'Abgelehnt',
+    statuses: ['rejected'],
+    icon: CheckCircle2,
+    headerColor: 'bg-red-50 text-red-700 border-red-200',
+    badgeColor: 'bg-red-100 text-red-700',
+    targetView: 'decision',
+    separator: true,
   },
 ];
 
@@ -192,12 +214,20 @@ export default function PipelineBoard() {
 
   return (
     <div className="overflow-x-auto pb-2">
-      <div className="flex gap-3 min-w-max">
+      <div className="flex gap-3 min-w-max items-stretch">
         {columnData.map((col) => {
           const Icon = col.icon;
           return (
+            <Fragment key={col.key}>
+              {col.separator && (
+                <div
+                  className="flex flex-col items-center justify-stretch flex-shrink-0 mx-2"
+                  aria-hidden="true"
+                >
+                  <div className="w-px flex-1 bg-border" />
+                </div>
+              )}
             <div
-              key={col.key}
               className="flex flex-col w-48 flex-shrink-0"
             >
               {/* Column header */}
@@ -236,6 +266,7 @@ export default function PipelineBoard() {
                 )}
               </div>
             </div>
+            </Fragment>
           );
         })}
       </div>

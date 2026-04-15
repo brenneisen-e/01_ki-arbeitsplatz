@@ -41,6 +41,7 @@ import {
 } from 'recharts';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
+import StepIntroCard from '../shared/StepIntroCard';
 import {
   calculateAllRatios,
   changePercent,
@@ -284,6 +285,7 @@ export default function AnalysisView() {
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
+      <StepIntroCard stepKey="analysis" />
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>

@@ -43,7 +43,7 @@ export default function MainLayout() {
         <ProcessBar />
         <div className="flex flex-1 overflow-hidden">
           <main className="flex-1 overflow-y-auto p-6 scrollbar-thin">
-            <div className="max-w-[1440px] mx-auto">
+            <div className="w-full">
               <ViewComponent />
             </div>
           </main>

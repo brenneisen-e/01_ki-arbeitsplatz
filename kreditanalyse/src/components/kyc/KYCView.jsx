@@ -1,6 +1,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
+import { MockPdfPreviewButton, CHECKLIST_ID_TO_DOC } from '../shared/MockPdfPreview';
+import StepIntroCard from '../shared/StepIntroCard';
 import {
   ArrowLeft,
   FileCheck,
@@ -54,11 +56,11 @@ function daysAgo(n) {
 const INITIAL_CHECKLIST = [
   { id: 'hrAuszug', name: 'Handelsregisterauszug (max. 3 Monate alt)', status: 'geprueft', checked: true, pruefDatum: daysAgo(4), pruefer: 'KM', comment: 'Aktuell, keine Beanstandung', kiGeprueft: true },
   { id: 'gesellschaftsvertrag', name: 'Gesellschaftsvertrag / Satzung (aktuell)', status: 'geprueft', checked: true, pruefDatum: daysAgo(4), pruefer: 'KM', comment: 'KI-Extraktion der Gesellschafterstruktur, manuell freigegeben', kiGeprueft: true },
-  { id: 'gesellschafterliste', name: 'Gesellschafterliste (aktuell)', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: true },
+  { id: 'gesellschafterliste', name: 'Gesellschafterliste (aktuell)', status: 'eingereicht', checked: false, pruefDatum: daysAgo(1), pruefer: '', comment: 'KI-Scan erfolgt, wartet auf menschliche Freigabe', kiGeprueft: true },
   { id: 'transparenzregister', name: 'Transparenzregisterauszug', status: 'geprueft', checked: true, pruefDatum: daysAgo(2), pruefer: 'KM', comment: 'Abgleich erfolgt', kiGeprueft: true },
   { id: 'legGF1', name: 'Legitimation GF 1 (Ausweiskopie)', status: 'geprueft', checked: true, pruefDatum: daysAgo(6), pruefer: 'SB', comment: '', kiGeprueft: true },
-  { id: 'legGF2', name: 'Legitimation GF 2 (falls vorhanden)', status: 'offen', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: true },
-  { id: 'gewerbe', name: 'Gewerbeanmeldung/-ummeldung', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: true },
+  { id: 'legGF2', name: 'Legitimation GF 2 (falls vorhanden)', status: 'offen', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: false },
+  { id: 'gewerbe', name: 'Gewerbeanmeldung/-ummeldung', status: 'eingereicht', checked: false, pruefDatum: daysAgo(1), pruefer: '', comment: 'KI-Scan erfolgt, wartet auf menschliche Freigabe', kiGeprueft: true },
 ];
 
 const PEP_CATEGORIES = [
@@ -171,6 +173,9 @@ export default function KYCView() {
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
+      {/* Step intro card */}
+      <StepIntroCard stepKey="kyc" />
+
       {/* Page heading */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -371,6 +376,13 @@ function IdentifizierungTab({ checklist, setChecklist, expandedItem, setExpanded
                 {item.pruefDatum && (
                   <span className="text-xs font-mono text-text-muted hidden sm:inline">
                     {new Date(item.pruefDatum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                  </span>
+                )}
+
+                {/* Dokument-Vorschau */}
+                {CHECKLIST_ID_TO_DOC[item.id] && (item.status === 'geprueft' || item.status === 'eingereicht') && (
+                  <span onClick={e => e.stopPropagation()}>
+                    <MockPdfPreviewButton documentId={CHECKLIST_ID_TO_DOC[item.id]} label="Ansehen" />
                   </span>
                 )}
 

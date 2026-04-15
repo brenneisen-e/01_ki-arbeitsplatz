@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
+import StepIntroCard from '../shared/StepIntroCard';
 import RatingBadge from '../shared/RatingBadge';
 import PercentageBar from '../shared/PercentageBar';
 import SparklineChart from '../shared/SparklineChart';
@@ -191,6 +192,7 @@ export default function CreditProposalView() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-12">
+      <StepIntroCard stepKey="credit-proposal" />
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
         <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#00A3BF] text-white">

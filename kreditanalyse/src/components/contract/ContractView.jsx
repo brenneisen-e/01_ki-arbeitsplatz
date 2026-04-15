@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ArrowLeft,
   AlertCircle,
@@ -9,11 +9,13 @@ import {
   Download,
   Edit3,
   FileText,
+  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { exportContractAsDocx, exportContractAsPdf } from '../../utils/contractExport';
 import { fillContractTemplate } from '../../utils/contractTemplate';
 import { useAI } from '../../hooks/useAI';
+import StepIntroCard from '../shared/StepIntroCard';
 
 export default function ContractView() {
   const { getSelectedCompany, navigate } = useApp();
@@ -21,6 +23,19 @@ export default function ContractView() {
   const { callAI, loading: aiLoading } = useAI();
   const [contractText, setContractText] = useState(null);
   const [editable, setEditable] = useState(false);
+  const [letterText, setLetterText] = useState(null);
+  const [letterLoading, setLetterLoading] = useState(false);
+
+  // Wenn der Vorgang bereits in Status "contract" ist, haben wir den Vertrag
+  // schon vorher generiert (z.B. aus der Kreditentscheidung heraus). Dann
+  // direkt mit dem befüllten Template vorausfüllen — kein erneutes Klicken
+  // auf "Kreditvertrag generieren" nötig.
+  useEffect(() => {
+    if (company && company.status === 'contract' && !contractText) {
+      setContractText(fillContractTemplate(company));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [company?.status, company?.id]);
 
   if (!company) {
     return (
@@ -75,6 +90,7 @@ export default function ContractView() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12">
+      <StepIntroCard stepKey="contract" />
       {/* Header */}
       <div className="flex items-center gap-3 mb-2 no-print">
         <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-600 text-white">
@@ -161,7 +177,7 @@ export default function ContractView() {
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-3 no-print sticky bottom-4 bg-surface/95 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
+          <div className="flex items-center gap-3 flex-wrap no-print sticky bottom-4 bg-surface/95 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
             <button type="button" onClick={handleDownloadDocx}
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-light transition-colors">
               <FileText size={16} /> Word (.docx)
@@ -181,8 +197,186 @@ export default function ContractView() {
               <Edit3 size={16} /> {editable ? 'Bearbeitung beenden' : 'Vertrag bearbeiten'}
             </button>
           </div>
+
+          {/* ============================================================= */}
+          {/* Anschreiben an den Kreditnehmer                                */}
+          {/* ============================================================= */}
+          <CoverLetterBlock
+            company={company}
+            contractNr={contractNr}
+            letterText={letterText}
+            setLetterText={setLetterText}
+            letterLoading={letterLoading}
+            setLetterLoading={setLetterLoading}
+          />
         </>
       )}
+    </div>
+  );
+}
+
+// =============================================================================
+// CoverLetterBlock — Anschreiben vorformulieren + absenden + Email-Animation
+// + Übergang zu Unterschriftenprozess (Rückläufer)
+// =============================================================================
+
+function CoverLetterBlock({ company, contractNr, letterText, setLetterText, letterLoading, setLetterLoading }) {
+  const { dispatch, navigate } = useApp();
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const gf = company.gf?.[0]?.name || 'Sehr geehrte Damen und Herren';
+  const betrag = company.kredit?.betrag;
+  const betragStr = betrag ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(betrag) : '—';
+
+  const handleGenerate = () => {
+    setLetterLoading(true);
+    setTimeout(() => {
+      const text = `Anrede: Sehr geehrte/r ${gf},
+
+hiermit übersenden wir Ihnen den von uns vorbereiteten Kreditvertrag (Nr. ${contractNr}) über ${betragStr} zur Gegenzeichnung.
+
+Bitte unterschreiben Sie den beiliegenden Vertrag an den gekennzeichneten Stellen und senden uns ein Exemplar innerhalb von 14 Tagen per Post oder als elektronisch signiertes PDF zurück.
+
+Auszahlungsvoraussetzungen:
+- Vorlage der ergänzenden Sicherheitenverträge (Grundschuldbestellung, Abtretungserklärungen)
+- Bestätigung der zweckgebundenen Mittelverwendung
+- Einhaltung der vereinbarten Financial Covenants
+
+Für Rückfragen stehen wir Ihnen selbstverständlich gerne zur Verfügung.
+
+Mit freundlichen Grüßen
+
+Musterbank AG
+Firmenkunden-Kreditabteilung`;
+      setLetterText(text);
+      setLetterLoading(false);
+    }, 1200);
+  };
+
+  const handleSend = () => {
+    setSending(true);
+    // Animation: 2.5s "fliegt los", dann "angekommen"
+    setTimeout(() => {
+      setSending(false);
+      setSent(true);
+      // Vorgang in neuen Prozessschritt "Unterschriftenprozess / Rückläufer"
+      // überführen — Status "signature_pending" wird von MonitoringView und
+      // Pipeline ebenfalls erkannt.
+      dispatch({ type: 'SET_COMPANY_STATUS', companyId: company.id, status: 'signature_pending' });
+    }, 2500);
+  };
+
+  return (
+    <div className="bg-surface-card border border-border rounded-xl p-6 no-print">
+      <div className="flex items-start gap-3 mb-4">
+        <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+          <FileText size={20} strokeWidth={1.5} />
+        </div>
+        <div className="flex-1">
+          <h2 className="text-base font-semibold font-headline text-text-primary">
+            Anschreiben an den Kreditnehmer
+          </h2>
+          <p className="text-sm text-text-secondary mt-1">
+            Formuliere ein Anschreiben, mit dem der Vertrag zur Gegenzeichnung an den Kreditnehmer versandt wird.
+          </p>
+        </div>
+        {!letterText && (
+          <button
+            type="button"
+            onClick={handleGenerate}
+            disabled={letterLoading}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold font-body hover:bg-primary-light transition-colors disabled:opacity-60"
+          >
+            {letterLoading ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
+            {letterLoading ? 'Formuliere Anschreiben…' : 'Anschreiben vorformulieren'}
+          </button>
+        )}
+      </div>
+
+      {letterText && (
+        <>
+          <div className="bg-surface border border-border rounded-lg p-5 mb-4">
+            <div className="text-xs text-text-muted mb-2 font-mono flex items-center justify-between">
+              <span>An: {company.firma} · z.Hd. {gf}</span>
+              <span>Betreff: Kreditvertrag {contractNr}</span>
+            </div>
+            <textarea
+              value={letterText}
+              onChange={(e) => setLetterText(e.target.value)}
+              rows={12}
+              className="w-full text-sm font-body text-text-primary leading-relaxed border border-border rounded-lg p-3 resize-y focus:outline-none focus:ring-2 focus:ring-primary-light/20"
+            />
+          </div>
+
+          {!sent ? (
+            <div className="flex items-center gap-3 flex-wrap">
+              <button
+                type="button"
+                onClick={handleSend}
+                disabled={sending}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-white rounded-lg text-sm font-semibold font-body hover:bg-accent/90 transition-colors disabled:opacity-60"
+              >
+                {sending ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
+                Anschreiben mit Vertrag senden
+              </button>
+              <button
+                type="button"
+                onClick={handleGenerate}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-body text-text-secondary border border-border rounded-lg hover:bg-surface transition-colors"
+              >
+                <Sparkles size={14} /> Neu formulieren
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-emerald-50 border border-emerald-200">
+              <CheckCircle2 size={20} strokeWidth={1.75} className="text-emerald-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-emerald-900">Anschreiben & Vertrag versandt</p>
+                <p className="text-xs text-emerald-800 mt-0.5">
+                  Der Vorgang ist nun im Status <strong>Unterschriftenprozess / Rückläufer</strong>. Nach Rückkehr des unterschriebenen Vertrags geht es weiter zur Auszahlungsfreigabe.
+                </p>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {sending && <EmailSendAnimation firma={company.firma} onDone={() => {}} />}
+    </div>
+  );
+}
+
+// Mail-Flieger-Overlay für die Versand-Animation
+function EmailSendAnimation({ firma }) {
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm pointer-events-none">
+      <div className="bg-white rounded-2xl shadow-2xl px-10 py-8 text-center">
+        <div className="relative w-32 h-24 mx-auto mb-4 overflow-hidden">
+          <svg className="absolute inset-0 w-full h-full animate-mail-fly" viewBox="0 0 64 40" fill="none">
+            <rect x="2" y="6" width="48" height="32" rx="3" fill="#ffffff" stroke="#1B2B4B" strokeWidth="2" />
+            <path d="M2 6 L26 26 L50 6" stroke="#1B2B4B" strokeWidth="2" fill="none" />
+            <path d="M52 12 C56 12 60 14 62 18" stroke="#2D4A7A" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.6" />
+            <path d="M54 20 C58 20 61 22 62 26" stroke="#2D4A7A" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.4" />
+          </svg>
+        </div>
+        <p className="text-sm font-semibold font-headline text-text-primary">
+          Anschreiben wird versendet…
+        </p>
+        <p className="text-xs text-text-muted mt-1">
+          Empfänger: {firma}
+        </p>
+      </div>
+      <style>{`
+        @keyframes mail-fly {
+          0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+          40%  { transform: translate(45%, -20%) scale(0.9) rotate(-8deg); opacity: 1; }
+          100% { transform: translate(120%, -45%) scale(0.6) rotate(-14deg); opacity: 0; }
+        }
+        .animate-mail-fly {
+          animation: mail-fly 2.4s ease-in forwards;
+        }
+      `}</style>
     </div>
   );
 }

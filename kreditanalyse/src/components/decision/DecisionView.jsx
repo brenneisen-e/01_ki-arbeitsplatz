@@ -8,7 +8,7 @@
  * Finanzierungsstruktur & Konditionenberechnung moved to CreditProposalView.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   ArrowLeft,
   AlertCircle,
@@ -27,13 +27,17 @@ import {
   FileText,
   ChevronRight,
   Shield,
+  Lock,
   TrendingUp,
   TrendingDown,
   AlertTriangle,
   BadgeCheck,
   FileSignature,
   Download,
+  Printer,
+  X,
   ClipboardCheck,
+  Gavel,
 } from 'lucide-react';
 import {
   BarChart,
@@ -49,6 +53,7 @@ import {
 } from 'recharts';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
+import StepIntroCard from '../shared/StepIntroCard';
 import { formatCurrency, formatPercent, formatNumber } from '../../utils/formatters';
 import {
   competencyMatrix,
@@ -156,9 +161,12 @@ export default function DecisionView() {
   const marktUser = state.availableUsers.find(u => u.id === 'weber') || state.availableUsers[0];
   const marktfolgeUser = state.availableUsers.find(u => u.id === 'fischer') || state.availableUsers[1];
 
-  // If the current user matches the slot AND has a custom profile name, use it
-  const erstvotumName = (currentUser.id === marktUser.id && customName) ? customName : marktUser.name;
-  const zweitvotumName = (currentUser.id === marktfolgeUser.id && customName) ? customName : marktfolgeUser.name;
+  // Der Profilname repräsentiert die angemeldete Person (Markt-Rolle = Eigentümer
+  // des Accounts). Der Erstvotum-Bearbeiter bleibt konstant — unabhängig davon,
+  // in welche Perspektive der Nutzer gerade wechselt. Nur Lese-/Schreibrechte
+  // ändern sich durch den Perspektivwechsel, nicht die angezeigten Namen.
+  const erstvotumName = customName || marktUser.name;
+  const zweitvotumName = marktfolgeUser.name;
 
   const [activeTab, setActiveTab] = useState('votierung');
 
@@ -176,24 +184,66 @@ export default function DecisionView() {
   const [gewinnMarge, setGewinnMarge] = useState(0.30);
 
   // --- Tab 3: Votierung state ---
-  const [marktEmpfehlung, setMarktEmpfehlung] = useState('genehmigung');
-  const [marktfolgeEmpfehlung, setMarktfolgeEmpfehlung] = useState('genehmigung');
-  const [marktBegruendung, setMarktBegruendung] = useState('');
-  const [marktfolgeBegruendung, setMarktfolgeBegruendung] = useState('');
-  const [marktEindruck, setMarktEindruck] = useState('');
-  const [marktfolgeEindruck, setMarktfolgeEindruck] = useState('');
-  const [marktAuflagen, setMarktAuflagen] = useState(['Quartalsweise Einreichung der BWA', 'Nachweis der zweckgebundenen Mittelverwendung']);
-  const [marktfolgeAuflagen, setMarktfolgeAuflagen] = useState(['Halbjährliche Sicherheitenüberprüfung', 'Einhaltung der Financial Covenants (EK-Quote > 25%)']);
-  const [marktDatum, setMarktDatum] = useState(TODAY);
-  const [marktfolgeDatum, setMarktfolgeDatum] = useState(TODAY);
-  const [marktSigniert, setMarktSigniert] = useState(false);
-  const [marktfolgeSigniert, setMarktfolgeSigniert] = useState(false);
+  // Persistierung: state.votingState[companyId] speichert den Votierungs-Fortschritt,
+  // damit beim Navigieren weg & zurück keine Eingaben verloren gehen.
+  const isRheinImmoDemo = company?.id === 'CRED-2024-007';
+  const demoErstvotumSignedAt = isRheinImmoDemo
+    ? new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+    : null;
 
-  // KI Kreditempfehlung
-  const [kiLoading, setKiLoading] = useState(false);
-  const [kiResult, setKiResult] = useState(null);
-  const [kiHtml, setKiHtml] = useState(null);
-  const [kiTransferred, setKiTransferred] = useState(false);
+  const savedVoting = (company && state.votingState[company.id]) || {};
+
+  const [marktEmpfehlung, setMarktEmpfehlung] = useState(() => savedVoting.marktEmpfehlung ?? 'genehmigung');
+  const [marktfolgeEmpfehlung, setMarktfolgeEmpfehlung] = useState(() => savedVoting.marktfolgeEmpfehlung ?? 'genehmigung');
+  const [marktBegruendung, setMarktBegruendung] = useState(() => savedVoting.marktBegruendung ?? '');
+  const [marktfolgeBegruendung, setMarktfolgeBegruendung] = useState(() => savedVoting.marktfolgeBegruendung ?? '');
+  const [marktEindruck, setMarktEindruck] = useState(() => savedVoting.marktEindruck ?? '');
+  const [marktfolgeEindruck, setMarktfolgeEindruck] = useState(() => savedVoting.marktfolgeEindruck ?? '');
+  const [marktAuflagen, setMarktAuflagen] = useState(() => savedVoting.marktAuflagen ?? ['Quartalsweise Einreichung der BWA', 'Nachweis der zweckgebundenen Mittelverwendung']);
+  const [marktfolgeAuflagen, setMarktfolgeAuflagen] = useState(() => savedVoting.marktfolgeAuflagen ?? ['Halbjährliche Sicherheitenüberprüfung', 'Einhaltung der Financial Covenants (EK-Quote > 25%)']);
+  const [marktDatum, setMarktDatum] = useState(() => savedVoting.marktDatum ?? TODAY);
+  const [marktfolgeDatum, setMarktfolgeDatum] = useState(() => savedVoting.marktfolgeDatum ?? TODAY);
+  const [marktSigniert, setMarktSigniert] = useState(() => savedVoting.marktSigniert ?? isRheinImmoDemo);
+  const [marktfolgeSigniert, setMarktfolgeSigniert] = useState(() => savedVoting.marktfolgeSigniert ?? false);
+  const [marktSignedAt, setMarktSignedAt] = useState(() => savedVoting.marktSignedAt ?? demoErstvotumSignedAt);
+  const [marktfolgeSignedAt, setMarktfolgeSignedAt] = useState(() => savedVoting.marktfolgeSignedAt ?? null);
+
+  // Persistiere jede Änderung in state.votingState[companyId]
+  useEffect(() => {
+    if (!company) return;
+    dispatch({
+      type: 'UPDATE_VOTING_STATE',
+      companyId: company.id,
+      data: {
+        marktEmpfehlung, marktfolgeEmpfehlung,
+        marktBegruendung, marktfolgeBegruendung,
+        marktEindruck, marktfolgeEindruck,
+        marktAuflagen, marktfolgeAuflagen,
+        marktDatum, marktfolgeDatum,
+        marktSigniert, marktfolgeSigniert,
+        marktSignedAt, marktfolgeSignedAt,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    marktEmpfehlung, marktfolgeEmpfehlung,
+    marktBegruendung, marktfolgeBegruendung,
+    marktEindruck, marktfolgeEindruck,
+    marktAuflagen, marktfolgeAuflagen,
+    marktDatum, marktfolgeDatum,
+    marktSigniert, marktfolgeSigniert,
+    marktSignedAt, marktfolgeSignedAt,
+  ]);
+
+  // Wrapper: signature toggle sets timestamp
+  const handleSetMarktSigniert = (checked) => {
+    setMarktSigniert(checked);
+    setMarktSignedAt(checked ? new Date().toISOString() : null);
+  };
+  const handleSetMarktfolgeSigniert = (checked) => {
+    setMarktfolgeSigniert(checked);
+    setMarktfolgeSignedAt(checked ? new Date().toISOString() : null);
+  };
 
   // ---------------------------------------------------------------------------
   // No-company fallback
@@ -282,7 +332,8 @@ Die regulatorischen Anforderungen gemäß §18 KWG, MaRisk BTO 1.2 sowie CRR/CRD
 
 Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen.`;
 
-  // Initialize defaults once
+  // Initialize defaults once — Erstvotum wird vorbelegt, Zweitvotum bleibt leer
+  // (der Marktfolge-Prüfer füllt es manuell oder per KI-Empfehlung im Zweitvotum-Card).
   if (!marktBegruendung) {
     // Using a trick: we set via timeout 0 to avoid setState during render
     setTimeout(() => {
@@ -290,33 +341,36 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
       setMarktEindruck('Herr ' + (company.gf?.[0]?.name?.split(' ').pop() || 'Geschäftsführer') + ' machte im persönlichen Gespräch am ' + new Date().toLocaleDateString('de-DE') + ' einen kompetenten und vertrauenswürdigen Eindruck. Die Investitionspläne wurden schlüssig und detailliert dargelegt. Das Unternehmen wird gut geführt und verfügt über klare strategische Ziele.');
     }, 0);
   }
-  if (!marktfolgeBegruendung) {
-    setTimeout(() => {
-      setMarktfolgeBegruendung(defaultMarktfolgeBegruendung);
-      setMarktfolgeEindruck('Die Unterlagen wurden vollständig und termingerecht eingereicht. Die wirtschaftlichen Verhältnisse wurden gemäß §18 KWG geprüft. Die Sicherheitenbewertung erfolgte nach den institutsinternen Beleihungswertrichtlinien.');
-    }, 0);
-  }
 
-  // KI Kreditempfehlung handler
-  const handleKiEmpfehlung = () => {
-    setKiLoading(true);
-    setKiResult(null);
-    setKiHtml(null);
-    setKiTransferred(false);
+  // Inline KI-Empfehlung: füllt Begründung + Eindruck des jeweiligen Votums direkt.
+  // target = 'markt' | 'marktfolge'
+  const [kiLoadingMarkt, setKiLoadingMarkt] = useState(false);
+  const [kiLoadingMarktfolge, setKiLoadingMarktfolge] = useState(false);
+
+  // Kreditvertrag-Vorschau-Modal
+  const [contractPreviewOpen, setContractPreviewOpen] = useState(false);
+  const [contractPreviewText, setContractPreviewText] = useState('');
+
+  const handleKiFillVotum = (target) => {
+    if (target === 'markt') setKiLoadingMarkt(true);
+    else setKiLoadingMarktfolge(true);
+
     setTimeout(() => {
-      setKiLoading(false);
       const plainText = generateKiKreditempfehlung(company, kredit, betrag, bilanz, b23, simulatedRating, bestVerbind, kundenZins);
-      setKiResult(plainText);
-      setKiHtml(convertKiResultToHtml(plainText));
-    }, 2000);
-  };
-
-  // Transfer KI result into Erstvotum Begründung
-  const handleTransferToVotum = () => {
-    if (kiResult) {
-      setMarktBegruendung(kiResult);
-      setKiTransferred(true);
-    }
+      if (target === 'markt') {
+        setMarktBegruendung(plainText);
+        if (!marktEindruck) {
+          setMarktEindruck('Herr ' + (company.gf?.[0]?.name?.split(' ').pop() || 'Geschäftsführer') + ' machte im persönlichen Gespräch einen kompetenten und vertrauenswürdigen Eindruck.');
+        }
+        setKiLoadingMarkt(false);
+      } else {
+        setMarktfolgeBegruendung(plainText);
+        if (!marktfolgeEindruck) {
+          setMarktfolgeEindruck('Die Unterlagen wurden vollständig und termingerecht eingereicht. Die wirtschaftlichen Verhältnisse wurden gemäß §18 KWG geprüft. Die Sicherheitenbewertung erfolgte nach den institutsinternen Beleihungswertrichtlinien.');
+        }
+        setKiLoadingMarktfolge(false);
+      }
+    }, 1800);
   };
 
   // ---------------------------------------------------------------------------
@@ -324,6 +378,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
+      <StepIntroCard stepKey="decision" />
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
@@ -660,7 +715,10 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
             datum={marktDatum}
             setDatum={setMarktDatum}
             signiert={marktSigniert}
-            setSigniert={setMarktSigniert}
+            setSigniert={handleSetMarktSigniert}
+            signedAt={marktSignedAt}
+            onKiFill={() => handleKiFillVotum('markt')}
+            kiLoading={kiLoadingMarkt}
             accentColor="primary"
             readOnly={currentUser.id !== marktUser.id}
             readOnlyHint={`Nur ${marktUser.name} (${marktUser.role}) kann das Erstvotum bearbeiten.`}
@@ -681,7 +739,10 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
             datum={marktfolgeDatum}
             setDatum={setMarktfolgeDatum}
             signiert={marktfolgeSigniert}
-            setSigniert={setMarktfolgeSigniert}
+            setSigniert={handleSetMarktfolgeSigniert}
+            signedAt={marktfolgeSignedAt}
+            onKiFill={() => handleKiFillVotum('marktfolge')}
+            kiLoading={kiLoadingMarktfolge}
             accentColor="primary-light"
             readOnly={currentUser.id !== marktfolgeUser.id}
             readOnlyHint={`Nur ${marktfolgeUser.name} (${marktfolgeUser.role}) kann das Zweitvotum bearbeiten.`}
@@ -775,8 +836,8 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           </div>
         )}
 
-        {/* KI Kreditvorlage / Kreditvertrag generieren */}
-        {company.status === 'approved' ? (
+        {/* Kreditvertrag generieren (nur nach Genehmigung) */}
+        {company.status === 'approved' && (
           <div className="bg-surface-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-semibold font-headline text-text-primary">
@@ -784,80 +845,50 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
               </h2>
             </div>
             <p className="text-sm text-text-secondary mb-4">
-              Der Kredit wurde genehmigt. Generiere den Kreditvertrag als Word-Dokument basierend auf der STANDARD LOAN AGREEMENT Vorlage.
+              Der Kredit wurde genehmigt. Der Kreditvertrag wird basierend auf der
+              STANDARD LOAN AGREEMENT Vorlage generiert — er wird hier direkt im Tool
+              angezeigt und kann zusätzlich als Word-Dokument heruntergeladen werden.
             </p>
-            <button
-              type="button"
-              onClick={async () => {
-                const contractText = fillContractTemplate(company);
-                const contractNr = `${company.id} / ${new Date().getFullYear()}`;
-                await exportContractAsDocx(contractText, company, contractNr);
-              }}
-              className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-lg text-sm font-semibold font-body hover:bg-emerald-700 transition-colors"
-            >
-              <FileSignature size={18} />
-              Kreditvertrag generieren
-            </button>
-          </div>
-        ) : (
-          <div className="bg-surface-card border border-border rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold font-headline text-text-primary">
-                KI-Kreditempfehlung
-              </h2>
+            <div className="flex flex-wrap gap-3">
               <button
                 type="button"
-                onClick={handleKiEmpfehlung}
-                disabled={kiLoading}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-body hover:bg-primary-light transition-colors disabled:opacity-60"
+                onClick={() => {
+                  // Vorgang in die "Kreditvertrag"-Stufe rücken und direkt
+                  // in den Kreditvertrag-Reiter springen — dort wird der
+                  // Vertrag automatisch aus den Antragsdaten befüllt und
+                  // ein Haken zeigt, dass der Schritt schon erledigt ist.
+                  dispatch({ type: 'ADVANCE_TO_CONTRACT', companyId: company.id });
+                  navigate('contract');
+                }}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-lg text-sm font-semibold font-body hover:bg-emerald-700 transition-colors"
               >
-                {kiLoading ? (
-                  <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
-                ) : (
-                  <Sparkles size={16} strokeWidth={1.5} />
-                )}
-                {kiLoading ? 'Generiere Empfehlung...' : 'KI-Kreditempfehlung generieren'}
+                <FileSignature size={18} />
+                Kreditvertrag generieren & öffnen
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const contractText = fillContractTemplate(company);
+                  const contractNr = `${company.id} / ${new Date().getFullYear()}`;
+                  await exportContractAsDocx(contractText, company, contractNr);
+                  dispatch({ type: 'ADVANCE_TO_CONTRACT', companyId: company.id });
+                }}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-white text-emerald-700 border border-emerald-600 rounded-lg text-sm font-semibold font-body hover:bg-emerald-50 transition-colors"
+              >
+                <Download size={18} />
+                Nur Word-Export
               </button>
             </div>
-
-            {kiLoading && (
-              <div className="flex items-center gap-3 p-6 text-text-secondary text-sm">
-                <Loader2 size={20} strokeWidth={1.5} className="animate-spin text-primary" />
-                KI analysiert Kreditantrag und erstellt Empfehlung...
-              </div>
-            )}
-
-            {kiHtml && (
-              <>
-                <div className="bg-surface border border-border rounded-lg p-6 prose prose-sm max-w-none">
-                  <div
-                    className="text-sm text-text-primary font-body leading-relaxed ki-recommendation-html"
-                    dangerouslySetInnerHTML={{ __html: kiHtml }}
-                  />
-                </div>
-                <div className="mt-4 flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={handleTransferToVotum}
-                    disabled={kiTransferred}
-                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold font-body transition-colors shadow-sm ${
-                      kiTransferred
-                        ? 'bg-accent/20 text-accent border border-accent/30 cursor-default'
-                        : 'bg-accent text-white hover:bg-accent/90'
-                    }`}
-                  >
-                    <ClipboardCheck size={16} strokeWidth={1.5} />
-                    {kiTransferred ? 'In Erstvotum übernommen' : 'In Erstvotum (Votum 1) übernehmen'}
-                  </button>
-                  {kiTransferred && (
-                    <span className="text-xs text-accent font-body">
-                      Empfehlung wurde in die Begründung des Erstvotums übertragen.
-                    </span>
-                  )}
-                </div>
-              </>
-            )}
           </div>
+        )}
+
+        {/* Modal: Kreditvertrag-Vorschau */}
+        {contractPreviewOpen && (
+          <ContractPreviewModal
+            company={company}
+            contractText={contractPreviewText}
+            onClose={() => setContractPreviewOpen(false)}
+          />
         )}
       </div>
     );
@@ -1133,6 +1164,9 @@ function VotumCard({
   setDatum,
   signiert,
   setSigniert,
+  signedAt,
+  onKiFill,
+  kiLoading = false,
   accentColor,
   readOnly = false,
   readOnlyHint = '',
@@ -1152,8 +1186,8 @@ function VotumCard({
         <Vote size={18} strokeWidth={1.5} className={`text-${accentColor}`} />
         <h3 className="text-sm font-bold font-headline text-text-primary">{title}</h3>
         {readOnly && (
-          <span className="ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-            <Shield size={10} strokeWidth={2} />
+          <span className="ml-auto inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300 shadow-sm">
+            <Lock size={11} strokeWidth={2.5} />
             Nur Lesezugriff
           </span>
         )}
@@ -1290,18 +1324,50 @@ function VotumCard({
         )}
       </div>
 
-      {/* Signatur */}
-      <label className={`flex items-center gap-2 pt-1 ${readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-        <input
-          type="checkbox"
-          checked={signiert}
-          onChange={(e) => setSigniert(e.target.checked)}
-          disabled={readOnly}
-          className="accent-primary w-4 h-4 disabled:cursor-not-allowed"
-        />
-        <span className="text-sm font-body text-text-primary">Votum einreichen & digital signieren</span>
-        {signiert && <BadgeCheck size={16} strokeWidth={1.5} className="text-accent" />}
-      </label>
+      {/* Signatur + Inline KI-Empfehlung */}
+      <div className="pt-2 border-t border-border space-y-2">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <label className={`flex items-center gap-2 ${readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+            <input
+              type="checkbox"
+              checked={signiert}
+              onChange={(e) => setSigniert(e.target.checked)}
+              disabled={readOnly}
+              className="accent-primary w-4 h-4 disabled:cursor-not-allowed"
+            />
+            <span className="text-sm font-semibold font-body text-text-primary">Votum digital signieren</span>
+            {signiert && <BadgeCheck size={16} strokeWidth={1.5} className="text-accent" />}
+          </label>
+
+          {!readOnly && onKiFill && (
+            <button
+              type="button"
+              onClick={onKiFill}
+              disabled={kiLoading || signiert}
+              title="Begründung automatisch aus KI-Kreditempfehlung befüllen"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold font-body bg-primary text-white hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {kiLoading ? (
+                <Loader2 size={14} strokeWidth={1.5} className="animate-spin" />
+              ) : (
+                <Sparkles size={14} strokeWidth={1.5} />
+              )}
+              {kiLoading ? 'Generiere …' : 'KI-Kreditempfehlung generieren'}
+            </button>
+          )}
+        </div>
+
+        {/* Signatur-Zeitstempel */}
+        {signiert && signedAt && (
+          <div className="flex items-center gap-1.5 text-[11px] text-accent font-mono">
+            <Clock size={11} strokeWidth={1.5} />
+            Signiert am {new Date(signedAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+            {' um '}
+            {new Date(signedAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+            {' Uhr'}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -1327,5 +1393,101 @@ function getApproverName(approver) {
     'Gesamtvorstand + AR': 'Gesamtvorstand + Aufsichtsrat',
   };
   return names[approver] || approver;
+}
+
+// =============================================================================
+// Kreditvertrag-Vorschau-Modal
+// =============================================================================
+
+function ContractPreviewModal({ company, contractText, onClose }) {
+  const contractNr = `${company.id} / ${new Date().getFullYear()}`;
+
+  const handleDownload = async () => {
+    await exportContractAsDocx(contractText, company, contractNr);
+  };
+
+  const handlePrint = () => {
+    const win = window.open('', '_blank');
+    if (!win) return;
+    win.document.write(`<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"/>
+<title>Kreditvertrag ${contractNr}</title>
+<style>
+  body { font-family: 'Times New Roman', serif; font-size: 11pt; line-height: 1.55; max-width: 720px; margin: 2cm auto; color: #111; }
+  h1 { font-size: 16pt; text-align: center; margin-bottom: 0.5rem; }
+  h2 { font-size: 13pt; margin-top: 1.5rem; border-bottom: 1px solid #999; padding-bottom: 4px; }
+  pre { white-space: pre-wrap; font-family: inherit; }
+</style></head><body><pre>${contractText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></body></html>`);
+    win.document.close();
+    win.addEventListener('load', () => win.print());
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+              <FileSignature size={20} strokeWidth={1.5} />
+            </div>
+            <div>
+              <h3 className="text-base font-semibold font-headline text-text-primary">
+                Kreditvertrag-Vorschau
+              </h3>
+              <p className="text-xs text-text-muted">
+                {company.firma} &mdash; Vertragsnummer {contractNr}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface transition-colors"
+            aria-label="Schließen"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Body: contract text */}
+        <div className="flex-1 overflow-y-auto px-6 py-6 scrollbar-thin">
+          <div className="bg-surface border border-border rounded-lg p-6 font-body text-sm text-text-primary whitespace-pre-wrap leading-relaxed">
+            {contractText}
+          </div>
+        </div>
+
+        {/* Footer actions */}
+        <div className="flex items-center justify-between px-6 py-3 border-t border-border bg-surface/50">
+          <p className="text-xs text-text-muted">
+            Vorschau basiert auf STANDARD LOAN AGREEMENT (LMA) — vor Versand durch Rechtsabteilung prüfen lassen.
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-body text-text-secondary border border-border rounded-lg hover:bg-surface transition-colors"
+            >
+              <Printer size={14} strokeWidth={1.5} />
+              Drucken
+            </button>
+            <button
+              type="button"
+              onClick={handleDownload}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold font-body bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              <Download size={14} strokeWidth={1.5} />
+              Als Word herunterladen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 

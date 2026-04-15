@@ -28,6 +28,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import KPIBox from '../shared/KPIBox';
 
 // ---------------------------------------------------------------------------
 // Prozessschritte mit KI-Funktionen
@@ -281,10 +282,26 @@ export default function ComplianceView() {
 
       {/* KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <KpiCard icon={Sparkles} label="KI-Funktionen gesamt" value={totalFunctions} color="text-primary" />
-        <KpiCard icon={AlertTriangle} label="Hochrisiko-KI (AI Act)" value={highRiskCount} color="text-amber-600" />
-        <KpiCard icon={UserCheck} label="Human-in-the-Loop" value="100%" color="text-accent" />
-        <KpiCard icon={CheckCircle2} label="§22 DSGVO konform" value="Ja" color="text-accent" />
+        <KPIBox
+          icon="Sparkles" label="KI-Funktionen gesamt" wert={totalFunctions} format="num" trend={8.3} delay={0}
+          description="Anzahl dokumentierter KI-Komponenten im Kreditprozess"
+          period="Stand heute"
+        />
+        <KPIBox
+          icon="AlertTriangle" label="Hochrisiko-KI (AI Act)" wert={highRiskCount} format="num" trend={-4.2} delay={80}
+          description="Komponenten mit Einstufung 'Hohes Risiko' nach EU AI Act"
+          period="aktuelle Klassifizierung"
+        />
+        <KPIBox
+          icon="UserCheck" label="Human-in-the-Loop" wert={100} format="pct" trend={0.5} delay={160}
+          description="Anteil KI-Entscheidungen mit menschlicher Freigabe"
+          period="rollierend 30 Tage"
+        />
+        <KPIBox
+          icon="CheckCircle2" label="Audit-Events" wert={847} format="num" trend={12.1} delay={240}
+          description="Protokollierte KI-Aktionen (Inference, Override, Freigabe)"
+          period="letzte 30 Tage"
+        />
       </div>
 
       {/* Governance principles */}
@@ -402,20 +419,3 @@ export default function ComplianceView() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// KPI card
-// ---------------------------------------------------------------------------
-
-function KpiCard({ icon: Icon, label, value, color }) {
-  return (
-    <div className="bg-surface-card border border-border rounded-xl p-4 flex items-center gap-3">
-      <div className={`w-10 h-10 rounded-lg bg-surface flex items-center justify-center ${color}`}>
-        <Icon size={20} strokeWidth={1.5} />
-      </div>
-      <div>
-        <p className="text-xs text-text-muted font-body">{label}</p>
-        <p className="text-lg font-bold font-headline text-text-primary">{value}</p>
-      </div>
-    </div>
-  );
-}

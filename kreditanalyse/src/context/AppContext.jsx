@@ -116,17 +116,25 @@ function reducer(state, action) {
         ),
       };
     case 'ADD_CUSTOMER_APPLICATION': {
+      // Die Kundenperspektive reicht inzwischen realistische Finanzzahlen,
+      // Sicherheiten und Bonitätsdaten mit (damit der End-to-End-Flow mit
+      // dem eigenen Antrag abgebildet werden kann). Deshalb nur Defaults
+      // setzen wo nichts übergeben wurde — vorhandene Werte erhalten.
+      const c = action.company;
       const newCompany = {
-        ...action.company,
-        bilanz: {},
-        gf: action.company.ansprechpartner
-          ? [{ name: action.company.ansprechpartner.name, funktion: action.company.ansprechpartner.position || 'GF', anteil: '', seit: '', erfahrung: '' }]
-          : [],
-        sicherheiten: [],
-        konto: null,
-        schufa: null,
-        creditreform_index: null,
-        uploadedDocuments: action.company.uploadedDocuments || [],
+        ...c,
+        bilanz: c.bilanz && Object.keys(c.bilanz).length > 0 ? c.bilanz : {},
+        gf: c.gf && c.gf.length > 0
+          ? c.gf
+          : (c.ansprechpartner
+              ? [{ name: c.ansprechpartner.name, funktion: c.ansprechpartner.position || 'GF', anteil: '', seit: '', erfahrung: '' }]
+              : []),
+        sicherheiten: c.sicherheiten ?? [],
+        bestehende_verbindlichkeiten: c.bestehende_verbindlichkeiten ?? [],
+        konto: c.konto ?? null,
+        schufa: c.schufa ?? null,
+        creditreform_index: c.creditreform_index ?? null,
+        uploadedDocuments: c.uploadedDocuments || [],
       };
       return {
         ...state,

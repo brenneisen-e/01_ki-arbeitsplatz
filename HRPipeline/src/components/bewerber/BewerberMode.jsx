@@ -1,10 +1,27 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Upload, ChevronDown, ChevronLeft, MapPin, Calendar, Briefcase, Activity, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
+import { Upload, ChevronDown, ChevronLeft, MapPin, Calendar, Briefcase, Activity, CheckCircle, AlertCircle, HelpCircle, FileText, Edit3 } from 'lucide-react';
 import { getHRData, HP_DISTANCES_EXT, getHPMatchScoreExt, getHPMatchBadgesExt } from '../../data/hrData';
 import { useToast } from '../../hooks/useToast';
 import { useInstitut } from '../../hooks/useInstitut';
 import ScoreRing from '../shared/ScoreRing';
 import WaterfallChart from '../shared/WaterfallChart';
+import CvSourceViewer from './CvSourceViewer';
+
+// Tiny badge that activates source highlighting for a given key
+function SourceBadge({ sourceKey, onActivate, label = 'Quelle anzeigen' }) {
+  if (!sourceKey) return null;
+  return (
+    <button
+      type="button"
+      className="hp-source-badge"
+      onClick={(e) => { e.stopPropagation(); onActivate?.(sourceKey); }}
+      title="CV-Quelle im Viewer hervorheben"
+    >
+      <FileText size={11} />
+      {label}
+    </button>
+  );
+}
 
 function getMatchesForProfile(profile, positions, mode) {
   return positions.map(pos => {
@@ -202,7 +219,8 @@ function LoadingSection({ onDone, steps }) {
 }
 
 // ======== Profile Card ========
-function ProfileCard({ profile, scoreLabels, indicatorsLabel }) {
+function ProfileCard({ profile, scoreLabels, indicatorsLabel, sourceMap, onSource }) {
+  const hasSources = !!sourceMap && Object.keys(sourceMap).length > 0;
   const scoreClass = profile.totalScore >= 80 ? 'high' : profile.totalScore >= 60 ? 'mid' : 'low';
   const certTags = profile.certifications || [];
   const greenFlags = profile.insuranceFlags?.green || [];
@@ -271,9 +289,14 @@ function ProfileCard({ profile, scoreLabels, indicatorsLabel }) {
               const keys = ['vertrieb', 'branche', 'qualifikation', 'standort', 'softskills'];
               const val = profile.scores[keys[i]];
               const barClass = val >= 70 ? 'high' : val >= 40 ? 'mid' : 'low';
+              const srcKey = `scores.${keys[i]}`;
+              const hasSrc = hasSources && sourceMap[srcKey];
               return (
                 <div key={i} className="hp-score-bar-row">
-                  <div className="hp-score-bar-label">{label}</div>
+                  <div className="hp-score-bar-label">
+                    {label}
+                    {hasSrc && <SourceBadge sourceKey={srcKey} onActivate={onSource} label="Quelle" />}
+                  </div>
                   <div className="hp-score-bar-track"><div className={`hp-score-bar-value ${barClass}`} style={{ width: `${val}%` }} /></div>
                   <div className="hp-score-bar-num">{val}</div>
                 </div>
@@ -284,7 +307,12 @@ function ProfileCard({ profile, scoreLabels, indicatorsLabel }) {
 
         <WaterfallChart waterfall={profile.waterfall} />
 
-        <KiSummary text={profile.summary} />
+        <div className="hp-ki-summary-wrap">
+          <KiSummary text={profile.summary} />
+          {hasSources && sourceMap.summary && (
+            <SourceBadge sourceKey="summary" onActivate={onSource} />
+          )}
+        </div>
 
         {profile.counterfactual && (
           <div className="hp-counterfactual" style={{ gridColumn: '1 / -1' }}>
@@ -395,10 +423,23 @@ function JobDetailOverlay({ positionId, onClose, positions }) {
 }
 
 // ======== Results Section ========
-function ResultsSection({ profile, onReset, onJobDetail, hrData }) {
+function ResultsSection({ profile, onReset, onJobDetail, hrData, onTriggerChat, onSubmitApplication }) {
   const [sortBy, setSortBy] = useState('score');
   const [expandedIdx, setExpandedIdx] = useState(null);
+  const [activeSourceKey, setActiveSourceKey] = useState(null);
+  const [isEditingCv, setIsEditingCv] = useState(false);
+  const [editedSections, setEditedSections] = useState(null);
   const { positions, mode, scoreLabels, ui } = hrData;
+
+  const sourceMap = profile.sourceMap || {};
+  const hasCvViewer = Array.isArray(profile.cvSections) && profile.cvSections.length > 0;
+  const highlightIds = activeSourceKey ? (sourceMap[activeSourceKey] || []) : [];
+  const activeLabel = activeSourceKey
+    ? activeSourceKey.replace(/^[a-z]+\./i, '').replace(/^scores\./, '')
+    : null;
+  const activateSource = useCallback((key) => {
+    setActiveSourceKey(prev => (prev === key ? null : key));
+  }, []);
 
   // Compute matches once per profile/positions/mode so scores stay stable
   // across re-renders (otherwise the ±3 random fuzz shuffles the list).
@@ -424,7 +465,15 @@ function ResultsSection({ profile, onReset, onJobDetail, hrData }) {
         KI-gestützte Vorauswahl — Die finale Bewertung und Entscheidung wird stets durch qualifiziertes Personal getroffen.
       </div>
 
-      <ProfileCard profile={profile} scoreLabels={scoreLabels} indicatorsLabel={scoreLabels.indicatorsLabel} />
+      <div className={`hp-results-split ${hasCvViewer ? 'with-viewer' : ''}`}>
+        <div className="hp-results-analysis">
+      <ProfileCard
+        profile={profile}
+        scoreLabels={scoreLabels}
+        indicatorsLabel={scoreLabels.indicatorsLabel}
+        sourceMap={sourceMap}
+        onSource={activateSource}
+      />
 
       {profile.rejected && (
         <div className="hp-rejection-notice active">
@@ -465,19 +514,104 @@ function ResultsSection({ profile, onReset, onJobDetail, hrData }) {
           />
         ))}
       </div>
+
+      {hasCvViewer && onSubmitApplication && !profile.rejected && (
+        <div className="hp-results-submit">
+          <button
+            type="button"
+            className="hp-action-btn"
+            onClick={() => setIsEditingCv(v => !v)}
+            title="CV im rechten Viewer inline bearbeiten"
+          >
+            <Edit3 size={14} />
+            {isEditingCv ? 'Bearbeitung beenden' : 'Bewerbung anpassen'}
+          </button>
+          <button
+            type="button"
+            className="hp-action-btn hp-apply-btn"
+            onClick={() => onSubmitApplication?.(editedSections || profile.cvSections)}
+          >
+            <CheckCircle size={16} />
+            Bewerbung jetzt absenden
+          </button>
+        </div>
+      )}
+        </div>
+        {hasCvViewer && (
+          <div className="hp-results-viewer">
+            <CvSourceViewer
+              profile={profile}
+              highlightIds={highlightIds}
+              activeLabel={activeLabel}
+              editable={isEditingCv}
+              onSectionsChange={setEditedSections}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ======== Submission Overlay ========
+function SubmissionOverlay({ profile, cvSections, institut, onReset, onTriggerChat }) {
+  const dateStr = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const absender = institut.mode === 'generic' ? 'karriere@zukunfts-ag.de' : 'recruiting@ergo.de';
+  const absenderName = institut.mode === 'generic' ? 'Zukunfts AG Recruiting' : 'ERGO Recruiting';
+  return (
+    <div className="hp-submission-overlay">
+      <div className="hp-submission-animation">
+        <svg className="hp-mail-flying" viewBox="0 0 120 120" width="140" height="140" aria-hidden="true">
+          <rect className="hp-mail-envelope" x="20" y="40" width="80" height="55" rx="4" fill="#fff" stroke="#7c3aed" strokeWidth="2.5" />
+          <path className="hp-mail-flap" d="M20 40 L60 72 L100 40" fill="none" stroke="#7c3aed" strokeWidth="2.5" />
+          <circle className="hp-mail-check" cx="90" cy="85" r="14" fill="#16A34A" />
+          <path className="hp-mail-check-tick" d="M83 85 L88 90 L97 80" stroke="#fff" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <h2>Bewerbung erfolgreich gesendet</h2>
+        <p>Wir haben Ihre Unterlagen empfangen und Sie erhalten in Kürze eine Eingangsbestätigung per E-Mail.</p>
+      </div>
+
+      <div className="hp-submission-mail">
+        <div className="hp-submission-mail-head">
+          <div><strong>Von:</strong> {absenderName} &lt;{absender}&gt;</div>
+          <div><strong>An:</strong> {profile.name}</div>
+          <div><strong>Datum:</strong> {dateStr}</div>
+          <div><strong>Betreff:</strong> Eingangsbestätigung Ihrer Bewerbung</div>
+        </div>
+        <div className="hp-submission-mail-body">
+          <p>Sehr geehrte/r {profile.name.split(' ')[0]},</p>
+          <p>vielen Dank für Ihre Bewerbung bei {institut.institut}. Wir haben Ihre Unterlagen am {dateStr} empfangen.</p>
+          <p>Unsere KI-gestützte Vorauswahl läuft in den nächsten 24 Stunden. Danach prüft ein/e Recruiter/in Ihre Unterlagen persönlich (Human-in-the-Loop gem. Art. 22 DSGVO). Sie hören innerhalb von 2–5 Werktagen von uns.</p>
+          <p>Mit freundlichen Grüßen<br />{absenderName}</p>
+        </div>
+      </div>
+
+      <div className="hp-submission-actions">
+        <button className="hp-action-btn hp-apply-btn" onClick={() => onTriggerChat?.('Wie geht es nach der Bewerbung weiter?')}>
+          <HelpCircle size={16} />
+          Wie geht es weiter?
+        </button>
+        <button className="hp-action-btn" onClick={onReset}>
+          <Upload size={14} />
+          Neue Bewerbung starten
+        </button>
+      </div>
+      {/* cvSections kept in state for potential re-download/preview; not rendered here */}
+      {cvSections && null}
     </div>
   );
 }
 
 // ======== Main Bewerber Mode ========
-export default function BewerberMode({ onProfileSubmitted }) {
+export default function BewerberMode({ onProfileSubmitted, onTriggerChat }) {
   const showToast = useToast();
   const { institut } = useInstitut();
   const hrData = useMemo(() => getHRData(institut.mode), [institut.mode]);
-  const [view, setView] = useState('upload'); // 'upload' | 'loading' | 'results'
+  const [view, setView] = useState('upload'); // 'upload' | 'loading' | 'results' | 'submitted'
   const [currentProfile, setCurrentProfile] = useState(null);
   const [currentProfileId, setCurrentProfileId] = useState(null);
   const [jobDetailId, setJobDetailId] = useState(null);
+  const [submittedCvSections, setSubmittedCvSections] = useState(null);
 
   // Reset when mode changes so we never render stale data from another mode
   useEffect(() => {
@@ -503,8 +637,16 @@ export default function BewerberMode({ onProfileSubmitted }) {
 
   const handleReset = useCallback(() => {
     setCurrentProfile(null);
+    setSubmittedCvSections(null);
     setView('upload');
   }, []);
+
+  const handleSubmitApplication = useCallback((sections) => {
+    setSubmittedCvSections(sections || currentProfile?.cvSections || []);
+    setView('submitted');
+    onProfileSubmitted?.(currentProfileId);
+    showToast?.('Bewerbung erfolgreich gesendet', 'success');
+  }, [currentProfile, currentProfileId, onProfileSubmitted, showToast]);
 
   return (
     <div className="hp-bewerber-section">
@@ -515,7 +657,23 @@ export default function BewerberMode({ onProfileSubmitted }) {
         <LoadingSection onDone={handleLoadingDone} steps={hrData.ui.loadingSteps} />
       )}
       {view === 'results' && currentProfile && (
-        <ResultsSection profile={currentProfile} onReset={handleReset} onJobDetail={setJobDetailId} hrData={hrData} />
+        <ResultsSection
+          profile={currentProfile}
+          onReset={handleReset}
+          onJobDetail={setJobDetailId}
+          hrData={hrData}
+          onTriggerChat={onTriggerChat}
+          onSubmitApplication={handleSubmitApplication}
+        />
+      )}
+      {view === 'submitted' && currentProfile && (
+        <SubmissionOverlay
+          profile={currentProfile}
+          cvSections={submittedCvSections}
+          institut={institut}
+          onReset={handleReset}
+          onTriggerChat={onTriggerChat}
+        />
       )}
       {jobDetailId && (
         <JobDetailOverlay positionId={jobDetailId} positions={hrData.positions} onClose={() => { setJobDetailId(null); showToast?.('Bewerbung wurde erfolgreich eingereicht!', 'success'); }} />

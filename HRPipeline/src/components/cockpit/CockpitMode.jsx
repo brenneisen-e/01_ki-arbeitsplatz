@@ -405,14 +405,32 @@ function EarlyWarningView({ data, labels }) {
 }
 
 // ======== Employee Warnings Panel (Demo / Mitbestimmung) ========
-const EMPLOYEE_WARNINGS = [
-  { id: 'emp-a', label: 'M.S., Team Sales DACH', team: 'Sales DACH', signal: 'Mitarbeiterbefragung 21 Punkte negativer als Vorjahr', level: 'red', updated: '10.04.2026', measure: 'Bleibegespräch mit direkter Führungskraft in KW 17' },
-  { id: 'emp-b', label: 'Kandidat/in #042', team: 'Finance Controlling', signal: 'Niedriger Engagement-Score im FK-Feedback (Q1)', level: 'amber', updated: '08.04.2026', measure: 'Coaching-Angebot über People & Culture prüfen' },
-  { id: 'emp-c', label: 'Kandidat/in #118', team: 'Operations Süd', signal: 'Krankheitstage +32 % gegenüber 12-Monats-Durchschnitt', level: 'red', updated: '12.04.2026', measure: 'Gespräch BGM / arbeitsmedizinischer Dienst empfohlen' },
-  { id: 'emp-d', label: 'Kandidat/in #007', team: 'Tech Platform', signal: 'Zwei Absagen auf interne Ausschreibungen in 90 Tagen', level: 'amber', updated: '05.04.2026', measure: 'Karrieregespräch, Entwicklungsperspektive abstimmen' }
-];
+function formatDaysAgo(days) {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+function currentIsoWeek() {
+  const d = new Date();
+  const target = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNr = (target.getUTCDay() + 6) % 7;
+  target.setUTCDate(target.getUTCDate() - dayNr + 3);
+  const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
+  const diff = target - firstThursday;
+  return 1 + Math.round(diff / (7 * 24 * 3600 * 1000));
+}
+function buildEmployeeWarnings() {
+  const wk = currentIsoWeek();
+  return [
+    { id: 'emp-a', label: 'M.S., Team Sales DACH', team: 'Sales DACH', signal: 'Mitarbeiterbefragung 21 Punkte negativer als Vorjahr', level: 'red', updated: formatDaysAgo(3), measure: `Bleibegespräch mit direkter Führungskraft in KW ${wk + 1}` },
+    { id: 'emp-b', label: 'Kandidat/in #042', team: 'Finance Controlling', signal: 'Niedriger Engagement-Score im FK-Feedback letztes Quartal', level: 'amber', updated: formatDaysAgo(5), measure: 'Coaching-Angebot über People & Culture prüfen' },
+    { id: 'emp-c', label: 'Kandidat/in #118', team: 'Operations Süd', signal: 'Krankheitstage +32 % gegenüber 12-Monats-Durchschnitt', level: 'red', updated: formatDaysAgo(1), measure: 'Gespräch BGM / arbeitsmedizinischer Dienst empfohlen' },
+    { id: 'emp-d', label: 'Kandidat/in #007', team: 'Tech Platform', signal: 'Zwei Absagen auf interne Ausschreibungen in den letzten 90 Tagen', level: 'amber', updated: formatDaysAgo(8), measure: 'Karrieregespräch, Entwicklungsperspektive abstimmen' }
+  ];
+}
 
 function EmployeeWarningsPanel({ labels }) {
+  const warnings = useMemo(() => buildEmployeeWarnings(), []);
   return (
     <div className="hc-panel hc-full-width hc-employee-warn-panel" style={{ marginBottom: 'var(--space-6)' }}>
       <div className="hc-panel-header">
@@ -426,7 +444,7 @@ function EmployeeWarningsPanel({ labels }) {
         <strong>Hinweis Mitbestimmung:</strong> Individuelle HR-Analytics unterliegen dem BetrVG (§ 87 Abs. 1 Nr. 6 / § 80 Abs. 1 Nr. 1). Vor produktiver Nutzung ist eine Betriebsvereinbarung mit dem Betriebsrat erforderlich. Darstellung hier ausschließlich als Mockup.
       </div>
       <div className="hc-employee-warn-list">
-        {EMPLOYEE_WARNINGS.map(w => (
+        {warnings.map(w => (
           <div key={w.id} className={`hc-employee-warn-card ${w.level}`}>
             <div className="hc-employee-warn-head">
               <span className={`hc-alert-dot ${w.level}`} />

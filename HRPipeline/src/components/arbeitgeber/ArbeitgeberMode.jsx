@@ -2,10 +2,38 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { UserPlus, Activity, Eye, EyeOff, MapPin, Calendar, Briefcase, CheckCircle, XCircle, Bookmark, HelpCircle, Send, FileText, Phone, Video, Building, ChevronDown, Sparkles } from 'lucide-react';
 import { anonymizeText } from '../../data/applicants';
 import { getHRData } from '../../data/hrData';
+import { logoDevUrl } from '../../data/profilesGeneric';
 import { useToast } from '../../hooks/useToast';
 import { useInstitut } from '../../hooks/useInstitut';
 import WaterfallChart from '../shared/WaterfallChart';
 import SkillGapChart from '../shared/SkillGapChart';
+
+// Tech-Skills-Chips mit logo.dev-Logos (Software + Unternehmen)
+function TechSkillsPanel({ techSkills }) {
+  if (!Array.isArray(techSkills) || techSkills.length === 0) return null;
+  return (
+    <div className="hp-tech-skills-panel" style={{ marginTop: 'var(--space-6)' }}>
+      <h4 style={{ fontSize: 'var(--font-sm)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)', margin: '0 0 var(--space-3)' }}>
+        Software &amp; Tools
+      </h4>
+      <div className="hp-tech-grid">
+        {techSkills.map((t, i) => (
+          <div key={i} className="hp-tech-chip" title={`${t.name}${t.level ? ' · ' + t.level : ''}`}>
+            <img
+              src={logoDevUrl(t.domain, 48)}
+              alt={t.name}
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+            <div>
+              <div className="hp-tech-name">{t.name}</div>
+              {t.level && <div className="hp-tech-level">{t.level}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function getBlindId(applicantId, applicants) {
   const idx = applicants.findIndex(a => a.id === applicantId);
@@ -241,6 +269,9 @@ function DetailOverlay({ applicant, isBlind, onClose, positions, applicants, sco
 
                 {/* Skill Gap */}
                 <SkillGapChart skillGap={applicant.skillGap} />
+
+                {/* Tech-Skills (Software + Unternehmen mit Logo) */}
+                <TechSkillsPanel techSkills={applicant.techSkills} />
 
                 {/* Counterfactual */}
                 {applicant.counterfactual && (

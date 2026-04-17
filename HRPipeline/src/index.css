@@ -5216,3 +5216,34 @@ body {
     font-size: var(--font-xs);
 }
 .hc-employee-warn-measure strong { color: var(--ai-primary); }
+
+/* ========================================
+   TECH SKILLS PANEL (Arbeitgeber-Detail)
+   ======================================== */
+.hp-tech-skills-panel { display: block; }
+.hp-tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--space-2);
+}
+.hp-tech-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    transition: border-color var(--transition-fast);
+}
+.hp-tech-chip:hover { border-color: var(--ai-primary-light); }
+.hp-tech-chip img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 4px;
+    background: var(--gray-50);
+}
+.hp-tech-name { font-weight: var(--font-semibold); color: var(--text-primary); font-size: var(--font-xs); line-height: 1.2; }
+.hp-tech-level { font-size: 10px; color: var(--text-tertiary); text-transform: capitalize; }

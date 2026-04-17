@@ -55,6 +55,9 @@ const MARKET_DATA = [
 // by uploading their own image, or hide them entirely via the toggle.
 const DEFAULT_HEADER_IMAGES = {
   'Zukunftsbank': './images/zukunftsbank-header.jpeg',
+  // Zukunftsversicherung teilt sich das Header-Stockphoto des Bankfrontends
+  // (Whitelabel-Geschwister), damit die Marken optisch zusammen auftreten.
+  'Zukunftsversicherung': './images/zukunftsbank-header.jpeg',
 };
 
 function readHeaderImage() {

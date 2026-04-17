@@ -9,19 +9,19 @@ export const V1 = {
   linkedin: { kontakte: 500, aktivitaet: 'mittel', branchen: ['IT', 'Digitalisierung'] },
   lebenssituation: 'konsolidierung',
   nps: 8, risikoscore: 28, potentialScore: 4.8, abwanderungsrisiko: 'niedrig',
-  tiere: { typ: 'hund', rasse: 'Labrador-Mischling', name: 'Balu', vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf K\u00f6ln', betrag: -85, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarztpraxis Dr. M\u00fcller', betrag: -120, haeufigkeit: 'quartalsweise' }, { empfaenger: 'Hundeschule Rhein', betrag: -45, haeufigkeit: 'monatlich' }] },
+  tiere: { typ: null, rasse: null, name: null, vermutet: false, quelle: null, umsaetze: [] },
   risikoSignale: [
     {
-      typ: 'haustier',
-      titel: 'Hundehaltung ohne Tierhalter-Haftpflicht erkannt',
-      beschreibung: 'Aus Kontoumsätzen abgeleitet: Peter Schmidt hält einen Hund — monatliche Umsätze bei Fressnapf und Hundeschule sowie quartalsweise Tierarztkosten. In NRW besteht für Hundehalter eine Tierhalter-Haftpflichtversicherungspflicht (LHundG NRW § 5). Eine entsprechende Police ist im Bestand nicht hinterlegt.',
+      typ: 'extremsport',
+      titel: 'Extremsport-Aktivitäten erkannt',
+      beschreibung: 'Aus Kontoumsätzen abgeleitet: Peter Schmidt ist regelmäßig in der Boulderhalle aktiv, hat im Vorjahr eine Fallschirmsprung-Tandembuchung getätigt und im Sommer hochwertige Kletterausrüstung angeschafft.',
       transaktionen: [
-        { empfaenger: 'Fressnapf Köln', betrag: 85, haeufigkeit: 'monatlich' },
-        { empfaenger: 'Hundeschule Rhein', betrag: 45, haeufigkeit: 'monatlich' },
-        { empfaenger: 'Tierarztpraxis Dr. Müller', betrag: 120, haeufigkeit: 'quartalsweise' },
+        { empfaenger: 'DAV Boulderhalle Köln', betrag: 72, haeufigkeit: 'monatlich' },
+        { empfaenger: 'Skydive Center Bonn-Hangelar', betrag: 340, haeufigkeit: 'einmalig 09/2025' },
+        { empfaenger: 'Globetrotter Klettern & Bergsport', betrag: 189, haeufigkeit: 'einmalig 06/2025' },
       ],
-      konsequenz: 'Die aktuelle {{versicherungspartner}} Privathaftpflicht (Privat Premium) deckt Schäden durch Hunde explizit nicht ab. Verursacht der Hund einen Personen- oder Sachschaden, haftet Peter Schmidt in voller Höhe privat — zusätzlich droht in NRW ein Ordnungsgeld bis 100.000 € wegen fehlender Pflicht-Haftpflicht.',
-      empfehlung: 'Tierhalter-Haftpflicht („{{versicherungspartner}} Tierhalter-Haftpflicht Premium") abschließen und optional Tierkrankenversicherung anbieten — passend zur bestehenden Familienabsicherung.',
+      konsequenz: 'Die aktuelle {{versicherungspartner}} Privathaftpflicht Premium und die bestehende Risikolebens- und BU-Absicherung decken Unfälle im Rahmen von Extremsport-Aktivitäten (Fallschirmspringen, Klettern, Bouldern in Outdoor-Routen) nicht oder nur eingeschränkt ab. Bei einem Unfall im Rahmen dieser Aktivitäten besteht keine volle Leistung.',
+      empfehlung: 'Zusatzbaustein „Sport- & Freizeitrisiken" zur bestehenden Unfall- und BU-Police hinzufügen oder Wechsel in den {{versicherungspartner}} Premium-Tarif mit Extremsport-Einschluss anbieten.',
     },
   ],
   eigeneProdukte: [

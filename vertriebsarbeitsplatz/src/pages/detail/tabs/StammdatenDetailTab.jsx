@@ -389,12 +389,13 @@ export default function StammdatenDetailTab({ kunde }) {
                 <div className="flex items-center gap-2 text-sm" title="Schufa-Score (neues Modell, gültig seit März 2026)">
                   <span className="text-slate-400 shrink-0">Bonitätsscore:</span>
                   <span className="flex items-center gap-2">
-                    <img
-                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=96&format=png"
-                      alt="Schufa"
-                      className="w-9 h-9 rounded"
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
+                    <span
+                      className="inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider text-white shrink-0"
+                      style={{ backgroundColor: '#004899', letterSpacing: '0.1em' }}
+                      aria-label="Schufa"
+                    >
+                      SCHUFA
+                    </span>
                     <span className={`font-semibold ${klasse.color}`}>{schufa}/999</span>
                     <span className={`inline-block w-1.5 h-1.5 rounded-full ${klasse.dot}`} />
                     <span className="text-xs text-slate-400">({klasse.label}, neues Schufa-Modell 03/2026)</span>

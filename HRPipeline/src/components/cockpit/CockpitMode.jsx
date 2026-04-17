@@ -379,6 +379,9 @@ function EarlyWarningView({ data, labels }) {
         </div>
       </div>
 
+      {/* Individuelle Auffälligkeiten (Demo / Mitbestimmungs-Disclaimer) */}
+      <EmployeeWarningsPanel labels={labels} />
+
       {/* Model Performance */}
       <div className="hc-panel hc-full-width">
         <div className="hc-panel-header"><h3>Modell-Performance</h3></div>
@@ -396,6 +399,49 @@ function EarlyWarningView({ data, labels }) {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ======== Employee Warnings Panel (Demo / Mitbestimmung) ========
+const EMPLOYEE_WARNINGS = [
+  { id: 'emp-a', label: 'M.S., Team Sales DACH', team: 'Sales DACH', signal: 'Mitarbeiterbefragung 21 Punkte negativer als Vorjahr', level: 'red', updated: '10.04.2026', measure: 'Bleibegespräch mit direkter Führungskraft in KW 17' },
+  { id: 'emp-b', label: 'Kandidat/in #042', team: 'Finance Controlling', signal: 'Niedriger Engagement-Score im FK-Feedback (Q1)', level: 'amber', updated: '08.04.2026', measure: 'Coaching-Angebot über People & Culture prüfen' },
+  { id: 'emp-c', label: 'Kandidat/in #118', team: 'Operations Süd', signal: 'Krankheitstage +32 % gegenüber 12-Monats-Durchschnitt', level: 'red', updated: '12.04.2026', measure: 'Gespräch BGM / arbeitsmedizinischer Dienst empfohlen' },
+  { id: 'emp-d', label: 'Kandidat/in #007', team: 'Tech Platform', signal: 'Zwei Absagen auf interne Ausschreibungen in 90 Tagen', level: 'amber', updated: '05.04.2026', measure: 'Karrieregespräch, Entwicklungsperspektive abstimmen' }
+];
+
+function EmployeeWarningsPanel({ labels }) {
+  return (
+    <div className="hc-panel hc-full-width hc-employee-warn-panel" style={{ marginBottom: 'var(--space-6)' }}>
+      <div className="hc-panel-header">
+        <h3>
+          <Shield size={16} style={{ verticalAlign: 'middle', marginRight: 8, color: '#DC2626' }} />
+          Individuelle Auffälligkeiten
+          <span className="hc-employee-warn-demo-badge">Demo / Mockup</span>
+        </h3>
+      </div>
+      <div className="hc-mitbestimmung-note">
+        <strong>Hinweis Mitbestimmung:</strong> Individuelle HR-Analytics unterliegen dem BetrVG (§ 87 Abs. 1 Nr. 6 / § 80 Abs. 1 Nr. 1). Vor produktiver Nutzung ist eine Betriebsvereinbarung mit dem Betriebsrat erforderlich. Darstellung hier ausschließlich als Mockup.
+      </div>
+      <div className="hc-employee-warn-list">
+        {EMPLOYEE_WARNINGS.map(w => (
+          <div key={w.id} className={`hc-employee-warn-card ${w.level}`}>
+            <div className="hc-employee-warn-head">
+              <span className={`hc-alert-dot ${w.level}`} />
+              <strong>{w.label}</strong>
+              <span className="hc-employee-warn-team">{w.team}</span>
+            </div>
+            <div className="hc-employee-warn-signal">{w.signal}</div>
+            <div className="hc-employee-warn-meta">
+              <span>Letzte Aktualisierung: {w.updated}</span>
+            </div>
+            <div className="hc-employee-warn-measure">
+              <strong>Empfohlene Maßnahme:</strong> {w.measure}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

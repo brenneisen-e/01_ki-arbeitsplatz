@@ -341,18 +341,25 @@ export default function LandingPage() {
 
       {/* Top bar */}
       <div className="px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <a
             href="../../index.html"
-            className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors shrink-0"
             title="Zurück zur Modulübersicht"
           >
             <ArrowLeft size={16} className="text-white/70" strokeWidth={1.75} />
           </a>
-          <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
-            <Briefcase size={16} className="text-white" strokeWidth={1.75} />
+          <div className="flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/15 shadow-[0_8px_20px_-6px_rgba(0,0,0,0.4)]">
+            <img
+              src="https://img.logo.dev/deloitte.com?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=256&format=png"
+              alt="Deloitte"
+              className="h-16 w-auto object-contain"
+              onError={(e) => { e.currentTarget.src = './images/6364529b74a1f1454594542e_Monitor Deloitte Logo.png'; }}
+            />
+            <span className="text-white text-2xl font-bold uppercase tracking-[0.2em] leading-none">
+              Demo
+            </span>
           </div>
-          <span className="text-white/80 text-sm font-medium">KI-Vertriebsarbeitsplatz</span>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 bg-white/10 rounded-lg p-0.5">

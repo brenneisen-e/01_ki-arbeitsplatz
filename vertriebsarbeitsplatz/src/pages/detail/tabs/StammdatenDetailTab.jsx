@@ -389,11 +389,31 @@ export default function StammdatenDetailTab({ kunde }) {
                 <div className="flex items-center gap-2 text-sm" title="Schufa-Score (neues Modell, gültig seit März 2026)">
                   <span className="text-slate-400 shrink-0">Bonitätsscore:</span>
                   <span className="flex items-center gap-2">
+                    {/*
+                      Schufa-Logo via logo.dev. Primärdomain der SCHUFA Holding AG
+                      ist schufa.de (Unternehmensauftritt). Verbraucherportal ist
+                      meineschufa.de; als zusätzlicher Fallback probieren wir die
+                      Domain schufa-api.de (Schufa B2B API-Portal).
+                    */}
                     <img
-                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=96&format=png"
+                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=128&format=png&retina=true"
                       alt="Schufa"
-                      className="w-9 h-9 rounded"
-                      onError={(e) => { e.target.style.display = 'none'; }}
+                      className="h-8 w-auto object-contain rounded"
+                      data-step="0"
+                      onError={(e) => {
+                        const el = e.currentTarget;
+                        const step = parseInt(el.dataset.step || '0', 10);
+                        const fallbacks = [
+                          'https://img.logo.dev/meineschufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=128&format=png&retina=true',
+                          'https://img.logo.dev/schufa-api.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=128&format=png&retina=true',
+                        ];
+                        if (step < fallbacks.length) {
+                          el.dataset.step = String(step + 1);
+                          el.src = fallbacks[step];
+                        } else {
+                          el.style.display = 'none';
+                        }
+                      }}
                     />
                     <span className={`font-semibold ${klasse.color}`}>{schufa}/999</span>
                     <span className={`inline-block w-1.5 h-1.5 rounded-full ${klasse.dot}`} />

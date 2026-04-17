@@ -539,6 +539,15 @@ const LEBENSLAGEN_RADAR_VERSICHERUNG = [
 ];
 
 /* ── Abwanderungsradar (versicherung) ──────────────────────────── */
+// Wichtig: Nur Signale aus Datenquellen, auf die der Versicherer tatsächlich
+// Zugriff hat. Stärkstes öffentliches Signal ist eine FiDA-Datenanfrage
+// (Financial Data Access-Verordnung, EU 2024/..., Anwendung ab 2026): Wenn
+// ein Kunde einem konkurrierenden Versicherer oder einem FISP (Financial
+// Information Service Provider) per SCA Consent gibt, seine Vertrags-,
+// Schaden- und Prämiendaten abzurufen, sieht der haltende Versicherer diese
+// Datenübermittlungsanfrage mit Empfänger, Zweck und Umfang — ein deutlich
+// stärkeres Churn-Signal als Browser-/Vergleichsportal-Tracking
+// (Check24 etc., was für Versicherer gar nicht beobachtbar ist).
 const ABWANDERUNGS_RADAR_VERSICHERUNG = [
   {
     kundeId: 'KD00006',
@@ -547,12 +556,12 @@ const ABWANDERUNGS_RADAR_VERSICHERUNG = [
     riskLevel: 'high',
     riskScore: 84,
     riskType: 'KFZ-Wechsel zum Online-Versicherer',
-    summary: 'Check24-Rechnerbesuche · Kündigung KFZ angekündigt',
+    summary: 'FiDA-Datenanfrage von HUK24 · Portal-Kündigungsassistent geöffnet',
     signals: [
-      'Check24-Vergleichsrechner für Kfz 3× in 4 Wochen aufgerufen',
-      'Kündigungsformular KFZ im Portal angefordert',
-      'Dauerauftrag „HUK24" auf Konto vorbereitet (PSD2)',
-      'Keine Reaktion auf letzte 2 Jahresgespräche-Einladungen',
+      'FiDA-Datenübermittlungsanfrage von „HUK24 Versicherung AG" (Consent via SCA am 08.04.) — Umfang: Kfz-Vertragsdaten, Schadenhistorie, aktuelle Prämie',
+      'Kündigungsassistent im eigenen Kundenportal für Kfz-Vertrag 2× gestartet (keine Absendung)',
+      'Kein Portal-Login seit 11 Wochen, E-Mail-Öffnungsrate auf 0 % gefallen',
+      'Jahresgespräch 2× abgesagt, keine Reaktion auf letzte 3 Servicemails',
     ],
     clvAtRisk: 14600,
     trend: 'steigend',
@@ -564,11 +573,12 @@ const ABWANDERUNGS_RADAR_VERSICHERUNG = [
     riskLevel: 'medium',
     riskScore: 58,
     riskType: 'Betriebshaftpflicht-Verlagerung',
-    summary: 'Konkurrenz-Angebot für Gewerbeversicherung angefragt',
+    summary: 'FiDA-Anfrage eines Maklers · negatives NPS · offener Großschaden',
     signals: [
-      'Recherche „Handwerker-Versicherung Vergleich"',
-      'Kontakt zu Allianz-Agentur über Empfehlung',
-      'Jahresbeitrag als zu hoch kommentiert im NPS-Feedback',
+      'FiDA-Datenübermittlungsanfrage eines unabhängigen Maklers (FISP „AssekuranzFinder GmbH") — Umfang: Gewerbehaftpflicht, Prämienhistorie 3 Jahre',
+      'NPS-Score von 8 auf 3 gefallen, Kommentar: „Beitrag unverhältnismäßig"',
+      'Offener Betriebsschaden seit 6 Wochen nicht abschließend reguliert',
+      'Beitragsrückerstattungsanfrage für Jahresprämie 2025 eingegangen',
     ],
     clvAtRisk: 8900,
     trend: 'stabil',

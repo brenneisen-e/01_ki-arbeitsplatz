@@ -86,7 +86,13 @@ function KPISection() {
 // ======== Applicant Card ========
 function ApplicantCard({ applicant, isBlind, onClick, positions, applicants }) {
   const scoreClass = applicant.totalScore >= 80 ? 'high' : applicant.totalScore >= 60 ? 'mid' : 'low';
-  const statusLabel = applicant.status === 'recommended' ? 'Empfohlen' : applicant.status === 'review' ? 'Prüfen' : 'Ablehnung empfohlen';
+  const statusLabel = applicant.status === 'invited'
+    ? 'Eingeladen'
+    : applicant.status === 'recommended'
+      ? 'Empfohlen'
+      : applicant.status === 'review'
+        ? 'Prüfen'
+        : 'Ablehnung empfohlen';
   const appliedPos = applicant.appliedPositionId ? positions.find(p => p.id === applicant.appliedPositionId) : null;
   const dateStr = applicant.appliedDate ? new Date(applicant.appliedDate).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
 
@@ -133,7 +139,7 @@ function ApplicantCard({ applicant, isBlind, onClick, positions, applicants }) {
 }
 
 // ======== Detail Overlay ========
-function DetailOverlay({ applicant, isBlind, onClose, positions, applicants, scoreLabels }) {
+function DetailOverlay({ applicant, isBlind, onClose, positions, applicants, scoreLabels, onInvited }) {
   const showToast = useToast();
   const [actionView, setActionView] = useState(null); // null | 'einladen' | 'ablehnen'
   const [interviewOpen, setInterviewOpen] = useState(false);
@@ -289,7 +295,18 @@ function DetailOverlay({ applicant, isBlind, onClose, positions, applicants, sco
               </button>
             </div>
           ) : actionView === 'einladen' ? (
-            <InviteWorkflow name={displayName} onCancel={() => setActionView(null)} onConfirm={() => { showToast?.(`Einladung an ${displayName} gesendet`, 'success'); onClose(); }} />
+            <InviteWorkflow
+              name={displayName}
+              onCancel={() => setActionView(null)}
+              onConfirm={() => {
+                showToast?.(`Einladung an ${displayName} gesendet`, 'success');
+                if (onInvited) {
+                  onInvited(applicant);
+                } else {
+                  onClose();
+                }
+              }}
+            />
           ) : (
             <RejectWorkflow name={displayName} onCancel={() => setActionView(null)} onConfirm={() => { showToast?.(`Absage an ${displayName} gesendet`, 'warning'); onClose(); }} />
           )}
@@ -517,6 +534,7 @@ export default function ArbeitgeberMode({ newApplicantProfileId }) {
   const [filterStatus, setFilterStatus] = useState('');
   const [detailApplicant, setDetailApplicant] = useState(null);
   const [analyzingNew, setAnalyzingNew] = useState(false);
+  const [invitedIds, setInvitedIds] = useState(() => new Set());
 
   const newApplicantProfile = useMemo(
     () => newApplicantProfileId ? hrData.profiles[newApplicantProfileId] : null,
@@ -551,7 +569,14 @@ export default function ArbeitgeberMode({ newApplicantProfileId }) {
     });
   };
 
-  const filteredApplicants = applicants.filter(a => {
+  // Overlay applicant with dynamic invited status + dedupe the new applicant
+  const applicantsWithStatus = useMemo(() => {
+    return applicants
+      .filter(a => !newApplicantProfileId || a.id !== newApplicantProfileId)
+      .map(a => invitedIds.has(a.id) ? { ...a, status: 'invited' } : a);
+  }, [applicants, newApplicantProfileId, invitedIds]);
+
+  const filteredApplicants = applicantsWithStatus.filter(a => {
     if (filterRegion && a.region !== filterRegion) return false;
     if (filterScore) {
       if (filterScore === 'high' && a.totalScore < 80) return false;
@@ -561,6 +586,19 @@ export default function ArbeitgeberMode({ newApplicantProfileId }) {
     if (filterStatus && a.status !== filterStatus) return false;
     return true;
   });
+
+  const [invitingAnimation, setInvitingAnimation] = useState(null); // { name, positionTitle } | null
+  const handleInvited = useCallback((applicant) => {
+    setDetailApplicant(null);
+    setInvitedIds(prev => {
+      const next = new Set(prev);
+      next.add(applicant.id);
+      return next;
+    });
+    const posTitle = positions.find(p => p.id === applicant.appliedPositionId)?.title || '';
+    setInvitingAnimation({ name: applicant.name, positionTitle: posTitle });
+    setTimeout(() => setInvitingAnimation(null), 2600);
+  }, [positions]);
 
   return (
     <div className="hp-employer-section active">
@@ -632,13 +670,32 @@ export default function ArbeitgeberMode({ newApplicantProfileId }) {
 
       {detailApplicant && (
         <DetailOverlay
-          applicant={detailApplicant}
+          applicant={invitedIds.has(detailApplicant.id) ? { ...detailApplicant, status: 'invited' } : detailApplicant}
           isBlind={blindScreening}
           onClose={() => setDetailApplicant(null)}
           positions={positions}
           applicants={applicants}
           scoreLabels={scoreLabels}
+          onInvited={handleInvited}
         />
+      )}
+
+      {invitingAnimation && (
+        <div className="hp-invite-overlay">
+          <div className="hp-invite-card">
+            <svg className="hp-invite-mail" viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
+              <rect className="hp-mail-envelope" x="20" y="40" width="80" height="55" rx="4" fill="#fff" stroke="#7c3aed" strokeWidth="2.5" />
+              <path className="hp-mail-flap" d="M20 40 L60 72 L100 40" fill="none" stroke="#7c3aed" strokeWidth="2.5" />
+              <circle className="hp-mail-check" cx="90" cy="85" r="14" fill="#16A34A" />
+              <path className="hp-mail-check-tick" d="M83 85 L88 90 L97 80" stroke="#fff" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <h3>Einladung wird gesendet...</h3>
+            <p>
+              <strong>{invitingAnimation.name}</strong>
+              {invitingAnimation.positionTitle ? ` · ${invitingAnimation.positionTitle}` : ''}
+            </p>
+          </div>
+        </div>
       )}
     </div>
   );

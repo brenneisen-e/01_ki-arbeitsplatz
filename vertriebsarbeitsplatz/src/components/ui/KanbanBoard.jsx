@@ -86,6 +86,8 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
     });
     Object.keys(map).forEach(key => {
       map[key].sort((a, b) => {
+        // Showcase-Kunde (z. B. Peter Schmidt in Versicherung) immer zuerst
+        if (a._showcase !== b._showcase) return a._showcase ? -1 : 1;
         if (sortMode === 'volumen') return (b.volumen || 0) - (a.volumen || 0);
         if (sortMode === 'kunde') return (a.kundeName || '').localeCompare(b.kundeName || '');
         // prioritaet (default)

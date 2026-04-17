@@ -8,8 +8,22 @@ export const V1 = {
   wohnsituation: 'Eigentum', wohnflaeche: 145, adresse: 'Lindenallee 23, 50996 Köln',
   linkedin: { kontakte: 500, aktivitaet: 'mittel', branchen: ['IT', 'Digitalisierung'] },
   lebenssituation: 'konsolidierung',
-  nps: 8, risikoscore: 28, potentialScore: 4.5, abwanderungsrisiko: 'niedrig',
-  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf K\u00f6ln', betrag: -85, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarztpraxis Dr. M\u00fcller', betrag: -120, haeufigkeit: 'quartalsweise' }, { empfaenger: 'Hundeschule Rhein', betrag: -45, haeufigkeit: 'monatlich' }] },
+  nps: 8, risikoscore: 28, potentialScore: 4.8, abwanderungsrisiko: 'niedrig',
+  tiere: { typ: 'hund', rasse: 'Labrador-Mischling', name: 'Balu', vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf K\u00f6ln', betrag: -85, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarztpraxis Dr. M\u00fcller', betrag: -120, haeufigkeit: 'quartalsweise' }, { empfaenger: 'Hundeschule Rhein', betrag: -45, haeufigkeit: 'monatlich' }] },
+  risikoSignale: [
+    {
+      typ: 'haustier',
+      titel: 'Hundehaltung ohne Tierhalter-Haftpflicht erkannt',
+      beschreibung: 'Aus Kontoumsätzen abgeleitet: Peter Schmidt hält einen Hund — monatliche Umsätze bei Fressnapf und Hundeschule sowie quartalsweise Tierarztkosten. In NRW besteht für Hundehalter eine Tierhalter-Haftpflichtversicherungspflicht (LHundG NRW § 5). Eine entsprechende Police ist im Bestand nicht hinterlegt.',
+      transaktionen: [
+        { empfaenger: 'Fressnapf Köln', betrag: 85, haeufigkeit: 'monatlich' },
+        { empfaenger: 'Hundeschule Rhein', betrag: 45, haeufigkeit: 'monatlich' },
+        { empfaenger: 'Tierarztpraxis Dr. Müller', betrag: 120, haeufigkeit: 'quartalsweise' },
+      ],
+      konsequenz: 'Die aktuelle {{versicherungspartner}} Privathaftpflicht (Privat Premium) deckt Schäden durch Hunde explizit nicht ab. Verursacht der Hund einen Personen- oder Sachschaden, haftet Peter Schmidt in voller Höhe privat — zusätzlich droht in NRW ein Ordnungsgeld bis 100.000 € wegen fehlender Pflicht-Haftpflicht.',
+      empfehlung: 'Tierhalter-Haftpflicht („{{versicherungspartner}} Tierhalter-Haftpflicht Premium") abschließen und optional Tierkrankenversicherung anbieten — passend zur bestehenden Familienabsicherung.',
+    },
+  ],
   eigeneProdukte: [
     { typ: 'bu', sparte: 'leben', produkt: 'ERGO BU Comfort', details: '1.800\u20ac/mtl. Rente', praemie: 2160, seit: '2018-03', status: 'optimierbar' },
     { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO Kfz-Vollkasko', details: 'VW Tiguan, 500\u20ac SB, SF-12', praemie: 680, seit: '2021-06', status: 'aktiv' },
@@ -65,6 +79,21 @@ export const V1 = {
     { kategorie: 'tierarzt', betrag: -40, empfaenger: 'Tierarztpraxis Dr. M\u00fcller' },
   ],
   potentiale: [
+    {
+      titel: 'Tierhalter-Haftpflicht + Tierkrankenversicherung (Hund Balu)', typ: 'whitespot', quellen: ['kontoumsaetze', 'risikosignal'], prioritaet: 'hoch', volumen: 360, volumenTyp: 'jaehrlich',
+      beschreibung: 'Hundehaltung aus Kontoumsätzen abgeleitet. In NRW ist eine Tierhalter-Haftpflicht gesetzlich vorgeschrieben — aktuell nicht im Bestand.',
+      kiDescription: 'KI-Analyse: Peter Schmidt hält einen Hund („Balu", Labrador-Mischling) — erkennbar an den regelmäßigen Umsätzen bei Fressnapf Köln (85€/Mon.), Hundeschule Rhein (45€/Mon.) und Tierarztpraxis Dr. Müller (120€/Quartal). Die bestehende ERGO Privathaftpflicht schließt Hunde-bezogene Schäden aus; zudem greift in NRW die gesetzliche Pflicht (LHundG §5). Empfehlung: ERGO Tierhalter-Haftpflicht Premium (ca. 80€/J.) kombiniert mit ERGO Tierkranken Komfort (ca. 280€/J.) — Gesamtbeitrag ~360€/J.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Tierhalter-Haftpflicht Premium + Tierkranken Komfort', status: 'identifiziert',
+      herleitung: [
+        { label: 'Erkannte Haustierhaltung', value: 'Hund (Labrador-Mischling, „Balu")' },
+        { label: 'Auslöser', value: 'Kontoumsätze Fressnapf, Tierarzt, Hundeschule' },
+        { label: 'Gesetzliche Lage NRW', value: 'LHundG §5 — Pflicht-Haftpflichtversicherung' },
+        { label: 'Deckung aktuell', value: 'Keine (Privathaftpflicht deckt Hund nicht)' },
+        { label: 'Empfohlene Police', value: 'ERGO Tierhalter-Haftpflicht Premium' },
+        { label: 'Mehrwert', value: 'Zusätzlich Tierkranken Komfort (OP-Schutz + Ambulant)' },
+        { label: 'Jahresbeitrag gesamt', value: 'ca. 360€/J.' },
+      ],
+    },
     {
       titel: 'Erh\u00f6hung Abdeckung Berufsunf\u00e4higkeitsversicherung', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 960, volumenTyp: 'jaehrlich',
       beschreibung: 'Zweites Kind, Einkommen gestiegen. BU deckt nur 69% statt 80%.',

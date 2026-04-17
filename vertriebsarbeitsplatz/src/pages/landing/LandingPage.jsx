@@ -374,6 +374,19 @@ export default function LandingPage() {
         </div>
       </div>
 
+      {/* Header stock photo (einheitlich aus Zukunftsbank-Bildwelt) */}
+      <div className="w-full px-6 pb-6">
+        <div
+          className="mx-auto max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+          style={{
+            height: 200,
+            backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.15) 0%, rgba(15,23,42,0.55) 100%), url('./images/zukunftsbank-header.jpeg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+      </div>
+
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-8">
         {/* Logo */}

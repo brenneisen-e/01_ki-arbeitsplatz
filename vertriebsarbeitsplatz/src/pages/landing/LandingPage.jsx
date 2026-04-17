@@ -284,7 +284,14 @@ export default function LandingPage() {
   return (
     <div
       className="min-h-screen transition-colors duration-500 flex flex-col"
-      style={{ background: currentColors.gradient }}
+      style={{
+        // Stockphoto als Vollbild-Hintergrund mit Dunkel-Overlay für Lesbarkeit.
+        backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.65) 0%, rgba(15,23,42,0.82) 100%), url('./images/zukunftsbank-header.jpeg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
     >
       {/* Name Prompt Overlay */}
       {showNamePrompt && (
@@ -372,19 +379,6 @@ export default function LandingPage() {
           </div>
           <span className="text-xs text-white/40 font-medium tracking-wider uppercase">Open Finance Suite</span>
         </div>
-      </div>
-
-      {/* Header stock photo (einheitlich aus Zukunftsbank-Bildwelt) */}
-      <div className="w-full px-6 pb-6">
-        <div
-          className="mx-auto max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-white/10"
-          style={{
-            height: 200,
-            backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.15) 0%, rgba(15,23,42,0.55) 100%), url('./images/zukunftsbank-header.jpeg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
       </div>
 
       {/* Main content */}

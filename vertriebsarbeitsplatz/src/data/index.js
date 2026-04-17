@@ -59,12 +59,32 @@ export function getKundeById(modeId, kundeId) {
   return list.find(k => k.id === kundeId);
 }
 
+// Showcase-Kunden pro Modus: Potentiale werden priorisiert angezeigt.
+const SHOWCASE_KUNDE_IDS = {
+  versicherung: 'KD00001',       // Peter Schmidt
+  banking: 'BK00001',            // Klaus Fischer
+  vermoegensverwaltung: null,
+};
+
 const _potentialeCache = {};
 export function getAllPotentiale(modeId) {
   if (_potentialeCache[modeId]) return _potentialeCache[modeId];
   const kunden = KUNDEN_BY_MODE[modeId] || [];
-  const result = kunden.flatMap(k =>
-    (k.potentiale || []).map(p => ({ ...p, kundeId: k.id, kundeName: k.name }))
+  const showcaseId = SHOWCASE_KUNDE_IDS[modeId];
+  // Stable ordering: showcase customer first, rest unchanged.
+  const orderedKunden = showcaseId
+    ? [
+        ...kunden.filter(k => k.id === showcaseId),
+        ...kunden.filter(k => k.id !== showcaseId),
+      ]
+    : kunden;
+  const result = orderedKunden.flatMap(k =>
+    (k.potentiale || []).map(p => ({
+      ...p,
+      kundeId: k.id,
+      kundeName: k.name,
+      _showcase: k.id === showcaseId,
+    }))
   );
   _potentialeCache[modeId] = result;
   return result;

@@ -9,6 +9,7 @@ import {
   Database,
   Clock,
   ChevronDown,
+  ChevronRight,
   Check,
 } from 'lucide-react';
 import { PrioBadge, QuellenBadge } from './Badge';
@@ -275,30 +276,62 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
               {/* Cards */}
               <div className="p-2 space-y-2 min-h-[150px]">
                 {(() => {
+                  // Gruppieren nach Kunde: dieselbe Person soll nicht mehrfach
+                  // mit je einem Potenzial erscheinen. Die interne Reihenfolge
+                  // innerhalb eines Clusters bleibt die Sortierung aus
+                  // columnsMap (Prio/Volumen), also ist das erste Item auch das
+                  // "Top-Potenzial" des Kunden.
+                  const groups = [];
+                  const seen = {};
+                  cards.forEach(p => {
+                    const key = p.kundeId || p._id;
+                    if (seen[key] == null) {
+                      seen[key] = groups.length;
+                      groups.push([p]);
+                    } else {
+                      groups[seen[key]].push(p);
+                    }
+                  });
+
                   const isExpanded = !!expandedColumns[col.id];
-                  const visibleCards = isExpanded
-                    ? cards
-                    : cards.slice(0, CARDS_PER_COLUMN);
-                  const hiddenCount = cards.length - visibleCards.length;
+                  const visibleGroups = isExpanded
+                    ? groups
+                    : groups.slice(0, CARDS_PER_COLUMN);
+                  const hiddenGroupCount = groups.length - visibleGroups.length;
                   return (
                     <>
-                      {visibleCards.map(p => (
-                        <PotenzialCard
-                          key={p._id}
-                          p={p}
-                          columnColor={col.color}
-                          onDragStart={handleDragStart}
-                          onDragEnd={handleDragEnd}
-                          onReactivate={onReactivate}
-                          onCardClick={onCardClick}
-                        />
-                      ))}
+                      {visibleGroups.map((items, idx) => {
+                        if (items.length === 1) {
+                          return (
+                            <PotenzialCard
+                              key={items[0]._id}
+                              p={items[0]}
+                              columnColor={col.color}
+                              onDragStart={handleDragStart}
+                              onDragEnd={handleDragEnd}
+                              onReactivate={onReactivate}
+                              onCardClick={onCardClick}
+                            />
+                          );
+                        }
+                        return (
+                          <PotenzialClusterCard
+                            key={`cluster_${items[0].kundeId}_${idx}`}
+                            items={items}
+                            columnColor={col.color}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                            onReactivate={onReactivate}
+                            onCardClick={onCardClick}
+                          />
+                        );
+                      })}
                       {cards.length === 0 && (
                         <div className="text-center text-[11px] text-slate-400 italic py-4">
                           {isDropTarget ? 'Hier ablegen' : '—'}
                         </div>
                       )}
-                      {cards.length > CARDS_PER_COLUMN && (
+                      {groups.length > CARDS_PER_COLUMN && (
                         <button
                           type="button"
                           onClick={() =>
@@ -312,7 +345,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                         >
                           {isExpanded
                             ? 'Weniger anzeigen'
-                            : `Mehr anzeigen (+${hiddenCount})`}
+                            : `Mehr anzeigen (+${hiddenGroupCount} Kunden)`}
                         </button>
                       )}
                     </>
@@ -468,6 +501,177 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
           <RotateCcw size={10} /> Reaktivieren
         </button>
       )}
+    </div>
+  );
+}
+
+const QUELLEN_THEME_LABELS = {
+  finanztransaktion: 'FIDA-Signal',
+  bestand: 'Bestandssignal',
+  wettbewerb: 'Wettbewerb',
+  lebensereignis: 'Lebensereignis',
+  direktvertrieb: 'Direktvertrieb',
+  kontoumsaetze: 'Kontoumsätze',
+  risikosignal: 'Risikosignal',
+  kommunikation: 'Kommunikation',
+  markt: 'Marktdaten',
+};
+
+function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onReactivate, onCardClick }) {
+  const [expanded, setExpanded] = useState(false);
+  const top = items[0];
+  const kundeName = top.kundeName || '';
+  const initials = kundeName.split(' ').map(n => n[0]).join('').slice(0, 2);
+
+  const totalEinmalig = items
+    .filter(p => p.volumenTyp !== 'jaehrlich')
+    .reduce((s, p) => s + (p.volumen || 0), 0);
+  const totalJaehrlich = items
+    .filter(p => p.volumenTyp === 'jaehrlich')
+    .reduce((s, p) => s + (p.volumen || 0), 0);
+
+  const fida = items.some(p => (p.quellen || []).includes('finanztransaktion'));
+
+  const quelleCounts = {};
+  items.forEach(p => (p.quellen || []).forEach(q => {
+    quelleCounts[q] = (quelleCounts[q] || 0) + 1;
+  }));
+  const sortedQuellen = Object.entries(quelleCounts).sort((a, b) => b[1] - a[1]);
+
+  let themaText = '';
+  if (sortedQuellen.length > 0) {
+    const [topQ, topCount] = sortedQuellen[0];
+    const topLabel = QUELLEN_THEME_LABELS[topQ] || topQ;
+    if (topCount >= 2) {
+      themaText = `${topCount}× ${topLabel}`;
+      if (sortedQuellen.length > 1) {
+        const secondLabel = QUELLEN_THEME_LABELS[sortedQuellen[1][0]] || sortedQuellen[1][0];
+        themaText += ` + ${secondLabel}`;
+      }
+      themaText += ' — Bestandskonsolidierung';
+    } else if (sortedQuellen.length > 1) {
+      const secondLabel = QUELLEN_THEME_LABELS[sortedQuellen[1][0]] || sortedQuellen[1][0];
+      themaText = `${topLabel} + ${secondLabel}`;
+    } else {
+      themaText = topLabel;
+    }
+  }
+
+  const topVolText = top.volumen
+    ? `${formatEur(top.volumen)}${top.volumenTyp === 'jaehrlich' ? ' /J.' : ''}`
+    : '';
+
+  if (expanded) {
+    return (
+      <div className="rounded-lg border p-2 bg-white/60 space-y-2" style={{ borderColor: columnColor + '55' }}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <div
+              className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0"
+              style={{ backgroundColor: columnColor }}
+            >
+              {initials || '?'}
+            </div>
+            <span className="text-[11px] font-bold text-slate-700 truncate">{kundeName}</span>
+            <span className="text-[10px] text-slate-400 shrink-0">· {items.length} Potenziale</span>
+          </div>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setExpanded(false); }}
+            className="text-[10px] font-semibold text-slate-500 hover:text-slate-900 px-1.5 py-0.5 rounded hover:bg-slate-100 shrink-0"
+          >
+            Einklappen
+          </button>
+        </div>
+        <div className="space-y-2">
+          {items.map(p => (
+            <PotenzialCard
+              key={p._id}
+              p={p}
+              columnColor={columnColor}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+              onReactivate={onReactivate}
+              onCardClick={onCardClick}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      onClick={() => onCardClick?.(top)}
+      className="rounded-lg p-2.5 shadow-sm hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all cursor-pointer relative border border-slate-200 bg-white"
+    >
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-1">
+        <div
+          className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+          style={{ backgroundColor: columnColor }}
+        >
+          {initials || '?'}
+        </div>
+        <span className="text-xs font-semibold truncate flex-1 text-slate-700">{kundeName}</span>
+        {fida && (
+          <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" title="FIDA-Daten" />
+        )}
+      </div>
+
+      {/* Summary line */}
+      <div className="text-[11px] font-mono text-slate-500 mb-1.5">
+        {items.length} Potenziale
+        {(totalEinmalig + totalJaehrlich) > 0 && (
+          <>
+            {' · Σ '}
+            {totalEinmalig > 0 && formatEur(totalEinmalig)}
+            {totalEinmalig > 0 && totalJaehrlich > 0 && ' + '}
+            {totalJaehrlich > 0 && `${formatEur(totalJaehrlich)} /J.`}
+          </>
+        )}
+      </div>
+
+      {/* Bullet points */}
+      <ul className="space-y-1 mb-2">
+        <li className="text-[11px] text-slate-700 leading-snug flex gap-1.5">
+          <span className="text-slate-400 shrink-0">•</span>
+          <span className="min-w-0">
+            <span className="font-semibold">Top:</span>{' '}
+            <span className="text-slate-800">{top.titel}</span>
+            {topVolText && <span className="text-slate-500"> ({topVolText})</span>}
+          </span>
+        </li>
+        {themaText && (
+          <li className="text-[11px] text-slate-700 leading-snug flex gap-1.5">
+            <span className="text-slate-400 shrink-0">•</span>
+            <span className="min-w-0">
+              <span className="font-semibold">Thema:</span>{' '}
+              <span className="text-slate-600">{themaText}</span>
+            </span>
+          </li>
+        )}
+      </ul>
+
+      {/* Badges + expand */}
+      <div className="flex items-center justify-between gap-1">
+        <div className="flex items-center gap-1 flex-wrap">
+          <PrioBadge prioritaet={top.prioritaet} />
+          {items.length > 1 && (
+            <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-1.5 py-0.5">
+              +{items.length - 1}
+            </span>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
+          className="flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded hover:bg-slate-100 shrink-0"
+          style={{ color: columnColor }}
+        >
+          Aufklappen <ChevronRight size={10} />
+        </button>
+      </div>
     </div>
   );
 }

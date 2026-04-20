@@ -106,6 +106,17 @@ const DOMAIN_MAP = {
   'Zukunftsbank': null,
   'Privat': null,
   'Eigene': null,
+  // Einzeltitel / Aktien-Logos (via logo.dev)
+  'Apple': 'apple.com',
+  'Apple Inc.': 'apple.com',
+  'Apple Inc. (AAPL)': 'apple.com',
+  'AAPL': 'apple.com',
+  'Amazon': 'amazon.com',
+  'Amazon.com Inc.': 'amazon.com',
+  'Amazon.com Inc. (AMZN)': 'amazon.com',
+  'AMZN': 'amazon.com',
+  'OpenAI': 'openai.com',
+  'OpenAI (Pre-IPO / Secondary)': 'openai.com',
 };
 
 export function getLogoUrl(name, size = 32) {

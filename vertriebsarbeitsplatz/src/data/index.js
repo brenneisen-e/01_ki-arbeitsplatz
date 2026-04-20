@@ -729,13 +729,15 @@ export const TERMINE_BY_MODE = {
   get banking() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      // Banking-Termine: kundeId zeigt auf BK0000X, Foto kommt zentral aus
-      // kundenFotos.js. Demo-Stub-IDs (KDB00X) bekommen weiterhin den
-      // Fallback-Pfad, damit nichts leer bleibt.
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Stefan Braun', betreff: tx('Gewerbekonto-Beratung', 'Business account consultation'), kundeId: 'BK00006', foto: fotoFor('BK00006') },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: tx('VermögenPlus Depot Review', 'VermögenPlus Depot Review'), kundeId: 'BK00003', foto: fotoFor('BK00003') },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: tx('VR-FinanzPlan Erstgespräch', 'VR Financial Plan initial meeting'), kundeId: 'BK00002', foto: fotoFor('BK00002') },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: tx('Praxiskredit Auszahlung', 'Practice loan disbursement'), kundeId: 'BK00005', foto: fotoFor('BK00005') },
+      // Banking-Termine: bewusst KEINE Kunden, die bereits in den Radaren
+      // (Lebenslagen-/Abwanderungs-Radar) oder den Marketingkampagnen auf
+      // der Übersicht auftauchen – sonst wäre die Sidebar nur eine Kopie
+      // dieser Kacheln. Die hier genutzten Kunden sind reine Termin-Stubs
+      // (KDB00X), die auch in den Aufgaben vorkommen oder neu sind.
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Julia Becker', betreff: tx('FIDA-Consent Termin', 'FIDA consent meeting'), kundeId: 'KDB004', foto: fotoFor('KDB004', './images/AdobeStock_612940075.jpeg') },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Thomas Krüger', betreff: tx('Baufinanzierung Erstgespräch', 'Construction loan initial meeting'), kundeId: 'KDB007', foto: fotoFor('KDB007', './images/AdobeStock_329502726.jpeg') },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Christian Binder', betreff: tx('VR-FinanzPlan Beratung', 'VR Financial Plan consultation'), kundeId: 'KDB010', foto: fotoFor('KDB010', './images/AdobeStock_1091012713.jpeg') },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sabine Lorenz', betreff: tx('Wertpapier-Review', 'Securities review'), kundeId: 'KDB011', foto: fotoFor('KDB011', './images/maria-musterfrau.png') },
     ];
   },
   get vermoegensverwaltung() {

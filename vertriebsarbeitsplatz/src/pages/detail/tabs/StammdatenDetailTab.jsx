@@ -221,9 +221,9 @@ export default function StammdatenDetailTab({ kunde }) {
         </div>
       </div>
 
-      <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
+      <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-start' : 'grid grid-cols-2 gap-4 items-start'}>
         {/* Persoenliche Daten */}
-        <Card hover={false} className="h-full flex flex-col">
+        <Card hover={false} className="flex flex-col">
           <div
             className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-200 flex items-center gap-2"
             style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' }}
@@ -231,7 +231,7 @@ export default function StammdatenDetailTab({ kunde }) {
             <User size={20} className="text-blue-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-blue-900">{t('persoenlicheDaten')}</h3>
           </div>
-          <div className="space-y-2 text-sm flex-1 flex flex-col justify-between">
+          <div className="space-y-2 text-sm">
             <InfoRow label={t('name')} value={tn(kunde.name)} />
             <InfoRow label={t('geburtsdatum')} value={(() => {
               const today = new Date();
@@ -285,7 +285,7 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card hover={false} className="h-full flex flex-col">
+        <Card hover={false} className="flex flex-col">
           <div
             className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-200 flex items-center gap-2"
             style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)' }}
@@ -293,7 +293,7 @@ export default function StammdatenDetailTab({ kunde }) {
             <Wallet size={20} className="text-emerald-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-emerald-900">{t('finanzuebersicht')}</h3>
           </div>
-          <div className="space-y-2 text-sm flex-1 flex flex-col justify-between">
+          <div className="space-y-2 text-sm">
             <InfoRow label={t('haushaltsnetto')} value={`${formatEur(haushalt)}/mtl.`} />
             <InfoRow label={t('absicherungsquote')} value={formatPct(absQuote > 0 ? absQuote : (kunde.aum ? 72 + ((kunde.alter || 50) % 20) : 0))} />
             <InfoRow label={t('sparquote')} value={formatPct(sparQuote > 0 ? sparQuote : (kunde.nettoeinkommen ? Math.min(45, Math.round(kunde.nettoeinkommen / 200)) : 18))} />
@@ -1017,7 +1017,7 @@ function AktivitaetenCard({ kunde }) {
   };
 
   return (
-    <Card hover={false} className="h-full flex flex-col">
+    <Card hover={false} className="flex flex-col">
       <div
         className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-orange-200 flex items-center gap-2"
         style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)' }}

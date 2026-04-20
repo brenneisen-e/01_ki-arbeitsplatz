@@ -476,7 +476,7 @@ export default function OpenFinanceTab({ kunde }) {
                       const rows = k.positionen ? k.positionen.map((pos, j) => ({ key: `${i}-${j}`, row: pos, parent: k })) : [{ key: `${i}`, row: k, parent: null }];
                       return rows.map(({ key, row, parent }) => (
                         <tr key={key} className="border-t border-slate-100 row-hover">
-                          <td className="px-4 py-2.5 font-medium">{row.name || row.produkt}</td>
+                          <td className="px-4 py-2.5 font-medium"><div className="flex items-center gap-2"><LogoImg name={row.name || row.produkt} size={18} />{row.name || row.produkt}</div></td>
                           <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={row.institut || parent?.institut} size={18} />{row.institut || parent?.institut}</div></td>
                           {anySeit && <td className="px-4 py-2.5 text-slate-600">{row.seit ? formatSeit(row.seit) : <span className="text-slate-300">–</span>}</td>}
                           {anyEinkauf && <td className="px-4 py-2.5 text-right font-mono text-slate-500">{row.einkaufswert != null ? formatEur(row.einkaufswert) : <span className="text-slate-300">–</span>}</td>}

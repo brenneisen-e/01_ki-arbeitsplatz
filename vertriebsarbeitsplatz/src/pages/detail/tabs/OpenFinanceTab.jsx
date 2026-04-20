@@ -222,6 +222,14 @@ function PerfBadge({ value }) {
   return <span className={`font-mono font-semibold ${positive ? 'text-emerald-600' : 'text-red-600'}`}>{display}</span>;
 }
 
+function GewinnBadge({ value }) {
+  if (value == null) return <span className="text-slate-300">–</span>;
+  const positive = value > 0;
+  const prefix = positive ? '+' : (value < 0 ? '−' : '');
+  const abs = Math.abs(value);
+  return <span className={`font-mono font-semibold ${positive ? 'text-emerald-600' : value < 0 ? 'text-red-600' : 'text-slate-600'}`}>{prefix}{formatEur(abs)}</span>;
+}
+
 const MONATE_DE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 function formatSeit(iso) {
   if (!iso) return '';
@@ -440,7 +448,13 @@ export default function OpenFinanceTab({ kunde }) {
           )}
 
           {/* Kapitalmarkt */}
-          {bf.kapitalmarkt.length > 0 && (
+          {bf.kapitalmarkt.length > 0 && (() => {
+            const allPositions = bf.kapitalmarkt.flatMap(k => k.positionen || [k]);
+            const anyEinkauf = allPositions.some(p => p.einkaufswert != null);
+            const anyGewinn = allPositions.some(p => p.gewinn != null);
+            const anySeit = allPositions.some(p => p.seit);
+            const anySparrate = allPositions.some(p => p.sparrate);
+            return (
             <div>
               <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Kapitalmarkt</h4>
               <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
@@ -449,52 +463,47 @@ export default function OpenFinanceTab({ kunde }) {
                     <tr className="bg-slate-50">
                       <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Produkt</th>
                       <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Anbieter</th>
-                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Volumen</th>
-                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Sparrate</th>
+                      {anySeit && <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Gekauft</th>}
+                      {anyEinkauf && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Ø Einkauf</th>}
+                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Aktueller Wert</th>
+                      {anyGewinn && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Gewinn (nicht real.)</th>}
+                      {anySparrate && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Sparrate</th>}
                       <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Performance</th>
                     </tr>
                   </thead>
                   <tbody>
                     {bf.kapitalmarkt.map((k, i) => {
-                      // Show individual positions if available
-                      if (k.positionen) {
-                        return k.positionen.map((pos, j) => (
-                          <tr key={`${i}-${j}`} className="border-t border-slate-100 row-hover">
-                            <td className="px-4 py-2.5">
-                              <div className="font-medium">{pos.name}</div>
-                              {pos.seit && (
-                                <div className="text-[11px] text-slate-400 mt-0.5">im Depot seit {formatSeit(pos.seit)}</div>
-                              )}
-                            </td>
-                            <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={pos.institut || k.institut} size={18} />{pos.institut || k.institut}</div></td>
-                            <td className="px-4 py-2.5 text-right font-mono">{formatEur(pos.volumen)}</td>
-                            <td className="px-4 py-2.5 text-right font-mono text-slate-500">{pos.sparrate || '–'}</td>
-                            <td className="px-4 py-2.5 text-right"><PerfBadge value={pos.performanceYtd} /></td>
-                          </tr>
-                        ));
-                      }
-                      return (
-                        <tr key={i} className="border-t border-slate-100 row-hover">
-                          <td className="px-4 py-2.5 font-medium">{k.produkt}</td>
-                          <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={k.institut} size={18} />{k.institut}</div></td>
-                          <td className="px-4 py-2.5 text-right font-mono">{formatEur(k.volumen)}</td>
-                          <td className="px-4 py-2.5 text-right font-mono text-slate-500">{k.sparrate || '–'}</td>
-                          <td className="px-4 py-2.5 text-right"><PerfBadge value={k.performanceYtd} /></td>
+                      const rows = k.positionen ? k.positionen.map((pos, j) => ({ key: `${i}-${j}`, row: pos, parent: k })) : [{ key: `${i}`, row: k, parent: null }];
+                      return rows.map(({ key, row, parent }) => (
+                        <tr key={key} className="border-t border-slate-100 row-hover">
+                          <td className="px-4 py-2.5 font-medium">{row.name || row.produkt}</td>
+                          <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={row.institut || parent?.institut} size={18} />{row.institut || parent?.institut}</div></td>
+                          {anySeit && <td className="px-4 py-2.5 text-slate-600">{row.seit ? formatSeit(row.seit) : <span className="text-slate-300">–</span>}</td>}
+                          {anyEinkauf && <td className="px-4 py-2.5 text-right font-mono text-slate-500">{row.einkaufswert != null ? formatEur(row.einkaufswert) : <span className="text-slate-300">–</span>}</td>}
+                          <td className="px-4 py-2.5 text-right font-mono">{formatEur(row.volumen)}</td>
+                          {anyGewinn && <td className="px-4 py-2.5 text-right"><GewinnBadge value={row.gewinn} /></td>}
+                          {anySparrate && <td className="px-4 py-2.5 text-right font-mono text-slate-500">{row.sparrate || '–'}</td>}
+                          <td className="px-4 py-2.5 text-right"><PerfBadge value={row.performanceYtd} /></td>
                         </tr>
-                      );
+                      ));
                     })}
                     {/* Summenzeile */}
-                    {bf.kapitalmarkt.length > 0 && (() => {
-                      const items = bf.kapitalmarkt.flatMap(k => k.positionen || [k]);
-                      if (items.length <= 1) return null;
-                      const totalVol = items.reduce((s, k) => s + (k.volumen || 0), 0);
+                    {allPositions.length > 1 && (() => {
+                      const totalVol = allPositions.reduce((s, p) => s + (p.volumen || 0), 0);
+                      const totalEinkauf = allPositions.reduce((s, p) => s + (p.einkaufswert || 0), 0);
+                      const totalGewinn = allPositions.reduce((s, p) => s + (p.gewinn || 0), 0);
+                      const gesamtPerf = totalEinkauf > 0 ? `+${((totalGewinn / totalEinkauf) * 100).toFixed(1).replace('.', ',')}%` : null;
+                      const colCount = 3 + (anySeit ? 1 : 0) + (anyEinkauf ? 1 : 0) + (anyGewinn ? 1 : 0) + (anySparrate ? 1 : 0);
                       return (
                         <tr className="border-t-2 border-slate-200 bg-slate-50/80 font-semibold">
                           <td className="px-4 py-2.5">Gesamt Depot</td>
                           <td className="px-4 py-2.5"></td>
+                          {anySeit && <td className="px-4 py-2.5"></td>}
+                          {anyEinkauf && <td className="px-4 py-2.5 text-right font-mono">{totalEinkauf > 0 ? formatEur(totalEinkauf) : ''}</td>}
                           <td className="px-4 py-2.5 text-right font-mono">{formatEur(totalVol)}</td>
-                          <td className="px-4 py-2.5"></td>
-                          <td className="px-4 py-2.5"></td>
+                          {anyGewinn && <td className="px-4 py-2.5 text-right"><GewinnBadge value={totalGewinn > 0 ? totalGewinn : null} /></td>}
+                          {anySparrate && <td className="px-4 py-2.5"></td>}
+                          <td className="px-4 py-2.5 text-right">{gesamtPerf ? <PerfBadge value={gesamtPerf} /> : ''}</td>
                         </tr>
                       );
                     })()}
@@ -511,7 +520,8 @@ export default function OpenFinanceTab({ kunde }) {
                 </div>
               )}
             </div>
-          )}
+            );
+          })()}
         </Card>
         </div>
       )}

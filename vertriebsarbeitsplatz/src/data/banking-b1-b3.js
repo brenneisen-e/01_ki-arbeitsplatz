@@ -1,7 +1,7 @@
 // B1: Klaus Fischer
 export const B1 = {
   name: 'Klaus Fischer', id: 'BK00001', alter: 32,
-  beruf: 'Vertriebsleiter', arbeitgeber: { name: 'Continental AG', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4500,
+  beruf: 'Vertriebsleiter', arbeitgeber: { name: 'Bosch', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4500,
   familienstand: 'verheiratet',
   partner: { name: 'Sabine', einkommen: 1200 },
   kinder: [{ name: 'Lukas', alter: 4 }, { name: 'Marie', alter: 1 }],
@@ -46,9 +46,9 @@ export const B1 = {
     ],
     kapitalmarkt: [
       { produkt: 'Trade Republic Depot', institut: 'Trade Republic', volumen: 28000, positionen: [
-        { name: 'Apple Inc. (AAPL)', institut: 'Trade Republic', volumen: 14500, seit: '2023-06', performanceYtd: '+24,8%' },
-        { name: 'Amazon.com Inc. (AMZN)', institut: 'Trade Republic', volumen: 9200, seit: '2024-03', performanceYtd: '+38,2%' },
-        { name: 'OpenAI (Pre-IPO / Secondary)', institut: 'Trade Republic', volumen: 4300, seit: '2025-11', performanceYtd: '+12,5%' },
+        { name: 'Apple Inc. (AAPL)', institut: 'Trade Republic', volumen: 14500, seit: '2023-06', einkaufswert: 11620, gewinn: 2880, performanceYtd: '+24,8%' },
+        { name: 'Amazon.com Inc. (AMZN)', institut: 'Trade Republic', volumen: 9200, seit: '2024-03', einkaufswert: 6660, gewinn: 2540, performanceYtd: '+38,2%' },
+        { name: 'OpenAI (Pre-IPO / Secondary)', institut: 'Trade Republic', volumen: 4300, seit: '2025-11', einkaufswert: 3820, gewinn: 480, performanceYtd: '+12,5%' },
       ],
         kiHinweis: {
           titel: 'Konzentrationsrisiko erkannt – keine diversifizierte Anlage',
@@ -320,7 +320,7 @@ export const B1 = {
     // 8c. Altersvorsorge-Check (hoch) — keine geförderte Vorsorge im Bestand
     { titel: 'Altersvorsorge-Check \u2013 Versorgungsl\u00fccke ca. 1.450 \u20ac/mtl.', typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion'], prioritaet: 'hoch', volumen: 1800, volumenTyp: 'jaehrlich',
       beschreibung: 'Mit 32 Jahren keine geförderte Altersvorsorge im Bestand \u2013 nur ein konzentriertes Einzelaktien-Depot (28k) bei Trade Republic. Versorgungslücke deutlich.',
-      kiDescription: 'KI-Analyse: Klaus Fischer ist 32 Jahre alt, verdient 4.500 \u20ac netto und hat Familie (Sabine + 2 Kinder). Im Bestand findet die KI KEINE geförderte private oder betriebliche Altersvorsorge \u2013 weder Riester, R\u00fcrup, bAV noch eine private Rentenversicherung. Lediglich ein Trade-Republic-Depot (28.000 \u20ac, 3 Einzelaktien: Apple, Amazon, OpenAI) ist erkennbar \u2013 hohes Klumpenrisiko und daher nicht geeignet als alleinige Altersvorsorge-Basis.\n\nProgose mit DRV-Standardwerten: Bei Renteneintritt 67 ergibt sich eine gesetzliche Rente von ca. 1.850 \u20ac/Mon. (heutige Kaufkraft) \u2013 das entspricht nur ~41 % seines aktuellen Nettoeinkommens. Empfohlene Versorgungsquote: mind. 75 % \u2192 Versorgungslücke ca. 1.450 \u20ac/Mon. (real, inflationsbereinigt).\n\nDazu kommt: Sabine arbeitet Teilzeit (1.200 \u20ac), kommt also auch nicht auf eine ausreichende eigene Rente. Im Hinblick auf die geplante Immobilienfinanzierung (Bausparvertrag zuteilungsreif) wird die Bank ohnehin die langfristige Vorsorgesituation pr\u00fcfen.\n\nEmpfehlung: Termin Altersvorsorge-Check anbieten. Mögliche Bausteine \u2013 {{versicherungspartner}} Privatrente Performance (z. B. 150 \u20ac/Mon.), bAV-Pr\u00fcfung beim Arbeitgeber Continental AG (Direktversicherung möglich), Riester f\u00fcr Sabine wegen Kindern hochattraktiv (Zulagen 175 \u20ac + 2 × 300 \u20ac).',
+      kiDescription: 'KI-Analyse: Klaus Fischer ist 32 Jahre alt, verdient 4.500 \u20ac netto und hat Familie (Sabine + 2 Kinder). Im Bestand findet die KI KEINE geförderte private oder betriebliche Altersvorsorge \u2013 weder Riester, R\u00fcrup, bAV noch eine private Rentenversicherung. Lediglich ein Trade-Republic-Depot (28.000 \u20ac, 3 Einzelaktien: Apple, Amazon, OpenAI) ist erkennbar \u2013 hohes Klumpenrisiko und daher nicht geeignet als alleinige Altersvorsorge-Basis.\n\nProgose mit DRV-Standardwerten: Bei Renteneintritt 67 ergibt sich eine gesetzliche Rente von ca. 1.850 \u20ac/Mon. (heutige Kaufkraft) \u2013 das entspricht nur ~41 % seines aktuellen Nettoeinkommens. Empfohlene Versorgungsquote: mind. 75 % \u2192 Versorgungslücke ca. 1.450 \u20ac/Mon. (real, inflationsbereinigt).\n\nDazu kommt: Sabine arbeitet Teilzeit (1.200 \u20ac), kommt also auch nicht auf eine ausreichende eigene Rente. Im Hinblick auf die geplante Immobilienfinanzierung (Bausparvertrag zuteilungsreif) wird die Bank ohnehin die langfristige Vorsorgesituation pr\u00fcfen.\n\nEmpfehlung: Termin Altersvorsorge-Check anbieten. Mögliche Bausteine \u2013 {{versicherungspartner}} Privatrente Performance (z. B. 150 \u20ac/Mon.), bAV-Pr\u00fcfung beim Arbeitgeber Bosch (Direktversicherung möglich), Riester f\u00fcr Sabine wegen Kindern hochattraktiv (Zulagen 175 \u20ac + 2 × 300 \u20ac).',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: '{{versicherungspartner}} Privatrente Performance + Riester (Sabine) + bAV-Check', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle 1', value: 'Bestand \u2013 keine geförderte AV vorhanden' },
@@ -329,7 +329,7 @@ export const B1 = {
         { label: 'Erwartete gesetzliche Rente', value: 'ca. 1.850 \u20ac/mtl. \u2013 nur ~41 % vom Netto' },
         { label: 'Versorgungslücke', value: 'ca. 1.450 \u20ac/mtl. (Ziel 75 % Netto)' },
         { label: 'Riester-Eignung Sabine', value: 'Sehr hoch \u2013 Kinderzulagen 2 × 300 \u20ac + 175 \u20ac' },
-        { label: 'bAV-Status Continental AG', value: 'Direktversicherung möglich \u2013 noch nicht genutzt' },
+        { label: 'bAV-Status Bosch', value: 'Direktversicherung möglich \u2013 noch nicht genutzt' },
         { label: 'Empfehlung', value: 'Altersvorsorge-Check Termin \u2013 {{versicherungspartner}} Privatrente + Riester + bAV-Pr\u00fcfung' },
       ],
       deckungsluecke: {

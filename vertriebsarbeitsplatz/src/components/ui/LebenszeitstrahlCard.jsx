@@ -22,7 +22,7 @@ const TIMELINE_DATA = {
         signals: ['Newsletter „VR-Immobilien" seit 2 Jahren', 'ImmoScout-Logins (PSD2)', 'Maklerbesuche'] },
     ],
     oeffentlich: [
-      { date: '2019-02', label: 'Wechsel zu Continental AG', source: 'LinkedIn' },
+      { date: '2019-02', label: 'Wechsel zu Bosch', source: 'LinkedIn' },
       { date: '2022-11', label: 'Beförderung Senior Vertrieb', source: 'LinkedIn' },
       { date: '2024-06', label: 'Vertriebsleiter', source: 'LinkedIn' },
     ],

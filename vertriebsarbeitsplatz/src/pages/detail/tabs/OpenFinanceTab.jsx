@@ -3,7 +3,7 @@ import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import LogoImg from '../../../components/ui/LogoImg';
 import { formatEur, berechneAnlagevolumen, berechneKreditvolumen } from '../../../utils/formatters';
-import { CheckCircle, XCircle, Link2, Briefcase, PiggyBank, Shield, Home, TrendingUp, AlertTriangle, ChevronDown } from 'lucide-react';
+import { CheckCircle, XCircle, Link2, Briefcase, PiggyBank, Shield, Home, TrendingUp, AlertTriangle, ChevronDown, Sparkles } from 'lucide-react';
 import useTranslation from '../../../i18n/useTranslation';
 import { useMode } from '../../../hooks/useMode';
 import VertraegeTab from './VertraegeTab';
@@ -222,6 +222,42 @@ function PerfBadge({ value }) {
   return <span className={`font-mono font-semibold ${positive ? 'text-emerald-600' : 'text-red-600'}`}>{display}</span>;
 }
 
+const MONATE_DE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+function formatSeit(iso) {
+  if (!iso) return '';
+  const [y, m] = iso.split('-').map(Number);
+  if (!y || !m) return iso;
+  return `${MONATE_DE[m - 1]} ${y}`;
+}
+
+function KiDepotHinweis({ hinweis, depot }) {
+  return (
+    <div className="rounded-xl border border-violet-200 bg-gradient-to-br from-violet-50 to-indigo-50 p-4">
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center shrink-0">
+          <Sparkles size={16} className="text-white" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-violet-700">KI-Hinweis</span>
+            {depot && (
+              <span className="text-[10px] text-violet-500">· {depot}</span>
+            )}
+          </div>
+          <div className="text-sm font-bold text-violet-900 mt-1">{hinweis.titel}</div>
+          <p className="text-sm text-violet-900/90 leading-relaxed mt-1.5">{hinweis.text}</p>
+          {hinweis.empfehlung && (
+            <div className="mt-3 pt-3 border-t border-violet-200">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-violet-600 mb-1">Empfehlung</div>
+              <p className="text-sm text-violet-900 leading-relaxed">{hinweis.empfehlung}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function OpenFinanceTab({ kunde }) {
   const { t, lang } = useTranslation();
   const { config, modeId } = useMode();
@@ -415,7 +451,7 @@ export default function OpenFinanceTab({ kunde }) {
                       <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Anbieter</th>
                       <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Volumen</th>
                       <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Sparrate</th>
-                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Performance YTD</th>
+                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Performance</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -424,7 +460,12 @@ export default function OpenFinanceTab({ kunde }) {
                       if (k.positionen) {
                         return k.positionen.map((pos, j) => (
                           <tr key={`${i}-${j}`} className="border-t border-slate-100 row-hover">
-                            <td className="px-4 py-2.5 font-medium">{pos.name}</td>
+                            <td className="px-4 py-2.5">
+                              <div className="font-medium">{pos.name}</div>
+                              {pos.seit && (
+                                <div className="text-[11px] text-slate-400 mt-0.5">im Depot seit {formatSeit(pos.seit)}</div>
+                              )}
+                            </td>
                             <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={pos.institut || k.institut} size={18} />{pos.institut || k.institut}</div></td>
                             <td className="px-4 py-2.5 text-right font-mono">{formatEur(pos.volumen)}</td>
                             <td className="px-4 py-2.5 text-right font-mono text-slate-500">{pos.sparrate || '–'}</td>
@@ -460,6 +501,15 @@ export default function OpenFinanceTab({ kunde }) {
                   </tbody>
                 </table>
               </div>
+
+              {/* KI-Hinweise zu den Depots (z. B. Konzentrationsrisiko) */}
+              {bf.kapitalmarkt.some(k => k.kiHinweis) && (
+                <div className="mt-3 space-y-2">
+                  {bf.kapitalmarkt.filter(k => k.kiHinweis).map((k, i) => (
+                    <KiDepotHinweis key={`ki-${i}`} hinweis={k.kiHinweis} depot={k.produkt} />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </Card>

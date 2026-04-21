@@ -23,8 +23,8 @@ export default function MissingKeysPanel({ missingKeys }) {
             Nicht automatisch erkannt
           </div>
           <p className="text-xs text-amber-800 font-body mt-1">
-            Folgende Felder konnten aus der PDF nicht zweifelsfrei extrahiert werden und müssen
-            in der jeweiligen Maske händisch erfasst werden:
+            Folgende Felder konnten aus der PDF nicht zweifelsfrei extrahiert werden.
+            Sie müssen in der angegebenen SAP-Transaktion manuell erfasst werden:
           </p>
           <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
             {missingKeys.map((key) => {
@@ -39,6 +39,7 @@ export default function MissingKeysPanel({ missingKeys }) {
                   <span className="font-semibold">{m.label}</span>
                   <span className="text-amber-700/80 truncate">
                     &rsaquo; {m.maskLabel}
+                    {m.transaction ? ` (TA ${m.transaction})` : ''}
                     {m.section ? ` · ${m.section}` : ''}
                   </span>
                 </li>

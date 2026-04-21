@@ -9,7 +9,7 @@
 import { useMemo } from 'react';
 import MaskenGroupCard from './MaskenGroupCard';
 
-const MASK_ORDER = ['application', 'collateral', 'contract', 'analysis'];
+const MASK_ORDER = ['sap-partner', 'sap-finanzierung', 'sap-tranche', 'sap-ziehung'];
 
 function groupHitsByMask(hits) {
   const groups = new Map();

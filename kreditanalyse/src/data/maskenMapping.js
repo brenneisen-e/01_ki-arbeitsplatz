@@ -1,135 +1,178 @@
 /**
  * maskenMapping.js
  *
- * Definiert, in welche Maske der KI-Kreditanalyse ein aus einem externen
- * Konsortialkredit-PDF extrahiertes Feld gehört. Das Ziel ist eine klare
- * Anleitung für den Kreditanalysten: "Wert X bitte in Maske Y, Feld Z".
+ * Mapping der aus externen Konsortialkredit-PDFs extrahierten Werte auf
+ * die Erfassungsmasken im **SAP S/4HANA Banking for Complex Loans**
+ * Finanzierungsarbeitsplatz. Bezeichnungen und Registerkarten folgen
+ * exakt dem offiziellen SAP-Handbuch (Dokumentversion 1.0, 23.01.2026).
  *
- * Jedes Feld hat:
- *   - key:        Eindeutiger Schlüssel (wird vom Parser gefüllt)
- *   - label:      Anzeigename für die UI
- *   - maskId:     View-Key aus MainLayout.jsx (z.B. 'application')
- *   - maskLabel:  Deutscher Name der Maske
- *   - section:    Optionaler Abschnitt innerhalb der Maske
- *   - field:      Konkretes Eingabefeld, das befüllt werden soll
- *   - format:     'currency' | 'percent' | 'date' | 'text' | 'years'
+ * Hierarchie:
+ *   Finanzierung (oberstes Objekt)
+ *     └─ Tranchen
+ *         └─ Ziehungen
+ *
+ * Wichtige Hierarchie-Objekte als Ziel-Maske ("maskId"):
+ *   - sap-finanzierung  Finanzierung (Kopfebene) mit Registerkarten
+ *                       Übersicht, Konditionen, Ziehungsregeln, Partner,
+ *                       Syndizierung, Covenants, Sperren, Regeln
+ *   - sap-tranche       Tranche innerhalb der Finanzierung
+ *   - sap-ziehung       Ziehung innerhalb einer Tranche
+ *   - sap-partner       Geschäftspartner (SAP BP, Darlehensnehmer/
+ *                       Konsortialführer)
  */
 
 export const MASKEN_MAPPING = {
-  // --- Abschnitt A: Antragsteller ---
+  // ============================================================
+  // Geschäftspartner (Darlehensnehmer als SAP Business Partner)
+  // ============================================================
   firma: {
     label: 'Firmenname Kreditnehmer',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'A  Antragsteller', field: 'Firmenname', format: 'text',
+    maskId: 'sap-partner', maskLabel: 'SAP Geschäftspartner',
+    transaction: 'BP', section: 'Allgemeine Daten', field: 'Name 1', format: 'text',
   },
   rechtsform: {
     label: 'Rechtsform',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'A  Antragsteller', field: 'Rechtsform', format: 'text',
+    maskId: 'sap-partner', maskLabel: 'SAP Geschäftspartner',
+    transaction: 'BP', section: 'Allgemeine Daten', field: 'Rechtsform', format: 'text',
   },
   hrb: {
     label: 'Handelsregisternummer',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'A  Antragsteller', field: 'HRB', format: 'text',
+    maskId: 'sap-partner', maskLabel: 'SAP Geschäftspartner',
+    transaction: 'BP', section: 'Identifikation', field: 'Handelsregisternummer', format: 'text',
   },
   adresse: {
     label: 'Sitz / Adresse',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'A  Antragsteller', field: 'Strasse / PLZ / Ort', format: 'text',
+    maskId: 'sap-partner', maskLabel: 'SAP Geschäftspartner',
+    transaction: 'BP', section: 'Adresse', field: 'Straße / PLZ / Ort', format: 'text',
   },
 
-  // --- Abschnitt C: Kreditwunsch ---
-  kreditart: {
-    label: 'Kreditart',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'C  Kreditwunsch', field: 'Kreditart', format: 'text',
-  },
+  // ============================================================
+  // Finanzierung (Kopfebene im Finanzierungsarbeitsplatz)
+  // ============================================================
   kreditbetrag: {
     label: 'Nominalbetrag (Gesamt-Tranche)',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'C  Kreditwunsch', field: 'Kreditbetrag (EUR)', format: 'currency',
-  },
-  laufzeit: {
-    label: 'Laufzeit',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'C  Kreditwunsch', field: 'Laufzeit (Monate)', format: 'years',
-  },
-  tilgungsfrei: {
-    label: 'Tilgungsfreie Zeit',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'C  Kreditwunsch', field: 'Tilgungsfreie Zeit (Monate)', format: 'years',
-  },
-  auszahlung: {
-    label: 'Gewünschter Auszahlungstermin',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'C  Kreditwunsch', field: 'Auszahlungstermin', format: 'date',
-  },
-  verwendung: {
-    label: 'Verwendungszweck',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'C  Kreditwunsch', field: 'Verwendungszweck', format: 'text',
-  },
-
-  // --- Abschnitt D: bestehende Verbindlichkeiten (Konsortialkredit) ---
-  konsortialfuehrer: {
-    label: 'Konsortialführer / Gläubiger',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'D  Bestehende Verbindlichkeiten', field: 'Gläubiger (Konsortialführer)', format: 'text',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Übersicht',
+    field: 'Gesamtbetrag', format: 'currency',
   },
   ursprungsbetrag: {
-    label: 'Ursprungsbetrag Konsortialkredit',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'D  Bestehende Verbindlichkeiten', field: 'Ursprungsbetrag', format: 'currency',
+    label: 'Ursprungsbetrag',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Übersicht',
+    field: 'Finanzierungsbetrag', format: 'currency',
   },
-  restschuld: {
-    label: 'Restschuld',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'D  Bestehende Verbindlichkeiten', field: 'Restschuld', format: 'currency',
-  },
-  zinssatz: {
-    label: 'Zinssatz / Marge',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'D  Bestehende Verbindlichkeiten', field: 'Zinssatz', format: 'percent',
-  },
-  rate: {
-    label: 'Rate / Tilgung pro Monat',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'D  Bestehende Verbindlichkeiten', field: 'Rate', format: 'currency',
+  auszahlung: {
+    label: 'Auszahlungstermin / Valuta',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Übersicht',
+    field: 'Beginn der Vertragslaufzeit', format: 'date',
   },
   laufzeitende: {
     label: 'Laufzeitende / Fälligkeit',
-    maskId: 'application', maskLabel: 'Kreditantrag',
-    section: 'D  Bestehende Verbindlichkeiten', field: 'Laufzeitende', format: 'date',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Übersicht',
+    field: 'Ende der Vertragslaufzeit', format: 'date',
+  },
+  verwendung: {
+    label: 'Verwendungszweck',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Übersicht',
+    field: 'Name (Beschreibung)', format: 'text',
+  },
+  kreditart: {
+    label: 'Kreditart / Produkttyp',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Übersicht',
+    field: 'Produkt', format: 'text',
   },
 
-  // --- Maske: Sicherheiten ---
+  // ============================================================
+  // Konsortialführer → Registerkarte Syndizierung
+  // ============================================================
+  konsortialfuehrer: {
+    label: 'Konsortialführer / Gläubiger',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Syndizierung',
+    field: 'Konsorten (Partnerrolle Konsortialführer)', format: 'text',
+  },
+
+  // ============================================================
+  // Konditionen (Registerkarte Konditionen → Kopfdaten/Beträge)
+  // ============================================================
+  zinssatz: {
+    label: 'Zinssatz / Marge',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz',
+    section: 'Registerkarte Konditionen › Kopfdaten',
+    field: 'Effektivzins', format: 'percent',
+  },
+  rate: {
+    label: 'Tilgungsrate pro Monat',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz',
+    section: 'Registerkarte Konditionen › Beträge',
+    field: 'Konditionsbetrag (Tilgung)', format: 'currency',
+  },
+  laufzeit: {
+    label: 'Laufzeit',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz',
+    section: 'Registerkarte Konditionen › Termine',
+    field: 'Fest ab / Fest bis', format: 'years',
+  },
+  tilgungsfrei: {
+    label: 'Tilgungsfreie Zeit',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz',
+    section: 'Registerkarte Konditionen › Termine',
+    field: 'Gültig ab (Tilgungskondition)', format: 'years',
+  },
+
+  // ============================================================
+  // Restschuld → Ziehungsebene / Finanzstrom
+  // ============================================================
+  restschuld: {
+    label: 'Restschuld',
+    maskId: 'sap-ziehung', maskLabel: 'Ziehung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Finanzströme',
+    field: 'Offene Kreditlinie / Restkapital', format: 'currency',
+  },
+
+  // ============================================================
+  // Sicherheiten (kein eigenes CML-Objekt in Complex Loans,
+  // werden i.d.R. als Referenzen / Covenant-Sicherheiten hinterlegt)
+  // ============================================================
   sicherheit_art: {
     label: 'Sicherheiten-Art',
-    maskId: 'collateral', maskLabel: 'Sicherheiten',
-    section: 'Sicherheiten erfassen', field: 'Art der Sicherheit', format: 'text',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Referenzen',
+    field: 'Referenzart „Sicherheit"', format: 'text',
   },
   sicherheit_wert: {
     label: 'Nominalwert Sicherheit',
-    maskId: 'collateral', maskLabel: 'Sicherheiten',
-    section: 'Sicherheiten erfassen', field: 'Nominalwert (EUR)', format: 'currency',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Referenzen',
+    field: 'Referenzbetrag', format: 'currency',
   },
   sicherheit_bezeichnung: {
     label: 'Bezeichnung Sicherheit',
-    maskId: 'collateral', maskLabel: 'Sicherheiten',
-    section: 'Sicherheiten erfassen', field: 'Bezeichnung', format: 'text',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Referenzen',
+    field: 'Bezeichnung', format: 'text',
   },
 
-  // --- Maske: Kreditvertrag (Covenants, Kündigungsrechte) ---
+  // ============================================================
+  // Financial Covenants → eigene Registerkarte
+  // ============================================================
   covenant: {
-    label: 'Covenant / Auflage',
-    maskId: 'contract', maskLabel: 'Kreditvertrag',
-    section: 'Vertragsbedingungen', field: 'Covenants', format: 'text',
+    label: 'Financial Covenant / Auflage',
+    maskId: 'sap-finanzierung', maskLabel: 'Finanzierung',
+    transaction: 'Finanzierungsarbeitsplatz', section: 'Registerkarte Covenants',
+    field: 'Vertragliche Verpflichtung', format: 'text',
   },
 };
 
-/**
- * Gibt alle Keys gruppiert nach Ziel-Maske zurück.
- */
+/** Gruppiert Keys nach maskId. */
 export function groupKeysByMask() {
   const groups = {};
   for (const [key, cfg] of Object.entries(MASKEN_MAPPING)) {

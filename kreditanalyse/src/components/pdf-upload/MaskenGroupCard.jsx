@@ -60,8 +60,9 @@ export default function MaskenGroupCard({ maskId, maskLabel, hits, defaultOpen =
         <>
           <div className="grid grid-cols-12 gap-3 py-2 px-4 text-[10px] uppercase tracking-wider font-semibold text-text-muted font-body border-b border-border bg-gray-50/30">
             <div className="col-span-4">Erkanntes Feld</div>
-            <div className="col-span-3">Wert aus PDF</div>
-            <div className="col-span-4">Ziel in SAP Complex Loans</div>
+            <div className="col-span-2">Wert aus PDF</div>
+            <div className="col-span-3">Ziel in SAP Complex Loans</div>
+            <div className="col-span-2">Vorschau SAP-Maske</div>
             <div className="col-span-1 text-right">Konfidenz</div>
           </div>
 

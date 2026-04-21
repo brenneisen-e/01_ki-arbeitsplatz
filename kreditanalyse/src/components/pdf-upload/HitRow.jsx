@@ -3,19 +3,16 @@
  *
  * Eine Zeile in der Ergebnistabelle. Zeigt für ein extrahiertes Feld:
  *   - Label + Quelle (Originaltext)
- *   - Extrahierten Wert (formatiert)
- *   - Ziel-Maske + Abschnitt + konkretes Feld
- *   - "Zur Maske springen"-Button
+ *   - Extrahierten Wert (formatiert) + Copy-Button
+ *   - Ziel-Maske in SAP Complex Loans (Transaktion, Registerkarte, Feld)
  *   - Konfidenz-Badge
  */
 
-import { ArrowRight, Copy, Check } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { useState } from 'react';
-import { useApp } from '../../context/AppContext';
 import { formatHitValue, confidenceLabel, confidenceClass } from './formatHit';
 
 export default function HitRow({ hit }) {
-  const { navigate } = useApp();
   const [copied, setCopied] = useState(false);
   const formatted = formatHitValue(hit);
 
@@ -54,21 +51,26 @@ export default function HitRow({ hit }) {
         </button>
       </div>
 
-      {/* Ziel-Maske */}
+      {/* SAP-Ziel-Maske */}
       <div className="col-span-4">
-        <div className="text-xs font-semibold text-primary font-body">
-          {hit.mapping.maskLabel}
-          {hit.mapping.section ? (
-            <span className="text-text-muted font-normal"> &rsaquo; {hit.mapping.section}</span>
-          ) : null}
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-primary font-body flex-wrap">
+          <span>{hit.mapping.maskLabel}</span>
+          {hit.mapping.transaction && (
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-mono border border-primary/20">
+              TA {hit.mapping.transaction}
+            </span>
+          )}
         </div>
         <div className="text-[11px] text-text-muted font-body mt-0.5">
+          {hit.mapping.section && (
+            <>Reg.: <span className="text-text-primary">{hit.mapping.section}</span> · </>
+          )}
           Feld: <span className="text-text-primary">{hit.mapping.field}</span>
         </div>
       </div>
 
-      {/* Konfidenz + Sprung-Button */}
-      <div className="col-span-1 flex items-center justify-end gap-1">
+      {/* Konfidenz */}
+      <div className="col-span-1 flex items-center justify-end">
         <span
           className={
             'inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-body ' +
@@ -78,14 +80,6 @@ export default function HitRow({ hit }) {
         >
           {confidenceLabel(hit.confidence)}
         </span>
-        <button
-          type="button"
-          onClick={() => navigate(hit.mapping.maskId)}
-          className="p-1 rounded text-primary hover:bg-primary/10 transition-colors"
-          title={`Zu Maske ${hit.mapping.maskLabel} springen`}
-        >
-          <ArrowRight size={14} />
-        </button>
       </div>
     </div>
   );

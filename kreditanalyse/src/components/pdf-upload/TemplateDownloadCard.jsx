@@ -1,14 +1,15 @@
 /**
  * TemplateDownloadCard.jsx
  *
- * Showcase-Hilfe: Analyst kann einen fiktiven Muster-Konsortialkreditvertrag
- * als PDF herunterladen, um die PDF-Upload-Funktion direkt auszuprobieren.
- * Der Mustervertrag ist so aufgebaut, dass der Parser alle unterstützten
- * Felder erkennt.
+ * Ermöglicht den Download eines fiktiven Muster-Konsortialkreditvertrags,
+ * um die PDF-Extraktions-Pipeline ohne echtes Vertragsdokument zu
+ * verifizieren. Struktur und Klauseln orientieren sich an marktüblichen
+ * Mustern (LMA Recommended Form of Facility Agreement, BdB-Musterklauseln
+ * zu Konsortialkrediten).
  */
 
 import { useState } from 'react';
-import { Download, FileDown, Sparkles } from 'lucide-react';
+import { Download, FileDown, FileText } from 'lucide-react';
 import { generateKonsortialTemplatePdf } from '../../utils/generateTemplatePdf';
 
 export default function TemplateDownloadCard() {
@@ -17,8 +18,6 @@ export default function TemplateDownloadCard() {
   const onDownload = async () => {
     setGenerating(true);
     try {
-      // In ein Microtask packen, damit der Spinner gerendert wird, bevor
-      // jsPDF den Main-Thread kurz blockiert.
       await new Promise((r) => setTimeout(r, 0));
       generateKonsortialTemplatePdf();
     } finally {
@@ -27,22 +26,26 @@ export default function TemplateDownloadCard() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4">
+    <div className="bg-surface-card border border-border rounded-lg p-5">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="flex items-start gap-3 min-w-0">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-amber-100 text-amber-700 shrink-0">
-            <Sparkles size={18} strokeWidth={1.5} />
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary shrink-0">
+            <FileText size={18} strokeWidth={1.5} />
           </div>
           <div className="min-w-0">
-            <div className="text-sm font-headline font-semibold text-amber-900">
-              Showcase: Mustervertrag herunterladen
+            <div className="text-sm font-headline font-semibold text-text-primary">
+              Muster-Konsortialkreditvertrag zur Verifikation
             </div>
-            <p className="text-xs text-amber-800/90 font-body mt-1 max-w-xl">
-              Du hast gerade keinen echten Konsortialvertrag zur Hand? Lade hier einen
-              fiktiven Muster-Konsortialkreditvertrag (15 Mio. EUR, Commerzbank AG als
-              Konsortialführer, 60 Monate Laufzeit, Covenants, Sicherheiten) als PDF
-              herunter und lade ihn anschließend hier wieder hoch, um die Extraktion
-              live zu sehen. Struktur lehnt sich an marktübliche LMA-/BdB-Vorlagen an.
+            <p className="text-xs text-text-secondary font-body mt-1 max-w-2xl leading-relaxed">
+              Für Testzwecke steht ein anonymisierter Muster-Konsortialkreditvertrag zur
+              Verfügung. Inhalt und Klauselaufbau folgen den gängigen Marktstandards
+              (LMA Recommended Form of Facility Agreement sowie Musterklauseln des
+              Bundesverbands deutscher Banken). Der Vertrag dient ausschließlich zur
+              Validierung der PDF-Extraktion und enthält keine produktiven Daten.
+            </p>
+            <p className="text-[11px] text-text-muted font-body mt-2">
+              Format: PDF · Umfang: ca. 3 Seiten · alle relevanten Felder (Kreditbetrag,
+              Zinskonditionen, Laufzeit, Sicherheiten, Financial Covenants) sind enthalten.
             </p>
           </div>
         </div>
@@ -51,17 +54,17 @@ export default function TemplateDownloadCard() {
           type="button"
           onClick={onDownload}
           disabled={generating}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-primary text-white rounded-md hover:bg-primary-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
         >
           {generating ? (
             <>
               <FileDown size={14} strokeWidth={1.5} className="animate-pulse" />
-              Wird erzeugt …
+              Wird erzeugt
             </>
           ) : (
             <>
               <Download size={14} strokeWidth={1.5} />
-              Mustervertrag (PDF)
+              Muster herunterladen
             </>
           )}
         </button>

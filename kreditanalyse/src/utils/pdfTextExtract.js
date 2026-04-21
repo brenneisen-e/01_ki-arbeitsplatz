@@ -31,13 +31,28 @@ function readFileAsArrayBuffer(file) {
 }
 
 /**
- * Extrahiert den Text einer einzelnen Seite und normalisiert Whitespace.
+ * Extrahiert den Text einer einzelnen Seite. pdf.js liefert pro Textitem ein
+ * `hasEOL`-Flag (Zeilenende im Rendering). Das übersetzen wir in echte
+ * Zeilenumbrüche, damit die Parser-Regexe pro Feld terminieren können.
+ * Whitespace innerhalb einer Zeile wird dagegen auf ein einzelnes Space
+ * normalisiert.
  */
 async function extractPageText(pdf, pageNumber) {
   const page = await pdf.getPage(pageNumber);
   const content = await page.getTextContent();
-  const parts = content.items.map((item) => ('str' in item ? item.str : ''));
-  return parts.join(' ').replace(/\s+/g, ' ').trim();
+  const lines = [];
+  let current = '';
+  for (const item of content.items) {
+    if ('str' in item) current += item.str;
+    if (item.hasEOL) {
+      lines.push(current.replace(/[\t ]+/g, ' ').trim());
+      current = '';
+    } else {
+      current += ' ';
+    }
+  }
+  if (current.trim()) lines.push(current.replace(/[\t ]+/g, ' ').trim());
+  return lines.filter((l) => l.length > 0).join('\n');
 }
 
 /**

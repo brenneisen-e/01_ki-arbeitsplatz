@@ -15,6 +15,7 @@ import ContractView from '../contract/ContractView';
 import MonitoringView from '../monitoring/MonitoringView';
 import CustomerApplicationView from '../customer-application/CustomerApplicationView';
 import ComplianceView from '../compliance/ComplianceView';
+import PdfUploadView from '../pdf-upload/PdfUploadView';
 
 const views = {
   dashboard: DashboardView,
@@ -29,6 +30,7 @@ const views = {
   monitoring: MonitoringView,
   'customer-application': CustomerApplicationView,
   compliance: ComplianceView,
+  'pdf-upload': PdfUploadView,
 };
 
 export default function MainLayout() {

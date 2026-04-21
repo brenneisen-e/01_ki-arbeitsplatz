@@ -17,6 +17,7 @@ import SummaryBar from './SummaryBar';
 import ResultSection from './ResultSection';
 import MissingKeysPanel from './MissingKeysPanel';
 import RawTextPanel from './RawTextPanel';
+import TemplateDownloadCard from './TemplateDownloadCard';
 import usePdfUpload from './usePdfUpload';
 
 export default function PdfUploadView() {
@@ -47,7 +48,10 @@ export default function PdfUploadView() {
 
       {/* Schritt 1: Upload */}
       {status === 'idle' && (
-        <DropZone onFileSelected={handleFile} />
+        <>
+          <DropZone onFileSelected={handleFile} />
+          <TemplateDownloadCard />
+        </>
       )}
 
       {/* Schritt 2: Parsing */}

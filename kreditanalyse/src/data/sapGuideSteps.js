@@ -256,3 +256,11 @@ export const SAP_GUIDE_STEPS = [
     mappedKeys: ['covenant'],
   },
 ];
+
+/**
+ * Findet den Guide-Schritt, dem ein Mapping-Key zugeordnet ist.
+ * Liefert null, wenn kein Schritt diesen Key erfasst.
+ */
+export function findGuideStepForKey(key) {
+  return SAP_GUIDE_STEPS.find((s) => s.mappedKeys?.includes(key)) || null;
+}

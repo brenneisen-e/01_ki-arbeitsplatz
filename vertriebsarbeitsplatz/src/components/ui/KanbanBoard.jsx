@@ -60,6 +60,15 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
   // einzelne Spalte aufgeklappt werden — ein zweiter Klick blendet wieder ein.
   const CARDS_PER_COLUMN = 5;
   const [expandedColumns, setExpandedColumns] = useState({});
+  // Eine einzelne Karte (Einzel- oder Cluster-Karte) kann „groß" aufgeklappt
+  // werden. Dann wird die zugehörige Spalte breiter, damit die Details
+  // ordentlich Platz haben. Nur eine Karte gleichzeitig.
+  const [expandedCard, setExpandedCard] = useState(null); // { id, columnId } | null
+
+  const toggleExpandCard = (id, columnId) => {
+    setExpandedCard(prev => (prev && prev.id === id ? null : { id, columnId }));
+  };
+  const collapseExpandedCard = () => setExpandedCard(null);
 
   // Filter Pipeline
   const filtered = useMemo(() => {
@@ -140,6 +149,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
       setCloseModal({ potential: draggedCard });
     } else {
       onMoveCard(draggedCard._id, columnId);
+      collapseExpandedCard();
     }
     setDraggedCard(null);
     setHoverColumn(null);
@@ -149,12 +159,19 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
     if (!feedbackModal) return;
     onMoveCard(feedbackModal.potential._id, 'nicht_sinnvoll', { reason, comment });
     setFeedbackModal(null);
+    collapseExpandedCard();
   };
 
   const handleConfirmAbschluss = (data) => {
     if (!closeModal) return;
     onMoveCard(closeModal.potential._id, 'abgeschlossen', data);
     setCloseModal(null);
+    collapseExpandedCard();
+  };
+
+  const handleReactivateWithCollapse = (id) => {
+    onReactivate(id);
+    collapseExpandedCard();
   };
 
   // KPI für „Nicht sinnvoll" Header
@@ -217,8 +234,18 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
         />
       </div>
 
-      {/* Board */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      {/* Board
+          Ab lg wird gridTemplateColumns dynamisch über die CSS-Variable
+          gesetzt: wenn eine Kachel ausgeklappt ist, bekommt diese Spalte
+          mehr Platz (2.4fr) und die übrigen bleiben auf 1fr. */}
+      <div
+        className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:[grid-template-columns:var(--kanban-cols)] transition-[grid-template-columns] duration-300"
+        style={{
+          '--kanban-cols': expandedCard
+            ? COLUMNS.map(c => (c.id === expandedCard.columnId ? '2.4fr' : 'minmax(0,1fr)')).join(' ')
+            : 'repeat(5, minmax(0, 1fr))',
+        }}
+      >
         {COLUMNS.map(col => {
           const cards = columnsMap[col.id] || [];
           const totalVol = cards.reduce((s, c) => s + (c.volumen || 0), 0);
@@ -302,27 +329,35 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                     <>
                       {visibleGroups.map((items, idx) => {
                         if (items.length === 1) {
+                          const cardId = items[0]._id;
+                          const isCardExpanded = expandedCard?.id === cardId;
                           return (
                             <PotenzialCard
-                              key={items[0]._id}
+                              key={cardId}
                               p={items[0]}
                               columnColor={col.color}
                               onDragStart={handleDragStart}
                               onDragEnd={handleDragEnd}
-                              onReactivate={onReactivate}
+                              onReactivate={handleReactivateWithCollapse}
                               onCardClick={onCardClick}
+                              isExpanded={isCardExpanded}
+                              onToggleExpand={() => toggleExpandCard(cardId, col.id)}
                             />
                           );
                         }
+                        const clusterId = `cluster_${items[0].kundeId}_${idx}`;
+                        const isClusterExpanded = expandedCard?.id === clusterId;
                         return (
                           <PotenzialClusterCard
-                            key={`cluster_${items[0].kundeId}_${idx}`}
+                            key={clusterId}
                             items={items}
                             columnColor={col.color}
                             onDragStart={handleDragStart}
                             onDragEnd={handleDragEnd}
-                            onReactivate={onReactivate}
+                            onReactivate={handleReactivateWithCollapse}
                             onCardClick={onCardClick}
+                            isExpanded={isClusterExpanded}
+                            onToggleExpand={() => toggleExpandCard(clusterId, col.id)}
                           />
                         );
                       })}
@@ -395,7 +430,7 @@ function FilterSelect({ value, onChange, options }) {
   );
 }
 
-function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, onCardClick }) {
+function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, onCardClick, isExpanded, onToggleExpand }) {
   const dragStartedRef = useRef(false);
   const isClosed = p.status === 'abgeschlossen';
   const isDismissed = p.status === 'nicht_sinnvoll';
@@ -405,6 +440,7 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
   const initials = (p.kundeName || '').split(' ').map(n => n[0]).join('').slice(0, 2);
 
   const fida = (p.quellen || []).includes('finanztransaktion');
+  const canExpand = typeof onToggleExpand === 'function' && !isDismissed;
 
   // Einheitlich dünne Karten-Umrandung — keine dicke Alters-Warnkontur,
   // visueller Druck kommt nur über das kleine Warn-Icon im Header.
@@ -492,6 +528,65 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
         )}
       </div>
 
+      {/* Expandable details */}
+      {canExpand && isExpanded && (
+        <div
+          className="mt-2 pt-2 border-t border-slate-200 space-y-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {p.beschreibung && (
+            <div className="text-[11px] text-slate-600 leading-snug">
+              {p.beschreibung}
+            </div>
+          )}
+          {(p.quellen || []).length > 0 && (
+            <div>
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">
+                Quellen
+              </div>
+              <div className="flex items-center gap-1 flex-wrap">
+                {(p.quellen || []).map((q, qi) => (
+                  <QuellenBadge key={qi} quelle={q} />
+                ))}
+              </div>
+            </div>
+          )}
+          {p.produktEmpfehlung && (
+            <div>
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-0.5">
+                Produkt-Empfehlung
+              </div>
+              <div className="text-[11px] text-slate-700 font-semibold">
+                {p.produktEmpfehlung}
+              </div>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onCardClick?.(p); }}
+            className="w-full text-[11px] font-semibold text-white rounded px-2 py-1.5 transition-colors hover:opacity-90"
+            style={{ backgroundColor: columnColor }}
+          >
+            Zum Kundenprofil
+          </button>
+        </div>
+      )}
+
+      {/* Expand / collapse toggle */}
+      {canExpand && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onToggleExpand(); }}
+          className="mt-1.5 w-full flex items-center justify-center gap-0.5 text-[10px] font-semibold text-slate-500 hover:text-slate-900 rounded py-0.5 hover:bg-slate-100 transition-colors"
+        >
+          {isExpanded ? (
+            <>Weniger anzeigen <ChevronDown size={10} /></>
+          ) : (
+            <>Details <ChevronRight size={10} /></>
+          )}
+        </button>
+      )}
+
       {/* Reactivate button for dismissed */}
       {isDismissed && (
         <button
@@ -517,8 +612,14 @@ const QUELLEN_THEME_LABELS = {
   markt: 'Marktdaten',
 };
 
-function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onReactivate, onCardClick }) {
-  const [expanded, setExpanded] = useState(false);
+function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onReactivate, onCardClick, isExpanded, onToggleExpand }) {
+  const [localExpanded, setLocalExpanded] = useState(false);
+  const controlled = typeof isExpanded === 'boolean' && typeof onToggleExpand === 'function';
+  const expanded = controlled ? isExpanded : localExpanded;
+  const toggleExpanded = () => {
+    if (controlled) onToggleExpand();
+    else setLocalExpanded(v => !v);
+  };
   const top = items[0];
   const kundeName = top.kundeName || '';
   const initials = kundeName.split(' ').map(n => n[0]).join('').slice(0, 2);
@@ -577,7 +678,7 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
           </div>
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); setExpanded(false); }}
+            onClick={(e) => { e.stopPropagation(); toggleExpanded(); }}
             className="text-[10px] font-semibold text-slate-500 hover:text-slate-900 px-1.5 py-0.5 rounded hover:bg-slate-100 shrink-0"
           >
             Einklappen
@@ -665,7 +766,7 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
         </div>
         <button
           type="button"
-          onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
+          onClick={(e) => { e.stopPropagation(); toggleExpanded(); }}
           className="flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded hover:bg-slate-100 shrink-0"
           style={{ color: columnColor }}
         >

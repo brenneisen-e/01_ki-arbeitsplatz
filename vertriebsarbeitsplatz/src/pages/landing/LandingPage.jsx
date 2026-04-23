@@ -722,7 +722,7 @@ export default function LandingPage() {
                   {claudeLoading ? (
                     <span className="flex items-center gap-2 text-white/70">
                       <Loader2 size={14} className="animate-spin" />
-                      Claude antwortet…
+                      KI antwortet…
                     </span>
                   ) : claudeReply?.error ? (
                     <span className="text-red-200">{claudeReply.error}</span>

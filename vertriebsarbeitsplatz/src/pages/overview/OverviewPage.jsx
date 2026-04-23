@@ -75,19 +75,15 @@ export default function OverviewPage() {
           <KPIGrid
             kpiConfig={config.kpiConfig}
             kpiValues={kpiValues}
-            overrides={
-              modeId === 'banking' ? {
-                kundenzahl: (
-                  <KundenDeutschlandkarteCompact
-                    key="kundenzahl-map"
-                    kunden={KUNDEN_BY_MODE.banking || []}
-                    totalCount={kpiValues.kundenzahl?.wert}
-                    trend={kpiValues.kundenzahl?.trend}
-                    title="Kunden"
-                    onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
-                  />
-                ),
-              } : undefined
+            leadingSlot={
+              modeId === 'banking' ? (
+                <KundenDeutschlandkarteCompact
+                  kunden={KUNDEN_BY_MODE.banking || []}
+                  totalCount={kpiValues.kundenzahl?.wert}
+                  title="Kundenkarte"
+                  onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
+                />
+              ) : null
             }
           />
         )}

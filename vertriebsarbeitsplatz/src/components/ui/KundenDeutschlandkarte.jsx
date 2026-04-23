@@ -31,12 +31,10 @@ function buildMapStyle(provider) {
       sources: {
         'osm': {
           type: 'raster',
-          tiles: [
-            'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          ],
+          // OSM.org empfiehlt inzwischen den Single-Host (HTTP/2).
+          tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
           tileSize: 256,
+          maxzoom: 19,
           attribution: '© OpenStreetMap contributors',
         },
       },
@@ -166,6 +164,7 @@ function DeutschlandSvgChoropleth({
   hoveredBundesland,
   onHover,
   onSelect,
+  showBubbles = true,
 }) {
   const SVG_W = 900;
   const SVG_H = 900;
@@ -223,7 +222,7 @@ function DeutschlandSvgChoropleth({
       })}
 
       {/* Moderne Zahlen-Bubbles je Bundesland */}
-      {centers.map(({ name, c }) => {
+      {showBubbles && centers.map(({ name, c }) => {
         const cnt = bundeslandCounts[name] || 0;
         if (!cnt) return null;
         const [cx, cy] = c;
@@ -396,6 +395,14 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
     mapRef.current = map;
 
+    // Modal/Container-Resize-Bug in MapLibre: nach dem Mount einmal explizit
+    // resize + ResizeObserver fuer spaetere Layout-Aenderungen.
+    const triggerResize = () => { try { map.resize(); } catch {} };
+    requestAnimationFrame(triggerResize);
+    setTimeout(triggerResize, 120);
+    const resizeObs = new ResizeObserver(() => triggerResize());
+    if (mapContainerRef.current) resizeObs.observe(mapContainerRef.current);
+
     const onStyleLoad = () => {
       if (!map.getSource('de-mask')) {
         map.addSource('de-mask', { type: 'geojson', data: maskGeoJSON });
@@ -431,6 +438,7 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     }
 
     return () => {
+      try { resizeObs.disconnect(); } catch {}
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
@@ -593,11 +601,14 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
         </div>
       </div>
 
-      <div className="grid grid-cols-[1fr_320px] gap-0" style={{ height: 620 }}>
-        {/* Linke Seite: Map (SVG Level 1 oder Leaflet Level 2) */}
-        <div className="relative bg-slate-50 min-h-0">
+      <div
+        className="grid gap-0"
+        style={{ gridTemplateColumns: '1fr 320px', gridTemplateRows: '620px', height: 620 }}
+      >
+        {/* Linke Seite: Map (SVG Level 1 oder MapLibre Level 2) */}
+        <div className="relative bg-slate-50 h-full min-h-0 overflow-hidden">
           {selectedBundesland ? (
-            <div ref={mapContainerRef} className="absolute inset-0" />
+            <div ref={mapContainerRef} className="w-full h-full" />
           ) : (
             <>
               <DeutschlandSvgChoropleth
@@ -746,13 +757,10 @@ export function KundenDeutschlandkarteCompact({
     return c;
   }, [geocoded]);
   const maxCount = useMemo(() => Math.max(0, ...Object.values(bundeslandCounts)), [bundeslandCounts]);
-  const displayTotal = totalCount || geocoded.length;
-  const trendPositive = typeof trend === 'number' ? trend >= 0 : null;
-
   return (
     <>
       <div
-        className="relative rounded-xl border p-4 cursor-pointer overflow-hidden card-base card-hover h-full flex flex-col"
+        className="relative rounded-xl border p-3 cursor-pointer overflow-hidden card-base card-hover h-full flex flex-col"
         style={{
           background:
             'linear-gradient(180deg, color-mix(in srgb, var(--mode-primary-light) 14%, #ffffff) 0%, color-mix(in srgb, var(--mode-primary-light) 6%, #ffffff) 100%)',
@@ -761,37 +769,22 @@ export function KundenDeutschlandkarteCompact({
         }}
         onClick={() => setOpen(true)}
       >
-        <div className="flex items-center justify-between mb-1.5">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box shrink-0">
-              <Users size={15} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-            </div>
-            <span className="text-xs font-medium text-slate-500 truncate">{title}</span>
+        <div className="flex items-center gap-1.5 mb-2">
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box shrink-0">
+            <MapPin size={13} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
           </div>
-          {trendPositive !== null && (
-            <span
-              className={`text-xs font-semibold inline-flex items-center gap-0.5 shrink-0 ${trendPositive ? 'text-emerald-600' : 'text-red-600'}`}
-            >
-              <TrendingUp size={12} className={trendPositive ? '' : 'rotate-180'} strokeWidth={2.5} />
-              {trendPositive ? '+' : ''}{Number(trend).toFixed(1)}%
-            </span>
-          )}
+          <span className="text-[11px] font-medium text-slate-500 truncate">{title}</span>
+          <Maximize2 size={11} className="text-slate-400 ml-auto shrink-0" />
         </div>
-        <div className="font-mono text-[2rem] leading-tight font-extrabold truncate text-slate-900">
-          {displayTotal.toLocaleString('de-DE')}
-        </div>
-        <div className="flex-1 min-h-[90px] mt-2 rounded-md overflow-hidden pointer-events-none">
+        <div className="flex-1 min-h-0 rounded-md overflow-hidden pointer-events-none">
           <DeutschlandSvgChoropleth
             bundeslandCounts={bundeslandCounts}
             maxCount={maxCount}
             hoveredBundesland={null}
             onHover={() => {}}
             onSelect={() => {}}
+            showBubbles={false}
           />
-        </div>
-        <div className="mt-1 flex items-center justify-between">
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Deutschlandweit</span>
-          <Maximize2 size={11} className="text-slate-400" />
         </div>
       </div>
 

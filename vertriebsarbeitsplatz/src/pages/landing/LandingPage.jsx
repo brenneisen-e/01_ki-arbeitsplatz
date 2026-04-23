@@ -6,7 +6,8 @@ import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
 import useTranslation from '../../i18n/useTranslation';
 import { invalidateLangCache } from '../../utils/langHelper';
-import { TERMINE_BY_MODE } from '../../data';
+import { TERMINE_BY_MODE, getKundeById } from '../../data';
+import TerminPrepModal from '../../components/ui/TerminPrepModal';
 
 // Demo-Private-Banking-Ansprechpartner. Die Landing-Page kennt keine echten
 // Kollegen-Stammdaten, daher ein fester kleiner Pool – passt zur Demo-Logik
@@ -92,6 +93,9 @@ export default function LandingPage() {
   const [showVariants, setShowVariants] = useState(false);
   // Quick-Prompt-Dropdowns unter dem Chat (null | 'termin' | 'privateBanking')
   const [openPromptDropdown, setOpenPromptDropdown] = useState(null);
+  // Vorbereitungs-Modal für einen ausgewählten Termin (öffnet sich direkt
+  // als Chatbot-Antwort statt einer Navigation).
+  const [terminPrep, setTerminPrep] = useState(null); // { kunde, termin } | null
   const [language, setLanguage] = useState(() => localStorage.getItem('kia_language') || 'de');
   const [settingsName, setSettingsName] = useState(() => localStorage.getItem('kia_user_fullname') || '');
   const [settingsPhoto, setSettingsPhoto] = useState(() => localStorage.getItem('kia_user_photo') || '');
@@ -356,6 +360,16 @@ export default function LandingPage() {
         </div>
       )}
 
+      {/* Gesprächsvorbereitungs-Modal — identisch zu dem Modal, das aus
+          den Termin-Kacheln in der Übersicht geöffnet wird. */}
+      {terminPrep && (
+        <TerminPrepModal
+          kunde={terminPrep.kunde}
+          termin={terminPrep.termin}
+          onClose={() => setTerminPrep(null)}
+        />
+      )}
+
       {/* Thinking Overlay */}
       {isThinking && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-fade-in">
@@ -523,9 +537,14 @@ export default function LandingPage() {
                   <button
                     key={i}
                     onClick={() => {
-                      setChatInput(`Vorbereitung Gesprächstermin — ${termin.kunde}`);
                       setOpenPromptDropdown(null);
-                      executeSuggestion({ action: 'overview' });
+                      setChatInput(`Vorbereitung Gesprächstermin — ${termin.kunde}`);
+                      // Kunde aus den Stammdaten ziehen – falls nicht
+                      // vorhanden (reine Termin-Stubs), fallback auf einen
+                      // minimalen Kunde-Datensatz aus dem Termin selbst.
+                      const kunde = getKundeById(activeModule, termin.kundeId)
+                        || { id: termin.kundeId, name: termin.kunde, foto: termin.foto };
+                      setTerminPrep({ kunde, termin });
                     }}
                     className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-left transition-colors"
                   >

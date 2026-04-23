@@ -132,7 +132,7 @@ export const B1 = {
     },
     // 2. Abgebrochener Online-Kredit (hoch)
     { titel: 'Ratenkredit 15k \u2013 Online-Abbruch', typ: 'anpassung', quellen: ['direktvertrieb'], prioritaet: 'hoch', volumen: 15000, volumenTyp: 'einmalig',
-      beschreibung: 'Kunde hat Online-Kreditantrag (15.000\u20ac, Badsanierung) bei VideoIdent abgebrochen. Warmes Lead!',
+      beschreibung: 'Kunde hat Online-Kreditantrag (15.000\u20ac, Badsanierung) bei VideoIdent abgebrochen.',
       kiDescription: 'KI-Analyse: Klaus Fischer hat am {{datumVorEinerWoche}} im Online-Banking einen Ratenkredit \u00fcber 15.000 \u20ac (60 Monate, 4,9 % eff., Verwendung: Badsanierung) konfiguriert und bis Schritt 4 von 6 ausgef\u00fcllt \u2013 dann bei der VideoIdent-Legitimation um 19:30 Uhr abgebrochen. Alle pers\u00f6nlichen Daten, Einkommensangaben und Kontoverbindung liegen bereits vor. Der Abbruch am Abend deutet auf Zeitmangel oder technische Probleme hin \u2013 nicht auf Desinteresse. Empfehlung: Innerhalb von 48 Stunden pers\u00f6nlich ansprechen, PostIdent als Alternative anbieten und Abschluss in der Filiale erm\u00f6glichen. Abschlusswahrscheinlichkeit: sehr hoch.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Privatkredit Komfort', status: 'identifiziert',
       herleitung: [
@@ -343,7 +343,7 @@ export const B1 = {
     // 8b. Auslandsreisekrankenversicherung – Anfrage aus Chatbot (hoch)
     { titel: 'Auslandsreisekrankenversicherung \u2013 Familie Thailand', typ: 'cross_sell', quellen: ['kommunikation'], prioritaet: 'hoch', volumen: 49, volumenTyp: 'jaehrlich',
       beschreibung: 'Kunde hat im Chatbot konkret nach Auslandskrankenschutz f\u00fcr Familienreise nach Thailand gefragt.',
-      kiDescription: 'KI-Analyse: Klaus Fischer hat am 18.03.2026 um 19:42 Uhr im Chatbot aktiv nach einer Auslandsreisekrankenversicherung gefragt \u2013 Anlass: geplante Sommerreise mit der Familie (4 Personen) nach Thailand. Im Bestand ist KEINE Auslandsreisekrankenversicherung vorhanden, auch die {{institutKurz}}-Visa Gold deckt nur eingeschr\u00e4nkten Auslandsschutz ab. Bei einer Fernreise mit Kindern (Lukas 4 J., Marie 1 J.) ist das Risiko hoch und die fehlende Deckung ein konkretes Problem. Empfehlung: {{versicherungspartner}} Auslandsreisekrankenversicherung Familie (ca. 49 \u20ac/Jahr, weltweit, Rücktransport, ohne Selbstbeteiligung). Sehr warmes Lead \u2013 Kunde wartet auf R\u00fcckmeldung der Beraterin.',
+      kiDescription: 'KI-Analyse: Klaus Fischer hat am 18.03.2026 um 19:42 Uhr im Chatbot aktiv nach einer Auslandsreisekrankenversicherung gefragt \u2013 Anlass: geplante Sommerreise mit der Familie (4 Personen) nach Thailand. Im Bestand ist KEINE Auslandsreisekrankenversicherung vorhanden, auch die {{institutKurz}}-Visa Gold deckt nur eingeschr\u00e4nkten Auslandsschutz ab. Bei einer Fernreise mit Kindern (Lukas 4 J., Marie 1 J.) ist das Risiko hoch und die fehlende Deckung ein konkretes Problem. Empfehlung: {{versicherungspartner}} Auslandsreisekrankenversicherung Familie (ca. 49 \u20ac/Jahr, weltweit, Rücktransport, ohne Selbstbeteiligung). Kunde wartet auf R\u00fcckmeldung der Beraterin.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: '{{versicherungspartner}} Auslandsreisekrankenversicherung Familie', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle 1', value: 'Kommunikation \u2013 Chatbot-Anfrage am 18.03.2026' },

@@ -296,10 +296,6 @@ export default function VertraegeTab({ kunde }) {
                   <span className="text-[11px] text-slate-400">{sumLabel}</span>
                   <span className="font-mono text-lg font-bold text-slate-800">{formatEur(gesamtKosten)}</span>
                 </div>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-[11px] text-slate-400">{t('optimierbar')}</span>
-                  <span className={`font-mono text-lg font-bold ${optimierbar > 0 ? 'text-amber-600' : 'text-slate-400'}`}>{optimierbar}</span>
-                </div>
               </div>
               <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-4">
                 <div className="text-xs text-emerald-700 font-semibold uppercase tracking-wider mb-2">

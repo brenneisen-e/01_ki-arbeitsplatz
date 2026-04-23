@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { clsx } from 'clsx';
-import { Send, Mic, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
+import { Send, Mic, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp, ArrowLeft, X } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
@@ -25,6 +25,26 @@ const ANSPRECHPARTNER_ABTEILUNGEN = [
   { abteilung: 'Compliance & Recht',    beschreibung: 'Regulatorik, FIDA/PSD2, Geldwäsche' },
   { abteilung: 'Kundenservice',         beschreibung: 'Allgemeine Anfragen, Beschwerden' },
 ];
+
+// Sicherheitsnetz: das Produkt erlaubt weder Emojis noch Markdown. Wir
+// strippen daher Unicode-Emojis und die häufigsten Markdown-Marker clientseitig,
+// auch wenn das Modell sich ausnahmsweise doch daran vergreift.
+function sanitizeAssistantText(text) {
+  if (!text) return '';
+  // Emojis / Pictographs / Symbols entfernen.
+  let out = text.replace(/[\p{Extended_Pictographic}\p{Emoji_Presentation}]/gu, '');
+  // Bold/Italic-Marker (** __  * _) entfernen, Text behalten.
+  out = out.replace(/\*\*(.+?)\*\*/g, '$1').replace(/__(.+?)__/g, '$1');
+  out = out.replace(/(^|[^*])\*(?!\s)([^*\n]+?)\*(?!\*)/g, '$1$2');
+  out = out.replace(/(^|[^_])_(?!\s)([^_\n]+?)_(?!_)/g, '$1$2');
+  // Code-Backticks
+  out = out.replace(/`([^`]+)`/g, '$1');
+  // Überschriften-# am Zeilenanfang
+  out = out.replace(/^#{1,6}\s+/gm, '');
+  // Bullet-Marker am Zeilenanfang (-, *, •) durch nichts ersetzen
+  out = out.replace(/^\s*[-*•]\s+/gm, '');
+  return out.trim();
+}
 
 // ISO-Datum (YYYY-MM-DD) → DD.MM.YYYY
 function formatDateDE(iso) {
@@ -262,7 +282,7 @@ export default function LandingPage() {
         throw new Error(msg);
       }
       if (!data) throw new Error('Leere Antwort vom /api/claude-Endpoint. Ist die Cloudflare Pages Function deployt?');
-      setClaudeReply({ prompt, text: data.text || '(leere Antwort)', error: null });
+      setClaudeReply({ prompt, text: sanitizeAssistantText(data.text || '(leere Antwort)'), error: null });
     } catch (err) {
       setClaudeReply({ prompt, text: '', error: String(err.message || err) });
     } finally {
@@ -369,7 +389,7 @@ export default function LandingPage() {
       className="min-h-screen transition-colors duration-500 flex flex-col"
       style={{
         // Stockphoto als Vollbild-Hintergrund mit Dunkel-Overlay für Lesbarkeit.
-        backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.65) 0%, rgba(15,23,42,0.82) 100%), url('./images/zukunftsbank-header.jpeg')`,
+        backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.65) 0%, rgba(15,23,42,0.82) 100%), url('/images/zukunftsbank-header.jpeg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -447,7 +467,7 @@ export default function LandingPage() {
               src="https://img.logo.dev/deloitte.com?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=256&format=png"
               alt="Deloitte"
               className="h-16 w-auto object-contain"
-              onError={(e) => { e.currentTarget.src = './images/6364529b74a1f1454594542e_Monitor Deloitte Logo.png'; }}
+              onError={(e) => { e.currentTarget.src = '/images/6364529b74a1f1454594542e_Monitor Deloitte Logo.png'; }}
             />
             <span className="text-white text-2xl font-bold uppercase tracking-[0.2em] leading-none">
               Demo
@@ -680,45 +700,45 @@ export default function LandingPage() {
             </div>
           )}
 
-          {/* Inline Claude-Chat-Antwort direkt unter dem Chat-Input. Kein
-              Modal — die Antwort bleibt Teil der Landing-Page, kann per X
-              entfernt werden. */}
+          {/* Inline-Chatverlauf unter dem Chat-Input. Linkes "User"-Bubble
+              zeigt die gestellte Frage, rechtes "Assistent"-Bubble die
+              Antwort. Kein Modal, kein Shadow – passt sich ans Glas-UI an. */}
           {(claudeLoading || claudeReply) && (
-            <div className="mt-3 rounded-2xl bg-white/90 border border-white/30 shadow-lg p-4 animate-fade-in">
-              <div className="flex items-center gap-2 mb-2">
-                <Bot size={14} className="text-violet-600" />
-                <span className="text-xs font-semibold text-slate-700">KI-Assistent</span>
+            <div className="mt-4 space-y-2 animate-fade-in">
+              {claudeReply?.prompt && (
+                <div className="flex justify-end">
+                  <div className="max-w-[80%] rounded-2xl rounded-tr-md px-4 py-2 bg-white/20 border border-white/25 backdrop-blur-sm text-white text-sm">
+                    {claudeReply.prompt}
+                  </div>
+                </div>
+              )}
+              <div className="flex justify-start gap-2 items-start">
+                <div className="w-7 h-7 rounded-full bg-white/15 border border-white/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <Bot size={14} className="text-white/80" />
+                </div>
+                <div className="max-w-[80%] rounded-2xl rounded-tl-md px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-sm text-white/90 text-sm leading-relaxed whitespace-pre-wrap">
+                  {claudeLoading ? (
+                    <span className="flex items-center gap-2 text-white/70">
+                      <Loader2 size={14} className="animate-spin" />
+                      Claude antwortet…
+                    </span>
+                  ) : claudeReply?.error ? (
+                    <span className="text-red-200">{claudeReply.error}</span>
+                  ) : (
+                    claudeReply?.text
+                  )}
+                </div>
                 {!claudeLoading && (
                   <button
                     type="button"
                     onClick={() => setClaudeReply(null)}
-                    className="ml-auto text-slate-400 hover:text-slate-700"
+                    className="text-white/40 hover:text-white/80 mt-1"
                     aria-label="Antwort entfernen"
                   >
-                    <span className="text-sm">✕</span>
+                    <X size={14} />
                   </button>
                 )}
               </div>
-              {claudeReply?.prompt && (
-                <div className="text-[11px] text-slate-500 mb-2">
-                  <span className="uppercase tracking-wider font-semibold text-slate-400">Frage: </span>
-                  {claudeReply.prompt}
-                </div>
-              )}
-              {claudeLoading ? (
-                <div className="flex items-center gap-2 text-slate-500 text-sm">
-                  <Loader2 size={14} className="animate-spin" />
-                  <span>Claude antwortet…</span>
-                </div>
-              ) : claudeReply?.error ? (
-                <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-                  {claudeReply.error}
-                </div>
-              ) : (
-                <div className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed">
-                  {claudeReply?.text}
-                </div>
-              )}
             </div>
           )}
         </div>

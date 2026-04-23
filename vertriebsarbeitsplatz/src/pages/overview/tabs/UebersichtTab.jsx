@@ -82,9 +82,9 @@ const LETZTE_ABSCHLUESSE = {
 
 const GEBURTSTAGE = {
   versicherung: [
-    { name: 'Amira König', kundeId: 'KD00002', datum: 'Mi, 12.03.', alter: 29, foto: './images/AdobeStock_252262042.jpeg' },
-    { name: 'Thomas Weber', kundeId: 'KD00003', datum: 'Do, 13.03.', alter: 56, foto: './images/AdobeStock_361342769.jpeg' },
-    { name: 'Sandra Yilmaz', kundeId: 'KD00008', datum: 'Sa, 15.03.', alter: 45, foto: './images/AdobeStock_612932760.jpeg' },
+    { name: 'Amira König', kundeId: 'KD00002', datum: 'Mi, 12.03.', alter: 29, foto: '/images/AdobeStock_252262042.jpeg' },
+    { name: 'Thomas Weber', kundeId: 'KD00003', datum: 'Do, 13.03.', alter: 56, foto: '/images/AdobeStock_361342769.jpeg' },
+    { name: 'Sandra Yilmaz', kundeId: 'KD00008', datum: 'Sa, 15.03.', alter: 45, foto: '/images/AdobeStock_612932760.jpeg' },
   ],
   banking: [
     { name: 'Sandra Müller', kundeId: 'BK00002', datum: 'Mi, 19.03.', alter: 34 },

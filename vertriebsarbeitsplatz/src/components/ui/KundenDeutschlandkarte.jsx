@@ -1,10 +1,33 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import { MapPin, ArrowLeft, Search } from 'lucide-react';
+import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import { MapPin, ArrowLeft, Search, Maximize2, X } from 'lucide-react';
 import bundeslaenderGeo from '../../pages/cockpit/bundeslaender.geo.json';
 import { geocodeKundeLeaflet } from './KundenKarteLeaflet';
 import { getKundeFoto } from '../../utils/kundenFotos';
+
+// Provider-Konfiguration. User kann zwischen MapTiler (Vector) und Mapbox
+// (Raster-Fallback via Static-Tiles-API) umschalten.
+const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY || '';
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || '';
+function buildMapStyle(provider) {
+  if (provider === 'mapbox' && MAPBOX_TOKEN) {
+    return {
+      version: 8,
+      sources: {
+        'mbx': {
+          type: 'raster',
+          tiles: [`https://api.mapbox.com/styles/v1/mapbox/light-v11/tiles/256/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`],
+          tileSize: 256,
+          attribution: '© Mapbox · © OpenStreetMap',
+        },
+      },
+      layers: [{ id: 'mbx', type: 'raster', source: 'mbx' }],
+    };
+  }
+  // Default: MapTiler Streets-v2
+  return `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`;
+}
 
 // Zwei Ebenen:
 //   Ebene 1 ("deutschland"): Reine SVG-Choropleth (1:1 VSTCockpit-Stil).
@@ -226,23 +249,82 @@ function DeutschlandSvgChoropleth({
   );
 }
 
+/* ────── Synthetische "Ghost"-Kunden, um totalCount auf der Karte
+    sauber zu verteilen (echte Demodaten sind nur ~12, Bank meldet aber
+    248 im KPI). Ghosts bekommen einen deterministischen deutschen Namen
+    und werden per scatterCityForKunde auf die Städte gestreut. ────── */
+const GHOST_FIRST = ['Anna','Bernd','Carla','Dieter','Elena','Felix','Gabi','Hans','Iris','Jan','Katrin','Lars','Mila','Nils','Olivia','Paul','Quirin','Rita','Stefan','Tina','Uwe','Vera','Wolf','Xenia','Yvonne','Zoe','Lena','Max','Julia','Tom','Sophie','Niklas','Emilia','Leon','Mia','Lukas','Hannah','Finn','Lea','Ben','Clara','Jonas','Alina','David','Laura','Luca','Nina','Tim','Pia','Sebastian'];
+const GHOST_LAST = ['Müller','Schmidt','Schneider','Fischer','Weber','Meyer','Wagner','Becker','Schulz','Hoffmann','Schäfer','Koch','Bauer','Richter','Klein','Wolf','Neumann','Schwarz','Zimmermann','Braun','Krüger','Hofmann','Hartmann','Lange','Schmitt','Werner','Schmitz','Krause','Meier','Lehmann','Walter','Schulze','Fuchs','Günther','Peters','Jung','Hahn','Vogel','Friedrich','Keller'];
+function ghostHash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
+function makeGhost(i) {
+  const id = `ghost-${i}`;
+  const h = ghostHash(id);
+  const fn = GHOST_FIRST[h % GHOST_FIRST.length];
+  const ln = GHOST_LAST[(h >>> 5) % GHOST_LAST.length];
+  // Deterministischer "letzter Kontakt": 0–360 Tage zurück, manche (20%) haben
+  // noch einen anstehenden Termin, damit die Farbstreuung nicht komplett grau ist.
+  const daysBack = h % 360;
+  const now = new Date();
+  const last = new Date(now.getTime() - daysBack * 86400000);
+  const hasUpcoming = (h % 100) < 20;
+  const upcoming = hasUpcoming ? new Date(now.getTime() + ((h % 40) + 1) * 86400000) : null;
+  return {
+    id,
+    name: `${fn} ${ln}`,
+    kommunikation: [{ datum: last.toISOString() }],
+    termine: upcoming ? [{ datum: upcoming.toISOString() }] : [],
+  };
+}
+
 /* ────── Hauptkomponente ────── */
-export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, title = 'Kundenkarte Deutschland' }) {
+export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKundeClick, title = 'Kundenkarte Deutschland' }) {
   const [selectedBundesland, setSelectedBundesland] = useState(null);
   const [hoveredBundesland, setHoveredBundesland] = useState(null);
   const [hoveredKundeId, setHoveredKundeId] = useState(null);
   const [hoveredCity, setHoveredCity] = useState(null);
   const [listSearch, setListSearch] = useState('');
 
-  const leafletContainerRef = useRef(null);
+  const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
-  const pinsLayerRef = useRef(null);
-  const cityMarkersRef = useRef(new Map());
-  const kundenMarkersRef = useRef(new Map());
+  const cityMarkersRef = useRef(new Map()); // city → { marker, el }
+  const kundenMarkersRef = useRef(new Map()); // kundeId → { marker, el }
+
+  // Provider-Switcher. Default: maptiler. User kann via Toggle oben rechts
+  // umschalten (falls entsprechender Key/Token in .env vorhanden).
+  const initialProvider = MAPTILER_KEY ? 'maptiler' : (MAPBOX_TOKEN ? 'mapbox' : 'maptiler');
+  const [mapProvider, setMapProvider] = useState(initialProvider);
+
+  // Masken-GeoJSON fuer MapLibre: grosse Box ueber Europa mit den
+  // Bundeslaender-Aussenringen als Loecher — damit bleiben nur
+  // Strassen/Staedte innerhalb Deutschlands sichtbar.
+  const maskGeoJSON = useMemo(() => {
+    const outer = [[-25, 30], [45, 30], [45, 72], [-25, 72], [-25, 30]];
+    const holes = [];
+    for (const feature of bundeslaenderGeo.features) {
+      const { type, coordinates } = feature.geometry;
+      if (type === 'Polygon') holes.push(coordinates[0]);
+      else if (type === 'MultiPolygon') for (const poly of coordinates) holes.push(poly[0]);
+    }
+    return {
+      type: 'Feature',
+      properties: {},
+      geometry: { type: 'Polygon', coordinates: [outer, ...holes] },
+    };
+  }, []);
+
+  // Wenn totalCount > kunden.length, fuellen wir mit synthetischen Ghost-
+  // Kunden auf, damit die Choropleth und die Markerverteilung der tatsaech-
+  // lichen KPI-Zahl entspricht (Bank: 248, Demo: nur ~12).
+  const paddedKunden = useMemo(() => {
+    if (!totalCount || totalCount <= kunden.length) return kunden;
+    const extras = [];
+    for (let i = kunden.length; i < totalCount; i++) extras.push(makeGhost(i));
+    return [...kunden, ...extras];
+  }, [kunden, totalCount]);
 
   const geocoded = useMemo(
-    () => kunden.map((k, i) => geocodeKundeLeaflet(k, i, { scatter: true })).filter(Boolean),
-    [kunden]
+    () => paddedKunden.map((k, i) => geocodeKundeLeaflet(k, i, { scatter: true })).filter(Boolean),
+    [paddedKunden]
   );
 
   const bundeslandCounts = useMemo(() => {
@@ -266,133 +348,165 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
     );
   }, [visibleKunden, listSearch]);
 
-  // Leaflet-Map nur auf Bundesland-Ebene initialisieren/entfernen.
+  // Map (MapLibre GL) initialisieren sobald ein Bundesland ausgewaehlt ist.
+  // Reagiert auf Provider-Wechsel: Karte wird abgerissen und mit neuem
+  // Style neu erzeugt.
   useEffect(() => {
     if (!selectedBundesland) {
-      // Karte abbauen, falls eine existiert.
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
-        pinsLayerRef.current = null;
         cityMarkersRef.current.clear();
         kundenMarkersRef.current.clear();
       }
       return;
     }
-    if (!leafletContainerRef.current) return;
-    if (mapRef.current) return; // schon initialisiert
+    if (!mapContainerRef.current) return;
+    if (mapRef.current) return;
 
-    const map = L.map(leafletContainerRef.current, {
-      center: [51.2, 10.4],
-      zoom: 7,
-      zoomControl: true,
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: buildMapStyle(mapProvider),
+      center: [10.4, 51.2],
+      zoom: 5.5,
       attributionControl: true,
-      scrollWheelZoom: true,
     });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-      subdomains: 'abcd',
-      attribution: '© OpenStreetMap · © CARTO',
-    }).addTo(map);
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
     mapRef.current = map;
 
-    // Bounds der Ziel-Bundesland-Feature berechnen und hinfliegen.
+    const onStyleLoad = () => {
+      if (!map.getSource('de-mask')) {
+        map.addSource('de-mask', { type: 'geojson', data: maskGeoJSON });
+        map.addLayer({
+          id: 'de-mask-fill',
+          type: 'fill',
+          source: 'de-mask',
+          paint: { 'fill-color': '#ffffff', 'fill-opacity': 1 },
+        });
+      }
+      if (!map.getSource('de-outline')) {
+        map.addSource('de-outline', { type: 'geojson', data: bundeslaenderGeo });
+        map.addLayer({
+          id: 'de-outline-line',
+          type: 'line',
+          source: 'de-outline',
+          paint: { 'line-color': '#cbd5e1', 'line-width': 0.8, 'line-opacity': 0.9 },
+        });
+      }
+    };
+    map.on('load', onStyleLoad);
+    // Bei Style-Wechsel (setStyle) wird 'load' nicht nochmal gefeuert —
+    // dann greift 'styledata'. Im aktuellen Pfad wird aber immer die Karte
+    // komplett neu gebaut, deshalb reicht 'load'.
+
+    // Auf das gewaehlte Bundesland fliegen.
     const feature = bundeslaenderGeo.features.find(f => f.properties.name === selectedBundesland);
     if (feature) {
-      const layer = L.geoJSON(feature);
-      const bounds = layer.getBounds();
-      map.fitBounds(bounds, { padding: [30, 30] });
+      const bounds = new maplibregl.LngLatBounds();
+      const walk = (c) => { if (typeof c[0] === 'number') bounds.extend(c); else c.forEach(walk); };
+      walk(feature.geometry.coordinates);
+      map.once('load', () => map.fitBounds(bounds, { padding: 40, duration: 700 }));
     }
 
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
+        cityMarkersRef.current.clear();
+        kundenMarkersRef.current.clear();
       }
     };
-  }, [selectedBundesland]);
+  }, [selectedBundesland, mapProvider, maskGeoJSON]);
 
-  // City-Aggregat-Marker + einzelne Kunden-Pins im aktuellen Bundesland.
+  // Marker (Custom-HTML via maplibregl.Marker) fuer City-Aggregate und
+  // einzelne Kunden.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selectedBundesland) return;
-    if (pinsLayerRef.current) { pinsLayerRef.current.remove(); pinsLayerRef.current = null; }
+    // Alte Marker entfernen
+    for (const { marker } of cityMarkersRef.current.values()) marker.remove();
+    for (const { marker } of kundenMarkersRef.current.values()) marker.remove();
     cityMarkersRef.current.clear();
     kundenMarkersRef.current.clear();
 
-    const layerGroup = L.layerGroup();
-    const cityGroups = groupByCity(geocoded.filter(k => k.bundesland === selectedBundesland));
+    const render = () => {
+      const cityGroups = groupByCity(geocoded.filter(k => k.bundesland === selectedBundesland));
+      for (const g of cityGroups) {
+        const size = 28 + Math.min(36, Math.sqrt(g.kunden.length) * 6);
+        const cityEl = document.createElement('div');
+        cityEl.style.cssText =
+          `width:${size}px;height:${size}px;border-radius:50%;` +
+          `background:rgba(59,130,246,0.55);border:2px solid #1e40af;` +
+          `display:flex;align-items:center;justify-content:center;` +
+          `font-family:DM Sans,sans-serif;font-weight:700;font-size:${Math.round(size*0.38)}px;` +
+          `color:#0f172a;cursor:pointer;transition:all 150ms;` +
+          `box-shadow:0 4px 12px rgba(30,64,175,0.30);`;
+        cityEl.textContent = g.kunden.length;
+        cityEl.title = `${g.city} — ${g.kunden.length} Kunde${g.kunden.length===1?'':'n'}`;
+        cityEl.addEventListener('mouseenter', () => setHoveredCity(g.city));
+        cityEl.addEventListener('mouseleave', () => setHoveredCity(null));
+        cityEl.addEventListener('click', () => map.flyTo({ center: [g.lng, g.lat], zoom: 11, duration: 600 }));
+        const cityMarker = new maplibregl.Marker({ element: cityEl, anchor: 'center' })
+          .setLngLat([g.lng, g.lat]).addTo(map);
+        cityMarkersRef.current.set(g.city, { marker: cityMarker, el: cityEl });
 
-    for (const g of cityGroups) {
-      const radius = 8 + Math.min(18, Math.sqrt(g.kunden.length) * 5);
-      const cityMarker = L.circleMarker([g.lat, g.lng], {
-        radius,
-        color: '#1e40af',
-        weight: 2,
-        fillColor: '#3b82f6',
-        fillOpacity: 0.55,
-      });
-      cityMarker.bindTooltip(
-        `<div style="font-family:'DM Sans',sans-serif;"><strong>${g.city}</strong><br/>${g.kunden.length} Kunde${g.kunden.length === 1 ? '' : 'n'}</div>`,
-        { direction: 'top', offset: [0, -4] }
-      );
-      cityMarker.on('mouseover', () => setHoveredCity(g.city));
-      cityMarker.on('mouseout', () => setHoveredCity(null));
-      cityMarker.on('click', () => { map.flyTo([g.lat, g.lng], 12, { duration: 0.6 }); });
-      cityMarker.addTo(layerGroup);
-      cityMarkersRef.current.set(g.city, cityMarker);
-
-      for (const k of g.kunden) {
-        const pin = L.circleMarker([k.lat, k.lng], {
-          radius: 5,
-          color: '#ffffff',
-          weight: 1.5,
-          fillColor: k.status.color,
-          fillOpacity: 0.95,
-        });
-        const fmtDE = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const kontaktText = k.status.nextTerminDate
-          ? `Termin ${fmtDE(k.status.nextTerminDate)}`
-          : k.status.lastContactDate
-            ? `Letzter Kontakt ${fmtDE(k.status.lastContactDate)}`
-            : 'Noch kein Kontakt';
-        pin.bindTooltip(
-          `<div style="font-family:'DM Sans',sans-serif;">
-            <div style="font-weight:700;color:#0f172a;">${k.name}</div>
-            <div style="color:#64748b;">${k.city}</div>
-            <div style="color:${k.status.color};font-weight:600;margin-top:2px;">${kontaktText}</div>
-          </div>`,
-          { direction: 'top', offset: [0, -4] }
-        );
-        pin.on('mouseover', () => setHoveredKundeId(k.id));
-        pin.on('mouseout', () => setHoveredKundeId(null));
-        pin.on('click', () => onKundeClick?.(k.id));
-        pin.addTo(layerGroup);
-        kundenMarkersRef.current.set(k.id, pin);
+        for (const k of g.kunden) {
+          const pinEl = document.createElement('div');
+          pinEl.style.cssText =
+            `width:12px;height:12px;border-radius:50%;` +
+            `background:${k.status.color};border:2px solid #fff;` +
+            `cursor:pointer;transition:all 150ms;` +
+            `box-shadow:0 1px 4px rgba(15,23,42,0.35);`;
+          const fmtDE = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+          const kontakt = k.status.nextTerminDate
+            ? `Termin ${fmtDE(k.status.nextTerminDate)}`
+            : k.status.lastContactDate
+              ? `Letzter Kontakt ${fmtDE(k.status.lastContactDate)}`
+              : 'Noch kein Kontakt';
+          pinEl.title = `${k.name} · ${k.city} · ${kontakt}`;
+          pinEl.addEventListener('mouseenter', () => setHoveredKundeId(k.id));
+          pinEl.addEventListener('mouseleave', () => setHoveredKundeId(null));
+          pinEl.addEventListener('click', () => onKundeClick?.(k.id));
+          const pinMarker = new maplibregl.Marker({ element: pinEl, anchor: 'center' })
+            .setLngLat([k.lng, k.lat]).addTo(map);
+          kundenMarkersRef.current.set(k.id, { marker: pinMarker, el: pinEl });
+        }
       }
-    }
+    };
 
-    layerGroup.addTo(map);
-    pinsLayerRef.current = layerGroup;
-  }, [selectedBundesland, geocoded, onKundeClick]);
+    if (map.loaded()) render();
+    else map.once('load', render);
+  }, [selectedBundesland, geocoded, onKundeClick, mapProvider]);
 
+  // Hover-Sync: DOM-Style der Marker aktualisieren.
   useEffect(() => {
-    for (const [id, marker] of kundenMarkersRef.current.entries()) {
+    for (const [id, m] of kundenMarkersRef.current.entries()) {
       if (id === hoveredKundeId) {
-        marker.setStyle({ radius: 9, weight: 3, color: '#1e40af', fillOpacity: 1 });
-        marker.bringToFront();
+        m.el.style.width = '18px';
+        m.el.style.height = '18px';
+        m.el.style.borderColor = '#1e40af';
+        m.el.style.borderWidth = '3px';
+        m.el.style.zIndex = '10';
       } else {
-        marker.setStyle({ radius: 5, weight: 1.5, color: '#ffffff', fillOpacity: 0.95 });
+        m.el.style.width = '12px';
+        m.el.style.height = '12px';
+        m.el.style.borderColor = '#ffffff';
+        m.el.style.borderWidth = '2px';
+        m.el.style.zIndex = '1';
       }
     }
   }, [hoveredKundeId]);
 
   useEffect(() => {
-    for (const [city, marker] of cityMarkersRef.current.entries()) {
+    for (const [city, m] of cityMarkersRef.current.entries()) {
       if (city === hoveredCity) {
-        marker.setStyle({ weight: 3, color: '#0f172a', fillOpacity: 0.8 });
+        m.el.style.borderColor = '#0f172a';
+        m.el.style.borderWidth = '3px';
+        m.el.style.background = 'rgba(59,130,246,0.75)';
       } else {
-        marker.setStyle({ weight: 2, color: '#1e40af', fillOpacity: 0.55 });
+        m.el.style.borderColor = '#1e40af';
+        m.el.style.borderWidth = '2px';
+        m.el.style.background = 'rgba(59,130,246,0.55)';
       }
     }
   }, [hoveredCity]);
@@ -419,9 +533,33 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
             {selectedBundesland && <span className="ml-2 text-slate-500 font-normal text-sm">· {selectedBundesland}</span>}
           </h3>
         </div>
-        <div className="text-xs text-slate-500">
-          {visibleKunden.length} Kunden
-          {selectedBundesland ? ` in ${selectedBundesland}` : ' bundesweit'}
+        <div className="flex items-center gap-3">
+          {selectedBundesland && (MAPTILER_KEY || MAPBOX_TOKEN) && (
+            <div className="flex items-center rounded-lg border border-slate-200 bg-white overflow-hidden text-[11px] font-semibold">
+              <button
+                type="button"
+                onClick={() => setMapProvider('maptiler')}
+                disabled={!MAPTILER_KEY}
+                className={`px-2 py-1 transition-colors ${mapProvider === 'maptiler' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'} disabled:opacity-40`}
+                title="MapTiler Streets"
+              >
+                MapTiler
+              </button>
+              <button
+                type="button"
+                onClick={() => setMapProvider('mapbox')}
+                disabled={!MAPBOX_TOKEN}
+                className={`px-2 py-1 transition-colors ${mapProvider === 'mapbox' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'} disabled:opacity-40`}
+                title="Mapbox Light"
+              >
+                Mapbox
+              </button>
+            </div>
+          )}
+          <div className="text-xs text-slate-500">
+            {visibleKunden.length} Kunden
+            {selectedBundesland ? ` in ${selectedBundesland}` : ' bundesweit'}
+          </div>
         </div>
       </div>
 
@@ -429,7 +567,7 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
         {/* Linke Seite: Map (SVG Level 1 oder Leaflet Level 2) */}
         <div className="relative bg-slate-50 min-h-0">
           {selectedBundesland ? (
-            <div ref={leafletContainerRef} className="absolute inset-0" />
+            <div ref={mapContainerRef} className="absolute inset-0" />
           ) : (
             <>
               <DeutschlandSvgChoropleth
@@ -543,5 +681,97 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
         </div>
       </div>
     </div>
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Kompakte KPI-Preview + Modal mit der vollen Deutschlandkarte.
+   ────────────────────────────────────────────────────────────── */
+export function KundenDeutschlandkarteCompact({ kunden = [], totalCount, onKundeClick, title = 'Kundenkarte' }) {
+  const [open, setOpen] = useState(false);
+
+  // Fuer die Vorschau pro Bundesland die Kunden-Zahl berechnen (inkl. Ghosts).
+  const paddedKunden = useMemo(() => {
+    if (!totalCount || totalCount <= kunden.length) return kunden;
+    const extras = [];
+    for (let i = kunden.length; i < totalCount; i++) extras.push(makeGhost(i));
+    return [...kunden, ...extras];
+  }, [kunden, totalCount]);
+  const geocoded = useMemo(
+    () => paddedKunden.map((k, i) => geocodeKundeLeaflet(k, i, { scatter: true })).filter(Boolean),
+    [paddedKunden]
+  );
+  const bundeslandCounts = useMemo(() => {
+    const c = {};
+    for (const k of geocoded) c[k.bundesland] = (c[k.bundesland] || 0) + 1;
+    return c;
+  }, [geocoded]);
+  const maxCount = useMemo(() => Math.max(0, ...Object.values(bundeslandCounts)), [bundeslandCounts]);
+  const displayTotal = totalCount || geocoded.length;
+
+  return (
+    <>
+      <div
+        className="relative rounded-xl border p-3 cursor-pointer overflow-hidden card-base card-hover flex flex-col"
+        style={{
+          background:
+            'linear-gradient(180deg, color-mix(in srgb, var(--mode-primary-light) 14%, #ffffff) 0%, color-mix(in srgb, var(--mode-primary-light) 6%, #ffffff) 100%)',
+          borderColor: 'color-mix(in srgb, var(--mode-primary-light) 22%, #e2e8f0)',
+          boxShadow: '0 6px 16px -6px rgba(15, 23, 42, 0.10), 0 2px 6px -2px rgba(15, 23, 42, 0.05)',
+        }}
+        onClick={() => setOpen(true)}
+      >
+        <div className="flex items-center gap-1.5 mb-2">
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box shrink-0">
+            <MapPin size={13} className="text-blue-600" strokeWidth={1.75} />
+          </div>
+          <span className="text-[11px] font-medium text-slate-500 truncate">{title}</span>
+          <Maximize2 size={11} className="text-slate-400 ml-auto shrink-0" />
+        </div>
+        <div className="font-mono text-[1.5rem] leading-tight font-extrabold mb-1 truncate text-slate-900">
+          {displayTotal.toLocaleString('de-DE')}
+        </div>
+        <div className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mb-2">
+          Kunden deutschlandweit
+        </div>
+        <div className="flex-1 min-h-[90px] rounded-md overflow-hidden border border-white/60 pointer-events-none bg-slate-50">
+          <DeutschlandSvgChoropleth
+            bundeslandCounts={bundeslandCounts}
+            maxCount={maxCount}
+            hoveredBundesland={null}
+            onHover={() => {}}
+            onSelect={() => {}}
+          />
+        </div>
+      </div>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-7xl h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-white/95 border border-slate-200 shadow-sm text-slate-500 hover:text-slate-900 hover:bg-white transition-colors"
+              aria-label="Schließen"
+            >
+              <X size={18} />
+            </button>
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <KundenDeutschlandkarte
+                kunden={kunden}
+                totalCount={totalCount}
+                onKundeClick={(id) => { setOpen(false); onKundeClick?.(id); }}
+                title={title}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

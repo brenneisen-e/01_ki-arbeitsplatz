@@ -43,11 +43,10 @@ function RisikoBadge({ warnung, institut }) {
         style={{
           backgroundColor: '#fef3c7',
           border: '1px solid #fcd34d',
-          color: '#1e293b',
         }}
         aria-label={titel}
       >
-        <AlertTriangle size={12} strokeWidth={2.5} style={{ color: '#1e293b' }} />
+        <AlertTriangle size={12} strokeWidth={2.5} color="#1e293b" />
       </span>
       {open && coords && createPortal(
         <div

@@ -6,7 +6,10 @@ import Card from './Card';
 import bundeslaenderGeo from '../../pages/cockpit/bundeslaender.geo.json';
 
 /* ── City coordinates + Bundesland mapping ────────────────────── */
-const CITY_COORDS = {
+// Städte aus allen 16 Bundesländern. Wird auch als Pool für die Deutsch-
+// land-weite Scatter-Verteilung genutzt, damit nicht alle Kunden im
+// selben Ort sitzen.
+export const CITY_COORDS = {
   // Banking (Mittelhessen)
   'Gießen':               { lat: 50.58, lng: 8.68, bundesland: 'Hessen' },
   'Wetzlar':              { lat: 50.56, lng: 8.50, bundesland: 'Hessen' },
@@ -28,7 +31,115 @@ const CITY_COORDS = {
   'Königstein im Taunus': { lat: 50.18, lng: 8.47, bundesland: 'Hessen' },
   'Oberursel':            { lat: 50.20, lng: 8.57, bundesland: 'Hessen' },
   'Oberursel (Taunus)':   { lat: 50.20, lng: 8.57, bundesland: 'Hessen' },
+
+  // NRW (weitere Grossstädte)
+  'Düsseldorf':           { lat: 51.22, lng: 6.78, bundesland: 'Nordrhein-Westfalen' },
+  'Dortmund':             { lat: 51.51, lng: 7.47, bundesland: 'Nordrhein-Westfalen' },
+  'Essen':                { lat: 51.45, lng: 7.01, bundesland: 'Nordrhein-Westfalen' },
+  'Duisburg':             { lat: 51.43, lng: 6.76, bundesland: 'Nordrhein-Westfalen' },
+  'Bochum':               { lat: 51.48, lng: 7.22, bundesland: 'Nordrhein-Westfalen' },
+  'Aachen':               { lat: 50.78, lng: 6.08, bundesland: 'Nordrhein-Westfalen' },
+  'Münster':              { lat: 51.96, lng: 7.63, bundesland: 'Nordrhein-Westfalen' },
+  // Bayern
+  'München':              { lat: 48.14, lng: 11.58, bundesland: 'Bayern' },
+  'Nürnberg':             { lat: 49.45, lng: 11.08, bundesland: 'Bayern' },
+  'Augsburg':             { lat: 48.37, lng: 10.90, bundesland: 'Bayern' },
+  'Regensburg':           { lat: 49.02, lng: 12.10, bundesland: 'Bayern' },
+  'Würzburg':             { lat: 49.79, lng: 9.93, bundesland: 'Bayern' },
+  'Ingolstadt':           { lat: 48.77, lng: 11.42, bundesland: 'Bayern' },
+  // Baden-Württemberg
+  'Stuttgart':            { lat: 48.78, lng: 9.18, bundesland: 'Baden-Württemberg' },
+  'Karlsruhe':            { lat: 49.01, lng: 8.40, bundesland: 'Baden-Württemberg' },
+  'Mannheim':             { lat: 49.49, lng: 8.47, bundesland: 'Baden-Württemberg' },
+  'Freiburg im Breisgau': { lat: 47.99, lng: 7.85, bundesland: 'Baden-Württemberg' },
+  'Heidelberg':           { lat: 49.40, lng: 8.67, bundesland: 'Baden-Württemberg' },
+  'Ulm':                  { lat: 48.40, lng: 9.99, bundesland: 'Baden-Württemberg' },
+  // Hessen (weitere)
+  'Darmstadt':            { lat: 49.87, lng: 8.65, bundesland: 'Hessen' },
+  'Kassel':               { lat: 51.31, lng: 9.49, bundesland: 'Hessen' },
+  'Fulda':                { lat: 50.55, lng: 9.68, bundesland: 'Hessen' },
+  // Niedersachsen
+  'Hannover':             { lat: 52.37, lng: 9.73, bundesland: 'Niedersachsen' },
+  'Braunschweig':         { lat: 52.27, lng: 10.52, bundesland: 'Niedersachsen' },
+  'Osnabrück':            { lat: 52.27, lng: 8.04, bundesland: 'Niedersachsen' },
+  'Oldenburg':            { lat: 53.14, lng: 8.21, bundesland: 'Niedersachsen' },
+  'Göttingen':            { lat: 51.54, lng: 9.93, bundesland: 'Niedersachsen' },
+  // Rheinland-Pfalz
+  'Mainz':                { lat: 50.00, lng: 8.27, bundesland: 'Rheinland-Pfalz' },
+  'Koblenz':              { lat: 50.36, lng: 7.59, bundesland: 'Rheinland-Pfalz' },
+  'Trier':                { lat: 49.76, lng: 6.64, bundesland: 'Rheinland-Pfalz' },
+  'Ludwigshafen am Rhein':{ lat: 49.48, lng: 8.43, bundesland: 'Rheinland-Pfalz' },
+  // Stadtstaaten
+  'Berlin':               { lat: 52.52, lng: 13.40, bundesland: 'Berlin' },
+  'Hamburg':              { lat: 53.55, lng: 9.99, bundesland: 'Hamburg' },
+  'Bremen':               { lat: 53.08, lng: 8.80, bundesland: 'Bremen' },
+  'Bremerhaven':          { lat: 53.54, lng: 8.58, bundesland: 'Bremen' },
+  // Schleswig-Holstein
+  'Kiel':                 { lat: 54.32, lng: 10.13, bundesland: 'Schleswig-Holstein' },
+  'Lübeck':               { lat: 53.87, lng: 10.69, bundesland: 'Schleswig-Holstein' },
+  'Flensburg':            { lat: 54.78, lng: 9.44, bundesland: 'Schleswig-Holstein' },
+  // Mecklenburg-Vorpommern
+  'Rostock':              { lat: 54.09, lng: 12.14, bundesland: 'Mecklenburg-Vorpommern' },
+  'Schwerin':             { lat: 53.63, lng: 11.41, bundesland: 'Mecklenburg-Vorpommern' },
+  'Greifswald':           { lat: 54.09, lng: 13.39, bundesland: 'Mecklenburg-Vorpommern' },
+  // Brandenburg
+  'Potsdam':              { lat: 52.40, lng: 13.06, bundesland: 'Brandenburg' },
+  'Cottbus':              { lat: 51.76, lng: 14.33, bundesland: 'Brandenburg' },
+  // Sachsen
+  'Dresden':              { lat: 51.05, lng: 13.74, bundesland: 'Sachsen' },
+  'Leipzig':              { lat: 51.34, lng: 12.37, bundesland: 'Sachsen' },
+  'Chemnitz':             { lat: 50.83, lng: 12.92, bundesland: 'Sachsen' },
+  // Sachsen-Anhalt
+  'Magdeburg':            { lat: 52.13, lng: 11.63, bundesland: 'Sachsen-Anhalt' },
+  'Halle (Saale)':        { lat: 51.48, lng: 11.97, bundesland: 'Sachsen-Anhalt' },
+  // Thüringen
+  'Erfurt':               { lat: 50.98, lng: 11.03, bundesland: 'Thüringen' },
+  'Jena':                 { lat: 50.93, lng: 11.59, bundesland: 'Thüringen' },
+  'Weimar':               { lat: 50.98, lng: 11.33, bundesland: 'Thüringen' },
+  // Saarland
+  'Saarbrücken':          { lat: 49.24, lng: 6.99, bundesland: 'Saarland' },
 };
+
+// Deterministischer Hash → Städte-Scatter. Jeder Kunde bekommt eine Stadt
+// aus dem obigen Pool, gewichtet nach Grossstadt-Groesse (viele Kunden in
+// Grossstädten, einzelne auf dem Land). Die Verteilung ist stabil, weil
+// sie sich nur aus der Kunden-ID ableitet.
+const SCATTER_POOL = [
+  // Ballung in Grossstädten (mehrfach gelistet = groesseres Gewicht)
+  'München','München','München',
+  'Hamburg','Hamburg','Hamburg',
+  'Berlin','Berlin','Berlin','Berlin',
+  'Köln','Köln','Köln',
+  'Frankfurt am Main','Frankfurt am Main',
+  'Stuttgart','Stuttgart',
+  'Düsseldorf','Düsseldorf',
+  'Dortmund','Essen','Duisburg','Bochum',
+  'Hannover','Hannover',
+  'Nürnberg','Nürnberg',
+  'Bremen',
+  'Leipzig','Leipzig','Dresden',
+  'Karlsruhe','Mannheim','Heidelberg','Freiburg im Breisgau','Ulm',
+  'Augsburg','Regensburg','Würzburg','Ingolstadt',
+  'Münster','Aachen','Bonn',
+  'Braunschweig','Osnabrück','Oldenburg','Göttingen',
+  'Mainz','Wiesbaden','Darmstadt','Kassel','Fulda',
+  'Koblenz','Trier','Ludwigshafen am Rhein','Saarbrücken',
+  'Kiel','Lübeck','Flensburg','Rostock','Schwerin',
+  'Potsdam','Cottbus','Magdeburg','Halle (Saale)',
+  'Erfurt','Jena','Weimar','Chemnitz','Bremerhaven',
+];
+
+function hashString(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+export function scatterCityForKunde(kundeId) {
+  if (!kundeId) return null;
+  const h = hashString(String(kundeId));
+  return SCATTER_POOL[h % SCATTER_POOL.length];
+}
 
 function extractCity(adresse) {
   if (!adresse || typeof adresse !== 'string') return null;
@@ -78,14 +189,30 @@ function getContactStatus(kunde, referenceDate = new Date()) {
   return { color: '#525252', label: 'Sehr lange her', tone: 'gray' };
 }
 
-export function geocodeKundeLeaflet(kunde, index) { return geocodeKunde(kunde, index); }
-function geocodeKunde(kunde, index) {
-  const city = extractCity(kunde.adresse);
-  if (!city) return null;
-  let coord = CITY_COORDS[city];
+export function geocodeKundeLeaflet(kunde, index, options = {}) { return geocodeKunde(kunde, index, options); }
+function geocodeKunde(kunde, index, options = {}) {
+  // scatter=true: erzwingt die Deutschland-weite Verteilung via scatterCity,
+  // damit die Gesamtkarte nicht einseitig auf eine Region kippt. Ansonsten
+  // bleibt die reale Stadt aus `kunde.adresse` erhalten.
+  const { scatter = false } = options;
+  let city = null;
+  let coord = null;
+  if (!scatter) {
+    city = extractCity(kunde.adresse);
+    if (city) {
+      coord = CITY_COORDS[city];
+      if (!coord) {
+        const found = Object.keys(CITY_COORDS).find((c) => c.startsWith(city) || city.startsWith(c));
+        if (found) coord = CITY_COORDS[found];
+      }
+    }
+  }
   if (!coord) {
-    const found = Object.keys(CITY_COORDS).find((c) => c.startsWith(city) || city.startsWith(c));
-    if (found) coord = CITY_COORDS[found];
+    const fallbackCity = scatterCityForKunde(kunde.id);
+    if (fallbackCity && CITY_COORDS[fallbackCity]) {
+      city = fallbackCity;
+      coord = CITY_COORDS[fallbackCity];
+    }
   }
   if (!coord) return null;
   // Deterministic jitter so customers in the same city don't stack

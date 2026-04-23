@@ -621,16 +621,19 @@ function HaustiereRow({ haustiere, t, kundeId }) {
               <div className="pt-2 border-t border-amber-200 space-y-2">
                 <div className="text-xs font-semibold text-amber-700">{t('haustierBestaetigen')}</div>
                 <div className="flex gap-2">
-                  <select
-                    value={tierArt}
-                    onChange={e => setTierArt(e.target.value)}
-                    className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
-                  >
-                    <option value="">{t('artPlaceholder')}</option>
-                    {TIER_ARTEN.map(a => (
-                      <option key={a} value={a}>{a}</option>
-                    ))}
-                  </select>
+                  <div className="relative flex-1">
+                    <select
+                      value={tierArt}
+                      onChange={e => setTierArt(e.target.value)}
+                      className="text-xs border border-amber-300 rounded pl-2 pr-7 py-1 w-full bg-white appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-400"
+                    >
+                      <option value="">{t('artPlaceholder')}</option>
+                      {TIER_ARTEN.map(a => (
+                        <option key={a} value={a}>{a}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={12} className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-amber-700" />
+                  </div>
                   <input
                     type="text"
                     placeholder="Name"

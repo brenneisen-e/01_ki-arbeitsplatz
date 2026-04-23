@@ -7,6 +7,7 @@ import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { Shield, Landmark, ShieldCheck, LineChart, CheckCircle, XCircle, ChevronDown, Calendar, Mail, ExternalLink, TrendingUp, ArrowRight, Sparkles } from 'lucide-react';
 import AnschreibenModal from '../../../components/ui/AnschreibenModal';
+import HerleitungBlock from '../../../components/ui/HerleitungBlocks';
 import { interpolateDynamicDates } from '../../../utils/dynamicDates';
 
 // Rekursive Interpolation für strukturierte Daten (Strings, Arrays, Objekte).
@@ -264,6 +265,15 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
                 <span className="text-xs font-semibold text-indigo-600">{t('kiZusammenfassung')}</span>
               </div>
               <p className="text-sm text-slate-700 leading-relaxed">{interpolateDynamicDates(p.kiDescription, ctx)}</p>
+            </div>
+          )}
+
+          {/* Strukturierte Visualisierungen (Liquiditätsverlauf, Deckungslücke, …) */}
+          {p.herleitungBlocks && p.herleitungBlocks.length > 0 && (
+            <div className="space-y-3">
+              {p.herleitungBlocks.map((block, i) => (
+                <HerleitungBlock key={i} block={block} />
+              ))}
             </div>
           )}
 

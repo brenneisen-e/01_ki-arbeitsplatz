@@ -1,6 +1,57 @@
 import { useState, useMemo } from 'react';
-import { Heart, Globe, TrendingUp, Sparkles, AlertTriangle, Database } from 'lucide-react';
+import {
+  Heart, Globe, TrendingUp, Sparkles, AlertTriangle, Database,
+  Baby, Briefcase, Building2, Home, Award, Mountain,
+  Mail, CreditCard, LineChart, PiggyBank, ShieldCheck, Plane, HandCoins,
+} from 'lucide-react';
 import Card from './Card';
+
+// Hochzeitsringe: Lucide hat dafuer kein Icon, also ein kurzes Inline-SVG
+// mit zwei sich ueberlappenden Kreisen im selben Stroke-Stil wie Lucide.
+function RingsIcon({ size = 16, strokeWidth = 2.25, className, style }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      style={style}
+    >
+      <circle cx="9" cy="14" r="5" />
+      <circle cx="15" cy="14" r="5" />
+      <path d="M7 6l2 2.5M17 6l-2 2.5" />
+    </svg>
+  );
+}
+
+// Waehlt ein passendes Icon fuer ein konkretes Event anhand seines Labels.
+// Fallback: das Spur-Icon (Heart/Globe/TrendingUp).
+function pickEventIcon(label, trackIcon) {
+  const l = (label || '').toLowerCase();
+  if (/heirat|ehe|hochzeit|standesamt|trauung/.test(l)) return RingsIcon;
+  if (/geboren|kind|sohn|tochter|baby/.test(l)) return Baby;
+  if (/befoerderung|beförderung|senior|vertriebsleiter|lead|chief|ceo|geschäftsf|gf\b/.test(l)) return Award;
+  if (/wechsel|bosch|continental|daimler|siemens|mitarbeiter|arbeitgeber|einstellung|job/.test(l)) return Briefcase;
+  if (/gmbh|unternehmen|firma|eingetragen|handelsregister/.test(l)) return Building2;
+  if (/auszeichnung|preis|medaille|award|mittelstand/.test(l)) return Award;
+  if (/immobilie|haus|makler|immoscout|wohnung|bau|nachfolge/.test(l)) return Home;
+  if (/boulder|kletter|dav|sport|fitness|wander/.test(l)) return Mountain;
+  if (/newsletter|mail|abonnement|e-mail|e-?mail/.test(l)) return Mail;
+  if (/reise|urlaub|thailand|ausland/.test(l)) return Plane;
+  if (/girokonto|tagesgeld|festgeld|sparkonto|\bkonto\b|hauptkonto|betriebs/.test(l)) return CreditCard;
+  if (/depot|trade republic|fonds|aktien|etf|union/.test(l)) return LineChart;
+  if (/bausparvertrag|bausparer|schwäbisch|\bbsv\b|zuteilung/.test(l)) return PiggyBank;
+  if (/kredit|ratenkredit|darlehen|finanzierung|sondertilgung/.test(l)) return HandCoins;
+  if (/versicher|\bbu\b|berufsunf|haftpflicht|riester|rürup|rente|vorsorge/.test(l)) return ShieldCheck;
+  if (/zuteil|ablauf|ende|auslaufen/.test(l)) return TrendingUp;
+  return trackIcon;
+}
 
 /* ── Track config ──────────────────────────────────────────── */
 // Jede Spur hat ihren eigenen dunklen Akzentton. Icons sitzen als weiße
@@ -276,7 +327,9 @@ export default function LebenszeitstrahlCard({ kunde }) {
                   const left = xPct(event.date);
                   const isHovered = hovered?.track === tr.key && hovered?.idx === idx;
                   const dotSize = isHovered ? DOT_HOVER : DOT_BASE;
-                  const DotIcon = tr.icon;
+                  // Icon passend zum Ereignis (Heirat = Ringe, Kind = Baby,
+                  // Kredit = HandCoins, …). Fallback: das Spur-Icon.
+                  const DotIcon = pickEventIcon(event.label, tr.icon);
                   const iconSize = Math.round(dotSize * 0.48);
                   return (
                     <div

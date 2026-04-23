@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import {
   Search,
   Filter,
@@ -11,9 +11,40 @@ import {
   ChevronDown,
   ChevronRight,
   Check,
+  Brain,
+  Cpu,
 } from 'lucide-react';
 import { PrioBadge, QuellenBadge } from './Badge';
 import { formatEur } from '../../utils/formatters';
+import { getKundeFoto } from '../../utils/kundenFotos';
+
+// Avatar fuer eine Kanban-Karte: versucht zuerst das Kundenfoto; faellt auf
+// die farbige Initialen-Bubble zurueck, wenn kein Foto vorhanden ist oder
+// das Laden scheitert.
+function KundenAvatar({ kundeId, kundeName, columnColor, size = 24 }) {
+  const [failed, setFailed] = useState(false);
+  const foto = getKundeFoto(kundeId);
+  const initials = (kundeName || '').split(' ').map(n => n[0]).join('').slice(0, 2);
+  if (foto && !failed) {
+    return (
+      <img
+        src={foto}
+        alt={kundeName || ''}
+        onError={() => setFailed(true)}
+        className="rounded-full object-cover shrink-0 border border-white shadow-sm"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  return (
+    <div
+      className="rounded-full flex items-center justify-center font-bold text-white shrink-0"
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.42), backgroundColor: columnColor }}
+    >
+      {initials || '?'}
+    </div>
+  );
+}
 
 const COLUMNS = [
   { id: 'identifiziert', label: 'Identifiziert', color: '#3b82f6', bg: '#eff6ff', border: '#bfdbfe' },
@@ -64,6 +95,28 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
   // werden. Dann wird die zugehörige Spalte breiter, damit die Details
   // ordentlich Platz haben. Nur eine Karte gleichzeitig.
   const [expandedCard, setExpandedCard] = useState(null); // { id, columnId } | null
+
+  // Ganze Spalten koennen eingeklappt werden. Default: nur „Identifiziert"
+  // ist offen, die restlichen Spalten erscheinen als schmaler vertikaler
+  // Strip und lassen sich per Klick auf den Strip wieder aufklappen. Drop-
+  // Targets bleiben auch im kollabierten Zustand aktiv.
+  const [collapsedColumns, setCollapsedColumns] = useState(() => {
+    const init = {};
+    COLUMNS.forEach(c => {
+      if (c.id !== 'identifiziert') init[c.id] = true;
+    });
+    return init;
+  });
+  const toggleColumnCollapsed = (columnId) => {
+    setCollapsedColumns(prev => ({ ...prev, [columnId]: !prev[columnId] }));
+    // Wenn wir eine Spalte einklappen, in der gerade eine Karte "gross"
+    // aufgeklappt ist, auch die Karten-Ansicht schliessen.
+    setExpandedCard(prev => (prev && prev.columnId === columnId ? null : prev));
+  };
+
+  // Nach einer „Nicht sinnvoll"-Rueckmeldung zeigen wir kurz eine Animation,
+  // die visualisiert, dass die KI aus dem Feedback lernt.
+  const [trainingToast, setTrainingToast] = useState(null); // { kundeName, reason }
 
   const toggleExpandCard = (id, columnId) => {
     setExpandedCard(prev => (prev && prev.id === id ? null : { id, columnId }));
@@ -157,9 +210,16 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
 
   const handleConfirmFeedback = (reason, comment) => {
     if (!feedbackModal) return;
-    onMoveCard(feedbackModal.potential._id, 'nicht_sinnvoll', { reason, comment });
+    const potential = feedbackModal.potential;
+    onMoveCard(potential._id, 'nicht_sinnvoll', { reason, comment });
     setFeedbackModal(null);
     collapseExpandedCard();
+    // Zeige die „KI-lernt"-Animation als Overlay fuer ein paar Sekunden.
+    setTrainingToast({
+      kundeName: potential.kundeName,
+      titel: potential.titel,
+      reason,
+    });
   };
 
   const handleConfirmAbschluss = (data) => {
@@ -236,14 +296,18 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
 
       {/* Board
           Ab lg wird gridTemplateColumns dynamisch über die CSS-Variable
-          gesetzt: wenn eine Kachel ausgeklappt ist, bekommt diese Spalte
-          mehr Platz (2.4fr) und die übrigen bleiben auf 1fr. */}
+          gesetzt:
+          - kollabierte Spalten = feste 48px
+          - Spalte mit groß aufgeklappter Karte = 2.4fr
+          - alle anderen = minmax(0, 1fr) */}
       <div
         className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:[grid-template-columns:var(--kanban-cols)] transition-[grid-template-columns] duration-300"
         style={{
-          '--kanban-cols': expandedCard
-            ? COLUMNS.map(c => (c.id === expandedCard.columnId ? '2.4fr' : 'minmax(0,1fr)')).join(' ')
-            : 'repeat(5, minmax(0, 1fr))',
+          '--kanban-cols': COLUMNS.map(c => {
+            if (collapsedColumns[c.id]) return '48px';
+            if (expandedCard && expandedCard.columnId === c.id) return '2.4fr';
+            return 'minmax(0,1fr)';
+          }).join(' '),
         }}
       >
         {COLUMNS.map(col => {
@@ -252,6 +316,46 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
           const isHover = hoverColumn === col.id;
           const isDropTarget = draggedCard && (ALLOWED_MOVES[draggedCard.status] || []).includes(col.id);
           const isInvalidTarget = draggedCard && !isDropTarget && draggedCard.status !== col.id;
+          const isCollapsed = !!collapsedColumns[col.id];
+
+          if (isCollapsed) {
+            return (
+              <div
+                key={col.id}
+                className="rounded-xl border-2 transition-all overflow-hidden cursor-pointer hover:shadow-sm"
+                style={{
+                  backgroundColor: isHover ? col.border : col.bg,
+                  borderColor: isHover ? col.color : col.border,
+                  opacity: isInvalidTarget ? 0.5 : 1,
+                }}
+                onDragOver={(e) => handleDragOver(e, col.id)}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, col.id)}
+                onClick={() => toggleColumnCollapsed(col.id)}
+                title={`${col.label} aufklappen`}
+              >
+                <div className="flex flex-col items-center gap-3 py-3" style={{ minHeight: 200 }}>
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: col.color }}
+                  />
+                  <span
+                    className="text-[10px] font-bold rounded-full px-1.5 py-0.5"
+                    style={{ backgroundColor: 'white', color: col.color, border: `1px solid ${col.border}` }}
+                  >
+                    {cards.length}
+                  </span>
+                  <div
+                    className="font-bold text-[11px] tracking-wider uppercase text-slate-700 whitespace-nowrap"
+                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                  >
+                    {col.label}
+                  </div>
+                  <ChevronRight size={14} className="text-slate-400 mt-auto" />
+                </div>
+              </div>
+            );
+          }
 
           return (
             <div
@@ -276,12 +380,22 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                     />
                     <span className="font-bold text-sm text-slate-800 truncate">{col.label}</span>
                   </div>
-                  <span
-                    className="text-xs font-bold rounded-full px-2 py-0.5 shrink-0"
-                    style={{ backgroundColor: 'white', color: col.color, border: `1px solid ${col.border}` }}
-                  >
-                    {cards.length}
-                  </span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <span
+                      className="text-xs font-bold rounded-full px-2 py-0.5"
+                      style={{ backgroundColor: 'white', color: col.color, border: `1px solid ${col.border}` }}
+                    >
+                      {cards.length}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => toggleColumnCollapsed(col.id)}
+                      className="p-0.5 rounded hover:bg-white/60 text-slate-500 hover:text-slate-800 transition-colors"
+                      title={`${col.label} einklappen`}
+                    >
+                      <ChevronDown size={14} />
+                    </button>
+                  </div>
                 </div>
                 {totalVol > 0 && (
                   <div className="text-[11px] font-mono text-slate-500 mt-1">
@@ -401,6 +515,16 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
         />
       )}
 
+      {/* KI-Lernt-Animation nach einem „Nicht sinnvoll"-Feedback */}
+      {trainingToast && (
+        <KITrainingToast
+          kundeName={trainingToast.kundeName}
+          titel={trainingToast.titel}
+          reason={trainingToast.reason}
+          onDone={() => setTrainingToast(null)}
+        />
+      )}
+
       {/* Abschluss Modal */}
       {closeModal && (
         <AbschlussModal
@@ -437,8 +561,6 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
   const ageInDays = computeAge(p);
   const ageWarn = ageInDays != null && ageInDays > 30;
 
-  const initials = (p.kundeName || '').split(' ').map(n => n[0]).join('').slice(0, 2);
-
   const fida = (p.quellen || []).includes('finanztransaktion');
   const canExpand = typeof onToggleExpand === 'function' && !isDismissed;
 
@@ -464,12 +586,7 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
     >
       {/* Header: Avatar + Name */}
       <div className="flex items-center gap-2 mb-1.5">
-        <div
-          className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-          style={{ backgroundColor: columnColor }}
-        >
-          {initials || '?'}
-        </div>
+        <KundenAvatar kundeId={p.kundeId} kundeName={p.kundeName} columnColor={columnColor} size={24} />
         <span className={`text-xs font-semibold truncate flex-1 ${isClosed ? 'text-slate-500 line-through' : 'text-slate-700'}`}>{p.kundeName}</span>
         {isClosed && (
           <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500 shrink-0" title="Abgeschlossen">
@@ -622,7 +739,6 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
   };
   const top = items[0];
   const kundeName = top.kundeName || '';
-  const initials = kundeName.split(' ').map(n => n[0]).join('').slice(0, 2);
 
   const totalEinmalig = items
     .filter(p => p.volumenTyp !== 'jaehrlich')
@@ -667,12 +783,7 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
       <div className="rounded-lg border p-2 bg-white/60 space-y-2" style={{ borderColor: columnColor + '55' }}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
-            <div
-              className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0"
-              style={{ backgroundColor: columnColor }}
-            >
-              {initials || '?'}
-            </div>
+            <KundenAvatar kundeId={top.kundeId} kundeName={kundeName} columnColor={columnColor} size={20} />
             <span className="text-[11px] font-bold text-slate-700 truncate">{kundeName}</span>
             <span className="text-[10px] text-slate-400 shrink-0">· {items.length} Potenziale</span>
           </div>
@@ -708,12 +819,7 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
-        <div
-          className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-          style={{ backgroundColor: columnColor }}
-        >
-          {initials || '?'}
-        </div>
+        <KundenAvatar kundeId={top.kundeId} kundeName={kundeName} columnColor={columnColor} size={24} />
         <span className="text-xs font-semibold truncate flex-1 text-slate-700">{kundeName}</span>
         {fida && (
           <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" title="FIDA-Daten" />
@@ -942,6 +1048,111 @@ function AbschlussModal({ potential, onClose, onConfirm }) {
         </button>
       </div>
     </ModalShell>
+  );
+}
+
+// KI-Lernt-Overlay nach einem „Nicht sinnvoll"-Feedback.
+// Zeigt eine kurze Animation: Sparkles + progressiver Fortschrittsbalken,
+// der suggeriert, dass das Modell mit der neuen Rueckmeldung trainiert
+// wird. Dismisst sich automatisch nach ~3.5 Sekunden.
+function KITrainingToast({ kundeName, titel, reason, onDone }) {
+  const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState(0); // 0 → lernend, 1 → fertig
+  const REASON_LABELS_FULL = {
+    bereits_abgesichert: 'Kunde hat bereits Absicherung',
+    kein_interesse: 'Kunde hat kein Interesse',
+    falsche_erkennung: 'Fehlerkennung',
+    timing: 'Timing passt nicht',
+    kunde_wechselt: 'Kunde wechselt / kündigt',
+    anderer_grund: 'Anderer Grund',
+  };
+  const reasonLabel = REASON_LABELS_FULL[reason] || 'Feedback';
+
+  useEffect(() => {
+    // Progress-Bar in Schritten hochziehen.
+    let mounted = true;
+    const tick = (target, delay) => setTimeout(() => { if (mounted) setProgress(target); }, delay);
+    const ts = [tick(18, 80), tick(42, 420), tick(68, 900), tick(88, 1500), tick(100, 2200)];
+    const done = setTimeout(() => { if (mounted) setPhase(1); }, 2400);
+    const dismiss = setTimeout(() => { if (mounted) onDone?.(); }, 3600);
+    return () => {
+      mounted = false;
+      ts.forEach(clearTimeout);
+      clearTimeout(done);
+      clearTimeout(dismiss);
+    };
+  }, [onDone]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-end p-6 pointer-events-none">
+      <div
+        className="pointer-events-auto w-[360px] rounded-2xl shadow-2xl border overflow-hidden animate-fade-in"
+        style={{
+          background: 'linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%)',
+          borderColor: '#c4b5fd',
+          boxShadow: '0 12px 40px -10px rgba(124, 58, 237, 0.35), 0 4px 12px rgba(15, 23, 42, 0.08)',
+        }}
+      >
+        <div className="p-4">
+          <div className="flex items-start gap-3">
+            <div
+              className="relative w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
+            >
+              {phase === 0 ? (
+                <Brain size={20} className="text-white animate-pulse" strokeWidth={2.25} />
+              ) : (
+                <Check size={20} className="text-white" strokeWidth={2.75} />
+              )}
+              {phase === 0 && (
+                <>
+                  <span className="absolute -top-1 -right-1">
+                    <Sparkles size={10} className="text-violet-300 animate-ping" />
+                  </span>
+                  <span className="absolute -bottom-1 -left-1">
+                    <Sparkles size={8} className="text-indigo-300 animate-ping [animation-delay:300ms]" />
+                  </span>
+                </>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-violet-700 bg-violet-100 px-1.5 py-0.5 rounded-full">
+                  <Cpu size={9} className="inline mr-0.5" /> KI lernt
+                </span>
+                <span className="text-[10px] text-slate-400">&middot; aus deinem Feedback</span>
+              </div>
+              <div className="text-sm font-semibold text-slate-800 leading-snug">
+                {phase === 0
+                  ? 'Feedback wird in das Scoring-Modell eingearbeitet…'
+                  : 'Modell aktualisiert — ähnliche Potenziale werden künftig besser bewertet.'}
+              </div>
+              <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+                {titel && <span className="font-medium">„{titel}"</span>}
+                {titel && kundeName && <span> · </span>}
+                {kundeName && <span>{kundeName}</span>}
+                {reasonLabel && (
+                  <span className="block mt-0.5">Grund: <span className="text-slate-700 font-medium">{reasonLabel}</span></span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="mt-3 h-1.5 rounded-full bg-violet-100 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500 ease-out"
+              style={{
+                width: `${progress}%`,
+                background: 'linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%)',
+              }}
+            />
+          </div>
+          <div className="flex items-center justify-between mt-1.5 text-[10px] text-slate-500">
+            <span>{progress < 100 ? 'Re-Training läuft…' : 'Abgeschlossen'}</span>
+            <span className="font-mono">{progress}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

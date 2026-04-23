@@ -26,6 +26,14 @@ const ANSPRECHPARTNER_ABTEILUNGEN = [
   { abteilung: 'Kundenservice',         beschreibung: 'Allgemeine Anfragen, Beschwerden' },
 ];
 
+// ISO-Datum (YYYY-MM-DD) → DD.MM.YYYY
+function formatDateDE(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
 function QuickPromptChip({ label, onClick, active = false, hasDropdown = false }) {
   return (
     <button
@@ -565,7 +573,7 @@ export default function LandingPage() {
                     )}
                     <div className="min-w-0 flex-1">
                       <div className="text-sm font-semibold text-white truncate">{termin.kunde}</div>
-                      <div className="text-[11px] text-white/60 truncate">{termin.datum} · {termin.zeit} — {termin.betreff}</div>
+                      <div className="text-[11px] text-white/60 truncate">{formatDateDE(termin.datum)} · {termin.zeit} — {termin.betreff}</div>
                     </div>
                   </button>
                 ))}

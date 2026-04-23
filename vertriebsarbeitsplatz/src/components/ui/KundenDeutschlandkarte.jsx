@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { MapPin, ArrowLeft, Search, Maximize2, X } from 'lucide-react';
+import { MapPin, ArrowLeft, Search, Maximize2, X, Users, TrendingUp } from 'lucide-react';
 import bundeslaenderGeo from '../../pages/cockpit/bundeslaender.geo.json';
 import { geocodeKundeLeaflet } from './KundenKarteLeaflet';
 import { getKundeFoto } from '../../utils/kundenFotos';
@@ -25,8 +25,29 @@ function buildMapStyle(provider) {
       layers: [{ id: 'mbx', type: 'raster', source: 'mbx' }],
     };
   }
-  // Default: MapTiler Streets-v2
-  return `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`;
+  if (provider === 'osm') {
+    return {
+      version: 8,
+      sources: {
+        'osm': {
+          type: 'raster',
+          tiles: [
+            'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          ],
+          tileSize: 256,
+          attribution: '© OpenStreetMap contributors',
+        },
+      },
+      layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
+    };
+  }
+  if (provider === 'maptiler' && MAPTILER_KEY) {
+    return `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`;
+  }
+  // Fallback: OSM ohne Key
+  return buildMapStyle('osm');
 }
 
 // Zwei Ebenen:
@@ -291,8 +312,9 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
 
   // Provider-Switcher. Default: maptiler. User kann via Toggle oben rechts
   // umschalten (falls entsprechender Key/Token in .env vorhanden).
-  const initialProvider = MAPTILER_KEY ? 'maptiler' : (MAPBOX_TOKEN ? 'mapbox' : 'maptiler');
-  const [mapProvider, setMapProvider] = useState(initialProvider);
+  // Default auf OSM, weil MapTiler/Mapbox eine Origin-Allowlist im Provider-
+  // Dashboard brauchen; OSM funktioniert immer. User kann live umschalten.
+  const [mapProvider, setMapProvider] = useState('osm');
 
   // Masken-GeoJSON fuer MapLibre: grosse Box ueber Europa mit den
   // Bundeslaender-Aussenringen als Loecher — damit bleiben nur
@@ -534,14 +556,22 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
           </h3>
         </div>
         <div className="flex items-center gap-3">
-          {selectedBundesland && (MAPTILER_KEY || MAPBOX_TOKEN) && (
+          {selectedBundesland && (
             <div className="flex items-center rounded-lg border border-slate-200 bg-white overflow-hidden text-[11px] font-semibold">
+              <button
+                type="button"
+                onClick={() => setMapProvider('osm')}
+                className={`px-2 py-1 transition-colors ${mapProvider === 'osm' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+                title="OpenStreetMap (keine Anmeldung)"
+              >
+                OSM
+              </button>
               <button
                 type="button"
                 onClick={() => setMapProvider('maptiler')}
                 disabled={!MAPTILER_KEY}
                 className={`px-2 py-1 transition-colors ${mapProvider === 'maptiler' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'} disabled:opacity-40`}
-                title="MapTiler Streets"
+                title="MapTiler Streets (Key in .env noetig, Origin-Allowlist im Dashboard setzen)"
               >
                 MapTiler
               </button>
@@ -550,7 +580,7 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
                 onClick={() => setMapProvider('mapbox')}
                 disabled={!MAPBOX_TOKEN}
                 className={`px-2 py-1 transition-colors ${mapProvider === 'mapbox' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-50'} disabled:opacity-40`}
-                title="Mapbox Light"
+                title="Mapbox Light (Token in .env noetig, URL-Restrictions im Account setzen)"
               >
                 Mapbox
               </button>
@@ -685,12 +715,21 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
 }
 
 /* ──────────────────────────────────────────────────────────────
-   Kompakte KPI-Preview + Modal mit der vollen Deutschlandkarte.
+   Kunden-KPI-Kachel mit integrierter Deutschlandkarte statt
+   Sparkline. Matcht die Optik der uebrigen KPIBox-Kacheln
+   (Icon oben links, Label, grosse Zahl, Trend-Pfeil oben rechts)
+   und ersetzt den Sparkline-Chart durch die SVG-Choropleth.
+   Klick oeffnet das volle Deutschlandkarten-Modal.
    ────────────────────────────────────────────────────────────── */
-export function KundenDeutschlandkarteCompact({ kunden = [], totalCount, onKundeClick, title = 'Kundenkarte' }) {
+export function KundenDeutschlandkarteCompact({
+  kunden = [],
+  totalCount,
+  onKundeClick,
+  title = 'Kunden',
+  trend,
+}) {
   const [open, setOpen] = useState(false);
 
-  // Fuer die Vorschau pro Bundesland die Kunden-Zahl berechnen (inkl. Ghosts).
   const paddedKunden = useMemo(() => {
     if (!totalCount || totalCount <= kunden.length) return kunden;
     const extras = [];
@@ -708,11 +747,12 @@ export function KundenDeutschlandkarteCompact({ kunden = [], totalCount, onKunde
   }, [geocoded]);
   const maxCount = useMemo(() => Math.max(0, ...Object.values(bundeslandCounts)), [bundeslandCounts]);
   const displayTotal = totalCount || geocoded.length;
+  const trendPositive = typeof trend === 'number' ? trend >= 0 : null;
 
   return (
     <>
       <div
-        className="relative rounded-xl border p-3 cursor-pointer overflow-hidden card-base card-hover flex flex-col"
+        className="relative rounded-xl border p-4 cursor-pointer overflow-hidden card-base card-hover h-full flex flex-col"
         style={{
           background:
             'linear-gradient(180deg, color-mix(in srgb, var(--mode-primary-light) 14%, #ffffff) 0%, color-mix(in srgb, var(--mode-primary-light) 6%, #ffffff) 100%)',
@@ -721,20 +761,26 @@ export function KundenDeutschlandkarteCompact({ kunden = [], totalCount, onKunde
         }}
         onClick={() => setOpen(true)}
       >
-        <div className="flex items-center gap-1.5 mb-2">
-          <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box shrink-0">
-            <MapPin size={13} className="text-blue-600" strokeWidth={1.75} />
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box shrink-0">
+              <Users size={15} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+            </div>
+            <span className="text-xs font-medium text-slate-500 truncate">{title}</span>
           </div>
-          <span className="text-[11px] font-medium text-slate-500 truncate">{title}</span>
-          <Maximize2 size={11} className="text-slate-400 ml-auto shrink-0" />
+          {trendPositive !== null && (
+            <span
+              className={`text-xs font-semibold inline-flex items-center gap-0.5 shrink-0 ${trendPositive ? 'text-emerald-600' : 'text-red-600'}`}
+            >
+              <TrendingUp size={12} className={trendPositive ? '' : 'rotate-180'} strokeWidth={2.5} />
+              {trendPositive ? '+' : ''}{Number(trend).toFixed(1)}%
+            </span>
+          )}
         </div>
-        <div className="font-mono text-[1.5rem] leading-tight font-extrabold mb-1 truncate text-slate-900">
+        <div className="font-mono text-[2rem] leading-tight font-extrabold truncate text-slate-900">
           {displayTotal.toLocaleString('de-DE')}
         </div>
-        <div className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mb-2">
-          Kunden deutschlandweit
-        </div>
-        <div className="flex-1 min-h-[90px] rounded-md overflow-hidden border border-white/60 pointer-events-none bg-slate-50">
+        <div className="flex-1 min-h-[90px] mt-2 rounded-md overflow-hidden pointer-events-none">
           <DeutschlandSvgChoropleth
             bundeslandCounts={bundeslandCounts}
             maxCount={maxCount}
@@ -742,6 +788,10 @@ export function KundenDeutschlandkarteCompact({ kunden = [], totalCount, onKunde
             onHover={() => {}}
             onSelect={() => {}}
           />
+        </div>
+        <div className="mt-1 flex items-center justify-between">
+          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Deutschlandweit</span>
+          <Maximize2 size={11} className="text-slate-400" />
         </div>
       </div>
 

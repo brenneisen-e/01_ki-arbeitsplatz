@@ -14,6 +14,7 @@ import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
 import { interpolateDynamicDates, resolveVersicherungspartner } from '../../../utils/dynamicDates';
+import { getHaustierConfirmation, setHaustierConfirmation } from '../../../utils/haustierConfirmation';
 
 // ─── Translation helpers for data values ───
 const FAMILIENSTAND_EN = { verheiratet: 'Married', ledig: 'Single', geschieden: 'Divorced', verwitwet: 'Widowed' };
@@ -221,11 +222,11 @@ export default function StammdatenDetailTab({ kunde }) {
         </div>
       </div>
 
-      <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-start' : 'grid grid-cols-2 gap-4 items-start'}>
+      <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
         {/* Persoenliche Daten */}
-        <Card hover={false} className="flex flex-col">
-          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
-            <User size={18} className="text-slate-500" strokeWidth={1.75} />
+        <Card hover={false} className="flex flex-col h-full">
+          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-100 flex items-center gap-2 bg-blue-50/70">
+            <User size={18} className="text-blue-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('persoenlicheDaten')}</h3>
           </div>
           <div className="space-y-2 text-sm">
@@ -246,17 +247,37 @@ export default function StammdatenDetailTab({ kunde }) {
             {kunde.partner && (
               <InfoRow
                 label={t('partner')}
-                value={kunde.partner.beruf
-                  ? `${kunde.partner.name} (${translateBeruf(kunde.partner.beruf, lang)})`
-                  : kunde.partner.name}
+                value={
+                  <>
+                    <PersonLink name={kunde.partner.name} />
+                    {kunde.partner.beruf ? ` (${translateBeruf(kunde.partner.beruf, lang)})` : ''}
+                  </>
+                }
               />
             )}
             {kunde.kinder?.length > 0 && (
-              <InfoRow label={t('kinder')} value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
+              <InfoRow
+                label={t('kinder')}
+                value={
+                  <span>
+                    {kunde.kinder.map((k, i) => (
+                      <span key={i}>
+                        <PersonLink name={k.name} />
+                        {` (${k.alter})`}
+                        {i < kunde.kinder.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
+                  </span>
+                }
+              />
             )}
             <InfoRow label={t('wohnsituation')} value={kunde.adresse ? `${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)` : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
             {(kunde.haustiere || kunde.tiere) && (
-              <HaustiereRow haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)} t={t} />
+              <HaustiereRow
+                haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)}
+                t={t}
+                kundeId={kunde.id}
+              />
             )}
             {kunde.linkedin && (
               <div className="flex items-center gap-2 pt-2 border-t border-slate-100 mt-2">
@@ -282,9 +303,9 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card hover={false} className="flex flex-col">
-          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
-            <Wallet size={18} className="text-slate-500" strokeWidth={1.75} />
+        <Card hover={false} className="flex flex-col h-full">
+          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-100 flex items-center gap-2 bg-emerald-50/70">
+            <Wallet size={18} className="text-emerald-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('finanzuebersicht')}</h3>
           </div>
           <div className="space-y-2 text-sm">
@@ -536,11 +557,29 @@ function normalizeHaustiere(raw) {
   };
 }
 
-function HaustiereRow({ haustiere, t }) {
+const TIER_ARTEN = ['Hund', 'Katze', 'Kaninchen', 'Vogel', 'Fisch', 'Reptil', 'Sonstiges'];
+
+function HaustiereRow({ haustiere, t, kundeId }) {
+  const initial = getHaustierConfirmation(kundeId);
   const [showDetail, setShowDetail] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
-  const [tierArt, setTierArt] = useState('');
-  const [tierName, setTierName] = useState('');
+  const [confirmed, setConfirmed] = useState(!!initial);
+  const [tierArt, setTierArt] = useState(initial?.typ || '');
+  const [tierName, setTierName] = useState(initial?.name || '');
+  const [bestaetigtAm, setBestaetigtAm] = useState(initial?.bestaetigtAm || null);
+
+  const handleConfirm = () => {
+    if (!tierArt.trim()) return;
+    const now = new Date().toISOString();
+    const data = { typ: tierArt.trim(), name: tierName.trim(), bestaetigtAm: now };
+    setHaustierConfirmation(kundeId, data);
+    setBestaetigtAm(now);
+    setConfirmed(true);
+    setShowDetail(false);
+  };
+
+  const bestaetigtDatum = bestaetigtAm
+    ? new Date(bestaetigtAm).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    : null;
 
   return (
     <div className="pt-2 border-t border-slate-100 mt-2">
@@ -570,10 +609,10 @@ function HaustiereRow({ haustiere, t }) {
                 <PawPrint size={12} />
                 {t('erkannteTransaktionen')}
               </div>
-              {haustiere.erkannteTransaktionen?.map((t, i) => (
+              {haustiere.erkannteTransaktionen?.map((tx, i) => (
                 <div key={i} className="flex justify-between text-xs text-amber-800">
-                  <span>{t.haendler}</span>
-                  <span className="font-mono">{t.betrag}€ ({t.haeufigkeit})</span>
+                  <span>{tx.haendler}</span>
+                  <span className="font-mono">{tx.betrag}€ ({tx.haeufigkeit})</span>
                 </div>
               ))}
               <div className="text-xs text-amber-600 pt-1 border-t border-amber-200">
@@ -582,13 +621,16 @@ function HaustiereRow({ haustiere, t }) {
               <div className="pt-2 border-t border-amber-200 space-y-2">
                 <div className="text-xs font-semibold text-amber-700">{t('haustierBestaetigen')}</div>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder={t('artPlaceholder')}
+                  <select
                     value={tierArt}
                     onChange={e => setTierArt(e.target.value)}
                     className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
-                  />
+                  >
+                    <option value="">{t('artPlaceholder')}</option>
+                    {TIER_ARTEN.map(a => (
+                      <option key={a} value={a}>{a}</option>
+                    ))}
+                  </select>
                   <input
                     type="text"
                     placeholder="Name"
@@ -597,8 +639,9 @@ function HaustiereRow({ haustiere, t }) {
                     className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
                   />
                   <button
-                    onClick={() => { if (tierArt.trim()) setConfirmed(true); }}
-                    className="text-xs px-3 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600 transition-colors font-medium"
+                    onClick={handleConfirm}
+                    disabled={!tierArt.trim()}
+                    className="text-xs px-3 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {t('bestaetigen')}
                   </button>
@@ -608,17 +651,17 @@ function HaustiereRow({ haustiere, t }) {
           )}
         </>
       ) : (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="flex items-center gap-1.5 text-slate-400 shrink-0">
             <PawPrint size={14} className="text-amber-500" />
             {t('haustierLabel')}:
           </span>
           <span className="text-slate-700 font-medium">
-            {tierArt}{tierName ? ` (${tierName})` : ''}
+            {tierArt}{tierName ? ` „${tierName}"` : ''}
           </span>
-          <span className="flex items-center gap-1 text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+          <span className="flex items-center gap-1 text-xs text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
             <CheckCircle size={11} />
-            {t('bestaetigt')}
+            {bestaetigtDatum ? `Bestätigt am ${bestaetigtDatum}` : t('bestaetigt')}
           </span>
         </div>
       )}
@@ -761,6 +804,23 @@ function InfoRow({ label, value }) {
       <span className="text-slate-400 shrink-0">{label}:</span>
       <span className="text-slate-700 font-medium">{value}</span>
     </div>
+  );
+}
+
+// Angehörige (Partner/Kinder) visuell als klickbarer Link rendern, um
+// anzudeuten, dass sie als eigene Kunden geöffnet werden könnten. Die
+// Klickstrecke ist bewusst noch nicht verdrahtet — sobald diese Personen
+// als eigene Kundendatensätze existieren, kann hier die Navigation
+// ergänzt werden.
+function PersonLink({ name }) {
+  return (
+    <span
+      className="cursor-pointer underline decoration-dotted decoration-slate-400 underline-offset-2 hover:text-slate-900 hover:decoration-slate-700 transition-colors"
+      title="Als Kunde öffnen"
+      role="link"
+    >
+      {name}
+    </span>
   );
 }
 
@@ -908,9 +968,13 @@ function generateFinanzKISummary(kunde) {
 }
 
 function generateKISummary(kunde) {
-  // Demo-KI-Zusammenfassung basierend auf vorhandenen Kundendaten
-  const name = kunde.name || 'Der Kunde';
-  const beruf = kunde.beruf || 'Berufstätig';
+  // Die KI-Zusammenfassung zieht ihre Zahlen aus exakt denselben Quellen
+  // wie Finanzübersicht + Leads-Tab, damit beide Sichten dieselbe Realität
+  // erzählen. Das Top-Potenzial stammt aus `kunde.potentiale` (identische
+  // Liste wie im Kanban/Leads), die Finanzzahlen aus den gemeinsamen
+  // Helpern.
+  const vorname = (kunde.name || 'Der Kunde').split(' ')[0];
+  const beruf = kunde.beruf || '';
   const arbeitgeber = kunde.arbeitgeber?.name || null;
   const jahre = kunde.eigeneProdukte?.[0]?.seit
     ? new Date().getFullYear() - parseInt(kunde.eigeneProdukte[0].seit.slice(0, 4), 10)
@@ -918,44 +982,89 @@ function generateKISummary(kunde) {
   const partner = kunde.partner?.name || null;
   const kinder = (kunde.kinder || []).length;
   const abwanderung = kunde.abwanderungsrisiko || 'gering';
-  const offenePot = (kunde.potentiale || []).filter(p => p.status === 'identifiziert' || p.status === 'termin').length;
+
+  // Finanzkennzahlen — dieselben Helper, die auch die Finanzübersicht nutzt.
+  const haushalt = berechneHaushaltsnetto(kunde);
+  const frei = berechneFrei(kunde);
+  const anlageVol = berechneAnlagevolumen(kunde);
+  const kreditVol = berechneKreditvolumen(kunde);
+
+  // Offene Potenziale = alles außer „nicht_sinnvoll"/„abgeschlossen" —
+  // exakt wie der Leads-Tab sie merged.
+  const offenePot = (kunde.potentiale || []).filter(
+    p => p.status !== 'nicht_sinnvoll' && p.status !== 'abgeschlossen'
+  );
+  const prioRank = { sehr_hoch: 4, kritisch: 4, hoch: 3, mittel: 2, niedrig: 1 };
+  const sortedPot = [...offenePot].sort(
+    (a, b) => (prioRank[b.prioritaet] || 0) - (prioRank[a.prioritaet] || 0)
+  );
+  const topPot = sortedPot[0] || null;
+
+  const fmtVol = (p) => {
+    if (!p?.volumen) return '';
+    return ` (${formatEur(p.volumen)}${p.volumenTyp === 'jaehrlich' ? '/J.' : ''})`;
+  };
 
   let text = '';
-  text += `${name} ist seit ${jahre || 'mehreren'} Jahren Kunde, ${beruf}`;
+  text += `${vorname} ist seit ${jahre || 'mehreren'} Jahren Kunde`;
+  if (beruf) text += `, ${beruf}`;
   if (arbeitgeber) text += ` bei ${arbeitgeber}`;
   text += '. ';
+
   if (partner) text += `Verheiratet mit ${partner}`;
-  if (kinder > 0) text += `, ${kinder} ${kinder === 1 ? 'Kind' : 'Kinder'}`;
+  if (kinder > 0) text += `${partner ? ', ' : ''}${kinder} ${kinder === 1 ? 'Kind' : 'Kinder'}`;
   if (partner || kinder) text += '. ';
 
+  if (haushalt > 0) {
+    text += `Haushaltsnetto ${formatEur(haushalt)}/mtl.`;
+    if (frei > 0) text += `, davon ${formatEur(frei)} frei verfügbar`;
+    text += '. ';
+  }
+  if (anlageVol > 0 || kreditVol > 0) {
+    const parts = [];
+    if (anlageVol > 0) parts.push(`Anlagevolumen ${formatEur(anlageVol)}`);
+    if (kreditVol > 0) parts.push(`offene Finanzierungen ${formatEur(kreditVol)}`);
+    text += parts.join(', ') + '. ';
+  }
+
   if (abwanderung === 'hoch') {
-    text += 'Die FIDA-Daten zeigen erhöhtes Abwanderungsrisiko: Vermögen wandert teilweise zu Fremdbanken ab. ';
+    text += 'FIDA-Signal: erhöhtes Abwanderungsrisiko, Vermögen wandert teilweise zu Fremdbanken ab. ';
   } else if (abwanderung === 'mittel') {
-    text += 'Erste Signale für Vermögensverlagerung an Fremdbanken erkennbar. ';
-  } else {
-    text += 'Stabile Hauptbankbeziehung, keine Abwanderungssignale. ';
+    text += 'Erste FIDA-Signale für Vermögensverlagerung an Fremdbanken erkennbar. ';
   }
 
-  if (offenePot > 0) {
-    text += `Aktuell ${offenePot} offene Vertriebspotenziale im Pipeline-Board.`;
+  if (topPot) {
+    text += `Top-Lead aktuell: „${topPot.titel}"${fmtVol(topPot)}`;
+    if (offenePot.length > 1) text += ` — plus ${offenePot.length - 1} weitere offene Potenziale im Pipeline-Board.`;
+    else text += '.';
+  } else if (offenePot.length > 0) {
+    text += `Aktuell ${offenePot.length} offene Vertriebspotenziale im Pipeline-Board.`;
   }
 
+  // Empfehlung kommt direkt aus dem Top-Potenzial (Aktion + Produkt), damit
+  // sie 1:1 zu dem passt, was der Leads-Tab als „nächsten Schritt" anzeigt.
   let recommendation = null;
-  // Produktfamilie aus den eigenen Produkten ableiten, damit Banking- und
-  // Versicherungs-Kunden den jeweils passenden Handlungsimpuls bekommen.
-  const sparten = new Set((kunde.eigeneProdukte || []).map(p => p.sparte));
-  const istVersicherung = sparten.has('leben') || sparten.has('schaden') || sparten.has('kranken') || sparten.has('kfz');
-  if (abwanderung === 'hoch' || abwanderung === 'mittel') {
-    recommendation = istVersicherung
-      ? 'Persönliches Bindungsgespräch priorisieren und Cross-Sell-Angebot (z. B. BU-Upgrade oder Familien-Bundle) vorbereiten.'
-      : 'Persönliches Bindungsgespräch priorisieren und Depot-Wechsel-Prämie als konkretes Angebot positionieren.';
-  } else if (offenePot > 2) {
-    recommendation = 'Top-Potenzial aus dem Kanban-Board angehen — kurzfristig Termin vereinbaren.';
+  if (topPot) {
+    const produkt = topPot.produktEmpfehlung;
+    const titel = topPot.titel;
+    if (topPot.empfohleneAktion === 'termin_vereinbaren') {
+      recommendation = produkt
+        ? `Termin zu „${titel}" vereinbaren — passendes Produkt: ${produkt}.`
+        : `Termin zu „${titel}" vereinbaren.`;
+    } else if (topPot.empfohleneAktion === 'angebot_erstellen') {
+      recommendation = produkt
+        ? `Angebot zu „${titel}" erstellen (${produkt}).`
+        : `Angebot zu „${titel}" erstellen.`;
+    } else if (topPot.empfohleneAktion === 'tarifvergleich') {
+      recommendation = `Tarifvergleich zu „${titel}" aufbereiten${produkt ? ` — Zielprodukt ${produkt}.` : '.'}`;
+    } else {
+      recommendation = `Top-Potenzial „${titel}" aktiv angehen.`;
+    }
   } else {
     recommendation = 'Jahresgespräch zur Bedarfsabklärung terminieren.';
   }
 
-  return { text, recommendation };
+  return { text: text.trim(), recommendation };
 }
 
 // ─── Aktivitäten: letzte Gespräche & Notizen ───
@@ -993,11 +1102,11 @@ function AktivitaetenCard({ kunde }) {
   const colorForType = () => ({ bg: 'bg-slate-50', text: 'text-slate-500', border: 'border-slate-200' });
 
   return (
-    <Card hover={false} className="flex flex-col">
-      <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
-        <MessageSquare size={18} className="text-slate-500" strokeWidth={1.75} />
+    <Card hover={false} className="flex flex-col h-full">
+      <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-amber-100 flex items-center gap-2 bg-amber-50/70">
+        <MessageSquare size={18} className="text-amber-600" strokeWidth={1.75} />
         <h3 className="font-semibold text-slate-700 text-sm tracking-wide">Aktivitäten</h3>
-        <span className="text-xs text-slate-400 ml-auto">
+        <span className="text-xs text-slate-500 ml-auto">
           {komms.length === 0 ? 'Keine' : `${komms.length} letzte`}
         </span>
       </div>

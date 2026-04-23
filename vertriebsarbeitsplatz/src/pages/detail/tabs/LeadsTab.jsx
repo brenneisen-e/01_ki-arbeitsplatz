@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
 import LogoImg from '../../../components/ui/LogoImg';
@@ -6,6 +6,8 @@ import { VV_LEADS } from '../../../data/vvExtended';
 import { LEADS_EN } from '../../../data/vvExtended-leads-en';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
+import { getHaustierConfirmation } from '../../../utils/haustierConfirmation';
+import HerleitungBlock from '../../../components/ui/HerleitungBlocks';
 import {
   ChevronDown, ChevronUp, UserPlus, Briefcase, Calendar, User,
   ExternalLink, TrendingUp, Filter, Sparkles, Send, Mail, X, Check,
@@ -89,6 +91,19 @@ export default function LeadsTab({ kunde }) {
     compliance: t('quelle.compliance'),
   };
 
+  // Haustier-Bestätigung fuer diesen Kunden (falls vom Nutzer im Stammdaten-
+  // Tab eingetragen). Wird hier in die Lead-Titel/Herleitung eingebaut,
+  // sobald bestätigt. Re-render bei Änderung via Custom Event.
+  const [haustierConf, setHaustierConf] = useState(() => getHaustierConfirmation(kunde?.id));
+  useEffect(() => {
+    setHaustierConf(getHaustierConfirmation(kunde?.id));
+    const onChange = (e) => {
+      if (e.detail?.kundeId === kunde?.id) setHaustierConf(e.detail.data || null);
+    };
+    window.addEventListener('kia:haustier-confirmed', onChange);
+    return () => window.removeEventListener('kia:haustier-confirmed', onChange);
+  }, [kunde?.id]);
+
   // Filter leads related to this mandant, merge with persona leads, and sort
   const mergedLeads = useMemo(() => {
     const allLeads = VV_LEADS || [];
@@ -102,9 +117,35 @@ export default function LeadsTab({ kunde }) {
       if (v >= 1000) return `${Math.round(v / 1000)}k €${typ === 'jaehrlich' ? '/J.' : ''}`;
       return `${v}€${typ === 'jaehrlich' ? '/J.' : ''}`;
     };
+    // Hilfsfunktion: wenn der Nutzer das Haustier bestätigt hat, wird
+    // "Haustier vermutet" im Lead durch die konkrete Art + Name ersetzt.
+    const isTierLead = (p) => /haustier|tierhalter/i.test(p?.titel || '');
+    const applyHaustier = (p) => {
+      if (!haustierConf || !haustierConf.typ || !isTierLead(p)) return p;
+      const datum = haustierConf.bestaetigtAm
+        ? new Date(haustierConf.bestaetigtAm).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        : null;
+      const artName = `${haustierConf.typ}${haustierConf.name ? ` „${haustierConf.name}"` : ''}`;
+      const newTitel = (p.titel || '').replace(/Haustier vermutet/i, artName);
+      const newBeschreibung = p.beschreibung
+        ? p.beschreibung.replace(/Art noch unklar\.?/i, `Art bestätigt: ${artName}${datum ? ` (${datum})` : ''}.`)
+        : p.beschreibung;
+      const newHerleitung = (p.herleitung || []).map(h => {
+        if (/vermutung/i.test(h.label)) {
+          return { label: 'Bestätigt', value: `${artName}${datum ? ` – bestätigt am ${datum}` : ''}` };
+        }
+        if (/empfehlung/i.test(h.label) && haustierConf.typ === 'Hund') {
+          return { label: 'Empfehlung', value: `R+V Tierhalterhaftpflicht für ${artName} anbieten (ab 65 €/Jahr)` };
+        }
+        return h;
+      });
+      return { ...p, titel: newTitel, beschreibung: newBeschreibung, herleitung: newHerleitung };
+    };
+
     const personaLeads = (kunde?.potentiale || [])
       // „nicht_sinnvoll" Potenziale gehören nicht in den Lead-Reiter
       .filter(p => p.status !== 'nicht_sinnvoll')
+      .map(applyHaustier)
       .map((p, i) => ({
         id: `persona-${i}`,
         name: p.titel,
@@ -117,6 +158,7 @@ export default function LeadsTab({ kunde }) {
         herkunft: p.beschreibung,
         kiDescription: p.kiDescription || null,
         herleitung: p.herleitung || [],
+        herleitungBlocks: p.herleitungBlocks || null,
         vergleich: p.vergleich || null,
         deckungsluecke: p.deckungsluecke || null,
         naechsterSchritt: p.empfohleneAktion === 'termin_vereinbaren' ? 'Termin vereinbaren' : p.empfohleneAktion === 'angebot_erstellen' ? 'Angebot erstellen' : p.empfohleneAktion,
@@ -141,7 +183,7 @@ export default function LeadsTab({ kunde }) {
       return 0;
     });
     return merged;
-  }, [kunde]);
+  }, [kunde, haustierConf]);
 
   const filtered = useMemo(() => mergedLeads.filter(l => {
     if (kategorieFilter !== 'alle' && l.kategorie !== kategorieFilter) return false;
@@ -528,6 +570,15 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
                     <span className="text-xs font-semibold text-indigo-600">{t('kiVertriebsassistent')}</span>
                   </div>
                   <p className="text-sm text-slate-700 leading-relaxed">{getLeadField(lead, 'kiDescription', lang)}</p>
+                </div>
+              )}
+
+              {/* Strukturierte Visualisierungen (Liquiditätsverlauf, Deckungslücke, …) */}
+              {lead.herleitungBlocks && lead.herleitungBlocks.length > 0 && (
+                <div className="space-y-3">
+                  {lead.herleitungBlocks.map((block, i) => (
+                    <HerleitungBlock key={i} block={block} />
+                  ))}
                 </div>
               )}
 

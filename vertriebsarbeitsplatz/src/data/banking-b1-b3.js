@@ -91,6 +91,44 @@ export const B1 = {
         { label: 'Verfügbares Eigenkapital', value: '30.000 € (BSV) + 15.000 € (VR-Sparkonto)' },
         { label: 'Empfehlung', value: 'Beratungstermin Immobilienfinanzierung anbieten, BSV-Zuteilung als Aufhänger' },
       ],
+      herleitungBlocks: [
+        {
+          type: 'liquiditaetsverlauf',
+          title: 'Freiwerdende Liquidität durch Commerzbank-Ratenkredit',
+          subtitle: 'Letzte Rate wird im Juni 2026 gezahlt – danach stehen 840 €/mtl. zur Verfügung.',
+          zahlungen: [
+            { label: 'Feb 26', betrag: -840, note: 'Ratenzahlung Commerzbank' },
+            { label: 'Mär 26', betrag: -840, note: 'Ratenzahlung Commerzbank' },
+            { label: 'Apr 26', betrag: -840, note: 'Ratenzahlung Commerzbank' },
+            { label: 'Mai 26', betrag: -840, zukunft: true, note: 'Ratenzahlung Commerzbank' },
+            { label: 'Jun 26', betrag: -840, zukunft: true, letzte: true, note: 'Letzte Ratenzahlung' },
+            { label: 'Jul 26', betrag: 0, zukunft: true, freigeworden: true, freigeworden_betrag: 840, note: '840 € frei verfügbar' },
+            { label: 'Aug 26', betrag: 0, zukunft: true, freigeworden: true, freigeworden_betrag: 840, note: '840 € frei verfügbar' },
+            { label: 'Sep 26', betrag: 0, zukunft: true, freigeworden: true, freigeworden_betrag: 840, note: '840 € frei verfügbar' },
+          ],
+        },
+        {
+          type: 'signale',
+          title: 'Drei unabhängige Signale triggern diesen Lead',
+          signale: [
+            { label: 'Auslaufender Commerzbank-Kredit', quelle: 'PSD2', staerke: 92, detail: 'Ratenzahlungen erkannt, Ende in 2 Monaten — 840 €/mtl. frei' },
+            { label: 'Zuteilungsreifer Bausparvertrag', quelle: 'Bestand', staerke: 88, detail: 'Schwäbisch Hall BSV 30.000 € — sofort als EK oder Sondertilgung einsetzbar' },
+            { label: 'Newsletter „VR-Immobilien"', quelle: 'Marketing', staerke: 64, detail: '24 Monate abonniert, hohe Öffnungsrate, Artikel-Klicks zu Zinsen/KfW' },
+          ],
+        },
+        {
+          type: 'zinsszenario',
+          title: 'Zins-Szenarien für 250.000 € Finanzierung',
+          subtitle: 'Monatliche Rate inkl. Zinsen und Tilgung, 2% anfängliche Tilgung.',
+          volumen: 250000,
+          szenarien: [
+            { zinssatz: 3.2, laufzeit: 10, rate: 1083, gesamtzins: 72400 },
+            { zinssatz: 3.4, laufzeit: 10, rate: 1125, gesamtzins: 78000, empfohlen: true },
+            { zinssatz: 3.6, laufzeit: 10, rate: 1167, gesamtzins: 83600 },
+            { zinssatz: 3.4, laufzeit: 15, rate: 958, gesamtzins: 116400 },
+          ],
+        },
+      ],
     },
     // 2. Abgebrochener Online-Kredit (hoch)
     { titel: 'Ratenkredit 15k \u2013 Online-Abbruch', typ: 'anpassung', quellen: ['direktvertrieb'], prioritaet: 'hoch', volumen: 15000, volumenTyp: 'einmalig',
@@ -341,6 +379,25 @@ export const B1 = {
         gehaltLabel: 'Heutiges Netto',
         absicherungLabel: 'Geschätzte gesetzliche Rente',
       },
+      herleitungBlocks: [
+        {
+          type: 'deckungsluecke',
+          title: 'Versorgungslücke im Rentenalter',
+          subtitle: 'Ziel: 75 % des heutigen Nettos. Aktuell gedeckt: nur ~41 %.',
+          aktuell: 1850,
+          empfohlen: 3375,
+          einheit: '€/mtl.',
+        },
+        {
+          type: 'signale',
+          title: 'Hintergrund zum Lead',
+          signale: [
+            { label: 'Keine geförderte AV im Bestand', quelle: 'Bestand', staerke: 95, detail: 'Weder Riester, Rürup, bAV noch private Rentenversicherung' },
+            { label: 'Trade-Republic-Depot mit Klumpenrisiko', quelle: 'Open Finance', staerke: 70, detail: '28 k € in nur 3 Einzelaktien (Apple, Amazon, OpenAI)' },
+            { label: 'Riester hoch attraktiv für Sabine', quelle: 'Familie', staerke: 80, detail: 'Kinderzulagen 2 × 300 € + 175 € Grundzulage' },
+          ],
+        },
+      ],
     },
     // 9. Extremsport nicht von aktueller Unfallversicherung abgedeckt (hoch)
     { titel: 'Unfallversicherung \u2013 Extremsport nicht abgedeckt', typ: 'anpassung', quellen: ['finanztransaktion', 'bestand'], prioritaet: 'hoch', volumen: 180, volumenTyp: 'jaehrlich',

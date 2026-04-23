@@ -111,7 +111,7 @@ export const B1 = {
           type: 'signale',
           title: 'Drei unabhängige Signale triggern diesen Lead',
           signale: [
-            { label: 'Auslaufender Commerzbank-Kredit', quelle: 'PSD2', staerke: 92, detail: 'Ratenzahlungen erkannt, Ende in 2 Monaten — 840 €/mtl. frei' },
+            { label: 'Auslaufender Commerzbank-Kredit', quelle: 'Kontoumsätze', staerke: 92, detail: 'Ratenzahlungen erkannt, Ende in 2 Monaten — 840 €/mtl. frei' },
             { label: 'Zuteilungsreifer Bausparvertrag', quelle: 'Bestand', staerke: 88, detail: 'Schwäbisch Hall BSV 30.000 € — sofort als EK oder Sondertilgung einsetzbar' },
             { label: 'Newsletter „VR-Immobilien"', quelle: 'Marketing', staerke: 64, detail: '24 Monate abonniert, hohe Öffnungsrate, Artikel-Klicks zu Zinsen/KfW' },
           ],

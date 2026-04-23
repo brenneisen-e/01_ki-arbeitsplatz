@@ -190,17 +190,17 @@ export default function VertraegeTab({ kunde }) {
   // damit in der Produktzeile ein Ausrufezeichen + Konsequenz-Hinweis
   // mit derselben Begruendung wie im Stammdaten-Tab erscheint.
   const sigs = Array.isArray(kunde.risikoSignale) ? kunde.risikoSignale : [];
-  const matchSparteRegex = (sparte) => {
-    if (sparte === 'unfall') return /unfall|extremsport|boulder|kletter|skydive|fallschirm|risikosport/i;
-    if (sparte === 'bu') return /berufsunf|arbeitsunf|\bbu\b/i;
-    if (sparte === 'hausrat') return /einbruch|hausrat/i;
-    if (sparte === 'kfz') return /kfz|fahrzeug/i;
-    if (sparte === 'haftpflicht') return /haftpflicht/i;
-    if (sparte === 'rlv' || sparte === 'leben') return /risikolebens|leben/i;
+  const matchProduktRegex = (key) => {
+    if (key === 'unfall') return /unfall|extremsport|boulder|kletter|skydive|fallschirm|risikosport/i;
+    if (key === 'bu') return /berufsunf|arbeitsunf|\bbu\b/i;
+    if (key === 'hausrat') return /einbruch|hausrat/i;
+    if (key === 'kfz' || key === 'kfz2' || key === 'kfz_fremd') return /kfz|fahrzeug/i;
+    if (key === 'haftpflicht') return /haftpflicht/i;
+    if (key === 'rlv' || key === 'leben' || key === 'lv' || key === 'lebensversicherung') return /risikolebens|leben/i;
     return null;
   };
   const findRisikoWarnung = (produkt) => {
-    const re = matchSparteRegex(produkt.sparte);
+    const re = matchProduktRegex(produkt.typ) || matchProduktRegex(produkt.sparte);
     if (!re) return null;
     const hit = sigs.find(s => re.test(`${s.titel || ''} ${s.beschreibung || ''}`));
     if (!hit) return null;

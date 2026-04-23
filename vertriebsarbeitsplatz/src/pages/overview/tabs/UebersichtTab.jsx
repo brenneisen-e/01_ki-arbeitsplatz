@@ -12,6 +12,7 @@ import { VV_LEADS } from '../../../data/vvExtended';
 import { formatEur } from '../../../utils/formatters';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 import TerminPrepModal from '../../../components/ui/TerminPrepModal';
+import RadarExplanationModal from '../../../components/ui/RadarExplanationModal';
 import { useDayAdvanced, getSimulatedAppointment, formatAppointmentTime } from '../../../utils/demoClock';
 
 import { getLang, tx } from '../../../utils/langHelper';
@@ -697,6 +698,10 @@ export default function UebersichtTab() {
     ? [heroTermin, ...baseTermine]
     : baseTermine).slice(0, 5);
   const [terminPrep, setTerminPrep] = useState(null); // { kunde, termin }
+  // Radar-Modal: Klick auf Lebenslagen-/Abwanderungs-Eintrag oeffnet erst
+  // eine HTML-aufbereitete Erklaerung mit Signalen und KPIs, nicht direkt
+  // den Kunden.
+  const [radarModal, setRadarModal] = useState(null); // { type, entry }
   const allAufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;
   // Bei Zukunftsbank gibt es kein „VR-FinanzPlan" — diese VR-spezifische
   // Aufgabe filtern wir hier aus, damit das Branding stimmt.
@@ -1014,7 +1019,7 @@ export default function UebersichtTab() {
                     <div
                       key={l.kundeId + l.event}
                       className="row-hover relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 cursor-pointer transition-all bg-white"
-                      onClick={() => navigateTo('detail', { kundeId: l.kundeId, tab: 'stammdaten' })}
+                      onClick={() => setRadarModal({ type: 'lebenslage', entry: l })}
                     >
                       <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: stripe }} />
                       <Avatar name={l.customerName} foto={getKundeFoto(l.kundeId)} size={36} />
@@ -1072,7 +1077,7 @@ export default function UebersichtTab() {
                     <div
                       key={r.kundeId}
                       className="row-hover relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 cursor-pointer transition-all bg-white"
-                      onClick={() => navigateTo('detail', { kundeId: r.kundeId, tab: 'stammdaten' })}
+                      onClick={() => setRadarModal({ type: 'abwanderung', entry: r })}
                     >
                       <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: risk.stripe }} />
                       <Avatar name={r.customerName} foto={getKundeFoto(r.kundeId)} size={36} />
@@ -1284,6 +1289,18 @@ export default function UebersichtTab() {
             kunde={terminPrep.kunde}
             termin={terminPrep.termin}
             onClose={() => setTerminPrep(null)}
+          />
+        )}
+
+        {radarModal && (
+          <RadarExplanationModal
+            type={radarModal.type}
+            entry={radarModal.entry}
+            onClose={() => setRadarModal(null)}
+            onOpenKunde={(kundeId) => {
+              setRadarModal(null);
+              navigateTo('detail', { kundeId, tab: 'stammdaten' });
+            }}
           />
         )}
 

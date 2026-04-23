@@ -3,7 +3,7 @@ import { useMode } from '../../hooks/useMode';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import KPIGrid from '../../components/ui/KPIGrid';
 import { KundenDeutschlandkarteCompact } from '../../components/ui/KundenDeutschlandkarte';
-import { KUNDEN_BY_MODE } from '../../data';
+import { KUNDEN_BY_MODE, SHOWCASE_KUNDE_IDS } from '../../data';
 import UebersichtTab from './tabs/UebersichtTab';
 
 // Lazy import mit Auto-Reload bei veralteten Chunks
@@ -78,7 +78,9 @@ export default function OverviewPage() {
             leadingSlot={
               modeId === 'banking' ? (
                 <KundenDeutschlandkarteCompact
-                  kunden={KUNDEN_BY_MODE.banking || []}
+                  kunden={(KUNDEN_BY_MODE.banking || []).filter(
+                    k => k.id !== SHOWCASE_KUNDE_IDS.banking
+                  )}
                   totalCount={kpiValues.kundenzahl?.wert}
                   title="Kundenkarte"
                   onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}

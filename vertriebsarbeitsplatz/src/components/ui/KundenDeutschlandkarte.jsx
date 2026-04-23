@@ -299,6 +299,7 @@ function makeGhost(i) {
 /* ────── Hauptkomponente ────── */
 export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKundeClick, title = 'Kundenkarte Deutschland' }) {
   const [selectedBundesland, setSelectedBundesland] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null); // city-level drilldown
   const [hoveredBundesland, setHoveredBundesland] = useState(null);
   const [hoveredKundeId, setHoveredKundeId] = useState(null);
   const [hoveredCity, setHoveredCity] = useState(null);
@@ -311,9 +312,10 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
 
   // Provider-Switcher. Default: maptiler. User kann via Toggle oben rechts
   // umschalten (falls entsprechender Key/Token in .env vorhanden).
-  // Default auf OSM, weil MapTiler/Mapbox eine Origin-Allowlist im Provider-
-  // Dashboard brauchen; OSM funktioniert immer. User kann live umschalten.
-  const [mapProvider, setMapProvider] = useState('osm');
+  // Default: Mapbox (schoenster Style, Token in .env). Fallback-Toggle
+  // auf OSM oder MapTiler steht oben rechts zur Verfuegung.
+  const initialProvider = MAPBOX_TOKEN ? 'mapbox' : (MAPTILER_KEY ? 'maptiler' : 'osm');
+  const [mapProvider, setMapProvider] = useState(initialProvider);
 
   // Masken-GeoJSON fuer MapLibre: grosse Box ueber Europa mit Loechern
   // an der Stelle Deutschlands bzw. des selektierten Bundeslands.
@@ -364,9 +366,11 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
   const maxCount = useMemo(() => Math.max(0, ...Object.values(bundeslandCounts)), [bundeslandCounts]);
 
   const visibleKunden = useMemo(() => {
-    if (selectedBundesland) return geocoded.filter(k => k.bundesland === selectedBundesland);
-    return geocoded;
-  }, [geocoded, selectedBundesland]);
+    let list = geocoded;
+    if (selectedBundesland) list = list.filter(k => k.bundesland === selectedBundesland);
+    if (selectedCity) list = list.filter(k => k.city === selectedCity);
+    return list;
+  }, [geocoded, selectedBundesland, selectedCity]);
 
   const filteredListKunden = useMemo(() => {
     const q = listSearch.trim().toLowerCase();
@@ -499,7 +503,10 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
         cityEl.title = `${g.city} — ${g.kunden.length} Kunde${g.kunden.length===1?'':'n'}`;
         cityEl.addEventListener('mouseenter', () => setHoveredCity(g.city));
         cityEl.addEventListener('mouseleave', () => setHoveredCity(null));
-        cityEl.addEventListener('click', () => map.flyTo({ center: [g.lng, g.lat], zoom: 11, duration: 600 }));
+        cityEl.addEventListener('click', () => {
+          setSelectedCity(g.city);
+          map.flyTo({ center: [g.lng, g.lat], zoom: 11, duration: 600 });
+        });
         const cityMarker = new maplibregl.Marker({ element: cityEl, anchor: 'center' })
           .setLngLat([g.lng, g.lat]).addTo(map);
         cityMarkersRef.current.set(g.city, { marker: cityMarker, el: cityEl });
@@ -530,6 +537,22 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
 
     if (map.loaded()) render();
     else map.once('load', render);
+
+    // Bei hohem Zoom (>=10) sind die einzelnen Kunden-Pins sichtbar —
+    // dann blenden wir die grossen Stadt-Aggregations-Kreise aus,
+    // damit sie die Einzel-Pins nicht mehr verdecken.
+    const CITY_HIDE_ZOOM = 10;
+    const updateCityVisibility = () => {
+      const z = map.getZoom();
+      const hide = z >= CITY_HIDE_ZOOM;
+      for (const m of cityMarkersRef.current.values()) {
+        m.el.style.opacity = hide ? '0' : '1';
+        m.el.style.pointerEvents = hide ? 'none' : 'auto';
+      }
+    };
+    map.on('zoom', updateCityVisibility);
+    // Einmal initial anwenden, falls die Karte schon weit gezoomt ist.
+    setTimeout(updateCityVisibility, 150);
   }, [selectedBundesland, geocoded, onKundeClick, mapProvider]);
 
   // Hover-Sync: DOM-Style der Marker aktualisieren.
@@ -565,7 +588,25 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     }
   }, [hoveredCity]);
 
-  const backToDeutschland = () => setSelectedBundesland(null);
+  const backToDeutschland = () => {
+    setSelectedCity(null);
+    setSelectedBundesland(null);
+  };
+
+  // Zurueck zur Bundesland-Uebersicht, ohne den Modus zu verlassen:
+  // fliegt zur Bounding-Box des aktiven Bundeslands und haebt die
+  // Stadt-Filterung auf.
+  const backToBundesland = () => {
+    setSelectedCity(null);
+    const map = mapRef.current;
+    if (!map || !selectedBundesland) return;
+    const feature = bundeslaenderGeo.features.find(f => f.properties.name === selectedBundesland);
+    if (!feature) return;
+    const bounds = new maplibregl.LngLatBounds();
+    const walk = (c) => { if (typeof c[0] === 'number') bounds.extend(c); else c.forEach(walk); };
+    walk(feature.geometry.coordinates);
+    map.fitBounds(bounds, { padding: 40, duration: 600 });
+  };
 
   const hoveredBlCount = hoveredBundesland ? (bundeslandCounts[hoveredBundesland] || 0) : null;
 
@@ -581,10 +622,22 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
               <ArrowLeft size={12} /> Deutschland
             </button>
           )}
+          {selectedBundesland && selectedCity && (
+            <button
+              onClick={backToBundesland}
+              className="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg px-2 py-1 transition-colors"
+            >
+              <ArrowLeft size={12} /> {selectedBundesland}
+            </button>
+          )}
           <MapPin size={18} className="text-blue-600" strokeWidth={1.75} />
           <h3 className="font-semibold text-slate-800">
             {title}
-            {selectedBundesland && <span className="ml-2 text-slate-500 font-normal text-sm">· {selectedBundesland}</span>}
+            {selectedBundesland && (
+              <span className="ml-2 text-slate-500 font-normal text-sm">
+                · {selectedCity || selectedBundesland}
+              </span>
+            )}
           </h3>
         </div>
         <div className="flex items-center gap-3">
@@ -620,7 +673,7 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
           )}
           <div className="text-xs text-slate-500">
             {visibleKunden.length} Kunden
-            {selectedBundesland ? ` in ${selectedBundesland}` : ' bundesweit'}
+            {selectedCity ? ` in ${selectedCity}` : selectedBundesland ? ` in ${selectedBundesland}` : ' bundesweit'}
           </div>
         </div>
       </div>
@@ -679,7 +732,7 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
               />
             </div>
             <div className="mt-2 text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
-              {selectedBundesland ? `Kunden in ${selectedBundesland}` : 'Alle Kunden'}
+              {selectedCity ? `Kunden in ${selectedCity}` : selectedBundesland ? `Kunden in ${selectedBundesland}` : 'Alle Kunden'}
               <span className="ml-1 text-slate-400 normal-case">· {filteredListKunden.length}</span>
             </div>
           </div>

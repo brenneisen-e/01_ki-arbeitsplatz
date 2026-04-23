@@ -3,6 +3,7 @@ import { useMode } from '../../hooks/useMode';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import KPIGrid from '../../components/ui/KPIGrid';
 import { KundenKarteCompact } from '../../components/ui/KundenKarte';
+import KundenDeutschlandkarte from '../../components/ui/KundenDeutschlandkarte';
 import { KUNDEN_BY_MODE } from '../../data';
 import UebersichtTab from './tabs/UebersichtTab';
 
@@ -72,20 +73,21 @@ export default function OverviewPage() {
       <GlobalHeader />
       <div className="px-6 py-6 animate-fade-in-up">
         {activeTab === 'uebersicht' && (
-          <KPIGrid
-            kpiConfig={config.kpiConfig}
-            kpiValues={kpiValues}
-            leadingSlot={
-              modeId === 'banking' ? (
-                <KundenKarteCompact
+          <>
+            <KPIGrid
+              kpiConfig={config.kpiConfig}
+              kpiValues={kpiValues}
+            />
+            {modeId === 'banking' && (
+              <div className="mt-6">
+                <KundenDeutschlandkarte
                   kunden={KUNDEN_BY_MODE.banking || []}
-                  totalCount={kpiValues.kundenzahl?.wert}
                   onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
-                  title="Kundenkarte"
+                  title="Kundenkarte Deutschland"
                 />
-              ) : null
-            }
-          />
+              </div>
+            )}
+          </>
         )}
         <Suspense fallback={TabFallback}>
           <TabComponent />

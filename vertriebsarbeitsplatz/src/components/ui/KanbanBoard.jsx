@@ -101,15 +101,9 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
   // Strip und lassen sich per Klick auf den Strip wieder aufklappen. Drop-
   // Targets bleiben auch im kollabierten Zustand aktiv.
   const [collapsedColumns, setCollapsedColumns] = useState(() => {
-    // Default: "Identifiziert" und "Nicht sinnvoll" sind offen (beide
-    // enthalten die Items, mit denen aktiv gearbeitet wird bzw. gerade
-    // aussortiert wurden). Der Mittelblock ist zur Entlastung geklappt.
-    const EXPANDED_BY_DEFAULT = new Set(['identifiziert', 'nicht_sinnvoll']);
-    const init = {};
-    COLUMNS.forEach(c => {
-      if (!EXPANDED_BY_DEFAULT.has(c.id)) init[c.id] = true;
-    });
-    return init;
+    // Default: alle Spalten offen. User kann einzelne Spalten via Chevron
+    // im Header einklappen, dann erscheint dort das Bookmark-Placeholder.
+    return {};
   });
   const toggleColumnCollapsed = (columnId) => {
     setCollapsedColumns(prev => ({ ...prev, [columnId]: !prev[columnId] }));

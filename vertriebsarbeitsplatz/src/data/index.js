@@ -60,7 +60,7 @@ export function getKundeById(modeId, kundeId) {
 }
 
 // Showcase-Kunden pro Modus: Potentiale werden priorisiert angezeigt.
-const SHOWCASE_KUNDE_IDS = {
+export const SHOWCASE_KUNDE_IDS = {
   versicherung: 'KD00001',       // Peter Schmidt
   banking: 'BK00001',            // Klaus Fischer
   vermoegensverwaltung: null,

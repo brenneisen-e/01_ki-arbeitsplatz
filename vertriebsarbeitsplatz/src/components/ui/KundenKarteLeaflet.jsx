@@ -135,8 +135,21 @@ function hashString(s) {
   return h;
 }
 
+// Forciertes Mapping fuer konkrete Demo-Kunden-IDs — damit bei Live-
+// Zoom in die Stadt (z. B. Frankfurt) echte Demo-Kunden mit Foto zu
+// sehen sind. Alle photofaehigen Banking-Demo-Kunden landen in FFM.
+const FORCED_CITY_BY_ID = {
+  BK00002: 'Frankfurt am Main', // Sandra Mueller
+  BK00003: 'Frankfurt am Main', // Peter Hoffmann
+  BK00004: 'Frankfurt am Main', // Markus Wagner
+  BK00005: 'Frankfurt am Main', // Andrea Lang
+  BK00006: 'Frankfurt am Main', // Stefan Braun
+  BK00007: 'Frankfurt am Main', // Maria Schuster
+};
+
 export function scatterCityForKunde(kundeId) {
   if (!kundeId) return null;
+  if (FORCED_CITY_BY_ID[kundeId]) return FORCED_CITY_BY_ID[kundeId];
   const h = hashString(String(kundeId));
   return SCATTER_POOL[h % SCATTER_POOL.length];
 }

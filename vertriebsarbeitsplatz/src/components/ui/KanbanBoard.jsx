@@ -101,9 +101,13 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
   // Strip und lassen sich per Klick auf den Strip wieder aufklappen. Drop-
   // Targets bleiben auch im kollabierten Zustand aktiv.
   const [collapsedColumns, setCollapsedColumns] = useState(() => {
+    // Default: "Identifiziert" und "Nicht sinnvoll" sind offen (beide
+    // enthalten die Items, mit denen aktiv gearbeitet wird bzw. gerade
+    // aussortiert wurden). Der Mittelblock ist zur Entlastung geklappt.
+    const EXPANDED_BY_DEFAULT = new Set(['identifiziert', 'nicht_sinnvoll']);
     const init = {};
     COLUMNS.forEach(c => {
-      if (c.id !== 'identifiziert') init[c.id] = true;
+      if (!EXPANDED_BY_DEFAULT.has(c.id)) init[c.id] = true;
     });
     return init;
   });
@@ -295,17 +299,16 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
       </div>
 
       {/* Board
-          Ab lg wird gridTemplateColumns dynamisch über die CSS-Variable
-          gesetzt:
-          - kollabierte Spalten = feste 48px
-          - Spalte mit groß aufgeklappter Karte = 2.4fr
-          - alle anderen = minmax(0, 1fr) */}
+          Alle Spalten behalten im Grunde ihre Breite (~1fr). Kollabierte
+          Spalten wirken nur wie ein eingeklapptes Bookmark: Tab-Header
+          bleibt sichtbar, der Karten-Stream wird ausgeblendet. Nur wenn
+          eine einzelne Karte "gross" ausgeklappt wird, bekommt ihre
+          Spalte etwas mehr Platz (1.6fr). */}
       <div
         className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:[grid-template-columns:var(--kanban-cols)] transition-[grid-template-columns] duration-300"
         style={{
           '--kanban-cols': COLUMNS.map(c => {
-            if (collapsedColumns[c.id]) return '48px';
-            if (expandedCard && expandedCard.columnId === c.id) return '2.4fr';
+            if (expandedCard && expandedCard.columnId === c.id) return '1.6fr';
             return 'minmax(0,1fr)';
           }).join(' '),
         }}
@@ -319,10 +322,14 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
           const isCollapsed = !!collapsedColumns[col.id];
 
           if (isCollapsed) {
+            // Bookmark-Look: horizontaler Tab-Header bleibt, Karten-
+            // Stream wird durch einen dezenten "eingeklappt"-Slot ersetzt.
+            // Die Spalte behaelt ihre normale Breite, sodass das Board
+            // visuell nicht kippt.
             return (
               <div
                 key={col.id}
-                className="rounded-xl border-2 transition-all overflow-hidden cursor-pointer hover:shadow-sm"
+                className="rounded-xl border-2 transition-all overflow-hidden cursor-pointer hover:shadow-sm flex flex-col"
                 style={{
                   backgroundColor: isHover ? col.border : col.bg,
                   borderColor: isHover ? col.color : col.border,
@@ -334,24 +341,43 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                 onClick={() => toggleColumnCollapsed(col.id)}
                 title={`${col.label} aufklappen`}
               >
-                <div className="flex flex-col items-center gap-3 py-3" style={{ minHeight: 200 }}>
-                  <span
-                    className="w-2 h-2 rounded-full shrink-0"
-                    style={{ backgroundColor: col.color }}
-                  />
-                  <span
-                    className="text-[10px] font-bold rounded-full px-1.5 py-0.5"
-                    style={{ backgroundColor: 'white', color: col.color, border: `1px solid ${col.border}` }}
-                  >
-                    {cards.length}
-                  </span>
-                  <div
-                    className="font-bold text-[11px] tracking-wider uppercase text-slate-700 whitespace-nowrap"
-                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-                  >
-                    {col.label}
+                {/* Column header (wie ausgeklappt, nur mit Aufklapp-Chevron) */}
+                <div className="px-3 py-3 border-b" style={{ borderColor: col.border, backgroundColor: col.bg }}>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ backgroundColor: col.color }}
+                      />
+                      <span className="font-bold text-sm text-slate-800 truncate">{col.label}</span>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <span
+                        className="text-xs font-bold rounded-full px-2 py-0.5"
+                        style={{ backgroundColor: 'white', color: col.color, border: `1px solid ${col.border}` }}
+                      >
+                        {cards.length}
+                      </span>
+                      <ChevronRight size={14} className="text-slate-500" />
+                    </div>
                   </div>
-                  <ChevronRight size={14} className="text-slate-400 mt-auto" />
+                  {totalVol > 0 && (
+                    <div className="text-[11px] font-mono text-slate-500 mt-1">
+                      Σ {formatEur(totalVol)}
+                    </div>
+                  )}
+                </div>
+                {/* Leerer "eingeklappt"-Slot — gestrichelter, fadebarer
+                    Bookmark-Bereich; Drop-Target bleibt durch den Outer-Div
+                    funktional. */}
+                <div
+                  className="flex-1 flex items-center justify-center text-[11px] italic text-slate-400 px-2"
+                  style={{ minHeight: 140, backgroundColor: col.bg }}
+                >
+                  <div className="text-center">
+                    <div className="font-semibold text-slate-500 not-italic mb-0.5">Eingeklappt</div>
+                    <div>Klick zum Aufklappen</div>
+                  </div>
                 </div>
               </div>
             );

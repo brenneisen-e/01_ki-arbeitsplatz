@@ -252,8 +252,16 @@ export default function LandingPage() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ prompt }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+      const raw = await res.text();
+      let data = null;
+      try { data = raw ? JSON.parse(raw) : null; } catch { /* leave as text */ }
+      if (!res.ok) {
+        const msg = data?.error
+          || (raw && raw.slice(0, 200))
+          || `HTTP ${res.status}`;
+        throw new Error(msg);
+      }
+      if (!data) throw new Error('Leere Antwort vom /api/claude-Endpoint. Ist die Cloudflare Pages Function deployt?');
       setClaudeReply({ prompt, text: data.text || '(leere Antwort)', error: null });
     } catch (err) {
       setClaudeReply({ prompt, text: '', error: String(err.message || err) });
@@ -398,61 +406,6 @@ export default function LandingPage() {
               {t('losGehts')}
             </button>
           </form>
-        </div>
-      )}
-
-      {/* Claude-Antwort-Overlay. Zeigt die letzte Frage + Antwort in einem
-          zentrierten Panel. Klick auf Hintergrund oder ESC schließt. */}
-      {(claudeLoading || claudeReply) && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in"
-          onClick={() => { if (!claudeLoading) setClaudeReply(null); }}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="px-5 py-3 border-b border-slate-200 flex items-center gap-2">
-              <Bot size={16} className="text-violet-600" />
-              <span className="text-sm font-semibold text-slate-800">KI-Assistent</span>
-              <button
-                type="button"
-                onClick={() => setClaudeReply(null)}
-                disabled={claudeLoading}
-                className="ml-auto text-slate-400 hover:text-slate-700 disabled:opacity-40"
-                aria-label="Schließen"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="px-5 py-4 overflow-y-auto space-y-3 text-sm">
-              {claudeReply?.prompt && (
-                <div>
-                  <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-1">Frage</div>
-                  <div className="text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-                    {claudeReply.prompt}
-                  </div>
-                </div>
-              )}
-              <div>
-                <div className="text-[10px] uppercase tracking-wider text-violet-600 font-semibold mb-1">Antwort</div>
-                {claudeLoading ? (
-                  <div className="flex items-center gap-2 text-slate-500">
-                    <Loader2 size={14} className="animate-spin" />
-                    <span>Claude antwortet…</span>
-                  </div>
-                ) : claudeReply?.error ? (
-                  <div className="text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-                    {claudeReply.error}
-                  </div>
-                ) : (
-                  <div className="text-slate-800 whitespace-pre-wrap leading-relaxed">
-                    {claudeReply?.text}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
@@ -724,6 +677,48 @@ export default function LandingPage() {
                   className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/15 text-white text-sm placeholder-white/40 focus:outline-none focus:bg-white/15 focus:border-white/30 transition-all"
                 />
               </div>
+            </div>
+          )}
+
+          {/* Inline Claude-Chat-Antwort direkt unter dem Chat-Input. Kein
+              Modal — die Antwort bleibt Teil der Landing-Page, kann per X
+              entfernt werden. */}
+          {(claudeLoading || claudeReply) && (
+            <div className="mt-3 rounded-2xl bg-white/90 border border-white/30 shadow-lg p-4 animate-fade-in">
+              <div className="flex items-center gap-2 mb-2">
+                <Bot size={14} className="text-violet-600" />
+                <span className="text-xs font-semibold text-slate-700">KI-Assistent</span>
+                {!claudeLoading && (
+                  <button
+                    type="button"
+                    onClick={() => setClaudeReply(null)}
+                    className="ml-auto text-slate-400 hover:text-slate-700"
+                    aria-label="Antwort entfernen"
+                  >
+                    <span className="text-sm">✕</span>
+                  </button>
+                )}
+              </div>
+              {claudeReply?.prompt && (
+                <div className="text-[11px] text-slate-500 mb-2">
+                  <span className="uppercase tracking-wider font-semibold text-slate-400">Frage: </span>
+                  {claudeReply.prompt}
+                </div>
+              )}
+              {claudeLoading ? (
+                <div className="flex items-center gap-2 text-slate-500 text-sm">
+                  <Loader2 size={14} className="animate-spin" />
+                  <span>Claude antwortet…</span>
+                </div>
+              ) : claudeReply?.error ? (
+                <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                  {claudeReply.error}
+                </div>
+              ) : (
+                <div className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed">
+                  {claudeReply?.text}
+                </div>
+              )}
             </div>
           )}
         </div>

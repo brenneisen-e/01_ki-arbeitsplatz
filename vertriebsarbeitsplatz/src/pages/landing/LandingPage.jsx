@@ -621,7 +621,7 @@ export default function LandingPage() {
               Gesprächstermin", "Ansprechpartner Private Banking") klappen
               beim Klick ein Kunden-/Kollegen-Auswahl-Dropdown auf. */}
           <div className="flex flex-wrap justify-center gap-2 mt-3">
-            <QuickPromptChip label="Vertriebs-Cockpit" onClick={() => { setChatInput('Vertriebs-Cockpit'); executeSuggestion({ action: 'cockpit' }); }} />
+            <QuickPromptChip label="Vertriebs-Cockpit" onClick={() => { setChatInput('Vertriebs-Cockpit'); executeSuggestion({ action: 'overview' }); }} />
             <QuickPromptChip label="Übersicht Produktlandschaft" onClick={() => { setChatInput('Übersicht Produktlandschaft'); executeSuggestion({ action: 'overview' }); }} />
             <QuickPromptChip
               label="Ansprechpartner"

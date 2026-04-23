@@ -9,8 +9,9 @@
 // Diese Bloecke werden in LeadsTab.jsx im aufgeklappten Lead zusaetzlich
 // zur klassischen Label/Value-Herleitung gerendert (`lead.herleitungBlocks`).
 
-import { TrendingDown, TrendingUp, ArrowRight, Sparkles, Circle, MessageSquare, Bot, User } from 'lucide-react';
+import { TrendingDown, TrendingUp, ArrowRight, Sparkles, Circle, MessageSquare, Bot, User, Receipt } from 'lucide-react';
 import { formatEur } from '../../utils/formatters';
+import LogoImg from './LogoImg';
 
 function formatMonth(iso) {
   // "2026-05" → "Mai 2026"
@@ -265,6 +266,101 @@ export function Chatverlauf({ title, subtitle, datum, nachrichten = [] }) {
   );
 }
 
+// ─── Transaktionen (Tabelle erkannter Kontobewegungen) ─────────────────
+export function Transaktionen({ title, subtitle, transaktionen = [] }) {
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 p-4">
+      <div className="flex items-center gap-2 mb-1">
+        <Receipt size={14} className="text-slate-500" />
+        <div className="text-sm font-semibold text-slate-700">{title || 'Erkannte Kontoumsätze'}</div>
+      </div>
+      {subtitle && <div className="text-xs text-slate-500 mb-2">{subtitle}</div>}
+      <table className="w-full text-sm mt-2">
+        <thead>
+          <tr className="text-[10px] uppercase tracking-wider text-slate-400">
+            <th className="text-left py-1.5 pr-2 font-semibold">Empfänger / Händler</th>
+            <th className="text-left py-1.5 px-2 font-semibold">Häufigkeit</th>
+            <th className="text-right py-1.5 pl-2 font-semibold">Betrag</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transaktionen.map((tx, i) => (
+            <tr key={i} className="border-t border-slate-100">
+              <td className="py-1.5 pr-2 text-slate-700 font-medium">
+                <div className="flex items-center gap-2">
+                  <LogoImg name={tx.empfaenger || tx.haendler || ''} size={16} />
+                  <span>{tx.empfaenger || tx.haendler}</span>
+                </div>
+              </td>
+              <td className="py-1.5 px-2 text-slate-500">{tx.haeufigkeit || '-'}</td>
+              <td className="py-1.5 pl-2 text-right font-mono text-slate-700">
+                {typeof tx.betrag === 'number' ? `${formatEur(Math.abs(tx.betrag))}` : tx.betrag}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ─── Depotpositionen (Positionsliste mit Logo je Aktie/ETF) ───────────
+export function Depotpositionen({ title, subtitle, positionen = [] }) {
+  const gesamt = positionen.reduce((s, p) => s + (p.volumen || 0), 0);
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 p-4">
+      <div className="flex items-center gap-2 mb-1">
+        <TrendingUp size={14} className="text-slate-500" />
+        <div className="text-sm font-semibold text-slate-700">{title || 'Depot-Positionen'}</div>
+      </div>
+      {subtitle && <div className="text-xs text-slate-500 mb-2">{subtitle}</div>}
+      <table className="w-full text-sm mt-2">
+        <thead>
+          <tr className="text-[10px] uppercase tracking-wider text-slate-400">
+            <th className="text-left py-1.5 pr-2 font-semibold">Position</th>
+            <th className="text-left py-1.5 px-2 font-semibold">Seit</th>
+            <th className="text-right py-1.5 px-2 font-semibold">Wert</th>
+            <th className="text-right py-1.5 px-2 font-semibold">Gewinn</th>
+            <th className="text-right py-1.5 pl-2 font-semibold">Performance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {positionen.map((p, i) => {
+            const gewinnPositive = (p.gewinn ?? 0) > 0;
+            return (
+              <tr key={i} className="border-t border-slate-100">
+                <td className="py-1.5 pr-2 text-slate-700 font-medium">
+                  <div className="flex items-center gap-2">
+                    <LogoImg name={p.name} size={18} />
+                    <span>{p.name}</span>
+                  </div>
+                </td>
+                <td className="py-1.5 px-2 text-slate-500">{p.seit || '-'}</td>
+                <td className="py-1.5 px-2 text-right font-mono text-slate-700">{formatEur(p.volumen || 0)}</td>
+                <td className={`py-1.5 px-2 text-right font-mono ${gewinnPositive ? 'text-emerald-700' : (p.gewinn < 0 ? 'text-red-600' : 'text-slate-500')}`}>
+                  {p.gewinn != null ? `${p.gewinn > 0 ? '+' : ''}${formatEur(p.gewinn)}` : '–'}
+                </td>
+                <td className={`py-1.5 pl-2 text-right font-mono ${gewinnPositive ? 'text-emerald-700 font-semibold' : 'text-slate-500'}`}>
+                  {p.performanceYtd || '–'}
+                </td>
+              </tr>
+            );
+          })}
+          {gesamt > 0 && (
+            <tr className="border-t-2 border-slate-200 bg-slate-50/60 font-semibold">
+              <td className="py-1.5 pr-2 text-slate-700">Gesamt</td>
+              <td className="py-1.5 px-2"></td>
+              <td className="py-1.5 px-2 text-right font-mono text-slate-800">{formatEur(gesamt)}</td>
+              <td className="py-1.5 px-2"></td>
+              <td className="py-1.5 pl-2"></td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 // ─── Renderer-Switch ─────────────────────────────────────────────────────
 export default function HerleitungBlock({ block }) {
   if (!block || !block.type) return null;
@@ -279,6 +375,10 @@ export default function HerleitungBlock({ block }) {
       return <ZinsSzenarioMatrix {...block} />;
     case 'chatverlauf':
       return <Chatverlauf {...block} />;
+    case 'transaktionen':
+      return <Transaktionen {...block} />;
+    case 'depotpositionen':
+      return <Depotpositionen {...block} />;
     default:
       return null;
   }

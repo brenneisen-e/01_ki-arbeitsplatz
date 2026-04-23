@@ -80,9 +80,9 @@ function deriveAbsicherung(kunde) {
 // Produkt-Kategorien nach denen die Leads/Potenziale geclustert werden.
 // Die Reihenfolge ist die Anzeige-Reihenfolge.
 const PRODUKT_KATEGORIEN = [
-  { key: 'bank',          label: 'Bankprodukte',          icon: Landmark,    color: '#0f766e' },
-  { key: 'versicherung',  label: 'Versicherungsprodukte', icon: ShieldCheck, color: '#b45309' },
   { key: 'anlage',        label: 'Anlageprodukte',        icon: LineChart,   color: '#6d28d9' },
+  { key: 'versicherung',  label: 'Versicherungsprodukte', icon: ShieldCheck, color: '#b45309' },
+  { key: 'bank',          label: 'Bankprodukte',          icon: Landmark,    color: '#0f766e' },
 ];
 
 // Priorität → numerische Sortier-Reihenfolge
@@ -113,6 +113,8 @@ export default function ImpulseTab({ kunde }) {
   const luecken = absicherung.fehlend?.length || 0;
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [anschreibenFor, setAnschreibenFor] = useState(null);
+  // Kategorien sind standardmäßig eingeklappt; der Nutzer klappt gezielt auf.
+  const [openCategories, setOpenCategories] = useState({});
 
   // Gruppiere alle Potenziale nach Produktkategorie und sortiere innerhalb
   // jeder Gruppe nach Priorität (sehr_hoch → kritisch → hoch → mittel → niedrig).
@@ -162,37 +164,60 @@ export default function ImpulseTab({ kunde }) {
         </div>
       </Card>
 
-      {/* Leads / Potenziale geclustert nach Produktkategorie */}
+      {/* Leads / Potenziale geclustert nach Produktkategorie.
+          Kategorie-Cards sind standardmäßig eingeklappt und zeigen nur die
+          Anzahl der Leads. Klick öffnet sie zu einem Grid mit bis zu 3
+          Tile-Kacheln pro Reihe. */}
       {PRODUKT_KATEGORIEN.map(kat => {
         const list = gruppiert[kat.key] || [];
         if (list.length === 0) return null;
         const Icon = kat.icon;
+        const isOpen = !!openCategories[kat.key];
         return (
           <Card key={kat.key} hover={false}>
-            <div className="flex items-center justify-between mb-4">
+            <button
+              type="button"
+              className="w-full flex items-center justify-between gap-3 text-left"
+              onClick={() => setOpenCategories(s => ({ ...s, [kat.key]: !s[kat.key] }))}
+            >
               <div className="flex items-center gap-2">
                 <Icon size={20} style={{ color: kat.color }} strokeWidth={1.75} />
                 <h3 className="font-semibold text-slate-800">{kat.label}</h3>
+                <span className="ml-1 inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                  {list.length}
+                </span>
               </div>
-              <span className="text-sm text-slate-400">{list.length} Potentiale</span>
-            </div>
-            <div className="space-y-3">
-              {list.map((p, i) => {
-                const key = `${kat.key}-${i}`;
-                return (
-                  <PotentialCard
-                    key={key}
-                    potential={p}
-                    kunde={kunde}
-                    expanded={expandedIndex === key}
-                    onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
-                    onAnschreiben={() => setAnschreibenFor(p)}
-                    t={t}
-                    ctx={ctx}
-                  />
-                );
-              })}
-            </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-slate-400">
+                  {list.length === 1 ? '1 Lead' : `${list.length} Leads`}
+                </span>
+                <ChevronDown
+                  size={16}
+                  className={`text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                />
+              </div>
+            </button>
+            {isOpen && (
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 animate-fade-in">
+                {list.map((p, i) => {
+                  const key = `${kat.key}-${i}`;
+                  const isExpanded = expandedIndex === key;
+                  return (
+                    <div key={key} className={isExpanded ? 'md:col-span-2 lg:col-span-3' : ''}>
+                      <PotentialCard
+                        potential={p}
+                        kunde={kunde}
+                        expanded={isExpanded}
+                        onToggle={() => setExpandedIndex(isExpanded ? null : key)}
+                        onAnschreiben={() => setAnschreibenFor(p)}
+                        t={t}
+                        ctx={ctx}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </Card>
         );
       })}

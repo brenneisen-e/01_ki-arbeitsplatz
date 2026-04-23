@@ -309,6 +309,28 @@ export const B1 = {
           { merkmal: 'Risikoprofil', aktuell: 'Hoch (Klumpenrisiko)', angebot: 'Moderat – strukturierte Diversifikation', highlight: true },
         ],
       },
+      herleitungBlocks: [
+        {
+          type: 'depotpositionen',
+          title: 'Trade-Republic-Depot – aktuelle Positionen',
+          subtitle: 'Alle Positionen US-Tech, keine Diversifikation über Regionen / Sektoren / Assetklassen.',
+          positionen: [
+            { name: 'Apple Inc. (AAPL)', seit: 'Juni 2023', volumen: 14500, einkaufswert: 11620, gewinn: 2880, performanceYtd: '+24,8%' },
+            { name: 'Amazon.com Inc. (AMZN)', seit: 'März 2024', volumen: 9200, einkaufswert: 6660, gewinn: 2540, performanceYtd: '+38,2%' },
+            { name: 'OpenAI (Pre-IPO / Secondary)', seit: 'November 2025', volumen: 4300, einkaufswert: 3820, gewinn: 480, performanceYtd: '+12,5%' },
+          ],
+        },
+        {
+          type: 'signale',
+          title: 'Diversifikations-Signale',
+          signale: [
+            { label: 'Nur 3 Einzeltitel im Depot', quelle: 'Open Finance', staerke: 92, detail: 'Apple, Amazon, OpenAI – gesamt 28.000 €' },
+            { label: '100 % US-Tech-Konzentration', quelle: 'Depotanalyse', staerke: 88, detail: 'Ein Sektor, eine Region, eine Assetklasse' },
+            { label: 'Illiquide Pre-IPO-Position', quelle: 'Bestand', staerke: 70, detail: 'OpenAI Secondary 4.300 € – schwer bewertbar, nicht börsengehandelt' },
+            { label: 'Beta >1,1 ggü. S&P 500', quelle: 'Marktdaten', staerke: 60, detail: 'Apple & Amazon korrelieren stark in Marktkorrekturen' },
+          ],
+        },
+      ],
     },
     // 7. Liquidit\u00e4tsaufbau Girokonto (mittel)
     { titel: 'Girokonto-\u00dcberschuss 18k \u2013 Liquidit\u00e4t strukturieren', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 18000, volumenTyp: 'einmalig',
@@ -338,6 +360,17 @@ export const B1 = {
         { label: 'Vermutung', value: 'Haustier vorhanden \u2013 Art im Gespr\u00e4ch kl\u00e4ren' },
         { label: 'Haftpflicht-Status', value: 'Keine Tierhalterhaftpflicht vorhanden' },
         { label: 'Empfehlung', value: 'Tierart kurz erfragen, dann R+V Tierhalterhaftpflicht ab 65 \u20ac/Jahr anbieten' },
+      ],
+      herleitungBlocks: [
+        {
+          type: 'transaktionen',
+          title: 'Erkannte Tier-Ausgaben aus Kontoums\u00e4tzen',
+          subtitle: 'KI-Erkennung \u2013 regelm\u00e4\u00dfige Zahlungen an tierbezogene H\u00e4ndler.',
+          transaktionen: [
+            { empfaenger: 'Fressnapf Gie\u00dfen', haeufigkeit: 'monatlich', betrag: 75 },
+            { empfaenger: 'Tierarztpraxis Dr. Sch\u00e4fer', haeufigkeit: 'quartalsweise', betrag: 110 },
+          ],
+        },
       ],
     },
     // 8b. Auslandsreisekrankenversicherung – Anfrage aus Chatbot (hoch)
@@ -426,6 +459,18 @@ export const B1 = {
         { label: 'Datenquelle 2', value: 'Bestand \u2013 R+V Unfallversicherung Basis-Tarif' },
         { label: 'Deckungsl\u00fccke', value: 'Extremsport-Risiken ausgeschlossen \u2013 keine Deckung im Schadenfall' },
         { label: 'Empfehlung', value: 'Zusatzbaustein Sport & Freizeit (ca. 180 \u20ac/J.) oder Wechsel in R+V Unfall Premium' },
+      ],
+      herleitungBlocks: [
+        {
+          type: 'transaktionen',
+          title: 'Erkannte Extremsport-Transaktionen',
+          subtitle: 'KI-Erkennung aus PSD2-Kontoums\u00e4tzen \u2013 regelm\u00e4\u00dfige + einmalige Buchungen.',
+          transaktionen: [
+            { empfaenger: 'DAV-Boulderhalle Gie\u00dfen', haeufigkeit: 'monatlich', betrag: 65 },
+            { empfaenger: 'Skydive Center Marburg', haeufigkeit: 'einmalig 09/2025', betrag: 320 },
+            { empfaenger: 'Globetrotter Kletterschuhe', haeufigkeit: 'einmalig 06/2025', betrag: 149 },
+          ],
+        },
       ],
     },
   ],

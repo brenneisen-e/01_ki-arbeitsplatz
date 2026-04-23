@@ -274,7 +274,26 @@ export default function StammdatenDetailTab({ kunde }) {
                 }
               />
             )}
-            <InfoRow label={t('wohnsituation')} value={kunde.adresse ? `${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)` : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
+            <InfoRow
+              label={t('wohnsituation')}
+              value={(() => {
+                const base = kunde.adresse
+                  ? `${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)`
+                  : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`;
+                const hausrat = (kunde.fremdProdukte || []).find(
+                  p => /hausrat/i.test(p.produktart || '') && p.consent
+                );
+                if (!hausrat) return base;
+                return (
+                  <span className="inline-flex items-center gap-2 flex-wrap">
+                    <span>{base}</span>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+                      Open Finance · Hausrat
+                    </span>
+                  </span>
+                );
+              })()}
+            />
             {(kunde.haustiere || kunde.tiere) && (
               <HaustiereRow
                 haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)}
@@ -693,9 +712,9 @@ function HaustiereRow({ haustiere, t, kundeId }) {
       {!confirmed ? (
         <>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="flex items-center gap-1.5 text-amber-500 shrink-0 text-sm">
+            <span className="flex items-center gap-1.5 text-amber-700 shrink-0 text-sm">
               <PawPrint size={14} />
-              {haustiere.vermutet ? t('haustierVermutet') : t('haustierHinweis')}
+              {haustiere.vermutet ? 'Haustier' : t('haustierHinweis')}
             </span>
             <span className="text-sm text-slate-500 italic">
               {haustiere.vermutet

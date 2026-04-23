@@ -69,11 +69,11 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
     return { count, days };
   }, [kanbanState]);
 
-  // Quick Wins — drei niedrig-effort, hoch-konfidente Potenziale aus „identifiziert"/„termin"
+  // Quick Wins — drei niedrig-effort, hoch-konfidente Potenziale.
+  // Nur Status „identifiziert" (noch nicht in Bearbeitung / nicht in Termin
+  // / nicht abgeschlossen) — sonst wären es keine neuen Empfehlungen.
   const quickWins = useMemo(() => {
-    const candidates = potentiale.filter(p =>
-      p.status === 'identifiziert' || p.status === 'termin'
-    );
+    const candidates = potentiale.filter(p => p.status === 'identifiziert');
     // Sortiere nach Priorität, dann Volumen
     const prioRank = { sehr_hoch: 4, hoch: 3, mittel: 2, niedrig: 1 };
     const sorted = [...candidates].sort((a, b) => {
@@ -122,47 +122,50 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
         />
       </div>
 
-      {/* Streak */}
-      <div className="rounded-xl border border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 p-4 mb-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
-            <Flame size={20} className="text-orange-600" strokeWidth={2} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-bold text-slate-800">
-              {streak.count} {streak.count === 1 ? 'Tag' : 'Tage'} in Folge mindestens 1 Potenzial bearbeitet
+      {/* Streak + Quick Wins nebeneinander, damit beides nicht die volle
+          Breite einnimmt. Auf schmaleren Viewports stapeln sie wieder. */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Streak */}
+        <div className="rounded-xl border border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 p-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
+              <Flame size={20} className="text-orange-600" strokeWidth={2} />
             </div>
-            <div className="text-xs text-slate-500 mt-0.5">
-              {streak.count >= 20 ? 'Unaufhaltsam' : streak.count >= 10 ? 'Auf Kurs' : streak.count >= 5 ? 'Solide Woche' : 'Streak aufbauen'}
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            {streak.days.map((d, i) => (
-              <div
-                key={i}
-                className="flex flex-col items-center gap-0.5"
-                title={d.date}
-              >
-                <div
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    d.active
-                      ? 'bg-orange-500'
-                      : 'bg-white border border-orange-200'
-                  }`}
-                />
-                <span className="text-[9px] text-slate-400 font-medium">{d.label}</span>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-bold text-slate-800">
+                {streak.count} {streak.count === 1 ? 'Tag' : 'Tage'} in Folge mindestens 1 Potenzial bearbeitet
               </div>
-            ))}
+              <div className="text-xs text-slate-500 mt-0.5">
+                {streak.count >= 20 ? 'Unaufhaltsam' : streak.count >= 10 ? 'Auf Kurs' : streak.count >= 5 ? 'Solide Woche' : 'Streak aufbauen'}
+              </div>
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
+              {streak.days.map((d, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col items-center gap-0.5"
+                  title={d.date}
+                >
+                  <div
+                    className={`w-3 h-3 rounded-full transition-colors ${
+                      d.active
+                        ? 'bg-orange-500'
+                        : 'bg-white border border-orange-200'
+                    }`}
+                  />
+                  <span className="text-[9px] text-slate-400 font-medium">{d.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Quick Wins */}
-      <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/60 to-blue-50/30 p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Calendar size={16} className="text-indigo-600" strokeWidth={2} />
-          <span className="text-sm font-bold text-slate-800">Die KI empfiehlt diese {quickWins.length} Potenziale für heute:</span>
-        </div>
+        {/* Quick Wins */}
+        <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/60 to-blue-50/30 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Calendar size={16} className="text-indigo-600" strokeWidth={2} />
+            <span className="text-sm font-bold text-slate-800">Die KI empfiehlt diese {quickWins.length} Potenziale für heute:</span>
+          </div>
         <div className="space-y-2">
           {quickWins.map((qw, i) => (
             <div
@@ -197,6 +200,7 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
               Keine offenen Quick Wins.
             </div>
           )}
+          </div>
         </div>
       </div>
     </Card>

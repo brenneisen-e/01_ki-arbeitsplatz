@@ -188,6 +188,18 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
     setHoverColumn(null);
   };
 
+  // Führt das Move für EINEN Drag-Payload aus — egal ob ein Einzel-Potenzial
+  // oder ein Cluster (alle Potenziale eines Kunden). Bei einem Cluster werden
+  // alle Items in die Zielspalte verschoben.
+  const moveDraggedTo = (dragged, columnId, extra) => {
+    if (!dragged) return;
+    if (Array.isArray(dragged.items) && dragged.items.length > 0) {
+      dragged.items.forEach(it => onMoveCard(it._id, columnId, extra));
+    } else if (dragged._id) {
+      onMoveCard(dragged._id, columnId, extra);
+    }
+  };
+
   const handleDrop = (e, columnId) => {
     e.preventDefault();
     if (!draggedCard) return;
@@ -202,7 +214,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
     } else if (columnId === 'abgeschlossen') {
       setCloseModal({ potential: draggedCard });
     } else {
-      onMoveCard(draggedCard._id, columnId);
+      moveDraggedTo(draggedCard, columnId);
       collapseExpandedCard();
     }
     setDraggedCard(null);
@@ -212,20 +224,21 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
   const handleConfirmFeedback = (reason, comment) => {
     if (!feedbackModal) return;
     const potential = feedbackModal.potential;
-    onMoveCard(potential._id, 'nicht_sinnvoll', { reason, comment });
+    moveDraggedTo(potential, 'nicht_sinnvoll', { reason, comment });
     setFeedbackModal(null);
     collapseExpandedCard();
     // Zeige die „KI-lernt"-Animation als Overlay fuer ein paar Sekunden.
+    const isCluster = Array.isArray(potential.items) && potential.items.length > 1;
     setTrainingToast({
       kundeName: potential.kundeName,
-      titel: potential.titel,
+      titel: isCluster ? `${potential.items.length} Potenziale` : potential.titel,
       reason,
     });
   };
 
   const handleConfirmAbschluss = (data) => {
     if (!closeModal) return;
-    onMoveCard(closeModal.potential._id, 'abgeschlossen', data);
+    moveDraggedTo(closeModal.potential, 'abgeschlossen', data);
     setCloseModal(null);
     collapseExpandedCard();
   };
@@ -754,11 +767,23 @@ const QUELLEN_THEME_LABELS = {
 
 function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onReactivate, onCardClick, isExpanded, onToggleExpand }) {
   const [localExpanded, setLocalExpanded] = useState(false);
+  const dragStartedRef = useRef(false);
   const controlled = typeof isExpanded === 'boolean' && typeof onToggleExpand === 'function';
   const expanded = controlled ? isExpanded : localExpanded;
   const toggleExpanded = () => {
     if (controlled) onToggleExpand();
     else setLocalExpanded(v => !v);
+  };
+  // Ganzes Cluster (z. B. alle Potenziale von Peter Seidel) als Drag-Payload:
+  // Statt einzelner _id übertragen wir ein Array von Items, damit der Drop
+  // alle Potenziale gemeinsam verschiebt.
+  const clusterPayload = {
+    _id: items[0]?._id,
+    kundeId: items[0]?.kundeId,
+    kundeName: items[0]?.kundeName,
+    titel: items[0]?.titel,
+    status: items[0]?.status,
+    items,
   };
   const top = items[0];
   const kundeName = top.kundeName || '';
@@ -837,8 +862,14 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
 
   return (
     <div
-      onClick={() => onCardClick?.(top)}
-      className="rounded-lg p-2.5 shadow-sm hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all cursor-pointer relative border border-slate-200 bg-white"
+      draggable={top.status !== 'abgeschlossen'}
+      onDragStart={(e) => { dragStartedRef.current = true; onDragStart?.(e, clusterPayload); }}
+      onDragEnd={(e) => { onDragEnd?.(e); setTimeout(() => { dragStartedRef.current = false; }, 0); }}
+      onClick={() => {
+        if (dragStartedRef.current) return;
+        onCardClick?.(top);
+      }}
+      className="rounded-lg p-2.5 shadow-sm hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all cursor-pointer active:cursor-grabbing relative border border-slate-200 bg-white"
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">

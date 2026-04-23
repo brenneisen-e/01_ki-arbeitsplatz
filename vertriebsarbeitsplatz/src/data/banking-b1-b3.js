@@ -354,6 +354,20 @@ export const B1 = {
         { label: 'Empfehlung', value: '{{versicherungspartner}} ARKV Familie (49 \u20ac/J., weltweit, Rücktransport)' },
         { label: 'Status', value: 'Beraterin-R\u00fcckmeldung wurde im Chatbot zugesagt' },
       ],
+      herleitungBlocks: [
+        {
+          type: 'chatverlauf',
+          title: 'Chatbot-Anfrage Klaus Fischer',
+          subtitle: 'Ausl\u00f6ser des Leads \u2013 Kunde hat aktiv nach einer Auslandsreisekrankenversicherung gefragt.',
+          datum: '18.03.2026',
+          nachrichten: [
+            { rolle: 'kunde', text: 'Hallo, wir planen im Sommer mit der Familie eine Fernreise nach Thailand. Haben wir \u00fcber die Bank eigentlich eine Auslandsreisekrankenversicherung?', zeit: '19:42' },
+            { rolle: 'bot', text: 'Guten Abend Herr Fischer! Ich sehe in Ihrem Bestand aktuell keine Auslandsreisekrankenversicherung \u2014 weder \u00fcber Ihre {{versicherungspartner}}-Unfallversicherung noch \u00fcber Ihre {{institutKurz}}-Visa Gold ist ein umfassender Auslandskrankenschutz inkludiert. F\u00fcr eine Familienreise nach Thailand ist ein eigener Reisekrankenschutz dringend zu empfehlen (R\u00fccktransport, station\u00e4re Behandlung, Privatklinik).', zeit: '19:43' },
+            { rolle: 'kunde', text: 'Was w\u00fcrdet ihr denn empfehlen? Und wie viel kostet das ungef\u00e4hr f\u00fcr eine vierk\u00f6pfige Familie?', zeit: '19:45' },
+            { rolle: 'bot', text: 'Ein Familien-Jahresschutz der {{versicherungspartner}} mit weltweiter Deckung, R\u00fccktransport und keiner Deckungsobergrenze liegt bei ca. 49 \u20ac/Jahr f\u00fcr die gesamte Familie. Das ist deutlich g\u00fcnstiger als Einzeltarife vor der Reise. Ich vermerke Ihre Anfrage f\u00fcr Ihre Beraterin Frau Weber, sie meldet sich in den n\u00e4chsten Tagen mit einem konkreten Angebot.', zeit: '19:46' },
+          ],
+        },
+      ],
     },
     // 8c. Altersvorsorge-Check (hoch) — keine geförderte Vorsorge im Bestand
     { titel: 'Altersvorsorge-Check \u2013 Versorgungsl\u00fccke ca. 1.450 \u20ac/mtl.', typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion'], prioritaet: 'hoch', volumen: 1800, volumenTyp: 'jaehrlich',

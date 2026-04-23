@@ -9,7 +9,7 @@
 // Diese Bloecke werden in LeadsTab.jsx im aufgeklappten Lead zusaetzlich
 // zur klassischen Label/Value-Herleitung gerendert (`lead.herleitungBlocks`).
 
-import { TrendingDown, TrendingUp, ArrowRight, Sparkles, Circle } from 'lucide-react';
+import { TrendingDown, TrendingUp, ArrowRight, Sparkles, Circle, MessageSquare, Bot, User } from 'lucide-react';
 import { formatEur } from '../../utils/formatters';
 
 function formatMonth(iso) {
@@ -219,6 +219,52 @@ export function ZinsSzenarioMatrix({ title, subtitle, volumen, szenarien }) {
   );
 }
 
+// ─── Chatverlauf ─────────────────────────────────────────────────────────
+// Rendert einen Chatbot-Dialog (Kunde ↔ Bot) als Herleitung zum Lead.
+export function Chatverlauf({ title, subtitle, datum, nachrichten = [] }) {
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 p-4">
+      <div className="flex items-baseline justify-between mb-3 gap-3 flex-wrap">
+        <div className="flex items-center gap-2">
+          <MessageSquare size={14} className="text-slate-500" />
+          <div className="text-sm font-semibold text-slate-700">{title || 'Chatverlauf'}</div>
+        </div>
+        {datum && (
+          <div className="text-[11px] font-mono text-slate-500">{datum}</div>
+        )}
+      </div>
+      {subtitle && <div className="text-xs text-slate-500 mb-3">{subtitle}</div>}
+      <div className="space-y-2">
+        {nachrichten.map((n, i) => {
+          const isKunde = n.rolle === 'kunde';
+          return (
+            <div key={i} className={`flex gap-2 ${isKunde ? 'justify-end' : 'justify-start'}`}>
+              {!isKunde && (
+                <div className="w-6 h-6 rounded-full bg-violet-100 border border-violet-200 flex items-center justify-center shrink-0 mt-0.5">
+                  <Bot size={12} className="text-violet-700" />
+                </div>
+              )}
+              <div className={`max-w-[75%] rounded-lg px-3 py-1.5 ${isKunde ? 'bg-blue-50 border border-blue-100' : 'bg-slate-50 border border-slate-200'}`}>
+                <div className="text-xs text-slate-700 leading-snug whitespace-pre-wrap">{n.text}</div>
+                {n.zeit && (
+                  <div className={`text-[10px] font-mono mt-0.5 ${isKunde ? 'text-blue-500 text-right' : 'text-slate-400'}`}>
+                    {n.zeit}
+                  </div>
+                )}
+              </div>
+              {isKunde && (
+                <div className="w-6 h-6 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center shrink-0 mt-0.5">
+                  <User size={12} className="text-blue-700" />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ─── Renderer-Switch ─────────────────────────────────────────────────────
 export default function HerleitungBlock({ block }) {
   if (!block || !block.type) return null;
@@ -231,6 +277,8 @@ export default function HerleitungBlock({ block }) {
       return <SignaleStack {...block} />;
     case 'zinsszenario':
       return <ZinsSzenarioMatrix {...block} />;
+    case 'chatverlauf':
+      return <Chatverlauf {...block} />;
     default:
       return null;
   }

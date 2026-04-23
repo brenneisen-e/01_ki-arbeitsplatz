@@ -10,6 +10,7 @@ import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefc
 import { getLogoUrl } from '../../../utils/logos';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
@@ -622,18 +623,29 @@ function TierArtDropdown({ value, onChange, placeholder, options }) {
   const ref = useRef(null);
   const buttonRef = useRef(null);
 
+  const [menuEl, setMenuEl] = useState(null);
+
   const updateCoords = () => {
     const el = buttonRef.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    setCoords({ top: r.bottom + 4, left: r.left, width: r.width });
+    const estMenuHeight = Math.min(options.length * 28 + 8, 224);
+    const spaceBelow = window.innerHeight - r.bottom;
+    const flipUp = spaceBelow < estMenuHeight + 12 && r.top > estMenuHeight + 12;
+    setCoords({
+      top: flipUp ? r.top - estMenuHeight - 4 : r.bottom + 4,
+      left: r.left,
+      width: r.width,
+    });
   };
 
   useEffect(() => {
     if (!open) return;
     updateCoords();
     const onClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+      const inAnchor = ref.current && ref.current.contains(e.target);
+      const inMenu = menuEl && menuEl.contains(e.target);
+      if (!inAnchor && !inMenu) setOpen(false);
     };
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
     const onScrollOrResize = () => updateCoords();
@@ -662,16 +674,17 @@ function TierArtDropdown({ value, onChange, placeholder, options }) {
         </span>
         <ChevronDown size={12} className="text-amber-700 shrink-0" />
       </button>
-      {open && coords && (
+      {open && coords && createPortal(
         <ul
+          ref={setMenuEl}
           style={{
             position: 'fixed',
             top: coords.top,
             left: coords.left,
             width: coords.width,
-            zIndex: 60,
+            zIndex: 9999,
           }}
-          className="bg-white border border-amber-300 rounded shadow-lg max-h-56 overflow-y-auto py-0.5"
+          className="bg-white border border-amber-300 rounded shadow-lg max-h-56 overflow-y-auto py-0.5 pointer-events-auto"
         >
           {options.map(opt => (
             <li key={opt}>
@@ -684,7 +697,8 @@ function TierArtDropdown({ value, onChange, placeholder, options }) {
               </button>
             </li>
           ))}
-        </ul>
+        </ul>,
+        document.body
       )}
     </div>
   );
@@ -721,10 +735,13 @@ function HaustiereRow({ haustiere, t, kundeId }) {
               <PawPrint size={14} />
               {haustiere.vermutet ? 'Haustier' : t('haustierHinweis')}
             </span>
-            <span className="text-sm text-slate-500 italic">
-              {haustiere.vermutet
-                ? t('haustierAusKonto')
-                : `${haustiere.art}${haustiere.name ? ` "${haustiere.name}"` : ''} — ${t('ausKontoumsaetzenErkannt')}`}
+            {!haustiere.vermutet && (
+              <span className="text-sm text-slate-500 italic">
+                {`${haustiere.art}${haustiere.name ? ` "${haustiere.name}"` : ''}`}
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+              Bestätigt durch Kontoumsätze
             </span>
             <button
               onClick={() => setShowDetail(!showDetail)}
@@ -832,8 +849,8 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
               {fz.praemie > 0 && <span className="font-mono"> ({fz.praemie}€/J.)</span>}
             </span>
             {fz.quelle === 'psd2' && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-50 text-slate-600 border border-slate-200">
-                Open Finance
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+                Open Finance · KFZ
               </span>
             )}
             {fz.fbRating && (
@@ -853,7 +870,7 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
         <div className="flex items-baseline gap-2 text-sm flex-wrap">
           <span className="text-slate-400 shrink-0">{t('mobilitaetsausgaben')}:</span>
           <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-slate-50 text-slate-600 border border-slate-200 font-medium">PSD2</span>
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">Kontoumsätze</span>
         </div>
       )}
     </>

@@ -1,12 +1,93 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Card from '../../../components/ui/Card';
 import LogoImg from '../../../components/ui/LogoImg';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
-import { ChevronDown, ChevronRight, ExternalLink, Award, AlertTriangle } from 'lucide-react';
+import { ChevronDown, ChevronRight, ExternalLink, Award, AlertTriangle, Sparkles } from 'lucide-react';
 import { resolveVersicherungspartner } from '../../../utils/dynamicDates';
+
+// Warnsymbol mit Hover-Popover – zeigt Versicherungslücke + Empfehlung.
+// Das Icon nutzt inline-Styles (Spezifität), damit es auf row-hover
+// (color: inherit !important) weiterhin amber bleibt. Das Popover wird per
+// Portal in document.body gerendert, damit Card-Containment (contain: paint)
+// es nicht clippt.
+function RisikoBadge({ warnung }) {
+  const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState(null);
+  const triggerRef = useRef(null);
+
+  useEffect(() => {
+    if (!open || !triggerRef.current) return;
+    const r = triggerRef.current.getBoundingClientRect();
+    setCoords({ top: r.bottom + 6, left: r.left + r.width / 2 });
+  }, [open]);
+
+  return (
+    <span
+      ref={triggerRef}
+      className="relative inline-flex pointer-events-auto"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <span
+        className="inline-flex items-center justify-center w-5 h-5 rounded-full shrink-0 cursor-help"
+        style={{
+          backgroundColor: '#fef3c7',
+          border: '1px solid #fcd34d',
+          color: '#b45309',
+        }}
+        aria-label={warnung.titel}
+      >
+        <AlertTriangle size={12} strokeWidth={2.5} style={{ color: '#b45309' }} />
+      </span>
+      {open && coords && createPortal(
+        <div
+          style={{
+            position: 'fixed',
+            top: coords.top,
+            left: coords.left,
+            transform: 'translateX(-50%)',
+            zIndex: 9999,
+          }}
+          className="w-80 rounded-xl border border-amber-200 bg-white shadow-xl overflow-hidden pointer-events-auto"
+        >
+          <div className="bg-amber-50 px-4 py-2.5 border-b border-amber-200 flex items-start gap-2">
+            <AlertTriangle size={14} className="text-amber-700 mt-0.5 shrink-0" strokeWidth={2.5} />
+            <div className="text-sm font-semibold text-amber-900 leading-snug">{warnung.titel}</div>
+          </div>
+          <div className="px-4 py-3 space-y-2.5 text-xs leading-relaxed">
+            {warnung.beschreibung && (
+              <p className="text-slate-700">{warnung.beschreibung}</p>
+            )}
+            {warnung.konsequenz && (
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-0.5">
+                  Versicherungslücke
+                </div>
+                <p className="text-slate-700">{warnung.konsequenz}</p>
+              </div>
+            )}
+            {warnung.empfehlung && (
+              <div className="flex items-start gap-1.5 pt-2 border-t border-slate-100">
+                <Sparkles size={12} className="text-violet-600 mt-0.5 shrink-0" />
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-violet-700 mb-0.5">
+                    Empfehlung
+                  </div>
+                  <p className="text-slate-700">{warnung.empfehlung}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>,
+        document.body
+      )}
+    </span>
+  );
+}
 
 function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
   const [expanded, setExpanded] = useState(false);
@@ -26,12 +107,7 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
             {produkt.versicherer && <LogoImg name={produkt.versicherer} size={18} />}
             <span className="font-medium text-slate-700">{produkt.produkt}</span>
             {produkt._risikoWarnung && (
-              <span
-                className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-100 border border-amber-300 text-amber-700 shrink-0"
-                title={`${produkt._risikoWarnung.titel} — ${produkt._risikoWarnung.konsequenz || ''}`}
-              >
-                <AlertTriangle size={12} strokeWidth={2.5} />
-              </span>
+              <RisikoBadge warnung={produkt._risikoWarnung} />
             )}
           </div>
         </td>

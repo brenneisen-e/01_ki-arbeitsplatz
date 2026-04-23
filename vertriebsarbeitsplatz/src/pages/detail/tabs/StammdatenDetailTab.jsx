@@ -776,7 +776,7 @@ function HaustiereRow({ haustiere, t, kundeId }) {
                   />
                   <input
                     type="text"
-                    placeholder="Name"
+                    placeholder="Name des Tieres"
                     value={tierName}
                     onChange={e => setTierName(e.target.value)}
                     className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"

@@ -5,7 +5,7 @@ import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
-import { ChevronDown, ChevronRight, ExternalLink, Award } from 'lucide-react';
+import { ChevronDown, ChevronRight, ExternalLink, Award, AlertTriangle } from 'lucide-react';
 import { resolveVersicherungspartner } from '../../../utils/dynamicDates';
 
 function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
@@ -25,6 +25,14 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
             </span>
             {produkt.versicherer && <LogoImg name={produkt.versicherer} size={18} />}
             <span className="font-medium text-slate-700">{produkt.produkt}</span>
+            {produkt._risikoWarnung && (
+              <span
+                className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-100 border border-amber-300 text-amber-700 shrink-0"
+                title={`${produkt._risikoWarnung.titel} — ${produkt._risikoWarnung.konsequenz || ''}`}
+              >
+                <AlertTriangle size={12} strokeWidth={2.5} />
+              </span>
+            )}
           </div>
         </td>
         <td className="px-4 py-3 text-sm">
@@ -81,6 +89,31 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
                         </span>
                         <span className="text-xs text-slate-500">{produkt.fbKlasse}</span>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {produkt._risikoWarnung && (
+                <div className="col-span-2 md:col-span-4 mt-1">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-start gap-2">
+                    <AlertTriangle size={14} className="text-amber-700 mt-0.5 shrink-0" />
+                    <div className="text-xs text-amber-900 leading-snug">
+                      <div className="font-semibold">{produkt._risikoWarnung.titel}</div>
+                      {produkt._risikoWarnung.beschreibung && (
+                        <div className="mt-0.5">{produkt._risikoWarnung.beschreibung}</div>
+                      )}
+                      {produkt._risikoWarnung.konsequenz && (
+                        <div className="mt-1 font-medium">
+                          <span className="uppercase tracking-wider text-[10px] text-amber-700">Versicherungslücke: </span>
+                          {produkt._risikoWarnung.konsequenz}
+                        </div>
+                      )}
+                      {produkt._risikoWarnung.empfehlung && (
+                        <div className="mt-1">
+                          <span className="uppercase tracking-wider text-[10px] text-amber-700">Empfehlung: </span>
+                          {produkt._risikoWarnung.empfehlung}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -152,10 +185,38 @@ export default function VertraegeTab({ kunde }) {
   const { t, lang } = useTranslation();
   const { modeId, setActiveTab, config } = useMode();
   const institut = config?.institut;
+  // Risiko-Signale aus den Stammdaten den jeweiligen Versicherungs-
+  // produkten zuordnen (z. B. Extremsport-Signal → Unfallversicherung),
+  // damit in der Produktzeile ein Ausrufezeichen + Konsequenz-Hinweis
+  // mit derselben Begruendung wie im Stammdaten-Tab erscheint.
+  const sigs = Array.isArray(kunde.risikoSignale) ? kunde.risikoSignale : [];
+  const matchSparteRegex = (sparte) => {
+    if (sparte === 'unfall') return /unfall|extremsport|boulder|kletter|skydive|fallschirm|risikosport/i;
+    if (sparte === 'bu') return /berufsunf|arbeitsunf|\bbu\b/i;
+    if (sparte === 'hausrat') return /einbruch|hausrat/i;
+    if (sparte === 'kfz') return /kfz|fahrzeug/i;
+    if (sparte === 'haftpflicht') return /haftpflicht/i;
+    if (sparte === 'rlv' || sparte === 'leben') return /risikolebens|leben/i;
+    return null;
+  };
+  const findRisikoWarnung = (produkt) => {
+    const re = matchSparteRegex(produkt.sparte);
+    if (!re) return null;
+    const hit = sigs.find(s => re.test(`${s.titel || ''} ${s.beschreibung || ''}`));
+    if (!hit) return null;
+    return {
+      titel: hit.titel || 'Risiko-Signal erkannt',
+      beschreibung: hit.beschreibung || null,
+      konsequenz: hit.konsequenz || null,
+      empfehlung: hit.empfehlung || null,
+    };
+  };
+
   const produkte = (kunde.eigeneProdukte || []).map(p => ({
     ...p,
     produkt: adaptProduktName(p.produkt, modeId, institut),
     details: adaptProduktName(p.details, modeId, institut),
+    _risikoWarnung: findRisikoWarnung(p),
   }));
 
   const praemieLabel = modeId === 'banking' ? t('jahreskosten') : modeId === 'vermoegensverwaltung' ? t('volumenLabel') : t('gesamtpraemie').replace('/J.', '') + '/J.';

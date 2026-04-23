@@ -237,6 +237,31 @@ export default function LandingPage() {
     }, 600);
   }
 
+  // Claude-Chat-Antwort für freie Fragen. Wenn /api/claude nicht erreichbar
+  // ist (lokale Dev-Umgebung ohne Pages Functions), fallen wir auf das
+  // bisherige Demo-Verhalten (Cockpit-Navigation) zurück.
+  const [claudeReply, setClaudeReply] = useState(null); // { prompt, text, error } | null
+  const [claudeLoading, setClaudeLoading] = useState(false);
+
+  async function askClaude(prompt) {
+    setClaudeLoading(true);
+    setClaudeReply({ prompt, text: '', error: null });
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+      setClaudeReply({ prompt, text: data.text || '(leere Antwort)', error: null });
+    } catch (err) {
+      setClaudeReply({ prompt, text: '', error: String(err.message || err) });
+    } finally {
+      setClaudeLoading(false);
+    }
+  }
+
   function handleSubmit() {
     if (!chatInput.trim()) {
       // Empty input: go straight to overview dashboard
@@ -248,8 +273,8 @@ export default function LandingPage() {
     if (match) {
       executeSuggestion(match);
     } else {
-      // Default: go to overview
-      executeSuggestion({ action: 'overview' });
+      // Freie Frage → an Claude weiterreichen. Kein Navigations-Sprung.
+      askClaude(chatInput.trim());
     }
   }
 
@@ -376,6 +401,61 @@ export default function LandingPage() {
         </div>
       )}
 
+      {/* Claude-Antwort-Overlay. Zeigt die letzte Frage + Antwort in einem
+          zentrierten Panel. Klick auf Hintergrund oder ESC schließt. */}
+      {(claudeLoading || claudeReply) && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in"
+          onClick={() => { if (!claudeLoading) setClaudeReply(null); }}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 py-3 border-b border-slate-200 flex items-center gap-2">
+              <Bot size={16} className="text-violet-600" />
+              <span className="text-sm font-semibold text-slate-800">KI-Assistent</span>
+              <button
+                type="button"
+                onClick={() => setClaudeReply(null)}
+                disabled={claudeLoading}
+                className="ml-auto text-slate-400 hover:text-slate-700 disabled:opacity-40"
+                aria-label="Schließen"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="px-5 py-4 overflow-y-auto space-y-3 text-sm">
+              {claudeReply?.prompt && (
+                <div>
+                  <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-1">Frage</div>
+                  <div className="text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
+                    {claudeReply.prompt}
+                  </div>
+                </div>
+              )}
+              <div>
+                <div className="text-[10px] uppercase tracking-wider text-violet-600 font-semibold mb-1">Antwort</div>
+                {claudeLoading ? (
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <Loader2 size={14} className="animate-spin" />
+                    <span>Claude antwortet…</span>
+                  </div>
+                ) : claudeReply?.error ? (
+                  <div className="text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                    {claudeReply.error}
+                  </div>
+                ) : (
+                  <div className="text-slate-800 whitespace-pre-wrap leading-relaxed">
+                    {claudeReply?.text}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Gesprächsvorbereitungs-Modal — identisch zu dem Modal, das aus
           den Termin-Kacheln in der Übersicht geöffnet wird. */}
       {terminPrep && (
@@ -460,8 +540,24 @@ export default function LandingPage() {
                 <span className="text-slate-700 text-5xl font-bold">{currentInstitut.charAt(0)}</span>
               )}
             </div>
-            <span className="mt-1 text-black text-[13px] font-mono font-medium tracking-[0.12em] uppercase">
-              {currentInstitut}
+            <span
+              className="mt-1 text-black text-[15px] tracking-[0.08em] uppercase"
+              style={{ fontFamily: 'Aptos, "Aptos Display", "Segoe UI", system-ui, sans-serif' }}
+            >
+              {(() => {
+                const name = currentInstitut || '';
+                const lower = name.toLowerCase();
+                const match = lower.match(/^(zukunfts)(.+)$/);
+                if (match) {
+                  return (
+                    <>
+                      <span className="font-light">{name.slice(0, match[1].length).toUpperCase()}</span>
+                      <span className="font-extrabold">{name.slice(match[1].length).toUpperCase()}</span>
+                    </>
+                  );
+                }
+                return <span className="font-light">{name.toUpperCase()}</span>;
+              })()}
             </span>
           </div>
         </div>

@@ -1244,16 +1244,15 @@ export default function UebersichtTab() {
               const isNeu = !!termin.istNeuZugestimmt;
               const handleClick = () => {
                 // Alle Termine öffnen die KI-Gesprächsvorbereitung als Popup.
-                // Falls der Kunde nicht im aktuell geladenen Mode-Bestand zu
-                // finden ist (z. B. VV-Pipeline-Stubs, KDB-Stubs), springen
-                // wir direkt auf die Detailseite — dann kümmert sich die
-                // Suspense-Logik um das Laden.
-                const k = modeKunden.find(k => k.id === termin.kundeId);
-                if (k) {
-                  setTerminPrep({ kunde: k, termin });
-                } else {
-                  navigateTo('detail', { kundeId: termin.kundeId });
-                }
+                // Wenn der Kunde nicht im aktuell geladenen Mode-Bestand ist
+                // (z. B. VV-Pipeline-Stubs, KDB-Stubs wie Julia Becker,
+                // Thomas Krüger, Christian Binder, Sabine Lorenz), öffnen wir
+                // das Modal trotzdem mit einem Minimal-Datensatz aus dem
+                // Termin selbst — statt fälschlich auf einen anderen Kunden
+                // (z. B. Klaus Fischer) zu springen.
+                const k = modeKunden.find(k => k.id === termin.kundeId)
+                  || { id: termin.kundeId, name: termin.kunde, foto: termin.foto };
+                setTerminPrep({ kunde: k, termin });
               };
               return (
                 <div

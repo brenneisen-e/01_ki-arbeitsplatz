@@ -7,23 +7,29 @@ import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { ChevronDown, ChevronRight, ExternalLink, Award, AlertTriangle, Sparkles } from 'lucide-react';
-import { resolveVersicherungspartner } from '../../../utils/dynamicDates';
+import { resolveVersicherungspartner, interpolateDynamicDates } from '../../../utils/dynamicDates';
 
 // Warnsymbol mit Hover-Popover – zeigt Versicherungslücke + Empfehlung.
 // Das Icon nutzt inline-Styles (Spezifität), damit es auf row-hover
 // (color: inherit !important) weiterhin amber bleibt. Das Popover wird per
 // Portal in document.body gerendert, damit Card-Containment (contain: paint)
 // es nicht clippt.
-function RisikoBadge({ warnung }) {
+function RisikoBadge({ warnung, institut }) {
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState(null);
   const triggerRef = useRef(null);
+  const ctx = { institut };
 
   useEffect(() => {
     if (!open || !triggerRef.current) return;
     const r = triggerRef.current.getBoundingClientRect();
     setCoords({ top: r.bottom + 6, left: r.left + r.width / 2 });
   }, [open]);
+
+  const titel = interpolateDynamicDates(warnung.titel || '', ctx);
+  const beschreibung = interpolateDynamicDates(warnung.beschreibung || '', ctx);
+  const konsequenz = interpolateDynamicDates(warnung.konsequenz || '', ctx);
+  const empfehlung = interpolateDynamicDates(warnung.empfehlung || '', ctx);
 
   return (
     <span
@@ -37,11 +43,11 @@ function RisikoBadge({ warnung }) {
         style={{
           backgroundColor: '#fef3c7',
           border: '1px solid #fcd34d',
-          color: '#b45309',
+          color: '#1e293b',
         }}
-        aria-label={warnung.titel}
+        aria-label={titel}
       >
-        <AlertTriangle size={12} strokeWidth={2.5} style={{ color: '#b45309' }} />
+        <AlertTriangle size={12} strokeWidth={2.5} style={{ color: '#1e293b' }} />
       </span>
       {open && coords && createPortal(
         <div
@@ -56,28 +62,28 @@ function RisikoBadge({ warnung }) {
         >
           <div className="bg-amber-50 px-4 py-2.5 border-b border-amber-200 flex items-start gap-2">
             <AlertTriangle size={14} className="text-amber-700 mt-0.5 shrink-0" strokeWidth={2.5} />
-            <div className="text-sm font-semibold text-amber-900 leading-snug">{warnung.titel}</div>
+            <div className="text-sm font-semibold text-amber-900 leading-snug">{titel}</div>
           </div>
           <div className="px-4 py-3 space-y-2.5 text-xs leading-relaxed">
-            {warnung.beschreibung && (
-              <p className="text-slate-700">{warnung.beschreibung}</p>
+            {beschreibung && (
+              <p className="text-slate-700">{beschreibung}</p>
             )}
-            {warnung.konsequenz && (
+            {konsequenz && (
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-0.5">
                   Versicherungslücke
                 </div>
-                <p className="text-slate-700">{warnung.konsequenz}</p>
+                <p className="text-slate-700">{konsequenz}</p>
               </div>
             )}
-            {warnung.empfehlung && (
+            {empfehlung && (
               <div className="flex items-start gap-1.5 pt-2 border-t border-slate-100">
                 <Sparkles size={12} className="text-violet-600 mt-0.5 shrink-0" />
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-wider text-violet-700 mb-0.5">
                     Empfehlung
                   </div>
-                  <p className="text-slate-700">{warnung.empfehlung}</p>
+                  <p className="text-slate-700">{empfehlung}</p>
                 </div>
               </div>
             )}
@@ -89,7 +95,7 @@ function RisikoBadge({ warnung }) {
   );
 }
 
-function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
+function ProduktRow({ produkt, modeId, institut, onNavigateKontoumsaetze, t }) {
   const [expanded, setExpanded] = useState(false);
   const isGiro = produkt.typ === 'girokonto';
 
@@ -107,7 +113,7 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
             {produkt.versicherer && <LogoImg name={produkt.versicherer} size={18} />}
             <span className="font-medium text-slate-700">{produkt.produkt}</span>
             {produkt._risikoWarnung && (
-              <RisikoBadge warnung={produkt._risikoWarnung} />
+              <RisikoBadge warnung={produkt._risikoWarnung} institut={institut} />
             )}
           </div>
         </td>
@@ -174,20 +180,20 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
                   <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-start gap-2">
                     <AlertTriangle size={14} className="text-amber-700 mt-0.5 shrink-0" />
                     <div className="text-xs text-amber-900 leading-snug">
-                      <div className="font-semibold">{produkt._risikoWarnung.titel}</div>
+                      <div className="font-semibold">{interpolateDynamicDates(produkt._risikoWarnung.titel, { institut })}</div>
                       {produkt._risikoWarnung.beschreibung && (
-                        <div className="mt-0.5">{produkt._risikoWarnung.beschreibung}</div>
+                        <div className="mt-0.5">{interpolateDynamicDates(produkt._risikoWarnung.beschreibung, { institut })}</div>
                       )}
                       {produkt._risikoWarnung.konsequenz && (
                         <div className="mt-1 font-medium">
                           <span className="uppercase tracking-wider text-[10px] text-amber-700">Versicherungslücke: </span>
-                          {produkt._risikoWarnung.konsequenz}
+                          {interpolateDynamicDates(produkt._risikoWarnung.konsequenz, { institut })}
                         </div>
                       )}
                       {produkt._risikoWarnung.empfehlung && (
                         <div className="mt-1">
                           <span className="uppercase tracking-wider text-[10px] text-amber-700">Empfehlung: </span>
-                          {produkt._risikoWarnung.empfehlung}
+                          {interpolateDynamicDates(produkt._risikoWarnung.empfehlung, { institut })}
                         </div>
                       )}
                     </div>
@@ -327,6 +333,7 @@ export default function VertraegeTab({ kunde }) {
                     key={p.id || i}
                     produkt={p}
                     modeId={modeId}
+                    institut={institut}
                     onNavigateKontoumsaetze={p.typ === 'girokonto' ? () => setActiveTab('finanzprofil') : null}
                     t={t}
                   />

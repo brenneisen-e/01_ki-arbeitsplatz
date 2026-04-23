@@ -231,7 +231,7 @@ const translationsDetail = {
   'erkannteTransaktionen': { de: 'Erkannte Transaktionen', en: 'Detected Transactions' },
   'quellePsd2': { de: 'Quelle: PSD2/Open Finance Transaktionsanalyse', en: 'Source: PSD2/Open Finance Transaction Analysis' },
   'haustierBestaetigen': { de: 'Haustier bestätigen:', en: 'Confirm pet:' },
-  'artPlaceholder': { de: 'Art (z.B. Katze, Hund)', en: 'Type (e.g. Cat, Dog)' },
+  'artPlaceholder': { de: 'Tierart wählen', en: 'Select pet type' },
   'optimierungspotenzial': { de: 'Optimierungspotenzial erkannt — Tarifaktualisierung empfohlen', en: 'Optimization potential detected — rate update recommended' },
 
   // ─── Fahrzeuge / Mobilität (PSD2) ───

@@ -132,7 +132,7 @@ export const B1 = {
     },
     // 2. Abgebrochener Online-Kredit (hoch)
     { titel: 'Ratenkredit 15k \u2013 Online-Abbruch', typ: 'anpassung', quellen: ['direktvertrieb'], prioritaet: 'hoch', volumen: 15000, volumenTyp: 'einmalig',
-      beschreibung: 'Kunde hat Online-Kreditantrag (15.000\u20ac, Badsanierung) bei VideoIdent abgebrochen. Warmes Lead!',
+      beschreibung: 'Kunde hat Online-Kreditantrag (15.000\u20ac, Badsanierung) bei VideoIdent abgebrochen.',
       kiDescription: 'KI-Analyse: Klaus Fischer hat am {{datumVorEinerWoche}} im Online-Banking einen Ratenkredit \u00fcber 15.000 \u20ac (60 Monate, 4,9 % eff., Verwendung: Badsanierung) konfiguriert und bis Schritt 4 von 6 ausgef\u00fcllt \u2013 dann bei der VideoIdent-Legitimation um 19:30 Uhr abgebrochen. Alle pers\u00f6nlichen Daten, Einkommensangaben und Kontoverbindung liegen bereits vor. Der Abbruch am Abend deutet auf Zeitmangel oder technische Probleme hin \u2013 nicht auf Desinteresse. Empfehlung: Innerhalb von 48 Stunden pers\u00f6nlich ansprechen, PostIdent als Alternative anbieten und Abschluss in der Filiale erm\u00f6glichen. Abschlusswahrscheinlichkeit: sehr hoch.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Privatkredit Komfort', status: 'identifiziert',
       herleitung: [
@@ -309,6 +309,28 @@ export const B1 = {
           { merkmal: 'Risikoprofil', aktuell: 'Hoch (Klumpenrisiko)', angebot: 'Moderat – strukturierte Diversifikation', highlight: true },
         ],
       },
+      herleitungBlocks: [
+        {
+          type: 'depotpositionen',
+          title: 'Trade-Republic-Depot – aktuelle Positionen',
+          subtitle: 'Alle Positionen US-Tech, keine Diversifikation über Regionen / Sektoren / Assetklassen.',
+          positionen: [
+            { name: 'Apple Inc. (AAPL)', seit: 'Juni 2023', volumen: 14500, einkaufswert: 11620, gewinn: 2880, performanceYtd: '+24,8%' },
+            { name: 'Amazon.com Inc. (AMZN)', seit: 'März 2024', volumen: 9200, einkaufswert: 6660, gewinn: 2540, performanceYtd: '+38,2%' },
+            { name: 'OpenAI (Pre-IPO / Secondary)', seit: 'November 2025', volumen: 4300, einkaufswert: 3820, gewinn: 480, performanceYtd: '+12,5%' },
+          ],
+        },
+        {
+          type: 'signale',
+          title: 'Diversifikations-Signale',
+          signale: [
+            { label: 'Nur 3 Einzeltitel im Depot', quelle: 'Open Finance', staerke: 92, detail: 'Apple, Amazon, OpenAI – gesamt 28.000 €' },
+            { label: '100 % US-Tech-Konzentration', quelle: 'Depotanalyse', staerke: 88, detail: 'Ein Sektor, eine Region, eine Assetklasse' },
+            { label: 'Illiquide Pre-IPO-Position', quelle: 'Bestand', staerke: 70, detail: 'OpenAI Secondary 4.300 € – schwer bewertbar, nicht börsengehandelt' },
+            { label: 'Beta >1,1 ggü. S&P 500', quelle: 'Marktdaten', staerke: 60, detail: 'Apple & Amazon korrelieren stark in Marktkorrekturen' },
+          ],
+        },
+      ],
     },
     // 7. Liquidit\u00e4tsaufbau Girokonto (mittel)
     { titel: 'Girokonto-\u00dcberschuss 18k \u2013 Liquidit\u00e4t strukturieren', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 18000, volumenTyp: 'einmalig',
@@ -339,11 +361,22 @@ export const B1 = {
         { label: 'Haftpflicht-Status', value: 'Keine Tierhalterhaftpflicht vorhanden' },
         { label: 'Empfehlung', value: 'Tierart kurz erfragen, dann R+V Tierhalterhaftpflicht ab 65 \u20ac/Jahr anbieten' },
       ],
+      herleitungBlocks: [
+        {
+          type: 'transaktionen',
+          title: 'Erkannte Tier-Ausgaben aus Kontoums\u00e4tzen',
+          subtitle: 'KI-Erkennung \u2013 regelm\u00e4\u00dfige Zahlungen an tierbezogene H\u00e4ndler.',
+          transaktionen: [
+            { empfaenger: 'Fressnapf Gie\u00dfen', haeufigkeit: 'monatlich', betrag: 75 },
+            { empfaenger: 'Tierarztpraxis Dr. Sch\u00e4fer', haeufigkeit: 'quartalsweise', betrag: 110 },
+          ],
+        },
+      ],
     },
     // 8b. Auslandsreisekrankenversicherung – Anfrage aus Chatbot (hoch)
     { titel: 'Auslandsreisekrankenversicherung \u2013 Familie Thailand', typ: 'cross_sell', quellen: ['kommunikation'], prioritaet: 'hoch', volumen: 49, volumenTyp: 'jaehrlich',
       beschreibung: 'Kunde hat im Chatbot konkret nach Auslandskrankenschutz f\u00fcr Familienreise nach Thailand gefragt.',
-      kiDescription: 'KI-Analyse: Klaus Fischer hat am 18.03.2026 um 19:42 Uhr im Chatbot aktiv nach einer Auslandsreisekrankenversicherung gefragt \u2013 Anlass: geplante Sommerreise mit der Familie (4 Personen) nach Thailand. Im Bestand ist KEINE Auslandsreisekrankenversicherung vorhanden, auch die {{institutKurz}}-Visa Gold deckt nur eingeschr\u00e4nkten Auslandsschutz ab. Bei einer Fernreise mit Kindern (Lukas 4 J., Marie 1 J.) ist das Risiko hoch und die fehlende Deckung ein konkretes Problem. Empfehlung: {{versicherungspartner}} Auslandsreisekrankenversicherung Familie (ca. 49 \u20ac/Jahr, weltweit, Rücktransport, ohne Selbstbeteiligung). Sehr warmes Lead \u2013 Kunde wartet auf R\u00fcckmeldung der Beraterin.',
+      kiDescription: 'KI-Analyse: Klaus Fischer hat am 18.03.2026 um 19:42 Uhr im Chatbot aktiv nach einer Auslandsreisekrankenversicherung gefragt \u2013 Anlass: geplante Sommerreise mit der Familie (4 Personen) nach Thailand. Im Bestand ist KEINE Auslandsreisekrankenversicherung vorhanden, auch die {{institutKurz}}-Visa Gold deckt nur eingeschr\u00e4nkten Auslandsschutz ab. Bei einer Fernreise mit Kindern (Lukas 4 J., Marie 1 J.) ist das Risiko hoch und die fehlende Deckung ein konkretes Problem. Empfehlung: {{versicherungspartner}} Auslandsreisekrankenversicherung Familie (ca. 49 \u20ac/Jahr, weltweit, Rücktransport, ohne Selbstbeteiligung). Kunde wartet auf R\u00fcckmeldung der Beraterin.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: '{{versicherungspartner}} Auslandsreisekrankenversicherung Familie', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle 1', value: 'Kommunikation \u2013 Chatbot-Anfrage am 18.03.2026' },
@@ -426,6 +459,18 @@ export const B1 = {
         { label: 'Datenquelle 2', value: 'Bestand \u2013 R+V Unfallversicherung Basis-Tarif' },
         { label: 'Deckungsl\u00fccke', value: 'Extremsport-Risiken ausgeschlossen \u2013 keine Deckung im Schadenfall' },
         { label: 'Empfehlung', value: 'Zusatzbaustein Sport & Freizeit (ca. 180 \u20ac/J.) oder Wechsel in R+V Unfall Premium' },
+      ],
+      herleitungBlocks: [
+        {
+          type: 'transaktionen',
+          title: 'Erkannte Extremsport-Transaktionen',
+          subtitle: 'KI-Erkennung aus PSD2-Kontoums\u00e4tzen \u2013 regelm\u00e4\u00dfige + einmalige Buchungen.',
+          transaktionen: [
+            { empfaenger: 'DAV-Boulderhalle Gie\u00dfen', haeufigkeit: 'monatlich', betrag: 65 },
+            { empfaenger: 'Skydive Center Marburg', haeufigkeit: 'einmalig 09/2025', betrag: 320 },
+            { empfaenger: 'Globetrotter Kletterschuhe', haeufigkeit: 'einmalig 06/2025', betrag: 149 },
+          ],
+        },
       ],
     },
   ],

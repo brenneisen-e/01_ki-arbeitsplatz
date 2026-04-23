@@ -741,7 +741,7 @@ function HaustiereRow({ haustiere, t, kundeId }) {
               </span>
             )}
             <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
-              Bestätigt durch Kontoumsätze
+              Aus Kontoumsätzen erkannt
             </span>
             <button
               onClick={() => setShowDetail(!showDetail)}

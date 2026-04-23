@@ -590,6 +590,34 @@ export default function OpenFinanceTab({ kunde }) {
               </tbody>
             </table>
           </div>
+
+          {/* KI-Hinweis zum Absichern-Bestand — fällt nur, wenn Fremd-
+              Policen bei mehreren Versicherern verteilt sind (klarer
+              Konsolidierungs-Lead) oder wenn schwache Bewertungen im
+              Bestand sind. */}
+          {(() => {
+            const inst = new Set((bf.versicherungenFremd || []).map(v => v.institut).filter(Boolean));
+            const schwache = (bf.versicherungenFremd || []).filter(v => {
+              const s = v.consent === false ? null : scoreVersicherung(kunde.id, v);
+              return typeof s === 'number' && s < 75;
+            });
+            const summePraemie = (bf.versicherungenFremd || []).reduce((s, v) => s + (v.praemie || 0), 0);
+            if (inst.size < 2 && schwache.length === 0) return null;
+            const hinweis = {
+              titel: inst.size >= 2
+                ? `Fragmentierter Versicherungsbestand — ${inst.size} Anbieter, ${bf.versicherungenFremd.length} Policen`
+                : 'Schwach bewertete Policen im Bestand',
+              text: inst.size >= 2
+                ? `Die Wettbewerber-Policen liegen auf ${inst.size} verschiedenen Anbietern (${Array.from(inst).join(', ')}) verteilt — aktuelle Jahresprämie zusammen ca. ${formatEur(summePraemie)}. Mehrere Ansprechpartner, doppelte Verwaltung und im Schadenfall abgestimmtes Vorgehen erschwert. Zusätzlich liegt die Bewertung einzelner Tarife unter dem Marktdurchschnitt.`
+                : `Mindestens eine Police im Bestand erreicht eine Bewertung < 75. Betroffen: ${schwache.map(v => `${v.produkt} (${v.institut})`).join(', ')}. Preis-Leistungs-Optimierung möglich.`,
+              empfehlung: 'Bestandskonsolidierung bei einem Hausversicherer anbieten (Bündel-Rabatt, ein Ansprechpartner). Im Lead-System als Potenzial „Versicherungscheck — Bestand konsolidieren" hinterlegt.',
+            };
+            return (
+              <div className="mt-3">
+                <KiDepotHinweis hinweis={hinweis} depot={`${bf.versicherungenFremd.length} Fremd-Policen`} />
+              </div>
+            );
+          })()}
         </Card>
         </div>
       )}

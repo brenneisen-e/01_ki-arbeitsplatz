@@ -6,46 +6,101 @@ import bundeslaenderGeo from '../../pages/cockpit/bundeslaender.geo.json';
 import { geocodeKundeLeaflet } from './KundenKarteLeaflet';
 import { getKundeFoto } from '../../utils/kundenFotos';
 
-// Volle Breite: Leaflet-Karte mit zwei Ebenen.
+// Zwei Ebenen:
+//   Ebene 1 ("deutschland"): Reine SVG-Choropleth (1:1 VSTCockpit-Stil).
+//     Nur Deutschland, keine Labels, keine Nachbarlaender, keine Strassen.
+//     Bundeslaender eingefaerbt nach Kundenzahl. Klick waehlt Bundesland.
+//   Ebene 2 ("bundesland"): Leaflet + CARTO-Light-Tiles mit Straessen,
+//     Staedten, Labels. Kunden als aggregierte Stadt-Kreise + einzelne Pins.
 //
-//   Ebene 1 ("deutschland"):  die 16 Bundesländer als Choropleth-Overlay
-//                             auf CARTO-Light, keine einzelnen Pins.
-//   Ebene 2 ("bundesland"):   Leaflet zoomt auf das gewählte Bundesland
-//                             und zeigt gleichzeitig alle Städte dieses
-//                             Landes als Kreise (Radius proportional zur
-//                             Kundenzahl). CARTO-Light liefert Straßen-
-//                             und Stadt-Labels.
-// Rechts neben der Karte ist eine Kundenliste mit Foto — Hover auf einem
-// Marker markiert den Listeneintrag und umgekehrt.
+// Rechts immer eine Kunden-Sidebar mit Foto, die mit Map via Hover verlinkt.
 
-// Projektionshelfer: Mittelpunkt eines Polygons (lon/lat). Nimmt die
-// aussere Ring-Durchschnittsmitte, reicht fuer Label- und Center-Zwecke.
-function featureCenter(feature) {
-  let sumLat = 0, sumLng = 0, n = 0;
+/* ────── SVG helpers (Mercator-Projektion auf Viewport) ────── */
+const DEG2RAD = Math.PI / 180;
+function mercator(lon, lat) {
+  return [lon * DEG2RAD, Math.log(Math.tan(Math.PI / 4 + (lat * DEG2RAD) / 2))];
+}
+function buildProjection(features, width, height, padding = 12) {
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
   const visit = (coords) => {
     if (typeof coords[0] === 'number') {
-      sumLng += coords[0];
-      sumLat += coords[1];
-      n++;
+      const [px, py] = mercator(coords[0], coords[1]);
+      if (px < minX) minX = px; if (px > maxX) maxX = px;
+      if (py < minY) minY = py; if (py > maxY) maxY = py;
     } else {
       coords.forEach(visit);
     }
   };
-  visit(feature.geometry.coordinates);
-  return n > 0 ? [sumLat / n, sumLng / n] : [51.1, 10.4];
+  features.forEach((f) => visit(f.geometry.coordinates));
+  const geoW = maxX - minX;
+  const geoH = maxY - minY;
+  const usable = { w: width - padding * 2, h: height - padding * 2 };
+  const scale = Math.min(usable.w / geoW, usable.h / geoH);
+  const offX = padding + (usable.w - geoW * scale) / 2;
+  const offY = padding + (usable.h - geoH * scale) / 2;
+  return (lon, lat) => {
+    const [px, py] = mercator(lon, lat);
+    return [(px - minX) * scale + offX, (maxY - py) * scale + offY];
+  };
+}
+function ringToPath(ring, project) {
+  return ring
+    .map((pt, i) => {
+      const [x, y] = project(pt[0], pt[1]);
+      return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join('') + 'Z';
+}
+function featureToPath(feature, project) {
+  const { type, coordinates } = feature.geometry;
+  const parts = [];
+  if (type === 'Polygon') {
+    coordinates.forEach((ring) => parts.push(ringToPath(ring, project)));
+  } else if (type === 'MultiPolygon') {
+    coordinates.forEach((polygon) => polygon.forEach((ring) => parts.push(ringToPath(ring, project))));
+  }
+  return parts.join(' ');
 }
 
-// Farbe fuer die Choropleth je nach relativer Kundenzahl im Bundesland.
+// Schwerpunkt (visuelles Zentrum) eines Features in SVG-Koordinaten.
+// Fuer Polygone nehmen wir die Mitte der Bounding-Box des groessten Rings,
+// fuer MultiPolygons die Mitte der grossen Polygon-Komponente. Das legt
+// das Zahlen-Bubble stabil in die Flaeche der Landflaeche.
+function featureCenterSvg(feature, project) {
+  const ringsToBBox = (rings) => {
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    rings.forEach((pt) => {
+      const [x, y] = project(pt[0], pt[1]);
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    });
+    return { minX, maxX, minY, maxY, area: (maxX - minX) * (maxY - minY) };
+  };
+  const { type, coordinates } = feature.geometry;
+  let best = null;
+  if (type === 'Polygon') {
+    const outer = coordinates[0];
+    best = ringsToBBox(outer);
+  } else if (type === 'MultiPolygon') {
+    for (const poly of coordinates) {
+      const bbox = ringsToBBox(poly[0]);
+      if (!best || bbox.area > best.area) best = bbox;
+    }
+  }
+  if (!best) return [0, 0];
+  return [(best.minX + best.maxX) / 2, (best.minY + best.maxY) / 2];
+}
+
+// Blau-Skala passend zu den KPI-Charts (Tailwind blue-100 … blue-700).
 function fillColorForCount(count, maxCount) {
   if (!count) return '#e2e8f0';
   const r = Math.max(0, Math.min(1, count / Math.max(1, maxCount)));
-  // Slate → Indigo Gradient
-  if (r >= 0.85) return '#4338ca';
-  if (r >= 0.65) return '#6366f1';
-  if (r >= 0.45) return '#818cf8';
-  if (r >= 0.25) return '#a5b4fc';
-  if (r >= 0.1)  return '#c7d2fe';
-  return '#e0e7ff';
+  if (r >= 0.85) return '#1e40af'; // blue-800
+  if (r >= 0.65) return '#2563eb'; // blue-600
+  if (r >= 0.45) return '#3b82f6'; // blue-500
+  if (r >= 0.25) return '#60a5fa'; // blue-400
+  if (r >= 0.1)  return '#93c5fd'; // blue-300
+  return '#dbeafe';                // blue-100
 }
 
 function groupByCity(kunden) {
@@ -60,26 +115,136 @@ function groupByCity(kunden) {
   return Array.from(map.values());
 }
 
+/* ────── Level 1: SVG-Choropleth (VSTCockpit-Stil) ────── */
+function DeutschlandSvgChoropleth({
+  bundeslandCounts,
+  maxCount,
+  hoveredBundesland,
+  onHover,
+  onSelect,
+}) {
+  const SVG_W = 900;
+  const SVG_H = 900;
+  const { paths, centers } = useMemo(() => {
+    const proj = buildProjection(bundeslaenderGeo.features, SVG_W, SVG_H, 20);
+    const ps = bundeslaenderGeo.features.map((f) => ({
+      name: f.properties.name,
+      d: featureToPath(f, proj),
+    }));
+    const cs = bundeslaenderGeo.features.map((f) => ({
+      name: f.properties.name,
+      c: featureCenterSvg(f, proj),
+    }));
+    return { paths: ps, centers: cs };
+  }, []);
+
+  // Handlupe: Radius der Zahlen-Bubble proportional zum Maximum.
+  const bubbleRadius = (count) => {
+    if (!count) return 0;
+    const r = Math.max(0, Math.min(1, count / Math.max(1, maxCount)));
+    return 20 + r * 22; // 20 … 42 px
+  };
+
+  return (
+    <svg
+      viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+      preserveAspectRatio="xMidYMid meet"
+      className="w-full h-full"
+    >
+      <defs>
+        <filter id="kk-bubble-shadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#1e293b" floodOpacity="0.28" />
+        </filter>
+      </defs>
+
+      {paths.map(({ name, d }) => {
+        const cnt = bundeslandCounts[name] || 0;
+        const isHovered = hoveredBundesland === name;
+        return (
+          <path
+            key={name}
+            d={d}
+            fill={fillColorForCount(cnt, maxCount)}
+            stroke={isHovered ? '#1e293b' : '#ffffff'}
+            strokeWidth={isHovered ? 2.5 : 1.5}
+            className="cursor-pointer transition-all duration-150"
+            style={{ opacity: isHovered ? 1 : 0.92 }}
+            onMouseEnter={() => onHover(name)}
+            onMouseLeave={() => onHover(null)}
+            onClick={() => onSelect(name)}
+          >
+            <title>{`${name} — ${cnt} Kunde${cnt === 1 ? '' : 'n'}`}</title>
+          </path>
+        );
+      })}
+
+      {/* Moderne Zahlen-Bubbles je Bundesland */}
+      {centers.map(({ name, c }) => {
+        const cnt = bundeslandCounts[name] || 0;
+        if (!cnt) return null;
+        const [cx, cy] = c;
+        const r = bubbleRadius(cnt);
+        const isHovered = hoveredBundesland === name;
+        return (
+          <g
+            key={`bubble-${name}`}
+            className="cursor-pointer"
+            onMouseEnter={() => onHover(name)}
+            onMouseLeave={() => onHover(null)}
+            onClick={() => onSelect(name)}
+            style={{ pointerEvents: 'auto' }}
+          >
+            {/* Weisser Ring als subtile Trennung zur Flaeche */}
+            <circle cx={cx} cy={cy} r={r + 2} fill="#ffffff" opacity={0.55} />
+            <circle
+              cx={cx}
+              cy={cy}
+              r={r}
+              fill="#1e3a8a"
+              stroke={isHovered ? '#3b82f6' : '#1e40af'}
+              strokeWidth={isHovered ? 3 : 1.5}
+              filter="url(#kk-bubble-shadow)"
+              style={{ transition: 'all 150ms' }}
+            />
+            <text
+              x={cx}
+              y={cy}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill="#ffffff"
+              fontFamily="DM Sans, sans-serif"
+              fontWeight="800"
+              fontSize={cnt >= 100 ? r * 0.62 : r * 0.78}
+              style={{ userSelect: 'none', pointerEvents: 'none' }}
+            >
+              {cnt}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/* ────── Hauptkomponente ────── */
 export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, title = 'Kundenkarte Deutschland' }) {
   const [selectedBundesland, setSelectedBundesland] = useState(null);
+  const [hoveredBundesland, setHoveredBundesland] = useState(null);
   const [hoveredKundeId, setHoveredKundeId] = useState(null);
   const [hoveredCity, setHoveredCity] = useState(null);
   const [listSearch, setListSearch] = useState('');
 
-  const mapContainerRef = useRef(null);
+  const leafletContainerRef = useRef(null);
   const mapRef = useRef(null);
-  const geoLayerRef = useRef(null);
   const pinsLayerRef = useRef(null);
-  const cityMarkersRef = useRef(new Map()); // city → Leaflet circle marker
-  const kundenMarkersRef = useRef(new Map()); // kundeId → marker
+  const cityMarkersRef = useRef(new Map());
+  const kundenMarkersRef = useRef(new Map());
 
-  // Geocode all customers (scatter → Deutschland-weit verteilt).
   const geocoded = useMemo(
     () => kunden.map((k, i) => geocodeKundeLeaflet(k, i, { scatter: true })).filter(Boolean),
     [kunden]
   );
 
-  // Bundesland counts
   const bundeslandCounts = useMemo(() => {
     const c = {};
     for (const k of geocoded) c[k.bundesland] = (c[k.bundesland] || 0) + 1;
@@ -87,7 +252,6 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
   }, [geocoded]);
   const maxCount = useMemo(() => Math.max(0, ...Object.values(bundeslandCounts)), [bundeslandCounts]);
 
-  // Kunden im aktuell sichtbaren Scope (fuer die Sidebar)
   const visibleKunden = useMemo(() => {
     if (selectedBundesland) return geocoded.filter(k => k.bundesland === selectedBundesland);
     return geocoded;
@@ -102,12 +266,25 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
     );
   }, [visibleKunden, listSearch]);
 
-  // Leaflet-Map initialisieren (einmal).
+  // Leaflet-Map nur auf Bundesland-Ebene initialisieren/entfernen.
   useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return;
-    const map = L.map(mapContainerRef.current, {
+    if (!selectedBundesland) {
+      // Karte abbauen, falls eine existiert.
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+        pinsLayerRef.current = null;
+        cityMarkersRef.current.clear();
+        kundenMarkersRef.current.clear();
+      }
+      return;
+    }
+    if (!leafletContainerRef.current) return;
+    if (mapRef.current) return; // schon initialisiert
+
+    const map = L.map(leafletContainerRef.current, {
       center: [51.2, 10.4],
-      zoom: 6,
+      zoom: 7,
       zoomControl: true,
       attributionControl: true,
       scrollWheelZoom: true,
@@ -118,61 +295,30 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
       attribution: '© OpenStreetMap · © CARTO',
     }).addTo(map);
     mapRef.current = map;
-    // Initial: Deutschland-Bounds
-    map.setView([51.2, 10.4], 6);
-  }, []);
 
-  // Choropleth-Layer anlegen + bei Klick Bundesland selektieren.
+    // Bounds der Ziel-Bundesland-Feature berechnen und hinfliegen.
+    const feature = bundeslaenderGeo.features.find(f => f.properties.name === selectedBundesland);
+    if (feature) {
+      const layer = L.geoJSON(feature);
+      const bounds = layer.getBounds();
+      map.fitBounds(bounds, { padding: [30, 30] });
+    }
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, [selectedBundesland]);
+
+  // City-Aggregat-Marker + einzelne Kunden-Pins im aktuellen Bundesland.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map) return;
-    if (geoLayerRef.current) { geoLayerRef.current.remove(); geoLayerRef.current = null; }
-
-    const layer = L.geoJSON(bundeslaenderGeo, {
-      style: (feature) => {
-        const name = feature.properties.name;
-        const isSelected = selectedBundesland === name;
-        const fill = fillColorForCount(bundeslandCounts[name] || 0, maxCount);
-        return {
-          color: isSelected ? '#1e293b' : '#475569',
-          weight: isSelected ? 2 : 1,
-          fillColor: fill,
-          fillOpacity: selectedBundesland ? (isSelected ? 0.28 : 0.08) : 0.68,
-        };
-      },
-      onEachFeature: (feature, lyr) => {
-        const name = feature.properties.name;
-        const cnt = bundeslandCounts[name] || 0;
-        lyr.bindTooltip(
-          `<div style="font-family:'DM Sans',sans-serif;"><strong>${name}</strong><br/>${cnt} Kunden</div>`,
-          { direction: 'center', className: 'kunden-land-tooltip', sticky: true }
-        );
-        lyr.on('mouseover', (e) => {
-          if (selectedBundesland) return;
-          e.target.setStyle({ weight: 2, color: '#1e293b', fillOpacity: 0.82 });
-        });
-        lyr.on('mouseout', (e) => {
-          if (selectedBundesland) return;
-          layer.resetStyle(e.target);
-        });
-        lyr.on('click', () => {
-          setSelectedBundesland(name);
-          map.flyToBounds(lyr.getBounds(), { padding: [30, 30], duration: 0.8 });
-        });
-      },
-    }).addTo(map);
-    geoLayerRef.current = layer;
-  }, [bundeslandCounts, maxCount, selectedBundesland]);
-
-  // City-Aggregat-Marker (nur auf Bundesland-Ebene).
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
+    if (!map || !selectedBundesland) return;
     if (pinsLayerRef.current) { pinsLayerRef.current.remove(); pinsLayerRef.current = null; }
     cityMarkersRef.current.clear();
     kundenMarkersRef.current.clear();
-
-    if (!selectedBundesland) return;
 
     const layerGroup = L.layerGroup();
     const cityGroups = groupByCity(geocoded.filter(k => k.bundesland === selectedBundesland));
@@ -181,9 +327,9 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
       const radius = 8 + Math.min(18, Math.sqrt(g.kunden.length) * 5);
       const cityMarker = L.circleMarker([g.lat, g.lng], {
         radius,
-        color: '#4338ca',
+        color: '#1e40af',
         weight: 2,
-        fillColor: '#6366f1',
+        fillColor: '#3b82f6',
         fillOpacity: 0.55,
       });
       cityMarker.bindTooltip(
@@ -192,13 +338,10 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
       );
       cityMarker.on('mouseover', () => setHoveredCity(g.city));
       cityMarker.on('mouseout', () => setHoveredCity(null));
-      cityMarker.on('click', () => {
-        map.flyTo([g.lat, g.lng], 12, { duration: 0.6 });
-      });
+      cityMarker.on('click', () => { map.flyTo([g.lat, g.lng], 12, { duration: 0.6 }); });
       cityMarker.addTo(layerGroup);
       cityMarkersRef.current.set(g.city, cityMarker);
 
-      // Einzelne Kunden-Pins pro Stadt — kleiner, farblich je nach Kontaktstatus.
       for (const k of g.kunden) {
         const pin = L.circleMarker([k.lat, k.lng], {
           radius: 5,
@@ -207,11 +350,17 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
           fillColor: k.status.color,
           fillOpacity: 0.95,
         });
+        const fmtDE = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const kontaktText = k.status.nextTerminDate
+          ? `Termin ${fmtDE(k.status.nextTerminDate)}`
+          : k.status.lastContactDate
+            ? `Letzter Kontakt ${fmtDE(k.status.lastContactDate)}`
+            : 'Noch kein Kontakt';
         pin.bindTooltip(
           `<div style="font-family:'DM Sans',sans-serif;">
             <div style="font-weight:700;color:#0f172a;">${k.name}</div>
             <div style="color:#64748b;">${k.city}</div>
-            <div style="color:${k.status.color};font-weight:600;margin-top:2px;">${k.status.label}</div>
+            <div style="color:${k.status.color};font-weight:600;margin-top:2px;">${kontaktText}</div>
           </div>`,
           { direction: 'top', offset: [0, -4] }
         );
@@ -227,11 +376,10 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
     pinsLayerRef.current = layerGroup;
   }, [selectedBundesland, geocoded, onKundeClick]);
 
-  // Hover aus der Sidebar → Marker hervorheben.
   useEffect(() => {
     for (const [id, marker] of kundenMarkersRef.current.entries()) {
       if (id === hoveredKundeId) {
-        marker.setStyle({ radius: 9, weight: 3, color: '#4338ca', fillOpacity: 1 });
+        marker.setStyle({ radius: 9, weight: 3, color: '#1e40af', fillOpacity: 1 });
         marker.bringToFront();
       } else {
         marker.setStyle({ radius: 5, weight: 1.5, color: '#ffffff', fillOpacity: 0.95 });
@@ -242,19 +390,16 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
   useEffect(() => {
     for (const [city, marker] of cityMarkersRef.current.entries()) {
       if (city === hoveredCity) {
-        marker.setStyle({ weight: 3, color: '#1e293b', fillOpacity: 0.8 });
+        marker.setStyle({ weight: 3, color: '#0f172a', fillOpacity: 0.8 });
       } else {
-        marker.setStyle({ weight: 2, color: '#4338ca', fillOpacity: 0.55 });
+        marker.setStyle({ weight: 2, color: '#1e40af', fillOpacity: 0.55 });
       }
     }
   }, [hoveredCity]);
 
-  // Zuruck zu Deutschland.
-  const backToDeutschland = () => {
-    setSelectedBundesland(null);
-    const map = mapRef.current;
-    if (map) map.flyTo([51.2, 10.4], 6, { duration: 0.6 });
-  };
+  const backToDeutschland = () => setSelectedBundesland(null);
+
+  const hoveredBlCount = hoveredBundesland ? (bundeslandCounts[hoveredBundesland] || 0) : null;
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
@@ -268,7 +413,7 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
               <ArrowLeft size={12} /> Deutschland
             </button>
           )}
-          <MapPin size={18} className="text-indigo-600" strokeWidth={1.75} />
+          <MapPin size={18} className="text-blue-600" strokeWidth={1.75} />
           <h3 className="font-semibold text-slate-800">
             {title}
             {selectedBundesland && <span className="ml-2 text-slate-500 font-normal text-sm">· {selectedBundesland}</span>}
@@ -280,9 +425,44 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
         </div>
       </div>
 
-      <div className="grid grid-cols-[1fr_320px] gap-0" style={{ height: 560 }}>
-        <div ref={mapContainerRef} className="w-full h-full bg-slate-50" />
+      <div className="grid grid-cols-[1fr_320px] gap-0" style={{ height: 620 }}>
+        {/* Linke Seite: Map (SVG Level 1 oder Leaflet Level 2) */}
+        <div className="relative bg-slate-50 min-h-0">
+          {selectedBundesland ? (
+            <div ref={leafletContainerRef} className="absolute inset-0" />
+          ) : (
+            <>
+              <DeutschlandSvgChoropleth
+                bundeslandCounts={bundeslandCounts}
+                maxCount={maxCount}
+                hoveredBundesland={hoveredBundesland}
+                onHover={setHoveredBundesland}
+                onSelect={setSelectedBundesland}
+              />
+              {/* Hover-Tooltip unten links */}
+              {hoveredBundesland && (
+                <div className="absolute left-4 bottom-4 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-lg shadow-lg px-3 py-2 pointer-events-none">
+                  <div className="text-xs font-bold text-slate-800">{hoveredBundesland}</div>
+                  <div className="text-[11px] text-slate-500">
+                    {hoveredBlCount} Kunde{hoveredBlCount === 1 ? '' : 'n'}
+                  </div>
+                </div>
+              )}
+              {/* Legende unten rechts */}
+              <div className="absolute right-4 bottom-4 flex items-center gap-2 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-lg px-3 py-1.5 text-[10px] text-slate-500">
+                <span>Wenige</span>
+                <div className="flex gap-0.5">
+                  {['#dbeafe', '#93c5fd', '#60a5fa', '#3b82f6', '#2563eb', '#1e40af'].map((c) => (
+                    <div key={c} className="w-4 h-2.5 rounded-sm" style={{ backgroundColor: c }} />
+                  ))}
+                </div>
+                <span>Viele</span>
+              </div>
+            </>
+          )}
+        </div>
 
+        {/* Rechts: Kundenliste */}
         <div className="flex flex-col border-l border-slate-200 bg-white min-h-0">
           <div className="p-3 border-b border-slate-200 shrink-0">
             <div className="relative">
@@ -292,7 +472,7 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
                 value={listSearch}
                 onChange={(e) => setListSearch(e.target.value)}
                 placeholder="Kunde, Stadt…"
-                className="w-full pl-7 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
+                className="w-full pl-7 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300"
               />
             </div>
             <div className="mt-2 text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
@@ -311,10 +491,19 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
                   const isHovered = hoveredKundeId === k.id;
                   const foto = getKundeFoto(k.id);
                   const initials = (k.name || '').split(' ').map(n => n[0]).join('').slice(0, 2);
+                  // Exaktes Datum des letzten Kontakts / des nächsten Termins.
+                  const nextTermin = k.status?.nextTerminDate ? new Date(k.status.nextTerminDate) : null;
+                  const lastContact = k.status?.lastContactDate ? new Date(k.status.lastContactDate) : null;
+                  const fmt = (d) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                  const contactLabel = nextTermin
+                    ? `Termin ${fmt(nextTermin)}`
+                    : lastContact
+                      ? `Letzter Kontakt ${fmt(lastContact)}`
+                      : 'Noch kein Kontakt';
                   return (
                     <li
                       key={k.id}
-                      className={`flex items-center gap-2.5 px-3 py-2 cursor-pointer transition-colors ${isHovered ? 'bg-indigo-50' : 'hover:bg-slate-50'}`}
+                      className={`flex items-center gap-2.5 px-3 py-2 cursor-pointer transition-colors ${isHovered ? 'bg-blue-50' : 'hover:bg-slate-50'}`}
                       onMouseEnter={() => setHoveredKundeId(k.id)}
                       onMouseLeave={() => setHoveredKundeId(null)}
                       onClick={() => onKundeClick?.(k.id)}
@@ -323,12 +512,12 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
                         <img
                           src={foto}
                           alt={k.name}
-                          className="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-200"
+                          className="w-9 h-9 rounded-full object-cover shrink-0 border border-slate-200"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                       ) : (
                         <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
                           style={{ backgroundColor: k.status.color }}
                         >
                           {initials || '?'}
@@ -336,9 +525,13 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-slate-800 truncate">{k.name}</div>
-                        <div className="text-[11px] text-slate-500 truncate flex items-center gap-1">
+                        <div className="text-[11px] text-slate-500 truncate">{k.city}</div>
+                        <div
+                          className="text-[10px] truncate font-medium flex items-center gap-1 mt-0.5"
+                          style={{ color: k.status.color }}
+                        >
                           <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: k.status.color }} />
-                          {k.city}
+                          {contactLabel}
                         </div>
                       </div>
                     </li>

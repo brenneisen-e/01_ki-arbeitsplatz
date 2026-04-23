@@ -151,8 +151,11 @@ function extractCity(adresse) {
 }
 
 /* ── Contact freshness → colour scale (green → gray) ──────────── */
+// Gibt zusaetzlich zum Farb-/Label-Bucket auch das exakte letzte Kontakt-
+// datum (`lastContactDate`) und das exakte naechste Termindatum
+// (`nextTerminDate`) zurueck, damit die Sidebar das konkrete Datum
+// anzeigen kann. Die Farblogik (frisch → alt) bleibt unveraendert.
 function getContactStatus(kunde, referenceDate = new Date()) {
-  // Find the most recent kommunikation entry with a date
   const komms = Array.isArray(kunde.kommunikation) ? kunde.kommunikation : [];
   let lastContact = null;
   for (const k of komms) {
@@ -162,7 +165,6 @@ function getContactStatus(kunde, referenceDate = new Date()) {
     }
   }
 
-  // Find upcoming termin
   const termine = Array.isArray(kunde.termine) ? kunde.termine : [];
   let nextTermin = null;
   for (const t of termine) {
@@ -172,21 +174,25 @@ function getContactStatus(kunde, referenceDate = new Date()) {
     }
   }
 
+  const baseMeta = {
+    lastContactDate: lastContact ? lastContact.toISOString() : null,
+    nextTerminDate: nextTermin ? nextTermin.toISOString() : null,
+  };
+
   // Upcoming appointment → strong green
   if (nextTermin) {
     const daysAhead = (nextTermin - referenceDate) / 86400000;
-    if (daysAhead <= 14) return { color: '#10b981', label: 'Termin bevorsteht', tone: 'vivid' };
-    return { color: '#34d399', label: 'Termin geplant', tone: 'vivid' };
+    if (daysAhead <= 14) return { color: '#10b981', label: 'Termin bevorsteht', tone: 'vivid', ...baseMeta };
+    return { color: '#34d399', label: 'Termin geplant', tone: 'vivid', ...baseMeta };
   }
 
-  // Based on last contact recency
-  if (!lastContact) return { color: '#9ca3af', label: 'Kein Kontakt', tone: 'gray' };
+  if (!lastContact) return { color: '#9ca3af', label: 'Kein Kontakt', tone: 'gray', ...baseMeta };
   const daysAgo = (referenceDate - lastContact) / 86400000;
-  if (daysAgo <= 14) return { color: '#10b981', label: 'Kürzlich kontaktiert', tone: 'vivid' };
-  if (daysAgo <= 45) return { color: '#84cc16', label: 'Vor wenigen Wochen', tone: 'fresh' };
-  if (daysAgo <= 90) return { color: '#a3a3a3', label: 'Vor ~2 Monaten', tone: 'fading' };
-  if (daysAgo <= 180) return { color: '#737373', label: 'Länger her', tone: 'fading' };
-  return { color: '#525252', label: 'Sehr lange her', tone: 'gray' };
+  if (daysAgo <= 14) return { color: '#10b981', label: 'Kürzlich kontaktiert', tone: 'vivid', ...baseMeta };
+  if (daysAgo <= 45) return { color: '#84cc16', label: 'Vor wenigen Wochen', tone: 'fresh', ...baseMeta };
+  if (daysAgo <= 90) return { color: '#a3a3a3', label: 'Vor ~2 Monaten', tone: 'fading', ...baseMeta };
+  if (daysAgo <= 180) return { color: '#737373', label: 'Länger her', tone: 'fading', ...baseMeta };
+  return { color: '#525252', label: 'Sehr lange her', tone: 'gray', ...baseMeta };
 }
 
 export function geocodeKundeLeaflet(kunde, index, options = {}) { return geocodeKunde(kunde, index, options); }

@@ -538,22 +538,22 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     if (map.loaded()) render();
     else map.once('load', render);
 
-    // Bei hohem Zoom (>=10) sind die einzelnen Kunden-Pins sichtbar —
-    // dann blenden wir die grossen Stadt-Aggregations-Kreise aus,
-    // damit sie die Einzel-Pins nicht mehr verdecken.
-    const CITY_HIDE_ZOOM = 10;
+    // Bei hohem Zoom (>=9) oder nach explizitem Stadt-Drilldown sind
+    // die einzelnen Kunden-Pins sichtbar — dann blenden wir die grossen
+    // Stadt-Aggregations-Kreise aus, damit sie die Einzel-Pins nicht
+    // mehr verdecken.
+    const CITY_HIDE_ZOOM = 9;
     const updateCityVisibility = () => {
       const z = map.getZoom();
-      const hide = z >= CITY_HIDE_ZOOM;
+      const hide = z >= CITY_HIDE_ZOOM || Boolean(selectedCity);
       for (const m of cityMarkersRef.current.values()) {
         m.el.style.opacity = hide ? '0' : '1';
         m.el.style.pointerEvents = hide ? 'none' : 'auto';
       }
     };
     map.on('zoom', updateCityVisibility);
-    // Einmal initial anwenden, falls die Karte schon weit gezoomt ist.
     setTimeout(updateCityVisibility, 150);
-  }, [selectedBundesland, geocoded, onKundeClick, mapProvider]);
+  }, [selectedBundesland, geocoded, onKundeClick, mapProvider, selectedCity]);
 
   // Hover-Sync: DOM-Style der Marker aktualisieren.
   useEffect(() => {

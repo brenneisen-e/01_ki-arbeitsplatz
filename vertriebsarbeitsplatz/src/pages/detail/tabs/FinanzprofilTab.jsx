@@ -225,14 +225,39 @@ function generateKontoumsaetze(kunde) {
     ]});
   }
 
-  // Tierbedarf + Tierarzt (separate category if exists)
+  // Tierbedarf + Tierarzt. Quellen:
+  //   (a) explizite `tierbedarf`/`tierarzt`-Eintraege in kunde.transaktionen
+  //   (b) `kunde.tiere.umsaetze` bzw. `kunde.haustiere.umsaetze` — dort
+  //        stehen bei vielen Demo-Kunden (z. B. Klaus Fischer) die Tier-
+  //        Umsaetze, weil das Tier selbst noch „vermutet" ist.
   const tierbedarf = txn.find(t => t.kategorie === 'tierbedarf');
   const tierarzt = txn.find(t => t.kategorie === 'tierarzt');
-  if (tierbedarf || tierarzt) {
+  const stammdatenTiere = kunde.tiere || kunde.haustiere || null;
+  const extraTierUmsaetze = Array.isArray(stammdatenTiere?.umsaetze) ? stammdatenTiere.umsaetze : [];
+  const hasAnyTier = tierbedarf || tierarzt || extraTierUmsaetze.length > 0;
+  if (hasAnyTier) {
     const tierItems = [];
     if (tierbedarf) tierItems.push({ name: tierbedarf.empfaenger || 'Fressnapf', amount: Math.abs(tierbedarf.betrag), datum: fmtDate(vm, 12), badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true, insight: tx('finanzprofil.insightHaustierInline') });
     if (tierarzt) tierItems.push({ name: tierarzt.empfaenger || 'Tierarzt', amount: Math.abs(tierarzt.betrag), datum: fmtDate(vm, 18), badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true });
-    categories.push({ name: tx('finanzprofil.tierbedarf'), color: '#e8a87c', total: tierItems.reduce((s, i) => s + i.amount, 0), items: tierItems });
+    // Umsaetze aus den Stammdaten (haeufigkeit monatlich/quartalsweise/halbjährlich)
+    extraTierUmsaetze.forEach((u, idx) => {
+      // bereits via transaktionen abgedeckt? (gleicher Empfaenger-Prefix)
+      const alreadyAdded = tierItems.some(t => (t.name || '').toLowerCase().startsWith((u.empfaenger || '').toLowerCase().split(' ')[0]));
+      if (alreadyAdded) return;
+      const hLabel = u.haeufigkeit || 'monatlich';
+      tierItems.push({
+        name: u.empfaenger || 'Tier',
+        amount: Math.abs(u.betrag || 0),
+        datum: fmtDate(vm, 8 + idx * 6),
+        badge: 'tier-hint',
+        badgeLabel: tx('finanzprofil.haustierErkannt'),
+        recurring: true,
+        frequency: hLabel,
+      });
+    });
+    if (tierItems.length > 0) {
+      categories.push({ name: tx('finanzprofil.tierbedarf'), color: '#e8a87c', total: tierItems.reduce((s, i) => s + i.amount, 0), items: tierItems });
+    }
   }
 
   return categories;
@@ -514,19 +539,24 @@ export default function FinanzprofilTab({ kunde }) {
             </div>
           </div>
 
-          {/* Filter Chips */}
+          {/* Filter Chips — Value lower-case fuer Vergleich, Label in
+              Original-Schreibweise der Kategorie (damit Gross/Klein nach
+              "&" stimmt: "Kredit & Finanzierung", "Lebensmittel & Alltag",
+              "Sparen & Investment"). */}
           <div className="flex flex-wrap gap-1.5 mb-4">
-            {['alle', ...kontoumsaetze.map(c => c.name.toLowerCase())].map(f => (
+            {[{ value: 'alle', label: t('finanzprofil.alle') },
+              ...kontoumsaetze.map(c => ({ value: c.name.toLowerCase(), label: c.name }))
+            ].map(f => (
               <button
-                key={f}
-                onClick={() => setActiveFilter(f)}
+                key={f.value}
+                onClick={() => setActiveFilter(f.value)}
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                  activeFilter === f
+                  activeFilter === f.value
                     ? 'bg-slate-800 text-white border-slate-800'
                     : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
                 }`}
               >
-                {f === 'alle' ? t('finanzprofil.alle') : f.charAt(0).toUpperCase() + f.slice(1)}
+                {f.label}
               </button>
             ))}
           </div>

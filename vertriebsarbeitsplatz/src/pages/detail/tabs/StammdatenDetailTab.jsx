@@ -224,7 +224,7 @@ export default function StammdatenDetailTab({ kunde }) {
 
       <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
         {/* Persoenliche Daten */}
-        <Card hover={false} className="flex flex-col h-full">
+        <Card hover={false} className="flex flex-col h-full info-card-invert info-card-invert-blue">
           <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-100 flex items-center gap-2 bg-blue-50/70">
             <User size={18} className="text-blue-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('persoenlicheDaten')}</h3>
@@ -249,7 +249,10 @@ export default function StammdatenDetailTab({ kunde }) {
                 label={t('partner')}
                 value={
                   <>
-                    <PersonLink name={kunde.partner.name} />
+                    <PersonLink
+                      name={kunde.partner.name}
+                      role={`Partner${kunde.partner.beruf ? ' · ' + translateBeruf(kunde.partner.beruf, lang) : ''}`}
+                    />
                     {kunde.partner.beruf ? ` (${translateBeruf(kunde.partner.beruf, lang)})` : ''}
                   </>
                 }
@@ -262,7 +265,7 @@ export default function StammdatenDetailTab({ kunde }) {
                   <span>
                     {kunde.kinder.map((k, i) => (
                       <span key={i}>
-                        <PersonLink name={k.name} />
+                        <PersonLink name={k.name} role={`Kind · ${k.alter} Jahre`} />
                         {` (${k.alter})`}
                         {i < kunde.kinder.length - 1 ? ', ' : ''}
                       </span>
@@ -303,7 +306,7 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card hover={false} className="flex flex-col h-full">
+        <Card hover={false} className="flex flex-col h-full info-card-invert info-card-invert-emerald">
           <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-100 flex items-center gap-2 bg-emerald-50/70">
             <Wallet size={18} className="text-emerald-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('finanzuebersicht')}</h3>
@@ -464,11 +467,37 @@ export default function StammdatenDetailTab({ kunde }) {
               // Deterministisches NPS-Erhebungsdatum aus der Kunden-ID ableiten,
               // damit der Stand nicht bei jedem Render springt.
               const seed = (kunde.id || kunde.name || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-              const daysAgo = 14 + (seed % 90); // vor 2 Wochen bis ca. 3,5 Monaten
+              const daysAgo = 14 + (seed % 90);
               const d = new Date();
               d.setDate(d.getDate() - daysAgo);
               const datum = d.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-              return <InfoRow label="NPS" value={`${kunde.nps}/10 (erhoben ${datum})`} />;
+              const nps = Number(kunde.nps) || 0;
+              // Kritikpunkt + KI-Handlungsimpuls abhaengig vom NPS-Wert.
+              let schmerz = null;
+              let impuls = null;
+              if (nps <= 6) {
+                schmerz = 'Kritikpunkt: „Ich habe das Gefühl, dass sich nie jemand proaktiv bei mir meldet."';
+                impuls = 'Kontaktfrequenz auf Quartalsrhythmus erhöhen, proaktiven Check-In-Termin anbieten.';
+              } else if (nps <= 8) {
+                schmerz = 'Kritikpunkt: „Kontakt passt grundsätzlich, aber zu wenig proaktiv."';
+                impuls = 'Kontaktfrequenz leicht erhöhen (z. B. halbjährlicher Review-Termin), Gesprächsimpulse senden.';
+              } else {
+                schmerz = 'Promotor — äußerte: „Fühle mich gut betreut, bitte so weitermachen."';
+                impuls = 'Als Empfehlungsgeber aktivieren (Next-Gen / Bekanntenkreis einladen).';
+              }
+              return (
+                <>
+                  <InfoRow label="NPS" value={`${nps}/10 (erhoben ${datum})`} />
+                  <div className="pl-1 -mt-1 flex items-start gap-1.5 text-[11px] leading-snug">
+                    <Sparkles size={11} className="text-violet-600 mt-0.5 shrink-0" />
+                    <span className="text-slate-600">
+                      <span className="italic">{schmerz}</span>
+                      <br />
+                      <strong className="text-slate-800">KI-Empfehlung:</strong> {impuls}
+                    </span>
+                  </div>
+                </>
+              );
             })()}
             <InfoRow label="CLV" value={formatEur((() => {
               const praemien = (kunde.eigeneProdukte?.reduce((s, p) => s + (p.praemie || 0), 0) || 0) * 10;
@@ -565,24 +594,41 @@ const TIER_ARTEN = ['Hund', 'Katze', 'Kaninchen', 'Vogel', 'Fisch', 'Reptil', 'S
 // schliesst bei Klick ausserhalb.
 function TierArtDropdown({ value, onChange, placeholder, options }) {
   const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState(null); // { top, left, width }
   const ref = useRef(null);
+  const buttonRef = useRef(null);
+
+  const updateCoords = () => {
+    const el = buttonRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setCoords({ top: r.bottom + 4, left: r.left, width: r.width });
+  };
+
   useEffect(() => {
     if (!open) return;
+    updateCoords();
     const onClick = (e) => {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
     };
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    const onScrollOrResize = () => updateCoords();
     document.addEventListener('mousedown', onClick);
     document.addEventListener('keydown', onKey);
+    window.addEventListener('scroll', onScrollOrResize, true);
+    window.addEventListener('resize', onScrollOrResize);
     return () => {
       document.removeEventListener('mousedown', onClick);
       document.removeEventListener('keydown', onKey);
+      window.removeEventListener('scroll', onScrollOrResize, true);
+      window.removeEventListener('resize', onScrollOrResize);
     };
   }, [open]);
 
   return (
     <div ref={ref} className="relative flex-1">
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen(o => !o)}
         className="text-xs border border-amber-300 rounded pl-2 pr-7 py-1 w-full bg-white text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-400 flex items-center justify-between"
@@ -592,9 +638,16 @@ function TierArtDropdown({ value, onChange, placeholder, options }) {
         </span>
         <ChevronDown size={12} className="text-amber-700 shrink-0" />
       </button>
-      {open && (
+      {open && coords && (
         <ul
-          className="absolute left-0 right-0 top-full mt-1 z-30 bg-white border border-amber-300 rounded shadow-lg max-h-56 overflow-y-auto py-0.5"
+          style={{
+            position: 'fixed',
+            top: coords.top,
+            left: coords.left,
+            width: coords.width,
+            zIndex: 60,
+          }}
+          className="bg-white border border-amber-300 rounded shadow-lg max-h-56 overflow-y-auto py-0.5"
         >
           {options.map(opt => (
             <li key={opt}>
@@ -732,7 +785,19 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
             title="Zur Finanzübersicht — KFZ-Versicherung anzeigen"
           >
             <span className="text-slate-400 shrink-0">Fahrzeug:</span>
-            <span className="text-slate-700 font-medium group-hover:underline">{fz.modell}</span>
+            {(() => {
+              const parts = (fz.modell || '').split(' ');
+              const brand = parts[0] || '';
+              const rest = parts.slice(1).join(' ');
+              return (
+                <>
+                  {brand && <LogoImg name={brand} size={16} />}
+                  <span className="text-slate-700 font-medium group-hover:underline">
+                    {rest || fz.modell}
+                  </span>
+                </>
+              );
+            })()}
             {(fz.deckung || fz.sf) && (
               <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
                 {[fz.deckung, fz.sf].filter(Boolean).join(' · ')}
@@ -857,19 +922,78 @@ function InfoRow({ label, value }) {
   );
 }
 
-// Angehörige (Partner/Kinder) visuell als klickbarer Link rendern, um
-// anzudeuten, dass sie als eigene Kunden geöffnet werden könnten. Die
-// Klickstrecke ist bewusst noch nicht verdrahtet — sobald diese Personen
-// als eigene Kundendatensätze existieren, kann hier die Navigation
-// ergänzt werden.
-function PersonLink({ name }) {
+// Angehörige (Partner/Kinder) als klickbarer Link mit Hover-Popover.
+// Das Popover zeigt eine synthetische Kunden-ID, "Kunde seit" und einen
+// "Zum Kunden"-Button mit Foto bzw. Initialen. Die Navigation ist noch
+// nicht verdrahtet, weil die Angehoerigen aktuell keine eigenen
+// Kundendatensaetze haben.
+function personHash(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = (h * 16777619) >>> 0; }
+  return h;
+}
+function PersonLink({ name, role }) {
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
+
+  // Synthetische Metadaten, deterministisch aus dem Namen.
+  const h = personHash(name || '');
+  const syntheticId = `BK${(90000 + (h % 9999)).toString().padStart(5, '0')}`;
+  const yearNow = new Date().getFullYear();
+  const kundeSeitJahr = 2015 + (h % 11); // 2015..2025
+  const kundeSeitMonat = 1 + (h % 12);
+  const kundeSeit = `${String(kundeSeitMonat).padStart(2, '0')}.${kundeSeitJahr}`;
+  const initials = (name || '').split(' ').map(n => n[0]).join('').slice(0, 2);
+  const avatarBg = `hsl(${h % 360}, 60%, 45%)`;
+
   return (
     <span
-      className="cursor-pointer underline decoration-dotted decoration-slate-400 underline-offset-2 hover:text-slate-900 hover:decoration-slate-700 transition-colors"
-      title="Als Kunde öffnen"
-      role="link"
+      ref={wrapperRef}
+      className="relative inline-block"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
     >
-      {name}
+      <span
+        className="cursor-pointer underline decoration-dotted decoration-slate-400 underline-offset-2 hover:text-slate-900 hover:decoration-slate-700 transition-colors"
+        role="link"
+      >
+        {name}
+      </span>
+      {open && (
+        <div
+          className="absolute left-0 top-full mt-1 z-30 rounded-xl border border-slate-200 bg-white shadow-lg px-3 py-2.5 w-64 animate-fade-in pointer-events-auto"
+        >
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+              style={{ backgroundColor: avatarBg }}
+            >
+              {initials || '?'}
+            </div>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-slate-800 truncate">{name}</div>
+              {role && <div className="text-[11px] text-slate-500 truncate">{role}</div>}
+            </div>
+          </div>
+          <div className="mt-2 pt-2 border-t border-slate-100 space-y-0.5 text-[11px]">
+            <div className="flex justify-between gap-2">
+              <span className="text-slate-400">Kunden-ID</span>
+              <span className="font-mono text-slate-700">{syntheticId}</span>
+            </div>
+            <div className="flex justify-between gap-2">
+              <span className="text-slate-400">Kunde seit</span>
+              <span className="font-mono text-slate-700">{kundeSeit}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => { /* Navigation wird ergaenzt sobald eigener Datensatz existiert */ }}
+            className="mt-2 w-full text-[11px] font-semibold text-white bg-slate-800 hover:bg-slate-900 rounded-lg px-2 py-1.5 transition-colors"
+          >
+            Zum Kunden
+          </button>
+        </div>
+      )}
     </span>
   );
 }
@@ -1152,7 +1276,7 @@ function AktivitaetenCard({ kunde }) {
   const colorForType = () => ({ bg: 'bg-slate-50', text: 'text-slate-500', border: 'border-slate-200' });
 
   return (
-    <Card hover={false} className="flex flex-col h-full">
+    <Card hover={false} className="flex flex-col h-full info-card-invert info-card-invert-amber">
       <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-amber-100 flex items-center gap-2 bg-amber-50/70">
         <MessageSquare size={18} className="text-amber-600" strokeWidth={1.75} />
         <h3 className="font-semibold text-slate-700 text-sm tracking-wide">Aktivitäten</h3>

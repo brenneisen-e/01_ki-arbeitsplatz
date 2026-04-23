@@ -221,11 +221,11 @@ export default function StammdatenDetailTab({ kunde }) {
         </div>
       </div>
 
-      <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-start' : 'grid grid-cols-2 gap-4 items-start'}>
+      <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
         {/* Persoenliche Daten */}
-        <Card hover={false} className="flex flex-col">
-          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
-            <User size={18} className="text-slate-500" strokeWidth={1.75} />
+        <Card hover={false} className="flex flex-col h-full">
+          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-100 flex items-center gap-2 bg-blue-50/70">
+            <User size={18} className="text-blue-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('persoenlicheDaten')}</h3>
           </div>
           <div className="space-y-2 text-sm">
@@ -282,9 +282,9 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card hover={false} className="flex flex-col">
-          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
-            <Wallet size={18} className="text-slate-500" strokeWidth={1.75} />
+        <Card hover={false} className="flex flex-col h-full">
+          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-100 flex items-center gap-2 bg-emerald-50/70">
+            <Wallet size={18} className="text-emerald-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('finanzuebersicht')}</h3>
           </div>
           <div className="space-y-2 text-sm">
@@ -993,11 +993,11 @@ function AktivitaetenCard({ kunde }) {
   const colorForType = () => ({ bg: 'bg-slate-50', text: 'text-slate-500', border: 'border-slate-200' });
 
   return (
-    <Card hover={false} className="flex flex-col">
-      <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
-        <MessageSquare size={18} className="text-slate-500" strokeWidth={1.75} />
+    <Card hover={false} className="flex flex-col h-full">
+      <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-amber-100 flex items-center gap-2 bg-amber-50/70">
+        <MessageSquare size={18} className="text-amber-600" strokeWidth={1.75} />
         <h3 className="font-semibold text-slate-700 text-sm tracking-wide">Aktivitäten</h3>
-        <span className="text-xs text-slate-400 ml-auto">
+        <span className="text-xs text-slate-500 ml-auto">
           {komms.length === 0 ? 'Keine' : `${komms.length} letzte`}
         </span>
       </div>

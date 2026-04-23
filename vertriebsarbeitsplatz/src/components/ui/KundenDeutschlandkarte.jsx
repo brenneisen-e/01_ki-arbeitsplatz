@@ -313,6 +313,11 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
   // jedes Mal neu zusammengesetzt werden muss, wenn nur die Stadt wechselt.
   const selectedCityRef = useRef(null);
   const cityVisibilityFnRef = useRef(null);
+  // Aktueller onKundeClick-Handler als Ref — verhindert, dass jeder
+  // Re-Render des Parents den Marker-Render-Effect neu startet (und dabei
+  // beim erneuten Render der City-Bubbles kurz blitzt).
+  const onKundeClickRef = useRef(onKundeClick);
+  useEffect(() => { onKundeClickRef.current = onKundeClick; }, [onKundeClick]);
 
   // Provider-Switcher. Default: maptiler. User kann via Toggle oben rechts
   // umschalten (falls entsprechender Key/Token in .env vorhanden).
@@ -492,17 +497,23 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     kundenMarkersRef.current.clear();
 
     const render = () => {
+      const CITY_HIDE_ZOOM = 9;
+      const currentlyHide = map.getZoom() >= CITY_HIDE_ZOOM || Boolean(selectedCityRef.current);
       const cityGroups = groupByCity(geocoded.filter(k => k.bundesland === selectedBundesland));
       for (const g of cityGroups) {
         const size = 28 + Math.min(36, Math.sqrt(g.kunden.length) * 6);
         const cityEl = document.createElement('div');
+        // Initiale Sichtbarkeit direkt setzen, damit frische Marker nach
+        // einem Re-Render nicht für 150 ms ungewollt aufblitzen.
         cityEl.style.cssText =
           `width:${size}px;height:${size}px;border-radius:50%;` +
           `background:rgba(59,130,246,0.55);border:2px solid #1e40af;` +
           `display:flex;align-items:center;justify-content:center;` +
           `font-family:DM Sans,sans-serif;font-weight:700;font-size:${Math.round(size*0.38)}px;` +
           `color:#0f172a;cursor:pointer;transition:all 150ms;` +
-          `box-shadow:0 4px 12px rgba(30,64,175,0.30);`;
+          `box-shadow:0 4px 12px rgba(30,64,175,0.30);` +
+          `opacity:${currentlyHide ? '0' : '1'};` +
+          `pointer-events:${currentlyHide ? 'none' : 'auto'};`;
         cityEl.textContent = g.kunden.length;
         cityEl.title = `${g.city} — ${g.kunden.length} Kunde${g.kunden.length===1?'':'n'}`;
         cityEl.addEventListener('mouseenter', () => setHoveredCity(g.city));
@@ -531,7 +542,7 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
           pinEl.title = `${k.name} · ${k.city} · ${kontakt}`;
           pinEl.addEventListener('mouseenter', () => setHoveredKundeId(k.id));
           pinEl.addEventListener('mouseleave', () => setHoveredKundeId(null));
-          pinEl.addEventListener('click', () => onKundeClick?.(k.id));
+          pinEl.addEventListener('click', () => onKundeClickRef.current?.(k.id));
           const pinMarker = new maplibregl.Marker({ element: pinEl, anchor: 'center' })
             .setLngLat([k.lng, k.lat]).addTo(map);
           kundenMarkersRef.current.set(k.id, { marker: pinMarker, el: pinEl });
@@ -558,7 +569,7 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     map.on('zoom', updateCityVisibility);
     setTimeout(updateCityVisibility, 150);
     cityVisibilityFnRef.current = updateCityVisibility;
-  }, [selectedBundesland, geocoded, onKundeClick, mapProvider]);
+  }, [selectedBundesland, geocoded, mapProvider]);
 
   // Separater Effect nur für selectedCity — aktualisiert die Sichtbarkeit
   // der City-Aggregations-Kreise, ohne alle Pins neu zu rendern (sonst

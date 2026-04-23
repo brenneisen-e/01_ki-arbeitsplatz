@@ -309,6 +309,10 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
   const mapRef = useRef(null);
   const cityMarkersRef = useRef(new Map()); // city → { marker, el }
   const kundenMarkersRef = useRef(new Map()); // kundeId → { marker, el }
+  // selectedCity-Ref für updateCityVisibility, damit diese Funktion nicht
+  // jedes Mal neu zusammengesetzt werden muss, wenn nur die Stadt wechselt.
+  const selectedCityRef = useRef(null);
+  const cityVisibilityFnRef = useRef(null);
 
   // Provider-Switcher. Default: maptiler. User kann via Toggle oben rechts
   // umschalten (falls entsprechender Key/Token in .env vorhanden).
@@ -545,7 +549,7 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     const CITY_HIDE_ZOOM = 9;
     const updateCityVisibility = () => {
       const z = map.getZoom();
-      const hide = z >= CITY_HIDE_ZOOM || Boolean(selectedCity);
+      const hide = z >= CITY_HIDE_ZOOM || Boolean(selectedCityRef.current);
       for (const m of cityMarkersRef.current.values()) {
         m.el.style.opacity = hide ? '0' : '1';
         m.el.style.pointerEvents = hide ? 'none' : 'auto';
@@ -553,7 +557,16 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     };
     map.on('zoom', updateCityVisibility);
     setTimeout(updateCityVisibility, 150);
-  }, [selectedBundesland, geocoded, onKundeClick, mapProvider, selectedCity]);
+    cityVisibilityFnRef.current = updateCityVisibility;
+  }, [selectedBundesland, geocoded, onKundeClick, mapProvider]);
+
+  // Separater Effect nur für selectedCity — aktualisiert die Sichtbarkeit
+  // der City-Aggregations-Kreise, ohne alle Pins neu zu rendern (sonst
+  // gingen die einzelnen Kunden-Pins während der flyTo-Animation verloren).
+  useEffect(() => {
+    selectedCityRef.current = selectedCity;
+    cityVisibilityFnRef.current?.();
+  }, [selectedCity]);
 
   // Hover-Sync: DOM-Style der Marker aktualisieren.
   useEffect(() => {

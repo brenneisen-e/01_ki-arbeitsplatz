@@ -3,17 +3,19 @@ import { Heart, Globe, TrendingUp, Sparkles, AlertTriangle, Database } from 'luc
 import Card from './Card';
 
 /* ── Track config ──────────────────────────────────────────── */
-// Einheitlicher Slate-Ton für alle drei Spuren — differenziert wird nur
-// über Icon + Label auf der linken Seite, nicht über die Event-Farbe.
-// Farbe trägt hier bewusst keine Kategorie-Bedeutung mehr; semantische
-// Farben bleiben ausschließlich „Heute" (rot), „KI erkannt" (violett),
-// „Warnung" (rot).
-const TRACK_COLOR = '#475569';      // slate-600
+// Jede Spur hat ihren eigenen dunklen Akzentton. Icons sitzen als weiße
+// Glyphe auf der farbigen Kugel — dunkle, gedeckte Farben (nicht grell):
+//   Leben      → Waldgrün
+//   Öffentlich → Navy
+//   Finanzen   → Bordeaux
+// Baseline der Spur bleibt slate, damit die Seite ruhig bleibt;
+// semantische Farben (rot = Heute / Warnung, violett = KI) sind davon
+// unabhängig.
 const TRACK_BASELINE = '#e2e8f0';   // slate-200
 const TRACKS = [
-  { key: 'leben',     label: 'Leben',      icon: Heart },
-  { key: 'oeffentlich', label: 'Öffentlich', icon: Globe },
-  { key: 'finanzen',  label: 'Finanzen',   icon: TrendingUp },
+  { key: 'leben',       label: 'Leben',      icon: Heart,      color: '#166534' }, // green-800
+  { key: 'oeffentlich', label: 'Öffentlich', icon: Globe,      color: '#1e3a8a' }, // blue-900 (navy)
+  { key: 'finanzen',    label: 'Finanzen',   icon: TrendingUp, color: '#881337' }, // rose-900 (bordeaux)
 ];
 
 /* ── Demo timeline data per Banking Kunde ─────────────────── */
@@ -216,8 +218,8 @@ export default function LebenszeitstrahlCard({ kunde }) {
 
       {/* Timeline body */}
       <div className="bg-slate-50 rounded-2xl p-5 pl-32 pr-6">
-        {/* Track row labels (left) — einheitliches Slate, differenziert nur
-            über Icon + Label. */}
+        {/* Track row labels (left) — dunkles Badge + weißes Icon,
+            Label-Text in derselben Spurfarbe. */}
         <div className="absolute pl-5 -ml-32" style={{ width: 96 }}>
           <div className="flex flex-col gap-0">
             {TRACKS.map((tr) => {
@@ -228,10 +230,13 @@ export default function LebenszeitstrahlCard({ kunde }) {
                   className="flex items-center gap-2"
                   style={{ height: TRACK_HEIGHT }}
                 >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-white border border-slate-200">
-                    <Icon size={16} className="text-slate-500" strokeWidth={2} />
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 shadow-sm"
+                    style={{ backgroundColor: tr.color }}
+                  >
+                    <Icon size={16} className="text-white" strokeWidth={2.25} />
                   </div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: tr.color }}>
                     {tr.label}
                   </span>
                 </div>
@@ -271,6 +276,8 @@ export default function LebenszeitstrahlCard({ kunde }) {
                   const left = xPct(event.date);
                   const isHovered = hovered?.track === tr.key && hovered?.idx === idx;
                   const dotSize = isHovered ? DOT_HOVER : DOT_BASE;
+                  const DotIcon = tr.icon;
+                  const iconSize = Math.round(dotSize * 0.48);
                   return (
                     <div
                       key={idx}
@@ -295,25 +302,31 @@ export default function LebenszeitstrahlCard({ kunde }) {
                             top: '50%',
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
-                            backgroundColor: TRACK_COLOR + '22',
+                            backgroundColor: tr.color + '28',
                           }}
                         />
                       )}
-                      {/* Dot */}
+                      {/* Dot (Icon-Badge) */}
                       <div
-                        className="rounded-full transition-all"
+                        className="rounded-full transition-all flex items-center justify-center"
                         style={{
                           width: dotSize,
                           height: dotSize,
-                          backgroundColor: event.isFuture ? '#ffffff' : TRACK_COLOR,
+                          backgroundColor: event.isFuture ? '#ffffff' : tr.color,
                           border: event.isFuture
-                            ? `2px dashed ${TRACK_COLOR}`
-                            : `3px solid white`,
+                            ? `2px dashed ${tr.color}`
+                            : `2px solid #ffffff`,
                           boxShadow: isHovered
-                            ? `0 6px 18px rgba(71, 85, 105, 0.45)`
-                            : '0 2px 5px rgba(15, 23, 42, 0.15)',
+                            ? `0 6px 18px ${tr.color}66`
+                            : '0 2px 6px rgba(15, 23, 42, 0.18)',
                         }}
-                      />
+                      >
+                        <DotIcon
+                          size={iconSize}
+                          strokeWidth={2.25}
+                          style={{ color: event.isFuture ? tr.color : '#ffffff' }}
+                        />
+                      </div>
                       {/* AI sparkle badge — violett als semantisches Signal */}
                       {event.aiDetected && (
                         <div
@@ -375,7 +388,10 @@ export default function LebenszeitstrahlCard({ kunde }) {
                             }}
                           >
                             <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                              <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                              <span
+                                className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full text-white"
+                                style={{ backgroundColor: tr.color }}
+                              >
                                 {tr.label}
                               </span>
                               <span className="text-[10px] font-mono font-semibold text-slate-500">
@@ -468,8 +484,13 @@ export default function LebenszeitstrahlCard({ kunde }) {
           const Icon = tr.icon;
           return (
             <div key={tr.key} className="flex items-center gap-1.5">
-              <Icon size={12} className="text-slate-500" strokeWidth={2.25} />
-              <span className="font-medium">{tr.label}</span>
+              <span
+                className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                style={{ backgroundColor: tr.color }}
+              >
+                <Icon size={9} className="text-white" strokeWidth={2.5} />
+              </span>
+              <span className="font-medium" style={{ color: tr.color }}>{tr.label}</span>
             </div>
           );
         })}

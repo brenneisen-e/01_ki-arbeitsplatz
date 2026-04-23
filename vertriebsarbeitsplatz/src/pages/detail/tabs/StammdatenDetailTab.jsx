@@ -246,13 +246,29 @@ export default function StammdatenDetailTab({ kunde }) {
             {kunde.partner && (
               <InfoRow
                 label={t('partner')}
-                value={kunde.partner.beruf
-                  ? `${kunde.partner.name} (${translateBeruf(kunde.partner.beruf, lang)})`
-                  : kunde.partner.name}
+                value={
+                  <>
+                    <PersonLink name={kunde.partner.name} />
+                    {kunde.partner.beruf ? ` (${translateBeruf(kunde.partner.beruf, lang)})` : ''}
+                  </>
+                }
               />
             )}
             {kunde.kinder?.length > 0 && (
-              <InfoRow label={t('kinder')} value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
+              <InfoRow
+                label={t('kinder')}
+                value={
+                  <span>
+                    {kunde.kinder.map((k, i) => (
+                      <span key={i}>
+                        <PersonLink name={k.name} />
+                        {` (${k.alter})`}
+                        {i < kunde.kinder.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
+                  </span>
+                }
+              />
             )}
             <InfoRow label={t('wohnsituation')} value={kunde.adresse ? `${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)` : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
             {(kunde.haustiere || kunde.tiere) && (
@@ -764,6 +780,23 @@ function InfoRow({ label, value }) {
   );
 }
 
+// Angehörige (Partner/Kinder) visuell als klickbarer Link rendern, um
+// anzudeuten, dass sie als eigene Kunden geöffnet werden könnten. Die
+// Klickstrecke ist bewusst noch nicht verdrahtet — sobald diese Personen
+// als eigene Kundendatensätze existieren, kann hier die Navigation
+// ergänzt werden.
+function PersonLink({ name }) {
+  return (
+    <span
+      className="cursor-pointer underline decoration-dotted decoration-slate-400 underline-offset-2 hover:text-slate-900 hover:decoration-slate-700 transition-colors"
+      title="Als Kunde öffnen"
+      role="link"
+    >
+      {name}
+    </span>
+  );
+}
+
 // ─── Risiko-Signale (z.B. Extremsport vs. Unfallversicherungs-Deckung) ───
 // Optisch wie der „Haustier erkannt"-Hinweis: blauer/dezenter Info-Stil,
 // nicht alarmrot. Die Versicherungslücke wird in einem separaten kleinen
@@ -908,9 +941,13 @@ function generateFinanzKISummary(kunde) {
 }
 
 function generateKISummary(kunde) {
-  // Demo-KI-Zusammenfassung basierend auf vorhandenen Kundendaten
-  const name = kunde.name || 'Der Kunde';
-  const beruf = kunde.beruf || 'Berufstätig';
+  // Die KI-Zusammenfassung zieht ihre Zahlen aus exakt denselben Quellen
+  // wie Finanzübersicht + Leads-Tab, damit beide Sichten dieselbe Realität
+  // erzählen. Das Top-Potenzial stammt aus `kunde.potentiale` (identische
+  // Liste wie im Kanban/Leads), die Finanzzahlen aus den gemeinsamen
+  // Helpern.
+  const vorname = (kunde.name || 'Der Kunde').split(' ')[0];
+  const beruf = kunde.beruf || '';
   const arbeitgeber = kunde.arbeitgeber?.name || null;
   const jahre = kunde.eigeneProdukte?.[0]?.seit
     ? new Date().getFullYear() - parseInt(kunde.eigeneProdukte[0].seit.slice(0, 4), 10)
@@ -918,44 +955,89 @@ function generateKISummary(kunde) {
   const partner = kunde.partner?.name || null;
   const kinder = (kunde.kinder || []).length;
   const abwanderung = kunde.abwanderungsrisiko || 'gering';
-  const offenePot = (kunde.potentiale || []).filter(p => p.status === 'identifiziert' || p.status === 'termin').length;
+
+  // Finanzkennzahlen — dieselben Helper, die auch die Finanzübersicht nutzt.
+  const haushalt = berechneHaushaltsnetto(kunde);
+  const frei = berechneFrei(kunde);
+  const anlageVol = berechneAnlagevolumen(kunde);
+  const kreditVol = berechneKreditvolumen(kunde);
+
+  // Offene Potenziale = alles außer „nicht_sinnvoll"/„abgeschlossen" —
+  // exakt wie der Leads-Tab sie merged.
+  const offenePot = (kunde.potentiale || []).filter(
+    p => p.status !== 'nicht_sinnvoll' && p.status !== 'abgeschlossen'
+  );
+  const prioRank = { sehr_hoch: 4, kritisch: 4, hoch: 3, mittel: 2, niedrig: 1 };
+  const sortedPot = [...offenePot].sort(
+    (a, b) => (prioRank[b.prioritaet] || 0) - (prioRank[a.prioritaet] || 0)
+  );
+  const topPot = sortedPot[0] || null;
+
+  const fmtVol = (p) => {
+    if (!p?.volumen) return '';
+    return ` (${formatEur(p.volumen)}${p.volumenTyp === 'jaehrlich' ? '/J.' : ''})`;
+  };
 
   let text = '';
-  text += `${name} ist seit ${jahre || 'mehreren'} Jahren Kunde, ${beruf}`;
+  text += `${vorname} ist seit ${jahre || 'mehreren'} Jahren Kunde`;
+  if (beruf) text += `, ${beruf}`;
   if (arbeitgeber) text += ` bei ${arbeitgeber}`;
   text += '. ';
+
   if (partner) text += `Verheiratet mit ${partner}`;
-  if (kinder > 0) text += `, ${kinder} ${kinder === 1 ? 'Kind' : 'Kinder'}`;
+  if (kinder > 0) text += `${partner ? ', ' : ''}${kinder} ${kinder === 1 ? 'Kind' : 'Kinder'}`;
   if (partner || kinder) text += '. ';
 
+  if (haushalt > 0) {
+    text += `Haushaltsnetto ${formatEur(haushalt)}/mtl.`;
+    if (frei > 0) text += `, davon ${formatEur(frei)} frei verfügbar`;
+    text += '. ';
+  }
+  if (anlageVol > 0 || kreditVol > 0) {
+    const parts = [];
+    if (anlageVol > 0) parts.push(`Anlagevolumen ${formatEur(anlageVol)}`);
+    if (kreditVol > 0) parts.push(`offene Finanzierungen ${formatEur(kreditVol)}`);
+    text += parts.join(', ') + '. ';
+  }
+
   if (abwanderung === 'hoch') {
-    text += 'Die FIDA-Daten zeigen erhöhtes Abwanderungsrisiko: Vermögen wandert teilweise zu Fremdbanken ab. ';
+    text += 'FIDA-Signal: erhöhtes Abwanderungsrisiko, Vermögen wandert teilweise zu Fremdbanken ab. ';
   } else if (abwanderung === 'mittel') {
-    text += 'Erste Signale für Vermögensverlagerung an Fremdbanken erkennbar. ';
-  } else {
-    text += 'Stabile Hauptbankbeziehung, keine Abwanderungssignale. ';
+    text += 'Erste FIDA-Signale für Vermögensverlagerung an Fremdbanken erkennbar. ';
   }
 
-  if (offenePot > 0) {
-    text += `Aktuell ${offenePot} offene Vertriebspotenziale im Pipeline-Board.`;
+  if (topPot) {
+    text += `Top-Lead aktuell: „${topPot.titel}"${fmtVol(topPot)}`;
+    if (offenePot.length > 1) text += ` — plus ${offenePot.length - 1} weitere offene Potenziale im Pipeline-Board.`;
+    else text += '.';
+  } else if (offenePot.length > 0) {
+    text += `Aktuell ${offenePot.length} offene Vertriebspotenziale im Pipeline-Board.`;
   }
 
+  // Empfehlung kommt direkt aus dem Top-Potenzial (Aktion + Produkt), damit
+  // sie 1:1 zu dem passt, was der Leads-Tab als „nächsten Schritt" anzeigt.
   let recommendation = null;
-  // Produktfamilie aus den eigenen Produkten ableiten, damit Banking- und
-  // Versicherungs-Kunden den jeweils passenden Handlungsimpuls bekommen.
-  const sparten = new Set((kunde.eigeneProdukte || []).map(p => p.sparte));
-  const istVersicherung = sparten.has('leben') || sparten.has('schaden') || sparten.has('kranken') || sparten.has('kfz');
-  if (abwanderung === 'hoch' || abwanderung === 'mittel') {
-    recommendation = istVersicherung
-      ? 'Persönliches Bindungsgespräch priorisieren und Cross-Sell-Angebot (z. B. BU-Upgrade oder Familien-Bundle) vorbereiten.'
-      : 'Persönliches Bindungsgespräch priorisieren und Depot-Wechsel-Prämie als konkretes Angebot positionieren.';
-  } else if (offenePot > 2) {
-    recommendation = 'Top-Potenzial aus dem Kanban-Board angehen — kurzfristig Termin vereinbaren.';
+  if (topPot) {
+    const produkt = topPot.produktEmpfehlung;
+    const titel = topPot.titel;
+    if (topPot.empfohleneAktion === 'termin_vereinbaren') {
+      recommendation = produkt
+        ? `Termin zu „${titel}" vereinbaren — passendes Produkt: ${produkt}.`
+        : `Termin zu „${titel}" vereinbaren.`;
+    } else if (topPot.empfohleneAktion === 'angebot_erstellen') {
+      recommendation = produkt
+        ? `Angebot zu „${titel}" erstellen (${produkt}).`
+        : `Angebot zu „${titel}" erstellen.`;
+    } else if (topPot.empfohleneAktion === 'tarifvergleich') {
+      recommendation = `Tarifvergleich zu „${titel}" aufbereiten${produkt ? ` — Zielprodukt ${produkt}.` : '.'}`;
+    } else {
+      recommendation = `Top-Potenzial „${titel}" aktiv angehen.`;
+    }
   } else {
     recommendation = 'Jahresgespräch zur Bedarfsabklärung terminieren.';
   }
 
-  return { text, recommendation };
+  return { text: text.trim(), recommendation };
 }
 
 // ─── Aktivitäten: letzte Gespräche & Notizen ───

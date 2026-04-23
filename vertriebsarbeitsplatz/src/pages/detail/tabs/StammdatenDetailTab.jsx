@@ -9,7 +9,7 @@ import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote
 import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info, Car, Fuel, Sparkles, MessageSquare, Phone, Mail, Calendar, FileText, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { getLogoUrl } from '../../../utils/logos';
 import { getKundeFoto } from '../../../utils/kundenFotos';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
@@ -559,6 +559,60 @@ function normalizeHaustiere(raw) {
 
 const TIER_ARTEN = ['Hund', 'Katze', 'Kaninchen', 'Vogel', 'Fisch', 'Reptil', 'Sonstiges'];
 
+// Custom Dropdown ohne natives <select> — das native Element wollte sich
+// in manchen Browserkonstellationen nicht oeffnen. Diese Implementierung
+// ist ein reines Button + absolutes Popup, klappt zuverlaessig auf und
+// schliesst bei Klick ausserhalb.
+function TierArtDropdown({ value, onChange, placeholder, options }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative flex-1">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="text-xs border border-amber-300 rounded pl-2 pr-7 py-1 w-full bg-white text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-400 flex items-center justify-between"
+      >
+        <span className={value ? 'text-slate-800' : 'text-slate-400'}>
+          {value || placeholder}
+        </span>
+        <ChevronDown size={12} className="text-amber-700 shrink-0" />
+      </button>
+      {open && (
+        <ul
+          className="absolute left-0 right-0 top-full mt-1 z-30 bg-white border border-amber-300 rounded shadow-lg max-h-56 overflow-y-auto py-0.5"
+        >
+          {options.map(opt => (
+            <li key={opt}>
+              <button
+                type="button"
+                onClick={() => { onChange(opt); setOpen(false); }}
+                className={`w-full text-left px-3 py-1.5 text-xs hover:bg-amber-50 transition-colors ${value === opt ? 'bg-amber-50 font-semibold text-amber-800' : 'text-slate-700'}`}
+              >
+                {opt}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function HaustiereRow({ haustiere, t, kundeId }) {
   const initial = getHaustierConfirmation(kundeId);
   const [showDetail, setShowDetail] = useState(false);
@@ -621,19 +675,12 @@ function HaustiereRow({ haustiere, t, kundeId }) {
               <div className="pt-2 border-t border-amber-200 space-y-2">
                 <div className="text-xs font-semibold text-amber-700">{t('haustierBestaetigen')}</div>
                 <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <select
-                      value={tierArt}
-                      onChange={e => setTierArt(e.target.value)}
-                      className="text-xs border border-amber-300 rounded pl-2 pr-7 py-1 w-full bg-white appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-400"
-                    >
-                      <option value="">{t('artPlaceholder')}</option>
-                      {TIER_ARTEN.map(a => (
-                        <option key={a} value={a}>{a}</option>
-                      ))}
-                    </select>
-                    <ChevronDown size={12} className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-amber-700" />
-                  </div>
+                  <TierArtDropdown
+                    value={tierArt}
+                    onChange={setTierArt}
+                    placeholder={t('artPlaceholder')}
+                    options={TIER_ARTEN}
+                  />
                   <input
                     type="text"
                     placeholder="Name"

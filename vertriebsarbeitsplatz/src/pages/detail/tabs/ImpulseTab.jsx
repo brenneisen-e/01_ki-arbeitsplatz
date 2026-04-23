@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { getLang } from '../../../utils/langHelper';
 import Card from '../../../components/ui/Card';
 import { PrioBadge, QuellenBadge } from '../../../components/ui/Badge';
@@ -9,6 +9,7 @@ import { Shield, Landmark, ShieldCheck, LineChart, CheckCircle, XCircle, Chevron
 import AnschreibenModal from '../../../components/ui/AnschreibenModal';
 import HerleitungBlock from '../../../components/ui/HerleitungBlocks';
 import { interpolateDynamicDates } from '../../../utils/dynamicDates';
+import { getHaustierConfirmation } from '../../../utils/haustierConfirmation';
 
 // Rekursive Interpolation für strukturierte Daten (Strings, Arrays, Objekte).
 // Der Kontext enthält insb. `institut`, damit Banking-Institut-spezifische
@@ -109,7 +110,43 @@ export default function ImpulseTab({ kunde }) {
     if (hasAnyData) return derived;
     return kunde.absicherung || { vorhanden: [], fremd: [], fehlend: [] };
   }, [kunde]);
-  const potentiale = kunde.potentiale || [];
+  // Haustier-Bestätigung aus den Stammdaten (localStorage). Wird in den
+  // Tier-Leads verarbeitet, damit dort statt "Haustier vermutet" der real
+  // bestätigte Tiertyp + Name erscheint.
+  const [haustierConf, setHaustierConf] = useState(() => getHaustierConfirmation(kunde.id));
+  useEffect(() => {
+    setHaustierConf(getHaustierConfirmation(kunde.id));
+    const onConfirm = (e) => {
+      if (e?.detail?.kundeId === kunde.id) {
+        setHaustierConf(e.detail.data || null);
+      }
+    };
+    window.addEventListener('kia:haustier-confirmed', onConfirm);
+    return () => window.removeEventListener('kia:haustier-confirmed', onConfirm);
+  }, [kunde.id]);
+
+  const potentiale = useMemo(() => {
+    const raw = kunde.potentiale || [];
+    if (!haustierConf?.typ) return raw;
+    const art = haustierConf.typ;
+    const name = haustierConf.name ? ` „${haustierConf.name}"` : '';
+    // Tier-bezogene Leads mit dem bestätigten Tier anreichern.
+    return raw.map(p => {
+      const hay = `${p.titel || ''} ${p.beschreibung || ''} ${p.produktEmpfehlung || ''}`.toLowerCase();
+      if (!/tierhalter|haustier|tierhaftpflicht/i.test(hay)) return p;
+      return {
+        ...p,
+        titel: `Tierhalterhaftpflicht – ${art}${name}`,
+        beschreibung: `${art}${name} aus Stammdaten bestätigt – Fressnapf + Tierarzt-Umsätze passen ins Muster.`,
+        herleitung: (p.herleitung || []).map(h => {
+          if (/Vermutung|Tierart|Haustier/i.test(h.label || '')) {
+            return { label: 'Bestätigtes Haustier', value: `${art}${name}` };
+          }
+          return h;
+        }),
+      };
+    });
+  }, [kunde.potentiale, haustierConf]);
   const luecken = absicherung.fehlend?.length || 0;
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [anschreibenFor, setAnschreibenFor] = useState(null);
@@ -132,42 +169,11 @@ export default function ImpulseTab({ kunde }) {
 
   return (
     <div className="space-y-4">
-      {/* Absicherungsstatus */}
-      <Card hover={false}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Shield size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">{t('absicherungsstatus')}</h3>
-          </div>
-          <span className="text-sm text-slate-400">{t('lueckenErkannt', { count: luecken })}</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {ABSICHERUNGS_TYPEN.map(typ => {
-            const eigen = absicherung.vorhanden?.includes(typ.key);
-            const fremd = absicherung.fremd?.includes(typ.key);
-            return (
-              <div
-                key={typ.key}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium ${
-                  eigen
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    : fremd
-                      ? 'bg-slate-100 text-slate-500 border border-slate-200'
-                      : 'bg-red-50 text-red-600 border border-red-200'
-                }`}
-              >
-                {eigen ? <CheckCircle size={14} /> : fremd ? <CheckCircle size={14} className="text-slate-400" /> : <XCircle size={14} />}
-                {t(`absicherung.${typ.key}`)}
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-
       {/* Leads / Potenziale geclustert nach Produktkategorie.
           Kategorie-Cards sind standardmäßig eingeklappt und zeigen nur die
           Anzahl der Leads. Klick öffnet sie zu einem Grid mit bis zu 3
-          Tile-Kacheln pro Reihe. */}
+          Tile-Kacheln pro Reihe. In der Versicherungs-Kategorie wird
+          zusätzlich der Absicherungsstatus oberhalb der Leads angezeigt. */}
       {PRODUKT_KATEGORIEN.map(kat => {
         const list = gruppiert[kat.key] || [];
         if (list.length === 0) return null;
@@ -198,24 +204,58 @@ export default function ImpulseTab({ kunde }) {
               </div>
             </button>
             {isOpen && (
-              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 animate-fade-in">
-                {list.map((p, i) => {
-                  const key = `${kat.key}-${i}`;
-                  const isExpanded = expandedIndex === key;
-                  return (
-                    <div key={key} className={isExpanded ? 'md:col-span-2 lg:col-span-3' : ''}>
-                      <PotentialCard
-                        potential={p}
-                        kunde={kunde}
-                        expanded={isExpanded}
-                        onToggle={() => setExpandedIndex(isExpanded ? null : key)}
-                        onAnschreiben={() => setAnschreibenFor(p)}
-                        t={t}
-                        ctx={ctx}
-                      />
+              <div className="animate-fade-in">
+                {kat.key === 'versicherung' && (
+                  <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Shield size={16} className="text-slate-500" strokeWidth={1.75} />
+                        <h4 className="text-sm font-semibold text-slate-700">{t('absicherungsstatus')}</h4>
+                      </div>
+                      <span className="text-xs text-slate-400">{t('lueckenErkannt', { count: luecken })}</span>
                     </div>
-                  );
-                })}
+                    <div className="flex flex-wrap gap-2">
+                      {ABSICHERUNGS_TYPEN.map(typ => {
+                        const eigen = absicherung.vorhanden?.includes(typ.key);
+                        const fremd = absicherung.fremd?.includes(typ.key);
+                        return (
+                          <div
+                            key={typ.key}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium ${
+                              eigen
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : fremd
+                                  ? 'bg-slate-100 text-slate-500 border border-slate-200'
+                                  : 'bg-red-50 text-red-600 border border-red-200'
+                            }`}
+                          >
+                            {eigen ? <CheckCircle size={14} /> : fremd ? <CheckCircle size={14} className="text-slate-400" /> : <XCircle size={14} />}
+                            {t(`absicherung.${typ.key}`)}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {list.map((p, i) => {
+                    const key = `${kat.key}-${i}`;
+                    const isExpanded = expandedIndex === key;
+                    return (
+                      <div key={key} className={isExpanded ? 'md:col-span-2 lg:col-span-3' : ''}>
+                        <PotentialCard
+                          potential={p}
+                          kunde={kunde}
+                          expanded={isExpanded}
+                          onToggle={() => setExpandedIndex(isExpanded ? null : key)}
+                          onAnschreiben={() => setAnschreibenFor(p)}
+                          t={t}
+                          ctx={ctx}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </Card>
@@ -249,7 +289,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
 
   return (
     <div
-      className={`border rounded-lg transition-all ${expanded ? 'border-slate-300 shadow-sm' : 'border-slate-100 hover:border-slate-200'}`}
+      className={`border rounded-lg transition-all h-full ${expanded ? 'border-blue-300 bg-blue-50/40 shadow-sm' : 'border-blue-100 bg-blue-50/30 hover:border-blue-200 hover:bg-blue-50/60'}`}
     >
       {/* Clickable header */}
       <div

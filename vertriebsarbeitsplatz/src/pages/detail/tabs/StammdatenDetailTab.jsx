@@ -14,6 +14,7 @@ import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
 import { interpolateDynamicDates, resolveVersicherungspartner } from '../../../utils/dynamicDates';
+import { getHaustierConfirmation, setHaustierConfirmation } from '../../../utils/haustierConfirmation';
 
 // ─── Translation helpers for data values ───
 const FAMILIENSTAND_EN = { verheiratet: 'Married', ledig: 'Single', geschieden: 'Divorced', verwitwet: 'Widowed' };
@@ -272,7 +273,11 @@ export default function StammdatenDetailTab({ kunde }) {
             )}
             <InfoRow label={t('wohnsituation')} value={kunde.adresse ? `${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)` : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
             {(kunde.haustiere || kunde.tiere) && (
-              <HaustiereRow haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)} t={t} />
+              <HaustiereRow
+                haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)}
+                t={t}
+                kundeId={kunde.id}
+              />
             )}
             {kunde.linkedin && (
               <div className="flex items-center gap-2 pt-2 border-t border-slate-100 mt-2">
@@ -552,11 +557,29 @@ function normalizeHaustiere(raw) {
   };
 }
 
-function HaustiereRow({ haustiere, t }) {
+const TIER_ARTEN = ['Hund', 'Katze', 'Kaninchen', 'Vogel', 'Fisch', 'Reptil', 'Sonstiges'];
+
+function HaustiereRow({ haustiere, t, kundeId }) {
+  const initial = getHaustierConfirmation(kundeId);
   const [showDetail, setShowDetail] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
-  const [tierArt, setTierArt] = useState('');
-  const [tierName, setTierName] = useState('');
+  const [confirmed, setConfirmed] = useState(!!initial);
+  const [tierArt, setTierArt] = useState(initial?.typ || '');
+  const [tierName, setTierName] = useState(initial?.name || '');
+  const [bestaetigtAm, setBestaetigtAm] = useState(initial?.bestaetigtAm || null);
+
+  const handleConfirm = () => {
+    if (!tierArt.trim()) return;
+    const now = new Date().toISOString();
+    const data = { typ: tierArt.trim(), name: tierName.trim(), bestaetigtAm: now };
+    setHaustierConfirmation(kundeId, data);
+    setBestaetigtAm(now);
+    setConfirmed(true);
+    setShowDetail(false);
+  };
+
+  const bestaetigtDatum = bestaetigtAm
+    ? new Date(bestaetigtAm).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    : null;
 
   return (
     <div className="pt-2 border-t border-slate-100 mt-2">
@@ -586,10 +609,10 @@ function HaustiereRow({ haustiere, t }) {
                 <PawPrint size={12} />
                 {t('erkannteTransaktionen')}
               </div>
-              {haustiere.erkannteTransaktionen?.map((t, i) => (
+              {haustiere.erkannteTransaktionen?.map((tx, i) => (
                 <div key={i} className="flex justify-between text-xs text-amber-800">
-                  <span>{t.haendler}</span>
-                  <span className="font-mono">{t.betrag}€ ({t.haeufigkeit})</span>
+                  <span>{tx.haendler}</span>
+                  <span className="font-mono">{tx.betrag}€ ({tx.haeufigkeit})</span>
                 </div>
               ))}
               <div className="text-xs text-amber-600 pt-1 border-t border-amber-200">
@@ -598,13 +621,16 @@ function HaustiereRow({ haustiere, t }) {
               <div className="pt-2 border-t border-amber-200 space-y-2">
                 <div className="text-xs font-semibold text-amber-700">{t('haustierBestaetigen')}</div>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder={t('artPlaceholder')}
+                  <select
                     value={tierArt}
                     onChange={e => setTierArt(e.target.value)}
                     className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
-                  />
+                  >
+                    <option value="">{t('artPlaceholder')}</option>
+                    {TIER_ARTEN.map(a => (
+                      <option key={a} value={a}>{a}</option>
+                    ))}
+                  </select>
                   <input
                     type="text"
                     placeholder="Name"
@@ -613,8 +639,9 @@ function HaustiereRow({ haustiere, t }) {
                     className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
                   />
                   <button
-                    onClick={() => { if (tierArt.trim()) setConfirmed(true); }}
-                    className="text-xs px-3 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600 transition-colors font-medium"
+                    onClick={handleConfirm}
+                    disabled={!tierArt.trim()}
+                    className="text-xs px-3 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {t('bestaetigen')}
                   </button>
@@ -624,17 +651,17 @@ function HaustiereRow({ haustiere, t }) {
           )}
         </>
       ) : (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="flex items-center gap-1.5 text-slate-400 shrink-0">
             <PawPrint size={14} className="text-amber-500" />
             {t('haustierLabel')}:
           </span>
           <span className="text-slate-700 font-medium">
-            {tierArt}{tierName ? ` (${tierName})` : ''}
+            {tierArt}{tierName ? ` „${tierName}"` : ''}
           </span>
-          <span className="flex items-center gap-1 text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+          <span className="flex items-center gap-1 text-xs text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
             <CheckCircle size={11} />
-            {t('bestaetigt')}
+            {bestaetigtDatum ? `Bestätigt am ${bestaetigtDatum}` : t('bestaetigt')}
           </span>
         </div>
       )}

@@ -390,8 +390,8 @@ export default function LandingPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-8">
-        {/* Logo */}
-        <div className="mb-8">
+        {/* Logo + Institutsname */}
+        <div className="mb-8 flex flex-col items-center gap-3">
           {logoUrl ? (
             <div className="w-32 h-32 rounded-3xl bg-white shadow-xl flex items-center justify-center p-4">
               <img src={logoUrl} alt={currentInstitut} className="max-w-full max-h-full object-contain" />
@@ -401,6 +401,9 @@ export default function LandingPage() {
               <span className="text-slate-700 text-6xl font-bold">{currentInstitut.charAt(0)}</span>
             </div>
           )}
+          <span className="text-white text-lg font-semibold tracking-wide drop-shadow">
+            {currentInstitut}
+          </span>
         </div>
 
         {/* Welcome text */}
@@ -457,69 +460,30 @@ export default function LandingPage() {
               <Mic size={18} strokeWidth={1.75} />
             </button>
           </div>
-        </div>
 
-        {/* Module Tabs */}
-        <div className="flex gap-3 mb-6">
-          {MODULE_TABS.map(tab => {
-            const Icon = tab.icon;
-            const isActive = activeModule === tab.id;
-            return (
+          {/* Quick-Prompts unter dem Chat: setzen den Chat-Input und senden
+              die Anfrage direkt ab (Default-Ziel: Overview). */}
+          <div className="flex flex-wrap justify-center gap-2 mt-3">
+            {[
+              'Zusammenfassung heutiger Tag',
+              'Übersicht Produktlandschaft',
+              'Ansprechpartner Private Banking',
+              'Übersicht kommende Gespräche',
+              'Vorbereitung Gesprächstermin',
+            ].map(prompt => (
               <button
-                key={tab.id}
-                onClick={() => { setActiveModule(tab.id); setSelectedVariant(null); try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: tab.id })); } catch {} }}
-                className={clsx(
-                  'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
-                  isActive
-                    ? 'bg-white text-slate-800 shadow-md'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
-                )}
+                key={prompt}
+                onClick={() => { setChatInput(prompt); executeSuggestion({ action: 'overview' }); }}
+                className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white/80 text-xs font-medium transition-colors backdrop-blur-sm"
               >
-                <Icon size={16} strokeWidth={1.75} />
-                {tab.label}
+                {prompt}
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* Institute variants (collapsible) */}
-        <button
-          onClick={() => setShowVariants(v => !v)}
-          className="flex items-center gap-2 text-white/50 hover:text-white/80 text-xs font-medium transition-colors mb-3"
-        >
-          {showVariants ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          {showVariants ? t('unternehmenAusblenden') : t('unternehmenAuswaehlen')}
-        </button>
-        {showVariants && (
-          <div className="flex flex-wrap gap-2 justify-center max-w-3xl animate-fade-in">
-            {activeConfig.institutVarianten.map((variant) => {
-              const isSelected = selectedVariant?.institut === variant.institut ||
-                (!selectedVariant && variant.institut === activeConfig.institut);
-              const vLogoUrl = getLogoUrl(variant.institut, 32);
-              return (
-                <button
-                  key={variant.institut}
-                  onClick={() => { setSelectedVariant(variant); try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: activeModule, variant })); } catch {} }}
-                  className={clsx(
-                    'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300',
-                    isSelected
-                      ? 'bg-white text-slate-800 shadow-md'
-                      : 'bg-white/10 text-white/70 hover:bg-white/15 border border-white/10'
-                  )}
-                >
-                  {vLogoUrl ? (
-                    <img src={vLogoUrl} alt={variant.institut} className="w-5 h-5 rounded object-contain" />
-                  ) : (
-                    <span className="w-5 h-5 rounded bg-slate-200 flex items-center justify-center text-[9px] font-bold text-slate-600">
-                      {variant.institut.charAt(0)}
-                    </span>
-                  )}
-                  {variant.institut}
-                </button>
-              );
-            })}
-          </div>
-        )}
+        {/* Module Tabs + Institut-Varianten sind in die Einstellungen unten
+            umgezogen, damit der zentrale Landing-Bereich ruhiger bleibt. */}
       </div>
 
       {/* Settings Section */}
@@ -535,6 +499,74 @@ export default function LandingPage() {
 
         {showSettings && (
           <div className="mt-4 max-w-md mx-auto bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5 animate-fade-in">
+            {/* Modul-Auswahl */}
+            <h3 className="text-white text-sm font-semibold mb-3 flex items-center gap-2">
+              <Briefcase size={16} />
+              Modul
+            </h3>
+            <div className="flex gap-2 mb-3 flex-wrap">
+              {MODULE_TABS.map(tab => {
+                const Icon = tab.icon;
+                const isActive = activeModule === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => { setActiveModule(tab.id); setSelectedVariant(null); try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: tab.id })); } catch {} }}
+                    className={clsx(
+                      'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200',
+                      isActive
+                        ? 'bg-white text-slate-800 shadow-md'
+                        : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10'
+                    )}
+                  >
+                    <Icon size={14} strokeWidth={1.75} />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Unternehmens-Variante */}
+            <button
+              onClick={() => setShowVariants(v => !v)}
+              className="flex items-center gap-2 text-white/50 hover:text-white/80 text-xs font-medium transition-colors mb-3"
+            >
+              {showVariants ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+              {showVariants ? t('unternehmenAusblenden') : t('unternehmenAuswaehlen')}
+            </button>
+            {showVariants && (
+              <div className="flex flex-wrap gap-2 mb-4 animate-fade-in">
+                {activeConfig.institutVarianten.map((variant) => {
+                  const isSelected = selectedVariant?.institut === variant.institut ||
+                    (!selectedVariant && variant.institut === activeConfig.institut);
+                  const vLogoUrl = getLogoUrl(variant.institut, 32);
+                  return (
+                    <button
+                      key={variant.institut}
+                      onClick={() => { setSelectedVariant(variant); try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: activeModule, variant })); } catch {} }}
+                      className={clsx(
+                        'flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-[11px] font-medium transition-all duration-300',
+                        isSelected
+                          ? 'bg-white text-slate-800 shadow-md'
+                          : 'bg-white/10 text-white/70 hover:bg-white/15 border border-white/10'
+                      )}
+                    >
+                      {vLogoUrl ? (
+                        <img src={vLogoUrl} alt={variant.institut} className="w-4 h-4 rounded object-contain" />
+                      ) : (
+                        <span className="w-4 h-4 rounded bg-slate-200 flex items-center justify-center text-[8px] font-bold text-slate-600">
+                          {variant.institut.charAt(0)}
+                        </span>
+                      )}
+                      {variant.institut}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            <div className="h-px bg-white/10 my-4" />
+
             <h3 className="text-white text-sm font-semibold mb-4 flex items-center gap-2">
               <User size={16} />
               {t('beraterProfil')}

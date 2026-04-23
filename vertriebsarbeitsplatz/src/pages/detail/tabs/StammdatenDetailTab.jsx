@@ -949,7 +949,7 @@ function PersonLink({ name, role }) {
   return (
     <span
       ref={wrapperRef}
-      className="relative inline-block"
+      className="relative inline-block pointer-events-auto"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >

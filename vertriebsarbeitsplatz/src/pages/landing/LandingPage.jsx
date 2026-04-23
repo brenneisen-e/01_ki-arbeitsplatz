@@ -6,6 +6,34 @@ import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
 import useTranslation from '../../i18n/useTranslation';
 import { invalidateLangCache } from '../../utils/langHelper';
+import { TERMINE_BY_MODE } from '../../data';
+
+// Demo-Private-Banking-Ansprechpartner. Die Landing-Page kennt keine echten
+// Kollegen-Stammdaten, daher ein fester kleiner Pool – passt zur Demo-Logik
+// der App und liefert Fotos via Adobe Stock Platzhaltern.
+const PRIVATE_BANKING_CONTACTS = [
+  { name: 'Dr. Martina Huber',  rolle: 'Senior Relationship Manager', foto: './images/AdobeStock_910604663.jpeg' },
+  { name: 'Stefan Obermann',    rolle: 'Private Banking Berater',     foto: './images/AdobeStock_329502726.jpeg' },
+  { name: 'Claudia Neumann',    rolle: 'Vermögensplanung',            foto: './images/AdobeStock_612940075.jpeg' },
+  { name: 'Alexander Brandt',   rolle: 'Family Office',               foto: './images/AdobeStock_1387839378.jpeg' },
+];
+
+function QuickPromptChip({ label, onClick, active = false, hasDropdown = false }) {
+  return (
+    <button
+      onClick={onClick}
+      className={clsx(
+        'px-3 py-1.5 rounded-full border text-xs font-medium transition-colors backdrop-blur-sm inline-flex items-center gap-1.5',
+        active
+          ? 'bg-white text-slate-800 border-white shadow-md'
+          : 'bg-white/10 hover:bg-white/20 border-white/15 text-white/80'
+      )}
+    >
+      {label}
+      {hasDropdown && <ChevronDown size={12} className={active ? 'rotate-180 transition-transform' : 'transition-transform'} />}
+    </button>
+  );
+}
 
 export default function LandingPage() {
   const { t } = useTranslation();
@@ -62,6 +90,8 @@ export default function LandingPage() {
   // Settings
   const [showSettings, setShowSettings] = useState(false);
   const [showVariants, setShowVariants] = useState(false);
+  // Quick-Prompt-Dropdowns unter dem Chat (null | 'termin' | 'privateBanking')
+  const [openPromptDropdown, setOpenPromptDropdown] = useState(null);
   const [language, setLanguage] = useState(() => localStorage.getItem('kia_language') || 'de');
   const [settingsName, setSettingsName] = useState(() => localStorage.getItem('kia_user_fullname') || '');
   const [settingsPhoto, setSettingsPhoto] = useState(() => localStorage.getItem('kia_user_photo') || '');
@@ -461,25 +491,93 @@ export default function LandingPage() {
             </button>
           </div>
 
-          {/* Quick-Prompts unter dem Chat: setzen den Chat-Input und senden
-              die Anfrage direkt ab (Default-Ziel: Overview). */}
+          {/* Quick-Prompts unter dem Chat. Zwei Prompts ("Vorbereitung
+              Gesprächstermin", "Ansprechpartner Private Banking") klappen
+              beim Klick ein Kunden-/Kollegen-Auswahl-Dropdown auf. */}
           <div className="flex flex-wrap justify-center gap-2 mt-3">
-            {[
-              'Zusammenfassung heutiger Tag',
-              'Übersicht Produktlandschaft',
-              'Ansprechpartner Private Banking',
-              'Übersicht kommende Gespräche',
-              'Vorbereitung Gesprächstermin',
-            ].map(prompt => (
-              <button
-                key={prompt}
-                onClick={() => { setChatInput(prompt); executeSuggestion({ action: 'overview' }); }}
-                className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white/80 text-xs font-medium transition-colors backdrop-blur-sm"
-              >
-                {prompt}
-              </button>
-            ))}
+            <QuickPromptChip label="Zusammenfassung heutiger Tag" onClick={() => { setChatInput('Zusammenfassung heutiger Tag'); executeSuggestion({ action: 'overview' }); }} />
+            <QuickPromptChip label="Übersicht Produktlandschaft" onClick={() => { setChatInput('Übersicht Produktlandschaft'); executeSuggestion({ action: 'overview' }); }} />
+            <QuickPromptChip
+              label="Ansprechpartner Private Banking"
+              active={openPromptDropdown === 'privateBanking'}
+              onClick={() => setOpenPromptDropdown(d => d === 'privateBanking' ? null : 'privateBanking')}
+              hasDropdown
+            />
+            <QuickPromptChip label="Übersicht kommende Gespräche" onClick={() => { setChatInput('Übersicht kommende Gespräche'); executeSuggestion({ action: 'overview' }); }} />
+            <QuickPromptChip
+              label="Vorbereitung Gesprächstermin"
+              active={openPromptDropdown === 'termin'}
+              onClick={() => setOpenPromptDropdown(d => d === 'termin' ? null : 'termin')}
+              hasDropdown
+            />
           </div>
+
+          {/* Dropdowns unter den Chips */}
+          {openPromptDropdown === 'termin' && (
+            <div className="mt-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 p-3 animate-fade-in">
+              <div className="text-[11px] uppercase tracking-wider text-white/60 font-semibold px-2 py-1">
+                Kunde für Gesprächsvorbereitung wählen
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
+                {(TERMINE_BY_MODE[activeModule] || []).map((termin, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setChatInput(`Vorbereitung Gesprächstermin — ${termin.kunde}`);
+                      setOpenPromptDropdown(null);
+                      executeSuggestion({ action: 'overview' });
+                    }}
+                    className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-left transition-colors"
+                  >
+                    {termin.foto ? (
+                      <img src={termin.foto} alt={termin.kunde} className="w-9 h-9 rounded-full object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                    ) : (
+                      <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        {termin.kunde.split(' ').map(n => n[0]).join('').slice(0,2)}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-semibold text-white truncate">{termin.kunde}</div>
+                      <div className="text-[11px] text-white/60 truncate">{termin.datum} · {termin.zeit} — {termin.betreff}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {openPromptDropdown === 'privateBanking' && (
+            <div className="mt-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 p-3 animate-fade-in">
+              <div className="text-[11px] uppercase tracking-wider text-white/60 font-semibold px-2 py-1">
+                Private-Banking-Ansprechpartner
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
+                {PRIVATE_BANKING_CONTACTS.map((c, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setChatInput(`Ansprechpartner Private Banking — ${c.name}`);
+                      setOpenPromptDropdown(null);
+                      executeSuggestion({ action: 'overview' });
+                    }}
+                    className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-left transition-colors"
+                  >
+                    {c.foto ? (
+                      <img src={c.foto} alt={c.name} className="w-9 h-9 rounded-full object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                    ) : (
+                      <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        {c.name.split(' ').map(n => n[0]).join('').slice(0,2)}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-semibold text-white truncate">{c.name}</div>
+                      <div className="text-[11px] text-white/60 truncate">{c.rolle}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Module Tabs + Institut-Varianten sind in die Einstellungen unten

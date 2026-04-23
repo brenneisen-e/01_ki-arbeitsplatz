@@ -16,19 +16,19 @@ const F = 'f';
 
 // Geschlecht pro Foto (manuell verifiziert anhand der tatsächlichen Bilder)
 const PHOTO_GENDER = {
-  './images/AdobeStock_624564221.jpeg':  M, // junger Mann, blaues Hemd
-  './images/AdobeStock_252262042.jpeg':  F, // Frau mit dunklen Locken
-  './images/AdobeStock_361342769.jpeg':  M, // Mann mit Brille + Karo-Hemd
-  './images/AdobeStock_477904088.jpeg':  F, // Frau, Locken, hellblauer Blazer
-  './images/AdobeStock_612932760.jpeg':  F, // ältere Dame mit Brille
-  './images/AdobeStock_612940075.jpeg':  F, // Frau, kurze Haare, blauer Blazer
-  './images/AdobeStock_910604663.jpeg':  F, // Frau, lange Haare, schwarzer Blazer
-  './images/AdobeStock_965208311.jpeg':  M, // Mann im Anzug, asiatischer Hintergrund
-  './images/AdobeStock_1091012713.jpeg': M, // junger Mann, dunkle Locken
-  './images/AdobeStock_1210213822.jpeg': M, // Mann mit Brille
-  './images/AdobeStock_1367815601.jpeg': M, // älterer Herr im Anzug
-  './images/AdobeStock_1387839378.jpeg': M, // Mann mit asiatischem Hintergrund
-  './images/AdobeStock_329502726.jpeg':  M, // Mann mit Brille, älter, dunkler Blazer
+  '/images/AdobeStock_624564221.jpeg':  M, // junger Mann, blaues Hemd
+  '/images/AdobeStock_252262042.jpeg':  F, // Frau mit dunklen Locken
+  '/images/AdobeStock_361342769.jpeg':  M, // Mann mit Brille + Karo-Hemd
+  '/images/AdobeStock_477904088.jpeg':  F, // Frau, Locken, hellblauer Blazer
+  '/images/AdobeStock_612932760.jpeg':  F, // ältere Dame mit Brille
+  '/images/AdobeStock_612940075.jpeg':  F, // Frau, kurze Haare, blauer Blazer
+  '/images/AdobeStock_910604663.jpeg':  F, // Frau, lange Haare, schwarzer Blazer
+  '/images/AdobeStock_965208311.jpeg':  M, // Mann im Anzug, asiatischer Hintergrund
+  '/images/AdobeStock_1091012713.jpeg': M, // junger Mann, dunkle Locken
+  '/images/AdobeStock_1210213822.jpeg': M, // Mann mit Brille
+  '/images/AdobeStock_1367815601.jpeg': M, // älterer Herr im Anzug
+  '/images/AdobeStock_1387839378.jpeg': M, // Mann mit asiatischem Hintergrund
+  '/images/AdobeStock_329502726.jpeg':  M, // Mann mit Brille, älter, dunkler Blazer
 };
 
 // Geschlecht pro Kunden-ID
@@ -61,29 +61,29 @@ const KUNDEN_GENDER = {
 // PHOTO_GENDER[file] === KUNDEN_GENDER[id] gilt.
 const KUNDEN_FOTOS = {
   // Versicherung
-  KD00001: './images/AdobeStock_624564221.jpeg',
-  KD00002: './images/AdobeStock_252262042.jpeg',
-  KD00003: './images/AdobeStock_361342769.jpeg',
-  KD00005: './images/AdobeStock_612932760.jpeg',
-  KD00008: './images/AdobeStock_1091012713.jpeg',
+  KD00001: '/images/AdobeStock_624564221.jpeg',
+  KD00002: '/images/AdobeStock_252262042.jpeg',
+  KD00003: '/images/AdobeStock_361342769.jpeg',
+  KD00005: '/images/AdobeStock_612932760.jpeg',
+  KD00008: '/images/AdobeStock_1091012713.jpeg',
   // Banking
-  BK00001: './images/AdobeStock_361342769.jpeg',  // Klaus Fischer (M)
-  BK00002: './images/AdobeStock_477904088.jpeg',  // Sandra Müller (F)
-  BK00003: './images/AdobeStock_1210213822.jpeg', // Peter Hoffmann (M) – war versehentlich ein Frauenbild
-  BK00004: './images/AdobeStock_965208311.jpeg',  // Markus Wagner (M)
-  BK00005: './images/AdobeStock_252262042.jpeg',  // Andrea Lang (F)
-  BK00006: './images/AdobeStock_624564221.jpeg',  // Stefan Braun (M) – war versehentlich ein Frauenbild
-  BK00007: './images/AdobeStock_612940075.jpeg',  // Maria Schuster (F)
+  BK00001: '/images/AdobeStock_361342769.jpeg',  // Klaus Fischer (M)
+  BK00002: '/images/AdobeStock_477904088.jpeg',  // Sandra Müller (F)
+  BK00003: '/images/AdobeStock_1210213822.jpeg', // Peter Hoffmann (M) – war versehentlich ein Frauenbild
+  BK00004: '/images/AdobeStock_965208311.jpeg',  // Markus Wagner (M)
+  BK00005: '/images/AdobeStock_252262042.jpeg',  // Andrea Lang (F)
+  BK00006: '/images/AdobeStock_624564221.jpeg',  // Stefan Braun (M) – war versehentlich ein Frauenbild
+  BK00007: '/images/AdobeStock_612940075.jpeg',  // Maria Schuster (F)
   // Stiftungen: Logo statt Foto
-  VV00003: './images/stiftung-weber-logo.svg',
+  VV00003: '/images/stiftung-weber-logo.svg',
   // VV Mandanten
-  VV00001: './images/AdobeStock_1367815601.jpeg',
-  VV00002: './images/AdobeStock_910604663.jpeg',
-  VV00004: './images/AdobeStock_329502726.jpeg',
-  VV00005: './images/AdobeStock_1387839378.jpeg',
+  VV00001: '/images/AdobeStock_1367815601.jpeg',
+  VV00002: '/images/AdobeStock_910604663.jpeg',
+  VV00004: '/images/AdobeStock_329502726.jpeg',
+  VV00005: '/images/AdobeStock_1387839378.jpeg',
   // WM
-  WM00001: './images/AdobeStock_612932760.jpeg',
-  WM00003: './images/AdobeStock_1091012713.jpeg',
+  WM00001: '/images/AdobeStock_612932760.jpeg',
+  WM00003: '/images/AdobeStock_1091012713.jpeg',
 };
 
 // Dev-Assertion beim Import ausführen, damit ein Mismatch sofort auffällt.

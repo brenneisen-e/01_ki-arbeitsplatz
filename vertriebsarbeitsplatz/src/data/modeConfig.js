@@ -6,7 +6,7 @@ export const MODE_CONFIGS = {
     institutDomain: 'ergo.de',
     beraterTitel: 'Agentur', beraterTitelM: 'Agentur', beraterTitelW: 'Agentur', beraterTitelEn: 'Agency',
     beraterName: 'Nadine Müller',
-    beraterFoto: './images/maria-musterfrau.png',
+    beraterFoto: '/images/maria-musterfrau.png',
     beraterId: 'VM00001',
     kundenLabel: 'Kunde', kundenLabelEn: 'Client',
     colors: {
@@ -62,7 +62,7 @@ export const MODE_CONFIGS = {
     institutDomain: 'volksbank.de',
     beraterTitel: 'Beraterin', beraterTitelM: 'Berater', beraterTitelW: 'Beraterin', beraterTitelEn: 'Advisor',
     beraterName: 'Nadine Müller',
-    beraterFoto: './images/maria-musterfrau.png',
+    beraterFoto: '/images/maria-musterfrau.png',
     beraterId: 'VB-40210',
     kundenLabel: 'Kunde', kundenLabelEn: 'Client',
     colors: {
@@ -117,7 +117,7 @@ export const MODE_CONFIGS = {
     institutDomain: 'hrklunis.com',
     beraterTitel: 'Senior Advisor', beraterTitelM: 'Senior Advisor', beraterTitelW: 'Senior Advisor',
     beraterName: 'Dr. Thomas Richter',
-    beraterFoto: './images/AdobeStock_361342769.jpeg',
+    beraterFoto: '/images/AdobeStock_361342769.jpeg',
     beraterId: 'HRK-TR-001',
     kundenLabel: 'Mandant',
     kundenLabelEn: 'Client',

@@ -277,19 +277,24 @@ export default function StammdatenDetailTab({ kunde }) {
             <InfoRow
               label={t('wohnsituation')}
               value={(() => {
-                const base = kunde.adresse
-                  ? `${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)`
-                  : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`;
                 const hausrat = (kunde.fremdProdukte || []).find(
                   p => /hausrat/i.test(p.produktart || '') && p.consent
                 );
-                if (!hausrat) return base;
                 return (
                   <span className="inline-flex items-center gap-2 flex-wrap">
-                    <span>{base}</span>
-                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
-                      Open Finance · Hausrat
-                    </span>
+                    {kunde.adresse ? (
+                      <span>
+                        <AddressHoverMap address={kunde.adresse} />
+                        {` (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)`}
+                      </span>
+                    ) : (
+                      <span>{`${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`}</span>
+                    )}
+                    {hausrat && (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+                        Open Finance · Hausrat
+                      </span>
+                    )}
                   </span>
                 );
               })()}
@@ -929,6 +934,71 @@ function ExpandableProduktRow({ produkt, isVV, t }) {
         </tr>
       )}
     </>
+  );
+}
+
+// Adresse mit Mouseover-Map-Popover (Mapbox Static Images API).
+// Adresse wird beim Hover einmalig per Mapbox-Geocoding geokodiert,
+// danach wird eine kleine Kartengrafik mit Pin angezeigt.
+function AddressHoverMap({ address }) {
+  const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const token = import.meta.env.VITE_MAPBOX_TOKEN || '';
+
+  useEffect(() => {
+    if (!open || coords || loading || error || !token || !address) return;
+    setLoading(true);
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${token}&limit=1&country=DE`;
+    fetch(url)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        const center = data?.features?.[0]?.center;
+        if (Array.isArray(center) && center.length === 2) {
+          setCoords({ lon: center[0], lat: center[1] });
+        } else {
+          setError(true);
+        }
+      })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, [open, coords, loading, error, token, address]);
+
+  const staticUrl = token && coords
+    ? `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+e11d48(${coords.lon},${coords.lat})/${coords.lon},${coords.lat},15/280x160@2x?access_token=${token}`
+    : null;
+
+  return (
+    <span
+      className="relative inline-block pointer-events-auto"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <span className="cursor-pointer underline decoration-dotted decoration-slate-400 underline-offset-2 hover:decoration-slate-700 transition-colors">
+        {address}
+      </span>
+      {open && (
+        <div className="absolute left-0 top-full mt-1 z-40 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden w-[280px] animate-fade-in pointer-events-auto">
+          <div className="w-full h-[160px] bg-slate-100 flex items-center justify-center">
+            {staticUrl ? (
+              <img src={staticUrl} alt={address} className="w-full h-full object-cover" />
+            ) : loading ? (
+              <span className="text-xs text-slate-400">Lade Karte …</span>
+            ) : (
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <MapPin size={14} />
+                <span>Karte nicht verfügbar</span>
+              </div>
+            )}
+          </div>
+          <div className="px-3 py-2 text-xs text-slate-700 border-t border-slate-100 flex items-start gap-1.5">
+            <MapPin size={12} className="text-slate-500 mt-0.5 shrink-0" />
+            <span className="leading-snug">{address}</span>
+          </div>
+        </div>
+      )}
+    </span>
   );
 }
 

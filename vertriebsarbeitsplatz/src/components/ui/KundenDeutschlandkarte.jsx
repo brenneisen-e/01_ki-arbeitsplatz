@@ -315,13 +315,18 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
   // Dashboard brauchen; OSM funktioniert immer. User kann live umschalten.
   const [mapProvider, setMapProvider] = useState('osm');
 
-  // Masken-GeoJSON fuer MapLibre: grosse Box ueber Europa mit den
-  // Bundeslaender-Aussenringen als Loecher — damit bleiben nur
-  // Strassen/Staedte innerhalb Deutschlands sichtbar.
+  // Masken-GeoJSON fuer MapLibre: grosse Box ueber Europa mit Loechern
+  // an der Stelle Deutschlands. Wenn ein Bundesland ausgewaehlt ist,
+  // wird NUR dieses Bundesland ausgestanzt — die uebrigen sind als Teil
+  // der Maske weiss ueberdeckt. Ohne Auswahl werden alle 16 Bundeslaender
+  // ausgestanzt (komplettes Deutschland sichtbar).
   const maskGeoJSON = useMemo(() => {
     const outer = [[-25, 30], [45, 30], [45, 72], [-25, 72], [-25, 30]];
     const holes = [];
-    for (const feature of bundeslaenderGeo.features) {
+    const features = selectedBundesland
+      ? bundeslaenderGeo.features.filter(f => f.properties.name === selectedBundesland)
+      : bundeslaenderGeo.features;
+    for (const feature of features) {
       const { type, coordinates } = feature.geometry;
       if (type === 'Polygon') holes.push(coordinates[0]);
       else if (type === 'MultiPolygon') for (const poly of coordinates) holes.push(poly[0]);
@@ -331,7 +336,7 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
       properties: {},
       geometry: { type: 'Polygon', coordinates: [outer, ...holes] },
     };
-  }, []);
+  }, [selectedBundesland]);
 
   // Wenn totalCount > kunden.length, fuellen wir mit synthetischen Ghost-
   // Kunden auf, damit die Choropleth und die Markerverteilung der tatsaech-
@@ -414,12 +419,18 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
         });
       }
       if (!map.getSource('de-outline')) {
-        map.addSource('de-outline', { type: 'geojson', data: bundeslaenderGeo });
+        const outlineData = selectedBundesland
+          ? {
+              type: 'FeatureCollection',
+              features: bundeslaenderGeo.features.filter(f => f.properties.name === selectedBundesland),
+            }
+          : bundeslaenderGeo;
+        map.addSource('de-outline', { type: 'geojson', data: outlineData });
         map.addLayer({
           id: 'de-outline-line',
           type: 'line',
           source: 'de-outline',
-          paint: { 'line-color': '#cbd5e1', 'line-width': 0.8, 'line-opacity': 0.9 },
+          paint: { 'line-color': '#1e40af', 'line-width': 1.5, 'line-opacity': 0.9 },
         });
       }
     };
@@ -428,12 +439,22 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
     // dann greift 'styledata'. Im aktuellen Pfad wird aber immer die Karte
     // komplett neu gebaut, deshalb reicht 'load'.
 
-    // Auf das gewaehlte Bundesland fliegen.
+    // Auf das gewaehlte Bundesland fliegen und MaxBounds setzen, damit
+    // der User nicht ins maskierte Ausland pannen kann.
     const feature = bundeslaenderGeo.features.find(f => f.properties.name === selectedBundesland);
     if (feature) {
       const bounds = new maplibregl.LngLatBounds();
       const walk = (c) => { if (typeof c[0] === 'number') bounds.extend(c); else c.forEach(walk); };
       walk(feature.geometry.coordinates);
+      // etwas Spielraum um die Bundesland-Bounds:
+      const pad = 0.8;
+      const sw = bounds.getSouthWest();
+      const ne = bounds.getNorthEast();
+      const paddedBounds = [
+        [sw.lng - pad, sw.lat - pad],
+        [ne.lng + pad, ne.lat + pad],
+      ];
+      map.setMaxBounds(paddedBounds);
       map.once('load', () => map.fitBounds(bounds, { padding: 40, duration: 700 }));
     }
 

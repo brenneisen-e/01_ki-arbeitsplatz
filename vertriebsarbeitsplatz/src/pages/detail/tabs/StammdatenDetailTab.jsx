@@ -206,7 +206,7 @@ export default function StammdatenDetailTab({ kunde }) {
               {kunde.linkedin && (
                 <>
                   <span>·</span>
-                  <span className="flex items-center gap-1"><Linkedin size={12} className="text-blue-500" /> {kunde.linkedin.kontakte}+ {t('kontakte')}</span>
+                  <span className="flex items-center gap-1"><Linkedin size={12} className="text-slate-400" /> {kunde.linkedin.kontakte}+ {t('kontakte')}</span>
                 </>
               )}
             </div>
@@ -224,12 +224,9 @@ export default function StammdatenDetailTab({ kunde }) {
       <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-start' : 'grid grid-cols-2 gap-4 items-start'}>
         {/* Persoenliche Daten */}
         <Card hover={false} className="flex flex-col">
-          <div
-            className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-200 flex items-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' }}
-          >
-            <User size={20} className="text-blue-600" strokeWidth={1.75} />
-            <h3 className="font-semibold text-blue-900">{t('persoenlicheDaten')}</h3>
+          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
+            <User size={18} className="text-slate-500" strokeWidth={1.75} />
+            <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('persoenlicheDaten')}</h3>
           </div>
           <div className="space-y-2 text-sm">
             <InfoRow label={t('name')} value={tn(kunde.name)} />
@@ -263,7 +260,7 @@ export default function StammdatenDetailTab({ kunde }) {
             )}
             {kunde.linkedin && (
               <div className="flex items-center gap-2 pt-2 border-t border-slate-100 mt-2">
-                <Linkedin size={14} className="text-blue-600" />
+                <Linkedin size={14} className="text-slate-500" />
                 <span className="text-slate-500">{kunde.linkedin.kontakte}+ {t('kontakte')}</span>
                 <span className="text-slate-400">&middot; {kunde.linkedin.branchen?.join(', ')}</span>
               </div>
@@ -286,12 +283,9 @@ export default function StammdatenDetailTab({ kunde }) {
 
         {/* Finanzuebersicht */}
         <Card hover={false} className="flex flex-col">
-          <div
-            className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-200 flex items-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)' }}
-          >
-            <Wallet size={20} className="text-emerald-600" strokeWidth={1.75} />
-            <h3 className="font-semibold text-emerald-900">{t('finanzuebersicht')}</h3>
+          <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
+            <Wallet size={18} className="text-slate-500" strokeWidth={1.75} />
+            <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('finanzuebersicht')}</h3>
           </div>
           <div className="space-y-2 text-sm">
             <InfoRow label={t('haushaltsnetto')} value={`${formatEur(haushalt)}/mtl.`} />
@@ -428,7 +422,7 @@ export default function StammdatenDetailTab({ kunde }) {
                 <span className="flex items-center gap-1">
                   <span className="text-slate-700 font-medium">{kunde.risikoscore} ({kunde.risikoscore < 30 ? t('niedrig') : kunde.risikoscore < 50 ? t('mittel') : t('hoch')})</span>
                   {kunde.risikoSignale?.length > 0 && (
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 border border-blue-300 text-blue-600 ml-1" title="Risiko-Signal aus Kontoumsätzen">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 ml-1" title="Risiko-Signal aus Kontoumsätzen">
                       <ShieldAlert size={12} strokeWidth={2.5} />
                     </span>
                   )}
@@ -515,7 +509,7 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
         <div className="flex items-baseline gap-2 text-sm flex-wrap">
           <span className="text-slate-400 shrink-0">Position:</span>
           <span className="text-slate-700 font-medium">{beruf}</span>
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full">
             <Linkedin size={11} /> Durch LinkedIn Abgleich
           </span>
           <span className="text-xs text-slate-400 font-mono">{fmt(linkedInUpdate)}</span>
@@ -564,7 +558,7 @@ function HaustiereRow({ haustiere, t }) {
             </span>
             <button
               onClick={() => setShowDetail(!showDetail)}
-              className="flex items-center gap-1 text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-1 text-xs text-slate-600 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200 hover:bg-slate-100 transition-colors"
             >
               <Info size={11} />
               {t('details')}
@@ -656,7 +650,7 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
               {fz.praemie > 0 && <span className="font-mono"> ({fz.praemie}€/J.)</span>}
             </span>
             {fz.quelle === 'psd2' && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-50 text-slate-600 border border-slate-200">
                 Open Finance
               </span>
             )}
@@ -677,7 +671,7 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
         <div className="flex items-baseline gap-2 text-sm flex-wrap">
           <span className="text-slate-400 shrink-0">{t('mobilitaetsausgaben')}:</span>
           <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-medium">PSD2</span>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-slate-50 text-slate-600 border border-slate-200 font-medium">PSD2</span>
         </div>
       )}
     </>
@@ -782,26 +776,26 @@ function RisikoSignale({ signale, institut }) {
       {signale.map((s, i) => (
         <div key={i}>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="flex items-center gap-1.5 text-blue-600 shrink-0 text-sm">
+            <span className="flex items-center gap-1.5 text-amber-700 shrink-0 text-sm">
               <ShieldAlert size={14} />
               {interpolateDynamicDates(s.titel, ctx)}
             </span>
             <span className="text-sm text-slate-500 italic">Aus Kontoumsätzen erkannt</span>
             <button
               onClick={() => setExpanded(expanded === i ? null : i)}
-              className="flex items-center gap-1 text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-1 text-xs text-slate-600 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200 hover:bg-slate-100 transition-colors"
             >
               <Info size={11} />
               Details
             </button>
           </div>
           {expanded === i && (
-            <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2 animate-fade-in">
+            <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-2 animate-fade-in">
               <div className="text-sm text-slate-700 leading-snug">{interpolateDynamicDates(s.beschreibung, ctx)}</div>
 
               {s.transaktionen?.length > 0 && (
-                <div className="pt-2 border-t border-blue-200">
-                  <div className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-1">Erkannte Transaktionen</div>
+                <div className="pt-2 border-t border-amber-200">
+                  <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">Erkannte Transaktionen</div>
                   <div className="space-y-0.5">
                     {s.transaktionen.map((t, ti) => (
                       <div key={ti} className="flex items-baseline justify-between text-sm">
@@ -846,32 +840,20 @@ export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'sta
     ? generateFinanzKISummary(kunde)
     : generateKISummary(kunde);
   const wrapperClass = embedded
-    ? 'relative rounded-xl border overflow-hidden'
-    : 'relative rounded-2xl border overflow-hidden';
+    ? 'relative rounded-xl border border-slate-200 bg-white overflow-hidden'
+    : 'relative rounded-2xl border border-slate-200 bg-white overflow-hidden';
   return (
-    <div
-      className={wrapperClass}
-      style={{
-        background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #e0e7ff 100%)',
-        borderColor: '#d8d4ff',
-        boxShadow: embedded ? 'none' : '0 4px 14px -6px rgba(124, 58, 237, 0.18)',
-      }}
-    >
-      <div
-        className="absolute -top-12 -right-12 w-40 h-40 rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, transparent 70%)' }}
-      />
-      <div className="relative px-4 py-3 flex items-start gap-3">
-        <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
-          style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
-        >
-          <Sparkles size={16} className="text-white" strokeWidth={2} />
+    <div className={wrapperClass}>
+      {/* Schmaler Violett-Akzent als einziges Signal "das ist KI" */}
+      <div className="absolute top-0 left-0 bottom-0 w-0.5 bg-violet-500" />
+      <div className="relative pl-4 pr-4 py-3 flex items-start gap-3">
+        <div className="w-8 h-8 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center shrink-0">
+          <Sparkles size={16} className="text-violet-600" strokeWidth={2} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-0.5">
-            <h3 className="font-semibold text-slate-800 text-sm">KI-Zusammenfassung</h3>
-            <span className="text-[11px] text-slate-500 font-mono">
+          <div className="flex items-center justify-between mb-0.5 gap-2">
+            <h3 className="font-semibold text-slate-700 text-sm tracking-wide">KI-Zusammenfassung</h3>
+            <span className="text-[11px] text-slate-400 font-mono shrink-0">
               Aktualisiert {new Date().toLocaleDateString('de-DE')}
             </span>
           </div>
@@ -880,7 +862,7 @@ export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'sta
             <div className="mt-1 flex items-start gap-1.5 text-[13px]">
               <Sparkles size={12} className="text-violet-600 mt-0.5 shrink-0" />
               <span className="text-slate-700">
-                <strong className="text-violet-700">Empfehlung:</strong> {summary.recommendation}
+                <strong className="text-slate-800">Empfehlung:</strong> {summary.recommendation}
               </span>
             </div>
           )}
@@ -1005,26 +987,17 @@ function AktivitaetenCard({ kunde }) {
     }
   };
 
-  const colorForType = (typ) => {
-    switch (typ) {
-      case 'termin': return { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200' };
-      case 'telefon': case 'anruf': return { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' };
-      case 'email': case 'mail': return { bg: 'bg-violet-50', text: 'text-violet-600', border: 'border-violet-200' };
-      case 'newsletter': return { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200' };
-      case 'chatbot': case 'chat': return { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200' };
-      default: return { bg: 'bg-slate-50', text: 'text-slate-600', border: 'border-slate-200' };
-    }
-  };
+  // Einheitlich neutrale Icon-Boxen — Aktivitätstyp wird über Icon-Form
+  // kommuniziert, nicht über Farbe. Nur die "Neu"-Terminzusage wird
+  // weiterhin grün hervorgehoben (eigener Branch unten).
+  const colorForType = () => ({ bg: 'bg-slate-50', text: 'text-slate-500', border: 'border-slate-200' });
 
   return (
     <Card hover={false} className="flex flex-col">
-      <div
-        className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-orange-200 flex items-center gap-2"
-        style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)' }}
-      >
-        <MessageSquare size={20} className="text-orange-600" strokeWidth={1.75} />
-        <h3 className="font-semibold text-orange-900">Aktivitäten</h3>
-        <span className="text-xs text-orange-800/70 ml-auto">
+      <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-slate-200 flex items-center gap-2 bg-white">
+        <MessageSquare size={18} className="text-slate-500" strokeWidth={1.75} />
+        <h3 className="font-semibold text-slate-700 text-sm tracking-wide">Aktivitäten</h3>
+        <span className="text-xs text-slate-400 ml-auto">
           {komms.length === 0 ? 'Keine' : `${komms.length} letzte`}
         </span>
       </div>
@@ -1037,7 +1010,7 @@ function AktivitaetenCard({ kunde }) {
         <div className="space-y-3">
           {komms.map((k, i) => {
             const Icon = iconForType(k.typ);
-            const c = colorForType(k.typ);
+            const c = colorForType();
             const isNeu = k.istNeuZugestimmt;
             const date = new Date(k.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const appointmentLabel = isNeu

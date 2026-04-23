@@ -3,10 +3,17 @@ import { Heart, Globe, TrendingUp, Sparkles, AlertTriangle, Database } from 'luc
 import Card from './Card';
 
 /* ── Track config ──────────────────────────────────────────── */
+// Einheitlicher Slate-Ton für alle drei Spuren — differenziert wird nur
+// über Icon + Label auf der linken Seite, nicht über die Event-Farbe.
+// Farbe trägt hier bewusst keine Kategorie-Bedeutung mehr; semantische
+// Farben bleiben ausschließlich „Heute" (rot), „KI erkannt" (violett),
+// „Warnung" (rot).
+const TRACK_COLOR = '#475569';      // slate-600
+const TRACK_BASELINE = '#e2e8f0';   // slate-200
 const TRACKS = [
-  { key: 'leben',     label: 'Leben',      color: '#3b82f6', icon: Heart },
-  { key: 'oeffentlich', label: 'Öffentlich', color: '#8b5cf6', icon: Globe },
-  { key: 'finanzen',  label: 'Finanzen',   color: '#22c55e', icon: TrendingUp },
+  { key: 'leben',     label: 'Leben',      icon: Heart },
+  { key: 'oeffentlich', label: 'Öffentlich', icon: Globe },
+  { key: 'finanzen',  label: 'Finanzen',   icon: TrendingUp },
 ];
 
 /* ── Demo timeline data per Banking Kunde ─────────────────── */
@@ -184,8 +191,8 @@ export default function LebenszeitstrahlCard({ kunde }) {
     <Card hover={false} className="lebenszeitstrahl-card">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Sparkles size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-          <h3 className="font-semibold text-slate-800">Kunden-Lebenszeitstrahl</h3>
+          <Sparkles size={18} className="text-slate-500" strokeWidth={1.75} />
+          <h3 className="font-semibold text-slate-700 text-sm tracking-wide">Kunden-Lebenszeitstrahl</h3>
         </div>
         <div className="flex items-center gap-1 bg-slate-100 rounded-full p-0.5">
           {[
@@ -209,7 +216,8 @@ export default function LebenszeitstrahlCard({ kunde }) {
 
       {/* Timeline body */}
       <div className="bg-slate-50 rounded-2xl p-5 pl-32 pr-6">
-        {/* Track row labels (left) */}
+        {/* Track row labels (left) — einheitliches Slate, differenziert nur
+            über Icon + Label. */}
         <div className="absolute pl-5 -ml-32" style={{ width: 96 }}>
           <div className="flex flex-col gap-0">
             {TRACKS.map((tr) => {
@@ -220,13 +228,10 @@ export default function LebenszeitstrahlCard({ kunde }) {
                   className="flex items-center gap-2"
                   style={{ height: TRACK_HEIGHT }}
                 >
-                  <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: tr.color + '20' }}
-                  >
-                    <Icon size={18} style={{ color: tr.color }} strokeWidth={2.25} />
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-white border border-slate-200">
+                    <Icon size={16} className="text-slate-500" strokeWidth={2} />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: tr.color }}>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     {tr.label}
                   </span>
                 </div>
@@ -258,7 +263,7 @@ export default function LebenszeitstrahlCard({ kunde }) {
                 {/* Track baseline */}
                 <div
                   className="absolute left-0 right-0 h-0.5 rounded-full"
-                  style={{ top: trackCenter - 1, backgroundColor: tr.color + '25' }}
+                  style={{ top: trackCenter - 1, backgroundColor: TRACK_BASELINE }}
                 />
 
                 {/* Events */}
@@ -290,7 +295,7 @@ export default function LebenszeitstrahlCard({ kunde }) {
                             top: '50%',
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
-                            backgroundColor: tr.color + '30',
+                            backgroundColor: TRACK_COLOR + '22',
                           }}
                         />
                       )}
@@ -300,53 +305,53 @@ export default function LebenszeitstrahlCard({ kunde }) {
                         style={{
                           width: dotSize,
                           height: dotSize,
-                          backgroundColor: event.isFuture ? '#ffffff' : tr.color,
+                          backgroundColor: event.isFuture ? '#ffffff' : TRACK_COLOR,
                           border: event.isFuture
-                            ? `3px dashed ${tr.color}`
+                            ? `2px dashed ${TRACK_COLOR}`
                             : `3px solid white`,
                           boxShadow: isHovered
-                            ? `0 6px 18px ${tr.color}80`
-                            : '0 2px 6px rgba(0,0,0,0.22)',
+                            ? `0 6px 18px rgba(71, 85, 105, 0.45)`
+                            : '0 2px 5px rgba(15, 23, 42, 0.15)',
                         }}
                       />
-                      {/* AI sparkle badge */}
+                      {/* AI sparkle badge — violett als semantisches Signal */}
                       {event.aiDetected && (
                         <div
-                          className="absolute rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-md pointer-events-none"
+                          className="absolute rounded-full bg-violet-500 flex items-center justify-center border-2 border-white shadow-sm pointer-events-none"
                           style={{
-                            width: isHovered ? 26 : 22,
-                            height: isHovered ? 26 : 22,
-                            top: -2,
-                            right: -2,
+                            width: isHovered ? 24 : 20,
+                            height: isHovered ? 24 : 20,
+                            top: -1,
+                            right: -1,
                           }}
                         >
-                          <Sparkles size={isHovered ? 14 : 12} className="text-white" strokeWidth={2.75} />
+                          <Sparkles size={isHovered ? 13 : 11} className="text-white" strokeWidth={2.75} />
                         </div>
                       )}
-                      {/* FIDA dot */}
+                      {/* FIDA dot — dezenter Slate-Marker statt Lila */}
                       {event.fida && (
                         <div
-                          className="absolute rounded-full bg-purple-500 border-2 border-white shadow-md pointer-events-none"
+                          className="absolute rounded-sm bg-slate-700 border border-white shadow-sm pointer-events-none"
                           style={{
-                            width: isHovered ? 20 : 16,
-                            height: isHovered ? 20 : 16,
-                            top: 0,
-                            right: 0,
+                            width: isHovered ? 12 : 10,
+                            height: isHovered ? 12 : 10,
+                            top: 1,
+                            right: 1,
                           }}
                         />
                       )}
                       {/* Warning */}
                       {event.isWarning && (
                         <div
-                          className="absolute rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-md pointer-events-none"
+                          className="absolute rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-sm pointer-events-none"
                           style={{
-                            width: isHovered ? 26 : 22,
-                            height: isHovered ? 26 : 22,
-                            top: -2,
-                            right: -2,
+                            width: isHovered ? 24 : 20,
+                            height: isHovered ? 24 : 20,
+                            top: -1,
+                            right: -1,
                           }}
                         >
-                          <AlertTriangle size={isHovered ? 14 : 12} className="text-white" strokeWidth={2.75} />
+                          <AlertTriangle size={isHovered ? 13 : 11} className="text-white" strokeWidth={2.75} />
                         </div>
                       )}
                       {/* Floating tooltip */}
@@ -362,41 +367,37 @@ export default function LebenszeitstrahlCard({ kunde }) {
                           }}
                         >
                           <div
-                            className="rounded-xl shadow-xl border px-3.5 py-2.5 bg-white"
+                            className="rounded-xl shadow-lg border border-slate-200 px-3.5 py-2.5 bg-white"
                             style={{
-                              borderColor: tr.color + '60',
                               minWidth: 220,
                               maxWidth: 300,
-                              boxShadow: `0 10px 30px -8px ${tr.color}55, 0 4px 10px rgba(0,0,0,0.08)`,
+                              boxShadow: '0 10px 24px -8px rgba(15, 23, 42, 0.18), 0 3px 8px rgba(15, 23, 42, 0.05)',
                             }}
                           >
                             <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                              <span
-                                className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full"
-                                style={{ backgroundColor: tr.color + '22', color: tr.color }}
-                              >
+                              <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
                                 {tr.label}
                               </span>
                               <span className="text-[10px] font-mono font-semibold text-slate-500">
                                 {formatTooltipDate(event.date)}
                               </span>
                               {event.aiDetected && (
-                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-full">
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-violet-700 bg-violet-50 border border-violet-200 px-1.5 py-0.5 rounded-full">
                                   <Sparkles size={9} /> KI
                                 </span>
                               )}
                               {event.fida && (
-                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded-full">
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-700 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded-full">
                                   <Database size={9} /> FIDA
                                 </span>
                               )}
                               {event.isFuture && (
-                                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-600 bg-slate-200 px-1.5 py-0.5 rounded-full">
+                                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded-full">
                                   Zukunft
                                 </span>
                               )}
                               {event.isWarning && (
-                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-red-700 bg-red-100 px-1.5 py-0.5 rounded-full">
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-red-700 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded-full">
                                   <AlertTriangle size={9} /> Warnung
                                 </span>
                               )}
@@ -417,7 +418,7 @@ export default function LebenszeitstrahlCard({ kunde }) {
                                 <ul className="space-y-0.5">
                                   {event.signals.map((s, si) => (
                                     <li key={si} className="text-[11px] text-slate-700 flex items-start gap-1">
-                                      <span style={{ color: tr.color }} className="mt-0.5">▸</span>
+                                      <span className="mt-0.5 text-slate-400">▸</span>
                                       <span>{s}</span>
                                     </li>
                                   ))}
@@ -429,8 +430,8 @@ export default function LebenszeitstrahlCard({ kunde }) {
                               className="absolute left-1/2 -translate-x-1/2 w-0 h-0"
                               style={{
                                 ...(tooltipBelow
-                                  ? { bottom: '100%', borderBottom: `7px solid ${tr.color}60` }
-                                  : { top: '100%', borderTop: `7px solid ${tr.color}60` }),
+                                  ? { bottom: '100%', borderBottom: '7px solid #e2e8f0' }
+                                  : { top: '100%', borderTop: '7px solid #e2e8f0' }),
                                 borderLeft: '7px solid transparent',
                                 borderRight: '7px solid transparent',
                               }}
@@ -467,15 +468,15 @@ export default function LebenszeitstrahlCard({ kunde }) {
           const Icon = tr.icon;
           return (
             <div key={tr.key} className="flex items-center gap-1.5">
-              <Icon size={12} style={{ color: tr.color }} strokeWidth={2.5} />
+              <Icon size={12} className="text-slate-500" strokeWidth={2.25} />
               <span className="font-medium">{tr.label}</span>
             </div>
           );
         })}
         <span className="text-slate-300">·</span>
-        <span className="flex items-center gap-1"><Sparkles size={11} className="text-amber-500" /> KI erkannt</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> FIDA</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full border-2 border-slate-400 bg-white" /> Zukunft</span>
+        <span className="flex items-center gap-1"><Sparkles size={11} className="text-violet-600" /> KI erkannt</span>
+        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-slate-700" /> FIDA</span>
+        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full border-2 border-dashed border-slate-400 bg-white" /> Zukunft</span>
         <span className="ml-auto text-[10px] italic text-slate-400">Hover über einen Punkt für Details</span>
       </div>
     </Card>

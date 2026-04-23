@@ -734,7 +734,7 @@ export const TERMINE_BY_MODE = {
       // der Übersicht auftauchen – sonst wäre die Sidebar nur eine Kopie
       // dieser Kacheln. Die hier genutzten Kunden sind reine Termin-Stubs
       // (KDB00X), die auch in den Aufgaben vorkommen oder neu sind.
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Julia Becker', betreff: tx('FIDA-Consent Termin', 'FIDA consent meeting'), kundeId: 'KDB004', foto: fotoFor('KDB004', './images/AdobeStock_612940075.jpeg') },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Julia Becker', betreff: tx('Altersvorsorge Beratung', 'Retirement planning consultation'), kundeId: 'KDB004', foto: fotoFor('KDB004', './images/AdobeStock_612940075.jpeg') },
       { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Thomas Krüger', betreff: tx('Baufinanzierung Erstgespräch', 'Construction loan initial meeting'), kundeId: 'KDB007', foto: fotoFor('KDB007', './images/AdobeStock_329502726.jpeg') },
       { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Christian Binder', betreff: tx('VR-FinanzPlan Beratung', 'VR Financial Plan consultation'), kundeId: 'KDB010', foto: fotoFor('KDB010', './images/AdobeStock_1091012713.jpeg') },
       { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sabine Lorenz', betreff: tx('Wertpapier-Review', 'Securities review'), kundeId: 'KDB011', foto: fotoFor('KDB011', './images/maria-musterfrau.png') },

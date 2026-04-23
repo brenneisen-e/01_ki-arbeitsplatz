@@ -224,7 +224,7 @@ export default function StammdatenDetailTab({ kunde }) {
 
       <div className={(modeId === 'banking' || modeId === 'versicherung') ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
         {/* Persoenliche Daten */}
-        <Card hover={false} className="flex flex-col h-full">
+        <Card hover={false} className="flex flex-col h-full info-card-invert info-card-invert-blue">
           <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-100 flex items-center gap-2 bg-blue-50/70">
             <User size={18} className="text-blue-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('persoenlicheDaten')}</h3>
@@ -306,7 +306,7 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card hover={false} className="flex flex-col h-full">
+        <Card hover={false} className="flex flex-col h-full info-card-invert info-card-invert-emerald">
           <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-100 flex items-center gap-2 bg-emerald-50/70">
             <Wallet size={18} className="text-emerald-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('finanzuebersicht')}</h3>
@@ -467,11 +467,37 @@ export default function StammdatenDetailTab({ kunde }) {
               // Deterministisches NPS-Erhebungsdatum aus der Kunden-ID ableiten,
               // damit der Stand nicht bei jedem Render springt.
               const seed = (kunde.id || kunde.name || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-              const daysAgo = 14 + (seed % 90); // vor 2 Wochen bis ca. 3,5 Monaten
+              const daysAgo = 14 + (seed % 90);
               const d = new Date();
               d.setDate(d.getDate() - daysAgo);
               const datum = d.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-              return <InfoRow label="NPS" value={`${kunde.nps}/10 (erhoben ${datum})`} />;
+              const nps = Number(kunde.nps) || 0;
+              // Kritikpunkt + KI-Handlungsimpuls abhaengig vom NPS-Wert.
+              let schmerz = null;
+              let impuls = null;
+              if (nps <= 6) {
+                schmerz = 'Kritikpunkt: „Ich habe das Gefühl, dass sich nie jemand proaktiv bei mir meldet."';
+                impuls = 'Kontaktfrequenz auf Quartalsrhythmus erhöhen, proaktiven Check-In-Termin anbieten.';
+              } else if (nps <= 8) {
+                schmerz = 'Kritikpunkt: „Kontakt passt grundsätzlich, aber zu wenig proaktiv."';
+                impuls = 'Kontaktfrequenz leicht erhöhen (z. B. halbjährlicher Review-Termin), Gesprächsimpulse senden.';
+              } else {
+                schmerz = 'Promotor — äußerte: „Fühle mich gut betreut, bitte so weitermachen."';
+                impuls = 'Als Empfehlungsgeber aktivieren (Next-Gen / Bekanntenkreis einladen).';
+              }
+              return (
+                <>
+                  <InfoRow label="NPS" value={`${nps}/10 (erhoben ${datum})`} />
+                  <div className="pl-1 -mt-1 flex items-start gap-1.5 text-[11px] leading-snug">
+                    <Sparkles size={11} className="text-violet-600 mt-0.5 shrink-0" />
+                    <span className="text-slate-600">
+                      <span className="italic">{schmerz}</span>
+                      <br />
+                      <strong className="text-slate-800">KI-Empfehlung:</strong> {impuls}
+                    </span>
+                  </div>
+                </>
+              );
             })()}
             <InfoRow label="CLV" value={formatEur((() => {
               const praemien = (kunde.eigeneProdukte?.reduce((s, p) => s + (p.praemie || 0), 0) || 0) * 10;
@@ -1250,7 +1276,7 @@ function AktivitaetenCard({ kunde }) {
   const colorForType = () => ({ bg: 'bg-slate-50', text: 'text-slate-500', border: 'border-slate-200' });
 
   return (
-    <Card hover={false} className="flex flex-col h-full">
+    <Card hover={false} className="flex flex-col h-full info-card-invert info-card-invert-amber">
       <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-amber-100 flex items-center gap-2 bg-amber-50/70">
         <MessageSquare size={18} className="text-amber-600" strokeWidth={1.75} />
         <h3 className="font-semibold text-slate-700 text-sm tracking-wide">Aktivitäten</h3>

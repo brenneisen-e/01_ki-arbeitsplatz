@@ -417,3 +417,37 @@
   animation: kiaEnvelopeSwoosh 1.4s ease-out forwards;
   pointer-events: none;
 }
+
+/* ────────────────────────────────────────────────────────────
+   Info-Card Hover-Invert (Persoenliche Daten / Finanzuebersicht /
+   Aktivitaeten). Auf Hover wird der gesamte Karten-Hintergrund
+   in den Akzentton des Blocks gesetzt und alle Schrift auf weiss,
+   sodass die Kachel waehrend des Live-Demos klar hervorgeht.
+   ──────────────────────────────────────────────────────────── */
+.info-card-invert {
+  transition: background-color 150ms ease, color 150ms ease,
+              box-shadow 150ms ease;
+}
+.info-card-invert-blue:hover    { background-color: #2563eb !important; }
+.info-card-invert-emerald:hover { background-color: #059669 !important; }
+.info-card-invert-amber:hover   { background-color: #d97706 !important; }
+
+/* Alle textuellen Slate-/Akzent-Klassen innerhalb der gehoverten Karte
+   auf weiss zwingen. Badges, Pills, farbige Icons innerhalb sind davon
+   ausgenommen (sie nutzen bewusst andere Tailwind-Farbkanaele oder
+   inline style). */
+.info-card-invert:hover :is(
+  .text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700,
+  .text-slate-800, .text-slate-900,
+  .text-blue-600, .text-blue-700, .text-blue-800, .text-blue-900,
+  .text-emerald-600, .text-emerald-700, .text-emerald-800,
+  .text-amber-600, .text-amber-700, .text-amber-800,
+  .text-red-600, .text-red-700,
+  .text-lime-600
+) {
+  color: #ffffff !important;
+}
+.info-card-invert:hover .border-slate-100,
+.info-card-invert:hover .border-slate-200 {
+  border-color: rgba(255,255,255,0.25) !important;
+}

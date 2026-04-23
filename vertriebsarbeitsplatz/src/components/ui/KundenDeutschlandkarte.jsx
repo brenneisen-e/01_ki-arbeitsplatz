@@ -91,16 +91,16 @@ function featureCenterSvg(feature, project) {
   return [(best.minX + best.maxX) / 2, (best.minY + best.maxY) / 2];
 }
 
-// Slate → Indigo Skala fuer die Choropleth (abhaengig vom relativen Anteil).
+// Blau-Skala passend zu den KPI-Charts (Tailwind blue-100 … blue-700).
 function fillColorForCount(count, maxCount) {
   if (!count) return '#e2e8f0';
   const r = Math.max(0, Math.min(1, count / Math.max(1, maxCount)));
-  if (r >= 0.85) return '#4338ca';
-  if (r >= 0.65) return '#6366f1';
-  if (r >= 0.45) return '#818cf8';
-  if (r >= 0.25) return '#a5b4fc';
-  if (r >= 0.1)  return '#c7d2fe';
-  return '#e0e7ff';
+  if (r >= 0.85) return '#1e40af'; // blue-800
+  if (r >= 0.65) return '#2563eb'; // blue-600
+  if (r >= 0.45) return '#3b82f6'; // blue-500
+  if (r >= 0.25) return '#60a5fa'; // blue-400
+  if (r >= 0.1)  return '#93c5fd'; // blue-300
+  return '#dbeafe';                // blue-100
 }
 
 function groupByCity(kunden) {
@@ -200,8 +200,8 @@ function DeutschlandSvgChoropleth({
               cx={cx}
               cy={cy}
               r={r}
-              fill="#0f172a"
-              stroke={isHovered ? '#6366f1' : '#1e293b'}
+              fill="#1e3a8a"
+              stroke={isHovered ? '#3b82f6' : '#1e40af'}
               strokeWidth={isHovered ? 3 : 1.5}
               filter="url(#kk-bubble-shadow)"
               style={{ transition: 'all 150ms' }}
@@ -327,9 +327,9 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
       const radius = 8 + Math.min(18, Math.sqrt(g.kunden.length) * 5);
       const cityMarker = L.circleMarker([g.lat, g.lng], {
         radius,
-        color: '#4338ca',
+        color: '#1e40af',
         weight: 2,
-        fillColor: '#6366f1',
+        fillColor: '#3b82f6',
         fillOpacity: 0.55,
       });
       cityMarker.bindTooltip(
@@ -350,11 +350,17 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
           fillColor: k.status.color,
           fillOpacity: 0.95,
         });
+        const fmtDE = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const kontaktText = k.status.nextTerminDate
+          ? `Termin ${fmtDE(k.status.nextTerminDate)}`
+          : k.status.lastContactDate
+            ? `Letzter Kontakt ${fmtDE(k.status.lastContactDate)}`
+            : 'Noch kein Kontakt';
         pin.bindTooltip(
           `<div style="font-family:'DM Sans',sans-serif;">
             <div style="font-weight:700;color:#0f172a;">${k.name}</div>
             <div style="color:#64748b;">${k.city}</div>
-            <div style="color:${k.status.color};font-weight:600;margin-top:2px;">${k.status.label}</div>
+            <div style="color:${k.status.color};font-weight:600;margin-top:2px;">${kontaktText}</div>
           </div>`,
           { direction: 'top', offset: [0, -4] }
         );
@@ -373,7 +379,7 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
   useEffect(() => {
     for (const [id, marker] of kundenMarkersRef.current.entries()) {
       if (id === hoveredKundeId) {
-        marker.setStyle({ radius: 9, weight: 3, color: '#4338ca', fillOpacity: 1 });
+        marker.setStyle({ radius: 9, weight: 3, color: '#1e40af', fillOpacity: 1 });
         marker.bringToFront();
       } else {
         marker.setStyle({ radius: 5, weight: 1.5, color: '#ffffff', fillOpacity: 0.95 });
@@ -384,9 +390,9 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
   useEffect(() => {
     for (const [city, marker] of cityMarkersRef.current.entries()) {
       if (city === hoveredCity) {
-        marker.setStyle({ weight: 3, color: '#1e293b', fillOpacity: 0.8 });
+        marker.setStyle({ weight: 3, color: '#0f172a', fillOpacity: 0.8 });
       } else {
-        marker.setStyle({ weight: 2, color: '#4338ca', fillOpacity: 0.55 });
+        marker.setStyle({ weight: 2, color: '#1e40af', fillOpacity: 0.55 });
       }
     }
   }, [hoveredCity]);
@@ -407,7 +413,7 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
               <ArrowLeft size={12} /> Deutschland
             </button>
           )}
-          <MapPin size={18} className="text-indigo-600" strokeWidth={1.75} />
+          <MapPin size={18} className="text-blue-600" strokeWidth={1.75} />
           <h3 className="font-semibold text-slate-800">
             {title}
             {selectedBundesland && <span className="ml-2 text-slate-500 font-normal text-sm">· {selectedBundesland}</span>}
@@ -446,7 +452,7 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
               <div className="absolute right-4 bottom-4 flex items-center gap-2 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-lg px-3 py-1.5 text-[10px] text-slate-500">
                 <span>Wenige</span>
                 <div className="flex gap-0.5">
-                  {['#e0e7ff', '#c7d2fe', '#a5b4fc', '#818cf8', '#6366f1', '#4338ca'].map((c) => (
+                  {['#dbeafe', '#93c5fd', '#60a5fa', '#3b82f6', '#2563eb', '#1e40af'].map((c) => (
                     <div key={c} className="w-4 h-2.5 rounded-sm" style={{ backgroundColor: c }} />
                   ))}
                 </div>
@@ -466,7 +472,7 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
                 value={listSearch}
                 onChange={(e) => setListSearch(e.target.value)}
                 placeholder="Kunde, Stadt…"
-                className="w-full pl-7 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
+                className="w-full pl-7 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300"
               />
             </div>
             <div className="mt-2 text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
@@ -485,10 +491,19 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
                   const isHovered = hoveredKundeId === k.id;
                   const foto = getKundeFoto(k.id);
                   const initials = (k.name || '').split(' ').map(n => n[0]).join('').slice(0, 2);
+                  // Exaktes Datum des letzten Kontakts / des nächsten Termins.
+                  const nextTermin = k.status?.nextTerminDate ? new Date(k.status.nextTerminDate) : null;
+                  const lastContact = k.status?.lastContactDate ? new Date(k.status.lastContactDate) : null;
+                  const fmt = (d) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                  const contactLabel = nextTermin
+                    ? `Termin ${fmt(nextTermin)}`
+                    : lastContact
+                      ? `Letzter Kontakt ${fmt(lastContact)}`
+                      : 'Noch kein Kontakt';
                   return (
                     <li
                       key={k.id}
-                      className={`flex items-center gap-2.5 px-3 py-2 cursor-pointer transition-colors ${isHovered ? 'bg-indigo-50' : 'hover:bg-slate-50'}`}
+                      className={`flex items-center gap-2.5 px-3 py-2 cursor-pointer transition-colors ${isHovered ? 'bg-blue-50' : 'hover:bg-slate-50'}`}
                       onMouseEnter={() => setHoveredKundeId(k.id)}
                       onMouseLeave={() => setHoveredKundeId(null)}
                       onClick={() => onKundeClick?.(k.id)}
@@ -497,12 +512,12 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
                         <img
                           src={foto}
                           alt={k.name}
-                          className="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-200"
+                          className="w-9 h-9 rounded-full object-cover shrink-0 border border-slate-200"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                       ) : (
                         <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
                           style={{ backgroundColor: k.status.color }}
                         >
                           {initials || '?'}
@@ -510,9 +525,13 @@ export default function KundenDeutschlandkarte({ kunden = [], onKundeClick, titl
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-slate-800 truncate">{k.name}</div>
-                        <div className="text-[11px] text-slate-500 truncate flex items-center gap-1">
+                        <div className="text-[11px] text-slate-500 truncate">{k.city}</div>
+                        <div
+                          className="text-[10px] truncate font-medium flex items-center gap-1 mt-0.5"
+                          style={{ color: k.status.color }}
+                        >
                           <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: k.status.color }} />
-                          {k.city}
+                          {contactLabel}
                         </div>
                       </div>
                     </li>

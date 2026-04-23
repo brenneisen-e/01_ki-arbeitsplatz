@@ -82,6 +82,9 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
     quelle: 'alle',
     suche: '',
   });
+  // draggedCard repraesentiert entweder ein einzelnes Potenzial oder ein
+  // Cluster (mehrere Potenziale desselben Kunden). Beim Drop werden alle
+  // Items im Cluster ueberfuehrt. Shape: { status, items: Potential[] }.
   const [draggedCard, setDraggedCard] = useState(null);
   const [hoverColumn, setHoverColumn] = useState(null);
   const [feedbackModal, setFeedbackModal] = useState(null); // { potential, targetStatus }

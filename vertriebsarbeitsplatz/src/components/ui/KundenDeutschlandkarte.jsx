@@ -316,16 +316,19 @@ export default function KundenDeutschlandkarte({ kunden = [], totalCount, onKund
   const [mapProvider, setMapProvider] = useState('osm');
 
   // Masken-GeoJSON fuer MapLibre: grosse Box ueber Europa mit Loechern
-  // an der Stelle Deutschlands. Wenn ein Bundesland ausgewaehlt ist,
-  // wird NUR dieses Bundesland ausgestanzt — die uebrigen sind als Teil
-  // der Maske weiss ueberdeckt. Ohne Auswahl werden alle 16 Bundeslaender
-  // ausgestanzt (komplettes Deutschland sichtbar).
+  // an der Stelle Deutschlands bzw. des selektierten Bundeslands.
+  // GeoJSON/MapLibre erwartet: Outer-Ring counter-clockwise, Holes
+  // clockwise. Die Bundeslaender im geo.json sind CCW gespeichert, also
+  // werden sie hier fuer die Hole-Rolle gespiegelt.
   const maskGeoJSON = useMemo(() => {
     const outer = [[-25, 30], [45, 30], [45, 72], [-25, 72], [-25, 30]];
     const holes = [];
     const features = selectedBundesland
       ? bundeslaenderGeo.features.filter(f => f.properties.name === selectedBundesland)
       : bundeslaenderGeo.features;
+    // Die Bundeslaender im geo.json sind bereits CW gespeichert (shoelace
+    // test NRW => +8.85, also CW). Fuer Holes braucht MapLibre genau das,
+    // also direkt uebernehmen ohne reverse.
     for (const feature of features) {
       const { type, coordinates } = feature.geometry;
       if (type === 'Polygon') holes.push(coordinates[0]);

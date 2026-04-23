@@ -7,6 +7,7 @@ import { getLogoUrl } from '../../utils/logos';
 import useTranslation from '../../i18n/useTranslation';
 import { invalidateLangCache } from '../../utils/langHelper';
 import { TERMINE_BY_MODE, getKundeById } from '../../data';
+import { getTerminStubKunde } from '../../data/banking-termin-stubs';
 import TerminPrepModal from '../../components/ui/TerminPrepModal';
 
 // Demo-Private-Banking-Ansprechpartner. Die Landing-Page kennt keine echten
@@ -628,6 +629,7 @@ export default function LandingPage() {
                       // vorhanden (reine Termin-Stubs), fallback auf einen
                       // minimalen Kunde-Datensatz aus dem Termin selbst.
                       const kunde = getKundeById(activeModule, termin.kundeId)
+                        || getTerminStubKunde(termin.kundeId)
                         || { id: termin.kundeId, name: termin.kunde, foto: termin.foto };
                       setTerminPrep({ kunde, termin });
                     }}

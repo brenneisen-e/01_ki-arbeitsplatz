@@ -9,6 +9,7 @@ import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE } from '../../../data';
 import { VV_LEADS } from '../../../data/vvExtended';
+import { getTerminStubKunde } from '../../../data/banking-termin-stubs';
 import { formatEur } from '../../../utils/formatters';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 import TerminPrepModal from '../../../components/ui/TerminPrepModal';
@@ -1244,16 +1245,14 @@ export default function UebersichtTab() {
               const isNeu = !!termin.istNeuZugestimmt;
               const handleClick = () => {
                 // Alle Termine öffnen die KI-Gesprächsvorbereitung als Popup.
-                // Falls der Kunde nicht im aktuell geladenen Mode-Bestand zu
-                // finden ist (z. B. VV-Pipeline-Stubs, KDB-Stubs), springen
-                // wir direkt auf die Detailseite — dann kümmert sich die
-                // Suspense-Logik um das Laden.
-                const k = modeKunden.find(k => k.id === termin.kundeId);
-                if (k) {
-                  setTerminPrep({ kunde: k, termin });
-                } else {
-                  navigateTo('detail', { kundeId: termin.kundeId });
-                }
+                // Reihenfolge der Quellen:
+                //   1. realer Kunde im Mode-Bestand
+                //   2. Termin-Stub-Demo-Datensatz (banking-termin-stubs.js)
+                //   3. Minimal-Fallback aus den Termin-Feldern
+                const k = modeKunden.find(k => k.id === termin.kundeId)
+                  || getTerminStubKunde(termin.kundeId)
+                  || { id: termin.kundeId, name: termin.kunde, foto: termin.foto };
+                setTerminPrep({ kunde: k, termin });
               };
               return (
                 <div

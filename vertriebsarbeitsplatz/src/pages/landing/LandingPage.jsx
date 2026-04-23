@@ -12,11 +12,18 @@ import TerminPrepModal from '../../components/ui/TerminPrepModal';
 // Demo-Private-Banking-Ansprechpartner. Die Landing-Page kennt keine echten
 // Kollegen-Stammdaten, daher ein fester kleiner Pool – passt zur Demo-Logik
 // der App und liefert Fotos via Adobe Stock Platzhaltern.
-const PRIVATE_BANKING_CONTACTS = [
-  { name: 'Dr. Martina Huber',  rolle: 'Senior Relationship Manager', foto: './images/AdobeStock_910604663.jpeg' },
-  { name: 'Stefan Obermann',    rolle: 'Private Banking Berater',     foto: './images/AdobeStock_329502726.jpeg' },
-  { name: 'Claudia Neumann',    rolle: 'Vermögensplanung',            foto: './images/AdobeStock_612940075.jpeg' },
-  { name: 'Alexander Brandt',   rolle: 'Family Office',               foto: './images/AdobeStock_1387839378.jpeg' },
+// Ansprechpartner nach Abteilung, damit der Berater schnell den richtigen
+// Fachbereich aufrufen kann. Freitext-Feld unten ermöglicht beliebige
+// Themen, die nicht in der Liste stehen.
+const ANSPRECHPARTNER_ABTEILUNGEN = [
+  { abteilung: 'Private Banking',       beschreibung: 'Vermögende Privatkunden, Family Office' },
+  { abteilung: 'Baufinanzierung',       beschreibung: 'Immobiliendarlehen, Bausparverträge' },
+  { abteilung: 'Anlageberatung',        beschreibung: 'Wertpapiere, Fonds, ETFs' },
+  { abteilung: 'Firmenkundenbetreuung', beschreibung: 'Geschäftskonten, Betriebsmittelkredite' },
+  { abteilung: 'Kreditabteilung',       beschreibung: 'Konsumkredit, Rahmenkredit, Dispo' },
+  { abteilung: 'Versicherungsberatung', beschreibung: 'Zukunftsversicherung, BU, RLV' },
+  { abteilung: 'Compliance & Recht',    beschreibung: 'Regulatorik, FIDA/PSD2, Geldwäsche' },
+  { abteilung: 'Kundenservice',         beschreibung: 'Allgemeine Anfragen, Beschwerden' },
 ];
 
 function QuickPromptChip({ label, onClick, active = false, hasDropdown = false }) {
@@ -91,8 +98,9 @@ export default function LandingPage() {
   // Settings
   const [showSettings, setShowSettings] = useState(false);
   const [showVariants, setShowVariants] = useState(false);
-  // Quick-Prompt-Dropdowns unter dem Chat (null | 'termin' | 'privateBanking')
+  // Quick-Prompt-Dropdowns unter dem Chat (null | 'termin' | 'ansprechpartner')
   const [openPromptDropdown, setOpenPromptDropdown] = useState(null);
+  const [ansprechpartnerFreitext, setAnsprechpartnerFreitext] = useState('');
   // Vorbereitungs-Modal für einen ausgewählten Termin (öffnet sich direkt
   // als Chatbot-Antwort statt einer Navigation).
   const [terminPrep, setTerminPrep] = useState(null); // { kunde, termin } | null
@@ -444,7 +452,7 @@ export default function LandingPage() {
                 <span className="text-slate-700 text-5xl font-bold">{currentInstitut.charAt(0)}</span>
               )}
             </div>
-            <span className="mt-1 text-black text-sm font-semibold tracking-wide">
+            <span className="mt-1 text-black text-[13px] font-mono font-medium tracking-[0.12em] uppercase">
               {currentInstitut}
             </span>
           </div>
@@ -509,12 +517,12 @@ export default function LandingPage() {
               Gesprächstermin", "Ansprechpartner Private Banking") klappen
               beim Klick ein Kunden-/Kollegen-Auswahl-Dropdown auf. */}
           <div className="flex flex-wrap justify-center gap-2 mt-3">
-            <QuickPromptChip label="Zusammenfassung heutiger Tag" onClick={() => { setChatInput('Zusammenfassung heutiger Tag'); executeSuggestion({ action: 'overview' }); }} />
+            <QuickPromptChip label="Vertriebs-Cockpit" onClick={() => { setChatInput('Vertriebs-Cockpit'); executeSuggestion({ action: 'cockpit' }); }} />
             <QuickPromptChip label="Übersicht Produktlandschaft" onClick={() => { setChatInput('Übersicht Produktlandschaft'); executeSuggestion({ action: 'overview' }); }} />
             <QuickPromptChip
-              label="Ansprechpartner Private Banking"
-              active={openPromptDropdown === 'privateBanking'}
-              onClick={() => setOpenPromptDropdown(d => d === 'privateBanking' ? null : 'privateBanking')}
+              label="Ansprechpartner"
+              active={openPromptDropdown === 'ansprechpartner'}
+              onClick={() => setOpenPromptDropdown(d => d === 'ansprechpartner' ? null : 'ansprechpartner')}
               hasDropdown
             />
             <QuickPromptChip label="Übersicht kommende Gespräche" onClick={() => { setChatInput('Übersicht kommende Gespräche'); executeSuggestion({ action: 'overview' }); }} />
@@ -565,35 +573,52 @@ export default function LandingPage() {
             </div>
           )}
 
-          {openPromptDropdown === 'privateBanking' && (
+          {openPromptDropdown === 'ansprechpartner' && (
             <div className="mt-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 p-3 animate-fade-in">
               <div className="text-[11px] uppercase tracking-wider text-white/60 font-semibold px-2 py-1">
-                Private-Banking-Ansprechpartner
+                Ansprechpartner nach Abteilung
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
-                {PRIVATE_BANKING_CONTACTS.map((c, i) => (
+                {ANSPRECHPARTNER_ABTEILUNGEN.map((a, i) => (
                   <button
                     key={i}
                     onClick={() => {
-                      setChatInput(`Ansprechpartner Private Banking — ${c.name}`);
+                      setChatInput(`Ansprechpartner — ${a.abteilung}`);
                       setOpenPromptDropdown(null);
                       executeSuggestion({ action: 'overview' });
                     }}
                     className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-left transition-colors"
                   >
-                    {c.foto ? (
-                      <img src={c.foto} alt={c.name} className="w-9 h-9 rounded-full object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                    ) : (
-                      <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                        {c.name.split(' ').map(n => n[0]).join('').slice(0,2)}
-                      </div>
-                    )}
+                    <div className="w-9 h-9 rounded-lg bg-white/15 border border-white/15 flex items-center justify-center shrink-0">
+                      <Briefcase size={16} className="text-white/80" />
+                    </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-sm font-semibold text-white truncate">{c.name}</div>
-                      <div className="text-[11px] text-white/60 truncate">{c.rolle}</div>
+                      <div className="text-sm font-semibold text-white truncate">{a.abteilung}</div>
+                      <div className="text-[11px] text-white/60 truncate">{a.beschreibung}</div>
                     </div>
                   </button>
                 ))}
+              </div>
+              {/* Freitext-Feld für Abteilungen, die nicht in der Liste sind */}
+              <div className="mt-3 pt-3 border-t border-white/10">
+                <label className="block text-[10px] uppercase tracking-wider text-white/50 font-semibold px-1 mb-1.5">
+                  Andere Abteilung / Thema
+                </label>
+                <input
+                  type="text"
+                  value={ansprechpartnerFreitext}
+                  onChange={(e) => setAnsprechpartnerFreitext(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && ansprechpartnerFreitext.trim()) {
+                      setChatInput(`Ansprechpartner — ${ansprechpartnerFreitext.trim()}`);
+                      setOpenPromptDropdown(null);
+                      setAnsprechpartnerFreitext('');
+                      executeSuggestion({ action: 'overview' });
+                    }
+                  }}
+                  placeholder="z. B. Baufinanzierung Team Nord, Treasury, …"
+                  className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/15 text-white text-sm placeholder-white/40 focus:outline-none focus:bg-white/15 focus:border-white/30 transition-all"
+                />
               </div>
             </div>
           )}

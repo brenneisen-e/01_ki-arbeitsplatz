@@ -229,7 +229,7 @@ export default function StammdatenDetailTab({ kunde }) {
             <User size={18} className="text-blue-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('persoenlicheDaten')}</h3>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="text-sm [&>*]:py-1.5 [&>*]:border-t [&>*]:border-slate-100 [&>:first-child]:border-t-0 [&>:first-child]:pt-0">
             <InfoRow label={t('name')} value={tn(kunde.name)} />
             <InfoRow label={t('geburtsdatum')} value={(() => {
               const today = new Date();
@@ -283,7 +283,7 @@ export default function StammdatenDetailTab({ kunde }) {
               />
             )}
             {kunde.linkedin && (
-              <div className="flex items-center gap-2 pt-2 border-t border-slate-100 mt-2">
+              <div className="flex items-center gap-2">
                 <Linkedin size={14} className="text-slate-500" />
                 <span className="text-slate-500">{kunde.linkedin.kontakte}+ {t('kontakte')}</span>
                 <span className="text-slate-400">&middot; {kunde.linkedin.branchen?.join(', ')}</span>
@@ -311,7 +311,7 @@ export default function StammdatenDetailTab({ kunde }) {
             <Wallet size={18} className="text-emerald-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('finanzuebersicht')}</h3>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="text-sm [&>*]:py-1.5 [&>*]:border-t [&>*]:border-slate-100 [&>:first-child]:border-t-0 [&>:first-child]:pt-0">
             <InfoRow label={t('haushaltsnetto')} value={`${formatEur(haushalt)}/mtl.`} />
             <InfoRow label={t('absicherungsquote')} value={formatPct(absQuote > 0 ? absQuote : (kunde.aum ? 72 + ((kunde.alter || 50) % 20) : 0))} />
             <InfoRow label={t('sparquote')} value={formatPct(sparQuote > 0 ? sparQuote : (kunde.nettoeinkommen ? Math.min(45, Math.round(kunde.nettoeinkommen / 200)) : 18))} />
@@ -440,7 +440,7 @@ export default function StammdatenDetailTab({ kunde }) {
                 </div>
               );
             })()}
-            <div className="pt-2 border-t border-slate-100 mt-2">
+            <div>
               <div className="flex items-center gap-2 cursor-pointer" onClick={() => setRisikoExpanded(!risikoExpanded)}>
                 <span className="text-slate-400 shrink-0">{t('risikoscore')}</span>
                 <span className="flex items-center gap-1">
@@ -689,7 +689,7 @@ function HaustiereRow({ haustiere, t, kundeId }) {
     : null;
 
   return (
-    <div className="pt-2 border-t border-slate-100 mt-2">
+    <div>
       {!confirmed ? (
         <>
           <div className="flex items-center gap-2 flex-wrap">

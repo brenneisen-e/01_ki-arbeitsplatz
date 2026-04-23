@@ -390,20 +390,20 @@ export default function LandingPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-8">
-        {/* Logo + Institutsname */}
-        <div className="mb-8 flex flex-col items-center gap-3">
-          {logoUrl ? (
-            <div className="w-32 h-32 rounded-3xl bg-white shadow-xl flex items-center justify-center p-4">
-              <img src={logoUrl} alt={currentInstitut} className="max-w-full max-h-full object-contain" />
+        {/* Logo + Institutsname in einer weißen Kachel */}
+        <div className="mb-8">
+          <div className="rounded-3xl bg-white shadow-xl px-6 pt-4 pb-3 flex flex-col items-center">
+            <div className="w-24 h-24 flex items-center justify-center">
+              {logoUrl ? (
+                <img src={logoUrl} alt={currentInstitut} className="max-w-full max-h-full object-contain" />
+              ) : (
+                <span className="text-slate-700 text-5xl font-bold">{currentInstitut.charAt(0)}</span>
+              )}
             </div>
-          ) : (
-            <div className="w-32 h-32 rounded-3xl bg-white shadow-xl flex items-center justify-center">
-              <span className="text-slate-700 text-6xl font-bold">{currentInstitut.charAt(0)}</span>
-            </div>
-          )}
-          <span className="text-white text-lg font-semibold tracking-wide drop-shadow">
-            {currentInstitut}
-          </span>
+            <span className="mt-1 text-black text-sm font-semibold tracking-wide">
+              {currentInstitut}
+            </span>
+          </div>
         </div>
 
         {/* Welcome text */}

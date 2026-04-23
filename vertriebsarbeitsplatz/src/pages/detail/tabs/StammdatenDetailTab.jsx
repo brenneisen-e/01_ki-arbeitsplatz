@@ -622,8 +622,7 @@ function TierArtDropdown({ value, onChange, placeholder, options }) {
   const [coords, setCoords] = useState(null); // { top, left, width }
   const ref = useRef(null);
   const buttonRef = useRef(null);
-
-  const [menuEl, setMenuEl] = useState(null);
+  const menuRef = useRef(null);
 
   const updateCoords = () => {
     const el = buttonRef.current;
@@ -644,7 +643,7 @@ function TierArtDropdown({ value, onChange, placeholder, options }) {
     updateCoords();
     const onClick = (e) => {
       const inAnchor = ref.current && ref.current.contains(e.target);
-      const inMenu = menuEl && menuEl.contains(e.target);
+      const inMenu = menuRef.current && menuRef.current.contains(e.target);
       if (!inAnchor && !inMenu) setOpen(false);
     };
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
@@ -676,7 +675,7 @@ function TierArtDropdown({ value, onChange, placeholder, options }) {
       </button>
       {open && coords && createPortal(
         <ul
-          ref={setMenuEl}
+          ref={menuRef}
           style={{
             position: 'fixed',
             top: coords.top,

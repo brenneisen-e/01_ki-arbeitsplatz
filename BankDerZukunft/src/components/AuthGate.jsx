@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { Lock, Info, Compass } from 'lucide-react'
 
-const AUTH_KEY = 'kiarbeitsplatz_auth_v1'
+// Der Workshop hat ein eigenes Secret (WORKSHOP_PASSWORD) und einen eigenen
+// localStorage-Key, unabhaengig vom App-Gate der Root-Landing.
+const AUTH_KEY = 'bdz_workshop_auth_v1'
+const AUTH_SCOPE = 'workshop'
 
-// Prüft den bestehenden localStorage-Flag synchron (damit beim Wechsel von der
-// Root-Landing in die Workshop-App kein Zwischen-Flash entsteht).
 function readAuthed() {
   try {
     return localStorage.getItem(AUTH_KEY) === 'ok'
@@ -40,11 +41,11 @@ export default function AuthGate({ children }) {
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, scope: AUTH_SCOPE }),
         credentials: 'same-origin',
       })
       if (res.status === 401) throw new Error('Falsches Passwort.')
-      if (res.status === 500) throw new Error('ACCESS_PASSWORD-Secret ist noch nicht in Cloudflare hinterlegt.')
+      if (res.status === 500) throw new Error('WORKSHOP_PASSWORD-Secret ist noch nicht in Cloudflare hinterlegt.')
       if (!res.ok) throw new Error('Fehler ' + res.status + ' beim Anmelden.')
       const data = await res.json()
       if (!data?.ok) throw new Error('Falsches Passwort.')
@@ -107,7 +108,8 @@ export default function AuthGate({ children }) {
         </div>
         <h1 className="text-white font-bold text-2xl tracking-tight mb-2">Zugang</h1>
         <p className="text-slate-300 text-sm leading-relaxed mb-6">
-          Dieser interaktive Workshop ist passwortgeschützt. Bitte gib das Zugangspasswort ein.
+          Der Workshop hat ein eigenes Zugangspasswort — unabhängig vom Plattform-Zugang. Bitte
+          gib das Workshop-Passwort ein.
         </p>
 
         <form onSubmit={handleSubmit} autoComplete="off">

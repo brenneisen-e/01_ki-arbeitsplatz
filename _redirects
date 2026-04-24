@@ -1,6 +1,13 @@
 # Cloudflare Pages Redirects
 # Root serves index.html (React M-01 Landing Page)
 
+# VAB nutzt absolute /images/-Pfade (z. B. /images/AdobeStock_...jpeg,
+# /images/zukunftsbank-header.jpeg). Die Dateien liegen unter
+# vertriebsarbeitsplatz/dist/images/. Transparenter Rewrite (Status 200),
+# damit sie auch bei Root-Deploys aufgeloest werden — fuer BankDerZukunft
+# ebenso.
+/images/* /vertriebsarbeitsplatz/dist/images/:splat 200
+
 # Sub-App redirects: redirect to built dist/ versions (301 takes priority over static files)
 /Versicherungs1x1/ /Versicherungs1x1/dist/ 301
 /Versicherungs1x1 /Versicherungs1x1/dist/ 301

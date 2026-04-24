@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import AuthGate from './components/AuthGate.jsx'
 import LandingPage from './components/LandingPage.jsx'
 import ModuleDetail from './components/ModuleDetail.jsx'
 import VertriebsarbeitsplatzArchitektur from './components/VertriebsarbeitsplatzArchitektur.jsx'
@@ -34,18 +35,19 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
 
+  let content
   if (route.name === 'vertriebsarbeitsplatz') {
-    return <VertriebsarbeitsplatzArchitektur />
-  }
-
-  if (route.name === 'module') {
+    content = <VertriebsarbeitsplatzArchitektur />
+  } else if (route.name === 'module') {
     const mod = findModule(route.moduleId)
     if (!mod) {
       window.location.hash = '#/'
       return null
     }
-    return <ModuleDetail module={mod} />
+    content = <ModuleDetail module={mod} />
+  } else {
+    content = <LandingPage />
   }
 
-  return <LandingPage />
+  return <AuthGate>{content}</AuthGate>
 }

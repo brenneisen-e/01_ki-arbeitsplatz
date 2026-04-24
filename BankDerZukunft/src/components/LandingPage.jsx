@@ -272,10 +272,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Floating modules canvas */}
+      {/* Floating modules canvas — full viewport width for generous spacing */}
       <section
         ref={canvasRef}
-        className="relative z-10 mx-auto mt-6 h-[1100px] md:h-[950px] max-w-7xl"
+        className="relative z-10 w-full mt-6 h-[1100px] md:h-[950px] px-4"
       >
         <ConnectionLayer />
         {mounted &&

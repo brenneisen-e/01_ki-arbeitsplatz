@@ -246,6 +246,7 @@
     <script>
     (function() {
         var AUTH_KEY = 'kiarbeitsplatz_auth_v1';
+        var AUTH_SCOPE = 'app';
         var overlay = document.getElementById('auth-overlay');
         var card = document.getElementById('auth-card');
         var form = document.getElementById('auth-form');
@@ -287,7 +288,7 @@
             fetch('/api/auth', {
                 method: 'POST',
                 headers: { 'content-type': 'application/json' },
-                body: JSON.stringify({ password: pw }),
+                body: JSON.stringify({ password: pw, scope: AUTH_SCOPE }),
                 credentials: 'same-origin',
             }).then(function(res) {
                 if (res.status === 401) { throw new Error('Falsches Passwort.'); }

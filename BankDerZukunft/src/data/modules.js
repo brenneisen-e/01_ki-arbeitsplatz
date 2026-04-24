@@ -11,7 +11,7 @@ export const MODULES = [
     icon: 'Building2',
     color: '#38bdf8',
     colorDeep: '#0284c7',
-    position: { x: 16, y: 22, size: 'lg', anim: 'bdz-float' },
+    position: { x: 10, y: 22, size: 'lg', anim: 'bdz-float' },
     tagline:
       'Vom produktzentrierten Bank-Anbieter zum kundenzentrierten Ökosystempartner.',
     summary:
@@ -71,7 +71,7 @@ export const MODULES = [
     color: '#a78bfa',
     colorDeep: '#6366f1',
     featured: true,
-    position: { x: 62, y: 18, size: 'xl', anim: 'bdz-float-slow' },
+    position: { x: 50, y: 18, size: 'xl', anim: 'bdz-float-slow' },
     tagline:
       'Ein KI-natives Betriebsmodell mit klarer Orchestrierung zwischen Mensch, Prozess und Automatisierung.',
     summary:
@@ -131,7 +131,7 @@ export const MODULES = [
     icon: 'Sparkles',
     color: '#34d399',
     colorDeep: '#059669',
-    position: { x: 14, y: 62, size: 'md', anim: 'bdz-float-reverse' },
+    position: { x: 8, y: 55, size: 'md', anim: 'bdz-float-reverse' },
     tagline:
       'Konsistent, proaktiv und nahtlos — über alle Kanäle hinweg mit KI als Guide.',
     summary:
@@ -167,7 +167,7 @@ export const MODULES = [
     icon: 'BrainCircuit',
     color: '#fb7185',
     colorDeep: '#e11d48',
-    position: { x: 48, y: 56, size: 'lg', anim: 'bdz-float' },
+    position: { x: 45, y: 55, size: 'lg', anim: 'bdz-float' },
     tagline:
       'Eine moderne Daten- & KI-Plattform als Fundament für jeden Geschäftsprozess.',
     summary:
@@ -203,7 +203,7 @@ export const MODULES = [
     icon: 'Server',
     color: '#fbbf24',
     colorDeep: '#d97706',
-    position: { x: 78, y: 60, size: 'md', anim: 'bdz-float-slow' },
+    position: { x: 88, y: 55, size: 'md', anim: 'bdz-float-slow' },
     tagline:
       'Cloud-nativ, API-first und event-getrieben — mit Legacy-Modernisierung als Dauerthema.',
     summary:
@@ -239,7 +239,7 @@ export const MODULES = [
     icon: 'Users',
     color: '#f472b6',
     colorDeep: '#db2777',
-    position: { x: 32, y: 82, size: 'sm', anim: 'bdz-float-reverse' },
+    position: { x: 22, y: 85, size: 'sm', anim: 'bdz-float-reverse' },
     tagline:
       'KI-native Teams, neue Rollen und eine Kultur des kontinuierlichen Lernens.',
     summary:
@@ -275,7 +275,7 @@ export const MODULES = [
     icon: 'ShieldCheck',
     color: '#22d3ee',
     colorDeep: '#0891b2',
-    position: { x: 68, y: 84, size: 'sm', anim: 'bdz-float' },
+    position: { x: 72, y: 85, size: 'sm', anim: 'bdz-float' },
     tagline:
       'Regulatorik nicht als Bremse, sondern als eingebaute Qualität.',
     summary:
@@ -311,7 +311,7 @@ export const MODULES = [
     icon: 'Leaf',
     color: '#86efac',
     colorDeep: '#16a34a',
-    position: { x: 84, y: 38, size: 'sm', anim: 'bdz-float-slow' },
+    position: { x: 90, y: 22, size: 'sm', anim: 'bdz-float-slow' },
     tagline:
       'Banken sind Schlüssel-Akteure der grünen Transformation — und müssen es selbst vorleben.',
     summary:

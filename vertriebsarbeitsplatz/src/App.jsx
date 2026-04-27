@@ -5,6 +5,7 @@ import DetailPage from './pages/detail/DetailPage';
 import CockpitPage from './pages/cockpit/CockpitPage';
 import LandingPage from './pages/landing/LandingPage';
 import VertriebsAssistent from './components/layout/VertriebsAssistent';
+import { ScreenRecorderProvider } from './components/ScreenRecorder';
 
 const AppFallback = (
   <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -34,10 +35,12 @@ function AppRouter() {
 export default function App() {
   return (
     <ModeProvider>
-      <Suspense fallback={AppFallback}>
-        <AppRouter />
-        <VertriebsAssistent />
-      </Suspense>
+      <ScreenRecorderProvider>
+        <Suspense fallback={AppFallback}>
+          <AppRouter />
+          <VertriebsAssistent />
+        </Suspense>
+      </ScreenRecorderProvider>
     </ModeProvider>
   );
 }

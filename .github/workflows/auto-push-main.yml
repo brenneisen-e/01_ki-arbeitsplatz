@@ -1,0 +1,27 @@
+name: Auto Push to Main
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  push-to-main:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout pushed branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Push current commit to main
+        run: |
+          git push origin HEAD:refs/heads/main --force

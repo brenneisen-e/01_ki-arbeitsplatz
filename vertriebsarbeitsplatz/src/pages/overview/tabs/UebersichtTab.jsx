@@ -428,6 +428,23 @@ const LEBENSLAGEN_RADAR_BANKING = [
     isNew: true,
   },
   {
+    kundeId: 'BK00002',
+    customerName: 'Sandra Müller',
+    initials: 'SM',
+    event: 'Selbstständigkeit',
+    signals: [
+      'Wegfall regelmäßiger Gehaltseingang seit 3 Monaten',
+      'Stattdessen 4 unterschiedliche Rechnungseingänge / Monat',
+      'Gewerbeanmeldung beim Finanzamt erkannt (USt-ID-Nutzung)',
+      'Recherche: „Gewerbe-Girokonto", „Steuerrücklage" (Newsletter-Klicks)',
+    ],
+    signalCount: 4,
+    confidence: 92,
+    revenue: 2400,
+    category: 'beruf',
+    isNew: true,
+  },
+  {
     kundeId: 'BK00003',
     customerName: 'Peter Hoffmann',
     initials: 'PH',

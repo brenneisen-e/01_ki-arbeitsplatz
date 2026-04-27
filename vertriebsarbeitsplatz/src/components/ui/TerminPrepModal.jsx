@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   X, Sparkles, Calendar, Clock, MapPin, Target, User, CheckSquare,
   ListChecks, MessageSquare, FileText, Loader2, Phone, Mail, HelpCircle, ArrowRight,
-  Wallet, Link2,
+  Wallet, Link2, Bot, Video, UserPlus, Send, Check,
 } from 'lucide-react';
 import { formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../utils/demoClock';
 import { useMode } from '../../hooks/useMode';
@@ -18,6 +18,10 @@ import { formatEur, berechneAnlagevolumen, berechneKreditvolumen, berechneHausha
  */
 export default function TerminPrepModal({ kunde, termin, onClose }) {
   const [phase, setPhase] = useState('loading');
+  const [kiOfferOpen, setKiOfferOpen] = useState(false);
+  const [kiOfferMode, setKiOfferMode] = useState('avatar');
+  const [kiOfferEskalation, setKiOfferEskalation] = useState(true);
+  const [kiOfferSent, setKiOfferSent] = useState(false);
   const appointment = termin?.datum && termin?.zeit
     ? new Date(`${termin.datum}T${termin.zeit}:00`)
     : getSimulatedAppointment();
@@ -379,12 +383,31 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             </button>
           )}
           <button
+            onClick={() => { setKiOfferSent(false); setKiOfferOpen(true); }}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm"
+            style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)' }}
+          >
+            <Bot size={14} /> KI-Gespräch anbieten
+          </button>
+          <button
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm"
             style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
           >
             <FileText size={14} /> Vorbereitung drucken
           </button>
         </div>
+        {kiOfferOpen && (
+          <KiOfferModal
+            kunde={kunde}
+            mode={kiOfferMode}
+            setMode={setKiOfferMode}
+            eskalation={kiOfferEskalation}
+            setEskalation={setKiOfferEskalation}
+            sent={kiOfferSent}
+            onSend={() => setKiOfferSent(true)}
+            onClose={() => setKiOfferOpen(false)}
+          />
+        )}
       </div>
     </div>
   );
@@ -459,5 +482,96 @@ function TodoList({ items }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+const KI_OPTIONS = [
+  {
+    id: 'avatar',
+    icon: Video,
+    titel: 'KI-Avatar (Video-Call)',
+    beschreibung: 'Foto-realistischer Avatar im Look der Bank, spricht mit dem Kunden im Live-Video. Empathisch, mit Lippensync, kann Unterlagen einblenden.',
+    eignung: 'Geeignet für klassische Beratungsgespräche, Wunschtermin außerhalb Bürozeiten, Vor-Klärung vor Filialtermin.',
+  },
+  {
+    id: 'chatbot',
+    icon: MessageSquare,
+    titel: 'KI-Chatbot (Text)',
+    beschreibung: 'Schriftlicher Dialog im Online-Banking oder per WhatsApp Business. Kunde kann jederzeit pausieren, antworten wann es passt.',
+    eignung: 'Geeignet für Routine-Fragen, Dokumenten-Upload, asynchrone Vorbereitung.',
+  },
+];
+
+function KiOfferModal({ kunde, mode, setMode, eskalation, setEskalation, sent, onSend, onClose }) {
+  const vorname = kunde?.name?.split(' ')[0] || 'der Kunde';
+  return (
+    <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-xl max-w-xl w-full max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center"><Bot size={18} /></div>
+            <div>
+              <h3 className="text-base font-semibold text-slate-900">KI-Gespräch anbieten</h3>
+              <p className="text-xs text-slate-500">{vorname} kann das Gespräch zunächst mit der KI führen — Sie schalten sich auf Wunsch dazu.</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500" aria-label="Schließen"><X size={18} /></button>
+        </div>
+
+        {sent ? (
+          <div className="px-6 py-8 text-center space-y-3">
+            <div className="w-12 h-12 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center"><Check size={24} /></div>
+            <h4 className="text-base font-semibold text-slate-900">Vorschlag versendet</h4>
+            <p className="text-sm text-slate-600">{vorname} erhält jetzt eine Einladung zum {mode === 'avatar' ? 'KI-Avatar-Termin' : 'KI-Chat'}{eskalation ? ' mit Option, Sie jederzeit dazuzuholen' : ''}.</p>
+            <button onClick={onClose} className="mt-2 text-sm px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Schließen</button>
+          </div>
+        ) : (
+          <>
+            <div className="px-6 py-4 space-y-3">
+              {KI_OPTIONS.map(opt => {
+                const Icon = opt.icon;
+                const active = mode === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setMode(opt.id)}
+                    className={`w-full text-left rounded-xl border p-3 flex gap-3 transition-colors ${active ? 'border-sky-400 bg-sky-50' : 'border-slate-200 bg-white hover:border-slate-300'}`}
+                  >
+                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${active ? 'bg-sky-100 text-sky-700' : 'bg-slate-100 text-slate-600'}`}>
+                      <Icon size={18} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-slate-900">{opt.titel}</div>
+                      <p className="text-xs text-slate-600 mt-0.5">{opt.beschreibung}</p>
+                      <p className="text-xs text-slate-500 mt-1 italic">{opt.eignung}</p>
+                    </div>
+                  </button>
+                );
+              })}
+              <label className="flex items-start gap-2 text-sm text-slate-700 mt-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={eskalation}
+                  onChange={e => setEskalation(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                />
+                <span className="flex items-start gap-1.5">
+                  <UserPlus size={14} className="text-slate-500 mt-0.5" />
+                  Mensch danach optional dazuziehen — der Kunde kann jederzeit auf einen Live-Termin mit Ihnen wechseln.
+                </span>
+              </label>
+            </div>
+            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-2">
+              <button onClick={onClose} className="text-sm px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Abbrechen</button>
+              <button onClick={onSend} className="text-sm px-4 py-2 rounded-lg text-white inline-flex items-center gap-1.5" style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)' }}>
+                <Send size={14} />
+                Vorschlag an {vorname} senden
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }

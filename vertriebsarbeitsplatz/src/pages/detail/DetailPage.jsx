@@ -23,6 +23,7 @@ const FamilieNetzwerkTab = lazyRetry(() => import('./tabs/FamilieNetzwerkTab'));
 const EngagementTab = lazyRetry(() => import('./tabs/EngagementTab'));
 const LeadsTab = lazyRetry(() => import('./tabs/LeadsTab'));
 const ProduktabschlussTab = lazyRetry(() => import('./tabs/ProduktabschlussTab'));
+const ServiceTab = lazyRetry(() => import('./tabs/ServiceTab'));
 
 const TAB_COMPONENTS = {
   stammdaten: StammdatenDetailTab,
@@ -38,6 +39,7 @@ const TAB_COMPONENTS = {
   engagement: EngagementTab,
   leads: LeadsTab,
   produktabschluss: ProduktabschlussTab,
+  service: ServiceTab,
   portfolio: VertraegeTab,
   vermoegensbilanz: FinanzprofilTab,
   compliance: OpenFinanceTab,

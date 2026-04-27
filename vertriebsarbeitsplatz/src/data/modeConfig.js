@@ -98,6 +98,7 @@ export const MODE_CONFIGS = {
       { id: 'openfinance', label: 'Finanzübersicht', labelEn: 'Financial Overview' },
       { id: 'finanzprofil', label: 'Haushaltsprofil', labelEn: 'Household Profile' },
       { id: 'impulse', label: 'Leads', labelEn: 'Leads' },
+      { id: 'service', label: 'Service', labelEn: 'AI Services' },
       { id: 'produktabschluss', label: 'Produktabschluss', labelEn: 'Product Closing' },
       { id: 'kommunikation', label: 'Kommunikation', labelEn: 'Communication' },
     ],

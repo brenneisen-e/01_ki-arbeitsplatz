@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
-import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X, Clock, Sparkles, CheckCircle, RotateCcw, Video, Square } from 'lucide-react';
+import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X, Clock, Sparkles, CheckCircle, RotateCcw } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';
@@ -96,9 +96,6 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showDayAdvanceOverlay, setShowDayAdvanceOverlay] = useState(false);
-  const [recordPhase, setRecordPhase] = useState('idle');
-  const [recordCountdown, setRecordCountdown] = useState(0);
-  const recorderRef = useRef({ mediaRecorder: null, stream: null, chunks: [], mimeType: '' });
   const dayAdvanced = useDayAdvanced();
   const [headerImage, setHeaderImage] = useState(() => readHeaderImage());
   const [headerImageEnabled, setHeaderImageEnabled] = useState(() => readHeaderImageEnabled());
@@ -132,73 +129,6 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
       localStorage.setItem('kia_header_default_pos', JSON.stringify(defaultHeaderPos));
     } catch {}
   }, [defaultHeaderPos]);
-
-  // ── Bildschirmaufnahme ───────────────────────────────────────────
-  function pickRecorderMimeType() {
-    const types = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4;codecs=avc1', 'video/mp4'];
-    return types.find((t) => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(t)) || '';
-  }
-  function saveRecording() {
-    const { chunks, mimeType } = recorderRef.current;
-    if (!chunks?.length) return;
-    const isMP4 = (mimeType || '').includes('mp4');
-    const blob = new Blob(chunks, { type: isMP4 ? 'video/mp4' : 'video/webm' });
-    const url = URL.createObjectURL(blob);
-    const now = new Date();
-    const ts = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}`;
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Vertriebsarbeitsplatz_${ts}.${isMP4 ? 'mp4' : 'webm'}`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    recorderRef.current.chunks = [];
-  }
-  function stopRecording() {
-    const r = recorderRef.current;
-    try { if (r.mediaRecorder && r.mediaRecorder.state !== 'inactive') r.mediaRecorder.stop(); } catch {}
-    try { r.stream?.getTracks().forEach((t) => t.stop()); } catch {}
-    recorderRef.current.stream = null;
-    setRecordPhase('idle');
-    setRecordCountdown(0);
-  }
-  async function startRecording() {
-    if (recordPhase !== 'idle') return;
-    if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getDisplayMedia) {
-      alert('Bildschirmaufnahme wird vom Browser nicht unterstützt.');
-      return;
-    }
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: { frameRate: { ideal: 30 } },
-        audio: false,
-        preferCurrentTab: true,
-      });
-      const mimeType = pickRecorderMimeType();
-      const mr = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 20000000 });
-      recorderRef.current = { mediaRecorder: mr, stream, chunks: [], mimeType };
-      mr.ondataavailable = (e) => { if (e.data && e.data.size > 0) recorderRef.current.chunks.push(e.data); };
-      mr.onstop = saveRecording;
-      stream.getVideoTracks()[0].onended = () => { if (recorderRef.current.mediaRecorder) stopRecording(); };
-      setShowSettings(false);
-      setRecordPhase('countdown');
-      setRecordCountdown(5);
-    } catch (err) {
-      // User hat Share-Dialog abgebrochen — silent
-      setRecordPhase('idle');
-    }
-  }
-  useEffect(() => {
-    if (recordPhase !== 'countdown') return;
-    if (recordCountdown <= 0) {
-      try { recorderRef.current.mediaRecorder?.start(1000); } catch {}
-      setRecordPhase('recording');
-      return;
-    }
-    const t = setTimeout(() => setRecordCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(t);
-  }, [recordPhase, recordCountdown]);
 
   function handleFileSelect(e) {
     const file = e.target.files?.[0];
@@ -473,31 +403,6 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
         ))}
       </div>
 
-      {/* Aufnahme-Countdown-Overlay (5..1) — wird ausgelöst nachdem der
-          User den Tab/das Fenster im Browser-Share-Dialog gewählt hat. */}
-      {recordPhase === 'countdown' && recordCountdown > 0 && (
-        <div className="fixed inset-0 z-[95] flex items-center justify-center bg-slate-950/60 backdrop-blur-sm pointer-events-none">
-          <div className="text-center text-white">
-            <div className="text-[11rem] leading-none font-bold tracking-tight tabular-nums drop-shadow-2xl">
-              {recordCountdown}
-            </div>
-            <div className="mt-2 text-sm uppercase tracking-widest text-white/80">Aufnahme startet…</div>
-          </div>
-        </div>
-      )}
-
-      {/* Recording-Indikator (kleines rotes Badge oben rechts während Aufnahme) */}
-      {recordPhase === 'recording' && (
-        <button
-          onClick={stopRecording}
-          title="Aufnahme stoppen"
-          className="fixed top-3 right-3 z-[95] inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold shadow-lg"
-        >
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
-          REC · Stoppen
-        </button>
-      )}
-
       {/* Demo-Zeitmaschinen-Overlay: täuscht Nacht-zu-nächster-Tag vor und
           setzt dann das Flag, damit neue Aktivitäten sichtbar werden. */}
       {showDayAdvanceOverlay && (
@@ -576,38 +481,6 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
                     style={{ transform: headerImageEnabled ? 'translateX(24px)' : 'translateX(4px)' }}
                   />
                 </button>
-              </div>
-
-              {/* Bildschirmaufnahme */}
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-sm font-semibold text-slate-800 flex items-center gap-2">
-                      <Video size={14} className="text-slate-600" />
-                      Bildschirmaufnahme
-                    </div>
-                    <div className="text-xs text-slate-500 mt-0.5">
-                      Nach Auswahl des Tabs/Fensters startet die Aufnahme nach 5 Sekunden Countdown. Beim Stoppen wird das Video als Datei heruntergeladen.
-                    </div>
-                  </div>
-                  {recordPhase === 'recording' ? (
-                    <button
-                      onClick={stopRecording}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors shrink-0"
-                    >
-                      <Square size={14} fill="currentColor" /> Stoppen
-                    </button>
-                  ) : (
-                    <button
-                      onClick={startRecording}
-                      disabled={recordPhase === 'countdown'}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-700 text-white text-sm font-medium transition-colors shrink-0 disabled:opacity-60"
-                    >
-                      <Video size={14} />
-                      {recordPhase === 'countdown' ? `Start in ${recordCountdown}…` : 'Aufnahme starten'}
-                    </button>
-                  )}
-                </div>
               </div>
 
               <p className="text-sm text-slate-600">

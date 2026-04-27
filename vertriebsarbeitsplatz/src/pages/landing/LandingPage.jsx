@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { clsx } from 'clsx';
-import { Send, Mic, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp, ArrowLeft, X } from 'lucide-react';
+import { Send, Mic, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp, ArrowLeft, X, Video, Square } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
@@ -127,6 +127,10 @@ export default function LandingPage() {
   // Settings
   const [showSettings, setShowSettings] = useState(false);
   const [showVariants, setShowVariants] = useState(false);
+  const [recordPhase, setRecordPhase] = useState('idle');
+  const [recordCountdown, setRecordCountdown] = useState(0);
+  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
+  const recorderRef = useRef({ mediaRecorder: null, stream: null, chunks: [], mimeType: '' });
   // Quick-Prompt-Dropdowns unter dem Chat (null | 'termin' | 'ansprechpartner')
   const [openPromptDropdown, setOpenPromptDropdown] = useState(null);
   const [ansprechpartnerFreitext, setAnsprechpartnerFreitext] = useState('');
@@ -374,6 +378,102 @@ export default function LandingPage() {
   useEffect(() => () => {
     listenTimeoutsRef.current.forEach(clearTimeout);
   }, []);
+
+  // ── Bildschirmaufnahme ───────────────────────────────────────────
+  function pickRecorderMimeType() {
+    const types = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4;codecs=avc1', 'video/mp4'];
+    return types.find((t) => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(t)) || '';
+  }
+  function saveRecording() {
+    const { chunks, mimeType } = recorderRef.current;
+    if (!chunks?.length) return;
+    const isMP4 = (mimeType || '').includes('mp4');
+    const blob = new Blob(chunks, { type: isMP4 ? 'video/mp4' : 'video/webm' });
+    const url = URL.createObjectURL(blob);
+    const now = new Date();
+    const ts = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Vertriebsarbeitsplatz_${ts}.${isMP4 ? 'mp4' : 'webm'}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    recorderRef.current.chunks = [];
+  }
+  function stopRecording() {
+    const r = recorderRef.current;
+    try { if (r.mediaRecorder && r.mediaRecorder.state !== 'inactive') r.mediaRecorder.stop(); } catch {}
+    try { r.stream?.getTracks().forEach((t) => t.stop()); } catch {}
+    recorderRef.current.stream = null;
+    setRecordPhase('idle');
+    setRecordCountdown(0);
+  }
+  async function startRecording() {
+    if (recordPhase !== 'idle') return;
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getDisplayMedia) {
+      alert('Bildschirmaufnahme wird vom Browser nicht unterstützt.');
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: { frameRate: { ideal: 30 } },
+        audio: false,
+        preferCurrentTab: true,
+      });
+      const mimeType = pickRecorderMimeType();
+      const mr = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 20000000 });
+      recorderRef.current = { mediaRecorder: mr, stream, chunks: [], mimeType };
+      mr.ondataavailable = (e) => { if (e.data && e.data.size > 0) recorderRef.current.chunks.push(e.data); };
+      mr.onstop = saveRecording;
+      stream.getVideoTracks()[0].onended = () => { if (recorderRef.current.mediaRecorder) stopRecording(); };
+      setRecordPhase('countdown');
+      setRecordCountdown(5);
+    } catch {
+      setRecordPhase('idle');
+    }
+  }
+  useEffect(() => {
+    if (recordPhase !== 'countdown') return;
+    if (recordCountdown <= 0) {
+      try { recorderRef.current.mediaRecorder?.start(1000); } catch {}
+      setRecordPhase('recording');
+      return;
+    }
+    const t = setTimeout(() => setRecordCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [recordPhase, recordCountdown]);
+
+  // Cursor-Tracking während der Aufnahme
+  useEffect(() => {
+    if (recordPhase !== 'recording') return;
+    const onMove = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [recordPhase]);
+
+  // Klick-Ripples während der Aufnahme
+  useEffect(() => {
+    if (recordPhase !== 'recording') return;
+    const onClick = (e) => {
+      // REC-Stop-Button selbst ausnehmen
+      if (e.target?.closest?.('[data-rec-stop]')) return;
+      const x = e.clientX, y = e.clientY;
+      const ring = document.createElement('div');
+      ring.className = 'rec-ripple';
+      ring.style.left = x + 'px';
+      ring.style.top = y + 'px';
+      const dot = document.createElement('div');
+      dot.className = 'rec-ripple-dot';
+      dot.style.left = x + 'px';
+      dot.style.top = y + 'px';
+      document.body.appendChild(ring);
+      document.body.appendChild(dot);
+      setTimeout(() => { ring.remove(); dot.remove(); }, 900);
+    };
+    window.addEventListener('click', onClick, true);
+    return () => window.removeEventListener('click', onClick, true);
+  }, [recordPhase]);
 
   function handleKeyDown(e) {
     if (e.key === 'Enter') {
@@ -906,6 +1006,35 @@ export default function LandingPage() {
               className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 text-white text-sm placeholder-white/30 focus:outline-none focus:bg-white/15 focus:border-white/30 transition-all mb-4"
             />
 
+            <div className="h-px bg-white/10 my-4" />
+
+            {/* Bildschirmaufnahme */}
+            <h3 className="text-white text-sm font-semibold mb-2 flex items-center gap-2">
+              <Video size={16} />
+              Bildschirmaufnahme
+            </h3>
+            <p className="text-[11px] text-white/50 mb-3 leading-relaxed">
+              Tab/Fenster im Share-Dialog wählen — dann startet die Aufnahme nach 5 Sekunden.
+              Während der Aufnahme erscheint ein grüner Cursor; Klicks erzeugen sichtbare Wellen.
+            </p>
+            {recordPhase === 'recording' ? (
+              <button
+                onClick={stopRecording}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/90 hover:bg-red-500 text-white text-xs font-medium transition-colors mb-4"
+              >
+                <Square size={12} fill="currentColor" /> Aufnahme stoppen
+              </button>
+            ) : (
+              <button
+                onClick={startRecording}
+                disabled={recordPhase === 'countdown'}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white/80 text-xs font-medium transition-colors mb-4 disabled:opacity-60"
+              >
+                <Video size={12} />
+                {recordPhase === 'countdown' ? `Start in ${recordCountdown}…` : 'Aufnahme starten'}
+              </button>
+            )}
+
             {/* Reset */}
             <button
               onClick={handleSettingsReset}
@@ -917,6 +1046,35 @@ export default function LandingPage() {
           </div>
         )}
       </div>
+
+      {/* Countdown-Overlay (5..1) */}
+      {recordPhase === 'countdown' && recordCountdown > 0 && (
+        <div className="fixed inset-0 z-[95] flex items-center justify-center bg-slate-950/60 backdrop-blur-sm pointer-events-none">
+          <div className="text-center text-white">
+            <div className="text-[11rem] leading-none font-bold tracking-tight tabular-nums drop-shadow-2xl">
+              {recordCountdown}
+            </div>
+            <div className="mt-2 text-sm uppercase tracking-widest text-white/80">Aufnahme startet…</div>
+          </div>
+        </div>
+      )}
+
+      {/* REC-Indikator + grüner Cursor + Cursor-Innen während Aufnahme */}
+      {recordPhase === 'recording' && (
+        <>
+          <button
+            data-rec-stop
+            onClick={stopRecording}
+            title="Aufnahme stoppen"
+            className="fixed top-3 right-3 z-[99999] inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold shadow-lg"
+          >
+            <span className="inline-block w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
+            REC · Stoppen
+          </button>
+          <div className="rec-cursor"        style={{ left: cursorPos.x, top: cursorPos.y }} />
+          <div className="rec-cursor-inner"  style={{ left: cursorPos.x, top: cursorPos.y }} />
+        </>
+      )}
     </div>
   );
 }

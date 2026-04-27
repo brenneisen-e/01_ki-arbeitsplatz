@@ -36,169 +36,123 @@ const KATEGORIE_FARBEN = {
   service:     { label: 'Service',         color: '#475569', bg: '#f8fafc' },
 };
 
+// ── KI-Matching: jeder Service hat eine match(kunde) → boolean Bedingung.
+// Nur passende Services tauchen beim jeweiligen Kunden auf.
+const HELFER = {
+  fremdHasDepotOrTagesgeld: (k) =>
+    (k.fremdProdukte || []).some(p => /depot|tagesgeld|festgeld|geldmarkt|kapitalmarkt/i.test([p.typ, p.produktart].join(' ')))
+    || (k.openFinance?.kapitalmarkt || []).length > 0
+    || (k.openFinance?.geldmarkt || []).length > 0,
+  eigenHasSpar: (k) =>
+    (k.eigeneProdukte || []).some(p => /spar|tagesgeld|festgeld|depot/i.test([p.typ, p.sparte].join(' '))),
+  hasFinanzierung: (k) =>
+    (k.eigeneProdukte || []).some(p => /kredit|finanzierung|darlehen|baufi/i.test([p.typ, p.produkt, p.sparte].join(' '))),
+  kindUnter1: (k) => (k.kinder || []).find(x => (x.alter ?? 99) <= 1),
+  kindAlter5bis7: (k) => (k.kinder || []).find(x => (x.alter ?? 0) >= 5 && (x.alter ?? 0) <= 7),
+  isSelbststaendig: (k) => k.id === 'BK00002' || /selbst|freibe/i.test(k.beruf || ''),
+  isPraxis: (k) => k.id === 'BK00005' || /praxis|arzt|ärzt/i.test(k.beruf || ''),
+  hasPartner: (k) => !!k.partner?.einkommen,
+  hasVisaOderReisekarte: (k) =>
+    (k.eigeneProdukte || []).some(p => /visa|mastercard|kreditkarte|reise/i.test([p.typ, p.produkt].join(' '))),
+  liquiditaet: (k) => {
+    const sparvolumen = (k.eigeneProdukte || [])
+      .filter(p => /spar|tagesgeld|festgeld/i.test([p.typ, p.sparte].join(' ')))
+      .reduce((s, p) => s + (p.volumen || 0), 0);
+    const monatsausgaben = Math.abs((k.transaktionen || []).filter(t => t.betrag < 0).reduce((s, t) => s + t.betrag, 0));
+    return { sparvolumen, monatsausgaben, knapp: monatsausgaben > 0 && sparvolumen < monatsausgaben * 3 };
+  },
+  hasStromVertrag: (k) =>
+    (k.transaktionen || []).some(t => /stadtwerk|strom|eon|vattenfall|enbw|energie/i.test(t.empfaenger || '')),
+};
+
 function buildServices(kunde) {
-  const kindUnter1 = (kunde.kinder || []).find(k => (k.alter ?? 99) <= 1);
-  const kindAlter5bis7 = (kunde.kinder || []).find(k => (k.alter ?? 0) >= 5 && (k.alter ?? 0) <= 7);
-  const hasGirokonto = (kunde.eigeneProdukte || []).some(p => p.typ === 'girokonto' || p.sparte === 'konto');
-  const hasFinanzierung = (kunde.eigeneProdukte || []).some(p => /kredit|finanzierung|darlehen/i.test([p.typ, p.produkt, p.sparte].join(' ')));
-  const sparvolumen = (kunde.eigeneProdukte || [])
-    .filter(p => /spar|tagesgeld|festgeld/i.test([p.typ, p.sparte].join(' ')))
-    .reduce((s, p) => s + (p.volumen || 0), 0);
-  const monatsausgaben = Math.abs((kunde.transaktionen || [])
-    .filter(t => t.betrag < 0)
-    .reduce((s, t) => s + t.betrag, 0));
+  const h = HELFER;
+  const liq = h.liquiditaet(kunde);
+  const vorname = kunde.name?.split(' ')[0] || 'Kunde';
+  const kindU1 = h.kindUnter1(kunde);
+  const kindSchule = h.kindAlter5bis7(kunde);
 
-  const services = [];
-
-  // 1. Freistellungsauftrag-Mismatch
-  services.push({
-    id: 'freistellung-mismatch',
-    kategorie: 'finanztipp',
-    status: 'versendet',
-    icon: ShieldCheck,
-    titel: 'Freistellungsauftrag optimieren',
-    datum: '2026-04-12',
-    kanal: 'E-Mail',
-    quelle: 'Open Finance · Erträge bei Trade Republic & ING erkannt',
-    nachricht: `Hallo ${kunde.name?.split(' ')[0] || 'Kunde'}, wir möchten Sie auf eine Optimierungsmöglichkeit hinweisen: Ihr Freistellungsauftrag bei uns liegt bei 600 EUR. Tatsächlich haben Sie in diesem Jahr aber nur ca. 200 EUR Kapitalerträge bei der Volksbank — bei Ihren externen Depots (Trade Republic, ING) sind hingegen rund 600 EUR Zinserträge angefallen, die ungenutzt versteuert werden. Eine Aufteilung des Pauschbetrags spart Ihnen rund 158 EUR Steuern pro Jahr. Antworten Sie einfach auf diese E-Mail, wir passen das gerne kostenfrei für Sie an.`,
-    ergebnis: 'Steuerersparnis ca. 158 EUR / Jahr',
-  });
-
-  // 2. Geburt vom Kind → Schnuller statt Sparplan
-  if (kindUnter1) {
-    services.push({
-      id: 'geburt-schnuller',
-      kategorie: 'geschenk',
-      status: 'versendet',
-      icon: Baby,
-      titel: 'Willkommensgruß zur Geburt',
-      datum: '2025-11-08',
-      kanal: 'Postversand',
-      quelle: `Daueraufträge an Kindergeldkasse + Eingang Elterngeld → KI erkannt: Geburt von ${kindUnter1.name}`,
-      nachricht: `Wir haben uns ganz bewusst gegen einen sofortigen Kindersparplan-Anschreiben entschieden — stattdessen schicken wir einen handgeschriebenen Glückwunsch und einen gebrandeten Bio-Schnuller in unserer Bankfarbe. Der Sparplan-Hinweis kommt frühestens nach 6 Monaten, wenn der erste Trubel vorbei ist.`,
+  const catalog = [
+    h.fremdHasDepotOrTagesgeld(kunde) && h.eigenHasSpar(kunde) && {
+      id: 'freistellung-mismatch', kategorie: 'finanztipp', status: 'versendet', icon: ShieldCheck,
+      titel: 'Freistellungsauftrag optimieren', datum: '2026-04-12', kanal: 'E-Mail',
+      quelle: 'Open Finance · Erträge bei externen Depots/Tagesgeldkonten erkannt',
+      nachricht: `Hallo ${vorname}, Ihr Freistellungsauftrag bei uns liegt bei 600 EUR. Tatsächlich haben Sie in diesem Jahr aber nur ca. 200 EUR Kapitalerträge bei der Volksbank — bei Ihren externen Depots/Tagesgeldkonten sind hingegen rund 600 EUR Zinserträge angefallen, die ungenutzt versteuert werden. Eine Aufteilung des Pauschbetrags spart rund 158 EUR Steuern pro Jahr. Antworten Sie einfach auf diese E-Mail, wir passen das gerne kostenfrei für Sie an.`,
+      ergebnis: 'Steuerersparnis ca. 158 EUR / Jahr',
+    },
+    kindU1 && {
+      id: 'geburt-schnuller', kategorie: 'geschenk', status: 'versendet', icon: Baby,
+      titel: 'Willkommensgruß zur Geburt', datum: '2025-11-08', kanal: 'Postversand',
+      quelle: `Daueraufträge an Familienkasse + Eingang Elterngeld → KI erkannt: Geburt von ${kindU1.name}`,
+      nachricht: `Wir haben uns ganz bewusst gegen einen sofortigen Kindersparplan-Anschreiben entschieden — stattdessen ein handgeschriebener Glückwunsch und ein gebrandeter Bio-Schnuller in unserer Bankfarbe. Der Sparplan-Hinweis kommt frühestens nach 6 Monaten, wenn der erste Trubel vorbei ist.`,
       ergebnis: 'Persönlicher Touchpoint ohne Verkaufsdruck',
-    });
-  }
-
-  // 3. Selbstständigkeit erkannt → 10% Rückstellung
-  services.push({
-    id: 'selbststaendigkeit-ruecklage',
-    kategorie: 'finanztipp',
-    status: 'vorschlag',
-    icon: Briefcase,
-    titel: 'Hinweis zur Steuerrückstellung',
-    datum: '2026-04-22',
-    kanal: 'E-Mail (Vorschlag)',
-    quelle: 'Open Finance · Wegfall Gehaltseingang, dafür unregelmäßige Rechnungseingänge → Lebenslage „Selbstständigkeit"',
-    nachricht: `Wir haben festgestellt, dass seit ca. 3 Monaten keine klassischen Gehaltseingänge mehr auf Ihrem Konto verbucht werden — dafür gehen Rechnungsbeträge von verschiedenen Auftraggebern ein. Falls Sie sich selbstständig gemacht haben: Herzlichen Glückwunsch! Ein Tipp aus der Praxis: Legen Sie automatisch ca. 10 % jeder eingehenden Rechnung auf ein separates Tagesgeldkonto zur Seite, um Steuernachzahlungen und USt.-Voranmeldungen entspannt bedienen zu können. Wir richten Ihnen das gerne kostenfrei als automatische Regel ein.`,
-    ergebnis: 'Vorschlag — vor Versand prüfen',
-  });
-
-  // 4. Geburtstag → Blumengruß
-  services.push({
-    id: 'geburtstag-blumen',
-    kategorie: 'glueckwunsch',
-    status: 'geplant',
-    icon: Cake,
-    titel: 'Geburtstagsgruß mit Blumengutschein',
-    datum: '2026-06-14',
-    kanal: 'Postkarte + Gutschein',
-    quelle: 'Stammdaten · Geburtstag in 7 Wochen',
-    nachricht: `Handgeschriebene Glückwunschkarte zum Geburtstag mit einem 25-EUR-Blumengutschein bei „Blumen Müller" (lokaler Partner). Kein Verkaufsanlass, kein Cross-Sell-Hinweis — reiner Wertschätzungs-Touchpoint.`,
-    ergebnis: 'NPS-Lift erwartet, Beleg lokales Engagement',
-  });
-
-  // 5. Streaming doppelt
-  services.push({
-    id: 'streaming-doppelt',
-    kategorie: 'sparhinweis',
-    status: 'versendet',
-    icon: Repeat,
-    titel: 'Doppelter Dauerauftrag erkannt',
-    datum: '2026-03-28',
-    kanal: 'In-App-Push',
-    quelle: 'Transaktionsanalyse · Netflix 12,99 EUR auf Hauptkonto + Partnerkonto',
-    nachricht: `Uns ist aufgefallen, dass sowohl auf Ihrem Konto als auch auf dem Konto Ihrer Partnerin monatlich 12,99 EUR an Netflix abgebucht werden. Vermutlich handelt es sich um zwei separate Abos, die Sie zu einem Familien-Account zusammenlegen können. Ersparnis: ca. 156 EUR pro Jahr — und mehr Profile inklusive.`,
-    ergebnis: 'Ersparnis ca. 156 EUR / Jahr',
-  });
-
-  // 6. Notgroschen-Hinweis
-  if (monatsausgaben > 0 && sparvolumen < monatsausgaben * 3) {
-    services.push({
-      id: 'notgroschen-hinweis',
-      kategorie: 'finanztipp',
-      status: 'vorschlag',
-      icon: PiggyBank,
-      titel: 'Sanfter Hinweis Notgroschen',
-      datum: '2026-04-25',
-      kanal: 'In-App-Banner',
-      quelle: `Liquiditäts-Analyse · Sparguthaben (${formatEur(sparvolumen)}) < 3 Monatsausgaben (${formatEur(monatsausgaben * 3)})`,
+    },
+    h.isSelbststaendig(kunde) && {
+      id: 'selbststaendigkeit-ruecklage', kategorie: 'finanztipp', status: 'vorschlag', icon: Briefcase,
+      titel: 'Hinweis zur Steuerrückstellung', datum: '2026-04-22', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Open Finance · Wegfall Gehaltseingang, dafür unregelmäßige Rechnungseingänge → Lebenslage „Selbstständigkeit"',
+      nachricht: `Hallo ${vorname}, seit ca. 3 Monaten verbuchen wir keine klassischen Gehaltseingänge mehr — dafür gehen Rechnungsbeträge von verschiedenen Auftraggebern ein. Falls Sie sich selbstständig gemacht haben: Herzlichen Glückwunsch! Praxistipp: Legen Sie automatisch ca. 10 % jeder eingehenden Rechnung auf ein separates Tagesgeldkonto zur Seite — für Steuernachzahlungen und USt.-Voranmeldungen. Wir richten Ihnen das gerne kostenfrei als automatische Regel ein.`,
+      ergebnis: 'Vorschlag — vor Versand prüfen',
+    },
+    h.isPraxis(kunde) && {
+      id: 'praxis-ruecklage', kategorie: 'finanztipp', status: 'vorschlag', icon: Briefcase,
+      titel: 'Steuer- & Investitionsrücklage Praxis', datum: '2026-04-22', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Open Finance · Erhöhte USt-Vorauszahlungen + Investitionen Praxisausstattung',
+      nachricht: `Hallo ${vorname}, durch die Praxis-Erweiterung steigen Steuerlast und Invest-Bedarf. Wir empfehlen: 12 % jeder Honorareingang automatisch auf ein Geschäfts-Tagesgeld zur Steuerrücklage + 5 % auf eine Investitions-Rücklage. Wir richten beides als Regel ein — keine Bindung, jederzeit anpassbar.`,
+      ergebnis: 'Vorschlag — vor Versand prüfen',
+    },
+    (kunde.id === 'BK00002' || kunde.id === 'BK00003' || kunde.id === 'BK00004') && {
+      id: 'geburtstag-blumen', kategorie: 'glueckwunsch', status: 'geplant', icon: Cake,
+      titel: 'Geburtstagsgruß mit Blumengutschein', datum: '2026-06-14', kanal: 'Postkarte + Gutschein',
+      quelle: 'Stammdaten · Geburtstag in 7 Wochen',
+      nachricht: `Handgeschriebene Glückwunschkarte zum Geburtstag mit einem 25-EUR-Blumengutschein bei „Blumen Müller" (lokaler Partner). Kein Verkaufsanlass, kein Cross-Sell-Hinweis — reiner Wertschätzungs-Touchpoint.`,
+      ergebnis: 'NPS-Lift erwartet, Beleg lokales Engagement',
+    },
+    h.hasPartner(kunde) && {
+      id: 'streaming-doppelt', kategorie: 'sparhinweis', status: 'versendet', icon: Repeat,
+      titel: 'Doppelter Dauerauftrag erkannt', datum: '2026-03-28', kanal: 'In-App-Push',
+      quelle: `Transaktionsanalyse · Netflix 12,99 EUR auf Hauptkonto + Konto ${kunde.partner.name || 'Partner/in'}`,
+      nachricht: `Uns ist aufgefallen, dass sowohl auf Ihrem Konto als auch auf dem Konto Ihrer/Ihres Partner/in monatlich 12,99 EUR an Netflix abgebucht werden. Vermutlich zwei separate Abos, die Sie zu einem Familien-Account zusammenlegen können. Ersparnis: ca. 156 EUR pro Jahr — und mehr Profile inklusive.`,
+      ergebnis: 'Ersparnis ca. 156 EUR / Jahr',
+    },
+    liq.knapp && {
+      id: 'notgroschen-hinweis', kategorie: 'finanztipp', status: 'vorschlag', icon: PiggyBank,
+      titel: 'Sanfter Hinweis Notgroschen', datum: '2026-04-25', kanal: 'In-App-Banner',
+      quelle: `Liquiditäts-Analyse · Sparguthaben (${formatEur(liq.sparvolumen)}) < 3 Monatsausgaben (${formatEur(liq.monatsausgaben * 3)})`,
       nachricht: `Empfehlung: 2-3 Monatsausgaben als jederzeit verfügbare Reserve. Wir schlagen Ihnen vor, einen kleinen Dauerauftrag (z. B. 100 EUR/Monat) auf ein Tagesgeldkonto einzurichten — komplett ohne Bindung. Reine Information, keine Aufdringlichkeit.`,
       ergebnis: 'Vorschlag — vor Versand prüfen',
-    });
-  }
-
-  // 7. Reise erkannt → Reise-Tipp
-  services.push({
-    id: 'reise-tipp',
-    kategorie: 'service',
-    status: 'versendet',
-    icon: Plane,
-    titel: 'Reise-Service vor Auslandsreise',
-    datum: '2026-02-19',
-    kanal: 'In-App-Push',
-    quelle: 'Kartenumsatz · Buchung Lufthansa BCN, Übernachtungen erkannt',
-    nachricht: `Schöne Reise nach Barcelona! Drei Hinweise vor der Abreise: (1) Ihre VR-Visa Gold ist im Ausland inklusive Reise-Krankenversicherung gültig. (2) Aktivieren Sie kurz die Auslandsfreigabe in der App, damit es bei der ersten Zahlung kein Sicherheits-Stop gibt. (3) Notfall-Hotline für Kartensperre: ${'+49 116 116'}. Gute Reise!`,
-    ergebnis: 'Service ohne Verkaufsanlass',
-  });
-
-  // 8. Schulanfang Kind
-  if (kindAlter5bis7) {
-    services.push({
-      id: 'schulanfang',
-      kategorie: 'geschenk',
-      status: 'geplant',
-      icon: GraduationCap,
-      titel: `Schulanfangs-Gutschein für ${kindAlter5bis7.name}`,
-      datum: '2026-08-15',
-      kanal: 'Postversand',
-      quelle: `Stammdaten · Kind ${kindAlter5bis7.name} (${kindAlter5bis7.alter} J.) — Einschulung im Sommer`,
-      nachricht: `Geplant: 20-EUR-Gutschein bei „Schreibwaren Becker" (lokaler Partner) zur Einschulung von ${kindAlter5bis7.name} — handgeschrieben, kein Verkaufs-Beilagen. Optional: Erinnerung an Junior-Sparbuch erst ab Klasse 2.`,
+    },
+    h.hasVisaOderReisekarte(kunde) && {
+      id: 'reise-tipp', kategorie: 'service', status: 'versendet', icon: Plane,
+      titel: 'Reise-Service vor Auslandsreise', datum: '2026-02-19', kanal: 'In-App-Push',
+      quelle: 'Kartenumsatz · Buchung Lufthansa BCN, Übernachtungen erkannt',
+      nachricht: `Schöne Reise nach Barcelona! Drei Hinweise vor der Abreise: (1) Ihre VR-Visa Gold ist im Ausland inklusive Reise-Krankenversicherung gültig. (2) Aktivieren Sie kurz die Auslandsfreigabe in der App, damit es bei der ersten Zahlung kein Sicherheits-Stop gibt. (3) Notfall-Hotline für Kartensperre: +49 116 116. Gute Reise!`,
+      ergebnis: 'Service ohne Verkaufsanlass',
+    },
+    kindSchule && {
+      id: 'schulanfang', kategorie: 'geschenk', status: 'geplant', icon: GraduationCap,
+      titel: `Schulanfangs-Gutschein für ${kindSchule.name}`, datum: '2026-08-15', kanal: 'Postversand',
+      quelle: `Stammdaten · Kind ${kindSchule.name} (${kindSchule.alter} J.) — Einschulung im Sommer`,
+      nachricht: `Geplant: 20-EUR-Gutschein bei „Schreibwaren Becker" (lokaler Partner) zur Einschulung von ${kindSchule.name} — handgeschrieben, kein Verkaufs-Beilagen. Optional: Erinnerung an Junior-Sparbuch erst ab Klasse 2.`,
       ergebnis: 'Lokales Partnernetz, NPS-Effekt',
-    });
-  }
-
-  // 9. Energievertrag-Check
-  services.push({
-    id: 'energie-check',
-    kategorie: 'sparhinweis',
-    status: 'vorschlag',
-    icon: Zap,
-    titel: 'Energievertrag günstiger möglich',
-    datum: '2026-04-26',
-    kanal: 'E-Mail (Vorschlag)',
-    quelle: 'Transaktion · Stadtwerke Gießen 142 EUR/Monat → ca. 18 % über Marktdurchschnitt für 2-Personen-Haushalt',
-    nachricht: `Ihr aktueller Stromtarif liegt rund 18 % über dem Marktdurchschnitt für Haushalte vergleichbarer Größe in Ihrer Region. Wir bieten unseren Mitgliedern einen kostenfreien Tarifcheck (über Verivox) — Wechsel optional, wir verkaufen Ihnen nichts. Ersparnispotenzial laut Schätzung: ca. 280 EUR / Jahr.`,
-    ergebnis: 'Ersparnispotenzial ca. 280 EUR / Jahr',
-  });
-
-  // 10. Tilgung Finanzierung beendet → Glückwunsch
-  if (hasFinanzierung) {
-    services.push({
-      id: 'tilgung-fertig',
-      kategorie: 'glueckwunsch',
-      status: 'geplant',
-      icon: PartyPopper,
-      titel: 'Glückwunsch zur letzten Rate',
-      datum: '2027-01-10',
-      kanal: 'Brief + Sekt-Gutschein',
+    },
+    h.hasStromVertrag(kunde) && {
+      id: 'energie-check', kategorie: 'sparhinweis', status: 'vorschlag', icon: Zap,
+      titel: 'Energievertrag günstiger möglich', datum: '2026-04-26', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Transaktion · Stadtwerke 142 EUR/Monat → ca. 18 % über Marktdurchschnitt',
+      nachricht: `Ihr aktueller Stromtarif liegt rund 18 % über dem Marktdurchschnitt für Haushalte vergleichbarer Größe in Ihrer Region. Wir bieten unseren Mitgliedern einen kostenfreien Tarifcheck (über Verivox) — Wechsel optional, wir verkaufen Ihnen nichts. Ersparnispotenzial laut Schätzung: ca. 280 EUR / Jahr.`,
+      ergebnis: 'Ersparnispotenzial ca. 280 EUR / Jahr',
+    },
+    h.hasFinanzierung(kunde) && {
+      id: 'tilgung-fertig', kategorie: 'glueckwunsch', status: 'geplant', icon: PartyPopper,
+      titel: 'Glückwunsch zur letzten Rate', datum: '2027-01-10', kanal: 'Brief + Sekt-Gutschein',
       quelle: 'Tilgungsplan · letzte Rate erkannt',
       nachricht: `Geplant zur Schluss-Rate Ihrer Immobilienfinanzierung: persönlicher Brief Ihres Beraters mit handschriftlichem Glückwunsch + Sekt-Gutschein bei einem regionalen Weinhändler. Kein Anschluss-Cross-Sell in dieser Sendung — der Hinweis auf eine mögliche Modernisierungs-Finanzierung kommt separat 4 Wochen später.`,
       ergebnis: 'Bindungsmoment am Lebensereignis',
-    });
-  }
+    },
+  ];
 
-  return services;
+  return catalog.filter(Boolean);
 }
 
 function ServiceCard({ service, onPreview }) {

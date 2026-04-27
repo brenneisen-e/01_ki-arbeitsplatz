@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
-import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X, Clock, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X, Clock, Sparkles, CheckCircle, RotateCcw } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';
@@ -307,6 +307,27 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
             className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
           >
             <Download size={18} strokeWidth={1.75} />
+          </button>
+          <button
+            onClick={() => {
+              const ok = window.confirm(
+                'Demo-Daten zurücksetzen?\n\nLöscht alle lokalen Anpassungen (z. B. bestätigte Haustiere, Header-Bild, Demo-Zeitmaschine) und lädt die Seite neu. Die ursprünglichen Demo-Datensätze bleiben unverändert.'
+              );
+              if (!ok) return;
+              try {
+                const keys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                  const key = localStorage.key(i);
+                  if (key && (key.startsWith('haustier_') || key.startsWith('kia_'))) keys.push(key);
+                }
+                keys.forEach((k) => localStorage.removeItem(k));
+              } catch {}
+              window.location.reload();
+            }}
+            title="Demo-Daten zurücksetzen (lokale Anpassungen löschen)"
+            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+          >
+            <RotateCcw size={18} strokeWidth={1.75} />
           </button>
           <button
             onClick={() => setShowSettings(true)}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import AuthGate from './components/AuthGate.jsx'
 import LandingPage from './components/LandingPage.jsx'
 import ModuleDetail from './components/ModuleDetail.jsx'
 import VertriebsarbeitsplatzArchitektur from './components/VertriebsarbeitsplatzArchitektur.jsx'
@@ -49,5 +48,5 @@ export default function App() {
     content = <LandingPage />
   }
 
-  return <AuthGate>{content}</AuthGate>
+  return content
 }

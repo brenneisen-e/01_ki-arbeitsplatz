@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Trophy, Target, TrendingUp, Flame, Zap, Calendar, ArrowRight } from 'lucide-react';
+import { Trophy, Target, TrendingUp, Flame, Zap, Calendar, ArrowRight, Award, Repeat } from 'lucide-react';
 import Card from './Card';
 import { formatEur } from '../../utils/formatters';
 
@@ -125,37 +125,85 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
       {/* Streak + Quick Wins nebeneinander, damit beides nicht die volle
           Breite einnimmt. Auf schmaleren Viewports stapeln sie wieder. */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Streak */}
-        <div className="rounded-xl border border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
-              <Flame size={20} className="text-orange-600" strokeWidth={2} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-bold text-slate-800">
-                {streak.count} {streak.count === 1 ? 'Tag' : 'Tage'} in Folge mindestens 1 Potenzial bearbeitet
+        {/* Linke Spalte: Streak + Ranking + Cross-Sell — vertikal gestapelt,
+            damit visuell in etwa die Höhe der drei Quick-Win-Karten rechts. */}
+        <div className="space-y-2">
+          {/* Streak */}
+          <div className="rounded-xl border border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
+                <Flame size={20} className="text-orange-600" strokeWidth={2} />
               </div>
-              <div className="text-xs text-slate-500 mt-0.5">
-                {streak.count >= 20 ? 'Unaufhaltsam' : streak.count >= 10 ? 'Auf Kurs' : streak.count >= 5 ? 'Solide Woche' : 'Streak aufbauen'}
-              </div>
-            </div>
-            <div className="flex items-center gap-1 shrink-0">
-              {streak.days.map((d, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col items-center gap-0.5"
-                  title={d.date}
-                >
-                  <div
-                    className={`w-3 h-3 rounded-full transition-colors ${
-                      d.active
-                        ? 'bg-orange-500'
-                        : 'bg-white border border-orange-200'
-                    }`}
-                  />
-                  <span className="text-[9px] text-slate-400 font-medium">{d.label}</span>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-bold text-slate-800">
+                  {streak.count} {streak.count === 1 ? 'Tag' : 'Tage'} in Folge mindestens 1 Potenzial bearbeitet
                 </div>
-              ))}
+                <div className="text-xs text-slate-500 mt-0.5">
+                  {streak.count >= 20 ? 'Unaufhaltsam' : streak.count >= 10 ? 'Auf Kurs' : streak.count >= 5 ? 'Solide Woche' : 'Streak aufbauen'}
+                </div>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                {streak.days.map((d, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col items-center gap-0.5"
+                    title={d.date}
+                  >
+                    <div
+                      className={`w-3 h-3 rounded-full transition-colors ${
+                        d.active
+                          ? 'bg-orange-500'
+                          : 'bg-white border border-orange-200'
+                      }`}
+                    />
+                    <span className="text-[9px] text-slate-400 font-medium">{d.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Filial-Ranking */}
+          <div className="rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                <Award size={20} className="text-emerald-600" strokeWidth={2} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-bold text-slate-800">
+                  Platz 2 von 7 in der Filiale
+                </div>
+                <div className="text-xs text-slate-500 mt-0.5">
+                  Nur 3 Abschlüsse hinter Spitzenreiter · Aufstieg möglich
+                </div>
+              </div>
+              <div className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-emerald-200">
+                <span className="text-base font-bold text-emerald-700 font-mono">#2</span>
+                <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">/ 7</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Cross-Sell-Quote */}
+          <div className="rounded-xl border border-violet-200 bg-gradient-to-r from-violet-50 to-indigo-50 p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
+                <Repeat size={20} className="text-violet-600" strokeWidth={2} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-bold text-slate-800">
+                  62% Cross-Sell-Anteil bei Abschlüssen
+                </div>
+                <div className="text-xs text-slate-500 mt-0.5">
+                  Filialschnitt 47% · +15 Pp besser
+                </div>
+              </div>
+              <div className="shrink-0 w-24">
+                <div className="h-2 bg-white rounded-full overflow-hidden border border-violet-200">
+                  <div className="h-full rounded-full bg-violet-500" style={{ width: '62%' }} />
+                </div>
+                <div className="text-[10px] text-slate-500 font-medium text-right mt-0.5">62%</div>
+              </div>
             </div>
           </div>
         </div>

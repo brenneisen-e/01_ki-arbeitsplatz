@@ -427,6 +427,7 @@ export default function LandingPage() {
       mr.ondataavailable = (e) => { if (e.data && e.data.size > 0) recorderRef.current.chunks.push(e.data); };
       mr.onstop = saveRecording;
       stream.getVideoTracks()[0].onended = () => { if (recorderRef.current.mediaRecorder) stopRecording(); };
+      setShowSettings(false);
       setRecordPhase('countdown');
       setRecordCountdown(5);
     } catch {

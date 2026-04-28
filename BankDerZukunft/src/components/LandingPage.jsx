@@ -229,7 +229,7 @@ export default function LandingPage() {
           className="bdz-fade-in text-white font-bold tracking-tight text-4xl md:text-5xl leading-[1.05]"
           style={{ animationDelay: '120ms' }}
         >
-          Acht Dimensionen der{' '}
+          Fünf Bausteine der{' '}
           <span
             style={{
               background: 'linear-gradient(90deg, #38bdf8 0%, #a78bfa 50%, #34d399 100%)',
@@ -245,26 +245,26 @@ export default function LandingPage() {
           className="bdz-fade-in mt-5 text-slate-300 text-base md:text-lg max-w-2xl mx-auto"
           style={{ animationDelay: '220ms' }}
         >
-          Klicke auf ein Modul und tauche ein — vom Geschäftsmodell über das
-          Betriebsmodell bis zur KI-Architektur. Jeder Baustein zeigt, wie wir heute
-          Banken der Zukunft gestalten.
+          Klicke auf einen Baustein und tauche ein — Kundenperspektive, Betriebsmodell,
+          Transformationspfad und unser Offering. Im Zentrum steht das gemeinsame Zielbild
+          „Bank der Zukunft".
         </p>
         <div
           className="bdz-fade-in mt-8 flex flex-wrap items-center justify-center gap-3"
           style={{ animationDelay: '320ms' }}
         >
           <a
-            href="#/modul/betriebsmodell"
+            href="#/modul/bank-der-zukunft"
             className="inline-flex items-center gap-2 rounded-full bg-white text-slate-900 px-5 py-2.5 text-sm font-semibold hover:scale-[1.03] transition-transform no-underline"
           >
             <Play size={14} strokeWidth={2.5} />
             Workshop starten
           </a>
           <a
-            href="#/modul/geschaeftsmodell"
+            href="#/modul/kundenperspektive"
             className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 text-white px-5 py-2.5 text-sm font-medium hover:bg-white/10 transition-colors no-underline"
           >
-            Mit Geschäftsmodell beginnen
+            Mit Kundenperspektive beginnen
             <ArrowRight size={14} strokeWidth={2.25} />
           </a>
         </div>
@@ -287,12 +287,12 @@ export default function LandingPage() {
         <div className="flex flex-wrap items-center justify-center gap-4">
           <span className="inline-flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-sky-400" />
-            Acht Module
+            Fünf Bausteine
           </span>
           <span className="opacity-40">·</span>
           <span className="inline-flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-violet-400" />
-            Ein Fokus-Thema: Vertriebsarbeitsplatz
+            Fokus-Demo: Vertriebsarbeitsplatz
           </span>
           <span className="opacity-40">·</span>
           <span className="inline-flex items-center gap-1.5">

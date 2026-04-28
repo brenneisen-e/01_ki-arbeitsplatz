@@ -11,7 +11,7 @@ export const MODULES = [
     icon: 'Users',
     color: '#34d399',
     colorDeep: '#059669',
-    position: { x: 22, y: 28, size: 'lg', anim: 'bdz-float' },
+    position: { x: 22, y: 20, size: 'lg', anim: 'bdz-float' },
     tagline:
       'Konsistent, proaktiv und nahtlos — von Privatkunde bis Capital Markets.',
     summary:
@@ -54,7 +54,7 @@ export const MODULES = [
     icon: 'Workflow',
     color: '#a78bfa',
     colorDeep: '#7c3aed',
-    position: { x: 78, y: 28, size: 'lg', anim: 'bdz-float-slow' },
+    position: { x: 78, y: 20, size: 'lg', anim: 'bdz-float-slow' },
     tagline:
       'Ein KI-natives Betriebsmodell mit klarer Orchestrierung zwischen Mensch, Prozess und Automatisierung.',
     summary:
@@ -174,7 +174,7 @@ export const MODULES = [
     icon: 'Workflow',
     color: '#fbbf24',
     colorDeep: '#d97706',
-    position: { x: 22, y: 78, size: 'lg', anim: 'bdz-float-reverse' },
+    position: { x: 22, y: 84, size: 'lg', anim: 'bdz-float-reverse' },
     tagline:
       'Ein klarer Weg in mehreren Wellen — vom heutigen Zustand zur Bank der Zukunft.',
     summary:
@@ -217,7 +217,7 @@ export const MODULES = [
     icon: 'ShieldCheck',
     color: '#fb7185',
     colorDeep: '#e11d48',
-    position: { x: 78, y: 78, size: 'lg', anim: 'bdz-float' },
+    position: { x: 78, y: 84, size: 'lg', anim: 'bdz-float' },
     tagline:
       'Modulare Angebotsbausteine — von Strategie über Architektur bis zum betriebenen Service.',
     summary:

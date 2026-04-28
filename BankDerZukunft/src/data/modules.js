@@ -1,81 +1,64 @@
 // Module catalog for the "Bank der Zukunft" workshop.
-// Each module describes a pillar of the future bank with sub-aspects.
-// Positions (x, y in percent) define the initial placement on the
-// floating landing canvas.
+// 5 Module in einem 2-1-2-Layout: „Bank der Zukunft" als zentraler Hub,
+// die vier anderen als Eckpunkte. Positionen (x, y in Prozent) definieren
+// die initiale Platzierung auf der schwebenden Landing-Canvas.
 
 export const MODULES = [
   {
-    id: 'geschaeftsmodell',
-    title: 'Geschäftsmodell',
-    subtitle: 'Wie wir Wert schaffen',
-    icon: 'Building2',
-    color: '#38bdf8',
-    colorDeep: '#0284c7',
-    position: { x: 10, y: 22, size: 'lg', anim: 'bdz-float' },
+    id: 'kundenperspektive',
+    title: 'Kundenperspektive',
+    subtitle: 'Wie Kunden uns erleben',
+    icon: 'Users',
+    color: '#34d399',
+    colorDeep: '#059669',
+    position: { x: 22, y: 28, size: 'lg', anim: 'bdz-float' },
     tagline:
-      'Vom produktzentrierten Bank-Anbieter zum kundenzentrierten Ökosystempartner.',
+      'Konsistent, proaktiv und nahtlos — von Privatkunde bis Capital Markets.',
     summary:
-      'Das Geschäftsmodell der Bank der Zukunft ist kontextuell, datengetrieben und eingebettet. Kunden erleben Finanzdienstleistungen dort, wo sie entstehen — im Alltag, in der Kaufsituation, im unternehmerischen Prozess.',
+      'Kunden begegnen der Bank nicht mehr an einzelnen „Touchpoints", sondern werden entlang ihrer Lebens- und Geschäftsereignisse begleitet. KI-Assistenten antizipieren Bedürfnisse, bevor sie artikuliert werden — und liefern Antworten, die zur jeweiligen Lebenslage passen.',
     pillars: [
       {
-        id: 'value',
-        title: 'Wertversprechen',
+        id: 'omnichannel',
+        title: 'Omnichannel-Erlebnis',
         description:
-          'Plattform-basierte Finanzdienstleistungen mit klarem Outcome-Versprechen statt Produktkatalog.',
-        bullets: [
-          'Embedded Finance für Retail & Firmenkunden',
-          'Advisory-as-a-Service statt Produktverkauf',
-          'Plattform-Ökosysteme mit Fintech-Partnern',
-        ],
+          'Nahtloser Wechsel zwischen App, Web, Filiale, Voice und Messaging — mit durchgehendem Kontext.',
+        bullets: ['Unified Customer Context', 'Voice-First-Interfaces', 'Conversational Banking'],
       },
       {
-        id: 'segments',
-        title: 'Zielsegmente',
+        id: 'personalisierung',
+        title: 'Hyper-Personalisierung',
         description:
-          'Hyper-Personalisierung auf Basis von Lebensphasen, Events und Mikrosegmenten.',
-        bullets: [
-          'Private Kunden & Vermögen',
-          'Firmenkunden & Mittelstand',
-          'Institutionelle Investoren',
-        ],
+          'Individuelle Ansprache, Produkte und Inhalte auf Basis von Echtzeit-Events und Open-Finance-Daten.',
+        bullets: ['Behavioral Insights', 'Next-Best-Offer-Engine', 'Lebenslagen-Erkennung'],
       },
       {
-        id: 'revenue',
-        title: 'Revenue Streams',
+        id: 'capital-markets',
+        title: 'Capital Markets-Sicht',
         description:
-          'Diversifizierung jenseits von Zins- und Provisionserträgen.',
-        bullets: [
-          'Subscription-Modelle für Beratung',
-          'Data-Monetarisierung (DSGVO-konform)',
-          'Plattform-Gebühren & API-Monetarisierung',
-        ],
+          'Institutionelle Kunden mit eigener Logik: Echtzeit-Trading, Research-Co-Pilot, Risiko-Cockpit.',
+        bullets: ['Trader-Co-Pilot', 'Research-as-a-Service', 'Echtzeit-Risiko-Dashboards'],
       },
       {
-        id: 'partners',
-        title: 'Ökosystem',
+        id: 'trust',
+        title: 'Vertrauen & Transparenz',
         description:
-          'Strategische Partnerschaften als zentraler Hebel für Reichweite und Innovation.',
-        bullets: [
-          'Fintech-Kooperationen',
-          'Banking-as-a-Service-Angebote',
-          'Plattform-Integrationen mit Marktplätzen',
-        ],
+          'Erklärbare KI, Datenhoheit und transparente Entscheidungen als Basis für Kundenbindung.',
+        bullets: ['Explainable AI', 'Consent Management', 'Fairness & Bias-Monitoring'],
       },
     ],
   },
   {
-    id: 'betriebsmodell',
-    title: 'Betriebsmodell',
+    id: 'betriebsmodell-zukunft',
+    title: 'Betriebsmodell der Zukunft',
     subtitle: 'Wie wir Wert liefern',
     icon: 'Workflow',
     color: '#a78bfa',
-    colorDeep: '#6366f1',
-    featured: true,
-    position: { x: 50, y: 18, size: 'xl', anim: 'bdz-float-slow' },
+    colorDeep: '#7c3aed',
+    position: { x: 78, y: 28, size: 'lg', anim: 'bdz-float-slow' },
     tagline:
       'Ein KI-natives Betriebsmodell mit klarer Orchestrierung zwischen Mensch, Prozess und Automatisierung.',
     summary:
-      'Das Betriebsmodell der Zukunft verbindet skalierbare Prozessautomatisierung mit einem neu gedachten Arbeitsplatz. KI übernimmt repetitive Arbeit, Menschen fokussieren sich auf Beziehung, Urteil und Eskalation.',
+      'Das Betriebsmodell der Zukunft verbindet skalierbare Prozessautomatisierung mit einem neu gedachten Arbeitsplatz. KI übernimmt repetitive Arbeit, Menschen fokussieren sich auf Beziehung, Urteil und Eskalation. Demos zeigen, wie der Vertriebsarbeitsplatz heute schon aussehen kann.',
     pillars: [
       {
         id: 'vertriebsarbeitsplatz',
@@ -93,7 +76,7 @@ export const MODULES = [
         id: 'backoffice',
         title: 'Backoffice-Automation',
         description:
-          'Straight-Through-Processing für Standardprozesse, menschliche Eskalation nur noch bei Ausnahmen.',
+          'Straight-Through-Processing für Standardprozesse, menschliche Eskalation nur bei Ausnahmen.',
         bullets: [
           'Dokumentenverarbeitung mit KI',
           'Automatisierte Antrags- & Kreditstrecken',
@@ -113,230 +96,160 @@ export const MODULES = [
       },
       {
         id: 'prozesse',
-        title: 'Prozesse',
+        title: 'Prozesse als Software',
         description:
-          'Prozesse als Software — versioniert, testbar, kontinuierlich optimiert mit Prozess-Mining.',
+          'Versioniert, testbar, kontinuierlich optimiert mit Prozess-Mining und Observability.',
         bullets: [
           'Event-getriebene Prozesse',
-          'Process Mining & Observability',
+          'Process Mining',
           'Human-in-the-Loop-Design',
         ],
       },
     ],
   },
   {
-    id: 'kundenerlebnis',
-    title: 'Kundenerlebnis',
-    subtitle: 'Wie Kunden uns erleben',
-    icon: 'Sparkles',
-    color: '#34d399',
-    colorDeep: '#059669',
-    position: { x: 8, y: 55, size: 'md', anim: 'bdz-float-reverse' },
+    id: 'bank-der-zukunft',
+    title: 'Bank der Zukunft',
+    subtitle: 'Das gemeinsame Zielbild',
+    icon: 'Compass',
+    color: '#38bdf8',
+    colorDeep: '#0284c7',
+    featured: true,
+    position: { x: 50, y: 52, size: 'xl', anim: 'bdz-float-slow' },
     tagline:
-      'Konsistent, proaktiv und nahtlos — über alle Kanäle hinweg mit KI als Guide.',
+      'Vom produktzentrierten Bank-Anbieter zum kundenzentrierten, KI-nativen Ökosystempartner.',
     summary:
-      'Kunden begegnen der Bank nicht mehr an „Touchpoints", sondern werden entlang ihrer Lebensreise begleitet. KI-Assistenten antizipieren Bedürfnisse, bevor sie artikuliert werden.',
+      'Die Bank der Zukunft ist kontextuell, datengetrieben, eingebettet — und wirtschaftlich nachhaltig. Sie liefert Outcomes statt Produkte, agiert als Plattform und macht KI zum Mitarbeitenden. Dieses Modul ist die zentrale Klammer für alle anderen Bausteine.',
     pillars: [
       {
-        id: 'omnichannel',
-        title: 'Omnichannel',
+        id: 'value',
+        title: 'Wertversprechen',
         description:
-          'Nahtloser Wechsel zwischen App, Web, Filiale, Voice und Messaging mit durchgehendem Kontext.',
-        bullets: ['Unified Customer Context', 'Voice-First-Interfaces', 'Conversational Banking'],
+          'Plattform-basierte Finanzdienstleistungen mit klarem Outcome-Versprechen statt Produktkatalog.',
+        bullets: [
+          'Embedded Finance für Retail & Firmenkunden',
+          'Advisory-as-a-Service statt Produktverkauf',
+          'Plattform-Ökosysteme mit Fintech-Partnern',
+        ],
       },
       {
-        id: 'personalisierung',
-        title: 'Hyper-Personalisierung',
+        id: 'revenue',
+        title: 'Revenue-Modelle',
         description:
-          'Individuelle Ansprache, Produkte und Inhalte auf Basis von Echtzeit-Events und Präferenzen.',
-        bullets: ['Behavioral Insights', 'Next-Best-Offer-Engine', 'Kontextuelle Empfehlungen'],
+          'Diversifizierung jenseits klassischer Zins- und Provisionserträge.',
+        bullets: [
+          'Subscription-Modelle für Beratung',
+          'Plattform-Gebühren & API-Monetarisierung',
+          'Data-Monetarisierung (DSGVO-konform)',
+        ],
       },
       {
-        id: 'trust',
-        title: 'Vertrauen & Transparenz',
+        id: 'ki-native',
+        title: 'KI-natives Selbstverständnis',
         description:
-          'Erklärbare KI, Datenhoheit und transparente Entscheidungen als Basis für Kundenbindung.',
-        bullets: ['Explainable AI', 'Consent Management', 'Fairness & Bias-Monitoring'],
+          'Die Organisation arbeitet mit KI als ständigem Partner — nicht als Tool, sondern als Kollege.',
+        bullets: [
+          'Agentische KI in jedem Prozess',
+          'Daten- und Modell-Plattform als Fundament',
+          'Continuous Learning Culture',
+        ],
+      },
+      {
+        id: 'oekosystem',
+        title: 'Ökosystem-Strategie',
+        description:
+          'Strategische Partnerschaften als zentraler Hebel für Reichweite und Innovation.',
+        bullets: [
+          'Fintech-Kooperationen',
+          'Banking-as-a-Service-Angebote',
+          'Plattform-Integrationen mit Marktplätzen',
+        ],
       },
     ],
   },
   {
-    id: 'daten-ki',
-    title: 'Daten & KI',
-    subtitle: 'Das Nervensystem der Bank',
-    icon: 'BrainCircuit',
-    color: '#fb7185',
-    colorDeep: '#e11d48',
-    position: { x: 45, y: 55, size: 'lg', anim: 'bdz-float' },
+    id: 'transitionspfad',
+    title: 'Transitions- & Transformationspfad',
+    subtitle: 'Vom Heute zum Zielbild',
+    icon: 'Workflow',
+    color: '#fbbf24',
+    colorDeep: '#d97706',
+    position: { x: 22, y: 78, size: 'lg', anim: 'bdz-float-reverse' },
     tagline:
-      'Eine moderne Daten- & KI-Plattform als Fundament für jeden Geschäftsprozess.',
+      'Ein klarer Weg in mehreren Wellen — vom heutigen Zustand zur Bank der Zukunft.',
     summary:
-      'Daten sind das wertvollste Asset. Die Bank der Zukunft besitzt eine skalierbare, governance-starke Plattform, auf der generative KI, klassische ML-Modelle und Analytics gemeinsam leben.',
+      'Transformation ist kein Big Bang. Wir definieren Wellen, MVPs und Quick Wins, machen Abhängigkeiten sichtbar und priorisieren entlang von Wert und Risiko. Capital Markets und Retail laufen dabei in unterschiedlichen Geschwindigkeiten — aber auf demselben Zielbild.',
     pillars: [
       {
-        id: 'platform',
-        title: 'Daten-Plattform',
+        id: 'roadmap',
+        title: 'Wellen-Roadmap',
         description:
-          'Data Mesh mit Domänen-Ownership, Feature Store und Echtzeit-Streams.',
-        bullets: ['Data Mesh & Data Products', 'Feature Store', 'Event Streaming (Kafka)'],
+          'Drei bis fünf Transformations-Wellen mit klaren Meilensteinen und MVP-Lieferungen.',
+        bullets: ['Welle 1: Foundations', 'Welle 2: Scale & Embed', 'Welle 3: Reinvent'],
       },
       {
-        id: 'genai',
-        title: 'Generative KI',
+        id: 'priorisierung',
+        title: 'Wert & Risiko-Priorisierung',
         description:
-          'LLM-Gateway mit sicherem Zugang zu Modellen, Vektor-Indizes und Policy-Guardrails.',
-        bullets: ['LLM-Gateway & Routing', 'Vector Search & RAG', 'Prompt- & Policy-Layer'],
+          'Initiativen werden nach Business-Value, Realisierungsrisiko und Abhängigkeiten geordnet.',
+        bullets: ['Value-Risk-Matrix', 'Dependency-Graph', 'OKR-Verankerung'],
       },
       {
         id: 'governance',
-        title: 'Governance',
+        title: 'Transformations-Governance',
         description:
-          'Datenhoheit, Qualität und Compliance by Design — mit Audit-Trail für jedes Modell.',
-        bullets: ['Data Lineage', 'Model Registry', 'AI Act & DSGVO Compliance'],
+          'Klare Entscheidungsstrukturen, Steering-Boards, Eskalationspfade — schnell und transparent.',
+        bullets: ['Steering Cadence', 'PMO & Reporting', 'Change-Management'],
+      },
+      {
+        id: 'transition',
+        title: 'Capital Markets vs. Retail',
+        description:
+          'Zwei Zielarchitekturen, ein gemeinsames Fundament — abgestimmte Migrationspfade.',
+        bullets: ['Spartenspezifische MVPs', 'Gemeinsame Plattform-Bausteine', 'Migrations-Welle pro Sparte'],
       },
     ],
   },
   {
-    id: 'technologie',
-    title: 'Technologie',
-    subtitle: 'Die Plattform dahinter',
-    icon: 'Server',
-    color: '#fbbf24',
-    colorDeep: '#d97706',
-    position: { x: 88, y: 55, size: 'md', anim: 'bdz-float-slow' },
-    tagline:
-      'Cloud-nativ, API-first und event-getrieben — mit Legacy-Modernisierung als Dauerthema.',
-    summary:
-      'Die Bank der Zukunft arbeitet auf einer modularen, resilient entwickelten Technologie-Basis. Neue Fähigkeiten entstehen in Wochen, nicht in Monaten.',
-    pillars: [
-      {
-        id: 'cloud',
-        title: 'Cloud-Native',
-        description:
-          'Multi-Cloud-Strategie mit Container-Orchestrierung und Zero-Trust-Sicherheit.',
-        bullets: ['Kubernetes & Service Mesh', 'Zero-Trust Security', 'Observability'],
-      },
-      {
-        id: 'api',
-        title: 'API-First',
-        description:
-          'Alle Fähigkeiten als kuratierte APIs — für interne Teams, Partner und Kunden.',
-        bullets: ['API-Gateway', 'Developer-Portal', 'Event-getriebene APIs'],
-      },
-      {
-        id: 'legacy',
-        title: 'Legacy-Transformation',
-        description:
-          'Schrittweise Ablösung von Monolithen durch domänenorientierte Services.',
-        bullets: ['Strangler-Muster', 'Domain-Driven Design', 'Modular Banking'],
-      },
-    ],
-  },
-  {
-    id: 'menschen-kultur',
-    title: 'Menschen & Kultur',
-    subtitle: 'Die Organisation als Software',
-    icon: 'Users',
-    color: '#f472b6',
-    colorDeep: '#db2777',
-    position: { x: 22, y: 85, size: 'sm', anim: 'bdz-float-reverse' },
-    tagline:
-      'KI-native Teams, neue Rollen und eine Kultur des kontinuierlichen Lernens.',
-    summary:
-      'Die Bank der Zukunft ist kein Tech-Unternehmen mit Banklizenz, sondern eine Organisation, in der Menschen und KI als Partner arbeiten. Dafür braucht es neue Rollen, neue Skills und eine Haltung.',
-    pillars: [
-      {
-        id: 'roles',
-        title: 'Neue Rollen',
-        description:
-          'Vom Sachbearbeiter zum Kurator — Menschen orchestrieren KI-Agenten statt Formulare auszufüllen.',
-        bullets: ['AI Product Manager', 'Prompt Engineer', 'Domain Data Steward'],
-      },
-      {
-        id: 'skills',
-        title: 'Skills & Lernen',
-        description:
-          'Kontinuierliches Lernen als integraler Bestandteil des Arbeitsalltags.',
-        bullets: ['KI-Grundausbildung für alle', 'Tool-Literacy', 'Experimentier-Kultur'],
-      },
-      {
-        id: 'leadership',
-        title: 'Führung',
-        description:
-          'Entscheidungen werden dezentralisiert, Transparenz wird zum Führungsinstrument.',
-        bullets: ['Distributed Leadership', 'Outcome-orientierung', 'Psychological Safety'],
-      },
-    ],
-  },
-  {
-    id: 'regulatorik',
-    title: 'Regulatorik',
-    subtitle: 'Compliance by Design',
+    id: 'offering',
+    title: 'Offering & Angebotsbausteine',
+    subtitle: 'Was wir konkret liefern',
     icon: 'ShieldCheck',
-    color: '#22d3ee',
-    colorDeep: '#0891b2',
-    position: { x: 72, y: 85, size: 'sm', anim: 'bdz-float' },
+    color: '#fb7185',
+    colorDeep: '#e11d48',
+    position: { x: 78, y: 78, size: 'lg', anim: 'bdz-float' },
     tagline:
-      'Regulatorik nicht als Bremse, sondern als eingebaute Qualität.',
+      'Modulare Angebotsbausteine — von Strategie über Architektur bis zum betriebenen Service.',
     summary:
-      'Von MaRisk über DORA bis zum EU AI Act: Die Bank der Zukunft baut Compliance in ihre Plattform, Prozesse und Produkte ein — automatisiert, auditierbar, nachvollziehbar.',
+      'Unsere Angebote sind so zusammengesteckt, wie der Kunde sie gerade braucht: vom Strategie-Sprint über Architektur-Blueprints bis zum laufenden Betrieb. Jeder Baustein steht für sich, lässt sich aber zu kompletten Transformationsprogrammen kombinieren.',
     pillars: [
       {
-        id: 'ai-act',
-        title: 'EU AI Act',
+        id: 'strategy',
+        title: 'Strategie & Zielbild',
         description:
-          'Risiko-Klassifizierung, Transparenzpflichten und Monitoring für jedes KI-System.',
-        bullets: ['Risiko-Register', 'Modell-Dokumentation', 'Continuous Monitoring'],
+          'Co-creation des Zielbilds, Business-Cases und Investitionspfade — schnell und entscheidungsreif.',
+        bullets: ['Zielbild-Workshops', 'Business-Case-Modell', 'Investitions-Roadmap'],
       },
       {
-        id: 'dora',
-        title: 'DORA & ICT-Resilienz',
+        id: 'architecture',
+        title: 'Architektur & Blueprints',
         description:
-          'Operative Widerstandsfähigkeit als Fundament — inklusive Drittanbieter-Risiken.',
-        bullets: ['ICT-Risk-Framework', 'Third-Party-Register', 'Resilience Testing'],
+          'Referenzarchitekturen für Daten, KI und Plattformen — anschlussfähig an die Realität der Bank.',
+        bullets: ['Daten- & KI-Plattform-Blueprints', 'Domain-Driven-Design', 'Tech-Stack-Empfehlungen'],
       },
       {
-        id: 'datenschutz',
-        title: 'DSGVO & Datenhoheit',
+        id: 'delivery',
+        title: 'Implementation & Delivery',
         description:
-          'Einwilligung, Zweckbindung und Löschkonzepte als Teil der Plattform.',
-        bullets: ['Consent Management', 'Data Minimization', 'Privacy-by-Design'],
-      },
-    ],
-  },
-  {
-    id: 'nachhaltigkeit',
-    title: 'Nachhaltigkeit',
-    subtitle: 'Finanzierung der Transformation',
-    icon: 'Leaf',
-    color: '#86efac',
-    colorDeep: '#16a34a',
-    position: { x: 90, y: 22, size: 'sm', anim: 'bdz-float-slow' },
-    tagline:
-      'Banken sind Schlüssel-Akteure der grünen Transformation — und müssen es selbst vorleben.',
-    summary:
-      'Die Bank der Zukunft lenkt Kapitalströme gezielt in nachhaltige Vorhaben, misst ESG-Wirkungen ihrer Portfolios und reduziert den eigenen Footprint.',
-    pillars: [
-      {
-        id: 'esg-portfolio',
-        title: 'ESG-Portfoliosteuerung',
-        description:
-          'Messbare ESG-KPIs für jedes Asset, integriert in Kredit- und Anlageentscheidungen.',
-        bullets: ['ESG-Scoring', 'Klimapfad-Analyse', 'Impact-Reporting'],
+          'Hands-on Umsetzung in Sprints — gemeinsam mit den Bank-Teams, nicht „über sie hinweg".',
+        bullets: ['Squad-Aufstellung', 'Inkrementelle Auslieferung', 'Knowledge-Transfer'],
       },
       {
-        id: 'green-products',
-        title: 'Grüne Produkte',
+        id: 'managed',
+        title: 'Managed Services',
         description:
-          'Transition-Finance, Green Loans und nachhaltige Investmentstrategien.',
-        bullets: ['Sustainable Finance', 'Transition Loans', 'Green Bonds'],
-      },
-      {
-        id: 'own-footprint',
-        title: 'Eigener Footprint',
-        description:
-          'Vom Rechenzentrum bis zur Filiale: Klima-Netto-Null als Ziel.',
-        bullets: ['Green Data Centers', 'CO2-Reporting', 'Supply-Chain-Transparenz'],
+          'Ausgewählte Bausteine als laufender Service — von KI-Modellen bis zu Compliance-Frameworks.',
+        bullets: ['MLOps-as-a-Service', 'AI-Governance-Service', 'Continuous-Compliance'],
       },
     ],
   },

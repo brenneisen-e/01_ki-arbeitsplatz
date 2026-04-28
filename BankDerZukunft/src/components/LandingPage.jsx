@@ -101,18 +101,16 @@ function FloatingModule({ mod, delay }) {
   )
 }
 
-// Pre-defined connection lines between modules (rendered as SVG)
-// to give the constellation a sense of relationship.
+// Verbindungs-Linien zwischen den Modulen (als SVG gerendert).
+// 2-1-2-Layout: „Bank der Zukunft" als zentraler Hub, vier andere
+// Module als Eckpunkte. Spider-Pattern + zwei Crossbars.
 const CONNECTIONS = [
-  ['geschaeftsmodell', 'betriebsmodell'],
-  ['geschaeftsmodell', 'kundenerlebnis'],
-  ['betriebsmodell', 'daten-ki'],
-  ['betriebsmodell', 'technologie'],
-  ['kundenerlebnis', 'daten-ki'],
-  ['daten-ki', 'technologie'],
-  ['daten-ki', 'menschen-kultur'],
-  ['technologie', 'regulatorik'],
-  ['betriebsmodell', 'nachhaltigkeit'],
+  ['bank-der-zukunft', 'kundenperspektive'],
+  ['bank-der-zukunft', 'betriebsmodell-zukunft'],
+  ['bank-der-zukunft', 'transitionspfad'],
+  ['bank-der-zukunft', 'offering'],
+  ['kundenperspektive', 'betriebsmodell-zukunft'],
+  ['transitionspfad', 'offering'],
 ]
 
 function ConnectionLayer() {

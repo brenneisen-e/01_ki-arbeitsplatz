@@ -110,6 +110,45 @@ export function Hero({ overlay }: HeroProps) {
     transform: 'translate(-50%, -50%)',
   }
 
+  // Diagnostik: wenn Video aktiv ist, hänge ALLE relevanten Events dran
+  useEffect(() => {
+    if (!useVideo) {
+      console.log('[Hero] kein Video gerendert — reduced:', reduced, 'failed:', videoFailed)
+      return
+    }
+    const v = videoRef.current
+    if (!v) { console.warn('[Hero] videoRef ist null'); return }
+    console.log('[Hero] Video gemounted, initial state:', {
+      currentSrc: v.currentSrc, networkState: v.networkState, readyState: v.readyState,
+      paused: v.paused, muted: v.muted, autoplay: v.autoplay,
+    })
+
+    const log = (e: Event) => {
+      const tgt = e.target as HTMLVideoElement
+      console.log(`[Hero][video] ${e.type}`, {
+        currentSrc: tgt.currentSrc, networkState: tgt.networkState, readyState: tgt.readyState,
+        paused: tgt.paused, errorCode: tgt.error?.code, errorMsg: tgt.error?.message,
+      })
+    }
+    const evts = ['loadstart','loadedmetadata','loadeddata','canplay','canplaythrough','play','playing','pause','waiting','stalled','suspend','abort','emptied','ended']
+    evts.forEach((ev) => v.addEventListener(ev, log))
+
+    // Manuell play() probieren — autoplay kann blockiert sein
+    v.play()
+      .then(() => console.log('[Hero] play() success'))
+      .catch((err: unknown) => console.warn('[Hero] play() rejected:', err))
+
+    // Source-URLs einmal explizit auflösen (HEAD)
+    Array.from(v.querySelectorAll('source')).forEach((s) => {
+      const url = (s as HTMLSourceElement).src
+      fetch(url, { method: 'HEAD' })
+        .then((r) => console.log(`[Hero] HEAD ${url}: ${r.status}`))
+        .catch((err) => console.warn(`[Hero] HEAD ${url} failed:`, err))
+    })
+
+    return () => { evts.forEach((ev) => v.removeEventListener(ev, log)) }
+  }, [useVideo, reduced, videoFailed])
+
   return (
     <div className="hero-stage relative w-full h-full flex items-center justify-center overflow-hidden">
       {/* Hero-Layer (Video + Poster) */}
@@ -124,7 +163,21 @@ export function Hero({ overlay }: HeroProps) {
             preload="auto"
             poster={HERO_POSTER}
             aria-label="Animierter Querschnitt: Bank der Zukunft 2035"
-            onError={() => { console.warn('[Hero] video error → fallback poster'); setVideoFailed(true) }}
+            onError={(e) => {
+              const v = e.currentTarget
+              const codeMap: Record<number, string> = {
+                1: 'MEDIA_ERR_ABORTED', 2: 'MEDIA_ERR_NETWORK',
+                3: 'MEDIA_ERR_DECODE',  4: 'MEDIA_ERR_SRC_NOT_SUPPORTED',
+              }
+              console.warn('[Hero] video onError → fallback poster', {
+                errorCode: v.error?.code,
+                errorName: v.error ? codeMap[v.error.code] : 'no-error-object',
+                errorMessage: v.error?.message,
+                currentSrc: v.currentSrc,
+                networkState: v.networkState, readyState: v.readyState,
+              })
+              setVideoFailed(true)
+            }}
             className="hero-image absolute max-w-full max-h-full w-auto h-auto"
             style={sharedStyle}
           >

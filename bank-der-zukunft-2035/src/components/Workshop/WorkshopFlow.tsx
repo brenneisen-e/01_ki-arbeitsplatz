@@ -12,22 +12,22 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 export function WorkshopFlow() {
   const step = useScene((s) => s.workshopStep)
   const setStep = useScene((s) => s.setWorkshopStep)
-  const setActiveFloor = useScene((s) => s.setActiveFloor)
-  const setHoverHotspot = useScene((s) => s.setHoverHotspot)
+  const openFloor = useScene((s) => s.openFloor)
+  const goHero = useScene((s) => s.goHero)
 
-  // Wenn Step gesetzt, übernehme dessen Floor + Hotspot in den Store
+  // Wenn Step gesetzt, fahre die zugehörige Etage an (Cross-Fade
+  // + Side-Panel) und zeige den passenden Hotspot als „aktiv".
   useEffect(() => {
     if (step === null) return
     const s = WORKSHOP_STEPS[step]
-    if (!s) { setStep(null); return }
-    setActiveFloor(s.floor)
-    setHoverHotspot(s.hotspot ?? null)
+    if (!s) { setStep(null); goHero(); return }
+    openFloor(s.floor, s.hotspot ?? null)
     const t = setTimeout(() => {
       if (step + 1 < WORKSHOP_STEPS.length) setStep(step + 1)
-      else setStep(null)
+      else { setStep(null); goHero() }
     }, s.durationSec * 1000)
     return () => clearTimeout(t)
-  }, [step, setActiveFloor, setHoverHotspot, setStep])
+  }, [step, openFloor, goHero, setStep])
 
   if (step === null) return null
   const s = WORKSHOP_STEPS[step]

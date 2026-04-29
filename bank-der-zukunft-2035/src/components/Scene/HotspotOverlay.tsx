@@ -8,6 +8,7 @@ const VIEW_TO_FLOOR: Record<SceneView, FloorId | null> = {
   'detail-ground':   'ground',
   'detail-basement': 'basement',
   'plaza':           'plaza',
+  'horizons':        null,           // separate View, eigene Komponente
 }
 
 /**

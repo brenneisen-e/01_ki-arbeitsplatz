@@ -12,6 +12,7 @@ const VIEW_TO_BASE: Record<SceneView, string> = {
   'detail-ground':   'assets/scene/floor-ground-detail',
   'detail-basement': 'assets/scene/floor-basement-detail',
   'plaza':           'assets/scene/outdoor-plaza',
+  'horizons':        'assets/scene/hero-cross-section-night', // unused, HorizonsView ersetzt das Bild
 }
 
 function imgSrcFor(v: SceneView): string {

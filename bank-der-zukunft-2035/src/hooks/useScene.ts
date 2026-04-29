@@ -9,7 +9,7 @@ import type { FloorId, HotspotId, ThemeMode } from '../types'
  *                     (ohne die anderen Etagen)
  *   'plaza' → Außen-Plaza-Bild, 4 Customer-Hotspots
  */
-export type SceneView = 'hero' | 'detail-top' | 'detail-ground' | 'detail-basement' | 'plaza'
+export type SceneView = 'hero' | 'detail-top' | 'detail-ground' | 'detail-basement' | 'plaza' | 'horizons'
 
 interface SceneState {
   view: SceneView
@@ -23,6 +23,7 @@ interface SceneState {
   setView: (v: SceneView) => void
   openFloor: (id: FloorId, hotspot?: HotspotId | null) => void
   openPlaza: () => void
+  openHorizons: () => void
   goHero: () => void
 
   setActiveFloor: (id: FloorId | null) => void
@@ -55,6 +56,11 @@ export const useScene = create<SceneState>((set) => ({
   openPlaza: () => {
     console.log('[scene] openPlaza')
     set({ view: 'plaza', activeFloor: 'plaza', activeHotspot: null, panelOpen: true })
+  },
+
+  openHorizons: () => {
+    console.log('[scene] openHorizons')
+    set({ view: 'horizons', activeFloor: null, activeHotspot: null, panelOpen: false })
   },
 
   goHero: () => {

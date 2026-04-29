@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Hero } from './components/Scene/Hero'
+import { HorizonsView } from './components/Scene/HorizonsView'
 import { HotspotOverlay } from './components/Scene/HotspotOverlay'
 import { Header } from './components/UI/Header'
 import { SidePanel } from './components/UI/SidePanel'
@@ -72,7 +73,9 @@ export default function App() {
   return (
     <div className="relative w-screen h-screen overflow-hidden" onClick={handleStageClick}>
       <main className="absolute left-0 right-0 bottom-0 top-16">
-        <Hero overlay={() => <HotspotOverlay />} />
+        {view === 'horizons'
+          ? <HorizonsView />
+          : <Hero overlay={() => <HotspotOverlay />} />}
       </main>
 
       <Header onStartWorkshop={() => setStep(0)} />

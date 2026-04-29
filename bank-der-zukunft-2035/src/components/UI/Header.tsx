@@ -1,4 +1,4 @@
-import { Play, Users } from 'lucide-react'
+import { Play, Users, TrendingUp } from 'lucide-react'
 import { useScene } from '../../hooks/useScene'
 
 interface HeaderProps {
@@ -7,6 +7,7 @@ interface HeaderProps {
 
 export function Header({ onStartWorkshop }: HeaderProps) {
   const openPlaza = useScene((s) => s.openPlaza)
+  const openHorizons = useScene((s) => s.openHorizons)
 
   return (
     <header
@@ -37,6 +38,14 @@ export function Header({ onStartWorkshop }: HeaderProps) {
         >
           <Users size={12} strokeWidth={1.4} />
           Mit Kundenperspektive beginnen
+        </button>
+        <button
+          onClick={openHorizons}
+          className="hairline hairline-hover inline-flex items-center gap-2.5 rounded-full h-9 px-4 text-[13px] font-normal tracking-tight text-[var(--color-ink-primary)] transition-colors"
+          style={{ background: 'transparent' }}
+        >
+          <TrendingUp size={12} strokeWidth={1.4} />
+          3 Horizonte
         </button>
       </nav>
     </header>

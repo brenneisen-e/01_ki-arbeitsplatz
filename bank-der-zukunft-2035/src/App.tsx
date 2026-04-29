@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Stage } from './components/Scene/Stage'
+import { PlaceholderSilhouette } from './components/Scene/PlaceholderSilhouette'
 import { HotspotOverlay } from './components/Scene/HotspotOverlay'
 import { Header } from './components/UI/Header'
 import { SidePanel } from './components/UI/SidePanel'
@@ -49,8 +50,15 @@ export default function App() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden tiltshift">
+      {/* Premium-Silhouetten-Fallback hinter dem R3F-Canvas, falls
+          das Hero-Bild noch fehlt. Bei vorhandenem Bild wird der
+          Fallback ohnehin durch das R3F-Plane verdeckt. */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <PlaceholderSilhouette theme={theme} />
+      </div>
+
       {/* WebGL-Bühne */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-[1]">
         <Stage />
       </div>
 

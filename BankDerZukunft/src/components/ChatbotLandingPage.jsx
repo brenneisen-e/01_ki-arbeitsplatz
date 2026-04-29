@@ -63,7 +63,7 @@ export default function ChatbotLandingPage() {
             <span className="text-slate-400 text-[11px] uppercase tracking-widest">Banking im KI-Zeitalter · Workshop 2026</span>
           </div>
         </div>
-        <a href="#/haus" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 text-white px-4 py-1.5 text-xs no-underline hover:bg-white/10">
+        <a href="/bank-der-zukunft-2035/dist/" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 text-white px-4 py-1.5 text-xs no-underline hover:bg-white/10">
           <Home size={13} /> Haus-Ansicht
         </a>
       </header>
@@ -76,7 +76,7 @@ export default function ChatbotLandingPage() {
             ref={scrollRef}
             messages={messages}
             thinking={thinking}
-            onOpenHouse={() => { window.location.hash = '#/haus' }}
+            onOpenHouse={() => { window.location.href = '/bank-der-zukunft-2035/dist/' }}
             onFollowUp={sendQuickPrompt}
           />
 

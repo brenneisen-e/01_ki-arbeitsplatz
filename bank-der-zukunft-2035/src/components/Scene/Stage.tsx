@@ -47,8 +47,8 @@ export function Stage() {
 function HeroPlane({ theme }: { theme: 'day' | 'night' }) {
   // Versuche .webp zuerst (kleiner), sonst .png als Fallback.
   const candidates = [
-    `/assets/scene/hero-cross-section-${theme}.webp`,
-    `/assets/scene/hero-cross-section-${theme}.png`,
+    `assets/scene/hero-cross-section-${theme}.webp`,
+    `assets/scene/hero-cross-section-${theme}.png`,
   ]
   const [tex, setTex] = useState<Texture | null>(null)
   const [failed, setFailed] = useState(false)

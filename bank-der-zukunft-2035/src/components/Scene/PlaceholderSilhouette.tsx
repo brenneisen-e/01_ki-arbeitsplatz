@@ -14,8 +14,8 @@ interface Props { theme: 'day' | 'night' }
  */
 export function PlaceholderSilhouette({ theme }: Props) {
   const candidates = [
-    `/assets/scene/hero-cross-section-${theme}.webp`,
-    `/assets/scene/hero-cross-section-${theme}.png`,
+    `assets/scene/hero-cross-section-${theme}.webp`,
+    `assets/scene/hero-cross-section-${theme}.png`,
   ]
   const [hasFile, setHasFile] = useState<boolean | null>(null)
   useEffect(() => {

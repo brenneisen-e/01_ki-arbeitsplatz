@@ -45,7 +45,11 @@ export function Stage() {
 }
 
 function HeroPlane({ theme }: { theme: 'day' | 'night' }) {
-  const src = `/assets/scene/hero-cross-section-${theme}.webp`
+  // Versuche .webp zuerst (kleiner), sonst .png als Fallback.
+  const candidates = [
+    `/assets/scene/hero-cross-section-${theme}.webp`,
+    `/assets/scene/hero-cross-section-${theme}.png`,
+  ]
   const [tex, setTex] = useState<Texture | null>(null)
   const [failed, setFailed] = useState(false)
 
@@ -53,22 +57,26 @@ function HeroPlane({ theme }: { theme: 'day' | 'night' }) {
     let cancelled = false
     setTex(null); setFailed(false)
     const loader = new TextureLoader()
-    loader.load(
-      src,
-      (texture) => {
-        // Defensiv: Cloudflare-SPA-Fallback liefert HTML statt Bild
-        // → image hat keine echten Pixel-Dimensionen
-        if (cancelled) return
-        if (!texture.image || !(texture.image instanceof HTMLImageElement) || texture.image.naturalWidth === 0) {
-          setFailed(true); return
-        }
-        setTex(texture)
-      },
-      undefined,
-      () => { if (!cancelled) setFailed(true) },
-    )
+
+    function tryLoad(idx: number) {
+      if (cancelled) return
+      if (idx >= candidates.length) { setFailed(true); return }
+      loader.load(
+        candidates[idx],
+        (texture) => {
+          if (cancelled) return
+          if (!texture.image || !(texture.image instanceof HTMLImageElement) || texture.image.naturalWidth === 0) {
+            tryLoad(idx + 1); return
+          }
+          setTex(texture)
+        },
+        undefined,
+        () => tryLoad(idx + 1),
+      )
+    }
+    tryLoad(0)
     return () => { cancelled = true; setTex(null) }
-  }, [src])
+  }, [theme])
 
   if (failed || !tex) return null
   const img = tex.image as HTMLImageElement

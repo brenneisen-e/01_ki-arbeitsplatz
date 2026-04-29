@@ -13,13 +13,18 @@ interface Props { theme: 'day' | 'night' }
  * dieser Fallback sich aus (das R3F-Plane verdeckt ihn ohnehin).
  */
 export function PlaceholderSilhouette({ theme }: Props) {
-  const src = `/assets/scene/hero-cross-section-${theme}.webp`
+  const candidates = [
+    `/assets/scene/hero-cross-section-${theme}.webp`,
+    `/assets/scene/hero-cross-section-${theme}.png`,
+  ]
   const [hasFile, setHasFile] = useState<boolean | null>(null)
   useEffect(() => {
     let cancelled = false
-    assetExists(src).then((ok) => { if (!cancelled) setHasFile(ok) })
+    Promise.all(candidates.map(assetExists)).then((results) => {
+      if (!cancelled) setHasFile(results.some(Boolean))
+    })
     return () => { cancelled = true }
-  }, [src])
+  }, [theme])
 
   if (hasFile === true) return null  // echte Datei verdeckt den Fallback eh
 

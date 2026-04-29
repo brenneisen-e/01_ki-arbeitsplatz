@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", monospace;
+
+  --color-ink:        #0a1628;
+  --color-ink-2:      #11243d;
+  --color-ink-day:    #dde8f3;
+  --color-ink-day-2:  #cad8e8;
+  --color-facade:     #d4b896;
+  --color-facade-dark:#a88a64;
+  --color-facade-accent:#7a5d3b;
+  --color-teal:       #3ba4f5;
+  --color-teal-deep:  #1a73c5;
+  --color-amber:      #f5b03b;
+  --color-amber-deep: #d68a1c;
+  --color-text-hi:    #f3f6fb;
+  --color-text-mid:   #aab8c9;
+  --color-text-dim:   #6b7c92;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; padding: 0; min-height: 100vh; font-family: var(--font-sans); }
+body {
+  color: var(--color-text-hi);
+  background: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Theme: Tag/Nacht steuert sich über data-theme am Body. */
+body[data-theme='day'] {
+  background: linear-gradient(180deg, #b9d4ee 0%, #d8e6f3 55%, #e8efef 100%);
+  color: #0f1d33;
+}
+
+/* Tilt-Shift-Effekt: oben/unten leicht weichzeichnen. */
+.tiltshift::before,
+.tiltshift::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 14%;
+  pointer-events: none;
+  z-index: 5;
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+}
+.tiltshift::before { top: 0;    background: linear-gradient(180deg, rgba(0,0,0,0.18), transparent); }
+.tiltshift::after  { bottom: 0; background: linear-gradient(0deg,   rgba(0,0,0,0.32), transparent); }
+
+/* Vignette */
+.vignette::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 6;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.4) 100%);
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(15, 30, 50, 0.55);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Floor highlight states */
+.floor-active   { filter: brightness(1.12) drop-shadow(0 0 28px rgba(59,164,245,0.45)); }
+.floor-dimmed   { opacity: 0.4; transition: opacity 0.45s var(--ease, ease-out); }
+.floor-hover    { cursor: pointer; transition: filter 0.35s ease; }
+.floor-hover:hover { filter: brightness(1.07); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

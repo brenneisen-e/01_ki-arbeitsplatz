@@ -1,12 +1,10 @@
-import { Canvas, useFrame, useLoader } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { EffectComposer, Bloom, Vignette, ChromaticAberration, Noise } from '@react-three/postprocessing'
-import { useRef, Suspense, useEffect, useState } from 'react'
-import { TextureLoader, Vector2, type Mesh } from 'three'
+import { useEffect, useRef, useState } from 'react'
+import { TextureLoader, Vector2, type Texture } from 'three'
 import { useScene } from '../../hooks/useScene'
-import { assetExists } from './AssetExists'
 import { ParticleField } from './ParticleField'
 
-export type StageMeshRef = Mesh
 
 /**
  * R3F-Bühne. Drei Layer-Ebenen mit unterschiedlicher Z-Tiefe für
@@ -31,10 +29,8 @@ export function Stage() {
       <ambientLight intensity={0.55} />
       <directionalLight position={[2, 4, 5]} intensity={0.35} />
 
-      <Suspense fallback={<FallbackGradient />}>
-        <HeroPlane theme={theme} />
-        {!reduced && <ParticleField />}
-      </Suspense>
+      <HeroPlane theme={theme} />
+      {!reduced && <ParticleField />}
 
       <ParallaxRig disabled={reduced} />
 
@@ -50,38 +46,39 @@ export function Stage() {
 
 function HeroPlane({ theme }: { theme: 'day' | 'night' }) {
   const src = `/assets/scene/hero-cross-section-${theme}.webp`
-  const [hasFile, setHasFile] = useState<boolean | null>(null)
+  const [tex, setTex] = useState<Texture | null>(null)
+  const [failed, setFailed] = useState(false)
+
   useEffect(() => {
     let cancelled = false
-    assetExists(src).then((ok) => { if (!cancelled) setHasFile(ok) })
-    return () => { cancelled = true }
+    setTex(null); setFailed(false)
+    const loader = new TextureLoader()
+    loader.load(
+      src,
+      (texture) => {
+        // Defensiv: Cloudflare-SPA-Fallback liefert HTML statt Bild
+        // → image hat keine echten Pixel-Dimensionen
+        if (cancelled) return
+        if (!texture.image || !(texture.image instanceof HTMLImageElement) || texture.image.naturalWidth === 0) {
+          setFailed(true); return
+        }
+        setTex(texture)
+      },
+      undefined,
+      () => { if (!cancelled) setFailed(true) },
+    )
+    return () => { cancelled = true; setTex(null) }
   }, [src])
 
-  if (hasFile === null) return null
-  if (!hasFile) return <FallbackGradient />
-  return <HeroPlaneTextured src={src} />
-}
-
-function HeroPlaneTextured({ src }: { src: string }) {
-  const tex = useLoader(TextureLoader, src)
-  // Bildverhältnis aus Textur ableiten (typisch 16:9 bei 4K)
-  const aspect = (tex.image?.width ?? 16) / (tex.image?.height ?? 9)
+  if (failed || !tex) return null
+  const img = tex.image as HTMLImageElement
+  const aspect = (img.naturalWidth || 16) / (img.naturalHeight || 9)
   const height = 3.4
   const width = height * aspect
   return (
     <mesh position={[0, 0, 0]}>
       <planeGeometry args={[width, height, 1, 1]} />
       <meshBasicMaterial map={tex} transparent />
-    </mesh>
-  )
-}
-
-function FallbackGradient() {
-  // Sehr dunkler Cyan-Verlauf — KEIN prozedurales Bankgebäude.
-  return (
-    <mesh position={[0, 0, 0]}>
-      <planeGeometry args={[6, 3.4, 1, 1]} />
-      <meshBasicMaterial color="#0a1628" transparent opacity={0.0} />
     </mesh>
   )
 }

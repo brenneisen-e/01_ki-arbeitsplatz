@@ -230,3 +230,36 @@ body {
 }
 .hero-stage::before { top: 0;    background: linear-gradient(180deg, rgba(7,13,26,0.35), transparent); }
 .hero-stage::after  { bottom: 0; background: linear-gradient(0deg,   rgba(7,13,26,0.45), transparent); }
+
+/* ── Prominente Hotspots im Hero-Overview (orange + größerer Pulse) ── */
+@keyframes hot-pulse-prominent {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.7; }
+  50%      { transform: translate(-50%, -50%) scale(1.55); opacity: 1.0; }
+}
+
+.hot[data-prominent="true"] {
+  width: 36px; height: 36px;
+}
+.hot[data-prominent="true"] .hot-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(255, 138, 60, 0.55);
+  animation: hot-pulse-prominent 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.hot[data-prominent="true"] .hot-core {
+  width: 16px; height: 16px;
+  background: radial-gradient(circle, #ff9a3c 0%, rgba(255, 138, 60, 0) 75%);
+  box-shadow:
+    0 0 0 1px rgba(255, 138, 60, 0.6),
+    0 0 22px 5px rgba(255, 138, 60, 0.55);
+}
+.hot[data-prominent="true"]:hover .hot-core,
+.hot[data-prominent="true"]:focus-visible .hot-core {
+  transform: translate(-50%, -50%) scale(1.45);
+  box-shadow:
+    0 0 0 2px rgba(255, 138, 60, 0.8),
+    0 0 30px 9px rgba(255, 138, 60, 0.7);
+}
+.hot[data-prominent="true"]:hover .hot-ring,
+.hot[data-prominent="true"]:focus-visible .hot-ring {
+  border-color: rgba(255, 138, 60, 0.85);
+}

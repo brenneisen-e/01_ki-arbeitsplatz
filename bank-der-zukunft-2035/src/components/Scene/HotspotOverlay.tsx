@@ -27,6 +27,11 @@ export function HotspotOverlay() {
     return h.floor === targetFloor
   })
 
+  // Auf der Übersichtsansicht (hero) sind Hotspots prominent orange
+  // und größer pulsierend, damit sie als Klick-Affordance auffallen.
+  // In Detail-Views bleiben sie zurückhaltender.
+  const prominent = view === 'hero'
+
   return (
     <>
       {visible.map((h, i) => (
@@ -34,6 +39,7 @@ export function HotspotOverlay() {
           key={h.id}
           h={h}
           delaySec={i * 0.32}
+          prominent={prominent}
           onEnter={() => setHover(h.id)}
           onLeave={() => setHover(null)}
           onClick={() => openFloor(h.floor, h.id)}
@@ -46,11 +52,12 @@ export function HotspotOverlay() {
 interface DotProps {
   h: Hotspot
   delaySec: number
+  prominent: boolean
   onEnter: () => void
   onLeave: () => void
   onClick: () => void
 }
-function HotspotDot({ h, delaySec, onEnter, onLeave, onClick }: DotProps) {
+function HotspotDot({ h, delaySec, prominent, onEnter, onLeave, onClick }: DotProps) {
   return (
     <button
       type="button"
@@ -63,6 +70,7 @@ function HotspotDot({ h, delaySec, onEnter, onLeave, onClick }: DotProps) {
       className="hot pointer-events-auto absolute"
       data-id={h.id}
       data-floor={h.floor}
+      data-prominent={prominent ? 'true' : 'false'}
       style={{
         left: `${h.x * 100}%`,
         top:  `${h.y * 100}%`,

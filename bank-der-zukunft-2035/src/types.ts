@@ -1,14 +1,12 @@
-export type FloorId = 'basement' | 'ground' | 'top' | 'outdoor'
+export type FloorId = 'basement' | 'ground' | 'top'
 
 export type HotspotId =
-  | 'core-data-center'
-  | 'observability'
-  | 'process-mining'
-  | 'agentic-ops'
-  | 'ai-governance'
-  | 'strategic-radar'
-  | 'customer-video'
-  | 'customer-pavilion'
+  | 'top-boardroom'
+  | 'top-display'
+  | 'mid-process'
+  | 'mid-workstations'
+  | 'basement-data'
+  | 'basement-control'
 
 export interface Hotspot {
   id: HotspotId

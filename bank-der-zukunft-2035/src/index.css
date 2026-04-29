@@ -157,3 +157,59 @@ body {
 /* Side-Panel CTA-Pfeil */
 .cta-arrow { transition: transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1); }
 .cta-arrow:hover { transform: translateX(4px); }
+
+/* ── Hero Hotspots v2 (12px core + 24px ring + 2.5s pulse) ────── */
+.hero-stage { background: transparent; }
+.hero-image { user-select: none; -webkit-user-drag: none; }
+
+@keyframes hot-pulse-ring {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.85; }
+  50%      { transform: translate(-50%, -50%) scale(1.15); opacity: 1.0; }
+}
+
+.hot {
+  width: 24px; height: 24px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  outline: none;
+}
+.hot-ring {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 24px; height: 24px;
+  border-radius: 9999px;
+  border: 1px solid rgba(126, 200, 255, 0.3);
+  transform: translate(-50%, -50%);
+  animation: hot-pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.hot-core {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 12px; height: 12px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, var(--color-accent-cyan) 0%, rgba(126,200,255,0) 75%);
+  box-shadow:
+    0 0 0 1px rgba(126, 200, 255, 0.45),
+    0 0 14px 3px rgba(126, 200, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.36s;
+}
+.hot:hover .hot-core,
+.hot:focus-visible .hot-core {
+  transform: translate(-50%, -50%) scale(1.45);
+  box-shadow:
+    0 0 0 1.5px rgba(126, 200, 255, 0.7),
+    0 0 22px 7px rgba(126, 200, 255, 0.65);
+}
+.hot:hover .hot-ring,
+.hot:focus-visible .hot-ring {
+  border-color: rgba(126, 200, 255, 0.55);
+}
+.hot:focus-visible {
+  outline: 1px solid rgba(126, 200, 255, 0.6);
+  outline-offset: 6px;
+  border-radius: 9999px;
+}

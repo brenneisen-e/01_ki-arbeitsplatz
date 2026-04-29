@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Stage } from './components/Scene/Stage'
-import { PlaceholderSilhouette } from './components/Scene/PlaceholderSilhouette'
+import { Hero } from './components/Scene/Hero'
 import { HotspotOverlay } from './components/Scene/HotspotOverlay'
 import { Header } from './components/UI/Header'
 import { SidePanel } from './components/UI/SidePanel'
@@ -11,7 +10,7 @@ import { WorkshopFlow } from './components/Workshop/WorkshopFlow'
 import { useScene } from './hooks/useScene'
 import { useUrlSync } from './hooks/useUrlSync'
 
-const FLOOR_ORDER = ['top', 'ground', 'basement', 'outdoor'] as const
+const FLOOR_ORDER = ['top', 'ground', 'basement'] as const
 
 export default function App() {
   const theme = useScene((s) => s.theme)
@@ -25,7 +24,7 @@ export default function App() {
 
   useEffect(() => { document.body.dataset.theme = theme }, [theme])
 
-  // Hint nach 8s ausblenden — Hotspots sind selbsterklärend
+  // Hint nach 8s ausblenden
   useEffect(() => {
     const t = setTimeout(() => setShowHint(false), 8000)
     return () => clearTimeout(t)
@@ -49,25 +48,13 @@ export default function App() {
   }, [activeFloor, setActiveFloor, closePanel])
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden tiltshift">
-      {/* Premium-Silhouetten-Fallback hinter dem R3F-Canvas, falls
-          das Hero-Bild noch fehlt. Bei vorhandenem Bild wird der
-          Fallback ohnehin durch das R3F-Plane verdeckt. */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <PlaceholderSilhouette theme={theme} />
-      </div>
+    <div className="relative w-screen h-screen overflow-hidden">
+      {/* Hero-Bühne füllt den Bereich unterhalb des 64px-Headers,
+          Bild bleibt vollständig sichtbar (object-fit: contain). */}
+      <main className="absolute left-0 right-0 bottom-0 top-16">
+        <Hero overlay={() => <HotspotOverlay />} />
+      </main>
 
-      {/* WebGL-Bühne */}
-      <div className="absolute inset-0 z-[1]">
-        <Stage />
-      </div>
-
-      {/* DOM-Overlay über der Bühne */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        <HotspotOverlay />
-      </div>
-
-      {/* UI */}
       <Header onStartWorkshop={() => setStep(0)} />
       <Tooltip />
       <SidePanel />
@@ -75,11 +62,10 @@ export default function App() {
       <ThemeToggle />
       <WorkshopFlow />
 
-      {/* Selbsterklärender Hint, fade-out nach 8s — sehr dezent unten rechts */}
       {showHint && (
         <div
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 mono-label pointer-events-none"
-          style={{ opacity: 0.4, transition: 'opacity 0.6s ease-out' }}
+          style={{ opacity: 0.4 }}
         >
           Hover · Klick · Pfeiltasten
         </div>

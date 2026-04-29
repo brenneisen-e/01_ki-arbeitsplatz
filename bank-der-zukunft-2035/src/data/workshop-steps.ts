@@ -1,43 +1,51 @@
 import type { WorkshopStep } from '../types'
 
 /**
- * Geführte Workshop-Sequenz für Auto-Play. Jeder Schritt setzt
- * activeFloor + hoverHotspot, dann nach `durationSec` weiter.
+ * Geführte Workshop-Sequenz für Auto-Play. Drei Etagen, von oben
+ * nach unten. Jeder Schritt setzt activeFloor + hoverHotspot, dann
+ * nach `durationSec` weiter.
  */
 export const WORKSHOP_STEPS: ReadonlyArray<WorkshopStep> = [
   {
-    floor: 'outdoor',
-    hotspot: 'customer-video',
-    durationSec: 8,
-    narration:
-      'Wir starten draußen — beim Kunden. 2035 erwartet jeder eine 24/7-Avatar-Beratung, mit Empathie und Lebenslagen-Kontext.',
-  },
-  {
-    floor: 'outdoor',
-    hotspot: 'customer-pavilion',
-    durationSec: 7,
-    narration:
-      'Selbst-Service-Pavillon mit Spatial-Computing — branchless, aber präsent. Von Identifikation bis Vertragsabschluss in einer Interaktion.',
-  },
-  {
-    floor: 'ground',
-    hotspot: 'process-mining',
+    floor: 'top',
+    hotspot: 'top-boardroom',
     durationSec: 9,
     narration:
-      'Ins Erdgeschoss: Operations laufen mit Hyperautomation. Process Mining macht jede Engstelle messbar, agentische Workflows führen aus.',
-  },
-  {
-    floor: 'basement',
-    hotspot: 'core-data-center',
-    durationSec: 8,
-    narration:
-      'Darunter das Fundament: Daten-Plattform mit LLM-Gateway, Vector Search und Feature Store. Composable Banking statt Monolith.',
+      'Wir starten oben — beim Vorstand. Ein CAIDO und das AI-Governance-Board steuern die KI-Agenda. Risiko, Compliance, Modell-Lifecycle sind C-Level-Sache.',
   },
   {
     floor: 'top',
-    hotspot: 'ai-governance',
+    hotspot: 'top-display',
+    durationSec: 7,
+    narration:
+      'Das strategische Radar zeigt Embedded Finance, Stablecoins und Plattform-Banking, bevor sie unausweichlich werden.',
+  },
+  {
+    floor: 'ground',
+    hotspot: 'mid-process',
     durationSec: 9,
     narration:
-      'Ganz oben sitzt der Vorstand mit dem AI-Governance-Board. Ein CAIDO steuert KI als Vorstands-Agenda — nicht als IT-Thema.',
+      'In den Operations: Process Mining + Hyperautomation machen jede Engstelle messbar. Dunkelverarbeitung wird zum Standard.',
+  },
+  {
+    floor: 'ground',
+    hotspot: 'mid-workstations',
+    durationSec: 7,
+    narration:
+      'Agentische Workflows übernehmen Routineentscheidungen über Kredit, KYC und Service. Sie reichen weiter und werden mit jedem Loop besser.',
+  },
+  {
+    floor: 'basement',
+    hotspot: 'basement-data',
+    durationSec: 9,
+    narration:
+      'Im Fundament: Daten-Mesh + LLM-Gateway + Vector-Search. Single Source of Truth für jeden Modell-Call.',
+  },
+  {
+    floor: 'basement',
+    hotspot: 'basement-control',
+    durationSec: 7,
+    narration:
+      'Live Observability über jedes Modell und jede Transaktion — Anomalien tauchen auf, bevor Kunden sie spüren.',
   },
 ]

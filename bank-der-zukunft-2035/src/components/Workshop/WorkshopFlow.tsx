@@ -20,7 +20,7 @@ export function WorkshopFlow() {
     if (step === null) return
     const s = WORKSHOP_STEPS[step]
     if (!s) { setStep(null); return }
-    setActiveFloor(s.floor === 'outdoor' ? null : s.floor)
+    setActiveFloor(s.floor)
     setHoverHotspot(s.hotspot ?? null)
     const t = setTimeout(() => {
       if (step + 1 < WORKSHOP_STEPS.length) setStep(step + 1)

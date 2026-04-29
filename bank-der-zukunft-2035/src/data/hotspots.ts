@@ -1,79 +1,58 @@
 import type { Hotspot } from '../types'
 
-// Koordinaten sind normalisiert 0..1 relativ zum Hero-Bild.
-// Justiert nach finaler Bildposition — Eike kann jeden Wert
-// hier direkt anpassen, ohne Code-Änderung.
+// Koordinaten normalisiert 0..1 relativ zum Hero-Bild.
+// Justiert auf das aktuelle Bild (drei klar getrennte Etagen):
+//   y ≈ 0.18  → Boardroom
+//   y ≈ 0.50  → Operations
+//   y ≈ 0.82  → Datacenter
 
 export const HOTSPOTS: ReadonlyArray<Hotspot> = [
-  // KELLER ───────────────────────────────────────────────────────
   {
-    id: 'core-data-center',
-    floor: 'basement',
-    x: 0.42, y: 0.78,
-    title: 'Data Backbone',
-    subtitle: 'LLM Gateway · Vector Search · Feature Store',
-    body: 'Realtime data mesh underpins every business process. The LLM gateway routes, caches and enforces policy on every model call. Single source of truth for retrieval-augmented generation.',
-  },
-  {
-    id: 'observability',
-    floor: 'basement',
-    x: 0.55, y: 0.78,
-    title: 'Live Observability',
-    subtitle: 'p95 latency · cache hit rate · policy enforcement',
-    body: 'Every model and every transaction is traced end to end. Anomalies surface before customers feel them. Compliance evidence is generated continuously, not at audit time.',
-  },
-
-  // ERDGESCHOSS ──────────────────────────────────────────────────
-  {
-    id: 'process-mining',
-    floor: 'ground',
-    x: 0.62, y: 0.55,
-    title: 'Process Mining & Hyperautomation',
-    subtitle: 'Real-time process intelligence',
-    body: 'Every business event is observed. Bottlenecks become automation candidates with quantified ROI. Dark processing becomes the default; humans only handle true exceptions.',
-  },
-  {
-    id: 'agentic-ops',
-    floor: 'ground',
-    x: 0.45, y: 0.55,
-    title: 'Agentic Operations',
-    subtitle: 'Self-orchestrating workflows',
-    body: 'AI agents take routine decisions across credit, KYC, customer service. They hand off seamlessly, document their reasoning and improve with every loop.',
-  },
-
-  // VORSTAND ─────────────────────────────────────────────────────
-  {
-    id: 'ai-governance',
+    id: 'top-boardroom',
     floor: 'top',
-    x: 0.50, y: 0.30,
+    x: 0.50, y: 0.20,
     title: 'AI Governance Board',
-    subtitle: 'CAIDO · Risk · Compliance · Model Lifecycle',
-    body: 'A Chief AI Officer reports to the board. Risk classification per the EU AI Act is built in. Every model has a registry entry, a lifecycle and an auditable decision trail.',
+    subtitle: 'CAIDO · Risk · Model Lifecycle',
+    body: 'Ein Chief AI Officer und ein AI-Governance-Board steuern die Transformation auf C-Level. Risiko-Klassifizierung gemäß EU AI Act, Modell-Lifecycle und auditierbare Entscheidungen — direkt am Vorstandstisch.',
   },
   {
-    id: 'strategic-radar',
+    id: 'top-display',
     floor: 'top',
-    x: 0.30, y: 0.30,
+    x: 0.30, y: 0.16,
     title: 'Strategic Radar',
     subtitle: 'Embedded finance · stablecoins · platform banking',
-    body: 'The board sees adjacent threats and platform plays in real time. Embedded finance, stablecoin rails, tokenized assets — surfaced when they become material, not when they are inevitable.',
-  },
-
-  // AUSSEN ───────────────────────────────────────────────────────
-  {
-    id: 'customer-video',
-    floor: 'outdoor',
-    x: 0.20, y: 0.85,
-    title: 'AI Avatar Banking',
-    subtitle: '24/7 personalized advisor in your pocket',
-    body: 'Photo-realistic avatars conduct conversations with empathy and lip-sync. They know the customer’s life context and hand off to a human only when value warrants it.',
+    body: 'Live-Cockpit für strategische Bewegung im Markt. Embedded Finance, Stablecoin-Rails, tokenisierte Assets — sichtbar bevor sie unausweichlich werden.',
   },
   {
-    id: 'customer-pavilion',
-    floor: 'outdoor',
-    x: 0.85, y: 0.85,
-    title: 'Self-Service Pavilion',
-    subtitle: 'Spatial computing banking interface',
-    body: 'Holographic pavilion experience for in-person flows. Identity, advice and product issuance in a single, transparent interaction — branchless yet present.',
+    id: 'mid-process',
+    floor: 'ground',
+    x: 0.55, y: 0.48,
+    title: 'Process Mining & Hyperautomation',
+    subtitle: 'Real-time process intelligence',
+    body: 'Jeder Geschäftsvorfall wird gemessen und visualisiert. Engstellen werden zu Automatisierungs-Kandidaten mit quantifiziertem ROI. Dunkelverarbeitung ist Standard.',
+  },
+  {
+    id: 'mid-workstations',
+    floor: 'ground',
+    x: 0.30, y: 0.52,
+    title: 'Agentic Operations',
+    subtitle: 'Self-orchestrating workflows',
+    body: 'KI-Agenten übernehmen Routine-Entscheidungen über Kredit, KYC, Service. Sie reichen weiter, dokumentieren ihre Argumentation und werden mit jeder Schleife besser.',
+  },
+  {
+    id: 'basement-data',
+    floor: 'basement',
+    x: 0.50, y: 0.82,
+    title: 'Data Backbone',
+    subtitle: 'LLM Gateway · Vector Search · Feature Store',
+    body: 'Realtime-Datenmesh trägt jeden Geschäftsprozess. LLM-Gateway routet, cached und enforced Policy bei jedem Modell-Call. Single Source of Truth für Retrieval-Augmented Generation.',
+  },
+  {
+    id: 'basement-control',
+    floor: 'basement',
+    x: 0.18, y: 0.82,
+    title: 'Live Observability',
+    subtitle: 'p95 latency · cache hit rate · policy enforcement',
+    body: 'Jedes Modell, jede Transaktion ist End-to-End getraced. Anomalien tauchen auf, bevor Kunden sie spüren. Compliance-Evidenz wird kontinuierlich erzeugt, nicht erst zum Audit.',
   },
 ]

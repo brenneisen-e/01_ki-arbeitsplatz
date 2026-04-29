@@ -1,43 +1,43 @@
 import type { WorkshopStep } from '../types'
 
 /**
- * Geführte Workshop-Sequenz. Wird von WorkshopFlow.tsx via GSAP-Timeline
- * abgespielt. Auto-Advance nach `durationSec`.
+ * Geführte Workshop-Sequenz für Auto-Play. Jeder Schritt setzt
+ * activeFloor + hoverHotspot, dann nach `durationSec` weiter.
  */
 export const WORKSHOP_STEPS: ReadonlyArray<WorkshopStep> = [
   {
     floor: 'outdoor',
-    hotspot: 'customer-phone',
+    hotspot: 'customer-video',
     durationSec: 8,
     narration:
-      'Wir starten draußen — bei dem, was zählt: dem Kunden. 2035 erwartet jeder Kunde 24/7-Erreichbarkeit, sprachfähige KI und nahtlose Übergänge zwischen Kanälen.',
+      'Wir starten draußen — beim Kunden. 2035 erwartet jeder eine 24/7-Avatar-Beratung, mit Empathie und Lebenslagen-Kontext.',
   },
   {
     floor: 'outdoor',
-    hotspot: 'customer-video',
+    hotspot: 'customer-pavilion',
     durationSec: 7,
     narration:
-      'Auf der Bank davor: ein Kunde im Video-Chat mit einem KI-Avatar — empathisch, lippensynchron, mit Kontext aus seiner Lebenslage.',
+      'Selbst-Service-Pavillon mit Spatial-Computing — branchless, aber präsent. Von Identifikation bis Vertragsabschluss in einer Interaktion.',
   },
   {
     floor: 'ground',
     hotspot: 'process-mining',
     durationSec: 9,
     narration:
-      'Ins Erdgeschoss: Operations laufen mit Hyperautomation. Process Mining macht jede Engstelle sichtbar, RPA + KI führen aus. Dunkelverarbeitung wird zum Standard.',
+      'Ins Erdgeschoss: Operations laufen mit Hyperautomation. Process Mining macht jede Engstelle messbar, agentische Workflows führen aus.',
   },
   {
     floor: 'basement',
-    hotspot: 'server-rack',
+    hotspot: 'core-data-center',
     durationSec: 8,
     narration:
-      'Darunter das Fundament: eine Daten-Plattform mit Mesh-Architektur, LLM-Gateway und Composable-Banking-Bausteinen statt Monolith.',
+      'Darunter das Fundament: Daten-Plattform mit LLM-Gateway, Vector Search und Feature Store. Composable Banking statt Monolith.',
   },
   {
     floor: 'top',
-    hotspot: 'ai-avatar',
+    hotspot: 'ai-governance',
     durationSec: 9,
     narration:
-      'Ganz oben sitzt der Vorstand mit dem AI-Governance-Board und einem CAIDO. KI-Steuerung ist Vorstands-Agenda — nicht IT-Thema. Und der KI-Co-Pilot sitzt mit am Tisch.',
+      'Ganz oben sitzt der Vorstand mit dem AI-Governance-Board. Ein CAIDO steuert KI als Vorstands-Agenda — nicht als IT-Thema.',
   },
 ]

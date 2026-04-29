@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
-import { BankBuilding } from './components/Scene/BankBuilding'
+import { useEffect, useState } from 'react'
+import { Stage } from './components/Scene/Stage'
+import { HotspotOverlay } from './components/Scene/HotspotOverlay'
 import { Header } from './components/UI/Header'
 import { SidePanel } from './components/UI/SidePanel'
 import { Tooltip } from './components/UI/Tooltip'
@@ -9,23 +10,27 @@ import { WorkshopFlow } from './components/Workshop/WorkshopFlow'
 import { useScene } from './hooks/useScene'
 import { useUrlSync } from './hooks/useUrlSync'
 
-const FLOOR_ORDER = ['top', 'ground', 'basement'] as const
+const FLOOR_ORDER = ['top', 'ground', 'basement', 'outdoor'] as const
 
 export default function App() {
   const theme = useScene((s) => s.theme)
-  const setActiveFloor = useScene((s) => s.setActiveFloor)
   const setStep = useScene((s) => s.setWorkshopStep)
   const closePanel = useScene((s) => s.closePanel)
+  const setActiveFloor = useScene((s) => s.setActiveFloor)
   const activeFloor = useScene((s) => s.activeFloor)
+  const [showHint, setShowHint] = useState(true)
 
   useUrlSync()
 
-  // Theme-Klasse am Body
-  useEffect(() => {
-    document.body.dataset.theme = theme
-  }, [theme])
+  useEffect(() => { document.body.dataset.theme = theme }, [theme])
 
-  // Tastatur-Navigation (ArrowUp/Down, Esc)
+  // Hint nach 8s ausblenden — Hotspots sind selbsterklärend
+  useEffect(() => {
+    const t = setTimeout(() => setShowHint(false), 8000)
+    return () => clearTimeout(t)
+  }, [])
+
+  // Tastatur
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') { closePanel(); setActiveFloor(null); return }
@@ -43,19 +48,34 @@ export default function App() {
   }, [activeFloor, setActiveFloor, closePanel])
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden">
+    <div className="relative w-screen h-screen overflow-hidden tiltshift">
+      {/* WebGL-Bühne */}
+      <div className="absolute inset-0 z-0">
+        <Stage />
+      </div>
+
+      {/* DOM-Overlay über der Bühne */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <HotspotOverlay />
+      </div>
+
+      {/* UI */}
       <Header onStartWorkshop={() => setStep(0)} />
-
-      {/* Bühne */}
-      <main className="relative w-full" style={{ height: 'calc(100vh - 80px)' }}>
-        <BankBuilding />
-      </main>
-
       <Tooltip />
       <SidePanel />
       <ResetButton />
       <ThemeToggle />
       <WorkshopFlow />
+
+      {/* Selbsterklärender Hint, fade-out nach 8s — sehr dezent unten rechts */}
+      {showHint && (
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 mono-label pointer-events-none"
+          style={{ opacity: 0.4, transition: 'opacity 0.6s ease-out' }}
+        >
+          Hover · Klick · Pfeiltasten
+        </div>
+      )}
     </div>
   )
 }

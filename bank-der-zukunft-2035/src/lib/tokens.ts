@@ -1,45 +1,41 @@
-// Design-Tokens für „Bank der Zukunft 2035".
-// Spiegelbildlich zu den CSS Custom Properties in `src/index.css`.
+// Premium-Tokens für „Bank der Zukunft 2035".
+// C-Level Pitch-Tool — gedeckte Cinema-Palette, ein Akzent (cyan).
+// Alles spiegelt sich in `src/index.css` als CSS Custom Properties.
 
-export const colors = {
-  // Backgrounds
-  ink:        '#0a1628',  // Marineblau (Nacht)
-  ink2:       '#11243d',
-  inkDay:     '#dde8f3',
-  inkDay2:    '#cad8e8',
-
-  // Building
-  facade:     '#d4b896',  // warmes Sand-Beige
-  facadeDark: '#a88a64',
-  facadeAccent: '#7a5d3b',
-
-  // Accents
-  teal:       '#3ba4f5',  // KI / Daten
-  tealDeep:   '#1a73c5',
-  amber:      '#f5b03b',  // Highlights
-  amberDeep:  '#d68a1c',
-
-  // Status
-  okGreen:    '#3eb87b',
-  warnAmber:  '#f5b03b',
-
-  // Text
-  textHi:     '#f3f6fb',
-  textMid:    '#aab8c9',
-  textDim:    '#6b7c92',
-} as const
-
-export const easings = {
-  glide: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
-  pop:   'cubic-bezier(0.34, 1.56, 0.64, 1)',
-} as const
-
-export const z = {
-  scene:   10,
-  hotspot: 20,
-  panel:   40,
-  header:  50,
-  tooltip: 60,
+export const tokens = {
+  color: {
+    bg: {
+      stage:        '#070d1a',
+      stageGlow:    '#0a1628',
+      panel:        'rgba(15, 28, 50, 0.6)',
+      panelStrong:  'rgba(15, 28, 50, 0.85)',
+    },
+    ink: {
+      primary:   'rgba(235, 240, 250, 0.95)',
+      secondary: 'rgba(180, 195, 215, 0.7)',
+      tertiary:  'rgba(140, 155, 175, 0.45)',
+      mono:      'rgba(180, 220, 255, 0.65)',
+    },
+    accent: {
+      cyan:  '#7ec8ff',
+      amber: '#f5b86e',
+      green: '#7ad5a0',
+    },
+    line: {
+      hairline: 'rgba(255,255,255,0.06)',
+      hover:    'rgba(255,255,255,0.18)',
+      strong:   'rgba(255,255,255,0.32)',
+    },
+  },
+  type: {
+    display: '"Inter Display", "Inter", system-ui, sans-serif',
+    body:    '"Inter", system-ui, sans-serif',
+    mono:    '"IBM Plex Mono", "JetBrains Mono", monospace',
+  },
+  blur: {
+    glass: 'blur(40px) saturate(180%)',
+    deep:  'blur(60px) saturate(200%)',
+  },
 } as const
 
 export type ThemeMode = 'day' | 'night'

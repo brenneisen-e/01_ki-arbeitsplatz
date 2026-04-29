@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useScene } from './useScene'
 import type { FloorId } from '../types'
 
-const FLOORS: ReadonlyArray<FloorId> = ['basement', 'ground', 'top']
+const FLOORS: ReadonlyArray<FloorId> = ['basement', 'ground', 'top', 'outdoor']
 
 /**
  * Hält die URL-Query-Params (?floor=...&hotspot=...) und den Zustand-Store

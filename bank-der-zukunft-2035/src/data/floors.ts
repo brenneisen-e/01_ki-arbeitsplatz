@@ -3,7 +3,6 @@ import type { FloorContent, FloorId } from '../types'
 export const FLOORS: ReadonlyArray<FloorContent> = [
   {
     id: 'basement',
-    label: 'Keller',
     badge: 'IT & Daten-Backbone',
     heading: 'Daten- & KI-Plattform als Fundament',
     description:
@@ -21,7 +20,6 @@ export const FLOORS: ReadonlyArray<FloorContent> = [
   },
   {
     id: 'ground',
-    label: 'Erdgeschoss',
     badge: 'Operations & Hyperautomation',
     heading: 'Realtime Banking durch Dunkelverarbeitung',
     description:
@@ -39,7 +37,6 @@ export const FLOORS: ReadonlyArray<FloorContent> = [
   },
   {
     id: 'top',
-    label: 'Vorstand',
     badge: 'AI Governance Board',
     heading: 'KI-Steuerung als Vorstands-Agenda',
     description:

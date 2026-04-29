@@ -1,49 +1,47 @@
-import { Play, Users, Compass } from 'lucide-react'
-import { useScene } from '../../hooks/useScene'
+import { Play } from 'lucide-react'
 
 interface HeaderProps {
   onStartWorkshop: () => void
 }
 
 /**
- * Premium-Header mit Logo + zwei Primary-CTAs.
- * Hintergrund: dezente Glas-Bar oben, kein verspielter Look.
+ * Minimaler, monochromer Header. Kein „BdZ"-Initialen-Quadrat.
+ * Logo: dünne Custom-SVG-Compass-Linie. Buttons: Glasmorphism-Frames.
  */
 export function Header({ onStartWorkshop }: HeaderProps) {
-  const setActiveFloor = useScene((s) => s.setActiveFloor)
-
   return (
-    <header className="relative z-50 px-8 py-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #1a73c5 0%, #3ba4f5 100%)' }}
-        >
-          <Compass size={20} strokeWidth={1.6} className="text-white" />
-        </div>
+    <header
+      className="fixed top-0 left-0 right-0 z-50 h-16 px-8 flex items-center justify-between glass"
+      style={{ borderBottom: '1px solid var(--line-hairline)', backdropFilter: 'blur(40px) saturate(180%)' }}
+    >
+      <div className="flex items-center gap-4">
+        <ThinCompass />
         <div className="flex flex-col leading-tight">
-          <span className="font-semibold text-base tracking-tight">Bank der Zukunft</span>
-          <span className="text-xs uppercase tracking-[0.18em] opacity-60">Banking · KI · 2035</span>
+          <span className="display-md text-[var(--color-ink-primary)]">Bank der Zukunft</span>
+          <span className="mono-label opacity-50">Banking · KI · 2035</span>
         </div>
       </div>
 
-      <nav className="flex items-center gap-3">
-        <button
-          onClick={onStartWorkshop}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium border border-white/20 bg-white/5 hover:bg-white/15 transition-colors"
-        >
-          <Play size={14} strokeWidth={2.25} />
-          Workshop starten
-        </button>
-        <button
-          onClick={() => setActiveFloor(null)}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-white"
-          style={{ background: 'linear-gradient(135deg, #1a73c5 0%, #3ba4f5 100%)' }}
-        >
-          <Users size={14} strokeWidth={2.25} />
-          Mit Kundenperspektive beginnen
-        </button>
-      </nav>
+      <button
+        onClick={onStartWorkshop}
+        className="hairline hairline-hover inline-flex items-center gap-2.5 rounded-full h-9 px-4 text-[13px] font-normal tracking-tight text-[var(--color-ink-primary)] transition-colors"
+        style={{ background: 'transparent' }}
+      >
+        <Play size={12} strokeWidth={1.4} />
+        Workshop starten
+      </button>
     </header>
+  )
+}
+
+/** Dünn-gestrichene Compass-Glyphe — kein gefülltes Logo. */
+function ThinCompass() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="10" stroke="var(--color-accent-cyan)" strokeWidth="1.1" />
+      <path d="M12 5 L13.6 12 L12 19 L10.4 12 Z"
+            stroke="var(--color-accent-cyan)" strokeWidth="1.1" strokeLinejoin="round" fill="none" />
+      <circle cx="12" cy="12" r="0.8" fill="var(--color-accent-cyan)" />
+    </svg>
   )
 }

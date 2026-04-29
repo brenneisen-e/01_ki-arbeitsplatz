@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import LandingPage from './components/LandingPage.jsx'
+import HouseLandingPage from './components/HouseLandingPage.jsx'
 import ModuleDetail from './components/ModuleDetail.jsx'
 import VertriebsarbeitsplatzArchitektur from './components/VertriebsarbeitsplatzArchitektur.jsx'
 import { findModule } from './data/modules.js'
@@ -45,7 +45,7 @@ export default function App() {
     }
     content = <ModuleDetail module={mod} />
   } else {
-    content = <LandingPage />
+    content = <HouseLandingPage />
   }
 
   return content

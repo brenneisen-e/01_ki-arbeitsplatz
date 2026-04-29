@@ -184,3 +184,109 @@ body {
 @keyframes bdz-dash {
   to { stroke-dashoffset: -100; }
 }
+
+/* ── House landing page: animated bank building ─────────────────── */
+
+/* Wolken driften langsam von links nach rechts */
+@keyframes bdz-cloud-drift {
+  from { transform: translateX(-200px); }
+  to   { transform: translateX(1800px); }
+}
+.bdz-cloud-1 { animation: bdz-cloud-drift 90s linear infinite; }
+.bdz-cloud-2 { animation: bdz-cloud-drift 130s linear infinite; animation-delay: -40s; }
+.bdz-cloud-3 { animation: bdz-cloud-drift 110s linear infinite; animation-delay: -75s; }
+
+/* Sterne pulsieren */
+@keyframes bdz-twinkle {
+  0%, 100% { opacity: 0.2; }
+  50%      { opacity: 0.9; }
+}
+.bdz-twinkle { animation: bdz-twinkle 3s ease-in-out infinite; }
+
+/* Fenster-Glow rhythmisch */
+@keyframes bdz-window-glow {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+.bdz-window-glow { animation: bdz-window-glow 4s ease-in-out infinite; }
+
+/* Penthouse-Highlight */
+@keyframes bdz-penthouse-pulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(56,189,248,0.4)); }
+  50%      { filter: drop-shadow(0 0 22px rgba(56,189,248,0.85)); }
+}
+.bdz-penthouse-pulse { animation: bdz-penthouse-pulse 3.5s ease-in-out infinite; }
+
+/* Personen laufen entlang Pfad */
+@keyframes bdz-walk-right {
+  0%   { transform: translateX(-80px) translateY(0); }
+  50%  { transform: translateX(620px) translateY(-2px); }
+  100% { transform: translateX(1320px) translateY(0); }
+}
+@keyframes bdz-walk-left {
+  0%   { transform: translateX(1320px) translateY(0); }
+  50%  { transform: translateX(620px) translateY(-2px); }
+  100% { transform: translateX(-80px) translateY(0); }
+}
+.bdz-person-walk-r { animation: bdz-walk-right 32s linear infinite; }
+.bdz-person-walk-l { animation: bdz-walk-left  38s linear infinite; }
+
+/* Bein-Schwung beim Laufen */
+@keyframes bdz-leg-swing {
+  0%, 100% { transform: rotate(20deg); }
+  50%      { transform: rotate(-20deg); }
+}
+@keyframes bdz-leg-swing-rev {
+  0%, 100% { transform: rotate(-20deg); }
+  50%      { transform: rotate(20deg); }
+}
+.bdz-leg-1 { animation: bdz-leg-swing 0.7s ease-in-out infinite; transform-origin: center top; }
+.bdz-leg-2 { animation: bdz-leg-swing-rev 0.7s ease-in-out infinite; transform-origin: center top; }
+.bdz-arm-1 { animation: bdz-leg-swing-rev 0.7s ease-in-out infinite; transform-origin: center top; }
+.bdz-arm-2 { animation: bdz-leg-swing 0.7s ease-in-out infinite; transform-origin: center top; }
+
+/* Sprechblasen-Pop */
+@keyframes bdz-bubble-pop {
+  0%, 35% { opacity: 0; transform: translateY(6px) scale(0.85); }
+  45%, 90% { opacity: 1; transform: translateY(0)  scale(1); }
+  100%    { opacity: 0; transform: translateY(-4px) scale(0.95); }
+}
+.bdz-bubble { animation: bdz-bubble-pop 12s ease-in-out infinite; transform-origin: bottom center; }
+
+/* Sitzendes Männchen winkt */
+@keyframes bdz-wave {
+  0%, 100% { transform: rotate(-15deg); }
+  50%      { transform: rotate(20deg); }
+}
+.bdz-wave { animation: bdz-wave 1.4s ease-in-out infinite; transform-origin: center bottom; }
+
+/* Vögel fliegen */
+@keyframes bdz-bird-fly {
+  from { transform: translate(-100px, 0); }
+  to   { transform: translate(1700px, -80px); }
+}
+.bdz-bird { animation: bdz-bird-fly 45s linear infinite; }
+
+/* Hover-Effekt für Etagen */
+.bdz-floor-hit {
+  cursor: pointer;
+  transition: filter 0.25s ease;
+}
+.bdz-floor-hit:hover {
+  filter: brightness(1.15) drop-shadow(0 0 14px rgba(255,255,255,0.45));
+}
+
+/* Server-LED blinken */
+@keyframes bdz-led-blink {
+  0%, 30%  { opacity: 1; }
+  40%, 70% { opacity: 0.2; }
+  80%, 100% { opacity: 1; }
+}
+.bdz-led { animation: bdz-led-blink 1.6s ease-in-out infinite; }
+
+/* Sanftes Bobbing für laufende Männchen */
+@keyframes bdz-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+.bdz-bob { animation: bdz-bob 0.7s ease-in-out infinite; }

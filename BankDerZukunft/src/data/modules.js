@@ -1,68 +1,125 @@
-// Module catalog for the "Bank der Zukunft" workshop.
-// 5 Module in einem 2-1-2-Layout: „Bank der Zukunft" als zentraler Hub,
-// die vier anderen als Eckpunkte. Positionen (x, y in Prozent) definieren
-// die initiale Platzierung auf der schwebenden Landing-Canvas.
+// Modul-Katalog für den Workshop "Banking im KI-Zeitalter".
+// Inhalte basieren auf dem Kickoff-Deck vom 24.04.2026 (siehe
+// 20260424 Kickoff Banking im KI-Zeitalter.pdf im Repo-Root).
+// Fünf Module bilden das gemeinsame Workshop-Format ab —
+// vom Markt aus (Kundenperspektive) bis zum Liefervehikel (Angebote).
 
 export const MODULES = [
   {
     id: 'kundenperspektive',
     title: 'Kundenperspektive',
-    subtitle: 'Wie Kunden uns erleben',
+    subtitle: 'Was Kunden 2035 erwarten',
     icon: 'Users',
     color: '#34d399',
     colorDeep: '#059669',
-    position: { x: 22, y: 20, size: 'lg', anim: 'bdz-float' },
+    owner: 'Andreas R. / Andreas P. (Cap. Markets)',
     tagline:
-      'Konsistent, proaktiv und nahtlos — von Privatkunde bis Capital Markets.',
+      'Hyper-personalisierte Interaktion — über Retail, Corporate und Capital Markets hinweg.',
     summary:
-      'Kunden begegnen der Bank nicht mehr an einzelnen „Touchpoints", sondern werden entlang ihrer Lebens- und Geschäftsereignisse begleitet. KI-Assistenten antizipieren Bedürfnisse, bevor sie artikuliert werden — und liefern Antworten, die zur jeweiligen Lebenslage passen.',
+      'Kunden erwarten 2035 ein durchgängiges Echtzeit-Banking, in dem KI-Avatare und proaktive Berater für jede Lebenslage zur Verfügung stehen. Heute reagiert die Bank auf Anfragen — morgen führt sie das Gespräch. Pro Segment unterscheiden sich die Treiber: Retail will Embedded Convenience, Corporate Echtzeit-Insight, Capital Markets demokratisierten Zugang zu neuen Asset-Klassen.',
     pillars: [
       {
-        id: 'omnichannel',
-        title: 'Omnichannel-Erlebnis',
+        id: 'retail',
+        title: 'Retail',
         description:
-          'Nahtloser Wechsel zwischen App, Web, Filiale, Voice und Messaging — mit durchgehendem Kontext.',
-        bullets: ['Unified Customer Context', 'Voice-First-Interfaces', 'Conversational Banking'],
+          '24/7-Erlebnis durch KI-Avatare und Chatbots; menschliche Beratung gezielt für komplexe Lebenslagen.',
+        bullets: [
+          'KI-Avatare als 1st-Level-Channel',
+          'Lebenslagen-Erkennung statt Produktansprache',
+          'Embedded Finance im Alltag (Mobility, Energy, Health)',
+        ],
       },
       {
-        id: 'personalisierung',
-        title: 'Hyper-Personalisierung',
+        id: 'corporate',
+        title: 'Corporate',
         description:
-          'Individuelle Ansprache, Produkte und Inhalte auf Basis von Echtzeit-Events und Open-Finance-Daten.',
-        bullets: ['Behavioral Insights', 'Next-Best-Offer-Engine', 'Lebenslagen-Erkennung'],
+          'Vom reaktiven Firmenkundenbetreuer zum proaktiven Strategie-Sparring auf Echtzeit-Datenbasis.',
+        bullets: [
+          'Proaktive Cashflow- & Working-Capital-Insights',
+          'API-Integration in ERP/Treasury der Kunden',
+          'Branchenspezifische Co-Piloten',
+        ],
       },
       {
         id: 'capital-markets',
-        title: 'Capital Markets-Sicht',
+        title: 'Capital Markets',
         description:
-          'Institutionelle Kunden mit eigener Logik: Echtzeit-Trading, Research-Co-Pilot, Risiko-Cockpit.',
-        bullets: ['Trader-Co-Pilot', 'Research-as-a-Service', 'Echtzeit-Risiko-Dashboards'],
+          'KI-gestütztes Trading, prädiktive Risikoanalyse und Tokenisierung als Standard.',
+        bullets: [
+          'Algorithmische Handelsentscheidungen',
+          'Tokenisierte Realwerte (Immobilien, Kunst, Infrastruktur)',
+          'Demokratisierter Zugang zu neuen Anlageklassen',
+        ],
       },
       {
         id: 'trust',
         title: 'Vertrauen & Transparenz',
         description:
-          'Erklärbare KI, Datenhoheit und transparente Entscheidungen als Basis für Kundenbindung.',
-        bullets: ['Explainable AI', 'Consent Management', 'Fairness & Bias-Monitoring'],
+          'Erklärbare KI, Datenhoheit und Consent-Management als Basis für Kundenbindung.',
+        bullets: ['Explainable AI', 'Consent Management', 'Bias- & Fairness-Monitoring'],
+      },
+    ],
+  },
+  {
+    id: 'bank-der-zukunft',
+    title: 'Bank der Zukunft',
+    subtitle: 'Geschäftsmodelle 2035',
+    icon: 'Compass',
+    color: '#38bdf8',
+    colorDeep: '#0284c7',
+    featured: true,
+    owner: 'Holger',
+    tagline:
+      'Vom produktzentrierten Bankhaus zum Ökosystem-Anbieter mit KI als Mitarbeitendem.',
+    summary:
+      'KI ist Fundament der gesamten Wertschöpfungskette und in alle Kernprozesse integriert. Relevanz wird durch Embedded Finance, BaaS und strategische Partnerschaften mit FinTechs und BigTechs gesichert. Erlöse entstehen jenseits klassischer Zins- und Provisionsmodelle. Steuerung erfolgt über einen Chief AI Officer und ein AI-Governance-Board auf Vorstandsebene.',
+    pillars: [
+      {
+        id: 'oekosystem',
+        title: 'Ökosystem-Geschäftsmodell',
+        description:
+          'Embedded Finance, Banking-as-a-Service und Plattform-Modelle als zentrale Wachstumshebel.',
+        bullets: ['Embedded Finance in Branchenplattformen', 'BaaS für Drittanbieter', 'Marktplatz-Integrationen'],
+      },
+      {
+        id: 'ki-first',
+        title: 'KI-First-Prinzip',
+        description:
+          'KI ist nicht Tool, sondern Mitarbeitender — orchestriert in jedem Kern- und Supportprozess.',
+        bullets: ['Agentische KI in jedem Prozess', 'Daten- & Modell-Plattform als Fundament', 'Continuous Learning Culture'],
+      },
+      {
+        id: 'erloesmodelle',
+        title: 'Neue Erlösmodelle',
+        description:
+          'Diversifizierung jenseits von Zins und Provision — Subscription, Plattform-Gebühren, Daten-Monetarisierung.',
+        bullets: ['Advisory-as-a-Service', 'API-Monetarisierung', 'DSGVO-konforme Daten-Monetarisierung'],
+      },
+      {
+        id: 'governance-vorstand',
+        title: 'Governance auf C-Level',
+        description:
+          'Chief AI Officer (CAIDO) und AI-Governance-Board steuern die Transformation strategisch.',
+        bullets: ['CAIDO-Rolle im Vorstand', 'AI-Governance-Board', 'KI als Vorstands-Agenda'],
       },
     ],
   },
   {
     id: 'betriebsmodell-zukunft',
     title: 'Betriebsmodell der Zukunft',
-    subtitle: 'Wie wir Wert liefern',
+    subtitle: 'The art of the possible',
     icon: 'Workflow',
     color: '#a78bfa',
     colorDeep: '#7c3aed',
-    position: { x: 78, y: 20, size: 'lg', anim: 'bdz-float-slow' },
+    owner: 'Georg / Thorsten / Lars (Demo & Deep Dive)',
     tagline:
-      'Ein KI-natives Betriebsmodell mit klarer Orchestrierung zwischen Mensch, Prozess und Automatisierung.',
+      'Dunkelverarbeitung End-to-End, Composable Architecture, KI-Vertriebsarbeitsplatz als Co-Pilot.',
     summary:
-      'Das Betriebsmodell der Zukunft verbindet skalierbare Prozessautomatisierung mit einem neu gedachten Arbeitsplatz. KI übernimmt repetitive Arbeit, Menschen fokussieren sich auf Beziehung, Urteil und Eskalation. Demos zeigen, wie der Vertriebsarbeitsplatz heute schon aussehen kann.',
+      'Vertrieb, Operations, IT, HR, Finanzen, GRC — alle Kern- und Supportfunktionen laufen KI-First. Vertrieb arbeitet am KI-Vertriebsarbeitsplatz mit 360°-Kundensicht. Operations basiert auf Hyperautomation und Dunkelverarbeitung. IT setzt auf Composable Banking und löst Legacy schrittweise ab. Corporate Services agieren als strategische Business Partner.',
     pillars: [
       {
         id: 'vertriebsarbeitsplatz',
-        title: 'Vertriebsarbeitsplatz',
+        title: 'KI-Vertriebsarbeitsplatz',
         description:
           'Der KI-gestützte Arbeitsplatz für Berater: 360°-Kundensicht, Next-Best-Action, Co-Pilot, Echtzeit-Compliance.',
         bullets: [
@@ -73,183 +130,132 @@ export const MODULES = [
         deepLink: 'vertriebsarbeitsplatz',
       },
       {
-        id: 'backoffice',
-        title: 'Backoffice-Automation',
+        id: 'operations',
+        title: 'Operations & Hyperautomation',
         description:
-          'Straight-Through-Processing für Standardprozesse, menschliche Eskalation nur bei Ausnahmen.',
-        bullets: [
-          'Dokumentenverarbeitung mit KI',
-          'Automatisierte Antrags- & Kreditstrecken',
-          'Exception-Handling per Workflow',
-        ],
+          'Dunkelverarbeitung als Standard: Geschäftsvorfälle End-to-End vollautomatisiert ohne menschlichen Eingriff.',
+        bullets: ['RPA + KI + Process Mining', 'Realtime Banking', 'Exception-Handling per Workflow'],
       },
       {
-        id: 'organisation',
-        title: 'Organisation',
+        id: 'it-architektur',
+        title: 'IT & Composable Architecture',
         description:
-          'Cross-funktionale Product-Teams mit Ende-zu-Ende-Verantwortung für Kundenreisen.',
-        bullets: [
-          'Domänen-orientierter Zuschnitt',
-          'Plattform- & Produktteams',
-          'KI-native Skill-Profile',
-        ],
+          'Modulare, API-gesteuerte Infrastruktur. Legacy schrittweise abgelöst (Strangler Fig Pattern).',
+        bullets: ['Composable Banking', 'Banking-as-a-Service', 'Strangler-Fig-Migrationen'],
       },
       {
-        id: 'prozesse',
-        title: 'Prozesse als Software',
+        id: 'corporate-services',
+        title: 'Corporate Services',
         description:
-          'Versioniert, testbar, kontinuierlich optimiert mit Prozess-Mining und Observability.',
-        bullets: [
-          'Event-getriebene Prozesse',
-          'Process Mining',
-          'Human-in-the-Loop-Design',
-        ],
-      },
-    ],
-  },
-  {
-    id: 'bank-der-zukunft',
-    title: 'Bank der Zukunft',
-    subtitle: 'Das gemeinsame Zielbild',
-    icon: 'Compass',
-    color: '#38bdf8',
-    colorDeep: '#0284c7',
-    featured: true,
-    position: { x: 50, y: 52, size: 'xl', anim: 'bdz-float-slow' },
-    tagline:
-      'Vom produktzentrierten Bank-Anbieter zum kundenzentrierten, KI-nativen Ökosystempartner.',
-    summary:
-      'Die Bank der Zukunft ist kontextuell, datengetrieben, eingebettet — und wirtschaftlich nachhaltig. Sie liefert Outcomes statt Produkte, agiert als Plattform und macht KI zum Mitarbeitenden. Dieses Modul ist die zentrale Klammer für alle anderen Bausteine.',
-    pillars: [
-      {
-        id: 'value',
-        title: 'Wertversprechen',
-        description:
-          'Plattform-basierte Finanzdienstleistungen mit klarem Outcome-Versprechen statt Produktkatalog.',
-        bullets: [
-          'Embedded Finance für Retail & Firmenkunden',
-          'Advisory-as-a-Service statt Produktverkauf',
-          'Plattform-Ökosysteme mit Fintech-Partnern',
-        ],
-      },
-      {
-        id: 'revenue',
-        title: 'Revenue-Modelle',
-        description:
-          'Diversifizierung jenseits klassischer Zins- und Provisionserträge.',
-        bullets: [
-          'Subscription-Modelle für Beratung',
-          'Plattform-Gebühren & API-Monetarisierung',
-          'Data-Monetarisierung (DSGVO-konform)',
-        ],
-      },
-      {
-        id: 'ki-native',
-        title: 'KI-natives Selbstverständnis',
-        description:
-          'Die Organisation arbeitet mit KI als ständigem Partner — nicht als Tool, sondern als Kollege.',
-        bullets: [
-          'Agentische KI in jedem Prozess',
-          'Daten- und Modell-Plattform als Fundament',
-          'Continuous Learning Culture',
-        ],
-      },
-      {
-        id: 'oekosystem',
-        title: 'Ökosystem-Strategie',
-        description:
-          'Strategische Partnerschaften als zentraler Hebel für Reichweite und Innovation.',
-        bullets: [
-          'Fintech-Kooperationen',
-          'Banking-as-a-Service-Angebote',
-          'Plattform-Integrationen mit Marktplätzen',
-        ],
+          'HR als Enabler des Wandels, CFO als strategischer Partner, GRC als Risk-Steuerung der KI.',
+        bullets: ['Upskilling für AI-Translator-Rollen', 'Predictive Forecasting im CFO-Office', 'GRC mit technologie-gestützten Prüfmethoden'],
       },
     ],
   },
   {
     id: 'transitionspfad',
     title: 'Transitions- & Transformationspfad',
-    subtitle: 'Vom Heute zum Zielbild',
-    icon: 'Workflow',
+    subtitle: 'Vom Heute zum Zielbild 2035',
+    icon: 'TrendingUp',
     color: '#fbbf24',
     colorDeep: '#d97706',
-    position: { x: 22, y: 84, size: 'lg', anim: 'bdz-float-reverse' },
+    owner: 'Andreas Reuß / Andreas Pfeil',
     tagline:
-      'Ein klarer Weg in mehreren Wellen — vom heutigen Zustand zur Bank der Zukunft.',
+      'Welche Dimensionen verändern sich, in welchen Wellen — und was bedeutet das für Steering und Investitionsplanung?',
     summary:
-      'Transformation ist kein Big Bang. Wir definieren Wellen, MVPs und Quick Wins, machen Abhängigkeiten sichtbar und priorisieren entlang von Wert und Risiko. Capital Markets und Retail laufen dabei in unterschiedlichen Geschwindigkeiten — aber auf demselben Zielbild.',
+      'Drei bis fünf Transformations-Wellen mit klaren Meilensteinen und MVPs. Capital Markets und Retail laufen mit unterschiedlichen Geschwindigkeiten, aber demselben Zielbild. Wert-/Risiko-Priorisierung und governance-starkes Programm-Management sind Pflicht — Transformation ist kein Big Bang, sondern eine kontrollierte Welle nach der anderen.',
     pillars: [
       {
-        id: 'roadmap',
+        id: 'wellen-roadmap',
         title: 'Wellen-Roadmap',
         description:
-          'Drei bis fünf Transformations-Wellen mit klaren Meilensteinen und MVP-Lieferungen.',
-        bullets: ['Welle 1: Foundations', 'Welle 2: Scale & Embed', 'Welle 3: Reinvent'],
+          'Foundation → Scale & Embed → Reinvent. Klare MVP-Lieferungen pro Welle, Quick Wins zuerst.',
+        bullets: ['Welle 1: Foundations (Daten, Plattform, Skills)', 'Welle 2: Scale & Embed', 'Welle 3: Reinvent (neue Geschäftsmodelle)'],
       },
       {
         id: 'priorisierung',
-        title: 'Wert & Risiko-Priorisierung',
+        title: 'Wert- & Risiko-Priorisierung',
         description:
           'Initiativen werden nach Business-Value, Realisierungsrisiko und Abhängigkeiten geordnet.',
-        bullets: ['Value-Risk-Matrix', 'Dependency-Graph', 'OKR-Verankerung'],
+        bullets: ['Value-Risk-Matrix', 'Investment-Case je Welle', 'Dependency-Graph'],
       },
       {
-        id: 'governance',
-        title: 'Transformations-Governance',
-        description:
-          'Klare Entscheidungsstrukturen, Steering-Boards, Eskalationspfade — schnell und transparent.',
-        bullets: ['Steering Cadence', 'PMO & Reporting', 'Change-Management'],
-      },
-      {
-        id: 'transition',
+        id: 'sparten-takt',
         title: 'Capital Markets vs. Retail',
         description:
-          'Zwei Zielarchitekturen, ein gemeinsames Fundament — abgestimmte Migrationspfade.',
+          'Zwei Zielarchitekturen, ein Fundament — abgestimmte Migrationspfade in passender Geschwindigkeit.',
         bullets: ['Spartenspezifische MVPs', 'Gemeinsame Plattform-Bausteine', 'Migrations-Welle pro Sparte'],
+      },
+      {
+        id: 'steering',
+        title: 'Steering & Governance',
+        description:
+          'Klare Entscheidungsstrukturen, Steering-Boards, Eskalationspfade — schnell und transparent.',
+        bullets: ['Steering Cadence', 'OKR-Verankerung', 'PMO & Reporting'],
       },
     ],
   },
   {
-    id: 'offering',
-    title: 'Offering & Angebotsbausteine',
-    subtitle: 'Was wir konkret liefern',
+    id: 'angebotsbausteine',
+    title: 'Angebotsbausteine',
+    subtitle: 'Was Deloitte konkret liefert',
     icon: 'ShieldCheck',
     color: '#fb7185',
     colorDeep: '#e11d48',
-    position: { x: 78, y: 84, size: 'lg', anim: 'bdz-float' },
+    owner: 'Holger',
     tagline:
-      'Modulare Angebotsbausteine — von Strategie über Architektur bis zum betriebenen Service.',
+      'Sieben modulare Pakete — passgenau zum Transformationspfad.',
     summary:
-      'Unsere Angebote sind so zusammengesteckt, wie der Kunde sie gerade braucht: vom Strategie-Sprint über Architektur-Blueprints bis zum laufenden Betrieb. Jeder Baustein steht für sich, lässt sich aber zu kompletten Transformationsprogrammen kombinieren.',
+      'Unsere Angebote kombinieren sich entlang der Transformationspfade des Kunden: Strategie, Implementierung, Operations, Infrastruktur, Change, GRC und Capital Markets — als eigenständige Bausteine oder als Programm-Bundle.',
     pillars: [
       {
-        id: 'strategy',
-        title: 'Strategie & Zielbild',
+        id: 'strategie',
+        title: 'Strategie: AI-Ready & Ecosystem Banking 2035',
         description:
-          'Co-creation des Zielbilds, Business-Cases und Investitionspfade — schnell und entscheidungsreif.',
-        bullets: ['Zielbild-Workshops', 'Business-Case-Modell', 'Investitions-Roadmap'],
+          'Entwicklung einer KI-Strategie und eines adaptiven Operating Models. Positionierung im Ökosystem (BaaS, Embedded Finance, Partnerschaften).',
+        bullets: ['Zielbild-Workshops', 'Operating-Model-Design', 'Ökosystem-Strategie'],
       },
       {
-        id: 'architecture',
-        title: 'Architektur & Blueprints',
+        id: 'vertrieb-service',
+        title: 'Implementation: Intelligenter Vertrieb & Service',
         description:
-          'Referenzarchitekturen für Daten, KI und Plattformen — anschlussfähig an die Realität der Bank.',
-        bullets: ['Daten- & KI-Plattform-Blueprints', 'Domain-Driven-Design', 'Tech-Stack-Empfehlungen'],
+          'Agiler Aufbau des KI-Vertriebsarbeitsplatzes und Konzeption vertrauenswürdiger Kundenschnittstellen (Avatare, Conversational AI).',
+        bullets: ['KI-Vertriebsarbeitsplatz', 'KI-Avatare & Conversational AI', 'Customer-Journey-Design'],
       },
       {
-        id: 'delivery',
-        title: 'Implementation & Delivery',
+        id: 'hyperautomation',
+        title: 'Operations: Road to Hyperautomation',
         description:
-          'Hands-on Umsetzung in Sprints — gemeinsam mit den Bank-Teams, nicht „über sie hinweg".',
-        bullets: ['Squad-Aufstellung', 'Inkrementelle Auslieferung', 'Knowledge-Transfer'],
+          'Prozessoptimierung über Process Mining und Implementierung einer ganzheitlichen Automatisierungsstrategie mit klarem Business Case.',
+        bullets: ['Process Mining', 'RPA + KI-Orchestrierung', 'ROI-Modell & Tracking'],
       },
       {
-        id: 'managed',
-        title: 'Managed Services',
+        id: 'composable',
+        title: 'Infrastruktur: Composable Architecture',
         description:
-          'Ausgewählte Bausteine als laufender Service — von KI-Modellen bis zu Compliance-Frameworks.',
-        bullets: ['MLOps-as-a-Service', 'AI-Governance-Service', 'Continuous-Compliance'],
+          'Modernisierung der IT-Landschaft durch Composable Banking und schrittweise Migration von Altsystemen via Strangler-Fig-Pattern.',
+        bullets: ['Composable-Blueprint', 'Strangler-Fig-Migration', 'BaaS-Integrationen'],
+      },
+      {
+        id: 'change',
+        title: 'Change: Future Workforce & Culture',
+        description:
+          'Begleitung des kulturellen Wandels, Konzeption von Upskilling-Programmen und Gestaltung neuer Jobprofile (z. B. AI-Translator).',
+        bullets: ['Upskilling/Reskilling', 'AI-Translator-Curriculum', 'Lernkultur-Etablierung'],
+      },
+      {
+        id: 'grc',
+        title: 'GRC: AI Governance, Risk & Compliance',
+        description:
+          'Aufbau eines ganzheitlichen KI-Governance-Frameworks. Compliance mit EU AI Act und DSGVO. Transformation der Risk- und Revisionsfunktionen.',
+        bullets: ['EU-AI-Act-Compliance', 'KI-Risk-Framework', 'Audit & Continuous Monitoring'],
+      },
+      {
+        id: 'capital-markets-paket',
+        title: 'Capital Markets: Next-Gen Asset Management',
+        description:
+          'Implementierung von KI-gestütztem Trading, prädiktiver Risikoanalyse und Erschließung des Geschäftsfelds „Tokenisierte Assets".',
+        bullets: ['KI-Trading-Plattform', 'Prädiktive Risikoanalysen', 'Tokenized-Assets-Marktplatz'],
       },
     ],
   },

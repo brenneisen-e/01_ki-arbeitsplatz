@@ -16,7 +16,6 @@ const VIEW_TO_BASE: Record<SceneView, string> = {
 }
 
 const HERO_POSTER = `${VIEW_TO_BASE.hero}.png`
-const HERO_VIDEO_WEBM = 'assets/scene/hero-loop.webm'
 const HERO_VIDEO_MP4  = 'assets/scene/hero-loop.mp4'
 
 function imgSrcFor(v: SceneView): string {
@@ -181,7 +180,11 @@ export function Hero({ overlay }: HeroProps) {
             className="hero-image absolute max-w-full max-h-full w-auto h-auto"
             style={sharedStyle}
           >
-            <source src={HERO_VIDEO_WEBM} type="video/webm" />
+            {/* WebM-Source nur, wenn die Datei wirklich existiert.
+                Cloudflare Pages liefert für fehlende Files das SPA-
+                Fallback-HTML mit Status 200 — der Browser hält das
+                für ein kaputtes WebM und feuert MEDIA_ERR. Solange
+                wir keine echte hero-loop.webm haben: nur MP4. */}
             <source src={HERO_VIDEO_MP4}  type="video/mp4"  />
           </video>
         ) : (

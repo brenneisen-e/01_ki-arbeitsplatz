@@ -214,22 +214,23 @@ body {
   border-radius: 9999px;
 }
 
-/* ── Tilt-Shift Booster auf Bilder ────────────────────────────── */
+/* ── Hero-Image: keine zusätzlichen Filter, damit Video pixelfrei
+   bleibt. Tilt-Shift kommt aus dem Bild/Video selbst. ─────────── */
 .hero-image {
-  filter: contrast(1.04) saturate(0.98);
+  image-rendering: -webkit-optimize-contrast;
 }
+/* Sehr dezente Vignette oben/unten OHNE Blur — der zusätzliche
+   blur frisst Video-Schärfe und macht das Bild pixelig. */
 .hero-stage::before,
 .hero-stage::after {
   content: '';
   position: absolute; left: 0; right: 0;
-  height: 8%;
+  height: 5%;
   pointer-events: none;
   z-index: 5;
-  backdrop-filter: blur(1.5px);
-  -webkit-backdrop-filter: blur(1.5px);
 }
-.hero-stage::before { top: 0;    background: linear-gradient(180deg, rgba(7,13,26,0.35), transparent); }
-.hero-stage::after  { bottom: 0; background: linear-gradient(0deg,   rgba(7,13,26,0.45), transparent); }
+.hero-stage::before { top: 0;    background: linear-gradient(180deg, rgba(7,13,26,0.55), transparent); }
+.hero-stage::after  { bottom: 0; background: linear-gradient(0deg,   rgba(7,13,26,0.65), transparent); }
 
 /* ── Prominente Hotspots im Hero-Overview (orange + größerer Pulse) ── */
 @keyframes hot-pulse-prominent {

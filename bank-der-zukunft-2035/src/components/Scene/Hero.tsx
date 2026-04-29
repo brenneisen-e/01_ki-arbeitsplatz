@@ -210,12 +210,26 @@ export function Hero({ overlay }: HeroProps) {
       />
 
       {/* Hotspot-Overlay sitzt EXAKT auf dem gerenderten Vorder-Element */}
-      {overlay && bounds && (
+      {bounds && (
         <div
-          className="absolute pointer-events-none"
-          style={{ width: bounds.width, height: bounds.height, left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 3 }}
+          className="absolute"
+          style={{ width: bounds.width, height: bounds.height, left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 3, pointerEvents: 'none' }}
         >
-          {overlay(bounds, view)}
+          {/* Veo-Watermark-Blocker — nur sichtbar während der Hero-View
+              läuft (das Watermark ist im Video, nicht in den Detail-Bildern). */}
+          {view === 'hero' && useVideo && (
+            <div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                right: 0, bottom: 0,
+                width: 140, height: 48,
+                background: '#000',
+                borderTopLeftRadius: 6,
+              }}
+            />
+          )}
+          {overlay && overlay(bounds, view)}
         </div>
       )}
     </div>

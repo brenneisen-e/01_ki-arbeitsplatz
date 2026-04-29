@@ -1,4 +1,4 @@
-export type FloorId = 'basement' | 'ground' | 'top'
+export type FloorId = 'basement' | 'ground' | 'top' | 'plaza'
 
 export type HotspotId =
   | 'top-boardroom'
@@ -7,6 +7,10 @@ export type HotspotId =
   | 'mid-workstations'
   | 'basement-data'
   | 'basement-control'
+  | 'customer-hotline'
+  | 'customer-avatar'
+  | 'customer-walking'
+  | 'customer-pavilion'
 
 export interface Hotspot {
   id: HotspotId

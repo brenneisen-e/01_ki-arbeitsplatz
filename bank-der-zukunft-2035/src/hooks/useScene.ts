@@ -1,13 +1,29 @@
 import { create } from 'zustand'
 import type { FloorId, HotspotId, ThemeMode } from '../types'
 
+/**
+ * SceneView entscheidet, welches Hintergrundbild + welcher Hotspot-Satz
+ * gerendert wird:
+ *   'hero'  → Querschnitt-Hauptbild, 6 Etagen-Hotspots
+ *   'detail-{floor}' → ein Etagen-Detail-Bild, Etagen-Hotspots
+ *                     (ohne die anderen Etagen)
+ *   'plaza' → Außen-Plaza-Bild, 4 Customer-Hotspots
+ */
+export type SceneView = 'hero' | 'detail-top' | 'detail-ground' | 'detail-basement' | 'plaza'
+
 interface SceneState {
+  view: SceneView
   activeFloor: FloorId | null
   activeHotspot: HotspotId | null
   hoverHotspot: HotspotId | null
   workshopStep: number | null
   theme: ThemeMode
   panelOpen: boolean
+
+  setView: (v: SceneView) => void
+  openFloor: (id: FloorId, hotspot?: HotspotId | null) => void
+  openPlaza: () => void
+  goHero: () => void
 
   setActiveFloor: (id: FloorId | null) => void
   setActiveHotspot: (id: HotspotId | null) => void
@@ -20,6 +36,7 @@ interface SceneState {
 }
 
 export const useScene = create<SceneState>((set) => ({
+  view: 'hero',
   activeFloor: null,
   activeHotspot: null,
   hoverHotspot: null,
@@ -27,17 +44,43 @@ export const useScene = create<SceneState>((set) => ({
   theme: 'night',
   panelOpen: false,
 
-  setActiveFloor: (id) => set((s) => ({
+  setView: (v) => set({ view: v }),
+
+  openFloor: (id, hotspot = null) => set({
+    view: id === 'top' ? 'detail-top' : id === 'ground' ? 'detail-ground' : 'detail-basement',
     activeFloor: id,
-    panelOpen: id !== null ? true : s.panelOpen,
-  })),
+    activeHotspot: hotspot,
+    panelOpen: true,
+  }),
+
+  openPlaza: () => set({
+    view: 'plaza',
+    activeFloor: null,
+    activeHotspot: null,
+    panelOpen: true,
+  }),
+
+  goHero: () => set({
+    view: 'hero',
+    activeFloor: null,
+    activeHotspot: null,
+    panelOpen: false,
+  }),
+
+  setActiveFloor: (id) => set({ activeFloor: id }),
   setActiveHotspot: (id) => set({ activeHotspot: id }),
   setHoverHotspot: (id) => set({ hoverHotspot: id }),
   setWorkshopStep: (idx) => set({ workshopStep: idx }),
   setTheme: (t) => set({ theme: t }),
   toggleTheme: () => set((s) => ({ theme: s.theme === 'night' ? 'day' : 'night' })),
-  closePanel: () => set({ panelOpen: false, activeHotspot: null }),
+  closePanel: () => set({
+    view: 'hero',
+    panelOpen: false,
+    activeFloor: null,
+    activeHotspot: null,
+  }),
   reset: () => set({
+    view: 'hero',
     activeFloor: null,
     activeHotspot: null,
     hoverHotspot: null,

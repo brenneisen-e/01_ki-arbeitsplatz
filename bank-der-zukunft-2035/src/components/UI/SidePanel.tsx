@@ -11,12 +11,16 @@ import { fmEase } from '../../lib/easings'
  * wird dessen Body als Headline verwendet, sonst die Etagen-Übersicht.
  */
 export function SidePanel() {
+  const view          = useScene((s) => s.view)
   const activeFloor   = useScene((s) => s.activeFloor)
   const activeHotspot = useScene((s) => s.activeHotspot)
   const panelOpen     = useScene((s) => s.panelOpen)
   const closePanel    = useScene((s) => s.closePanel)
 
-  const floor   = activeFloor ? FLOORS.find((f) => f.id === activeFloor) : undefined
+  // Bei Plaza-View ziehen wir den Floor-Eintrag 'plaza' heran;
+  // sonst den der aktiven Etage.
+  const floorId = view === 'plaza' ? 'plaza' : activeFloor
+  const floor   = floorId ? FLOORS.find((f) => f.id === floorId) : undefined
   const hotspot = activeHotspot ? HOTSPOTS.find((h) => h.id === activeHotspot) : undefined
   const visible = panelOpen && !!floor
 

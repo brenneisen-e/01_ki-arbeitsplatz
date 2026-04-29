@@ -55,4 +55,38 @@ export const HOTSPOTS: ReadonlyArray<Hotspot> = [
     subtitle: 'p95 latency · cache hit rate · policy enforcement',
     body: 'Jedes Modell, jede Transaktion ist End-to-End getraced. Anomalien tauchen auf, bevor Kunden sie spüren. Compliance-Evidenz wird kontinuierlich erzeugt, nicht erst zum Audit.',
   },
+
+  // PLAZA / KUNDENPERSPEKTIVE ─────────────────────────────────────
+  {
+    id: 'customer-hotline',
+    floor: 'plaza',
+    x: 0.20, y: 0.55,
+    title: 'AI-Hotline',
+    subtitle: 'Sprachassistenz mit LLM-Routing',
+    body: 'Sprach-KI nimmt das Anliegen entgegen, klärt Routine ab und routet erst bei Bedarf an einen menschlichen Berater weiter. Lebenslagen-Kontext liegt vor dem ersten Wort vor.',
+  },
+  {
+    id: 'customer-avatar',
+    floor: 'plaza',
+    x: 0.42, y: 0.50,
+    title: 'Holographische KI-Beratung',
+    subtitle: 'Persönlicher Avatar im Video-Call',
+    body: 'Foto-realistischer Avatar führt das Gespräch — empathisch, lippensynchron, mit Live-Zugriff auf Produkte, Verträge und Lebensereignisse.',
+  },
+  {
+    id: 'customer-walking',
+    floor: 'plaza',
+    x: 0.60, y: 0.55,
+    title: 'Filiale neu gedacht',
+    subtitle: 'Hybride Beratungserlebnisse',
+    body: 'Filiale wird zum Treffpunkt für komplexe Entscheidungen. Routine bleibt digital, Bauchgefühl-Themen werden im Raum geklärt — mit derselben Datenbasis im Hintergrund.',
+  },
+  {
+    id: 'customer-pavilion',
+    floor: 'plaza',
+    x: 0.88, y: 0.50,
+    title: 'Self-Service Pavillon',
+    subtitle: 'Spatial Banking Interface',
+    body: 'Holographisches Display am Marktplatz — Identifikation, Beratung und Vertragsabschluss in einer Spatial-Computing-Interaktion. Branchless, aber präsent.',
+  },
 ]

@@ -213,3 +213,20 @@ body {
   outline-offset: 6px;
   border-radius: 9999px;
 }
+
+/* ── Tilt-Shift Booster auf Bilder ────────────────────────────── */
+.hero-image {
+  filter: contrast(1.04) saturate(0.98);
+}
+.hero-stage::before,
+.hero-stage::after {
+  content: '';
+  position: absolute; left: 0; right: 0;
+  height: 8%;
+  pointer-events: none;
+  z-index: 5;
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+}
+.hero-stage::before { top: 0;    background: linear-gradient(180deg, rgba(7,13,26,0.35), transparent); }
+.hero-stage::after  { bottom: 0; background: linear-gradient(0deg,   rgba(7,13,26,0.45), transparent); }

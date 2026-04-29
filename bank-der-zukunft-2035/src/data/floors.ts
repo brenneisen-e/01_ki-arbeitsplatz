@@ -52,6 +52,23 @@ export const FLOORS: ReadonlyArray<FloorContent> = [
       { label: 'Audit-Findings', value: '0 offen' },
     ],
   },
+  {
+    id: 'plaza',
+    badge: 'Kundenperspektive 2035',
+    heading: 'Hyper-personalisierte Kundenreise',
+    description:
+      'Banking 2035 erlebt der Kunde jenseits der Filiale — als 24/7-AI-Avatar, als Pavillon-Erlebnis am Marktplatz, als Sprach-KI in der Hotline und als hybride Beratung in der neuen Filiale. Die Wahl liegt beim Kunden, der Kontext folgt ihm überall hin.',
+    bullets: [
+      'Sprach-KI mit LLM-Routing nimmt jeden Erstkontakt — eskaliert nur bei Substanz',
+      'Foto-realistische Avatare führen empathische Gespräche mit Lebenslagen-Kontext',
+      'Spatial-Banking-Pavillon ersetzt die klassische Filiale am Marktplatz',
+    ],
+    stats: [
+      { label: 'Self-Service-Quote', value: '78 %' },
+      { label: 'NPS-Lift',           value: '+24' },
+      { label: 'Time-to-Answer',     value: '< 8 s' },
+    ],
+  },
 ]
 
 export function findFloor(id: FloorId): FloorContent | undefined {

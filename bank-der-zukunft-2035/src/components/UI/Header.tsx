@@ -1,21 +1,12 @@
-import { Play, Layers } from 'lucide-react'
+import { Play, Users } from 'lucide-react'
 import { useScene } from '../../hooks/useScene'
 
 interface HeaderProps {
   onStartWorkshop: () => void
 }
 
-/**
- * Minimaler, monochromer Header. Zwei Glasmorphism-Buttons.
- */
 export function Header({ onStartWorkshop }: HeaderProps) {
-  const setActiveFloor = useScene((s) => s.setActiveFloor)
-
-  function walkFloors() {
-    // Geht durch alle 3 Etagen sequentiell, jeweils 3,5 s
-    const seq: ('top' | 'ground' | 'basement')[] = ['top', 'ground', 'basement']
-    seq.forEach((id, i) => setTimeout(() => setActiveFloor(id), i * 3500))
-  }
+  const openPlaza = useScene((s) => s.openPlaza)
 
   return (
     <header
@@ -40,12 +31,12 @@ export function Header({ onStartWorkshop }: HeaderProps) {
           Workshop starten
         </button>
         <button
-          onClick={walkFloors}
+          onClick={openPlaza}
           className="hairline hairline-hover inline-flex items-center gap-2.5 rounded-full h-9 px-4 text-[13px] font-normal tracking-tight text-[var(--color-ink-primary)] transition-colors"
           style={{ background: 'transparent' }}
         >
-          <Layers size={12} strokeWidth={1.4} />
-          Etagen durchlaufen
+          <Users size={12} strokeWidth={1.4} />
+          Mit Kundenperspektive beginnen
         </button>
       </nav>
     </header>

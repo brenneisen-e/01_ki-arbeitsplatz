@@ -1,34 +1,49 @@
-import { useScene } from '../../hooks/useScene'
+import { useScene, type SceneView } from '../../hooks/useScene'
 import { HOTSPOTS } from '../../data/hotspots'
-import type { Hotspot } from '../../types'
+import type { Hotspot, FloorId } from '../../types'
+
+const VIEW_TO_FLOOR: Record<SceneView, FloorId | null> = {
+  'hero':            null,         // Hero zeigt alle drei Etagen-Hotspots
+  'detail-top':      'top',
+  'detail-ground':   'ground',
+  'detail-basement': 'basement',
+  'plaza':           'plaza',
+}
 
 /**
- * Hotspot-Punkte über dem Hero-Bild. Wird von Hero.tsx als overlay-
- * function gerendert — der parent-Wrapper hat exakt die Maße der
- * `<img>`-Renderbox, sodass `left/top` in Prozent korrekt sitzen.
- *
- * Visualisierung pro Hotspot:
- *   12px innerer cyan-radial-gradient-Punkt
- *   24px äußerer Pulse-Ring (border 1px cyan/30)
- *   permanenter Pulse 1.0 → 1.15 → 1.0 über 2.5s, mit Stagger
+ * Filtert Hotspots passend zur aktuellen View:
+ *   hero            → alle 6 Etagen-Hotspots (oben/mitte/unten)
+ *   detail-{floor}  → nur die Hotspots der jeweiligen Etage
+ *   plaza           → die 4 Customer-Hotspots
  */
 export function HotspotOverlay() {
+  const view = useScene((s) => s.view)
   const setHover = useScene((s) => s.setHoverHotspot)
-  const setActiveFloor = useScene((s) => s.setActiveFloor)
+  const openFloor = useScene((s) => s.openFloor)
   const setActiveHotspot = useScene((s) => s.setActiveHotspot)
-  const activeFloor = useScene((s) => s.activeFloor)
+
+  const targetFloor = VIEW_TO_FLOOR[view]
+  const visible = HOTSPOTS.filter((h) => {
+    if (view === 'hero')   return h.floor !== 'plaza'
+    return h.floor === targetFloor
+  })
 
   return (
     <>
-      {HOTSPOTS.map((h, i) => (
+      {visible.map((h, i) => (
         <HotspotDot
           key={h.id}
           h={h}
           delaySec={i * 0.32}
-          dimmed={!!activeFloor && activeFloor !== h.floor}
           onEnter={() => setHover(h.id)}
           onLeave={() => setHover(null)}
-          onClick={() => { setActiveFloor(h.floor); setActiveHotspot(h.id) }}
+          onClick={() => {
+            if (h.floor === 'plaza') {
+              setActiveHotspot(h.id)
+            } else {
+              openFloor(h.floor, h.id)
+            }
+          }}
         />
       ))}
     </>
@@ -38,12 +53,11 @@ export function HotspotOverlay() {
 interface DotProps {
   h: Hotspot
   delaySec: number
-  dimmed: boolean
   onEnter: () => void
   onLeave: () => void
   onClick: () => void
 }
-function HotspotDot({ h, delaySec, dimmed, onEnter, onLeave, onClick }: DotProps) {
+function HotspotDot({ h, delaySec, onEnter, onLeave, onClick }: DotProps) {
   return (
     <button
       type="button"
@@ -52,14 +66,13 @@ function HotspotDot({ h, delaySec, dimmed, onEnter, onLeave, onClick }: DotProps
       onMouseLeave={onLeave}
       onFocus={onEnter}
       onBlur={onLeave}
-      onClick={onClick}
+      onClick={(e) => { e.stopPropagation(); onClick() }}
       className="hot pointer-events-auto absolute"
       data-id={h.id}
+      data-floor={h.floor}
       style={{
         left: `${h.x * 100}%`,
         top:  `${h.y * 100}%`,
-        opacity: dimmed ? 0.25 : 1,
-        transition: 'opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1)',
       }}
     >
       <span className="hot-ring"  style={{ animationDelay: `${delaySec}s` }} aria-hidden />

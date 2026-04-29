@@ -44,28 +44,23 @@ export const useScene = create<SceneState>((set) => ({
   theme: 'night',
   panelOpen: false,
 
-  setView: (v) => set({ view: v }),
+  setView: (v) => { console.log('[scene] setView →', v); set({ view: v }) },
 
-  openFloor: (id, hotspot = null) => set({
-    view: id === 'top' ? 'detail-top' : id === 'ground' ? 'detail-ground' : 'detail-basement',
-    activeFloor: id,
-    activeHotspot: hotspot,
-    panelOpen: true,
-  }),
+  openFloor: (id, hotspot = null) => {
+    const view = id === 'top' ? 'detail-top' : id === 'ground' ? 'detail-ground' : id === 'basement' ? 'detail-basement' : 'plaza'
+    console.log('[scene] openFloor', id, 'hotspot:', hotspot, '→ view:', view)
+    set({ view: view as SceneView, activeFloor: id, activeHotspot: hotspot, panelOpen: true })
+  },
 
-  openPlaza: () => set({
-    view: 'plaza',
-    activeFloor: null,
-    activeHotspot: null,
-    panelOpen: true,
-  }),
+  openPlaza: () => {
+    console.log('[scene] openPlaza')
+    set({ view: 'plaza', activeFloor: 'plaza', activeHotspot: null, panelOpen: true })
+  },
 
-  goHero: () => set({
-    view: 'hero',
-    activeFloor: null,
-    activeHotspot: null,
-    panelOpen: false,
-  }),
+  goHero: () => {
+    console.log('[scene] goHero')
+    set({ view: 'hero', activeFloor: null, activeHotspot: null, panelOpen: false })
+  },
 
   setActiveFloor: (id) => set({ activeFloor: id }),
   setActiveHotspot: (id) => set({ activeHotspot: id }),

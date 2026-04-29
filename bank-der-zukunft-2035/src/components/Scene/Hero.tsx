@@ -3,8 +3,6 @@ import gsap from 'gsap'
 import { useScene, type SceneView } from '../../hooks/useScene'
 
 interface HeroProps {
-  /** Overlay (z. B. Hotspots) — bekommt die Maße der gerenderten
-      Bildbox, sodass normalisierte Koordinaten exakt sitzen. */
   overlay?: (bounds: { width: number; height: number }, view: SceneView) => ReactNode
 }
 
@@ -16,49 +14,58 @@ const VIEW_TO_BASE: Record<SceneView, string> = {
   'plaza':           'assets/scene/outdoor-plaza',
 }
 
-/** Liefert .webp-Pfad zuerst, .png als Fallback. */
-function srcForView(v: SceneView): { primary: string; fallback: string } {
-  const base = VIEW_TO_BASE[v]
-  return { primary: `${base}.webp`, fallback: `${base}.png` }
+const HERO_PRIMARY = `${VIEW_TO_BASE.hero}.webp`
+const HERO_FALLBACK = `${VIEW_TO_BASE.hero}.png`
+
+function srcForView(v: SceneView): string {
+  return `${VIEW_TO_BASE[v]}.webp`
 }
 
 export function Hero({ overlay }: HeroProps) {
   const view = useScene((s) => s.view)
-  const containerRef = useRef<HTMLDivElement | null>(null)
   const aRef = useRef<HTMLImageElement | null>(null)
   const bRef = useRef<HTMLImageElement | null>(null)
-  // Welche der zwei Image-Layer ist gerade „vorne"?
+  // Beide Layer rendern IMMER (auch initial), damit die Refs verfügbar sind.
+  // 'a' beginnt als Vorder-Layer mit dem Hero-Bild.
+  const [aSrc, setASrc] = useState<string>(HERO_PRIMARY)
+  const [bSrc, setBSrc] = useState<string>(HERO_PRIMARY)
   const [front, setFront] = useState<'a' | 'b'>('a')
-  const [aSrc, setASrc] = useState<string>(srcForView('hero').primary)
-  const [bSrc, setBSrc] = useState<string>('')
   const [bounds, setBounds] = useState<{ width: number; height: number } | null>(null)
   const lastViewRef = useRef<SceneView>('hero')
 
   // Cross-Fade beim View-Wechsel
   useEffect(() => {
     if (view === lastViewRef.current) return
+    console.log('[Hero] view change', lastViewRef.current, '→', view)
     lastViewRef.current = view
     const back = front === 'a' ? 'b' : 'a'
+    const newSrc = srcForView(view)
     const backSetter = back === 'a' ? setASrc : setBSrc
     const backEl = back === 'a' ? aRef.current : bRef.current
     const frontEl = front === 'a' ? aRef.current : bRef.current
-    if (!backEl || !frontEl) return
+    if (!backEl || !frontEl) {
+      console.warn('[Hero] missing layer ref, skip fade', { backEl, frontEl, front, back })
+      return
+    }
+    backSetter(newSrc)
 
-    backSetter(srcForView(view).primary)
-
-    // Warten, bis das Back-Image geladen ist, dann Cross-Fade
     const onReady = () => {
+      console.log('[Hero] back layer ready, fading', { back, src: backEl.currentSrc || backEl.src })
       gsap.killTweensOf([backEl, frontEl])
       gsap.set(backEl, { opacity: 0 })
       gsap.to(backEl,  { opacity: 1, duration: 0.6, ease: 'expo.out' })
       gsap.to(frontEl, { opacity: 0, duration: 0.6, ease: 'expo.out', onComplete: () => setFront(back) })
     }
-    if (backEl.complete && backEl.naturalWidth > 0) onReady()
-    else backEl.addEventListener('load', onReady, { once: true })
+    if (backEl.complete && backEl.naturalWidth > 0 && (backEl.currentSrc || backEl.src).includes(newSrc.split('/').pop()!.replace('.webp', ''))) {
+      // Bild war schon im Browser-Cache (Preload) → sofort fade
+      onReady()
+    } else {
+      backEl.addEventListener('load', onReady, { once: true })
+    }
     return () => backEl.removeEventListener('load', onReady)
   }, [view, front])
 
-  // ResizeObserver auf gerendertem Vorder-Bild
+  // ResizeObserver auf das aktuell sichtbare (gerenderte) Bild
   useEffect(() => {
     const el = front === 'a' ? aRef.current : bRef.current
     if (!el) return
@@ -74,24 +81,42 @@ export function Hero({ overlay }: HeroProps) {
   }, [front, aSrc, bSrc])
 
   function handleErr(layer: 'a' | 'b') {
-    const setSrc = layer === 'a' ? setASrc : setBSrc
     const cur = layer === 'a' ? aSrc : bSrc
-    if (cur.endsWith('.webp')) setSrc(cur.replace(/\.webp$/, '.png'))
+    const setSrc = layer === 'a' ? setASrc : setBSrc
+    if (cur.endsWith('.webp')) {
+      console.warn(`[Hero] webp missing, fallback .png:`, cur)
+      setSrc(cur.replace(/\.webp$/, '.png'))
+    } else {
+      console.error(`[Hero] image failed:`, cur)
+    }
   }
 
   return (
-    <div ref={containerRef} className="hero-stage relative w-full h-full flex items-center justify-center overflow-hidden">
-      <ImgLayer  z={1} elRef={aRef} src={aSrc} initialFront={front === 'a'} onError={() => handleErr('a')} />
-      <ImgLayer  z={2} elRef={bRef} src={bSrc} initialFront={front === 'b'} onError={() => handleErr('b')} />
+    <div className="hero-stage relative w-full h-full flex items-center justify-center overflow-hidden">
+      <img
+        ref={aRef}
+        src={aSrc === HERO_PRIMARY ? HERO_PRIMARY : aSrc}
+        onError={() => handleErr('a')}
+        onLoad={() => { if (front === 'a' && aRef.current) {
+          const r = aRef.current.getBoundingClientRect()
+          if (r.width > 0 && r.height > 0) setBounds({ width: r.width, height: r.height })
+        } }}
+        alt="" draggable={false}
+        className="hero-image absolute max-w-full max-h-full w-auto h-auto"
+        style={{ zIndex: 1, objectFit: 'contain', opacity: front === 'a' ? 1 : 0, left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+      />
+      <img
+        ref={bRef}
+        src={bSrc}
+        onError={() => handleErr('b')}
+        alt="" draggable={false}
+        className="hero-image absolute max-w-full max-h-full w-auto h-auto"
+        style={{ zIndex: 2, objectFit: 'contain', opacity: front === 'b' ? 1 : 0, left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+      />
       {overlay && bounds && (
         <div
           className="absolute pointer-events-none"
-          style={{
-            width: bounds.width,
-            height: bounds.height,
-            left: '50%', top: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
+          style={{ width: bounds.width, height: bounds.height, left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 3 }}
         >
           {overlay(bounds, view)}
         </div>
@@ -100,30 +125,5 @@ export function Hero({ overlay }: HeroProps) {
   )
 }
 
-interface ImgLayerProps {
-  z: number
-  elRef: React.MutableRefObject<HTMLImageElement | null>
-  src: string
-  initialFront: boolean
-  onError: () => void
-}
-function ImgLayer({ z, elRef, src, initialFront, onError }: ImgLayerProps) {
-  if (!src) return null
-  return (
-    <img
-      ref={elRef}
-      src={src}
-      onError={onError}
-      alt=""
-      draggable={false}
-      className="hero-image absolute max-w-full max-h-full w-auto h-auto"
-      style={{
-        zIndex: z,
-        objectFit: 'contain',
-        opacity: initialFront ? 1 : 0,
-        left: '50%', top: '50%',
-        transform: 'translate(-50%, -50%)',
-      }}
-    />
-  )
-}
+// Hilf für TS-strict — HERO_FALLBACK wird in Pre-Resolve-Logik referenziert
+void HERO_FALLBACK

@@ -20,7 +20,6 @@ export function HotspotOverlay() {
   const view = useScene((s) => s.view)
   const setHover = useScene((s) => s.setHoverHotspot)
   const openFloor = useScene((s) => s.openFloor)
-  const setActiveHotspot = useScene((s) => s.setActiveHotspot)
 
   const targetFloor = VIEW_TO_FLOOR[view]
   const visible = HOTSPOTS.filter((h) => {
@@ -37,13 +36,7 @@ export function HotspotOverlay() {
           delaySec={i * 0.32}
           onEnter={() => setHover(h.id)}
           onLeave={() => setHover(null)}
-          onClick={() => {
-            if (h.floor === 'plaza') {
-              setActiveHotspot(h.id)
-            } else {
-              openFloor(h.floor, h.id)
-            }
-          }}
+          onClick={() => openFloor(h.floor, h.id)}
         />
       ))}
     </>

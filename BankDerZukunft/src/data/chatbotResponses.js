@@ -10,6 +10,17 @@ export const QUICK_PROMPTS = [
   { key: 'angebote',         label: 'Welche Angebote bietet Deloitte?' },
 ]
 
+// Follow-up Vorschläge je Antwort-Key — was der User als Nächstes
+// fragen könnte. Maximal 3 Chips pro Antwort.
+export const FOLLOWUPS = {
+  'bank-der-zukunft': ['kunde', 'betriebsmodell', 'transformation'],
+  'kunde':            ['betriebsmodell', 'angebote', 'transformation'],
+  'betriebsmodell':   ['transformation', 'angebote', 'bank-der-zukunft'],
+  'transformation':   ['angebote', 'betriebsmodell', 'bank-der-zukunft'],
+  'angebote':         ['transformation', 'betriebsmodell', 'kunde'],
+  'default':          ['bank-der-zukunft', 'kunde', 'angebote'],
+}
+
 // Mapping User-Eingabe → Antwort-Key. Erst exakter Quick-Prompt-Treffer,
 // dann Keyword-Matching, sonst Default.
 export function matchPromptKey(text) {

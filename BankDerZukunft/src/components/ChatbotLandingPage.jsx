@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, forwardRef } from 'react'
 import { Send, Bot, Sparkles, Home, ArrowRight, Loader2, User } from 'lucide-react'
-import { DEMO_RESPONSES, QUICK_PROMPTS, matchPromptKey } from '../data/chatbotResponses.js'
+import { DEMO_RESPONSES, QUICK_PROMPTS, FOLLOWUPS, matchPromptKey } from '../data/chatbotResponses.js'
 import { formatChatHtml } from '../utils/formatChatHtml.js'
 
 // Workshop-Chatbot — die Default-Landing-View. User schreibt eine Frage,
@@ -28,9 +28,14 @@ export default function ChatbotLandingPage() {
     setMessages((m) => [...m, { role: 'user', content: q }])
     setThinking(true)
     setTimeout(() => {
-      setMessages((m) => [...m, { role: 'assistant', content: answer.text, badge: answer.badge }])
+      setMessages((m) => [...m, { role: 'assistant', content: answer.text, badge: answer.badge, responseKey: key }])
       setThinking(false)
     }, 1100)
+  }
+
+  function sendQuickPrompt(promptKey) {
+    const p = QUICK_PROMPTS.find((q) => q.key === promptKey)
+    if (p) send(p.label)
   }
 
   function handleKey(e) {
@@ -72,6 +77,7 @@ export default function ChatbotLandingPage() {
             messages={messages}
             thinking={thinking}
             onOpenHouse={() => { window.location.hash = '#/haus' }}
+            onFollowUp={sendQuickPrompt}
           />
 
           {/* Eingabefeld + Quick Prompts */}
@@ -90,7 +96,7 @@ export default function ChatbotLandingPage() {
 }
 
 // ── ChatScroll ──────────────────────────────────────────────────
-const ChatScroll = forwardRef(function ChatScroll({ messages, thinking, onOpenHouse }, ref) {
+const ChatScroll = forwardRef(function ChatScroll({ messages, thinking, onOpenHouse, onFollowUp }, ref) {
   if (messages.length === 0 && !thinking) return <HeroEmptyState onOpenHouse={onOpenHouse} />
   return (
     <div ref={ref} className="flex-1 overflow-y-auto pr-2 space-y-4 mb-4 bdz-chat-scroll">
@@ -101,8 +107,10 @@ const ChatScroll = forwardRef(function ChatScroll({ messages, thinking, onOpenHo
           key={i}
           text={m.content}
           badge={m.badge}
+          responseKey={m.responseKey}
           showHouseCta={i === messages.length - 1}
           onOpenHouse={onOpenHouse}
+          onFollowUp={onFollowUp}
         />
       ))}
       {thinking && <ThinkingBubble />}
@@ -154,8 +162,11 @@ function UserBubble({ text }) {
   )
 }
 
-function AssistantBubble({ text, badge, showHouseCta, onOpenHouse }) {
+function AssistantBubble({ text, badge, responseKey, showHouseCta, onOpenHouse, onFollowUp }) {
   const html = formatChatHtml(text)
+  const followUps = (FOLLOWUPS[responseKey] || [])
+    .map((k) => QUICK_PROMPTS.find((p) => p.key === k))
+    .filter(Boolean)
   return (
     <div className="flex gap-2">
       <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)' }}>
@@ -168,9 +179,27 @@ function AssistantBubble({ text, badge, showHouseCta, onOpenHouse }) {
           </div>
         )}
         <div className="bdz-chat-html" dangerouslySetInnerHTML={{ __html: html }} />
+
+        {followUps.length > 0 && (
+          <div className="mt-4 pt-3 border-t border-slate-200">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Weiterfragen</div>
+            <div className="flex flex-wrap gap-1.5">
+              {followUps.map((p) => (
+                <button
+                  key={p.key}
+                  onClick={() => onFollowUp?.(p.key)}
+                  className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs px-3 py-1 transition-colors"
+                >
+                  {p.label} <ArrowRight size={11} />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {showHouseCta && (
-          <div className="mt-4 pt-3 border-t border-slate-200 flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-slate-500">Mehr Kontext?</span>
+          <div className="mt-3 pt-3 border-t border-slate-200 flex items-center gap-2 flex-wrap">
+            <span className="text-xs text-slate-500">Visuell?</span>
             <button onClick={onOpenHouse} className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-slate-700 transition-colors">
               <Home size={12} /> Bank der Zukunft als Haus
               <ArrowRight size={12} />

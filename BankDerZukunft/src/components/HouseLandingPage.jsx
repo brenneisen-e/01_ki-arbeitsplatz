@@ -130,12 +130,6 @@ export default function HouseLandingPage() {
             <ellipse cx="45" cy="300" rx="40" ry="14" fill="white" />
           </g>
 
-          {/* Vogel-Schwarm (3 kleine V-Formen) */}
-          <g className="bdz-bird" opacity="0.7">
-            <path d="M0,260 q5,-6 10,0 q5,-6 10,0" stroke="#cbd5e1" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-            <path d="M30,275 q5,-6 10,0 q5,-6 10,0" stroke="#cbd5e1" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-            <path d="M-10,290 q5,-6 10,0 q5,-6 10,0" stroke="#cbd5e1" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-          </g>
 
           <rect x="0" y="720" width="1600" height="180" fill="url(#bdz-ground)" />
           <rect x="0" y="720" width="1600" height="3" fill="#0a1410" />
@@ -349,12 +343,11 @@ export default function HouseLandingPage() {
             </text>
           </g>
 
-          {/* Vorbeilaufende Personen (auf Boden vor dem Haus) */}
+          {/* Vorbeilaufende Personen — ohne Sprechblasen (zu unruhig im Bild) */}
           {[
-            { id: 'p1', dir: 'r', shirt: '#3b82f6', skin: '#fbbf24', y: 850, dur: 32, delay: 0,   say: 'Embedded Finance!' },
-            { id: 'p2', dir: 'l', shirt: '#10b981', skin: '#fde68a', y: 870, dur: 38, delay: 8,   say: 'Token-Fonds zeichnen' },
-            { id: 'p3', dir: 'r', shirt: '#a78bfa', skin: '#fcd34d', y: 835, dur: 42, delay: 17,  say: 'KI-Avatar war top' },
-            { id: 'p4', dir: 'l', shirt: '#f43f5e', skin: '#fbbf24', y: 855, dur: 36, delay: 24,  say: 'Process Mining 22% gespart' },
+            { id: 'p1', dir: 'r', shirt: '#3b82f6', skin: '#fbbf24', y: 850, dur: 38, delay: 0  },
+            { id: 'p2', dir: 'l', shirt: '#10b981', skin: '#fde68a', y: 870, dur: 46, delay: 12 },
+            { id: 'p3', dir: 'r', shirt: '#a78bfa', skin: '#fcd34d', y: 835, dur: 50, delay: 24 },
           ].map((p) => (
             <g
               key={p.id}
@@ -363,26 +356,16 @@ export default function HouseLandingPage() {
               pointerEvents="none"
             >
               <g transform={`translate(0, ${p.y})`}>
-                <g className="bdz-bob">
-                  {/* Sprechblase */}
-                  <g transform="translate(0, -52)" className="bdz-bubble" style={{ animationDelay: `${(p.delay * 0.5) % 12}s` }}>
-                    <rect x="-58" y="-20" width="116" height="20" rx="10" fill="white" stroke="#0f172a" strokeWidth="1" />
-                    <polygon points="-5,0 5,0 0,7" fill="white" stroke="#0f172a" strokeWidth="1" />
-                    <text x="0" y="-6" textAnchor="middle" fontSize="9" fill="#0f172a" fontFamily="DM Sans, sans-serif">
-                      {p.say}
-                    </text>
-                  </g>
-                  {/* Kopf */}
-                  <circle cx="0" cy="-26" r="7" fill={p.skin} stroke="#0f172a" strokeWidth="1" />
-                  {/* Körper */}
-                  <rect x="-7" y="-19" width="14" height="20" rx="3" fill={p.shirt} />
-                  {/* Arme */}
-                  <rect x="-10" y="-17" width="3" height="14" fill={p.shirt} className={p.dir === 'r' ? 'bdz-arm-1' : 'bdz-arm-2'} />
-                  <rect x="7"   y="-17" width="3" height="14" fill={p.shirt} className={p.dir === 'r' ? 'bdz-arm-2' : 'bdz-arm-1'} />
-                  {/* Beine */}
-                  <rect x="-5" y="1" width="3.5" height="14" fill="#1e293b" className={p.dir === 'r' ? 'bdz-leg-1' : 'bdz-leg-2'} />
-                  <rect x="1.5" y="1" width="3.5" height="14" fill="#1e293b" className={p.dir === 'r' ? 'bdz-leg-2' : 'bdz-leg-1'} />
-                </g>
+                {/* Kopf */}
+                <circle cx="0" cy="-26" r="7" fill={p.skin} stroke="#0f172a" strokeWidth="1" />
+                {/* Körper */}
+                <rect x="-7" y="-19" width="14" height="20" rx="3" fill={p.shirt} />
+                {/* Arme */}
+                <rect x="-10" y="-17" width="3" height="14" fill={p.shirt} className={p.dir === 'r' ? 'bdz-arm-1' : 'bdz-arm-2'} />
+                <rect x="7"   y="-17" width="3" height="14" fill={p.shirt} className={p.dir === 'r' ? 'bdz-arm-2' : 'bdz-arm-1'} />
+                {/* Beine */}
+                <rect x="-5" y="1" width="3.5" height="14" fill="#1e293b" className={p.dir === 'r' ? 'bdz-leg-1' : 'bdz-leg-2'} />
+                <rect x="1.5" y="1" width="3.5" height="14" fill="#1e293b" className={p.dir === 'r' ? 'bdz-leg-2' : 'bdz-leg-1'} />
               </g>
             </g>
           ))}

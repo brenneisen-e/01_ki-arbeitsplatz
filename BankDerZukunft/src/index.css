@@ -196,12 +196,12 @@ body {
 .bdz-cloud-2 { animation: bdz-cloud-drift 130s linear infinite; animation-delay: -40s; }
 .bdz-cloud-3 { animation: bdz-cloud-drift 110s linear infinite; animation-delay: -75s; }
 
-/* Sterne pulsieren */
-@keyframes bdz-twinkle {
-  0%, 100% { opacity: 0.2; }
-  50%      { opacity: 0.9; }
+/* Sterne pulsieren — sehr dezent damit es nicht flimmert */
+@keyframes bdz-twinkle-soft {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 0.8; }
 }
-.bdz-twinkle { animation: bdz-twinkle 3s ease-in-out infinite; }
+.bdz-twinkle { animation: bdz-twinkle-soft 8s ease-in-out infinite; }
 
 /* Fenster-Glow rhythmisch */
 @keyframes bdz-window-glow {

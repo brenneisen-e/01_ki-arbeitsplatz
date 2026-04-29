@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { useScene, type SceneView } from '../../hooks/useScene'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 
 interface HeroProps {
   overlay?: (bounds: { width: number; height: number }, view: SceneView) => ReactNode
@@ -14,22 +15,27 @@ const VIEW_TO_BASE: Record<SceneView, string> = {
   'plaza':           'assets/scene/outdoor-plaza',
 }
 
-const HERO_PRIMARY = `${VIEW_TO_BASE.hero}.webp`
-const HERO_FALLBACK = `${VIEW_TO_BASE.hero}.png`
+const HERO_POSTER = `${VIEW_TO_BASE.hero}.png`
+const HERO_VIDEO_WEBM = 'assets/scene/hero-loop.webm'
+const HERO_VIDEO_MP4  = 'assets/scene/hero-loop.mp4'
 
-function srcForView(v: SceneView): string {
+function imgSrcFor(v: SceneView): string {
   return `${VIEW_TO_BASE[v]}.webp`
 }
 
 export function Hero({ overlay }: HeroProps) {
   const view = useScene((s) => s.view)
-  const aRef = useRef<HTMLImageElement | null>(null)
-  const bRef = useRef<HTMLImageElement | null>(null)
-  // Beide Layer rendern IMMER (auch initial), damit die Refs verfügbar sind.
-  // 'a' beginnt als Vorder-Layer mit dem Hero-Bild.
-  const [aSrc, setASrc] = useState<string>(HERO_PRIMARY)
-  const [bSrc, setBSrc] = useState<string>(HERO_PRIMARY)
-  const [front, setFront] = useState<'a' | 'b'>('a')
+  const reduced = useReducedMotion()
+
+  const heroLayerRef = useRef<HTMLDivElement | null>(null)
+  const detailRef = useRef<HTMLImageElement | null>(null)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const heroPosterRef = useRef<HTMLImageElement | null>(null)
+  const [videoFailed, setVideoFailed] = useState(false)
+
+  // Welcher Layer ist „vorne"?
+  const [front, setFront] = useState<'hero' | 'detail'>('hero')
+  const [detailSrc, setDetailSrc] = useState<string>(imgSrcFor('hero'))
   const [bounds, setBounds] = useState<{ width: number; height: number } | null>(null)
   const lastViewRef = useRef<SceneView>('hero')
 
@@ -38,81 +44,116 @@ export function Hero({ overlay }: HeroProps) {
     if (view === lastViewRef.current) return
     console.log('[Hero] view change', lastViewRef.current, '→', view)
     lastViewRef.current = view
-    const back = front === 'a' ? 'b' : 'a'
-    const newSrc = srcForView(view)
-    const backSetter = back === 'a' ? setASrc : setBSrc
-    const backEl = back === 'a' ? aRef.current : bRef.current
-    const frontEl = front === 'a' ? aRef.current : bRef.current
-    if (!backEl || !frontEl) {
-      console.warn('[Hero] missing layer ref, skip fade', { backEl, frontEl, front, back })
-      return
-    }
-    backSetter(newSrc)
+    const heroEl = heroLayerRef.current
+    const detEl = detailRef.current
+    if (!heroEl || !detEl) return
 
-    const onReady = () => {
-      console.log('[Hero] back layer ready, fading', { back, src: backEl.currentSrc || backEl.src })
-      gsap.killTweensOf([backEl, frontEl])
-      gsap.set(backEl, { opacity: 0 })
-      gsap.to(backEl,  { opacity: 1, duration: 0.6, ease: 'expo.out' })
-      gsap.to(frontEl, { opacity: 0, duration: 0.6, ease: 'expo.out', onComplete: () => setFront(back) })
-    }
-    if (backEl.complete && backEl.naturalWidth > 0 && (backEl.currentSrc || backEl.src).includes(newSrc.split('/').pop()!.replace('.webp', ''))) {
-      // Bild war schon im Browser-Cache (Preload) → sofort fade
-      onReady()
+    if (view === 'hero') {
+      gsap.killTweensOf([heroEl, detEl])
+      gsap.to(heroEl, { opacity: 1, duration: 0.6, ease: 'expo.out' })
+      gsap.to(detEl,  { opacity: 0, duration: 0.6, ease: 'expo.out', onComplete: () => setFront('hero') })
+      // Video wieder starten
+      videoRef.current?.play().catch(() => {})
     } else {
-      backEl.addEventListener('load', onReady, { once: true })
-    }
-    return () => backEl.removeEventListener('load', onReady)
-  }, [view, front])
+      // Detail-Bild für die neue View laden, dann fade
+      const newSrc = imgSrcFor(view)
+      setDetailSrc(newSrc)
 
-  // ResizeObserver auf das aktuell sichtbare (gerenderte) Bild
+      const onReady = () => {
+        gsap.killTweensOf([heroEl, detEl])
+        gsap.to(detEl,  { opacity: 1, duration: 0.6, ease: 'expo.out' })
+        gsap.to(heroEl, { opacity: 0, duration: 0.6, ease: 'expo.out', onComplete: () => {
+          setFront('detail')
+          // Video pausieren, GPU schonen
+          videoRef.current?.pause()
+        } })
+      }
+      // Falls bereits geladen (preload-cache) → sofort
+      if (detEl.complete && detEl.naturalWidth > 0 && detEl.src.includes(newSrc.split('/').pop()!.replace('.webp', ''))) {
+        onReady()
+      } else {
+        detEl.addEventListener('load', onReady, { once: true })
+        return () => detEl.removeEventListener('load', onReady)
+      }
+    }
+  }, [view])
+
+  // Bounds messen — vom aktuell sichtbaren Element (Video oder Bild)
   useEffect(() => {
-    const el = front === 'a' ? aRef.current : bRef.current
-    if (!el) return
+    const targetEl: HTMLElement | null = front === 'hero'
+      ? (videoRef.current ?? heroPosterRef.current)
+      : detailRef.current
+    if (!targetEl) return
     const measure = () => {
-      const r = el.getBoundingClientRect()
+      const r = targetEl.getBoundingClientRect()
       if (r.width > 0 && r.height > 0) setBounds({ width: r.width, height: r.height })
     }
     measure()
     const ro = new ResizeObserver(measure)
-    ro.observe(el)
+    ro.observe(targetEl)
     window.addEventListener('resize', measure)
     return () => { ro.disconnect(); window.removeEventListener('resize', measure) }
-  }, [front, aSrc, bSrc])
+  }, [front, videoFailed, reduced, detailSrc])
 
-  function handleErr(layer: 'a' | 'b') {
-    const cur = layer === 'a' ? aSrc : bSrc
-    const setSrc = layer === 'a' ? setASrc : setBSrc
-    if (cur.endsWith('.webp')) {
-      console.warn(`[Hero] webp missing, fallback .png:`, cur)
-      setSrc(cur.replace(/\.webp$/, '.png'))
+  function handleDetailErr() {
+    if (detailSrc.endsWith('.webp')) {
+      console.warn('[Hero] webp fehlt, fallback .png:', detailSrc)
+      setDetailSrc(detailSrc.replace(/\.webp$/, '.png'))
     } else {
-      console.error(`[Hero] image failed:`, cur)
+      console.error('[Hero] detail-Bild Fehler:', detailSrc)
     }
+  }
+
+  const useVideo = !reduced && !videoFailed
+  const sharedStyle = {
+    objectFit: 'contain' as const, left: '50%', top: '50%',
+    transform: 'translate(-50%, -50%)',
   }
 
   return (
     <div className="hero-stage relative w-full h-full flex items-center justify-center overflow-hidden">
+      {/* Hero-Layer (Video + Poster) */}
+      <div ref={heroLayerRef} className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 1, opacity: front === 'hero' ? 1 : 0 }}>
+        {useVideo ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster={HERO_POSTER}
+            aria-label="Animierter Querschnitt: Bank der Zukunft 2035"
+            onError={() => { console.warn('[Hero] video error → fallback poster'); setVideoFailed(true) }}
+            className="hero-image absolute max-w-full max-h-full w-auto h-auto"
+            style={sharedStyle}
+          >
+            <source src={HERO_VIDEO_WEBM} type="video/webm" />
+            <source src={HERO_VIDEO_MP4}  type="video/mp4"  />
+          </video>
+        ) : (
+          <img
+            ref={heroPosterRef}
+            src={HERO_POSTER}
+            alt=""
+            draggable={false}
+            className="hero-image absolute max-w-full max-h-full w-auto h-auto"
+            style={sharedStyle}
+          />
+        )}
+      </div>
+
+      {/* Detail-Layer (immer Bild) */}
       <img
-        ref={aRef}
-        src={aSrc === HERO_PRIMARY ? HERO_PRIMARY : aSrc}
-        onError={() => handleErr('a')}
-        onLoad={() => { if (front === 'a' && aRef.current) {
-          const r = aRef.current.getBoundingClientRect()
-          if (r.width > 0 && r.height > 0) setBounds({ width: r.width, height: r.height })
-        } }}
+        ref={detailRef}
+        src={detailSrc}
+        onError={handleDetailErr}
         alt="" draggable={false}
         className="hero-image absolute max-w-full max-h-full w-auto h-auto"
-        style={{ zIndex: 1, objectFit: 'contain', opacity: front === 'a' ? 1 : 0, left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+        style={{ zIndex: 2, opacity: front === 'detail' ? 1 : 0, ...sharedStyle }}
       />
-      <img
-        ref={bRef}
-        src={bSrc}
-        onError={() => handleErr('b')}
-        alt="" draggable={false}
-        className="hero-image absolute max-w-full max-h-full w-auto h-auto"
-        style={{ zIndex: 2, objectFit: 'contain', opacity: front === 'b' ? 1 : 0, left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
-      />
+
+      {/* Hotspot-Overlay sitzt EXAKT auf dem gerenderten Vorder-Element */}
       {overlay && bounds && (
         <div
           className="absolute pointer-events-none"
@@ -124,6 +165,3 @@ export function Hero({ overlay }: HeroProps) {
     </div>
   )
 }
-
-// Hilf für TS-strict — HERO_FALLBACK wird in Pre-Resolve-Logik referenziert
-void HERO_FALLBACK

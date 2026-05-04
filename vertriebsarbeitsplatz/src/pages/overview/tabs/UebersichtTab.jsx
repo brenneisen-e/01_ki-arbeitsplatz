@@ -706,7 +706,7 @@ export default function UebersichtTab() {
         foto: getKundeFoto(peter.id),
         datum: appt.toISOString().slice(0, 10),
         zeit: formatAppointmentTime(appt),
-        betreff: t('buNachversicherungFamilienCheck'),
+        betreff: t('versicherungsOptimierungstermin'),
         istNeuZugestimmt: true,
       };
     }

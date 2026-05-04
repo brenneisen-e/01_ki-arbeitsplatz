@@ -430,6 +430,7 @@ const translationsOverview = {
   // ─── Banking Übersicht: Termine ───
   'kreditgespraechImmoFinanzierung': { de: 'Kreditgespräch Immobilienfinanzierung', en: 'Property-financing meeting' },
   'buNachversicherungFamilienCheck': { de: 'BU-Nachversicherung & Familien-Check', en: 'DI top-up & family check' },
+  'versicherungsOptimierungstermin': { de: 'Versicherungs-Optimierung: KFZ, Haftpflicht-Bündel & Familienabsicherung', en: 'Insurance optimisation: motor, liability bundle & family cover' },
 };
 
 export default translationsOverview;

@@ -27,7 +27,14 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
     : getSimulatedAppointment();
   const { navigateTo } = useMode();
   const isKlausImmo = kunde?.id === 'BK00001' && (!termin?.betreff || /immobilien|kredit/i.test(termin.betreff));
-  const terminTitel = termin?.betreff || (isKlausImmo ? 'Kreditgespräch Immobilienfinanzierung' : 'Beratungstermin');
+  // Insurance-Klaus-Showcase: Open-Finance-getriebene KFZ/Haftpflicht/Familienabsicherung-Demo.
+  // Greift, wenn der Kunde KD00001 (Versicherungs-Klaus) ist — der heroTermin
+  // bei „Nacht simulieren" trägt automatisch den Optimierungs-Betreff, kann
+  // aber auch fehlen, dann fallen wir auf einen sinnvollen Default zurück.
+  const isKlausVersicherung = kunde?.id === 'KD00001' && (!termin?.betreff || /optimierung|kfz|haftpflicht|familien|versicherung/i.test(termin.betreff));
+  const terminTitel = termin?.betreff || (isKlausImmo
+    ? 'Kreditgespräch Immobilienfinanzierung'
+    : (isKlausVersicherung ? 'Versicherungs-Optimierung: KFZ, Haftpflicht-Bündel & Familienabsicherung' : 'Beratungstermin'));
 
   // KI-Generierung simulieren
   useEffect(() => {
@@ -110,6 +117,15 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                   Die drei erkannten Signale — auslaufender Ratenkredit bei der Commerzbank, zuteilungsreifer
                   Bausparvertrag und langjähriges Newsletter-Interesse — bilden einen sehr
                   starken Vertriebsimpuls für ein Erstgespräch zur Immobilienfinanzierung.</>
+                ) : isKlausVersicherung ? (
+                  <>Klaus Fischer (42) ist seit 2018 Kunde, verheiratet mit Sarah, zwei Kinder
+                  (Lina, 7 und Max, 1), wohnt im EFH (145 m²) in Köln. Nettoeinkommen 4.200 €/Mon.
+                  Auslöser des Termins: Über die Open-Finance-Einwilligung wurden drei konkrete
+                  Optimierungsgelegenheiten erkannt — die HUK-KFZ-Vollkasko liegt rund 160 €/J. über
+                  unserem Tarif, die Haftpflicht läuft separat bei einem Drittanbieter und ließe sich
+                  ohne Mehrkosten ins Bündel überführen, und die Familienabsicherung weist mehrere
+                  bekannte Lücken auf (BU 1.800 €/Mon. unter Bedarf, Hausrat unterversichert,
+                  keine Familien-Unfallversicherung).</>
                 ) : (
                   <>{kunde?.name}{kunde?.alter ? ` (${kunde.alter})` : ''}
                   {kunde?.eigeneProdukte?.[0]?.seit ? ` ist seit ${kunde.eigeneProdukte[0].seit.slice(0,4)} Kunde` : ' ist Kunde'}
@@ -134,6 +150,19 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                   <KPI label="Bauspar-Zuteilung (Q2/2026)" value="30.000 €" accent="text-emerald-600" />
                   <KPI label="VR-Sparkonto" value="15.000 €" />
                   <KPI label="Machbarer Kreditrahmen (ca.)" value="250.000 €" accent="text-indigo-600" />
+                </div>
+              </Section>
+            )}
+
+            {/* Kennzahlen — Klaus-Versicherung-Story (KFZ + Haftpflicht + Familie) */}
+            {isKlausVersicherung && (
+              <Section color="slate">
+                <SectionTitle icon={FileText} label="Schlüssel-Kennzahlen" color="slate" />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm pt-2">
+                  <KPI label="HUK KFZ-Vollkasko (heute)" value="780 €/J." accent="text-amber-700" />
+                  <KPI label="Unser Partner-Tarif" value="620 €/J." accent="text-emerald-600" />
+                  <KPI label="Ersparnis KFZ" value="−160 €/J." accent="text-emerald-700" />
+                  <KPI label="Bündel-Effekt Haftpflicht" value="ohne Mehrkosten" accent="text-emerald-600" />
                 </div>
               </Section>
             )}
@@ -232,6 +261,19 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               </Section>
             )}
 
+            {/* Ziele — Versicherung-Klaus */}
+            {isKlausVersicherung && (
+              <Section color="amber">
+                <SectionTitle icon={Target} label="Gesprächsziele" color="amber" />
+                <ul className="list-disc list-inside text-sm text-slate-700 space-y-1 pt-2 pl-1">
+                  <li>KFZ-Wechsel zur Zukunftsversicherung greifbar machen (160 €/J. Ersparnis).</li>
+                  <li>Haftpflicht ins Bündel überführen — Vorteil ohne Mehrkosten zeigen.</li>
+                  <li>Offene Familien-Lücken (BU-Höhe, Hausrat, Unfall) anhand der Open-Finance-Daten priorisieren.</li>
+                  <li>Konkretes Bündel-Angebot inkl. Bestandskunden-Bonus innerhalb von 5 Tagen versenden.</li>
+                </ul>
+              </Section>
+            )}
+
             {/* Gesprächsleitfaden — nur für die Klaus-Immo-Demo mit
                 ausformuliertem Skript. Andere Termine bekommen einen
                 generischen Phasen-Leitfaden weiter unten. */}
@@ -273,8 +315,23 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             </Section>
             )}
 
+            {/* Versicherungs-Klaus-Showcase: ausformulierter Leitfaden */}
+            {isKlausVersicherung && (
+              <Section color="violet">
+                <SectionTitle icon={MessageSquare} label="Gesprächsleitfaden" color="violet" />
+                <div className="space-y-2 pt-2">
+                  <LeitfadenStep nr={1} title="Warm-up & Beziehung" text="Kurzer persönlicher Einstieg, Familie ansprechen (Sarah, Lina 7, Max 1). An die letzte Mail anknüpfen, kurz erläutern, was Open Finance konkret leistet." />
+                  <LeitfadenStep nr={2} title="Open-Finance-Befund spiegeln" text={'„Mit Ihrer Einwilligung sehen wir Ihre Verträge bei HUK und dem Haftpflicht-Anbieter. Drei Punkte sind aufgefallen…“ — die drei Befunde nennen, ohne Bewertung.'} />
+                  <LeitfadenStep nr={3} title="Zahlenbeispiel KFZ" text="Direktvergleich HUK 780 € vs. Zukunftsversicherung 620 € (gleiche Deckung, SF-12, 500 € SB). Differenz greifbar machen: 160 €/J. = ein Familien-Restaurantbesuch im Monat." />
+                  <LeitfadenStep nr={4} title="Bündel-Effekt Haftpflicht" text="Zeigen, dass die Haftpflicht im Bündel ohne Mehrkosten enthalten ist. Argument: Ein Ansprechpartner, ein Schadensprozess, kein Doppelpapier." />
+                  <LeitfadenStep nr={5} title="Familien-Absicherung" text="Auf die bekannten Lücken eingehen: BU-Anpassung (heute 1.800 €/Mon. — Bedarf 3.360 €), Hausrat (Vertrag auf 65 m² statt 145 m² EFH), Familien-Unfall. Priorität gemeinsam festlegen." />
+                  <LeitfadenStep nr={6} title="Entscheidung & Nächste Schritte" text="Bündel-Angebot innerhalb 5 Tagen, Folgetermin (Detailgespräch BU + Hausrat) in 3 Wochen, Wechselformular HUK-KFZ direkt mitnehmen." />
+                </div>
+              </Section>
+            )}
+
             {/* Generischer Phasen-Leitfaden für alle anderen Termine */}
-            {!isKlausImmo && (
+            {!isKlausImmo && !isKlausVersicherung && (
               <Section color="violet">
                 <SectionTitle icon={MessageSquare} label="Gesprächsleitfaden" color="violet" />
                 <div className="space-y-2 pt-2">
@@ -310,6 +367,64 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               ))}
               </ul>
             </Section>
+            )}
+
+            {/* Mögliche Fragen — Versicherung-Klaus */}
+            {isKlausVersicherung && (
+              <Section color="rose">
+                <SectionTitle icon={HelpCircle} label="Mögliche Fragen des Kunden" color="rose" />
+                <ul className="space-y-1.5 pt-2">
+                  {[
+                    { q: 'Heißt das, ihr habt jetzt vollen Einblick in alle meine Versicherungen?', a: 'Nur in die Verträge, für die Sie explizit eingewilligt haben. Sie können den Zugriff jederzeit im Kundenportal entziehen.' },
+                    { q: 'Ist die Deckung im Partner-Tarif wirklich identisch zur HUK?', a: 'Ja — gleiche SB (500 €), SF-12, dieselben Bausteine (Vollkasko, Schutzbrief, GAP). Wir vergleichen die Bedingungen Zeile für Zeile vor Wechsel.' },
+                    { q: 'Was passiert, wenn ich die HUK kündige und die neue Police nicht zustande kommt?', a: 'Wir kündigen erst, wenn die neue Police aktiviert ist — keine Deckungslücke, kein Risiko.' },
+                    { q: 'Lohnt sich der Wechsel der Haftpflicht überhaupt, wenn er mich nicht spart?', a: 'Der Vorteil ist nicht der Preis, sondern der Service: Ein Ansprechpartner, ein Schadensprozess, gemeinsamer Bestandsbonus für die ganze Familie.' },
+                    { q: 'Reden wir über Bündel oder über meine BU?', a: 'Beides — der Wechsel ist heute der Anlass, die offenen Familienthemen (BU, Hausrat, Unfall) sind aber das größere Thema. Die nehmen wir Schritt für Schritt mit.' },
+                  ].map((item, i) => (
+                    <li key={i} className="rounded-lg border border-rose-200 bg-white px-3 py-2">
+                      <div className="text-sm font-medium text-slate-700 flex items-start gap-2">
+                        <HelpCircle size={14} className="text-rose-500 mt-0.5 shrink-0" />
+                        <span>{item.q}</span>
+                      </div>
+                      <div className="text-xs text-slate-500 mt-1 pl-6">→ {item.a}</div>
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            )}
+
+            {/* To-Dos VOR / NACH — Versicherung-Klaus */}
+            {isKlausVersicherung && (
+              <Section color="sky">
+                <SectionTitle icon={CheckSquare} label="To-Dos VOR dem Termin" color="sky" />
+                <div className="pt-2">
+                  <TodoList
+                    items={[
+                      'Bedingungen HUK KFZ-Vollkasko vs. Zukunftsversicherung Tarif Komfort vergleichen (Zeile für Zeile).',
+                      'Kalkulation Bündel-Effekt KFZ + Haftpflicht + Hausrat ausdrucken.',
+                      'BU-Bedarfsrechnung mit aktuellem Nettoeinkommen 4.200 €/Mon. aktualisieren.',
+                      'Familien-Unfall-Tarif (Familie 4 Personen) als Sofort-Angebot vorbereiten.',
+                      'Wechsel-Vollmacht HUK ausdrucken, damit Kündigung sofort übergeben werden kann.',
+                    ]}
+                  />
+                </div>
+              </Section>
+            )}
+            {isKlausVersicherung && (
+              <Section color="emerald">
+                <SectionTitle icon={ListChecks} label="To-Dos NACH dem Termin" color="emerald" />
+                <div className="pt-2">
+                  <TodoList
+                    items={[
+                      'Gesprächsnotiz inkl. Bestands-Befund (KFZ/Haftpflicht/Familie) in der Akte ablegen.',
+                      'Bündel-Angebot innerhalb von 5 Tagen versenden.',
+                      'Wechsel HUK-KFZ initiieren, Bestätigung der neuen Police abwarten, dann Kündigung absenden.',
+                      'Folgetermin BU-Anpassung + Hausrat-Update in 3 Wochen einplanen.',
+                      'Lead-Status im Pipeline-Board auf „Angebot" setzen.',
+                    ]}
+                  />
+                </div>
+              </Section>
             )}
 
             {/* To-Dos vor + nach dem Termin (nur Klaus-Demo, weil sehr spezifisch) */}

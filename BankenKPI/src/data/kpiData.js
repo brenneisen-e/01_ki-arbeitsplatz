@@ -139,7 +139,19 @@ export const KPI_VALUES = {
 
 // 12-Monats-Historie pro KPI x Segment, generiert aus dem aktuellen Ist-Wert
 // mit deterministischer Variation um den Plan herum (Seed je KPI/Segment).
-const MONTHS = ['Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
+// Die Monatsachse endet auf dem aktuellen Monat, damit der Chart-Endpunkt
+// zum „Stand"-Datum im Header passt.
+const MONTH_LABELS = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+
+function buildMonthAxis() {
+  const now = new Date();
+  const out = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    out.push(MONTH_LABELS[d.getMonth()]);
+  }
+  return out;
+}
 
 function seedHash(str) {
   let h = 2166136261;
@@ -161,6 +173,7 @@ export function buildHistory(kpiId, segmentId) {
   const target = cell.ist;
   const plan = cell.plan;
   const span = Math.abs(plan) > 0.0001 ? Math.abs(plan) * 0.18 : Math.max(Math.abs(target) * 0.1, 0.5);
+  const months = buildMonthAxis();
   const out = [];
   for (let i = 0; i < 12; i++) {
     const t = i / 11;
@@ -168,7 +181,7 @@ export function buildHistory(kpiId, segmentId) {
     const drift = (target - plan) * t;
     const val = plan + drift + noise;
     out.push({
-      month: MONTHS[i],
+      month: months[i],
       ist: Math.round(val * 100) / 100,
       plan: Math.round(plan * 100) / 100,
     });

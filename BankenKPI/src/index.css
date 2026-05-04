@@ -60,6 +60,70 @@
   contain: layout style;
 }
 
+/* === Institut/Bank-Dropdown (analog HR Pipeline) ============= */
+.hp-institut-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 280px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  padding: 8px;
+  z-index: 100;
+  animation: hp-dropdown-in 0.15s ease;
+}
+
+@keyframes hp-dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hp-institut-dropdown-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 12px 6px;
+}
+
+.hp-institut-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.hp-institut-option:hover { background: #f8fafc; }
+.hp-institut-option.active { background: #f1f5f9; }
+
+.hp-institut-option-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.hp-institut-option-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: white;
+}
+
 .bank-logo-chip {
   display: inline-flex;
   align-items: center;

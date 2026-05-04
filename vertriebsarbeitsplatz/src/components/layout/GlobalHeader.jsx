@@ -289,7 +289,7 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
                   }, 850);
                 }, 1600);
               }}
-              title="Demo-Zeitmaschine: einen Tag weiter springen"
+              title={t('demoZeitmaschineTitle')}
               className={clsx(
                 'p-2 rounded-lg text-white transition-colors relative',
                 dayAdvanced ? 'bg-emerald-500/40 hover:bg-emerald-500/50' : 'bg-white/10 hover:bg-white/20'
@@ -310,9 +310,7 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
           </button>
           <button
             onClick={() => {
-              const ok = window.confirm(
-                'Demo-Daten zurücksetzen?\n\nLöscht alle lokalen Anpassungen (z. B. bestätigte Haustiere, Header-Bild, Demo-Zeitmaschine) und lädt die Seite neu. Die ursprünglichen Demo-Datensätze bleiben unverändert.'
-              );
+              const ok = window.confirm(t('demoDatenZuruecksetzenConfirm'));
               if (!ok) return;
               try {
                 const keys = [];
@@ -324,7 +322,7 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
               } catch {}
               window.location.reload();
             }}
-            title="Demo-Daten zurücksetzen (lokale Anpassungen löschen)"
+            title={t('demoDatenZuruecksetzenTitle')}
             className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
           >
             <RotateCcw size={18} strokeWidth={1.75} />
@@ -340,7 +338,7 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
       </div>
       {/* Demo-Hinweis rechts */}
       <div className="px-6 flex justify-end -mt-1 pb-1">
-        <span className="text-[11px] text-white/40 tracking-wide">Demo-Umgebung — Rein synthetische Daten, keine echten Kundendaten</span>
+        <span className="text-[11px] text-white/40 tracking-wide">{t('demoUmgebungHinweis')}</span>
       </div>
 
       {/* Bloomberg Market Ticker - only on overview in VV mode */}
@@ -412,9 +410,9 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
               <Clock size={38} className="animate-pulse" />
             </div>
             <div className="space-y-1">
-              <div className="text-xl font-semibold">Nacht simulieren …</div>
+              <div className="text-xl font-semibold">{t('nachtSimulieren')}</div>
               <div className="text-sm text-white/70 max-w-md mx-auto">
-                KI wartet auf Reaktionen Ihrer Kunden und sammelt neue Aktivitäten für den nächsten Tag.
+                {t('nachtSimulierenText')}
               </div>
             </div>
             <div className="flex items-center justify-center gap-1.5">
@@ -424,7 +422,7 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
             </div>
             {dayAdvanced && (
               <div className="inline-flex items-center gap-2 text-emerald-300 text-sm font-medium bg-emerald-500/10 border border-emerald-400/30 px-3 py-1.5 rounded-full">
-                <CheckCircle size={14} /> Neue Termin­zusage eingegangen
+                <CheckCircle size={14} /> {t('neueTerminzusage')}
               </div>
             )}
           </div>

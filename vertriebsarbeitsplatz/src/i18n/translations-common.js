@@ -154,6 +154,18 @@ const translationsCommon = {
   'vertragsdetails': { de: 'Vertragsdetails', en: 'Contract Details' },
   'schliessen': { de: 'Schließen', en: 'Close' },
   'kundenmaskeOeffnen': { de: 'Kundenmaske öffnen', en: 'Open customer view' },
+
+  // ─── Header / GlobalHeader ───
+  'demoUmgebungHinweis': { de: 'Demo-Umgebung — Rein synthetische Daten, keine echten Kundendaten', en: 'Demo environment — Purely synthetic data, no real client data' },
+  'demoZeitmaschineTitle': { de: 'Demo-Zeitmaschine: einen Tag weiter springen', en: 'Demo time-machine: jump one day forward' },
+  'demoDatenZuruecksetzenTitle': { de: 'Demo-Daten zurücksetzen (lokale Anpassungen löschen)', en: 'Reset demo data (clear local adjustments)' },
+  'demoDatenZuruecksetzenConfirm': {
+    de: 'Demo-Daten zurücksetzen?\n\nLöscht alle lokalen Anpassungen (z. B. bestätigte Haustiere, Header-Bild, Demo-Zeitmaschine) und lädt die Seite neu. Die ursprünglichen Demo-Datensätze bleiben unverändert.',
+    en: 'Reset demo data?\n\nThis clears all local adjustments (e.g. confirmed pets, header image, demo time-machine) and reloads the page. The original demo datasets remain unchanged.',
+  },
+  'nachtSimulieren': { de: 'Nacht simulieren …', en: 'Simulating night …' },
+  'nachtSimulierenText': { de: 'KI wartet auf Reaktionen Ihrer Kunden und sammelt neue Aktivitäten für den nächsten Tag.', en: 'AI is waiting for your clients’ reactions and collecting new activity for the next day.' },
+  'neueTerminzusage': { de: 'Neue Terminzusage eingegangen', en: 'New appointment confirmation received' },
 };
 
 export default translationsCommon;

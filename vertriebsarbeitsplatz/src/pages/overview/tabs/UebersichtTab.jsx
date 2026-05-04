@@ -605,9 +605,9 @@ const ABWANDERUNGS_RADAR_VERSICHERUNG = [
 ];
 
 const RISK_LEVEL_FARBEN = {
-  high:   { stripe: '#dc2626', bg: '#fef2f2', text: '#991b1b', label: 'Hoch' },
-  medium: { stripe: '#d97706', bg: '#fffbeb', text: '#92400e', label: 'Mittel' },
-  low:    { stripe: '#64748b', bg: '#f1f5f9', text: '#475569', label: 'Niedrig' },
+  high:   { stripe: '#dc2626', bg: '#fef2f2', text: '#991b1b', labelKey: 'risikoHoch' },
+  medium: { stripe: '#d97706', bg: '#fffbeb', text: '#92400e', labelKey: 'risikoMittel' },
+  low:    { stripe: '#64748b', bg: '#f1f5f9', text: '#475569', labelKey: 'risikoNiedrig' },
 };
 
 const PROVISIONSABRECHNUNGEN = {
@@ -692,7 +692,7 @@ export default function UebersichtTab() {
         foto: getKundeFoto(klaus.id),
         datum: appt.toISOString().slice(0, 10),
         zeit: formatAppointmentTime(appt),
-        betreff: 'Kreditgespräch Immobilienfinanzierung',
+        betreff: t('kreditgespraechImmoFinanzierung'),
         istNeuZugestimmt: true,
       };
     }
@@ -706,7 +706,7 @@ export default function UebersichtTab() {
         foto: getKundeFoto(peter.id),
         datum: appt.toISOString().slice(0, 10),
         zeit: formatAppointmentTime(appt),
-        betreff: 'BU-Nachversicherung & Familien-Check',
+        betreff: t('buNachversicherungFamilienCheck'),
         istNeuZugestimmt: true,
       };
     }
@@ -874,10 +874,10 @@ export default function UebersichtTab() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Megaphone size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-                <h3 className="font-semibold text-slate-800">{lang === 'en' ? 'Marketing Campaigns' : 'Marketingkampagnen'}</h3>
+                <h3 className="font-semibold text-slate-800">{t('marketingkampagnen')}</h3>
               </div>
               <span className="text-sm text-slate-400">
-                {marketingKampagnen.filter(k => k.status === 'aktiv').length} {lang === 'en' ? 'active' : 'aktiv'} · {marketingKampagnen.filter(k => k.status === 'geplant').length} {lang === 'en' ? 'planned' : 'geplant'}
+                {marketingKampagnen.filter(k => k.status === 'aktiv').length} {t('aktivLabel')} · {marketingKampagnen.filter(k => k.status === 'geplant').length} {t('geplantLabel')}
               </span>
             </div>
             <div className="grid grid-cols-4 gap-4 pointer-events-auto">
@@ -916,7 +916,7 @@ export default function UebersichtTab() {
                       {/* Hover overlay — fades in, dims the gradient so the CTA surfaces */}
                       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-                          <span>{lang === 'en' ? 'Open campaign' : 'Kampagne öffnen'}</span>
+                          <span>{t('kampagneOeffnen')}</span>
                           <ChevronRight size={14} strokeWidth={2.5} />
                         </span>
                       </div>
@@ -927,13 +927,13 @@ export default function UebersichtTab() {
                           istAktiv ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'
                         }`}
                       >
-                        {istAktiv ? (lang === 'en' ? 'Active' : 'Aktiv') : (lang === 'en' ? 'Planned' : 'Geplant')}
+                        {istAktiv ? t('aktivBadge') : t('geplantBadge')}
                       </span>
 
                       {/* Matches count */}
                       <span
                         className="absolute top-2 right-2 inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-extrabold text-slate-800 bg-white shadow-sm"
-                        title={`${kampagne.passendeKunden.length} passende Kunden`}
+                        title={t('passendeKundenTitle', { count: kampagne.passendeKunden.length })}
                       >
                         {kampagne.passendeKunden.length}
                       </span>
@@ -961,7 +961,7 @@ export default function UebersichtTab() {
                 <div className="mt-4 pt-4 border-t border-slate-100">
                   <div className="flex items-center justify-between mb-2">
                     <div className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                      {lang === 'en' ? 'Matches for' : 'Treffer für'}: <span className="text-slate-800">{titel}</span>
+                      {t('trefferFuer')}: <span className="text-slate-800">{titel}</span>
                     </div>
                     <button
                       className="text-xs text-slate-400 hover:text-slate-600"
@@ -1024,10 +1024,10 @@ export default function UebersichtTab() {
                       </span>
                     )}
                   </div>
-                  <h3 className="font-semibold text-slate-800">Lebenslagen-Radar</h3>
+                  <h3 className="font-semibold text-slate-800">{t('lebenslagenRadar')}</h3>
                 </div>
                 <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-100">
-                  {lebenslagenRadar.filter((l) => l.isNew).length} neue Signale
+                  {t('neueSignale', { count: lebenslagenRadar.filter((l) => l.isNew).length })}
                 </span>
               </div>
               <div className="space-y-2">
@@ -1049,10 +1049,10 @@ export default function UebersichtTab() {
                           </span>
                         </div>
                         <div className="text-[11px] text-slate-500 truncate">
-                          {l.signals.slice(0, 1).join(' · ')} <span className="text-slate-400">→ {l.signalCount} Quellen</span>
+                          {l.signals.slice(0, 1).join(' · ')} <span className="text-slate-400">→ {t('quellenAnzahl', { count: l.signalCount })}</span>
                         </div>
                         <div className="flex items-center justify-between gap-2 mt-1.5">
-                          <span className="text-xs text-slate-500">Potenzial: <span className="font-bold text-slate-800">{l.revenue.toLocaleString('de-DE')}€</span></span>
+                          <span className="text-xs text-slate-500">{t('potenzialLabel')}: <span className="font-bold text-slate-800">{l.revenue.toLocaleString(lang === 'en' ? 'en-GB' : 'de-DE')}€</span></span>
                           <div className="flex items-center gap-1.5">
                             <div className="w-16 h-1.5 rounded-full bg-slate-200 overflow-hidden">
                               <div className="h-full rounded-full" style={{ width: `${l.confidence}%`, background: stripe }} />
@@ -1066,9 +1066,9 @@ export default function UebersichtTab() {
                 })}
               </div>
               <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-500">{lebenslagenRadar.length} erkannt</span>
+                <span className="text-slate-500">{lebenslagenRadar.length} {t('erkannt')}</span>
                 <span className="font-bold text-slate-800">
-                  {lebenslagenRadar.reduce((s, l) => s + l.revenue, 0).toLocaleString('de-DE')}€ Gesamtpotenzial
+                  {lebenslagenRadar.reduce((s, l) => s + l.revenue, 0).toLocaleString(lang === 'en' ? 'en-GB' : 'de-DE')}€ {t('gesamtpotenzial')}
                 </span>
               </div>
             </Card>
@@ -1080,10 +1080,10 @@ export default function UebersichtTab() {
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-red-50">
                     <AlertTriangle size={16} className="text-red-600" strokeWidth={2} />
                   </div>
-                  <h3 className="font-semibold text-slate-800">Abwanderungsradar</h3>
+                  <h3 className="font-semibold text-slate-800">{t('abwanderungsradar')}</h3>
                 </div>
                 <span className="text-xs px-2.5 py-1 rounded-full bg-red-50 text-red-700 font-semibold border border-red-100">
-                  {abwanderungsRadar.length} Risikokunden
+                  {t('risikokunden', { count: abwanderungsRadar.length })}
                 </span>
               </div>
               <div className="space-y-2">
@@ -1106,14 +1106,14 @@ export default function UebersichtTab() {
                             className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase whitespace-nowrap flex items-center gap-1"
                             style={{ background: risk.bg, color: risk.text }}
                           >
-                            <span style={{ color: trendColor }}>{trendArrow}</span> {risk.label}
+                            <span style={{ color: trendColor }}>{trendArrow}</span> {t(risk.labelKey)}
                           </span>
                         </div>
                         <div className="text-[11px] text-slate-500 truncate">{r.summary}</div>
-                        <div className="text-[11px] text-slate-400 italic truncate">{r.riskType} wahrscheinlich</div>
+                        <div className="text-[11px] text-slate-400 italic truncate">{r.riskType} {t('wahrscheinlich')}</div>
                         <div className="text-xs mt-1.5">
-                          <span className="text-slate-500">CLV at risk: </span>
-                          <span className="font-bold" style={{ color: risk.stripe }}>{r.clvAtRisk.toLocaleString('de-DE')}€</span>
+                          <span className="text-slate-500">{t('clvAtRisk')}: </span>
+                          <span className="font-bold" style={{ color: risk.stripe }}>{r.clvAtRisk.toLocaleString(lang === 'en' ? 'en-GB' : 'de-DE')}€</span>
                         </div>
                       </div>
                     </div>
@@ -1121,9 +1121,9 @@ export default function UebersichtTab() {
                 })}
               </div>
               <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-500">{abwanderungsRadar.length} Kunden</span>
+                <span className="text-slate-500">{abwanderungsRadar.length} {t('kundenWort')}</span>
                 <span className="font-bold text-red-700">
-                  {abwanderungsRadar.reduce((s, r) => s + r.clvAtRisk, 0).toLocaleString('de-DE')}€ CLV at risk
+                  {abwanderungsRadar.reduce((s, r) => s + r.clvAtRisk, 0).toLocaleString(lang === 'en' ? 'en-GB' : 'de-DE')}€ {t('clvAtRisk')}
                 </span>
               </div>
             </Card>
@@ -1142,7 +1142,7 @@ export default function UebersichtTab() {
               <h3 className="font-semibold text-slate-800">{t('aktuelleAufgaben')}</h3>
             </div>
             <span className="rh-badge text-xs px-2.5 py-1 rounded-full font-semibold bg-red-50 text-red-600 border border-red-100">
-              {aufgaben.length} {lang === 'en' ? 'open' : 'offen'}
+              {aufgaben.length} {t('aufgabeOpen')}
             </span>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
@@ -1171,7 +1171,7 @@ export default function UebersichtTab() {
                   <button
                     className="w-5 h-5 rounded-md border-2 border-slate-300 flex items-center justify-center group-hover:border-emerald-500 transition-colors shrink-0"
                     onClick={(e) => e.stopPropagation()}
-                    aria-label="Erledigen"
+                    aria-label={t('erledigen')}
                   >
                     <div className="w-2 h-2 rounded-sm bg-emerald-500 scale-0 group-hover:scale-100 transition-transform" />
                   </button>
@@ -1188,7 +1188,7 @@ export default function UebersichtTab() {
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-slate-800 truncate group-hover:text-slate-900">{text}</div>
                     <div className="text-xs text-slate-400 mt-0.5 group-hover:text-slate-500">
-                      {a.kundeId ? (lang === 'en' ? 'Open client file' : 'Kundenakte öffnen') : (lang === 'en' ? 'Internal task' : 'Interne Aufgabe')}
+                      {a.kundeId ? t('kundenakteOeffnen') : t('interneAufgabe')}
                     </div>
                   </div>
 
@@ -1289,7 +1289,7 @@ export default function UebersichtTab() {
                       <span className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>{termin.kunde}</span>
                       {isNeu && (
                         <span className="rh-badge inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold uppercase tracking-wide">
-                          <Sparkles size={9} /> +1 Neu
+                          <Sparkles size={9} /> {t('plusEinsNeu')}
                         </span>
                       )}
                     </div>
@@ -1429,7 +1429,7 @@ export default function UebersichtTab() {
                 <div className="relative z-10 flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${istAktiv ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'}`}>
-                      {istAktiv ? (lang === 'en' ? 'Active' : 'Aktiv') : (lang === 'en' ? 'Planned' : 'Geplant')}
+                      {istAktiv ? t('aktivBadge') : t('geplantBadge')}
                     </span>
                     <span className="text-[11px] font-mono text-white/80">{k.zeitraum}</span>
                   </div>
@@ -1439,7 +1439,7 @@ export default function UebersichtTab() {
                 <button
                   onClick={() => setKampagneModal(null)}
                   className="relative z-10 w-9 h-9 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors"
-                  aria-label="Schließen"
+                  aria-label={t('schliessen')}
                 >
                   <X size={18} strokeWidth={2} />
                 </button>
@@ -1450,19 +1450,19 @@ export default function UebersichtTab() {
                 {/* KPI Strip */}
                 <div className="grid grid-cols-4 gap-3">
                   <div className="rounded-xl border border-slate-200 p-3 text-center">
-                    <div className="text-xs text-slate-500 mb-1">{lang === 'en' ? 'Matches' : 'Treffer'}</div>
+                    <div className="text-xs text-slate-500 mb-1">{t('treffer')}</div>
                     <div className="text-xl font-bold text-slate-800">{totalMatches}</div>
                   </div>
                   <div className="rounded-xl border border-slate-200 p-3 text-center">
-                    <div className="text-xs text-slate-500 mb-1">{lang === 'en' ? 'Avg. Match' : 'Ø Match'}</div>
+                    <div className="text-xs text-slate-500 mb-1">{t('avgMatch')}</div>
                     <div className="text-xl font-bold text-emerald-600">{avgMatch}%</div>
                   </div>
                   <div className="rounded-xl border border-slate-200 p-3 text-center">
-                    <div className="text-xs text-slate-500 mb-1">{lang === 'en' ? 'Expected revenue' : 'Erw. Umsatz'}</div>
-                    <div className="text-xl font-bold text-slate-800">{erwarteterUmsatz.toLocaleString('de-DE')}€</div>
+                    <div className="text-xs text-slate-500 mb-1">{t('erwarteterUmsatz')}</div>
+                    <div className="text-xl font-bold text-slate-800">{erwarteterUmsatz.toLocaleString(lang === 'en' ? 'en-GB' : 'de-DE')}€</div>
                   </div>
                   <div className="rounded-xl border border-slate-200 p-3 text-center">
-                    <div className="text-xs text-slate-500 mb-1">{lang === 'en' ? 'Channel' : 'Kanal'}</div>
+                    <div className="text-xs text-slate-500 mb-1">{t('kanal')}</div>
                     <div className="text-xl font-bold text-slate-800">3</div>
                   </div>
                 </div>
@@ -1470,26 +1470,24 @@ export default function UebersichtTab() {
                 {/* Beschreibung */}
                 <div>
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Target size={12} /> {lang === 'en' ? 'Campaign briefing' : 'Kampagnen-Briefing'}
+                    <Target size={12} /> {t('kampagnenBriefing')}
                   </h4>
                   <p className="text-sm text-slate-700 leading-relaxed">
-                    {lang === 'en'
-                      ? `This campaign targets ${zielgruppe.toLowerCase()} who have shown relevant signals in their financial behavior. The matching engine scored ${totalMatches} clients above the 75% threshold and proposes a personalised approach via email, phone and online banking inbox.`
-                      : `Diese Kampagne richtet sich an ${zielgruppe.toLowerCase()}, bei denen relevante Signale im Finanzverhalten erkannt wurden. Die Matching-Engine hat ${totalMatches} Kunden oberhalb der 75 %-Schwelle gescored und schlägt eine personalisierte Ansprache über E-Mail, Telefon und Online-Banking-Postfach vor.`}
+                    {t('kampagneBriefingTextDe', { zielgruppe: zielgruppe.toLowerCase(), total: totalMatches })}
                   </p>
                 </div>
 
                 {/* Maßnahmen-Sequenz */}
                 <div>
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <ListChecks size={12} /> {lang === 'en' ? 'Action sequence' : 'Maßnahmen-Sequenz'}
+                    <ListChecks size={12} /> {t('massnahmenSequenz')}
                   </h4>
                   <ol className="space-y-2 text-sm">
                     {[
-                      lang === 'en' ? 'Day 1: Personalised email with campaign offer' : 'Tag 1: Personalisierte E-Mail mit Kampagnen-Angebot',
-                      lang === 'en' ? 'Day 4: Online-banking inbox message + push notification' : 'Tag 4: Online-Banking-Postfach + Push-Benachrichtigung',
-                      lang === 'en' ? 'Day 8: Advisor call to clients with > 80% match' : 'Tag 8: Beraterkontakt für Kunden mit > 80 % Match',
-                      lang === 'en' ? 'Day 14: Reminder email + retargeting via banner' : 'Tag 14: Erinnerungs-Mail + Retargeting via Banner',
+                      t('massnahmeTag1'),
+                      t('massnahmeTag4'),
+                      t('massnahmeTag8'),
+                      t('massnahmeTag14'),
                     ].map((step, idx) => (
                       <li key={idx} className="flex items-start gap-2.5">
                         <span className="w-5 h-5 rounded-full bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">{idx + 1}</span>
@@ -1502,7 +1500,7 @@ export default function UebersichtTab() {
                 {/* Passende Kunden */}
                 <div>
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Users size={12} /> {lang === 'en' ? 'Top matches' : 'Top-Treffer'}
+                    <Users size={12} /> {t('topTreffer')}
                   </h4>
                   <div className="space-y-2">
                     {k.passendeKunden.slice(0, 3).map((kd) => (
@@ -1526,22 +1524,22 @@ export default function UebersichtTab() {
               {/* Footer Actions */}
               <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex flex-wrap items-center justify-end gap-2 rounded-b-2xl">
                 <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
-                  <Copy size={14} /> {lang === 'en' ? 'Duplicate' : 'Duplizieren'}
+                  <Copy size={14} /> {t('duplizieren')}
                 </button>
                 <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
-                  <BarChart size={14} /> {lang === 'en' ? 'View report' : 'Auswertung'}
+                  <BarChart size={14} /> {t('auswertung')}
                 </button>
                 <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
-                  <Mail size={14} /> {lang === 'en' ? 'Send test mail' : 'Test-Mail senden'}
+                  <Mail size={14} /> {t('testMailSenden')}
                 </button>
                 <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white bg-slate-800 hover:bg-slate-700 transition-colors">
-                  <ListChecks size={14} /> {lang === 'en' ? 'Generate client list' : 'Kundenliste generieren'}
+                  <ListChecks size={14} /> {t('kundenlisteGenerieren')}
                 </button>
                 <button
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-white transition-colors"
                   style={{ background: 'var(--mode-primary)' }}
                 >
-                  <PlayCircle size={14} /> {lang === 'en' ? 'Launch campaign' : 'Kampagne starten'}
+                  <PlayCircle size={14} /> {t('kampagneStarten')}
                 </button>
               </div>
             </div>

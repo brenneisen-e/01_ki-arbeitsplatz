@@ -373,6 +373,63 @@ const translationsOverview = {
   'potenzialBewertung.hoch': { de: 'Hoch', en: 'High' },
   'potenzialBewertung.mittel': { de: 'Mittel', en: 'Medium' },
   'potenzialBewertung.sehrHoch': { de: 'Sehr hoch', en: 'Very high' },
+
+  // ─── Banking Übersicht: Radar-Karten ───
+  'lebenslagenRadar': { de: 'Lebenslagen-Radar', en: 'Life-Event Radar' },
+  'abwanderungsradar': { de: 'Abwanderungsradar', en: 'Churn Radar' },
+  'neueSignale': { de: '{count} neue Signale', en: '{count} new signals' },
+  'risikokunden': { de: '{count} Risikokunden', en: '{count} at-risk clients' },
+  'quellenAnzahl': { de: '{count} Quellen', en: '{count} sources' },
+  'potenzialLabel': { de: 'Potenzial', en: 'Potential' },
+  'erkannt': { de: 'erkannt', en: 'detected' },
+  'gesamtpotenzial': { de: 'Gesamtpotenzial', en: 'Total potential' },
+  'wahrscheinlich': { de: 'wahrscheinlich', en: 'likely' },
+  'kundenWort': { de: 'Kunden', en: 'Clients' },
+  'clvAtRisk': { de: 'CLV at risk', en: 'CLV at risk' },
+  'risikoHoch': { de: 'Hoch', en: 'High' },
+  'risikoMittel': { de: 'Mittel', en: 'Medium' },
+  'risikoNiedrig': { de: 'Niedrig', en: 'Low' },
+
+  // ─── Banking Übersicht: Marketingkampagnen ───
+  'marketingkampagnen': { de: 'Marketingkampagnen', en: 'Marketing Campaigns' },
+  'aktivLabel': { de: 'aktiv', en: 'active' },
+  'geplantLabel': { de: 'geplant', en: 'planned' },
+  'aktivBadge': { de: 'Aktiv', en: 'Active' },
+  'geplantBadge': { de: 'Geplant', en: 'Planned' },
+  'kampagneOeffnen': { de: 'Kampagne öffnen', en: 'Open campaign' },
+  'passendeKundenTitle': { de: '{count} passende Kunden', en: '{count} matching clients' },
+  'trefferFuer': { de: 'Treffer für', en: 'Matches for' },
+  'treffer': { de: 'Treffer', en: 'Matches' },
+  'avgMatch': { de: 'Ø Match', en: 'Avg. Match' },
+  'erwarteterUmsatz': { de: 'Erw. Umsatz', en: 'Expected revenue' },
+  'kanal': { de: 'Kanal', en: 'Channel' },
+  'kampagnenBriefing': { de: 'Kampagnen-Briefing', en: 'Campaign briefing' },
+  'massnahmenSequenz': { de: 'Maßnahmen-Sequenz', en: 'Action sequence' },
+  'topTreffer': { de: 'Top-Treffer', en: 'Top matches' },
+  'duplizieren': { de: 'Duplizieren', en: 'Duplicate' },
+  'auswertung': { de: 'Auswertung', en: 'View report' },
+  'testMailSenden': { de: 'Test-Mail senden', en: 'Send test mail' },
+  'kundenlisteGenerieren': { de: 'Kundenliste generieren', en: 'Generate client list' },
+  'kampagneStarten': { de: 'Kampagne starten', en: 'Launch campaign' },
+  'kampagneBriefingTextDe': {
+    de: 'Diese Kampagne richtet sich an {zielgruppe}, bei denen relevante Signale im Finanzverhalten erkannt wurden. Die Matching-Engine hat {total} Kunden oberhalb der 75 %-Schwelle gescored und schlägt eine personalisierte Ansprache über E-Mail, Telefon und Online-Banking-Postfach vor.',
+    en: 'This campaign targets {zielgruppe} who have shown relevant signals in their financial behavior. The matching engine scored {total} clients above the 75% threshold and proposes a personalised approach via email, phone and online-banking inbox.',
+  },
+  'massnahmeTag1':  { de: 'Tag 1: Personalisierte E-Mail mit Kampagnen-Angebot',           en: 'Day 1: Personalised email with campaign offer' },
+  'massnahmeTag4':  { de: 'Tag 4: Online-Banking-Postfach + Push-Benachrichtigung',         en: 'Day 4: Online-banking inbox message + push notification' },
+  'massnahmeTag8':  { de: 'Tag 8: Beraterkontakt für Kunden mit > 80 % Match',              en: 'Day 8: Advisor call to clients with > 80% match' },
+  'massnahmeTag14': { de: 'Tag 14: Erinnerungs-Mail + Retargeting via Banner',              en: 'Day 14: Reminder email + retargeting via banner' },
+
+  // ─── Banking Übersicht: Aufgaben ───
+  'aufgabeOpen': { de: 'offen', en: 'open' },
+  'erledigen': { de: 'Erledigen', en: 'Mark done' },
+  'kundenakteOeffnen': { de: 'Kundenakte öffnen', en: 'Open client file' },
+  'interneAufgabe': { de: 'Interne Aufgabe', en: 'Internal task' },
+  'plusEinsNeu': { de: '+1 Neu', en: '+1 New' },
+
+  // ─── Banking Übersicht: Termine ───
+  'kreditgespraechImmoFinanzierung': { de: 'Kreditgespräch Immobilienfinanzierung', en: 'Property-financing meeting' },
+  'buNachversicherungFamilienCheck': { de: 'BU-Nachversicherung & Familien-Check', en: 'DI top-up & family check' },
 };
 
 export default translationsOverview;

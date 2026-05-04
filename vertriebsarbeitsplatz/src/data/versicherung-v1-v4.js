@@ -1,6 +1,6 @@
-// V1: Peter Schmidt (vollständig)
+// V1: Klaus Fischer (vollständig)
 export const V1 = {
-  name: 'Peter Schmidt', id: 'KD00001', alter: 42,
+  name: 'Klaus Fischer', id: 'KD00001', alter: 42,
   beruf: 'IT-Projektleiter', arbeitgeber: { name: 'Deutsche Telekom AG', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4200,
   familienstand: 'verheiratet',
   partner: { name: 'Sarah', beruf: 'Lehrerin Teilzeit', einkommen: 1800 },
@@ -14,7 +14,7 @@ export const V1 = {
     {
       typ: 'extremsport',
       titel: 'Extremsport-Aktivitäten erkannt',
-      beschreibung: 'Aus Kontoumsätzen abgeleitet: Peter Schmidt ist regelmäßig in der Boulderhalle aktiv, hat im Vorjahr eine Fallschirmsprung-Tandembuchung getätigt und im Sommer hochwertige Kletterausrüstung angeschafft.',
+      beschreibung: 'Aus Kontoumsätzen abgeleitet: Klaus Fischer ist regelmäßig in der Boulderhalle aktiv, hat im Vorjahr eine Fallschirmsprung-Tandembuchung getätigt und im Sommer hochwertige Kletterausrüstung angeschafft.',
       transaktionen: [
         { empfaenger: 'DAV Boulderhalle Köln', betrag: 72, haeufigkeit: 'monatlich' },
         { empfaenger: 'Skydive Center Bonn-Hangelar', betrag: 340, haeufigkeit: 'einmalig 09/2025' },
@@ -82,7 +82,7 @@ export const V1 = {
     {
       titel: 'Tierhalter-Haftpflicht + Tierkrankenversicherung (Hund Balu)', typ: 'whitespot', quellen: ['kontoumsaetze', 'risikosignal'], prioritaet: 'hoch', volumen: 360, volumenTyp: 'jaehrlich',
       beschreibung: 'Hundehaltung aus Kontoumsätzen abgeleitet. In NRW ist eine Tierhalter-Haftpflicht gesetzlich vorgeschrieben — aktuell nicht im Bestand.',
-      kiDescription: 'KI-Analyse: Peter Schmidt hält einen Hund („Balu", Labrador-Mischling) — erkennbar an den regelmäßigen Umsätzen bei Fressnapf Köln (85€/Mon.), Hundeschule Rhein (45€/Mon.) und Tierarztpraxis Dr. Müller (120€/Quartal). Die bestehende ERGO Privathaftpflicht schließt Hunde-bezogene Schäden aus; zudem greift in NRW die gesetzliche Pflicht (LHundG §5). Empfehlung: ERGO Tierhalter-Haftpflicht Premium (ca. 80€/J.) kombiniert mit ERGO Tierkranken Komfort (ca. 280€/J.) — Gesamtbeitrag ~360€/J.',
+      kiDescription: 'KI-Analyse: Klaus Fischer hält einen Hund („Balu", Labrador-Mischling) — erkennbar an den regelmäßigen Umsätzen bei Fressnapf Köln (85€/Mon.), Hundeschule Rhein (45€/Mon.) und Tierarztpraxis Dr. Müller (120€/Quartal). Die bestehende ERGO Privathaftpflicht schließt Hunde-bezogene Schäden aus; zudem greift in NRW die gesetzliche Pflicht (LHundG §5). Empfehlung: ERGO Tierhalter-Haftpflicht Premium (ca. 80€/J.) kombiniert mit ERGO Tierkranken Komfort (ca. 280€/J.) — Gesamtbeitrag ~360€/J.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Tierhalter-Haftpflicht Premium + Tierkranken Komfort', status: 'identifiziert',
       herleitung: [
         { label: 'Erkannte Haustierhaltung', value: 'Hund (Labrador-Mischling, „Balu")' },
@@ -97,7 +97,7 @@ export const V1 = {
     {
       titel: 'Erh\u00f6hung Abdeckung Berufsunf\u00e4higkeitsversicherung', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 960, volumenTyp: 'jaehrlich',
       beschreibung: 'Zweites Kind, Einkommen gestiegen. BU deckt nur 69% statt 80%.',
-      kiDescription: 'KI-Analyse: Peter Schmidt (42 J., IT-Projektleiter) hat nach der Geburt seines zweiten Kindes Max und einer Gehaltserhöhung auf 4.200\u20ac netto eine BU-Deckungslücke von 11 Prozentpunkten — aktuelle BU-Rente 1.800\u20ac/mtl. deckt nur 69% statt der empfohlenen 80% (2.600\u20ac). Bei einer 4-köpfigen Familie mit Baufinanzierung (285k Restschuld) ist eine Erhöhung auf ERGO BU Comfort Plus dringend empfohlen — Mehrprämie ca. 80\u20ac/mtl.',
+      kiDescription: 'KI-Analyse: Klaus Fischer (42 J., IT-Projektleiter) hat nach der Geburt seines zweiten Kindes Max und einer Gehaltserhöhung auf 4.200\u20ac netto eine BU-Deckungslücke von 11 Prozentpunkten — aktuelle BU-Rente 1.800\u20ac/mtl. deckt nur 69% statt der empfohlenen 80% (2.600\u20ac). Bei einer 4-köpfigen Familie mit Baufinanzierung (285k Restschuld) ist eine Erhöhung auf ERGO BU Comfort Plus dringend empfohlen — Mehrprämie ca. 80\u20ac/mtl.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'termin',
       herleitung: [
         { label: 'Aktuelles Nettoeinkommen', value: '4.200\u20ac/mtl.' },
@@ -148,7 +148,7 @@ export const V1 = {
     {
       titel: 'Fondspolice statt ING-ETF-Depot', typ: 'whitespot', quellen: ['finanztransaktion', 'bestand'], prioritaet: 'mittel', volumen: 42000, volumenTyp: 'einmalig',
       beschreibung: '42k bei ING ohne Steuervorteil. ERGO-Fondspolice mit Halbeink\u00fcnfte.',
-      kiDescription: 'KI-Analyse: Peter Schmidt bespart ein ETF-Depot bei ING DiBa mit 42.000\u20ac Volumen und 300\u20ac/mtl. Sparrate \u2014 s\u00e4mtliche Ertr\u00e4ge unterliegen der vollen Abgeltungssteuer (26,375%). Durch Umschichtung in eine ERGO Rente Balance (Fondspolice) greift nach 12 Jahren das Halbeink\u00fcnfteverfahren \u2014 gesch\u00e4tzte Steuerersparnis ca. 4.500\u20ac \u00fcber 20 Jahre Laufzeit.',
+      kiDescription: 'KI-Analyse: Klaus Fischer bespart ein ETF-Depot bei ING DiBa mit 42.000\u20ac Volumen und 300\u20ac/mtl. Sparrate \u2014 s\u00e4mtliche Ertr\u00e4ge unterliegen der vollen Abgeltungssteuer (26,375%). Durch Umschichtung in eine ERGO Rente Balance (Fondspolice) greift nach 12 Jahren das Halbeink\u00fcnfteverfahren \u2014 gesch\u00e4tzte Steuerersparnis ca. 4.500\u20ac \u00fcber 20 Jahre Laufzeit.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert',
       herleitung: [
         { label: 'Aktuelles Depot (ING DiBa)', value: '42.000\u20ac (MSCI World 70%, EM 30%)' },
@@ -198,7 +198,7 @@ export const V1 = {
     {
       titel: 'Unfallversicherung Familie', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 250, volumenTyp: 'jaehrlich',
       beschreibung: '2 Kinder, kein Unfallschutz. ERGO Unfall Smart.',
-      kiDescription: 'KI-Analyse: Die Familie Schmidt (4 Personen) verf\u00fcgt \u00fcber keinerlei Unfallversicherung \u2014 bei zwei Kindern im aktiven Alter (Lina 7 J., Max 1 J.) besteht ein erh\u00f6htes Freizeitunfallrisiko. Eine ERGO Unfall Smart Familienversicherung f\u00fcr ca. 250\u20ac/J. sichert alle vier Familienmitglieder ab und schlie\u00dft eine wesentliche L\u00fccke im Absicherungskonzept.',
+      kiDescription: 'KI-Analyse: Die Familie Fischer (4 Personen) verf\u00fcgt \u00fcber keinerlei Unfallversicherung \u2014 bei zwei Kindern im aktiven Alter (Lina 7 J., Max 1 J.) besteht ein erh\u00f6htes Freizeitunfallrisiko. Eine ERGO Unfall Smart Familienversicherung f\u00fcr ca. 250\u20ac/J. sichert alle vier Familienmitglieder ab und schlie\u00dft eine wesentliche L\u00fccke im Absicherungskonzept.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Unfall Smart Familie', status: 'identifiziert',
       herleitung: [
         { label: 'Familiensituation', value: '4-k\u00f6pfige Familie, 2 Kinder (7 + 1 J.)' },
@@ -251,24 +251,55 @@ export const V1 = {
       ],
     },
   ],
+  produktabschluss: [
+    {
+      id: 'PA-V1-001',
+      typ: 'lebensversicherung',
+      kategorie: 'versicherung',
+      produkt: 'ERGO Risikolebensversicherung Premium',
+      kanal: 'Online-Strecke',
+      // Dynamic date: 5 Tage vor heute. Schritte werden in der UI
+      // proportional mitverschoben (siehe ProduktabschlussTab).
+      dynamicDaysAgo: 5,
+      datum: '2026-02-27',
+      status: 'abgebrochen',
+      abbruchSchritt: 'Gesundheitsfragen',
+      schritte: [
+        { name: 'Tarifrechner', status: 'abgeschlossen', datum: '2026-02-27T20:08:00' },
+        { name: 'Pers\u00f6nliche Daten', status: 'abgeschlossen', datum: '2026-02-27T20:14:00' },
+        { name: 'Versicherungsumfang', status: 'abgeschlossen', datum: '2026-02-27T20:19:00' },
+        { name: 'Beg\u00fcnstigung', status: 'abgeschlossen', datum: '2026-02-27T20:23:00' },
+        { name: 'Gesundheitsfragen', status: 'abgebrochen', datum: '2026-02-27T20:31:00' },
+        { name: 'Unterschrift', status: 'offen', datum: null },
+      ],
+      details: {
+        versicherungssumme: 350000,
+        laufzeitJahre: 25,
+        tarif: 'ERGO RLV Premium',
+        monatsbeitrag: 38,
+        absicherungszweck: 'Familienabsicherung & Restschuld Baufinanzierung',
+      },
+      bemerkung: 'Klaus Fischer hat den Online-Antrag bis zu den Gesundheitsfragen ausgef\u00fcllt und dort abgebrochen \u2014 vermutlich unsicher bei einer Frage zur Vorerkrankung. Idealer Aufh\u00e4nger f\u00fcr ein pers\u00f6nliches Gespr\u00e4ch (Beratung statt Selbsteingabe).',
+    },
+  ],
   kommunikation: [
     { datum: '2026-02-15', typ: 'termin', richtung: 'ausgehend', betreff: 'Jahresgespr\u00e4ch', zusammenfassung: 'BU-L\u00fccke angesprochen, Kunde offen. Termin f\u00fcr Nachversicherung vereinbart.',
-      inhalt: 'Jahresgespr\u00e4ch bei Peter Schmidt zu Hause. Sarah war dabei. Zentrale Themen:\n\n1. BU-Absicherung: Aktuell 1.800\u20ac/mtl., empfohlen 3.360\u20ac. Kunde versteht die L\u00fccke, will konkretes Angebot sehen.\n2. Hausrat-Unterversicherung: Vertrag basiert noch auf 65qm \u2013 lebt aber in 145qm EFH! Dringend anpassen.\n3. Baby Max (1 J.) \u2013 Unfallversicherung f\u00fcr Familie besprochen.\n4. Baufi-Zinsbindung Sparkasse l\u00e4uft 09/2027 \u2013 noch Zeit, aber Forward-Darlehen Thema f\u00fcr sp\u00e4ter.\n\nTermin f\u00fcr Angebotsbesprechung vereinbart: 01.03.2026.' },
+      inhalt: 'Jahresgespr\u00e4ch bei Klaus Fischer zu Hause. Sarah war dabei. Zentrale Themen:\n\n1. BU-Absicherung: Aktuell 1.800\u20ac/mtl., empfohlen 3.360\u20ac. Kunde versteht die L\u00fccke, will konkretes Angebot sehen.\n2. Hausrat-Unterversicherung: Vertrag basiert noch auf 65qm \u2013 lebt aber in 145qm EFH! Dringend anpassen.\n3. Baby Max (1 J.) \u2013 Unfallversicherung f\u00fcr Familie besprochen.\n4. Baufi-Zinsbindung Sparkasse l\u00e4uft 09/2027 \u2013 noch Zeit, aber Forward-Darlehen Thema f\u00fcr sp\u00e4ter.\n\nTermin f\u00fcr Angebotsbesprechung vereinbart: 01.03.2026.' },
     { datum: '2026-01-20', typ: 'chatbot', richtung: 'eingehend', betreff: 'Pflege Eltern',
       zusammenfassung: 'Kunde fragte nach Pflegezusatz f\u00fcr Eltern (68+71 Jahre). Chatbot erkl\u00e4rte Optionen.',
       chatverlauf: [
         { rolle: 'kunde', text: 'Hallo, meine Eltern werden \u00e4lter (68 und 71) und ich mache mir Sorgen wegen Pflegekosten. Gibt es da was bei ERGO?', zeit: '20:15' },
-        { rolle: 'bot', text: 'Guten Abend Herr Schmidt! Das ist ein wichtiges Thema. ERGO bietet verschiedene Pflegezusatzversicherungen an. F\u00fcr Ihre Eltern (68 und 71 Jahre) k\u00e4men in Frage:\n\n1. ERGO Pflege-Tagegeld \u2013 T\u00e4gliche Leistung ab Pflegegrad 2\n2. ERGO Pflege-Monatsgeld \u2013 Monatliche Pauschale\n\nAllerdings: Ab 65 Jahren steigen die Pr\u00e4mien deutlich und es gibt Gesundheitspr\u00fcfungen.', zeit: '20:16' },
+        { rolle: 'bot', text: 'Guten Abend Herr Fischer! Das ist ein wichtiges Thema. ERGO bietet verschiedene Pflegezusatzversicherungen an. F\u00fcr Ihre Eltern (68 und 71 Jahre) k\u00e4men in Frage:\n\n1. ERGO Pflege-Tagegeld \u2013 T\u00e4gliche Leistung ab Pflegegrad 2\n2. ERGO Pflege-Monatsgeld \u2013 Monatliche Pauschale\n\nAllerdings: Ab 65 Jahren steigen die Pr\u00e4mien deutlich und es gibt Gesundheitspr\u00fcfungen.', zeit: '20:16' },
         { rolle: 'kunde', text: 'Was kostet das ungef\u00e4hr f\u00fcr meine Mutter (68)?', zeit: '20:17' },
         { rolle: 'bot', text: 'F\u00fcr eine 68-j\u00e4hrige Frau liegt die Pr\u00e4mie f\u00fcr das ERGO Pflege-Tagegeld (50\u20ac/Tag ab PG 2) bei ca. 120-160\u20ac/mtl. Je nach Gesundheitszustand kann eine vereinfachte Pr\u00fcfung erfolgen. Soll ich einen Beratungstermin bei Ihrem ERGO Berater einrichten?', zeit: '20:17' },
         { rolle: 'kunde', text: 'Hmm, das ist schon einiges. Ich \u00fcberleg mir das nochmal und bespreche es mit meiner Frau.', zeit: '20:19' },
         { rolle: 'bot', text: 'Verst\u00e4ndlich! Nehmen Sie sich die Zeit. Tipp: Je fr\u00fcher der Abschluss, desto g\u00fcnstiger die Konditionen. Falls Sie Fragen haben, bin ich jederzeit hier oder Ihr Berater berät Sie gerne pers\u00f6nlich.', zeit: '20:19' },
       ],
-      kiZusammenfassung: 'Peter Schmidt erkundigte sich nach Pflegezusatzversicherung f\u00fcr seine Eltern (68+71 J.). Chatbot erkl\u00e4rte Optionen (Pflege-Tagegeld/Monatsgeld). Pr\u00e4mie f\u00fcr Mutter (68 J.) ca. 120-160\u20ac/mtl. Kunde ist noch unentschlossen, will mit Ehefrau Sarah besprechen. Kein Termin vereinbart \u2013 Follow-up empfohlen.',
+      kiZusammenfassung: 'Klaus Fischer erkundigte sich nach Pflegezusatzversicherung f\u00fcr seine Eltern (68+71 J.). Chatbot erkl\u00e4rte Optionen (Pflege-Tagegeld/Monatsgeld). Pr\u00e4mie f\u00fcr Mutter (68 J.) ca. 120-160\u20ac/mtl. Kunde ist noch unentschlossen, will mit Ehefrau Sarah besprechen. Kein Termin vereinbart \u2013 Follow-up empfohlen.',
     },
     { datum: '2025-12-18', typ: 'email', richtung: 'ausgehend', betreff: 'Frohe Weihnachten & Jahrescheck',
       zusammenfassung: 'Weihnachtsgr\u00fc\u00dfe mit Erinnerung an Jahresgespr\u00e4ch. Kunde antwortete und vereinbarte Termin.',
-      emailBody: 'Lieber Herr Schmidt,\n\nich w\u00fcnsche Ihnen und Ihrer Familie \u2013 besonders dem kleinen Max \u2013 frohe Weihnachten und einen guten Start ins neue Jahr!\n\nAnfang des Jahres sollten wir uns zu Ihrem j\u00e4hrlichen Versicherungscheck zusammensetzen. Besonders m\u00f6chte ich mit Ihnen besprechen:\n\n\u2022 Ihre BU-Absicherung (Anpassung an ge\u00e4ndertes Einkommen)\n\u2022 Die Hausratversicherung (Umzug ins EFH ber\u00fccksichtigen)\n\u2022 Unfallschutz f\u00fcr die ganze Familie\n\nHaben Sie im Januar/Februar Zeit f\u00fcr einen Termin?\n\nHerzliche Gr\u00fc\u00dfe\nIhr ERGO Berater',
+      emailBody: 'Lieber Herr Fischer,\n\nich w\u00fcnsche Ihnen und Ihrer Familie \u2013 besonders dem kleinen Max \u2013 frohe Weihnachten und einen guten Start ins neue Jahr!\n\nAnfang des Jahres sollten wir uns zu Ihrem j\u00e4hrlichen Versicherungscheck zusammensetzen. Besonders m\u00f6chte ich mit Ihnen besprechen:\n\n\u2022 Ihre BU-Absicherung (Anpassung an ge\u00e4ndertes Einkommen)\n\u2022 Die Hausratversicherung (Umzug ins EFH ber\u00fccksichtigen)\n\u2022 Unfallschutz f\u00fcr die ganze Familie\n\nHaben Sie im Januar/Februar Zeit f\u00fcr einen Termin?\n\nHerzliche Gr\u00fc\u00dfe\nIhr ERGO Berater',
     },
     { datum: '2025-11-05', typ: 'email', richtung: 'ausgehend', betreff: 'Weihnachtsaktion', zusammenfassung: 'Saisonale Kampagne verschickt, keine Reaktion.' },
   ],

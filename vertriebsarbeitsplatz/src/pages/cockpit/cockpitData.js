@@ -84,7 +84,7 @@ export const ABSCHLUESSE = [
   { datum: '10.03.2026', vn: 'Ralf Dietrich', produkt: 'BU-Versicherung', tarif: 'BU Premium', antragNr: 'A-2026-1248', beitrag: 1500, faktor: 12.5, provision: 18750, status: 'policiert' },
   { datum: '09.03.2026', vn: 'Ingrid Sommer', produkt: 'Zahnzusatz', tarif: 'DKV ZZ Pro', antragNr: 'A-2026-1247', beitrag: 384, faktor: 8.0, provision: 3072, status: 'policiert' },
   { datum: '08.03.2026', vn: 'Michael Braun', produkt: 'Kfz-Komfort', tarif: 'ERGO Premium', antragNr: 'A-2026-1246', beitrag: 890, faktor: 3.0, provision: 2670, status: 'policiert' },
-  { datum: '07.03.2026', vn: 'Peter Schmidt', produkt: 'BU-Nachversicherung', tarif: 'ERGO BU Plus', antragNr: 'A-2026-1245', beitrag: 1680, faktor: 10.0, provision: 16800, status: 'policiert' },
+  { datum: '07.03.2026', vn: 'Klaus Fischer', produkt: 'BU-Nachversicherung', tarif: 'ERGO BU Plus', antragNr: 'A-2026-1245', beitrag: 1680, faktor: 10.0, provision: 16800, status: 'policiert' },
   { datum: '06.03.2026', vn: 'Anna Hoffmann', produkt: 'Haftpflicht', tarif: 'PHV Familie', antragNr: 'A-2026-1244', beitrag: 145, faktor: 5.0, provision: 725, status: 'policiert' },
   { datum: '05.03.2026', vn: 'Sabine Danzig', produkt: 'Risikoleben', tarif: 'RL Basis', antragNr: 'A-2026-1243', beitrag: 480, faktor: 15.0, provision: 7200, status: 'policiert' },
   { datum: '04.03.2026', vn: 'Amira König', produkt: 'Rentenversicherung', tarif: 'fondsgebunden', antragNr: 'A-2026-1242', beitrag: 250, faktor: 20.0, provision: 5000, status: 'angenommen' },

@@ -40,6 +40,11 @@ const SCHRITT_ICONS_BY_KEY = {
   'legitimation': Fingerprint,
   'legitimationVideoIdent': Fingerprint,
   'unterschrift': PenTool,
+  // Insurance-Strecke
+  'tarifrechner': CreditCard,
+  'versicherungsumfang': FileText,
+  'beguenstigung': User,
+  'gesundheitsfragen': FileText,
 };
 
 const SCHRITT_NAME_TO_KEY = {
@@ -50,6 +55,11 @@ const SCHRITT_NAME_TO_KEY = {
   'Legitimation': 'legitimation',
   'Legitimation (VideoIdent)': 'legitimationVideoIdent',
   'Unterschrift': 'unterschrift',
+  // Insurance-Strecke
+  'Tarifrechner': 'tarifrechner',
+  'Versicherungsumfang': 'versicherungsumfang',
+  'Beg\u00fcnstigung': 'beguenstigung',
+  'Gesundheitsfragen': 'gesundheitsfragen',
 };
 
 export default function ProduktabschlussTab({ kunde }) {
@@ -60,6 +70,9 @@ export default function ProduktabschlussTab({ kunde }) {
     offen: { icon: Clock, color: 'text-slate-300', bg: 'bg-slate-50', label: t('statusOffen') },
   };
   const abschluesse = (kunde.produktabschluss || []).map(applyDynamicDates);
+  // Mode-aware summary: if every open application is insurance-style, show
+  // Versicherungssumme/Beitrag instead of Kreditvolumen.
+  const istVersicherung = abschluesse.length > 0 && abschluesse.every(a => a.kategorie === 'versicherung');
 
   if (abschluesse.length === 0) {
     return (
@@ -94,9 +107,9 @@ export default function ProduktabschlussTab({ kunde }) {
             </div>
             <div>
               <div className="text-2xl font-bold text-slate-800">
-                {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€
+                {abschluesse.reduce((sum, a) => sum + (a.details?.versicherungssumme || a.details?.betrag || 0), 0).toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€
               </div>
-              <div className="text-xs text-slate-400">{t('kreditvolumenGesamt')}</div>
+              <div className="text-xs text-slate-400">{istVersicherung ? t('versicherungssummeGesamt') : t('kreditvolumenGesamt')}</div>
             </div>
           </div>
         </Card>
@@ -155,9 +168,28 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
         </button>
       </div>
 
-      {/* Credit details summary */}
+      {/* Details summary — credit-style or insurance-style */}
       <div className="grid grid-cols-4 gap-3 mb-4">
-        {antrag.details && (
+        {antrag.details && (antrag.kategorie === 'versicherung' ? (
+          <>
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
+              <div className="text-xs text-slate-400 mb-1">{t('versicherungssumme')}</div>
+              <div className="text-lg font-bold text-slate-800">{antrag.details.versicherungssumme?.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€</div>
+            </div>
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
+              <div className="text-xs text-slate-400 mb-1">{t('laufzeit')}</div>
+              <div className="text-lg font-bold text-slate-800">{antrag.details.laufzeitJahre} {t('jahre')}</div>
+            </div>
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
+              <div className="text-xs text-slate-400 mb-1">{t('tarif')}</div>
+              <div className="text-lg font-bold text-slate-800">{antrag.details.tarif}</div>
+            </div>
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
+              <div className="text-xs text-slate-400 mb-1">{t('monatsbeitrag')}</div>
+              <div className="text-lg font-bold text-slate-800">{antrag.details.monatsbeitrag}€</div>
+            </div>
+          </>
+        ) : (
           <>
             <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <div className="text-xs text-slate-400 mb-1">{t('kreditbetrag')}</div>
@@ -176,13 +208,15 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
               <div className="text-lg font-bold text-slate-800">{antrag.details.rate}€</div>
             </div>
           </>
-        )}
+        ))}
       </div>
 
-      {/* Verwendungszweck */}
-      {antrag.details?.verwendung && (
+      {/* Verwendungszweck / Absicherungszweck */}
+      {(antrag.details?.verwendung || antrag.details?.absicherungszweck) && (
         <div className="text-sm text-slate-600 mb-4">
-          <span className="font-medium text-slate-500">{t('verwendungszweck')}:</span> {antrag.details.verwendung}
+          <span className="font-medium text-slate-500">
+            {antrag.kategorie === 'versicherung' ? t('absicherungszweck') : t('verwendungszweck')}:
+          </span> {antrag.details.absicherungszweck || antrag.details.verwendung}
         </div>
       )}
 

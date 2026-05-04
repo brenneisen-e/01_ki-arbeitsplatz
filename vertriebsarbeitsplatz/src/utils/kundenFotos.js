@@ -61,9 +61,11 @@ const KUNDEN_GENDER = {
 // PHOTO_GENDER[file] === KUNDEN_GENDER[id] gilt.
 const KUNDEN_FOTOS = {
   // Versicherung
-  KD00001: '/images/AdobeStock_624564221.jpeg',
+  // KD00001 = Klaus Fischer (showcase). Same photo as banking BK00001 so the
+  // showcase customer is visually identical across both modes.
+  KD00001: '/images/AdobeStock_361342769.jpeg',
   KD00002: '/images/AdobeStock_252262042.jpeg',
-  KD00003: '/images/AdobeStock_361342769.jpeg',
+  KD00003: '/images/AdobeStock_1210213822.jpeg',
   KD00005: '/images/AdobeStock_612932760.jpeg',
   KD00008: '/images/AdobeStock_1091012713.jpeg',
   // Banking

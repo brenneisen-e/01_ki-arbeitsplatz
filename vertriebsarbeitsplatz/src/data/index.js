@@ -61,7 +61,7 @@ export function getKundeById(modeId, kundeId) {
 
 // Showcase-Kunden pro Modus: Potentiale werden priorisiert angezeigt.
 export const SHOWCASE_KUNDE_IDS = {
-  versicherung: 'KD00001',       // Peter Schmidt
+  versicherung: 'KD00001',       // Klaus Fischer
   banking: 'BK00001',            // Klaus Fischer
   vermoegensverwaltung: null,
 };
@@ -756,7 +756,7 @@ export const TERMINE_BY_MODE = {
 // =============================================
 export const AUFGABEN_BY_MODE = {
   versicherung: [
-    { text: tx('Rückruf Peter Schmidt (BU-Nachversicherung)', 'Callback Peter Schmidt (DI reinsurance)'), faellig: tx('Heute', 'Today'), kundeId: 'KD00001', erledigt: false },
+    { text: tx('Rückruf Klaus Fischer (BU-Nachversicherung)', 'Callback Klaus Fischer (DI reinsurance)'), faellig: tx('Heute', 'Today'), kundeId: 'KD00001', erledigt: false },
     { text: tx('Angebot Amira König nachfassen', 'Follow up proposal Amira König'), faellig: tx('Morgen', 'Tomorrow'), kundeId: 'KD00002', erledigt: false },
     { text: tx('Storno-Warnung Klaus Wagner prüfen', 'Check cancellation warning Klaus Wagner'), faellig: tx('Fr', 'Fri'), kundeId: 'KD00003', erledigt: false },
   ],

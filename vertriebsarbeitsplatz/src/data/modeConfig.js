@@ -40,10 +40,11 @@ export const MODE_CONFIGS = {
     ],
     detailTabs: [
       { id: 'stammdaten', label: 'Stammdaten', labelEn: 'Master Data' },
-      { id: 'vertraege', label: 'Verträge', labelEn: 'Contracts' },
       { id: 'openfinance', label: 'Finanzübersicht', labelEn: 'Financial Overview' },
-      { id: 'impulse', label: 'Leads', labelEn: 'Leads' },
       { id: 'finanzprofil', label: 'Haushaltsprofil', labelEn: 'Household Profile' },
+      { id: 'impulse', label: 'Leads', labelEn: 'Leads' },
+      { id: 'service', label: 'Service', labelEn: 'AI Services' },
+      { id: 'produktabschluss', label: 'Produktabschluss', labelEn: 'Product Closing' },
       { id: 'kommunikation', label: 'Kommunikation', labelEn: 'Communication' },
     ],
     institutVarianten: [

@@ -40,7 +40,7 @@ const MINI_KPIS = {
 };
 
 const FOKUS = {
-  versicherung: { text: tx('Peter Schmidt - BU-Nachversicherung', 'Peter Schmidt - Disability Re-Insurance'), next: '17:30 Amira König' },
+  versicherung: { text: tx('Klaus Fischer - BU-Nachversicherung', 'Klaus Fischer - Disability Re-Insurance'), next: '17:30 Amira König' },
   banking: { text: tx('Klaus Fischer - Kreditgespräch Immobilienfinanzierung', 'Klaus Fischer - Property Financing Talk'), next: '14:00 Klaus Fischer' },
   vermoegensverwaltung: { text: tx('Keller NextGen - WpHG-Fragebogen + Geeignetheitsbericht', 'Keller NextGen - WpHG Questionnaire + Suitability Report'), next: tx('10:00 Dr. Anna Fischer (Onboarding)', '10:00 Dr. Anna Fischer (Onboarding)') },
 };
@@ -68,7 +68,7 @@ const LETZTE_ABSCHLUESSE = {
     { kunde: 'Sabine Danzig', kundeId: 'KD00008', produkt: 'ERGO Risikoleben', sparte: 'leben', betrag: 480, datum: '10.03.2026' },
     { kunde: 'Michael Braun', kundeId: 'KD00005', produkt: 'ERGO Kfz-Komfort', sparte: 'kfz', betrag: 890, datum: '09.03.2026' },
     { kunde: 'Anna Hoffmann', kundeId: 'KD00004', produkt: 'DKV Zahnzusatz', sparte: 'kranken', betrag: 35, datum: '08.03.2026' },
-    { kunde: 'Peter Schmidt', kundeId: 'KD00001', produkt: 'ERGO BU-Nachversicherung', sparte: 'leben', betrag: 1680, datum: '07.03.2026' },
+    { kunde: 'Klaus Fischer', kundeId: 'KD00001', produkt: 'ERGO BU-Nachversicherung', sparte: 'leben', betrag: 1680, datum: '07.03.2026' },
   ],
   banking: [
     { kunde: 'Andrea Lang', kundeId: 'BK00005', produkt: 'Praxiskredit', sparte: 'kredit', betrag: 85000, datum: '10.03.2026' },
@@ -324,7 +324,7 @@ function buildVersicherungsKampagnen(institut) {
       photoIcon: 'TrendingUp',
       photoAccent: '#fecaca',
       passendeKunden: [
-        { kundeId: 'KD00001', name: 'Peter Schmidt', match: 96, begruendung: `BU-Rente 1.800€/mtl. – unter dem 60%-Netto-Bedarf, ${b.buBrand}-Upgrade sinnvoll`, begruendungEn: `DI pension €1,800/mo – below 60% net-income need, ${b.buBrand} upgrade recommended` },
+        { kundeId: 'KD00001', name: 'Klaus Fischer', match: 96, begruendung: `BU-Rente 1.800€/mtl. – unter dem 60%-Netto-Bedarf, ${b.buBrand}-Upgrade sinnvoll`, begruendungEn: `DI pension €1,800/mo – below 60% net-income need, ${b.buBrand} upgrade recommended` },
         { kundeId: 'KD00004', name: 'Anna Hoffmann', match: 92, begruendung: 'Ärztin ohne BU, Einkommen 5.500€ – hohes Ausfallrisiko', begruendungEn: 'Physician without DI cover, €5,500 income – high risk' },
         { kundeId: 'KD00002', name: 'Amira König', match: 84, begruendung: 'Designerin, keine BU, Altersneuabschluss lohnt sich', begruendungEn: 'Designer, no DI, new policy worthwhile at this age' },
       ],
@@ -341,7 +341,7 @@ function buildVersicherungsKampagnen(institut) {
       photoIcon: 'Users',
       photoAccent: '#bfdbfe',
       passendeKunden: [
-        { kundeId: 'KD00001', name: 'Peter Schmidt', match: 94, begruendung: '2 Kinder, Hausrat unterversichert (65qm auf 145qm EFH)', begruendungEn: '2 kids, hausrat underinsured (65sqm on 145sqm house)' },
+        { kundeId: 'KD00001', name: 'Klaus Fischer', match: 94, begruendung: '2 Kinder, Hausrat unterversichert (65qm auf 145qm EFH)', begruendungEn: '2 kids, hausrat underinsured (65sqm on 145sqm house)' },
         { kundeId: 'KD00004', name: 'Anna Hoffmann', match: 88, begruendung: 'Junge Familie, RLV-Deckung zu gering', begruendungEn: 'Young family, insufficient term life coverage' },
         { kundeId: 'KD00005', name: 'Klaus Meier', match: 79, begruendung: 'Drei Kinder, RLV-Altbestand 150k€ aktualisieren', begruendungEn: 'Three children, term-life legacy 150k€ to refresh' },
       ],
@@ -672,7 +672,7 @@ export default function UebersichtTab() {
   // Demo-Zeitmaschine: nach „Nacht simulieren" wird der Beratungstermin der
   // Hero-Demo-Kundin bzw. des Hero-Demo-Kunden oben mit „+1"-Badge in die
   // Liste injiziert. Banking: Klaus Fischer (Kreditgespräch). Versicherung:
-  // Peter Schmidt (BU-Nachversicherung).
+  // Klaus Fischer (BU-Nachversicherung).
   const dayAdvanced = useDayAdvanced();
   const baseTermine = TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung;
   // Kunden des aktiven Modus frühzeitig dereferenzieren, damit die Daten

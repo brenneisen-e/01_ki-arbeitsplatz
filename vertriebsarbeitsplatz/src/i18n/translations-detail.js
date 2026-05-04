@@ -283,6 +283,13 @@ const translationsDetail = {
   'effektivzins': { de: 'Effektivzins', en: 'Effective Interest' },
   'monatsrate': { de: 'Monatsrate', en: 'Monthly Payment' },
   'verwendungszweck': { de: 'Verwendungszweck', en: 'Purpose' },
+  // Insurance-Variante des Produktabschluss-Tabs
+  'versicherungssumme': { de: 'Versicherungssumme', en: 'Sum Insured' },
+  'versicherungssummeGesamt': { de: 'Versicherungssumme gesamt', en: 'Total Sum Insured' },
+  'jahre': { de: 'Jahre', en: 'Years' },
+  'tarif': { de: 'Tarif', en: 'Tariff' },
+  'monatsbeitrag': { de: 'Monatsbeitrag', en: 'Monthly Premium' },
+  'absicherungszweck': { de: 'Absicherungszweck', en: 'Coverage Purpose' },
   'fortschrittOnlineAntrag': { de: 'Fortschritt Online-Antrag', en: 'Online Application Progress' },
   'schritte': { de: 'Schritte', en: 'Steps' },
   'analyseLabel': { de: 'Analyse', en: 'Analysis' },
@@ -446,6 +453,11 @@ const translationsDetail = {
   'schritt.legitimation': { de: 'Legitimation', en: 'Verification' },
   'schritt.legitimationVideoIdent': { de: 'Legitimation (VideoIdent)', en: 'Verification (VideoIdent)' },
   'schritt.unterschrift': { de: 'Unterschrift', en: 'Signature' },
+  // Insurance-Strecke
+  'schritt.tarifrechner': { de: 'Tarifrechner', en: 'Tariff Calculator' },
+  'schritt.versicherungsumfang': { de: 'Versicherungsumfang', en: 'Coverage Scope' },
+  'schritt.beguenstigung': { de: 'Begünstigung', en: 'Beneficiary' },
+  'schritt.gesundheitsfragen': { de: 'Gesundheitsfragen', en: 'Health Questions' },
 
   // ─── FinanzprofilTab labels ───
   'finanzprofil.wohnen': { de: 'Wohnen', en: 'Housing' },

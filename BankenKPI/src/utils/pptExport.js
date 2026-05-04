@@ -7,7 +7,7 @@ import {
   SEGMENTS, KPI_GROUPS, KPI_VALUES,
   deviationPct, ampelColor, REPORT_DATE,
 } from '../data/kpiData';
-import { buildKommentar } from '../data/aiAnalyse';
+import { buildKommentarPlainText } from '../data/aiAnalyse';
 
 const AMPEL_HEX = {
   green:  '16A34A',
@@ -59,7 +59,7 @@ export async function exportPpt(bank) {
           text: bank.name + ' · KPI Dashboard · gem. XYZ-Meldung',
           options: {
             x: 0.5, y: 0.08, w: 9, h: 0.4,
-            fontSize: 13, color: 'FFFFFF', fontFace: 'Calibri', bold: true,
+            fontSize: 13, color: 'FFFFFF', fontFace: 'Aptos', bold: true,
             valign: 'middle',
           },
         },
@@ -69,7 +69,7 @@ export async function exportPpt(bank) {
           text: 'Stand: ' + REPORT_DATE,
           options: {
             x: 9.5, y: 0.08, w: 3.33, h: 0.4,
-            fontSize: 11, color: 'FFFFFF', fontFace: 'Calibri', align: 'right', valign: 'middle',
+            fontSize: 11, color: 'FFFFFF', fontFace: 'Aptos', align: 'right', valign: 'middle',
           },
         },
       },
@@ -79,12 +79,12 @@ export async function exportPpt(bank) {
           text: 'DUMMY DATEN · VERTRAULICH · Whitelabel-Demo',
           options: {
             x: 0.5, y: 7.18, w: 9, h: 0.25,
-            fontSize: 9, color: TEXT_GRAY, fontFace: 'Calibri', italic: true, valign: 'middle',
+            fontSize: 9, color: TEXT_GRAY, fontFace: 'Aptos', italic: true, valign: 'middle',
           },
         },
       },
     ],
-    slideNumber: { x: 12.7, y: 7.18, w: 0.5, h: 0.25, fontSize: 9, color: TEXT_GRAY, fontFace: 'Calibri', align: 'right' },
+    slideNumber: { x: 12.7, y: 7.18, w: 0.5, h: 0.25, fontSize: 9, color: TEXT_GRAY, fontFace: 'Aptos', align: 'right' },
   });
 
   // ═══ SLIDE 1: Titel ═══════════════════════════════════════
@@ -92,19 +92,19 @@ export async function exportPpt(bank) {
   s1.addShape('rect', { x: 0.5, y: 1.2, w: 12.33, h: 5.4, fill: { color: BG_LIGHT }, line: { color: BORDER, width: 0.5 } });
   s1.addText('Monatlicher Bericht', {
     x: 1.0, y: 1.8, w: 11, h: 0.5,
-    fontSize: 16, color: TEXT_GRAY, fontFace: 'Calibri', bold: true,
+    fontSize: 16, color: TEXT_GRAY, fontFace: 'Aptos', bold: true,
   });
   s1.addText('KPI Dashboard', {
     x: 1.0, y: 2.3, w: 11, h: 1.0,
-    fontSize: 48, color: PRIMARY, fontFace: 'Calibri', bold: true,
+    fontSize: 48, color: PRIMARY, fontFace: 'Aptos', bold: true,
   });
   s1.addText(bank.name, {
     x: 1.0, y: 3.4, w: 11, h: 0.7,
-    fontSize: 28, color: TEXT_DARK, fontFace: 'Calibri',
+    fontSize: 28, color: TEXT_DARK, fontFace: 'Aptos',
   });
   s1.addText(`Stand: ${REPORT_DATE} · gem. XYZ-Meldung`, {
     x: 1.0, y: 4.2, w: 11, h: 0.4,
-    fontSize: 14, color: TEXT_GRAY, fontFace: 'Calibri',
+    fontSize: 14, color: TEXT_GRAY, fontFace: 'Aptos',
   });
   // 4 Kennzahlen-Tiles
   const heroKpis = [
@@ -118,15 +118,15 @@ export async function exportPpt(bank) {
     if (!cell) return;
     const x = 1.0 + i * 2.85;
     s1.addShape('rect', { x, y: 5.0, w: 2.6, h: 1.4, fill: { color: 'FFFFFF' }, line: { color: BORDER, width: 0.5 } });
-    s1.addText(hk.label, { x: x + 0.15, y: 5.1, w: 2.4, h: 0.3, fontSize: 11, color: TEXT_GRAY, fontFace: 'Calibri', bold: true });
+    s1.addText(hk.label, { x: x + 0.15, y: 5.1, w: 2.4, h: 0.3, fontSize: 11, color: TEXT_GRAY, fontFace: 'Aptos', bold: true });
     const unit = (hk.id === 'roRac' || hk.id === 'cir') ? '%' : 'MEUR';
     s1.addText(fmtCellValue(cell.ist, unit) + (unit === 'MEUR' ? ' Mio €' : ''), {
       x: x + 0.15, y: 5.45, w: 2.4, h: 0.55,
-      fontSize: 22, color: PRIMARY, fontFace: 'Calibri', bold: true,
+      fontSize: 22, color: PRIMARY, fontFace: 'Aptos', bold: true,
     });
     s1.addText('Plan: ' + fmtCellValue(cell.plan, unit) + (unit === 'MEUR' ? ' Mio €' : ''), {
       x: x + 0.15, y: 6.0, w: 2.4, h: 0.3,
-      fontSize: 10, color: TEXT_GRAY, fontFace: 'Calibri',
+      fontSize: 10, color: TEXT_GRAY, fontFace: 'Aptos',
     });
   });
 
@@ -134,7 +134,7 @@ export async function exportPpt(bank) {
   const s2 = pptx.addSlide({ masterName: 'BANKEN_KPI_MASTER' });
   s2.addText('KPI-Matrix · Ist vs. Plan', {
     x: 0.5, y: 0.7, w: 12.33, h: 0.4,
-    fontSize: 18, color: TEXT_DARK, fontFace: 'Calibri', bold: true,
+    fontSize: 18, color: TEXT_DARK, fontFace: 'Aptos', bold: true,
   });
 
   // Tabelle bauen
@@ -183,57 +183,98 @@ export async function exportPpt(bank) {
 
   s2.addTable(rows, {
     x: 0.5, y: 1.2, w: 12.33,
-    fontSize: 8.5, fontFace: 'Calibri',
+    fontSize: 8.5, fontFace: 'Aptos',
     border: { type: 'solid', color: BORDER, pt: 0.5 },
     rowH: 0.28,
   });
 
   s2.addText('Legende: ≥ 100 % im Plan · 95–99 % unter Plan · < 95 % kritisch', {
     x: 0.5, y: 6.85, w: 12.33, h: 0.3,
-    fontSize: 9, color: TEXT_GRAY, fontFace: 'Calibri', italic: true,
+    fontSize: 9, color: TEXT_GRAY, fontFace: 'Aptos', italic: true,
   });
 
   // ═══ SLIDE 3: KI-Kommentar ════════════════════════════════
   const s3 = pptx.addSlide({ masterName: 'BANKEN_KPI_MASTER' });
   s3.addText('KI-Kommentar mit Querlogik', {
     x: 0.5, y: 0.7, w: 12.33, h: 0.4,
-    fontSize: 18, color: TEXT_DARK, fontFace: 'Calibri', bold: true,
+    fontSize: 18, color: TEXT_DARK, fontFace: 'Aptos', bold: true,
   });
-  s3.addText('Automatische Analyse der Abweichungen, Cross-KPI-Bezüge und Handlungsempfehlungen', {
+  s3.addText('Branchenkontext, Produkt-Know-how und Cross-KPI-Bezüge', {
     x: 0.5, y: 1.1, w: 12.33, h: 0.35,
-    fontSize: 11, color: TEXT_GRAY, fontFace: 'Calibri', italic: true,
+    fontSize: 11, color: TEXT_GRAY, fontFace: 'Aptos', italic: true,
   });
 
-  const bullets = buildKommentar();
-  let yCursor = 1.6;
-  bullets.forEach((b) => {
+  // Pro Bullet eine eigene Folie, damit die Causes Platz haben.
+  const bullets = buildKommentarPlainText();
+  bullets.forEach((b, idx) => {
+    if (idx > 0) {
+      // weitere Folie für jedes weitere Bullet
+    }
+    const slide = idx === 0 ? s3 : pptx.addSlide({ masterName: 'BANKEN_KPI_MASTER' });
+    if (idx > 0) {
+      slide.addText('KI-Kommentar mit Querlogik', {
+        x: 0.5, y: 0.7, w: 12.33, h: 0.4,
+        fontSize: 18, color: TEXT_DARK, fontFace: 'Aptos', bold: true,
+      });
+      slide.addText(`Bullet ${idx + 1} von ${bullets.length}`, {
+        x: 0.5, y: 1.1, w: 12.33, h: 0.35,
+        fontSize: 11, color: TEXT_GRAY, fontFace: 'Aptos', italic: true,
+      });
+    }
+    const yStart = 1.55;
     const sevColor = AMPEL_HEX[b.severity] || AMPEL_HEX.gray;
-    const blockH = 0.85;
-    s3.addShape('rect', {
-      x: 0.5, y: yCursor, w: 12.33, h: blockH,
-      fill: { color: 'FFFFFF' }, line: { color: BORDER, width: 0.5 },
-    });
+
     // Severity bar
-    s3.addShape('rect', {
-      x: 0.5, y: yCursor, w: 0.12, h: blockH,
+    slide.addShape('rect', {
+      x: 0.5, y: yStart, w: 0.12, h: 5.5,
       fill: { color: sevColor }, line: { color: sevColor, width: 0 },
     });
-    s3.addText(b.headline, {
-      x: 0.8, y: yCursor + 0.05, w: 12, h: 0.3,
-      fontSize: 12, color: TEXT_DARK, fontFace: 'Calibri', bold: true,
+    // Headline
+    slide.addText(b.headline, {
+      x: 0.8, y: yStart, w: 12, h: 0.4,
+      fontSize: 16, color: TEXT_DARK, fontFace: 'Aptos', bold: true,
     });
-    s3.addText(b.text, {
-      x: 0.8, y: yCursor + 0.32, w: 12, h: 0.5,
-      fontSize: 10.5, color: '334155', fontFace: 'Calibri',
+    // Description
+    slide.addText(b.text, {
+      x: 0.8, y: yStart + 0.45, w: 12, h: 0.7,
+      fontSize: 11.5, color: '334155', fontFace: 'Aptos',
     });
-    yCursor += blockH + 0.1;
+    // Causes header
+    slide.addText('Mögliche Ursachen / Branchenkontext', {
+      x: 0.8, y: yStart + 1.25, w: 12, h: 0.3,
+      fontSize: 10, color: TEXT_GRAY, fontFace: 'Aptos', bold: true,
+    });
+    // Causes block
+    slide.addShape('rect', {
+      x: 0.8, y: yStart + 1.55, w: 12, h: 3.0,
+      fill: { color: BG_LIGHT }, line: { color: BORDER, width: 0.5 },
+    });
+    slide.addText(b.causes || '', {
+      x: 0.95, y: yStart + 1.65, w: 11.7, h: 2.85,
+      fontSize: 11, color: '334155', fontFace: 'Aptos',
+      paraSpaceAfter: 4,
+    });
+    // Recommendation header
+    slide.addText('Handlungsempfehlung', {
+      x: 0.8, y: yStart + 4.7, w: 12, h: 0.3,
+      fontSize: 10, color: 'B45309', fontFace: 'Aptos', bold: true,
+    });
+    // Recommendation block
+    slide.addShape('rect', {
+      x: 0.8, y: yStart + 5.0, w: 12, h: 0.6,
+      fill: { color: 'FFFBEB' }, line: { color: 'FDE68A', width: 0.5 },
+    });
+    slide.addText(b.recommendation || '', {
+      x: 0.95, y: yStart + 5.05, w: 11.7, h: 0.5,
+      fontSize: 11, color: '334155', fontFace: 'Aptos',
+    });
   });
 
   // ═══ SLIDE 4: Top-Auffälligkeiten ═════════════════════════
   const s4 = pptx.addSlide({ masterName: 'BANKEN_KPI_MASTER' });
   s4.addText('Top-Auffälligkeiten – Heatmap nach Abweichung', {
     x: 0.5, y: 0.7, w: 12.33, h: 0.4,
-    fontSize: 18, color: TEXT_DARK, fontFace: 'Calibri', bold: true,
+    fontSize: 18, color: TEXT_DARK, fontFace: 'Aptos', bold: true,
   });
 
   const heat = [];
@@ -284,7 +325,7 @@ export async function exportPpt(bank) {
 
   s4.addTable(heatRows, {
     x: 0.5, y: 1.3, w: 12.33,
-    fontSize: 11, fontFace: 'Calibri',
+    fontSize: 11, fontFace: 'Aptos',
     border: { type: 'solid', color: BORDER, pt: 0.5 },
     rowH: 0.4,
   });
@@ -293,7 +334,7 @@ export async function exportPpt(bank) {
   const s5 = pptx.addSlide({ masterName: 'BANKEN_KPI_MASTER' });
   s5.addText('Konzern · Ist vs. Plan', {
     x: 0.5, y: 0.7, w: 12.33, h: 0.4,
-    fontSize: 18, color: TEXT_DARK, fontFace: 'Calibri', bold: true,
+    fontSize: 18, color: TEXT_DARK, fontFace: 'Aptos', bold: true,
   });
 
   const chartCats = KPI_GROUPS.flatMap((g) => g.kpis).map((k) => k.label);

@@ -1,10 +1,11 @@
-import { X, Sparkles, Target, AlertTriangle, CheckCircle2, AlertCircle, Lightbulb } from 'lucide-react';
+import { X, Sparkles, Target, AlertTriangle, CheckCircle2, AlertCircle, Lightbulb, ListTree } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip,
   CartesianGrid, ReferenceLine, Legend,
 } from 'recharts';
 import { explainKpiSegment } from '../data/aiAnalyse';
 import { fmtVal, fmtCompact, AMPEL_COLORS } from '../data/kpiData';
+import RichText from './RichText';
 
 const SEVERITY_ICONS = { red: AlertTriangle, yellow: AlertCircle, green: CheckCircle2 };
 
@@ -120,10 +121,10 @@ export default function KPIDetailModal({ data, bank, onClose }) {
                 style={{ background: severityCfg.bg, color: severityCfg.text }}
               >
                 <SevIcon size={16} strokeWidth={1.75} className="shrink-0 mt-0.5" />
-                <p className="text-sm font-medium">{ai.headline}</p>
+                <RichText className="text-sm font-medium block">{ai.headline}</RichText>
               </div>
 
-              {ai.crossRefs.length > 0 && (
+              {ai.crossRefs?.length > 0 && (
                 <div className="bg-white/70 rounded-lg p-3 mb-3 border border-white">
                   <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                     Querbezüge
@@ -132,7 +133,24 @@ export default function KPIDetailModal({ data, bank, onClose }) {
                     {ai.crossRefs.map((ref, i) => (
                       <li key={i} className="text-sm text-slate-600 flex items-start gap-2">
                         <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: bank.primary }} />
-                        {ref}
+                        <RichText>{ref}</RichText>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {ai.causes?.length > 0 && (
+                <div className="bg-white/70 rounded-lg p-3 mb-3 border border-white">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                    <ListTree size={12} strokeWidth={2} />
+                    Mögliche Ursachen / Branchenkontext
+                  </div>
+                  <ul className="space-y-1.5">
+                    {ai.causes.map((c, i) => (
+                      <li key={i} className="text-sm text-slate-700 flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: bank.primary }} />
+                        <RichText>{c}</RichText>
                       </li>
                     ))}
                   </ul>
@@ -141,11 +159,11 @@ export default function KPIDetailModal({ data, bank, onClose }) {
 
               <div className="bg-white rounded-lg p-3 border border-slate-100 flex items-start gap-2">
                 <Lightbulb size={16} strokeWidth={1.75} className="text-amber-500 shrink-0 mt-0.5" />
-                <div>
+                <div className="flex-1">
                   <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
                     Empfehlung
                   </div>
-                  <p className="text-sm text-slate-700">{ai.recommendation}</p>
+                  <RichText className="text-sm text-slate-700 block">{ai.recommendation}</RichText>
                 </div>
               </div>
             </div>

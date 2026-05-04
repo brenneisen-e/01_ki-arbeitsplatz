@@ -89,8 +89,28 @@ export default function KPIDetailModal({ data, bank, onClose }) {
                       <stop offset="100%" stopColor={bank.primary} stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid stroke="#f1f5f9" vertical={false} />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                  <CartesianGrid stroke="#f1f5f9" vertical horizontal strokeDasharray="2 4" />
+                  <XAxis
+                    dataKey="month"
+                    tick={(p) => {
+                      const point = history.find((d) => d.month === p.payload.value);
+                      const idx = history.findIndex((d) => d.month === p.payload.value);
+                      const showYear = idx === 0 || (point && point.isJanuary);
+                      return (
+                        <g transform={`translate(${p.x},${p.y})`}>
+                          <text x={0} y={0} dy={14} textAnchor="middle" fontSize={11} fill="#64748b">{p.payload.value}</text>
+                          {showYear && point && (
+                            <text x={0} y={0} dy={28} textAnchor="middle" fontSize={10} fill="#cbd5e1">{point.year}</text>
+                          )}
+                        </g>
+                      );
+                    }}
+                    axisLine={false}
+                    tickLine={false}
+                    interval={0}
+                    padding={{ left: 0, right: 0 }}
+                    height={36}
+                  />
                   <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} tickFormatter={(v) => fmtCompact(v, kpi.unit)} />
                   <Tooltip
                     formatter={(v) => fmtCompact(v, kpi.unit)}

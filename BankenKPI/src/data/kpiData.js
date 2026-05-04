@@ -148,7 +148,11 @@ function buildMonthAxis() {
   const out = [];
   for (let i = 11; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    out.push(MONTH_LABELS[d.getMonth()]);
+    out.push({
+      month: MONTH_LABELS[d.getMonth()],
+      year: d.getFullYear(),
+      isJanuary: d.getMonth() === 0,
+    });
   }
   return out;
 }
@@ -181,7 +185,9 @@ export function buildHistory(kpiId, segmentId) {
     const drift = (target - plan) * t;
     const val = plan + drift + noise;
     out.push({
-      month: months[i],
+      month: months[i].month,
+      year: months[i].year,
+      isJanuary: months[i].isJanuary,
       ist: Math.round(val * 100) / 100,
       plan: Math.round(plan * 100) / 100,
     });

@@ -5,7 +5,7 @@ import {
   BarChart3, Banknote, Wallet, Percent, Layers, Activity, Scale, PieChart,
 } from 'lucide-react';
 import {
-  AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine,
+  AreaChart, Area, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine,
 } from 'recharts';
 import {
   KPI_VALUES, buildHistory, fmtVal, fmtCompact,
@@ -24,6 +24,26 @@ const KPI_ICONS = {
   roRac:              PieChart,
   cir:                Layers,
 };
+
+// Custom-Tick: Monat oben, Jahr in hellgrau darunter (nur am Jahres-Wechsel
+// und am ersten Tick, damit es nicht zu voll wird).
+function MonthYearTick({ x, y, payload, data }) {
+  const point = data?.find((d) => d.month === payload.value);
+  const idx = data?.findIndex((d) => d.month === payload.value);
+  const showYear = idx === 0 || (point && point.isJanuary);
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text x={0} y={0} dy={12} textAnchor="middle" fontSize={10} fill="#94a3b8">
+        {payload.value}
+      </text>
+      {showYear && point && (
+        <text x={0} y={0} dy={24} textAnchor="middle" fontSize={9} fill="#cbd5e1">
+          {point.year}
+        </text>
+      )}
+    </g>
+  );
+}
 
 function ChartTooltip({ active, payload, label, unit }) {
   if (!active || !payload?.length) return null;
@@ -121,22 +141,26 @@ export default function KPICard({ kpi, segmentId, segmentLabel, bank, onExpand, 
       </div>
 
       {/* Chart */}
-      <div className="flex-1 -ml-1 -mr-1" style={{ minHeight: 120 }}>
+      <div className="flex-1" style={{ minHeight: 130 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={history} margin={{ top: 6, right: 6, left: 0, bottom: 0 }}>
+          <AreaChart data={history} margin={{ top: 6, right: 6, left: 0, bottom: 16 }}>
             <defs>
               <linearGradient id={`grad-${kpi.id}-${segmentId}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={bank.primary} stopOpacity={0.35} />
                 <stop offset="100%" stopColor={bank.primary} stopOpacity={0} />
               </linearGradient>
             </defs>
+            <CartesianGrid stroke="#f1f5f9" vertical horizontal={false} strokeDasharray="2 4" />
             <XAxis
               dataKey="month"
-              tick={{ fontSize: 10, fill: '#94a3b8' }}
+              tick={(p) => <MonthYearTick {...p} data={history} />}
               axisLine={false}
               tickLine={false}
+              interval={0}
+              padding={{ left: 0, right: 0 }}
+              height={32}
             />
-            <YAxis hide domain={['auto', 'auto']} />
+            <YAxis hide domain={['auto', 'auto']} width={0} />
             <Tooltip content={<ChartTooltip unit={kpi.unit} />} cursor={{ stroke: '#e2e8f0' }} />
             <ReferenceLine
               y={cell.plan}

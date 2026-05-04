@@ -1,8 +1,16 @@
-import { Play, Users, TrendingUp } from 'lucide-react'
+import { Play, Users, TrendingUp, ArrowLeft } from 'lucide-react'
 import { useScene } from '../../hooks/useScene'
 
 interface HeaderProps {
   onStartWorkshop: () => void
+}
+
+function getLandingHref(): string {
+  if (typeof window === 'undefined') return '/'
+  const path = window.location.pathname
+  const idx = path.indexOf('/bank-der-zukunft-2035/')
+  if (idx >= 0) return path.slice(0, idx) + '/'
+  return '/'
 }
 
 export function Header({ onStartWorkshop }: HeaderProps) {
@@ -15,6 +23,15 @@ export function Header({ onStartWorkshop }: HeaderProps) {
       style={{ borderBottom: '1px solid var(--line-hairline)', backdropFilter: 'blur(40px) saturate(180%)' }}
     >
       <div className="flex items-center gap-4">
+        <a
+          href={getLandingHref()}
+          aria-label="Zurück zur Startseite"
+          title="Zurück zur Startseite"
+          className="hairline hairline-hover inline-flex items-center justify-center w-9 h-9 rounded-full text-[var(--color-ink-secondary)] hover:text-[var(--color-ink-primary)] transition-colors"
+          style={{ background: 'transparent' }}
+        >
+          <ArrowLeft size={14} strokeWidth={1.4} />
+        </a>
         <ThinCompass />
         <div className="flex flex-col leading-tight">
           <span className="display-md text-[var(--color-ink-primary)]">Bank der Zukunft</span>

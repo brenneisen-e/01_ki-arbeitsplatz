@@ -363,7 +363,7 @@
         CreditCard, CheckCircle, LayoutGrid, UserPlus, BookOpen, ClipboardCheck,
         Briefcase, ExternalLink, Mic, Send, MessageCircle, Search,
         Settings, User, Key, Upload, Play, FileUp, Lock, Camera, Video, Eye, EyeOff, ChevronDown,
-        Activity, LineChart, Atom, Compass
+        Activity, LineChart, Atom, Compass, BarChart3
     } from 'lucide-react';
 
     const h = React.createElement;
@@ -399,6 +399,7 @@
             modules: [
                 { id: 'dashboard',   label: 'VST-Cockpit',      icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',       href: 'VSTCockpit/dist/index.html',           tags: ['versicherung'] },
                 { id: 'am-equities', label: 'Active Equities',   icon: Activity,       desc: 'Portfolio Management Dashboard',    href: 'asset-management/dist/index.html',     tags: ['am'] },
+                { id: 'banken-kpi',  label: 'Banken-KPI',         icon: BarChart3,      desc: 'Monatlicher KPI-Bericht mit KI-Kommentar', href: 'BankenKPI/dist/index.html',         tags: ['banken'] },
                 { id: 'pmo',         label: 'PMO Toolbox',       icon: LayoutGrid,     desc: 'Transformationsprogramm',           href: 'PMOToolbox/index.html' },
             ]
         },

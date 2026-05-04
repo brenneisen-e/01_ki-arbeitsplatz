@@ -1103,7 +1103,7 @@ export default function UebersichtTab() {
                         <div className="flex items-center justify-between gap-2 mb-0.5">
                           <span className="text-sm font-bold text-slate-800 truncate">{r.customerName}</span>
                           <span
-                            className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase whitespace-nowrap flex items-center gap-1"
+                            className="rh-badge text-[10px] font-bold px-2 py-0.5 rounded-full uppercase whitespace-nowrap flex items-center gap-1"
                             style={{ background: risk.bg, color: risk.text }}
                           >
                             <span style={{ color: trendColor }}>{trendArrow}</span> {t(risk.labelKey)}

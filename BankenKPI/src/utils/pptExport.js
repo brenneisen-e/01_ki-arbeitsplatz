@@ -5,7 +5,7 @@
 import PptxGenJS from 'pptxgenjs';
 import {
   SEGMENTS, KPI_GROUPS, KPI_VALUES,
-  deviationPct, ampelColor, REPORT_DATE,
+  deviationPct, ampelColor, getReportDate,
 } from '../data/kpiData';
 import { buildKommentarPlainText } from '../data/aiAnalyse';
 
@@ -31,7 +31,7 @@ function fmtCellValue(value, unit) {
 export async function exportPpt(bank) {
   const pptx = new PptxGenJS();
   pptx.layout = 'LAYOUT_WIDE'; // 13.33 x 7.5
-  pptx.title = `Banken-KPI ${bank.name} – ${REPORT_DATE}`;
+  pptx.title = `Banken-KPI ${bank.name} – ${getReportDate()}`;
   pptx.subject = 'Monatlicher KPI-Bericht (Whitelabel-Demo)';
   pptx.company = bank.name;
 
@@ -66,7 +66,7 @@ export async function exportPpt(bank) {
       },
       {
         text: {
-          text: 'Stand: ' + REPORT_DATE,
+          text: 'Stand: ' + getReportDate(),
           options: {
             x: 9.5, y: 0.08, w: 3.33, h: 0.4,
             fontSize: 11, color: 'FFFFFF', fontFace: 'Aptos', align: 'right', valign: 'middle',
@@ -102,7 +102,7 @@ export async function exportPpt(bank) {
     x: 1.0, y: 3.4, w: 11, h: 0.7,
     fontSize: 28, color: TEXT_DARK, fontFace: 'Aptos',
   });
-  s1.addText(`Stand: ${REPORT_DATE} · gem. XYZ-Meldung`, {
+  s1.addText(`Stand: ${getReportDate()} · gem. XYZ-Meldung`, {
     x: 1.0, y: 4.2, w: 11, h: 0.4,
     fontSize: 14, color: TEXT_GRAY, fontFace: 'Aptos',
   });
@@ -236,37 +236,59 @@ export async function exportPpt(bank) {
     });
     // Description
     slide.addText(b.text, {
-      x: 0.8, y: yStart + 0.45, w: 12, h: 0.7,
+      x: 0.8, y: yStart + 0.45, w: 12, h: 0.6,
       fontSize: 11.5, color: '334155', fontFace: 'Aptos',
     });
-    // Causes header
-    slide.addText('Mögliche Ursachen / Branchenkontext', {
-      x: 0.8, y: yStart + 1.25, w: 12, h: 0.3,
+
+    // Zwei-Spalten: Externe / Interne Effekte
+    const colTop = yStart + 1.15;
+    const colH = 3.4;
+    const colW = 5.95;
+
+    // Linke Spalte – Externe Effekte
+    slide.addText('Externe Effekte', {
+      x: 0.8, y: colTop, w: colW, h: 0.3,
       fontSize: 10, color: TEXT_GRAY, fontFace: 'Aptos', bold: true,
     });
-    // Causes block
     slide.addShape('rect', {
-      x: 0.8, y: yStart + 1.55, w: 12, h: 3.0,
+      x: 0.8, y: colTop + 0.3, w: colW, h: colH,
       fill: { color: BG_LIGHT }, line: { color: BORDER, width: 0.5 },
     });
-    slide.addText(b.causes || '', {
-      x: 0.95, y: yStart + 1.65, w: 11.7, h: 2.85,
-      fontSize: 11, color: '334155', fontFace: 'Aptos',
+    slide.addText(b.externalEffects || '', {
+      x: 0.95, y: colTop + 0.4, w: colW - 0.3, h: colH - 0.2,
+      fontSize: 10.5, color: '334155', fontFace: 'Aptos',
       paraSpaceAfter: 4,
     });
-    // Recommendation header
-    slide.addText('Handlungsempfehlung', {
-      x: 0.8, y: yStart + 4.7, w: 12, h: 0.3,
-      fontSize: 10, color: 'B45309', fontFace: 'Aptos', bold: true,
+
+    // Rechte Spalte – Interne Effekte
+    const rightX = 0.8 + colW + 0.2;
+    slide.addText('Interne Effekte', {
+      x: rightX, y: colTop, w: colW, h: 0.3,
+      fontSize: 10, color: PRIMARY, fontFace: 'Aptos', bold: true,
     });
-    // Recommendation block
     slide.addShape('rect', {
-      x: 0.8, y: yStart + 5.0, w: 12, h: 0.6,
-      fill: { color: 'FFFBEB' }, line: { color: 'FDE68A', width: 0.5 },
+      x: rightX, y: colTop + 0.3, w: colW, h: colH,
+      fill: { color: 'FFFFFF' }, line: { color: PRIMARY, width: 0.75 },
+    });
+    slide.addText(b.internalEffects || '', {
+      x: rightX + 0.15, y: colTop + 0.4, w: colW - 0.3, h: colH - 0.2,
+      fontSize: 10.5, color: '334155', fontFace: 'Aptos',
+      paraSpaceAfter: 4,
+    });
+
+    // Recommendation
+    const recoY = colTop + colH + 0.5;
+    slide.addText('Handlungsempfehlung', {
+      x: 0.8, y: recoY, w: 12, h: 0.3,
+      fontSize: 10, color: TEXT_GRAY, fontFace: 'Aptos', bold: true,
+    });
+    slide.addShape('rect', {
+      x: 0.8, y: recoY + 0.3, w: 12, h: 0.5,
+      fill: { color: BG_LIGHT }, line: { color: BORDER, width: 0.5 },
     });
     slide.addText(b.recommendation || '', {
-      x: 0.95, y: yStart + 5.05, w: 11.7, h: 0.5,
-      fontSize: 11, color: '334155', fontFace: 'Aptos',
+      x: 0.95, y: recoY + 0.32, w: 11.7, h: 0.46,
+      fontSize: 10.5, color: '334155', fontFace: 'Aptos',
     });
   });
 
@@ -367,6 +389,6 @@ export async function exportPpt(bank) {
   });
 
   // ─── Datei speichern ─────────────────────────────────────
-  const filename = `Banken-KPI_${bank.id}_${REPORT_DATE.replace(/\./g, '-')}.pptx`;
+  const filename = `Banken-KPI_${bank.id}_${getReportDate().replace(/\./g, '-')}.pptx`;
   await pptx.writeFile({ fileName: filename });
 }

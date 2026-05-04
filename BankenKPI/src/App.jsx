@@ -6,7 +6,7 @@ import KPIMatrix from './components/KPIMatrix';
 import KPIDetailModal from './components/KPIDetailModal';
 import AIKommentar from './components/AIKommentar';
 import { BANKS, getBank } from './data/banks';
-import { SEGMENTS, KPI_GROUPS } from './data/kpiData';
+import { SEGMENTS, KPI_GROUPS, getReportDate } from './data/kpiData';
 import { exportPpt } from './utils/pptExport';
 
 function readBankId() {
@@ -49,37 +49,19 @@ export default function App() {
       <Header
         bank={bank}
         onBankChange={handleBankChange}
+        activeSegment={activeSegment}
+        onSegmentChange={setActiveSegment}
         onExportPpt={handleExportPpt}
         onExportPdf={handleExportPdf}
       />
 
       <main className="flex-1 px-6 py-6 space-y-6 max-w-[1600px] w-full mx-auto">
-        {/* Segment selector */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <h2 className="text-xl font-bold text-slate-800">KPI-Cockpit · {segment.label}</h2>
-            <p className="text-sm text-slate-500">
-              KPIs gemäß XYZ-Meldung mit 12-Monats-Verlauf, Plan-/Ist-Abweichungen und Ampelbewertung.
-              Klick auf eine KPI-Kachel öffnet die Detailansicht inkl. KI-Erläuterung.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {SEGMENTS.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => setActiveSegment(s.id)}
-                className={clsx(
-                  'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border',
-                  s.id === activeSegment
-                    ? 'text-white shadow-md border-transparent'
-                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50',
-                )}
-                style={s.id === activeSegment ? { background: bank.primary } : undefined}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
+        <div>
+          <h2 className="text-xl font-bold text-slate-800">KPI-Cockpit · {segment.label}</h2>
+          <p className="text-sm text-slate-500">
+            KPIs gemäß XYZ-Meldung mit 12-Monats-Verlauf, Plan-/Ist-Abweichungen und Ampelbewertung.
+            Klick auf eine KPI-Kachel öffnet die Detailansicht inkl. KI-Erläuterung.
+          </p>
         </div>
 
         {/* KPI Cards grouped */}
@@ -120,7 +102,7 @@ export default function App() {
             Banken-KPI · Whitelabel-Demo · {bank.name} · DUMMY DATEN VERTRAULICH
           </div>
           <div className="flex items-center gap-3">
-            <span>Datenstand: 14.01.2026</span>
+            <span>Datenstand: {getReportDate()}</span>
             <span className="w-px h-3 bg-slate-300" />
             <span>gem. XYZ-Meldung</span>
           </div>

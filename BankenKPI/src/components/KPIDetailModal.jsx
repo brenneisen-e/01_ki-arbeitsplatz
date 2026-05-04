@@ -1,4 +1,4 @@
-import { X, Sparkles, Target, AlertTriangle, CheckCircle2, AlertCircle, Lightbulb, ListTree } from 'lucide-react';
+import { X, Sparkles, Target, AlertTriangle, CheckCircle2, AlertCircle, Lightbulb, Globe2, Building2 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip,
   CartesianGrid, ReferenceLine, Legend,
@@ -140,22 +140,40 @@ export default function KPIDetailModal({ data, bank, onClose }) {
                 </div>
               )}
 
-              {ai.causes?.length > 0 && (
-                <div className="bg-white/70 rounded-lg p-3 mb-3 border border-white">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                    <ListTree size={12} strokeWidth={2} />
-                    Mögliche Ursachen / Branchenkontext
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                {ai.externalEffects?.length > 0 && (
+                  <div className="bg-white/70 rounded-lg p-3 border border-white">
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                      <Globe2 size={12} strokeWidth={2} />
+                      Externe Effekte
+                    </div>
+                    <ul className="space-y-1.5">
+                      {ai.externalEffects.map((c, i) => (
+                        <li key={i} className="text-sm text-slate-700 flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: '#64748b' }} />
+                          <RichText>{c}</RichText>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="space-y-1.5">
-                    {ai.causes.map((c, i) => (
-                      <li key={i} className="text-sm text-slate-700 flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: bank.primary }} />
-                        <RichText>{c}</RichText>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                )}
+                {ai.internalEffects?.length > 0 && (
+                  <div className="bg-white rounded-lg p-3 border" style={{ borderColor: bank.primary + '40' }}>
+                    <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: bank.primary }}>
+                      <Building2 size={12} strokeWidth={2} />
+                      Interne Effekte
+                    </div>
+                    <ul className="space-y-1.5">
+                      {ai.internalEffects.map((c, i) => (
+                        <li key={i} className="text-sm text-slate-700 flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: bank.primary }} />
+                          <RichText>{c}</RichText>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
 
               <div className="bg-white rounded-lg p-3 border border-slate-100 flex items-start gap-2">
                 <Lightbulb size={16} strokeWidth={1.75} className="text-amber-500 shrink-0 mt-0.5" />

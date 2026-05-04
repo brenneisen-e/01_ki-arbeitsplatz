@@ -37,19 +37,8 @@ export default function RichText({ children, className }) {
         </strong>,
       );
     } else {
-      // [color:text]
-      const color = match[2];
-      const inner = match[3];
-      const cfg = PASTEL[color] || PASTEL.slate;
-      parts.push(
-        <span
-          key={'c-' + key++}
-          className="px-1.5 py-0.5 rounded font-semibold"
-          style={{ background: cfg.bg, color: cfg.text }}
-        >
-          {inner}
-        </span>,
-      );
+      // [color:text] – Pastellfarben deaktiviert, nur als normaler Text rendern.
+      parts.push(match[3]);
     }
     lastIndex = match.index + match[0].length;
   }

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
   Sparkles, ChevronRight, RefreshCw, AlertTriangle, AlertCircle, CheckCircle2,
-  Lightbulb, ListTree,
+  Lightbulb, Globe2, Building2,
 } from 'lucide-react';
 import { buildKommentar } from '../data/aiAnalyse';
 import { AMPEL_COLORS } from '../data/kpiData';
@@ -67,31 +67,52 @@ export default function AIKommentar({ bank }) {
                   {b.text}
                 </RichText>
 
-                {b.causes?.length > 0 && (
-                  <div className="bg-slate-50 rounded-lg px-4 py-3 mb-3 border border-slate-100">
-                    <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
-                      <ListTree size={12} strokeWidth={2} />
-                      Mögliche Ursachen / Branchenkontext
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                  {b.externalEffects?.length > 0 && (
+                    <div className="bg-slate-50 rounded-lg px-4 py-3 border border-slate-200">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        <Globe2 size={12} strokeWidth={2} />
+                        Externe Effekte
+                      </div>
+                      <ul className="space-y-1.5">
+                        {b.externalEffects.map((c, ci) => (
+                          <li key={ci} className="text-sm text-slate-700 leading-relaxed flex gap-2">
+                            <span
+                              className="w-1.5 h-1.5 rounded-full shrink-0 mt-2"
+                              style={{ background: '#64748b' }}
+                            />
+                            <RichText>{c}</RichText>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="space-y-1.5">
-                      {b.causes.map((c, ci) => (
-                        <li key={ci} className="text-sm text-slate-700 leading-relaxed flex gap-2">
-                          <span
-                            className="w-1.5 h-1.5 rounded-full shrink-0 mt-2"
-                            style={{ background: bank.primary }}
-                          />
-                          <RichText>{c}</RichText>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                  )}
+                  {b.internalEffects?.length > 0 && (
+                    <div className="rounded-lg px-4 py-3 border" style={{ background: '#f8fafc', borderColor: bank.primary + '40' }}>
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: bank.primary }}>
+                        <Building2 size={12} strokeWidth={2} />
+                        Interne Effekte
+                      </div>
+                      <ul className="space-y-1.5">
+                        {b.internalEffects.map((c, ci) => (
+                          <li key={ci} className="text-sm text-slate-700 leading-relaxed flex gap-2">
+                            <span
+                              className="w-1.5 h-1.5 rounded-full shrink-0 mt-2"
+                              style={{ background: bank.primary }}
+                            />
+                            <RichText>{c}</RichText>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
 
                 {b.recommendation && (
-                  <div className="bg-amber-50/60 rounded-lg px-4 py-3 border border-amber-100 flex items-start gap-2">
-                    <Lightbulb size={16} strokeWidth={1.75} className="text-amber-500 shrink-0 mt-0.5" />
+                  <div className="bg-slate-50 rounded-lg px-4 py-3 border border-slate-200 flex items-start gap-2">
+                    <Lightbulb size={16} strokeWidth={1.75} className="text-slate-500 shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-amber-700 mb-1">
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                         Handlungsempfehlung
                       </div>
                       <RichText className="text-sm text-slate-700 leading-relaxed block">
@@ -109,8 +130,9 @@ export default function AIKommentar({ bank }) {
       <div className="px-5 py-3 border-t border-slate-100 bg-slate-50 flex items-center gap-2 text-xs text-slate-400">
         <Sparkles size={12} strokeWidth={1.75} />
         <span>
-          Generiert aus den im Dashboard angezeigten Werten. Branchenwissen integriert
-          (Basel IV, DORA, Tarifabschluss, Tagesgeld-/Festgeld-Aktionen, Private-Credit-Wettbewerb).
+          Generiert aus den im Dashboard angezeigten Werten. Trennung in <strong className="text-slate-600">Externe Effekte</strong>
+          {' '}(Markt, Regulatorik, Wettbewerb) und <strong className="text-slate-600">Interne Effekte</strong>
+          {' '}(eigene Aktionen, Pricing-Entscheidungen, Pipeline-Lage).
         </span>
       </div>
     </div>

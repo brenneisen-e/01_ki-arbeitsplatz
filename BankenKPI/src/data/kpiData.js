@@ -232,4 +232,18 @@ export const AMPEL_COLORS = {
   gray:   { bg: '#f1f5f9', text: '#475569', dot: '#94a3b8' },
 };
 
-export const REPORT_DATE = '14.01.2026';
+// Stand des Berichts. Wird zur Laufzeit ermittelt, damit der Bericht
+// immer „heute" zeigt. Format: DD.MM.YYYY.
+export function getReportDate() {
+  return new Date().toLocaleDateString('de-DE', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+  });
+}
+
+// Backwards-Kompatibilität: einige Stellen importieren `REPORT_DATE`
+// als String. Ein Getter via Object.defineProperty auf dem Modul wäre
+// schöner, in ESM aber nicht möglich – wir vergeben deshalb einen
+// Live-String, der bei Modul-Initialisierung gesetzt wird. Komponenten,
+// die den aktuellen Tag wirklich benötigen (z. B. Header) rufen
+// `getReportDate()` direkt auf.
+export const REPORT_DATE = getReportDate();

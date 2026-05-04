@@ -4,7 +4,7 @@ import {
   Home, ChevronDown, Download, FileText, ShieldCheck, BarChart3, Calendar,
 } from 'lucide-react';
 import { BANKS, getBankLogoUrl } from '../data/banks';
-import { REPORT_DATE, SEGMENTS } from '../data/kpiData';
+import { getReportDate, SEGMENTS } from '../data/kpiData';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -163,7 +163,7 @@ export default function Header({ bank, onBankChange, activeSegment, onSegmentCha
           {/* Stand */}
           <span className="hidden md:flex items-center gap-1.5 text-white/70 text-xs">
             <Calendar size={13} strokeWidth={1.75} />
-            Stand: {REPORT_DATE}
+            Stand: {getReportDate()}
           </span>
 
           {/* Export */}

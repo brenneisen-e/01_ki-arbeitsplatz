@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { clsx } from 'clsx';
 import {
   Home, ChevronDown, Download, FileText, ShieldCheck, BarChart3, Calendar,
+  Lock, FlaskConical,
 } from 'lucide-react';
 import { BANKS, getBankLogoUrl } from '../data/banks';
 import { getReportDate, SEGMENTS } from '../data/kpiData';
@@ -146,15 +147,19 @@ export default function Header({ bank, onBankChange, activeSegment, onSegmentCha
             </div>
           </div>
 
-          {/* Compliance Badges */}
+          {/* Klassifizierung & AI-Hinweis */}
           <div className="flex items-center gap-2 ml-4 pl-4 border-l border-white/20">
-            <span className="flex items-center gap-1 text-emerald-300 text-xs bg-white/10 px-2.5 py-1 rounded-full">
-              <ShieldCheck size={13} />
-              MaRisk
+            <span className="flex items-center gap-1 text-white/80 text-xs bg-white/10 px-2.5 py-1 rounded-full">
+              <Lock size={12} strokeWidth={2} />
+              Vertraulich
+            </span>
+            <span className="flex items-center gap-1 text-white/80 text-xs bg-white/10 px-2.5 py-1 rounded-full">
+              <FlaskConical size={12} strokeWidth={2} />
+              Demo-Daten
             </span>
             <span className="flex items-center gap-1 text-emerald-300 text-xs bg-white/10 px-2.5 py-1 rounded-full">
               <ShieldCheck size={13} />
-              CRR / Basel IV
+              EU AI Act
             </span>
           </div>
         </div>
@@ -203,7 +208,7 @@ export default function Header({ bank, onBankChange, activeSegment, onSegmentCha
             )}
           </div>
 
-          <span className="text-[11px] text-white/40 tracking-wide">DUMMY DATEN — Vertraulich · Demo</span>
+          <span className="text-[11px] text-white/40 tracking-wide">gem. XYZ-Meldung</span>
         </div>
       </div>
 

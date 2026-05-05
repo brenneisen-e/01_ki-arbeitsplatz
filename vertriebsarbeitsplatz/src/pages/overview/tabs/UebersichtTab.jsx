@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star, Megaphone, ChevronDown, ChevronRight, Users, TrendingUp, X, Mail, Target, ListChecks, Send, BarChart, PlayCircle, Copy } from 'lucide-react';
+import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star, Megaphone, ChevronDown, ChevronRight, Users, TrendingUp, X, Mail, Target, ListChecks, Send, BarChart, PlayCircle, Copy, Rocket, Shield, Gem, Plane, GitMerge, Hourglass, Layers, Briefcase, Activity } from 'lucide-react';
 
 const CAMPAIGN_ICONS = { Home, Users, TrendingUp, Heart, Sparkles };
 import Card from '../../../components/ui/Card';
@@ -628,12 +628,179 @@ const PROVISIONSABRECHNUNGEN = {
   ],
 };
 
+// Hyperpersonalisierte Produkte – extrem kurze Release-Zyklen, Time-to-Market
+// in Tagen statt Monaten. Pro Modus zwei Beispielprodukte mit jeweils einem
+// USP-Baustein (extra-Baustein), passendem Match-Score und einer Liste
+// gemappter Bestandskunden, die das Produkt aufgrund ihres Profils brauchen
+// (Beruf, Einkommen, Familie, Lebenslage). Die Kundennamen/IDs spiegeln
+// reale Datensätze aus KUNDEN_BY_MODE wider, damit der Klick auf eine Karte
+// den Berater direkt in die Detail-Stammdaten führen kann.
+const HYPERPERSONALISIERTE_PRODUKTE = {
+  versicherung: [
+    {
+      id: 'hnw-unfall',
+      titel: 'Premium Unfallschutz HNW Plus',
+      tagline: 'Unfallpolice exklusiv für vermögende Privatkunden',
+      zielgruppe: 'Privatvermögen ≥ 1 Mio EUR oder Haushaltsnetto ≥ 10.000 EUR',
+      timeToMarket: 18,
+      releaseZyklus: '6 Wochen',
+      versionsLabel: 'v2026.03 — Live seit 02.05.2026',
+      monatsBeitrag: '89–240 EUR',
+      photoGradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #6d28d9 100%)',
+      photoAccent: '#c4b5fd',
+      icon: 'Gem',
+      bausteinIcon: 'Plane',
+      bausteinTitel: 'Concierge & Privatklinik-Garantie',
+      bausteinBeschreibung:
+        'Bei Unfall im In- und Ausland weltweit medizinischer Privatjet-Rücktransport mit Notarztteam. Garantierter Aufnahmeplatz in einer kooperierenden Privatklinik (Beta-Klinik Bonn, Schön Klinik München, Klinik Hirslanden Zürich) ohne Wartezeit. 24/7-Familien-Concierge übernimmt Reise-, Hotel- und Schulmanagement der Angehörigen während der Genesung — bis zu 90 Tage, weltweit.',
+      bausteinHighlights: [
+        'Privatjet-Rückführung weltweit (max. 4 Std. Reaktionszeit)',
+        'Privatklinik-Aufnahmegarantie ohne Wartezeit',
+        '24/7-Familien-Concierge bis zu 90 Tage',
+        'Zweitmeinungs-Netzwerk Top-50 Universitätskliniken',
+      ],
+      passendeKunden: [
+        {
+          kundeId: 'KD00003', name: 'Thomas Weber', match: 96,
+          begruendung: 'GmbH-Geschäftsführer (Weber Sanitär), 4.800 EUR netto + Geschäftsanteil ≈ 1,4 Mio EUR. Reist quartalsweise zu Lieferanten in Italien — Auslandsschutz dringend.',
+        },
+        {
+          kundeId: 'KD00004', name: 'Anna Hoffmann', match: 94,
+          begruendung: 'Ärztin Uniklinik Köln, 5.500 EUR netto, hohe Kreditrate (Eigenheim), keine bestehende Unfallpolice. HNW-Familienprofil mit Kind Emma (3 J.).',
+        },
+        {
+          kundeId: 'KD00008', name: 'Sandra Yilmaz', match: 91,
+          begruendung: 'Pharma-Referentin (5.200 EUR) + Partner Mehmet Zahnarzt (selbstständig, 6.500 EUR). Gemeinsames HH-Netto 11.700 EUR, Praxisinventar als Vermögenswert.',
+        },
+      ],
+    },
+    {
+      id: 'flexcare-pflege',
+      titel: 'FlexCare Pflege Eltern-Kind 360',
+      tagline: 'Cross-Generations-Pflegeschutz mit Eltern-Modul',
+      zielgruppe: 'Berufstätige 35–55 J. mit pflegerelevanten Eltern',
+      timeToMarket: 21,
+      releaseZyklus: '8 Wochen',
+      versionsLabel: 'v2026.02 — Live seit 14.04.2026',
+      monatsBeitrag: '49–138 EUR',
+      photoGradient: 'linear-gradient(135deg, #064e3b 0%, #0d9488 50%, #0891b2 100%)',
+      photoAccent: '#a7f3d0',
+      icon: 'Heart',
+      bausteinIcon: 'Hourglass',
+      bausteinTitel: 'Pflegeplatz-Garantie 72 Std. + Steuer-Service',
+      bausteinBeschreibung:
+        'Modular eine oder beide Elternteile in dieselbe Police einschließen — Vorerkrankungen werden modular eingepreist statt ausgeschlossen. Im Pflegefall garantiert das Heimplatz-Netzwerk die Aufnahme binnen 72 Stunden in einer kooperierenden Einrichtung (Korian, Alloheim, Pro Seniore). Automatisierter Steuer-Service erfasst alle absetzbaren Pflegekosten und reicht sie quartalsweise ans Finanzamt.',
+      bausteinHighlights: [
+        'Eltern-Mit-Versicherung trotz Vorerkrankung',
+        '72-h-Pflegeplatz-Garantie (Korian, Alloheim, Pro Seniore)',
+        'Quartalsweise Steuer-Rückerstattung Pflegekosten',
+        'Digitaler Pflegegrad-Antrag via App in 12 Min.',
+      ],
+      passendeKunden: [
+        {
+          kundeId: 'KD00001', name: 'Klaus Fischer', match: 92,
+          begruendung: 'Sandwich-Generation: 42 J., 2 kleine Kinder, Eltern Mitte 70 (laut FIDA-Scoring keine Pflegeabsicherung). Konsolidierungs-Lebenslage.',
+        },
+        {
+          kundeId: 'KD00003', name: 'Thomas Weber', match: 88,
+          begruendung: 'Mutter Renate, 79 J., laut Praxis-Buchhaltung regelmäßige Apothekenüberweisungen — Pflegerisiko steigend. Eigene Police bisher ohne Eltern-Modul.',
+        },
+        {
+          kundeId: 'KD00007', name: 'Michael Braun', match: 86,
+          begruendung: 'Gymnasiallehrer, 62 J., Frau Renate bereits in Ruhestand. Eltern verstorben — Police als Eigenabsicherung mit Pflegegrad-Trigger besonders relevant.',
+        },
+      ],
+    },
+  ],
+  banking: [
+    {
+      id: 'family-office-liquidity',
+      titel: 'Family-Office Liquiditätsbridge',
+      tagline: 'Multi-Custody Tagesgeld-Sweep für Privatkunden',
+      zielgruppe: 'Einlagen ≥ 500.000 EUR oder eigene Stiftung/Holding',
+      timeToMarket: 12,
+      releaseZyklus: '4 Wochen',
+      versionsLabel: 'v2026.04 — Live seit 22.04.2026',
+      monatsBeitrag: '0 EUR (erfolgsbasiert 0,12 % p.a.)',
+      photoGradient: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #0ea5e9 100%)',
+      photoAccent: '#bfdbfe',
+      icon: 'Layers',
+      bausteinIcon: 'GitMerge',
+      bausteinTitel: 'Stiftungs-Bridge & Treasury-AI',
+      bausteinBeschreibung:
+        'Automatischer Tagesgeld-Sweep zwischen drei kooperierenden Custody-Banken (DZ BANK, BNP Paribas, J. Safra Sarasin) — der Algorithmus alloziert Liquidität täglich auf das beste Tagesgeld-Konto. Zusätzlicher Stiftungs-Bridge-Baustein: stundungsfähige Liquiditätsbrücke zwischen Privatvermögen und eigener Privatstiftung/Holding inkl. KI-gestützter Cashflow-Prognose über 36 Monate.',
+      bausteinHighlights: [
+        'Tagesgeld-Sweep über 3 Custody-Banken',
+        'Stiftungs-Bridge mit Stundungsmodell',
+        'KI-Cashflow-Prognose 36 Monate',
+        'Konsolidiertes Reporting & e-Bilanz-Export',
+      ],
+      passendeKunden: [
+        {
+          kundeId: 'BK00003', name: 'Peter Hoffmann', match: 95,
+          begruendung: 'GmbH-Geschäftsführer Siemens Healthineers, 8.500 EUR netto, hohe Bonus-Tranchen. Liquidität schwankt zwischen 280k und 1,2 Mio EUR.',
+        },
+        {
+          kundeId: 'BK00005', name: 'Andrea Lang', match: 90,
+          begruendung: 'Ärztin mit eigener Praxis (laufender Praxiskredit 85.000 EUR). Liquiditätspuffer Praxis + privat ≈ 620.000 EUR auf zwei Konten.',
+        },
+        {
+          kundeId: 'BK00001', name: 'Klaus Fischer', match: 78,
+          begruendung: 'Vertriebsleiter Bosch (4.500 EUR) + Bonusvereinbarung. Erbschaftsantritt 2025 (≈ 480.000 EUR) bisher nur Tagesgeld 0,5 %.',
+        },
+      ],
+    },
+    {
+      id: 'nextgen-erbe',
+      titel: 'NextGen Erbe-Coach Bundle',
+      tagline: 'Konto + Robo + Lifecoach für junge Erben',
+      zielgruppe: '25–40 J., Erbschaft/Schenkung ≥ 100.000 EUR',
+      timeToMarket: 9,
+      releaseZyklus: '3 Wochen',
+      versionsLabel: 'v2026.05 — Live seit 28.04.2026',
+      monatsBeitrag: '19,90 EUR All-in',
+      photoGradient: 'linear-gradient(135deg, #831843 0%, #be185d 50%, #f59e0b 100%)',
+      photoAccent: '#fbcfe8',
+      icon: 'Rocket',
+      bausteinIcon: 'Users',
+      bausteinTitel: 'Erbschafts-Mediator & Family-Charta-Workshop',
+      bausteinBeschreibung:
+        'Bundle aus Tagesgeldkonto, Robo-Advisor (3 ESG-Strategien) und persönlichem Lifecoach-Buddy mit monatlichem 1:1. USP-Baustein: rechtliche und psychologische Begleitung bei Familien-Erbkonflikten — Notar, Mediator und Coach erstellen gemeinsam mit der Familie eine schriftliche Family-Charta für Vermögen, Werte und Generationenübergang.',
+      bausteinHighlights: [
+        'Robo-Advisor 3 ESG-Strategien',
+        'Monatlicher Lifecoach-Buddy 1:1',
+        'Mediation & Family-Charta inkl.',
+        'Steuer-Optimierungs-Check Erbschaft',
+      ],
+      passendeKunden: [
+        {
+          kundeId: 'BK00004', name: 'Markus Wagner', match: 93,
+          begruendung: '29 J., junge Familie mit Neugeborenem, Schenkung Eltern 180.000 EUR (laut Kontoeingang 03/2026). Sucht Anlagestrategie + Beratung.',
+        },
+        {
+          kundeId: 'BK00006', name: 'Stefan Braun', match: 89,
+          begruendung: '36 J., Tech-Lead, Erbschaft Großmutter 240.000 EUR Q4/2025 unverändert auf Girokonto. Hohe Affinität für digitale Tools.',
+        },
+        {
+          kundeId: 'BK00002', name: 'Sandra Müller', match: 84,
+          begruendung: '33 J., Schenkung Eltern für Hauskauf in Vorbereitung. Wunsch nach Beratung zu Schenkung-Steuer und Familien-Charta für Kinder.',
+        },
+      ],
+    },
+  ],
+};
+
+const PRODUKT_ICONS = { Gem, Heart, Layers, Rocket, Plane, Hourglass, GitMerge, Users, Shield, Briefcase, Activity, Sparkles };
+
 export default function UebersichtTab() {
   const { modeId, config, navigateTo, setActiveTab } = useMode();
   const { t, tn, lang } = useTranslation();
   const [mandatFilter, setMandatFilter] = useState('alle');
   const [expandedKampagne, setExpandedKampagne] = useState('fruehlings-baufi');
   const [kampagneModal, setKampagneModal] = useState(null);
+  const [produktModal, setProduktModal] = useState(null);
+  const hyperPersonalisierteProdukte = HYPERPERSONALISIERTE_PRODUKTE[modeId] || [];
+  const showHyperProdukte = (modeId === 'banking' || modeId === 'versicherung') && hyperPersonalisierteProdukte.length > 0;
   // Marketingkampagnen are derived from the active institut so the campaign
   // titles always reflect the current institut's brand (no Volksbank-only
   // names leaking into Zukunftsbank, Sparkasse etc. — and no ERGO-only names
@@ -1003,6 +1170,97 @@ export default function UebersichtTab() {
                 </div>
               );
             })()}
+          </Card>
+        )}
+
+        {/* Individuelle Produktbausteine (Hyperpersonalisierte Produkte mit
+            extrem kurzen Release-Zyklen). Der Berater sieht zwei für sein
+            Modus aktuell scharf geschaltete Produkte (Versicherung / Banking)
+            inkl. Time-to-Market-Badge und kann per Klick einen USP-Baustein
+            sowie die gemappten Bestandskunden einsehen. */}
+        {showHyperProdukte && (
+          <Card hover={false}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Rocket size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+                <h3 className="font-semibold text-slate-800">Individuelle Produktbausteine</h3>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-violet-100 text-violet-700 ml-1">
+                  Hyperpersonalisiert
+                </span>
+              </div>
+              <span className="text-sm text-slate-400">
+                {hyperPersonalisierteProdukte.length} Produkte · Time-to-Market &lt; 21 Tage
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {hyperPersonalisierteProdukte.map((produkt) => {
+                const Icon = PRODUKT_ICONS[produkt.icon] || Sparkles;
+                const BausteinIcon = PRODUKT_ICONS[produkt.bausteinIcon] || Sparkles;
+                return (
+                  <div
+                    key={produkt.id}
+                    role="button"
+                    tabIndex={0}
+                    className="group relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5 bg-white flex flex-col"
+                    onClick={() => setProduktModal(produkt)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setProduktModal(produkt); }}
+                  >
+                    <div
+                      className="relative h-32 flex items-center justify-between px-5 overflow-hidden"
+                      style={{ background: produkt.photoGradient }}
+                    >
+                      <div
+                        className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-25"
+                        style={{ background: produkt.photoAccent }}
+                      />
+                      <div
+                        className="absolute -bottom-6 -left-6 w-20 h-20 rounded-full opacity-20"
+                        style={{ background: produkt.photoAccent }}
+                      />
+                      <div className="relative z-10 flex items-center gap-3 min-w-0">
+                        <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+                          <Icon size={24} className="text-white" strokeWidth={1.75} />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-[10px] font-bold text-white/80 uppercase tracking-wider">
+                            Time-to-Market: {produkt.timeToMarket} Tage
+                          </div>
+                          <div className="text-xs text-white/70 mt-0.5 truncate">
+                            Release-Zyklus: {produkt.releaseZyklus}
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        className="relative z-10 inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-extrabold text-slate-800 bg-white shadow-sm"
+                        title={`${produkt.passendeKunden.length} passende Kunden`}
+                      >
+                        {produkt.passendeKunden.length}
+                      </span>
+                    </div>
+
+                    <div className="p-4 flex-1 flex flex-col">
+                      <div className="text-base font-bold text-slate-800 mb-1 line-clamp-1">{produkt.titel}</div>
+                      <div className="text-xs text-slate-500 mb-3 line-clamp-1">{produkt.tagline}</div>
+
+                      <div className="rounded-lg bg-violet-50/70 border border-violet-100 p-2.5 mb-3">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <BausteinIcon size={13} className="text-violet-700" strokeWidth={2} />
+                          <span className="text-[10px] font-bold text-violet-800 uppercase tracking-wider">USP-Baustein</span>
+                        </div>
+                        <div className="text-xs font-semibold text-slate-800 leading-snug line-clamp-2">{produkt.bausteinTitel}</div>
+                      </div>
+
+                      <div className="mt-auto flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
+                        <span className="font-mono truncate">{produkt.versionsLabel}</span>
+                        <span className="text-violet-700 font-semibold flex items-center gap-0.5 whitespace-nowrap">
+                          Details <ChevronRight size={12} strokeWidth={2.5} />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </Card>
         )}
 
@@ -1396,6 +1654,152 @@ export default function UebersichtTab() {
           </div>
         </Card>
       </div>
+
+      {/* Hyperpersonalisiertes Produkt – Detail-Modal mit USP-Baustein und
+          gemappten Bestandskunden. Klick auf einen Kunden navigiert in die
+          Detail-Stammdaten. */}
+      {produktModal && (() => {
+        const p = produktModal;
+        const Icon = PRODUKT_ICONS[p.icon] || Sparkles;
+        const BausteinIcon = PRODUKT_ICONS[p.bausteinIcon] || Sparkles;
+        const total = p.passendeKunden.length;
+        const avg = Math.round(p.passendeKunden.reduce((s, k) => s + k.match, 0) / Math.max(total, 1));
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={() => setProduktModal(null)}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div
+                className="relative h-48 flex items-center gap-4 px-8 overflow-hidden"
+                style={{ background: p.photoGradient }}
+              >
+                <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full opacity-30" style={{ background: p.photoAccent }} />
+                <div className="absolute -bottom-10 -left-10 w-36 h-36 rounded-full opacity-20" style={{ background: p.photoAccent }} />
+                <div className="relative z-10 w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+                  <Icon size={40} className="text-white" strokeWidth={1.5} />
+                </div>
+                <div className="relative z-10 flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-violet-500 text-white">
+                      Hyperpersonalisiert
+                    </span>
+                    <span className="text-[11px] font-mono text-white/80">{p.versionsLabel}</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white truncate">{p.titel}</h2>
+                  <p className="text-sm text-white/80 mt-1 truncate">{p.tagline}</p>
+                </div>
+                <button
+                  onClick={() => setProduktModal(null)}
+                  className="relative z-10 w-9 h-9 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors"
+                  aria-label="Schließen"
+                >
+                  <X size={18} strokeWidth={2} />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-5">
+                <div className="grid grid-cols-4 gap-3">
+                  <div className="rounded-xl border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-500 mb-1">Time-to-Market</div>
+                    <div className="text-xl font-bold text-violet-700">{p.timeToMarket} Tage</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-500 mb-1">Release-Zyklus</div>
+                    <div className="text-xl font-bold text-slate-800">{p.releaseZyklus}</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-500 mb-1">Ø Match</div>
+                    <div className="text-xl font-bold text-emerald-600">{avg}%</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-500 mb-1">Beitrag</div>
+                    <div className="text-xl font-bold text-slate-800">{p.monatsBeitrag}</div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Target size={12} /> Zielgruppe
+                  </h4>
+                  <p className="text-sm text-slate-700 leading-relaxed">{p.zielgruppe}</p>
+                </div>
+
+                <div className="rounded-xl border-2 border-violet-200 bg-violet-50/50 p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-lg bg-violet-200/70 flex items-center justify-center">
+                      <BausteinIcon size={16} className="text-violet-700" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">USP-Baustein</div>
+                      <div className="text-base font-bold text-slate-800">{p.bausteinTitel}</div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-700 leading-relaxed mb-3">{p.bausteinBeschreibung}</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {p.bausteinHighlights.map((h, i) => (
+                      <div key={i} className="flex items-start gap-1.5 text-xs text-slate-700">
+                        <CheckCircle size={13} className="text-violet-600 shrink-0 mt-0.5" strokeWidth={2.25} />
+                        <span className="leading-snug">{h}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Users size={12} /> Gemappte Bestandskunden ({total})
+                  </h4>
+                  <div className="space-y-2">
+                    {p.passendeKunden.map((kd) => (
+                      <div
+                        key={kd.kundeId}
+                        className="row-hover flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-white cursor-pointer transition-all"
+                        onClick={() => {
+                          setProduktModal(null);
+                          navigateTo('detail', { kundeId: kd.kundeId, tab: 'stammdaten' });
+                        }}
+                      >
+                        <Avatar name={kd.name} foto={getKundeFoto(kd.kundeId)} size={42} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-bold text-slate-800 truncate">{kd.name}</span>
+                            <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap ${
+                              kd.match >= 90 ? 'bg-emerald-100 text-emerald-800'
+                              : kd.match >= 80 ? 'bg-lime-100 text-lime-800'
+                              : 'bg-amber-100 text-amber-800'
+                            }`}>{kd.match}% Match</span>
+                          </div>
+                          <div className="text-xs text-slate-600 leading-snug">{kd.begruendung}</div>
+                        </div>
+                        <ChevronRight size={16} className="text-slate-400 shrink-0" strokeWidth={2} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex flex-wrap items-center justify-end gap-2 rounded-b-2xl">
+                <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+                  <Copy size={14} /> Produktblatt
+                </button>
+                <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
+                  <Mail size={14} /> An passende Kunden
+                </button>
+                <button
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-white transition-colors"
+                  style={{ background: 'var(--mode-primary)' }}
+                >
+                  <PlayCircle size={14} /> Angebot starten
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Marketingkampagne Detail Modal */}
       {kampagneModal && (() => {

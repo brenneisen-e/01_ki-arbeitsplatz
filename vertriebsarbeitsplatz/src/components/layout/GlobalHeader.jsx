@@ -269,8 +269,8 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
               />
             )}
           </div>
-          {/* Demo-Zeitmaschine (nur Banking) */}
-          {modeId === 'banking' && (
+          {/* Demo-Zeitmaschine (Banking + Versicherung) */}
+          {(modeId === 'banking' || modeId === 'versicherung') && (
             <button
               onClick={() => {
                 if (dayAdvanced) {

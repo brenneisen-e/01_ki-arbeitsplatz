@@ -408,27 +408,38 @@ export function getDemoResponse(message, { currentView, modeId }) {
         navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
       };
     }
-    // versicherung
-    return {
-      content: `<div class="space-y-3">
-        <p class="font-semibold">${tx('Aktuelle Leads', 'Current Leads')}</p>
-        <p>${tx('Ich habe <strong>10 aktive Vertriebschancen</strong> identifiziert:', 'I have identified <strong>10 active sales opportunities</strong>:')}</p>
-        <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Neukunden (4):', 'New Customers (4):')} </p>
-        <ol class="list-decimal pl-4 space-y-1">
-          <li><strong>Familie Richter</strong> — ${tx('Empfehlung Bestandskunde, Komplettabsicherung', 'Referral from existing customer, full coverage')}</li>
-          <li><strong>Jan Krüger</strong> — ${tx('Berufsstart, BU + Haftpflicht', 'Career start, disability + liability insurance')}</li>
-          <li><strong>Dr. Eva Lorenz</strong> — ${tx('PKV-Wechsel, Ärztetarif', 'Private health insurance switch, physician rate')}</li>
-        </ol>
-        <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Bestandskunden (6):', 'Existing Customers (6):')} </p>
-        <ol class="list-decimal pl-4 space-y-1">
-          <li><strong>Braun ${tx('Pflegezusatz', 'Care Supplement')}</strong> — ${tx('Ehepaar, Cross-Sell Potenzial', 'Married couple, cross-sell potential')}</li>
-          <li><strong>Schmidt ${tx('BU-Erhöhung', 'DI Increase')}</strong> — ${tx('Gehaltsanpassung, Nachversicherung', 'Salary adjustment, subsequent insurance')}</li>
-          <li><strong>Weber ${tx('LV-Ablauf 2028', 'Life Insurance Expiry 2028')}</strong> — ${tx('Wiederanlage + Rentenvorsorge', 'Reinvestment + pension provision')}</li>
-        </ol>
-        <p class="text-xs text-slate-500 mt-2">${tx('→ Wechsel zum Tab <em>Potenziale</em> für Details...', '→ Switch to the <em>Potentials</em> tab for details...')}</p>
-      </div>`,
-      navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
-    };
+    // versicherung — gleiche Logik wie Banking: echte Potenziale aus
+    // getAllPotentiale lesen, damit die Chatbot-Antwort zu den Inhalten
+    // im Potenziale-Tab passt (CLAUDE.md: keine hardcodierten Namen).
+    {
+      const allPot = getAllPotentiale('versicherung');
+      const identifiziert = allPot.filter(p => p.status === 'identifiziert');
+      const prioRank = { kritisch: 5, sehr_hoch: 4, hoch: 3, mittel: 2, niedrig: 1 };
+      const topPotentiale = [...identifiziert]
+        .sort((a, b) => (prioRank[b.prioritaet] || 0) - (prioRank[a.prioritaet] || 0) || (b.volumen || 0) - (a.volumen || 0))
+        .slice(0, 6);
+      const fmtAmount = (p) => {
+        if (!p.volumen) return '';
+        const v = p.volumen >= 1000 ? `${Math.round(p.volumen / 100) / 10}k€` : `${p.volumen}€`;
+        return p.volumenTyp === 'jaehrlich' ? `${v}/J.` : v;
+      };
+      const listItems = topPotentiale.map(p => {
+        const amt = fmtAmount(p);
+        return `<li><strong>${p.kundeName}</strong> — ${p.titel}${amt ? ` <span class="text-slate-500">(${amt})</span>` : ''}</li>`;
+      }).join('');
+      const totalCount = identifiziert.length;
+      return {
+        content: `<div class="space-y-3">
+          <p class="font-semibold">${tx('Deine neuen Leads', 'Your new leads')}</p>
+          <p>${tx(`Ich habe <strong>${totalCount} neue Potenziale</strong> in der Spalte „Identifiziert". Die wichtigsten:`, `I have identified <strong>${totalCount} new potentials</strong> in the "Identified" column. The top ones:`)}</p>
+          <ol class="list-decimal pl-4 space-y-1 text-[13px]">
+            ${listItems}
+          </ol>
+          <p class="text-xs text-slate-500 mt-2">${tx('→ Wechsel zum Tab <em>Potenziale</em> zeigt alle Leads im Kanban-Board.', '→ Switching to the <em>Potentials</em> tab shows all leads in the kanban board.')}</p>
+        </div>`,
+        navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
+      };
+    }
   }
 
   if (lower.includes('bu') || lower.includes('berufsunfähigkeit') || lower.includes('disability insurance')) {

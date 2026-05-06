@@ -1138,16 +1138,16 @@ function KITrainingToast({ kundeName, titel, reason, onDone }) {
   }, [onDone]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-end p-6 pointer-events-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
       <div
-        className="pointer-events-auto w-[360px] rounded-2xl shadow-2xl border overflow-hidden animate-fade-in"
+        className="w-[420px] max-w-full rounded-2xl shadow-2xl border overflow-hidden animate-fade-in-up"
         style={{
           background: 'linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%)',
           borderColor: '#c4b5fd',
-          boxShadow: '0 12px 40px -10px rgba(124, 58, 237, 0.35), 0 4px 12px rgba(15, 23, 42, 0.08)',
+          boxShadow: '0 24px 60px -12px rgba(124, 58, 237, 0.45), 0 8px 16px rgba(15, 23, 42, 0.12)',
         }}
       >
-        <div className="p-4">
+        <div className="p-5">
           <div className="flex items-start gap-3">
             <div
               className="relative w-10 h-10 rounded-xl flex items-center justify-center shrink-0"

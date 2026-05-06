@@ -210,7 +210,7 @@ export const V1 = {
       titel: 'Erh\u00f6hung Abdeckung Berufsunf\u00e4higkeitsversicherung', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 960, volumenTyp: 'jaehrlich',
       beschreibung: 'Zweites Kind, Einkommen gestiegen. BU deckt nur 69% statt 80%.',
       kiDescription: 'KI-Analyse: Klaus Fischer (42 J., IT-Projektleiter) hat nach der Geburt seines zweiten Kindes Max und einer Gehaltserhöhung auf 4.200\u20ac netto eine BU-Deckungslücke von 11 Prozentpunkten — aktuelle BU-Rente 1.800\u20ac/mtl. deckt nur 69% statt der empfohlenen 80% (2.600\u20ac). Bei einer 4-köpfigen Familie mit Baufinanzierung (285k Restschuld) ist eine Erhöhung auf ERGO BU Comfort Plus dringend empfohlen — Mehrprämie ca. 80\u20ac/mtl.',
-      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'termin',
+      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'identifiziert',
       herleitung: [
         { label: 'Aktuelles Nettoeinkommen', value: '4.200\u20ac/mtl.' },
         { label: 'Partnereinkommen', value: '1.800\u20ac/mtl. (Sarah, Lehrerin)' },
@@ -315,7 +315,7 @@ export const V1 = {
       titel: 'RLV-Erh\u00f6hung 150k\u2192300k', typ: 'anpassung', quellen: ['wettbewerb', 'lebensereignis'], prioritaet: 'hoch', volumen: 240, volumenTyp: 'jaehrlich',
       beschreibung: 'Allianz-RLV deckt nicht mal Baufi-Restschuld.',
       kiDescription: 'KI-Analyse: Die bestehende Allianz-RLV (150.000\u20ac) deckt nicht einmal die Baufinanzierungs-Restschuld von 285.000\u20ac ab \u2014 eine Deckungsl\u00fccke von 135.000\u20ac. Bei einer 4-k\u00f6pfigen Familie mit zwei Kindern (7 und 1 J.) und laufender Baufinanzierung ist eine Erh\u00f6hung auf 300.000\u20ac (5x Jahreseinkommen) dringend empfohlen \u2014 ERGO Risikoleben f\u00fcr ca. 780\u20ac/J.',
-      empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO Risikoleben', status: 'angeschrieben',
+      empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO Risikoleben', status: 'identifiziert',
       herleitung: [
         { label: 'Aktuelle RLV (Allianz)', value: '150.000\u20ac Deckung' },
         { label: 'Baufinanzierung Restschuld', value: '285.000\u20ac (Sparkasse K\u00f6ln)' },

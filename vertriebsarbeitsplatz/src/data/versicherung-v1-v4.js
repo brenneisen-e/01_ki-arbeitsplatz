@@ -9,7 +9,11 @@ export const V1 = {
   linkedin: { kontakte: 500, aktivitaet: 'mittel', branchen: ['IT', 'Digitalisierung'] },
   lebenssituation: 'konsolidierung',
   nps: 8, risikoscore: 28, potentialScore: 4.8, abwanderungsrisiko: 'niedrig',
-  tiere: { typ: null, rasse: null, name: null, vermutet: false, quelle: null, umsaetze: [] },
+  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [
+    { empfaenger: 'Fressnapf Köln', betrag: -85, haeufigkeit: 'monatlich' },
+    { empfaenger: 'Hundeschule Rhein', betrag: -45, haeufigkeit: 'monatlich' },
+    { empfaenger: 'Tierarztpraxis Dr. Müller', betrag: -120, haeufigkeit: 'quartalsweise' },
+  ] },
   risikoSignale: [
     {
       typ: 'extremsport',
@@ -27,8 +31,6 @@ export const V1 = {
   eigeneProdukte: [
     { typ: 'bu', sparte: 'leben', produkt: 'ERGO BU Comfort', details: '1.800\u20ac/mtl. Rente', praemie: 2160, seit: '2018-03', status: 'optimierbar' },
     { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO Kfz-Vollkasko', details: 'VW Tiguan, 500\u20ac SB, SF-12', praemie: 680, seit: '2021-06', status: 'aktiv' },
-    { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Basis', details: '65qm versichert, 145qm EFH \u2013 unterversichert', praemie: 180, seit: '2016-01', status: 'optimierbar' },
-    { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie 10M\u20ac', praemie: 95, seit: '2017-05', status: 'aktiv' },
     { typ: 'unfall', sparte: 'schaden', produkt: 'ERGO Unfallversicherung Basis', details: 'Basis-Tarif (Extremsport ausgeschlossen), 100k Invalidit\u00e4tsleistung', praemie: 120, seit: '2020-06', status: 'optimierbar' },
   ],
   fremdProdukte: [
@@ -40,6 +42,8 @@ export const V1 = {
     { typ: 'festgeld', produktart: 'Festgeld', institut: 'ING DiBa', details: '3,25% bis 2026', volumen: 25000, consent: true },
     { typ: 'kfz', produktart: 'KFZ-Vollkasko', institut: 'Allianz', details: 'VW Passat, SF-12', volumen: 720, consent: true },
     { typ: 'rlv', produktart: 'Risikolebensversicherung', institut: 'Allianz', details: '150k Deckung, bis 2035', volumen: 540, consent: true },
+    { typ: 'hausrat', produktart: 'Hausrat', institut: 'HUK', details: '65 qm Standard-Tarif (FALSCH seit 2021 – tatsächlich 145 qm EFH), keine Elementardeckung', volumen: 180, consent: true },
+    { typ: 'haftpflicht', produktart: 'Privathaftpflicht', institut: 'HUK', details: 'Familien-Tarif, 10 Mio. EUR Deckung', volumen: 95, consent: true },
   ],
   openFinance: {
     geldmarkt: [
@@ -62,6 +66,8 @@ export const V1 = {
     versicherungenFremd: [
       { produkt: 'KFZ-Vollkasko', institut: 'Allianz', details: 'VW Passat, SF-12', praemie: 720, deckungssumme: 'VK 50k / TK 25k', leistungen: ['GAP-Deckung', 'Mardersch\u00e4den', 'Auslandsschutz'], selbstbehalt: '300\u20ac VK' },
       { produkt: 'Risikolebensversicherung', institut: 'Allianz', details: '150k Deckung, bis 2035', praemie: 540, deckungssumme: '150.000\u20ac' },
+      { produkt: 'Hausrat', institut: 'HUK', details: '65 qm versichert (FALSCH seit Umzug 2021 \u2013 145 qm EFH), Standard-Tarif ohne Elementar', praemie: 180, deckungssumme: '650 \u20ac/m\u00b2', leistungen: ['Standard-Deckung'] },
+      { produkt: 'Privathaftpflicht', institut: 'HUK', details: 'Familien-Tarif, 10 Mio. \u20ac Deckung', praemie: 95, deckungssumme: '10.000.000 \u20ac', leistungen: ['Familie', 'Schl\u00fcsselverlust bis 1.000 \u20ac'] },
     ],
     finanzierungen: [
       { produkt: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', restschuld: 285000, zinssatz: '2,85% p.a.', rate: '1.450\u20ac/Mon.', laufzeit: 'bis 2045', details: 'Zinsbindung bis 09/2027', absicherung: null },
@@ -87,32 +93,33 @@ export const V1 = {
   ],
   potentiale: [
     {
-      titel: 'Allgemeiner Versicherungscheck – Bestand prüfen & optimieren',
-      typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion', 'risikosignal'], prioritaet: 'hoch', volumen: 1180, volumenTyp: 'jaehrlich',
-      beschreibung: 'Jahresreview aller fünf bestehenden Verträge (BU, Hausrat, Unfall, KFZ, Haftpflicht) plus Fremd-RLV bei Allianz. Drei Verträge sind in Lebenslage konsolidierbar bzw. unterversichert.',
-      kiDescription: 'KI-Analyse: Über die ERGO-Bestandsdaten + Open-Finance-Sicht (Allianz-RLV via FIDA) ergibt sich ein klares Optimierungsbild für Klaus Fischer:\n\n1. BU Comfort: aktuelle Rente 1.800€/mtl. deckt nur 69 % statt der empfohlenen 80 % – Lebenslage 2. Kind + Gehaltsplus rechtfertigen Upgrade auf BU Comfort Plus (2.600€/mtl., +80€/mtl.).\n\n2. Hausrat Basis: seit Umzug 2021 noch auf 65 qm versichert, tatsächlich 145 qm EFH – 55 % Unterversicherung + fehlender Elementarschutz. Upgrade Premium + Elementar (+120€/J.).\n\n3. Unfallversicherung Basis: schließt Extremsport explizit aus, Klaus ist regelmäßig in der Boulderhalle und Fallschirm-Aktivitäten erkannt – Upgrade auf ERGO Unfall Premium mit Sport-Baustein (+95€/J.).\n\n4. RLV Allianz (Fremdvertrag): 150k Deckung gegen 285k Baufi-Restschuld – Lücke 135k. ERGO Risikoleben 300k konsolidiert + Bündelvorteil (+240€/J.).\n\n5. KFZ-Vollkasko + Privathaftpflicht Premium: aktuell ohne Optimierungsbedarf – Bündelrabatt nach Konsolidierung (-95€/J.).\n\nGesamteffekt: ca. 1.180€ Mehrbeitrag p.a. bei deutlich höherer Deckung, alle Verträge bei einem Versicherer (1 Ansprechpartner), entfällt die Allianz-RLV im Bestand.',
-      empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO Bestandsoptimierung (BU + Hausrat + Unfall + RLV)', status: 'identifiziert',
+      titel: 'Allgemeiner Versicherungscheck – Bestand prüfen & konsolidieren',
+      typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion', 'risikosignal'], prioritaet: 'hoch', volumen: 1320, volumenTyp: 'jaehrlich',
+      beschreibung: 'Jahresreview: zwei Eigenverträge ({{versicherungspartner}} BU + Unfall) optimieren, vier Fremd-Policen (HUK Hausrat + HUK Privathaftpflicht + Allianz RLV + Allianz KFZ Passat) prüfen und beim Hausversicherer konsolidieren.',
+      kiDescription: 'KI-Analyse: Über den eigenen Bestand bei {{versicherungspartner}} + Open-Finance-Sicht (FIDA) auf vier Fremd-Policen ergibt sich ein klares Konsolidierungs- und Optimierungsbild für Klaus Fischer:\n\n1. BU Comfort (Eigenvertrag): aktuelle Rente 1.800€/mtl. deckt nur 69 % statt der empfohlenen 80 % – Lebenslage 2. Kind + Gehaltsplus rechtfertigen Upgrade auf BU Comfort Plus (2.600€/mtl., +80€/mtl.).\n\n2. Hausrat HUK (Fremd): seit Umzug 2021 noch auf 65 qm versichert, tatsächlich 145 qm EFH – 55 % Unterversicherung + fehlender Elementarschutz. Konsolidierung beim Hausversicherer auf Hausrat Premium + Elementar (+120€/J.).\n\n3. Privathaftpflicht HUK (Fremd): 95€/J. separater Beitrag entfällt komplett bei Konsolidierung im Familien-Bündel des Hausversicherers (Deckung 10 Mio. → 15 Mio. €).\n\n4. Unfallversicherung Basis (Eigenvertrag): schließt Extremsport explizit aus, Klaus ist regelmäßig in der Boulderhalle und Fallschirm-Aktivitäten erkannt – Upgrade auf Unfall Premium mit Sport-Baustein (+95€/J.).\n\n5. RLV Allianz (Fremd): 150k Deckung gegen 285k Baufi-Restschuld – Lücke 135k. Konsolidierung mit 300k Deckung beim Hausversicherer (+240€/J.).\n\nGesamteffekt: ca. 1.320€ Mehrbeitrag p.a. bei deutlich höherer Deckung, alle Verträge bei einem Versicherer (1 Ansprechpartner statt 3), 4 Fremd-Policen entfallen.',
+      empfohleneAktion: 'tarifvergleich', produktEmpfehlung: '{{versicherungspartner}} Bestandsoptimierung + Konsolidierung HUK/Allianz', status: 'identifiziert',
       herleitung: [
-        { label: 'Datenquelle', value: 'ERGO-Bestand + Open Finance (FIDA) Allianz-RLV' },
-        { label: 'BU aktuell', value: 'ERGO BU Comfort, 1.800€/mtl. (69% Deckung)' },
-        { label: 'Hausrat aktuell', value: 'ERGO Hausrat Basis, 65 qm (FALSCH – 145 qm EFH)' },
-        { label: 'Unfall aktuell', value: 'ERGO Unfallversicherung Basis (Extremsport ausgeschlossen)' },
+        { label: 'Datenquelle', value: 'Eigenbestand + Open Finance (FIDA) HUK + Allianz' },
+        { label: 'BU aktuell (Eigen)', value: 'BU Comfort, 1.800€/mtl. (69% Deckung)' },
+        { label: 'Hausrat aktuell (Fremd)', value: 'HUK Standard, 65 qm (FALSCH – 145 qm EFH)' },
+        { label: 'Haftpflicht aktuell (Fremd)', value: 'HUK Familie, 95 €/J., 10 Mio. € Deckung' },
+        { label: 'Unfall aktuell (Eigen)', value: 'Unfallversicherung Basis (Extremsport ausgeschlossen)' },
         { label: 'RLV aktuell (Fremd)', value: 'Allianz, 150k – Baufi-Restschuld 285k' },
-        { label: 'Mehrbeitrag p.a.', value: 'ca. 1.180€/J.' },
-        { label: 'Mehrwert', value: '4 Lücken geschlossen, 1 Ansprechpartner, Bündelrabatt' },
-        { label: 'Empfehlung', value: 'Jahresreview-Termin + Bestandsoptimierungs-Angebot' },
+        { label: 'Mehrbeitrag p.a.', value: 'ca. 1.320€/J.' },
+        { label: 'Mehrwert', value: '5 Lücken geschlossen, 3 Versicherer → 1 Ansprechpartner, Bündelrabatt' },
+        { label: 'Empfehlung', value: 'Jahresreview-Termin + Bestands- und Konsolidierungs-Angebot' },
       ],
       einzelVergleiche: [
         {
           titel: 'Berufsunfähigkeit',
-          bisher: { anbieter: '{{versicherungspartner}}', praemie: '2.160 €/J.', score: 71, merkmale: [
+          bisher: { anbieter: 'Aktueller Tarif', praemie: '2.160 €/J.', score: 71, merkmale: [
             { label: 'Tarif', wert: 'BU Comfort' },
             { label: 'BU-Rente', wert: '1.800 €/Mon.' },
             { label: 'Deckungsgrad Netto', wert: '69 % (DIN 75: 80 %)' },
             { label: 'Nachversicherungsgarantie', wert: 'Eingeschränkt' },
             { label: 'Lebenslage 2. Kind', wert: 'Nicht angepasst' },
           ]},
-          neu: { anbieter: '{{versicherungspartner}}', praemie: '3.120 €/J.', score: 89, merkmale: [
+          neu: { anbieter: 'Empfehlung Premium-Upgrade', praemie: '3.120 €/J.', score: 89, merkmale: [
             { label: 'Tarif', wert: 'BU Comfort Plus' },
             { label: 'BU-Rente', wert: '2.600 €/Mon. (dynamisch)' },
             { label: 'Deckungsgrad Netto', wert: '80 % (DIN 75 erfüllt)' },
@@ -123,32 +130,50 @@ export const V1 = {
         },
         {
           titel: 'Hausrat',
-          bisher: { anbieter: '{{versicherungspartner}}', praemie: '180 €/J.', score: 58, merkmale: [
-            { label: 'Tarif', wert: 'Hausrat Basis' },
+          bisher: { anbieter: 'HUK (Fremdvertrag)', praemie: '180 €/J.', score: 58, merkmale: [
+            { label: 'Tarif', wert: 'HUK Hausrat Standard' },
             { label: 'Versicherte Wohnfläche', wert: '65 qm (FALSCH seit 2021)' },
             { label: 'Tatsächliche Wohnfläche', wert: '145 qm (EFH)' },
             { label: 'Elementarschäden', wert: 'Nicht enthalten' },
-            { label: 'Fahrraddiebstahl', wert: 'Nicht enthalten' },
+            { label: 'Fahrraddiebstahl', wert: 'Bis 500 €' },
           ]},
-          neu: { anbieter: '{{versicherungspartner}}', praemie: '300 €/J.', score: 88, merkmale: [
-            { label: 'Tarif', wert: 'Hausrat Premium + Elementar' },
+          neu: { anbieter: 'Konsolidierung beim Hausversicherer', praemie: '300 €/J.', score: 88, merkmale: [
+            { label: 'Tarif', wert: '{{versicherungspartner}} Hausrat Premium + Elementar' },
             { label: 'Versicherte Wohnfläche', wert: '145 qm (korrekt)' },
             { label: 'Tatsächliche Wohnfläche', wert: '145 qm (EFH)' },
             { label: 'Elementarschäden', wert: 'Inkl. Hochwasser, Starkregen' },
             { label: 'Fahrraddiebstahl', wert: 'Bis 3.000 €, ohne Zeitlimit' },
           ]},
-          fazit: '55 % Unterversicherung beseitigt, Elementarschutz für EFH ergänzt.',
+          fazit: '55 % Unterversicherung beseitigt, Elementarschutz für EFH ergänzt, HUK-Police konsolidiert.',
+        },
+        {
+          titel: 'Privathaftpflicht',
+          bisher: { anbieter: 'HUK (Fremdvertrag)', praemie: '95 €/J.', score: 65, merkmale: [
+            { label: 'Tarif', wert: 'HUK Privathaftpflicht Familie' },
+            { label: 'Deckungssumme', wert: '10 Mio. €' },
+            { label: 'Schlüsselverlust', wert: 'Bis 1.000 €' },
+            { label: 'Forderungsausfall', wert: 'Nicht enthalten' },
+            { label: 'Bündelvorteil', wert: 'Nicht möglich (eigener Vertrag)' },
+          ]},
+          neu: { anbieter: 'Konsolidierung beim Hausversicherer', praemie: 'Im Bündel enthalten', score: 88, merkmale: [
+            { label: 'Tarif', wert: '{{versicherungspartner}} Privat Premium' },
+            { label: 'Deckungssumme', wert: '15 Mio. €' },
+            { label: 'Schlüsselverlust', wert: 'Bis 50.000 €' },
+            { label: 'Forderungsausfall', wert: 'Inkl. bis 100.000 €' },
+            { label: 'Bündelvorteil', wert: '–95 € separater Beitrag entfällt komplett' },
+          ]},
+          fazit: 'HUK-Beitrag entfällt komplett, Deckung 1,5×, Schlüsselverlust 50× höher.',
         },
         {
           titel: 'Unfallversicherung',
-          bisher: { anbieter: '{{versicherungspartner}}', praemie: '120 €/J.', score: 52, merkmale: [
+          bisher: { anbieter: 'Aktueller Tarif', praemie: '120 €/J.', score: 52, merkmale: [
             { label: 'Tarif', wert: 'Unfallversicherung Basis' },
             { label: 'Invaliditätsleistung', wert: '100.000 €' },
             { label: 'Extremsport-Risiken', wert: 'Ausgeschlossen' },
             { label: 'Bouldern / Klettern', wert: 'Nicht gedeckt' },
             { label: 'Fallschirmsprung', wert: 'Nicht gedeckt' },
           ]},
-          neu: { anbieter: '{{versicherungspartner}}', praemie: '215 €/J.', score: 86, merkmale: [
+          neu: { anbieter: 'Empfehlung Premium-Upgrade', praemie: '215 €/J.', score: 86, merkmale: [
             { label: 'Tarif', wert: 'Unfall Premium + Sport-Baustein' },
             { label: 'Invaliditätsleistung', wert: '250.000 € (Progression 350 %)' },
             { label: 'Extremsport-Risiken', wert: 'Eingeschlossen' },
@@ -159,35 +184,36 @@ export const V1 = {
         },
         {
           titel: 'Risikolebensversicherung',
-          bisher: { anbieter: 'Allianz (Fremd)', praemie: '540 €/J.', score: 64, merkmale: [
+          bisher: { anbieter: 'Allianz (Fremdvertrag)', praemie: '540 €/J.', score: 64, merkmale: [
             { label: 'Tarif', wert: 'Risikoleben Standard' },
             { label: 'Deckungssumme', wert: '150.000 €' },
             { label: 'Baufi-Restschuld', wert: '285.000 € (135 k Lücke)' },
-            { label: 'Vertragspartner', wert: 'Allianz (separat zur ERGO)' },
+            { label: 'Vertragspartner', wert: 'Allianz (separat zur Hauspolice)' },
             { label: 'Bündelrabatt', wert: 'Nicht möglich' },
           ]},
-          neu: { anbieter: '{{versicherungspartner}}', praemie: '780 €/J.', score: 87, merkmale: [
+          neu: { anbieter: 'Konsolidierung beim Hausversicherer', praemie: '780 €/J.', score: 87, merkmale: [
             { label: 'Tarif', wert: 'Risikoleben Premium' },
             { label: 'Deckungssumme', wert: '300.000 € (5× Jahreseinkommen)' },
             { label: 'Baufi-Restschuld', wert: '285.000 € (vollständig gedeckt)' },
             { label: 'Vertragspartner', wert: '{{versicherungspartner}} (gebündelt)' },
             { label: 'Bündelrabatt', wert: '–95 €/J. auf KFZ + Haftpflicht' },
           ]},
-          fazit: 'Schließt 135k Baufi-Lücke und konsolidiert die Allianz-Police bei {{versicherungspartner}}.',
+          fazit: 'Schließt 135 k Baufi-Lücke und konsolidiert die Allianz-Police bei {{versicherungspartner}}.',
         },
       ],
       vergleich: {
-        titel: 'Bestandsoptimierung: Aktuell vs. {{versicherungspartner}}-Bündel',
-        spalten: ['Merkmal', 'Aktuell (ERGO + Allianz)', '{{versicherungspartner}} optimiert'],
+        titel: 'Bestandsoptimierung: 3 Versicherer vs. {{versicherungspartner}}-Bündel',
+        spalten: ['Merkmal', 'Aktuell (Eigen + HUK + Allianz)', '{{versicherungspartner}} konsolidiert'],
         zeilen: [
-          { merkmal: 'Berufsunfähigkeit', aktuell: '2.160 €/J. (69 % Deckung)', angebot: '3.120 €/J. (80 % Deckung)', highlight: true },
-          { merkmal: 'Hausrat', aktuell: '180 €/J. (65 qm – falsch)', angebot: '300 €/J. (145 qm + Elementar)', highlight: true },
-          { merkmal: 'Unfall', aktuell: '120 €/J. (Extremsport raus)', angebot: '215 €/J. (Sport-Baustein inkl.)', highlight: true },
-          { merkmal: 'Risikolebensversicherung', aktuell: '540 €/J. (Allianz, 150k)', angebot: '780 €/J. (300k, gebündelt)', highlight: true },
-          { merkmal: 'KFZ + Haftpflicht', aktuell: '775 €/J. (separat)', angebot: '680 €/J. (Bündelrabatt)', highlight: false },
+          { merkmal: 'Berufsunfähigkeit', aktuell: '2.160 €/J. (Eigenvertrag, 69 % Deckung)', angebot: '3.120 €/J. (Premium-Upgrade, 80 % Deckung)', highlight: true },
+          { merkmal: 'Hausrat', aktuell: '180 €/J. (HUK, 65 qm – falsch)', angebot: '300 €/J. (145 qm + Elementar)', highlight: true },
+          { merkmal: 'Privathaftpflicht', aktuell: '95 €/J. (HUK, separat)', angebot: 'Im Familien-Bündel enthalten', highlight: true },
+          { merkmal: 'Unfall', aktuell: '120 €/J. (Eigen Basis, Extremsport raus)', angebot: '215 €/J. (Premium + Sport-Baustein)', highlight: true },
+          { merkmal: 'Risikolebensversicherung', aktuell: '540 €/J. (Allianz, 150k Deckung)', angebot: '780 €/J. (300k, gebündelt)', highlight: true },
+          { merkmal: 'KFZ-Vollkasko Tiguan (Eigen)', aktuell: '680 €/J.', angebot: '680 €/J. (unverändert)', highlight: false },
           { merkmal: 'Gesamtkosten', aktuell: '3.775 €/J.', angebot: '5.095 €/J.', highlight: true },
-          { merkmal: 'Anbieter', aktuell: '2 Vertragspartner', angebot: '1 Ansprechpartner', highlight: true },
-          { merkmal: 'Lücken geschlossen', aktuell: '–', angebot: 'BU 11 %, Baufi 135 k, Hausrat 80 qm, Sport', highlight: true },
+          { merkmal: 'Anbieter', aktuell: '3 Vertragspartner (Eigen + HUK + Allianz)', angebot: '1 Ansprechpartner', highlight: true },
+          { merkmal: 'Lücken geschlossen', aktuell: '–', angebot: 'BU 11 %, Baufi 135 k, Hausrat 80 qm, Extremsport', highlight: true },
         ],
       },
     },
@@ -234,26 +260,27 @@ export const V1 = {
     {
       titel: 'Hausrat-Upgrade 65\u2192145qm + Elementar', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'hoch', volumen: 120, volumenTyp: 'jaehrlich',
       beschreibung: 'Falsche Wohnfl\u00e4che seit Umzug 2021. Keine Elementar trotz EFH.',
-      kiDescription: 'KI-Analyse: Seit dem Umzug 2021 in das Einfamilienhaus (145 qm) basiert der Hausratvertrag weiterhin auf 65 qm \u2014 damit sind 55% der Wohnfl\u00e4che nicht versichert, was im Schadenfall zu massiven Leistungsk\u00fcrzungen f\u00fchrt. Zus\u00e4tzlich fehlt der Elementarschutz (\u00dcberschwemmung, Starkregen) trotz EFH in Risikozone \u2014 Upgrade auf ERGO Hausrat Premium + Elementar f\u00fcr ca. 300\u20ac/J. dringend empfohlen.',
-      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Hausrat Premium + Elementar', status: 'identifiziert',
+      kiDescription: 'KI-Analyse: Seit dem Umzug 2021 in das Einfamilienhaus (145 qm) basiert der HUK-Hausratvertrag (Open-Finance-Datensatz) weiterhin auf 65 qm \u2014 damit sind 55% der Wohnfl\u00e4che nicht versichert, was im Schadenfall zu massiven Leistungsk\u00fcrzungen f\u00fchrt. Zus\u00e4tzlich fehlt der Elementarschutz (\u00dcberschwemmung, Starkregen) trotz EFH in Risikozone. Empfehlung: HUK-Police bei {{versicherungspartner}} konsolidieren und auf Hausrat Premium + Elementar (ca. 300\u20ac/J.) umstellen.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: '{{versicherungspartner}} Hausrat Premium + Elementar', status: 'identifiziert',
       herleitung: [
+        { label: 'Aktuelle Police', value: 'HUK Hausrat Standard (Fremdvertrag, FIDA)' },
         { label: 'Versicherte Wohnfl\u00e4che', value: '65 qm (FALSCH seit 2021!)' },
         { label: 'Tats\u00e4chliche Wohnfl\u00e4che', value: '145 qm (EFH, Eigentum)' },
         { label: 'Unterversicherung', value: '55% der Fl\u00e4che nicht versichert' },
         { label: 'Elementarschutz', value: 'FEHLT \u2013 trotz EFH in Risikozone' },
-        { label: 'Aktueller Beitrag', value: '180\u20ac/J. (ERGO Hausrat Basis)' },
-        { label: 'Neuer Beitrag', value: 'ca. 300\u20ac/J. (Premium + Elementar)' },
+        { label: 'Aktueller Beitrag', value: '180\u20ac/J. (HUK)' },
+        { label: 'Neuer Beitrag', value: 'ca. 300\u20ac/J. ({{versicherungspartner}} Premium + Elementar)' },
       ],
       vergleich: {
-        titel: 'Vergleich: Aktueller vs. empfohlener Schutz',
-        spalten: ['Merkmal', 'Aktuell', 'Empfehlung'],
+        titel: 'Vergleich: HUK-Bestand vs. {{versicherungspartner}}-Empfehlung',
+        spalten: ['Merkmal', 'Aktuell (HUK)', 'Empfehlung ({{versicherungspartner}})'],
         zeilen: [
-          { merkmal: 'Tarif', aktuell: 'ERGO Hausrat Basis', angebot: 'ERGO Hausrat Premium + Elementar', highlight: true },
+          { merkmal: 'Tarif', aktuell: 'HUK Hausrat Standard', angebot: '{{versicherungspartner}} Hausrat Premium + Elementar', highlight: true },
           { merkmal: 'Wohnfl\u00e4che', aktuell: '65 qm', angebot: '145 qm', highlight: true },
           { merkmal: 'Elementarschutz', aktuell: '\u2717 Nicht enthalten', angebot: '\u2713 Inkl. \u00dcberschwemmung, Starkregen', highlight: true },
-          { merkmal: 'Fahrraddiebstahl', aktuell: '\u2717 Nicht enthalten', angebot: '\u2713 bis 3.000\u20ac', highlight: true },
+          { merkmal: 'Fahrraddiebstahl', aktuell: 'Bis 500 \u20ac', angebot: '\u2713 Bis 3.000 \u20ac, ohne Zeitlimit', highlight: true },
           { merkmal: 'Glasbruch', aktuell: '\u2717 Nicht enthalten', angebot: '\u2713 Inkl. Ceranfeld', highlight: false },
-          { merkmal: 'Jahrespr\u00e4mie', aktuell: '180\u20ac/J.', angebot: 'ca. 300\u20ac/J.', highlight: false },
+          { merkmal: 'Jahrespr\u00e4mie', aktuell: '180 \u20ac/J.', angebot: 'ca. 300 \u20ac/J.', highlight: false },
         ],
       },
     },
@@ -338,24 +365,24 @@ export const V1 = {
     {
       titel: 'Unfallversicherung Familie', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 250, volumenTyp: 'jaehrlich',
       beschreibung: '2 Kinder, kein Unfallschutz. ERGO Unfall Smart.',
-      kiDescription: 'KI-Analyse: Die Familie Fischer (4 Personen) verf\u00fcgt \u00fcber keinerlei Unfallversicherung \u2014 bei zwei Kindern im aktiven Alter (Lina 7 J., Max 1 J.) besteht ein erh\u00f6htes Freizeitunfallrisiko. Eine ERGO Unfall Smart Familienversicherung f\u00fcr ca. 250\u20ac/J. sichert alle vier Familienmitglieder ab und schlie\u00dft eine wesentliche L\u00fccke im Absicherungskonzept.',
+      kiDescription: 'KI-Analyse: Klaus Fischer hat eine eigene ERGO Unfallversicherung Basis (120\u20ac/J., nur f\u00fcr ihn selbst) \u2014 Sarah und die beiden Kinder Lina (7 J.) und Max (1 J.) sind nicht mitversichert. Bei Kindern im aktiven Alter besteht ein erh\u00f6htes Freizeitunfallrisiko. Eine Erweiterung auf eine ERGO Unfall Smart Familienversicherung (250\u20ac/J. inkl. Klaus + Sarah + 2 Kinder) schlie\u00dft die L\u00fccke und erg\u00e4nzt parallel das im Allgemeinen Versicherungscheck angedachte Premium-Upgrade mit Sport-Baustein.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Unfall Smart Familie', status: 'identifiziert',
       herleitung: [
         { label: 'Familiensituation', value: '4-k\u00f6pfige Familie, 2 Kinder (7 + 1 J.)' },
-        { label: 'Unfallschutz vorhanden', value: 'Keiner \u2013 weder privat noch Kinder' },
+        { label: 'Unfallschutz vorhanden', value: 'Nur Klaus selbst (ERGO Basis 120 \u20ac/J.) \u2014 Sarah + Kinder nicht mitversichert' },
         { label: 'Risikobewertung', value: 'Kinder im aktiven Alter, Freizeitunf\u00e4lle' },
         { label: 'Empfohlener Schutz', value: 'Familien-Unfallversicherung 4 Personen' },
-        { label: 'Gesch\u00e4tzte Pr\u00e4mie', value: 'ca. 250\u20ac/J.' },
+        { label: 'Gesch\u00e4tzte Pr\u00e4mie', value: 'ca. 250\u20ac/J. (statt aktuell 120 \u20ac/J. f\u00fcr eine Person)' },
       ],
     },
     {
       titel: 'Baufi-Anschlussfinanzierung 2027', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung',
       beschreibung: 'Zinsbindung Sparkasse endet 09/2027. Forward-Darlehen jetzt pr\u00fcfen.',
-      kiDescription: 'KI-Analyse: Die Zinsbindung der Sparkassen-Baufinanzierung (285.000\u20ac Restschuld, aktuell 1,8%) endet im September 2027 \u2014 nur noch 18 Monate. Bei aktuellem Marktzinsniveau von 3,2\u20133,8% droht eine Mehrbelastung von ca. 230\u20ac/mtl. Ein Forward-Darlehen sichert jetzt die Konditionen \u2014 Vermittlung \u00fcber ERGO-Kooperationspartner empfohlen.',
+      kiDescription: 'KI-Analyse: Die Zinsbindung der Sparkassen-Baufinanzierung (285.000\u20ac Restschuld, aktuell 2,85%) endet im September 2027 \u2014 nur noch 18 Monate. Bei aktuellem Marktzinsniveau von 3,2\u20133,8% droht eine moderate Mehrbelastung von ca. 80\u2013130\u20ac/mtl. Ein Forward-Darlehen sichert jetzt die Konditionen \u2014 Vermittlung \u00fcber ERGO-Kooperationspartner empfohlen.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Kooperationspartner', status: 'identifiziert',
       herleitung: [
         { label: 'Aktuelle Baufinanzierung', value: 'Sparkasse K\u00f6ln, 285k Restschuld' },
-        { label: 'Aktueller Zinssatz', value: '1,8% (Zinsbindung bis 09/2027)' },
+        { label: 'Aktueller Zinssatz', value: '2,85% (Zinsbindung bis 09/2027)' },
         { label: 'Monatliche Rate', value: '1.050\u20ac/mtl.' },
         { label: 'Zinsbindungsende', value: '09/2027 \u2013 nur noch 18 Monate!' },
         { label: 'Forward-Darlehen Empfehlung', value: 'Jetzt Konditionen sichern' },
@@ -367,7 +394,7 @@ export const V1 = {
         spalten: ['Merkmal', 'Aktuell (Sparkasse)', 'Forward-Darlehen'],
         zeilen: [
           { merkmal: 'Restschuld', aktuell: '285.000\u20ac', angebot: '285.000\u20ac', highlight: false },
-          { merkmal: 'Zinssatz', aktuell: '1,8% (l\u00e4uft aus)', angebot: 'ca. 3,2% (Forward)', highlight: false },
+          { merkmal: 'Zinssatz', aktuell: '2,85% (l\u00e4uft aus)', angebot: 'ca. 3,2% (Forward)', highlight: false },
           { merkmal: 'Rate', aktuell: '1.050\u20ac/mtl.', angebot: 'ca. 1.280\u20ac/mtl.', highlight: false },
           { merkmal: 'Zinssicherung', aktuell: 'Endet 09/2027', angebot: 'Ab jetzt 15 Jahre fix', highlight: true },
           { merkmal: 'BSV-Kombination', aktuell: '\u2013', angebot: 'Optional Schw\u00e4bisch Hall', highlight: false },

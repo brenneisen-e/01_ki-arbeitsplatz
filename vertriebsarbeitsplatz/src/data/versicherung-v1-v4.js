@@ -93,6 +93,24 @@ export const V1 = {
   ],
   potentiale: [
     {
+      titel: 'RLV-Antrag abgebrochen bei Gesundheitsfragen – persönlich nachfassen',
+      typ: 'cross_sell', quellen: ['produktabschluss'], prioritaet: 'sehr_hoch', volumen: 456, volumenTyp: 'jaehrlich',
+      beschreibung: 'Klaus Fischer hat den Online-Antrag für die {{versicherungspartner}} Risikolebensversicherung Premium (350.000 € Deckung, 38 €/Mon.) bei den Gesundheitsfragen abgebrochen — 5 von 6 Schritten waren bereits abgeschlossen.',
+      kiDescription: 'KI-Analyse: Klaus Fischer hat am 27.02.2026 um 20:31 Uhr den Online-Antrag für die {{versicherungspartner}} Risikolebensversicherung Premium (350.000 € Deckung, Laufzeit 25 J., Monatsbeitrag 38 €) bei den Gesundheitsfragen verworfen. Der Antrag stand unmittelbar vor der Unterschrift (5 von 6 Schritten bereits abgeschlossen: Tarifrechner, Persönliche Daten, Versicherungsumfang, Begünstigung, Gesundheitsfragen begonnen).\n\nDas Abbruchmuster („Abbruch bei Gesundheitsfragen, kurz vor der Unterschrift") ist ein typisches Signal für Unsicherheit bei einer konkreten Frage zur Vorerkrankung, nicht für mangelndes Interesse — Kunde wollte die Police und ist auf der Zielgeraden ausgestiegen, weil ihn eine Frage verunsichert hat.\n\nAbsicherungszweck laut Antrag: Familienabsicherung & Restschuld Baufinanzierung (passt 1:1 zur Baufi-Restschuld 285k bei der Sparkasse). Für eine 4-köpfige Familie mit zwei Kindern (Lina 7, Max 1) und 285k Baufi ist eine RLV mit 350k Deckung sinnvoll.\n\nEmpfehlung: telefonisch oder im persönlichen Termin nachfassen, NICHT erneut in die Online-Strecke schicken — der Berater kann die kritische Frage individuell aufnehmen, evtl. in Zusammenarbeit mit dem Underwriting (kein anonymer Online-Self-Service mehr). Hohe Abschlusswahrscheinlichkeit, da Kunde bereits voll konvertiert war.',
+      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: '{{versicherungspartner}} Risikolebensversicherung Premium 350k', status: 'identifiziert',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Produktabschluss-Tracking – Online-Strecke RLV' },
+        { label: 'Antrags-ID', value: 'PA-V1-001 (Online-Antrag vom 27.02.2026)' },
+        { label: 'Status', value: 'Abgebrochen bei Schritt 5 von 6 (Gesundheitsfragen)' },
+        { label: 'Bereits ausgefüllt', value: 'Tarifrechner, Persönliche Daten, Versicherungsumfang, Begünstigung' },
+        { label: 'Versicherungssumme', value: '350.000 € (Familienabsicherung + Baufi-Restschuld)' },
+        { label: 'Laufzeit', value: '25 Jahre' },
+        { label: 'Monatsbeitrag', value: '38 € (≈ 456 €/J.)' },
+        { label: 'Abbruchgrund (vermutet)', value: 'Unsicherheit bei einer Vorerkrankungs-Frage' },
+        { label: 'Empfehlung', value: 'Persönliches Beratungsgespräch — kein erneuter Online-Versuch' },
+      ],
+    },
+    {
       titel: 'Allgemeiner Versicherungscheck – Bestand prüfen & konsolidieren',
       typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion', 'risikosignal'], prioritaet: 'hoch', volumen: 1320, volumenTyp: 'jaehrlich',
       beschreibung: 'Jahresreview: zwei Eigenverträge ({{versicherungspartner}} BU + Unfall) optimieren, vier Fremd-Policen (HUK Hausrat + HUK Privathaftpflicht + Allianz RLV + Allianz KFZ Passat) prüfen und beim Hausversicherer konsolidieren.',

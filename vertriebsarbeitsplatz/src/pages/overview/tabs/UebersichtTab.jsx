@@ -85,7 +85,7 @@ const GEBURTSTAGE = {
   versicherung: [
     { name: 'Amira König', kundeId: 'KD00002', datum: 'Mi, 12.03.', alter: 29, foto: '/images/AdobeStock_252262042.jpeg' },
     { name: 'Thomas Weber', kundeId: 'KD00003', datum: 'Do, 13.03.', alter: 56, foto: '/images/AdobeStock_361342769.jpeg' },
-    { name: 'Sandra Yilmaz', kundeId: 'KD00008', datum: 'Sa, 15.03.', alter: 45, foto: '/images/AdobeStock_612932760.jpeg' },
+    { name: 'Sandra Yilmaz', kundeId: 'KD00008', datum: 'Sa, 15.03.', alter: 45 },
   ],
   banking: [
     { name: 'Sandra Müller', kundeId: 'BK00002', datum: 'Mi, 19.03.', alter: 34 },
@@ -224,12 +224,14 @@ const INSURANCE_BRANDS = {
     altersvorsorge: 'Zurich Garantie Rente',
   },
   'Zukunftsversicherung': {
-    prefix: 'ZV',
-    buBrand: 'ZV BU-Schutz',
-    rlvBrand: 'ZV Risikoleben',
-    hausratBrand: 'ZV HausratPlus',
-    krankenBrand: 'ZV Zahn Digital',
-    altersvorsorge: 'ZV FuturePension',
+    prefix: '',
+    // Bewusst ohne vorangestelltes Marken-Kürzel (kein "ZV"). Die
+    // Tarifnamen stehen für sich, das Institut ist über Header/Logo klar.
+    buBrand: 'BU-Schutz',
+    rlvBrand: 'Risikoleben',
+    hausratBrand: 'HausratPlus',
+    krankenBrand: 'Zahn Digital',
+    altersvorsorge: 'FuturePension',
   },
 };
 
@@ -1173,97 +1175,6 @@ export default function UebersichtTab() {
           </Card>
         )}
 
-        {/* Individuelle Produktbausteine (Hyperpersonalisierte Produkte mit
-            extrem kurzen Release-Zyklen). Der Berater sieht zwei für sein
-            Modus aktuell scharf geschaltete Produkte (Versicherung / Banking)
-            inkl. Time-to-Market-Badge und kann per Klick einen USP-Baustein
-            sowie die gemappten Bestandskunden einsehen. */}
-        {showHyperProdukte && (
-          <Card hover={false}>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Rocket size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-                <h3 className="font-semibold text-slate-800">Individuelle Produktbausteine</h3>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-violet-100 text-violet-700 ml-1">
-                  Hyperpersonalisiert
-                </span>
-              </div>
-              <span className="text-sm text-slate-400">
-                {hyperPersonalisierteProdukte.length} Produkte · Time-to-Market &lt; 21 Tage
-              </span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {hyperPersonalisierteProdukte.map((produkt) => {
-                const Icon = PRODUKT_ICONS[produkt.icon] || Sparkles;
-                const BausteinIcon = PRODUKT_ICONS[produkt.bausteinIcon] || Sparkles;
-                return (
-                  <div
-                    key={produkt.id}
-                    role="button"
-                    tabIndex={0}
-                    className="group relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5 bg-white flex flex-col"
-                    onClick={() => setProduktModal(produkt)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setProduktModal(produkt); }}
-                  >
-                    <div
-                      className="relative h-32 flex items-center justify-between px-5 overflow-hidden"
-                      style={{ background: produkt.photoGradient }}
-                    >
-                      <div
-                        className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-25"
-                        style={{ background: produkt.photoAccent }}
-                      />
-                      <div
-                        className="absolute -bottom-6 -left-6 w-20 h-20 rounded-full opacity-20"
-                        style={{ background: produkt.photoAccent }}
-                      />
-                      <div className="relative z-10 flex items-center gap-3 min-w-0">
-                        <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
-                          <Icon size={24} className="text-white" strokeWidth={1.75} />
-                        </div>
-                        <div className="min-w-0">
-                          <div className="text-[10px] font-bold text-white/80 uppercase tracking-wider">
-                            Time-to-Market: {produkt.timeToMarket} Tage
-                          </div>
-                          <div className="text-xs text-white/70 mt-0.5 truncate">
-                            Release-Zyklus: {produkt.releaseZyklus}
-                          </div>
-                        </div>
-                      </div>
-                      <span
-                        className="relative z-10 inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-extrabold text-slate-800 bg-white shadow-sm"
-                        title={`${produkt.passendeKunden.length} passende Kunden`}
-                      >
-                        {produkt.passendeKunden.length}
-                      </span>
-                    </div>
-
-                    <div className="p-4 flex-1 flex flex-col">
-                      <div className="text-base font-bold text-slate-800 mb-1 line-clamp-1">{produkt.titel}</div>
-                      <div className="text-xs text-slate-500 mb-3 line-clamp-1">{produkt.tagline}</div>
-
-                      <div className="rounded-lg bg-violet-50/70 border border-violet-100 p-2.5 mb-3">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <BausteinIcon size={13} className="text-violet-700" strokeWidth={2} />
-                          <span className="text-[10px] font-bold text-violet-800 uppercase tracking-wider">USP-Baustein</span>
-                        </div>
-                        <div className="text-xs font-semibold text-slate-800 leading-snug line-clamp-2">{produkt.bausteinTitel}</div>
-                      </div>
-
-                      <div className="mt-auto flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
-                        <span className="font-mono truncate">{produkt.versionsLabel}</span>
-                        <span className="text-violet-700 font-semibold flex items-center gap-0.5 whitespace-nowrap">
-                          Details <ChevronRight size={12} strokeWidth={2.5} />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-        )}
-
         {/* Lebenslagen-Radar + Abwanderungsradar (Banking + Versicherung) –
             just below Marketingkampagnen. Datenquellen pro Modus sind
             lebenslagenRadar / abwanderungsRadar. */}
@@ -1386,6 +1297,97 @@ export default function UebersichtTab() {
               </div>
             </Card>
           </div>
+        )}
+
+        {/* Individuelle Produktbausteine (Hyperpersonalisierte Produkte mit
+            extrem kurzen Release-Zyklen). Steht bewusst unterhalb der
+            Lebenslagen-/Abwanderungsradare, weil die Radarsignale erst die
+            Bedarfslage liefern, aus der heraus die hyperpersonalisierten
+            Produkte zugeschnitten werden. */}
+        {showHyperProdukte && (
+          <Card hover={false}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Rocket size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+                <h3 className="font-semibold text-slate-800">Individuelle Produktbausteine</h3>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-violet-100 text-violet-700 ml-1">
+                  Hyperpersonalisiert
+                </span>
+              </div>
+              <span className="text-sm text-slate-400">
+                {hyperPersonalisierteProdukte.length} Produkte · Time-to-Market &lt; 21 Tage
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {hyperPersonalisierteProdukte.map((produkt) => {
+                const Icon = PRODUKT_ICONS[produkt.icon] || Sparkles;
+                const BausteinIcon = PRODUKT_ICONS[produkt.bausteinIcon] || Sparkles;
+                return (
+                  <div
+                    key={produkt.id}
+                    role="button"
+                    tabIndex={0}
+                    className="group relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5 bg-white flex flex-col"
+                    onClick={() => setProduktModal(produkt)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setProduktModal(produkt); }}
+                  >
+                    <div
+                      className="relative h-32 flex items-center justify-between px-5 overflow-hidden"
+                      style={{ background: produkt.photoGradient }}
+                    >
+                      <div
+                        className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-25"
+                        style={{ background: produkt.photoAccent }}
+                      />
+                      <div
+                        className="absolute -bottom-6 -left-6 w-20 h-20 rounded-full opacity-20"
+                        style={{ background: produkt.photoAccent }}
+                      />
+                      <div className="relative z-10 flex items-center gap-3 min-w-0">
+                        <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+                          <Icon size={24} className="text-white" strokeWidth={1.75} />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-[10px] font-bold text-white/80 uppercase tracking-wider">
+                            Time-to-Market: {produkt.timeToMarket} Tage
+                          </div>
+                          <div className="text-xs text-white/70 mt-0.5 truncate">
+                            Release-Zyklus: {produkt.releaseZyklus}
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        className="relative z-10 inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-extrabold text-slate-800 bg-white shadow-sm"
+                        title={`${produkt.passendeKunden.length} passende Kunden`}
+                      >
+                        {produkt.passendeKunden.length}
+                      </span>
+                    </div>
+
+                    <div className="p-4 flex-1 flex flex-col">
+                      <div className="text-base font-bold text-slate-800 mb-1 line-clamp-1">{produkt.titel}</div>
+                      <div className="text-xs text-slate-500 mb-3 line-clamp-1">{produkt.tagline}</div>
+
+                      <div className="rounded-lg bg-violet-50/70 border border-violet-100 p-2.5 mb-3">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <BausteinIcon size={13} className="text-violet-700" strokeWidth={2} />
+                          <span className="text-[10px] font-bold text-violet-800 uppercase tracking-wider">USP-Baustein</span>
+                        </div>
+                        <div className="text-xs font-semibold text-slate-800 leading-snug line-clamp-2">{produkt.bausteinTitel}</div>
+                      </div>
+
+                      <div className="mt-auto flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
+                        <span className="font-mono truncate">{produkt.versionsLabel}</span>
+                        <span className="text-violet-700 font-semibold flex items-center gap-0.5 whitespace-nowrap">
+                          Details <ChevronRight size={12} strokeWidth={2.5} />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
         )}
         </div>
         {/* /Potenziale + Marketingkampagnen wrapper */}

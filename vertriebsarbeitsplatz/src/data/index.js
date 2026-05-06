@@ -723,7 +723,7 @@ export const TERMINE_BY_MODE = {
       { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Amira König', betreff: tx('Kfz-Angebot besprechen', 'Discuss motor insurance quote'), kundeId: 'KD00002', foto: fotoFor('KD00002', '/images/AdobeStock_252262042.jpeg') },
       { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Anna Hoffmann', betreff: tx('Altersvorsorge-Beratung', 'Retirement planning consultation'), kundeId: 'KD00004', foto: fotoFor('KD00004') },
       { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Thomas Weber', betreff: tx('Hausbesuch Bindungsgespräch', 'Home visit retention meeting'), kundeId: 'KD00003', foto: fotoFor('KD00003', '/images/AdobeStock_361342769.jpeg') },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sandra Yilmaz', betreff: tx('Jahresgespräch', 'Annual review'), kundeId: 'KD00008', foto: fotoFor('KD00008', '/images/AdobeStock_612932760.jpeg') },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sandra Yilmaz', betreff: tx('Jahresgespräch', 'Annual review'), kundeId: 'KD00008', foto: fotoFor('KD00008') },
     ];
   },
   get banking() {

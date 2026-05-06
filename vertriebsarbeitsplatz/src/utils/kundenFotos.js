@@ -67,7 +67,7 @@ const KUNDEN_FOTOS = {
   KD00002: '/images/AdobeStock_252262042.jpeg',
   KD00003: '/images/AdobeStock_1210213822.jpeg',
   KD00005: '/images/AdobeStock_612932760.jpeg',
-  KD00008: '/images/AdobeStock_1091012713.jpeg',
+  // KD00008 (Sandra Yilmaz) bewusst ohne Foto – Avatar fällt auf Initialen zurück.
   // Banking
   BK00001: '/images/AdobeStock_361342769.jpeg',  // Klaus Fischer (M)
   BK00002: '/images/AdobeStock_477904088.jpeg',  // Sandra Müller (F)

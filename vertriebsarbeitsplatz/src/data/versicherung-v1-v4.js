@@ -218,6 +218,35 @@ export const V1 = {
       },
     },
     {
+      titel: 'Auslandsreisekrankenversicherung – Familie Thailand', typ: 'cross_sell', quellen: ['kommunikation'], prioritaet: 'hoch', volumen: 49, volumenTyp: 'jaehrlich',
+      beschreibung: 'Kunde hat im Chatbot konkret nach Auslandskrankenschutz für Familienreise nach Thailand gefragt.',
+      kiDescription: 'KI-Analyse: Klaus Fischer hat am 12.05.2026 um 19:42 Uhr im Chatbot aktiv nach einer Auslandsreisekrankenversicherung gefragt – Anlass: geplante Sommerreise mit der Familie (4 Personen) nach Thailand. Im Bestand ist KEINE Auslandsreisekrankenversicherung vorhanden, auch die bestehende {{versicherungspartner}} Unfallversicherung Basis greift bei Auslandsunfällen nur eingeschränkt und übernimmt keine Krankenrückführung. Bei einer Fernreise mit Kindern (Lina 7 J., Max 1 J.) ist das Risiko hoch und die fehlende Deckung ein konkretes Problem. Empfehlung: {{versicherungspartner}} Auslandsreisekrankenversicherung Familie (ca. 49 €/Jahr, weltweit, Rücktransport, ohne Selbstbeteiligung). Kunde wartet auf Rückmeldung des Beraters.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: '{{versicherungspartner}} Auslandsreisekrankenversicherung Familie', status: 'identifiziert',
+      herleitung: [
+        { label: 'Datenquelle 1', value: 'Kommunikation – Chatbot-Anfrage am 12.05.2026' },
+        { label: 'Anlass', value: 'Familienreise Thailand (Sommer 2026)' },
+        { label: 'Zu versichernde Personen', value: '4 (Klaus, Sarah, Lina 7 J., Max 1 J.)' },
+        { label: 'Bestand aktuell', value: 'Keine Auslandsreisekrankenversicherung' },
+        { label: 'Unfallversicherung Basis', value: 'Eingeschränkter Auslandsschutz, keine Rückführung' },
+        { label: 'Empfehlung', value: '{{versicherungspartner}} ARKV Familie (49 €/J., weltweit, Rücktransport)' },
+        { label: 'Status', value: 'Berater-Rückmeldung wurde im Chatbot zugesagt' },
+      ],
+      herleitungBlocks: [
+        {
+          type: 'chatverlauf',
+          title: 'Chatbot-Anfrage Klaus Fischer',
+          subtitle: 'Auslöser des Leads – Kunde hat aktiv nach einer Auslandsreisekrankenversicherung gefragt.',
+          datum: '12.05.2026',
+          nachrichten: [
+            { rolle: 'kunde', text: 'Hallo, wir planen im Sommer mit der Familie eine Fernreise nach Thailand. Haben wir bei {{versicherungspartner}} eigentlich schon eine Auslandsreisekrankenversicherung?', zeit: '19:42' },
+            { rolle: 'bot', text: 'Guten Abend Herr Fischer! Ich sehe in Ihrem Bestand aktuell keine Auslandsreisekrankenversicherung — Ihre {{versicherungspartner}} Unfallversicherung Basis greift bei Auslandsunfällen nur eingeschränkt und übernimmt insbesondere keine Krankenrückführung. Für eine Familienreise nach Thailand ist ein eigener Reisekrankenschutz dringend zu empfehlen (Rücktransport, stationäre Behandlung, Privatklinik).', zeit: '19:43' },
+            { rolle: 'kunde', text: 'Was würdet ihr denn empfehlen? Und wie viel kostet das ungefähr für eine vierköpfige Familie?', zeit: '19:45' },
+            { rolle: 'bot', text: 'Ein Familien-Jahresschutz der {{versicherungspartner}} mit weltweiter Deckung, Rücktransport und ohne Selbstbeteiligung liegt bei ca. 49 €/Jahr für die gesamte Familie (Sie, Sarah, Lina und Max). Das ist deutlich günstiger als Einzeltarife pro Reise und gilt für alle Auslandsaufenthalte bis 56 Tage. Ich vermerke Ihre Anfrage für Ihren Berater Herrn Brenneisen, er meldet sich in den nächsten Tagen mit einem konkreten Angebot.', zeit: '19:46' },
+          ],
+        },
+      ],
+    },
+    {
       titel: 'Tierhalter-Haftpflicht + Tierkrankenversicherung (Hund Balu)', typ: 'whitespot', quellen: ['kontoumsaetze', 'risikosignal'], prioritaet: 'hoch', volumen: 360, volumenTyp: 'jaehrlich',
       beschreibung: 'Hundehaltung aus Kontoumsätzen abgeleitet. In NRW ist eine Tierhalter-Haftpflicht gesetzlich vorgeschrieben — aktuell nicht im Bestand.',
       kiDescription: 'KI-Analyse: Klaus Fischer hält einen Hund („Balu", Labrador-Mischling) — erkennbar an den regelmäßigen Umsätzen bei Fressnapf Köln (85€/Mon.), Hundeschule Rhein (45€/Mon.) und Tierarztpraxis Dr. Müller (120€/Quartal). Die bestehende ERGO Privathaftpflicht schließt Hunde-bezogene Schäden aus; zudem greift in NRW die gesetzliche Pflicht (LHundG §5). Empfehlung: ERGO Tierhalter-Haftpflicht Premium (ca. 80€/J.) kombiniert mit ERGO Tierkranken Komfort (ca. 280€/J.) — Gesamtbeitrag ~360€/J.',
@@ -450,6 +479,16 @@ export const V1 = {
     },
   ],
   kommunikation: [
+    { datum: '2026-05-12', typ: 'chatbot', richtung: 'eingehend', betreff: 'Frage zur Auslandsreisekrankenversicherung',
+      zusammenfassung: 'Klaus Fischer hat im Chatbot nach einer Auslandsreisekrankenversicherung f\u00fcr eine geplante Familienreise nach Thailand gefragt.',
+      chatverlauf: [
+        { rolle: 'kunde', text: 'Hallo, wir planen im Sommer mit der Familie eine Fernreise nach Thailand. Haben wir bei {{versicherungspartner}} eigentlich schon eine Auslandsreisekrankenversicherung?', zeit: '19:42' },
+        { rolle: 'bot', text: 'Guten Abend Herr Fischer! Ich sehe in Ihrem Bestand aktuell keine Auslandsreisekrankenversicherung \u2014 Ihre {{versicherungspartner}} Unfallversicherung Basis greift bei Auslandsunf\u00e4llen nur eingeschr\u00e4nkt und \u00fcbernimmt insbesondere keine Krankenr\u00fcckf\u00fchrung. F\u00fcr eine Familienreise nach Thailand ist ein eigener Reisekrankenschutz dringend zu empfehlen (R\u00fccktransport, station\u00e4re Behandlung, Privatklinik).', zeit: '19:43' },
+        { rolle: 'kunde', text: 'Was w\u00fcrdet ihr denn empfehlen? Und wie viel kostet das ungef\u00e4hr f\u00fcr eine vierk\u00f6pfige Familie?', zeit: '19:45' },
+        { rolle: 'bot', text: 'Ein Familien-Jahresschutz der {{versicherungspartner}} mit weltweiter Deckung, R\u00fccktransport und ohne Selbstbeteiligung liegt bei ca. 49 \u20ac/Jahr f\u00fcr die gesamte Familie (Sie, Sarah, Lina und Max). Das ist deutlich g\u00fcnstiger als Einzeltarife pro Reise und gilt f\u00fcr alle Auslandsaufenthalte bis 56 Tage. Ich vermerke Ihre Anfrage f\u00fcr Ihren Berater Herrn Brenneisen, er meldet sich in den n\u00e4chsten Tagen mit einem konkreten Angebot.', zeit: '19:46' },
+      ],
+      kiZusammenfassung: 'Klaus Fischer plant mit Familie eine Fernreise (Thailand, Sommer 2026) und hat aktiv nach einer Auslandsreisekrankenversicherung gefragt. Keine ARKV im Bestand, Unfallversicherung Basis deckt Auslandsthemen nicht ab \u2014 sofortiger, warmer Cross-Sell-Lead mit kleinem Ticket, aber hoher Abschlusswahrscheinlichkeit.',
+    },
     { datum: '2026-05-03', typ: 'email', richtung: 'ausgehend', betreff: 'Versicherungs-Optimierung: KFZ, Haftpflicht-B\u00fcndel & Familienabsicherung',
       zusammenfassung: 'Showcase-Lead aus der Open-Finance-Analyse: HUK-KFZ-Vollkasko 780\u20ac/J. l\u00e4sst sich auf ~620\u20ac/J. senken, Haftpflicht in B\u00fcndel \u00fcberf\u00fchren, plus Familien-Absicherungsl\u00fccken besprechen. Termin angefragt.',
       kiZusammenfassung: 'Open-Finance-getriebener Cross-/Switch-Sell-Lead: Drei konkrete Hebel mit klarem Euro-Effekt (KFZ-Wechsel \u2212160\u20ac/J., Haftpflicht im B\u00fcndel ohne Mehrkosten, offene Familien-Absicherungsthemen). Hohe Termin-Wahrscheinlichkeit, Vorbereitung f\u00fcr das Gespr\u00e4ch nutzen.',

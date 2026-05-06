@@ -150,8 +150,12 @@ export default function ImpulseTab({ kunde }) {
   const luecken = absicherung.fehlend?.length || 0;
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [anschreibenFor, setAnschreibenFor] = useState(null);
-  // Kategorien sind standardmäßig eingeklappt; der Nutzer klappt gezielt auf.
-  const [openCategories, setOpenCategories] = useState({});
+  // Kategorien standardmäßig aufgeklappt — der Berater sieht beim Öffnen
+  // des Tabs sofort die Bank-/Versicherungs-/Anlage-Leads. Wer es ruhiger
+  // mag, klappt einzelne Kategorien gezielt zu.
+  const [openCategories, setOpenCategories] = useState(() =>
+    Object.fromEntries(PRODUKT_KATEGORIEN.map(k => [k.key, true]))
+  );
 
   // Gruppiere alle Potenziale nach Produktkategorie und sortiere innerhalb
   // jeder Gruppe nach Priorität (sehr_hoch → kritisch → hoch → mittel → niedrig).

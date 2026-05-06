@@ -36,7 +36,7 @@ export const V1 = {
   fremdProdukte: [
     { typ: 'girokonto', produktart: 'Girokonto', institut: 'Sparkasse K\u00f6ln', details: 'Gehaltseingang 4.200\u20ac', volumen: 3500, consent: true },
     { typ: 'baufinanzierung', produktart: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', details: '285k Rest, 2,85%, Zinsbindung bis 09/2027', volumen: 285000, consent: true },
-    { typ: 'kredit', produktart: 'Ratenkredit', institut: 'KfW', details: 'Studienkredit Rest 12k', volumen: 12000, consent: true },
+    { typ: 'kredit', produktart: 'Ratenkredit', institut: 'Commerzbank', details: 'Studienkredit Rest 12k', volumen: 12000, consent: true },
     { typ: 'depot', produktart: 'Einzelaktien-Depot', institut: 'Trade Republic', details: 'Apple, Amazon, OpenAI – 200€/mtl. Sparplan', volumen: 28000, consent: true },
     { typ: 'tagesgeld', produktart: 'Tagesgeld', institut: 'ING DiBa', details: '2,75% Zins', volumen: 15400, consent: true },
     { typ: 'festgeld', produktart: 'Festgeld', institut: 'ING DiBa', details: '3,25% bis 2026', volumen: 25000, consent: true },
@@ -71,7 +71,7 @@ export const V1 = {
     ],
     finanzierungen: [
       { produkt: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', restschuld: 285000, zinssatz: '2,85% p.a.', rate: '1.450\u20ac/Mon.', laufzeit: 'bis 2045', details: 'Zinsbindung bis 09/2027', absicherung: null },
-      { produkt: 'Studienkredit', institut: 'KfW', restschuld: 12000, zinssatz: '1,0% p.a.', rate: '120\u20ac/Mon.', laufzeit: 'bis 2028', details: 'Studienkredit Rest 12k' },
+      { produkt: 'Studienkredit', institut: 'Commerzbank', restschuld: 12000, zinssatz: '4,2% p.a.', rate: '120\u20ac/Mon.', laufzeit: 'bis 2028', details: 'Studienkredit Rest 12k' },
     ],
   },
   transaktionen: [
@@ -79,7 +79,7 @@ export const V1 = {
     { kategorie: 'gehalt_partner', betrag: 1800, empfaenger: 'Land NRW' },
     { kategorie: 'kindergeld', betrag: 500, empfaenger: 'Familienkasse' },
     { kategorie: 'baufi', betrag: -1050, empfaenger: 'Sparkasse' },
-    { kategorie: 'kredit', betrag: -120, empfaenger: 'KfW' },
+    { kategorie: 'kredit', betrag: -120, empfaenger: 'Commerzbank' },
     { kategorie: 'versicherung_eigen', betrag: -260, empfaenger: 'ERGO' },
     { kategorie: 'versicherung_fremd', betrag: -45, empfaenger: 'Allianz' },
     { kategorie: 'sparplan', betrag: -200, empfaenger: 'Trade Republic' },

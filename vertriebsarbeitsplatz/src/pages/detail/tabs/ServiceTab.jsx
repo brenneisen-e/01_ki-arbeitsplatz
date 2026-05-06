@@ -17,10 +17,17 @@ import {
   Send,
   Info,
   ShieldCheck,
+  ShieldAlert,
+  Heart,
+  Home,
+  FileText,
+  Activity,
+  Award,
   Eye,
   X,
 } from 'lucide-react';
 import { formatEur } from '../../../utils/formatters';
+import { useMode } from '../../../hooks/useMode';
 
 const STATUS = {
   versendet: { label: 'Automatisch versendet', icon: CheckCircle2, color: '#16a34a', bg: '#f0fdf4', border: '#bbf7d0' },
@@ -64,6 +71,132 @@ const HELFER = {
   hasStromVertrag: (k) =>
     (k.transaktionen || []).some(t => /stadtwerk|strom|eon|vattenfall|enbw|energie/i.test(t.empfaenger || '')),
 };
+
+// ── Versicherungs-spezifische Helfer (eigene Verträge analysieren). Während
+// die Banking-Helfer auf Kontoumsätze + Sparquoten zielen, geht es hier um
+// Vertragsbestand, Lebenslagen und Versicherungslücken.
+const VERS_HELFER = {
+  hasUnfallBasis: (k) => (k.eigeneProdukte || []).some(p => /unfall/i.test([p.typ, p.produkt].join(' ')) && /basis/i.test(p.details || p.produkt || '')),
+  hasHausratUnterversichert: (k) => (k.eigeneProdukte || []).some(p => /hausrat/i.test([p.typ, p.produkt].join(' ')) && /(unterversichert|65qm|falsch)/i.test(p.details || '')),
+  hasBu: (k) => (k.eigeneProdukte || []).some(p => /\bbu\b|berufsunf/i.test([p.typ, p.produkt].join(' '))),
+  hasRlvFremd: (k) => (k.fremdProdukte || []).some(p => /rlv|risikoleben/i.test([p.typ, p.produktart].join(' '))),
+  hasFamilieMitKindern: (k) => (k.kinder || []).length >= 1,
+  hasBaufi: (k) =>
+    (k.eigeneProdukte || []).some(p => /baufi|finanzierung|darlehen/i.test([p.typ, p.produkt].join(' ')))
+    || (k.fremdProdukte || []).some(p => /baufi|finanzierung|darlehen/i.test([p.typ, p.produktart].join(' '))),
+  hasRisikoSignalExtremsport: (k) => (k.risikoSignale || []).some(s => /extremsport|boulder|kletter|skydive|fallschirm/i.test([s.typ, s.titel, s.beschreibung].join(' '))),
+  vertragsbestand: (k) => (k.eigeneProdukte || []).length,
+  jahresbeitragGesamt: (k) => (k.eigeneProdukte || []).reduce((s, p) => s + (p.praemie || 0), 0),
+};
+
+function buildServicesVersicherung(kunde) {
+  const h = VERS_HELFER;
+  const vorname = kunde.name?.split(' ')[0] || 'Kunde';
+  const kindU1 = HELFER.kindUnter1(kunde);
+  const kindSchule = HELFER.kindAlter5bis7(kunde);
+  const beitrag = h.jahresbeitragGesamt(kunde);
+
+  const catalog = [
+    h.vertragsbestand(kunde) > 0 && {
+      id: 'vers-jahresreview', kategorie: 'service', status: 'geplant', icon: FileText,
+      titel: 'Jahres-Vertragsreview – Termin-Vorschlag',
+      datum: '2026-05-12', kanal: 'E-Mail + Kalenderlink',
+      quelle: `Bestand · ${h.vertragsbestand(kunde)} Verträge, Gesamt-Jahresbeitrag ${formatEur(beitrag)}`,
+      nachricht: `Hallo ${vorname}, einmal pro Jahr prüfen wir gemeinsam mit Ihnen alle laufenden Verträge — Deckung, Beitrag, Lebenslage. Für Ihren Bestand schlagen wir einen 30-Min.-Online-Termin vor (kostenfrei, keine Verkaufsabsicht). Sie erhalten danach ein schriftliches Bestands-Protokoll mit Empfehlungen.`,
+      ergebnis: 'Bestandspflege ohne Verkaufsdruck',
+    },
+    h.hasRisikoSignalExtremsport(kunde) && {
+      id: 'vers-extremsport-info', kategorie: 'finanztipp', status: 'vorschlag', icon: ShieldAlert,
+      titel: 'Hinweis Versicherungslücke Extremsport',
+      datum: '2026-04-22', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Open Finance · DAV Boulderhalle + Skydive Center in Kontoumsätzen erkannt',
+      nachricht: `Hallo ${vorname}, aus Ihren Aktivitäten (regelmäßiges Bouldern, Fallschirmsprung) leitet sich eine Lücke in Ihrer aktuellen Unfallversicherung Basis ab — Extremsport-Risiken sind dort explizit ausgeschlossen. Wir möchten Sie darauf hinweisen, bevor etwas passiert. Im Premium-Tarif oder über den Zusatzbaustein „Sport- & Freizeitrisiken" wären diese Aktivitäten gedeckt.`,
+      ergebnis: 'Vorschlag — vor Versand prüfen',
+    },
+    h.hasHausratUnterversichert(kunde) && {
+      id: 'vers-hausrat-flaeche', kategorie: 'service', status: 'versendet', icon: Home,
+      titel: 'Wohnflächen-Update Hausrat',
+      datum: '2026-03-18', kanal: 'E-Mail',
+      quelle: 'Bestand · Hausrat 65 qm, lt. Adressdatenbank Wohnfläche EFH 145 qm',
+      nachricht: `Wir möchten Sie auf eine wichtige Sache hinweisen: Ihre Hausratversicherung ist seit dem Umzug 2021 noch auf 65 qm versichert — tatsächlich wohnen Sie in einem 145-qm-Einfamilienhaus. Im Schadensfall droht eine massive Leistungskürzung. Wir bieten Ihnen die kostenfreie Anpassung an + Empfehlung Premium + Elementar.`,
+      ergebnis: '55 % Unterversicherung erkannt',
+    },
+    h.hasBu(kunde) && h.hasFamilieMitKindern(kunde) && {
+      id: 'vers-bu-nachvers', kategorie: 'service', status: 'geplant', icon: Activity,
+      titel: 'Nachversicherungsoption BU – Geburt',
+      datum: '2026-06-04', kanal: 'Brief + Antragsformular',
+      quelle: 'Stammdaten · Geburt zweites Kind innerhalb 12 Monaten',
+      nachricht: `Hallo ${vorname}, anlässlich der Geburt Ihres zweiten Kindes können Sie Ihre BU-Rente ohne erneute Gesundheitsprüfung erhöhen — diese Option läuft bei Ihrem Tarif 6 Monate nach dem Lebensereignis ab. Wir senden Ihnen das ausgefüllte Antragsformular zu, Sie müssen nur unterschreiben.`,
+      ergebnis: 'Schließt Deckungslücke ohne Gesundheitsfragen',
+    },
+    h.hasBaufi(kunde) && h.hasRlvFremd(kunde) && {
+      id: 'vers-rlv-baufi', kategorie: 'sparhinweis', status: 'vorschlag', icon: ShieldCheck,
+      titel: 'RLV-Deckung gegen Baufinanzierung prüfen',
+      datum: '2026-04-30', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Open Finance · Baufi-Restschuld 285k vs. RLV-Deckung 150k',
+      nachricht: `Wir haben festgestellt, dass Ihre bestehende Risikolebensversicherung (Allianz, 150 k) die Restschuld Ihrer Baufinanzierung nicht vollständig abdeckt — eine Lücke von 135 k. Im Todesfall müsste Ihre Familie das Defizit selbst tragen. Eine Aufstockung auf 300 k schließt die Lücke und ist im Bündel mit uns ca. 18 % günstiger.`,
+      ergebnis: '135 k Deckungslücke schließen',
+    },
+    kindU1 && {
+      id: 'vers-geburt-unfall', kategorie: 'geschenk', status: 'versendet', icon: Baby,
+      titel: 'Willkommensgruß zur Geburt',
+      datum: '2025-11-08', kanal: 'Postversand',
+      quelle: `Stammdaten · Geburt von ${kindU1.name}`,
+      nachricht: `Wir gratulieren herzlich zur Geburt von ${kindU1.name}! Als kleines Willkommens­geschenk legen wir einen handgeschriebenen Glückwunsch + ein Bio-Babymützchen dazu. Hinweis zur Versicherung kommt frühestens nach 6 Monaten — nutzen Sie die Karenzzeit zum Ankommen.`,
+      ergebnis: 'Persönlicher Touchpoint ohne Verkaufsdruck',
+    },
+    kindSchule && {
+      id: 'vers-schulanfang-unfall', kategorie: 'geschenk', status: 'geplant', icon: GraduationCap,
+      titel: `Schulanfang ${kindSchule.name} – Schulweg-Unfallschutz`,
+      datum: '2026-08-15', kanal: 'Postversand + Beilage',
+      quelle: `Stammdaten · Einschulung ${kindSchule.name} (${kindSchule.alter} J.)`,
+      nachricht: `Geplant: 20 €-Buchgutschein bei „Buchhandlung am Markt" zur Einschulung von ${kindSchule.name} + dezenter Hinweis-Flyer zum Kinder-Unfallschutz auf dem Schulweg (gesetzlich nur in der Schule + Schulweg gedeckt — Freizeitunfälle nicht). Kein direkter Vertragsantrag.`,
+      ergebnis: 'Lokales Engagement + sanfter Cross-Sell-Impuls',
+    },
+    {
+      id: 'vers-geburtstag', kategorie: 'glueckwunsch', status: 'geplant', icon: Cake,
+      titel: 'Geburtstagsgruß mit Beitrags-Treuegutschrift',
+      datum: '2026-09-12', kanal: 'Postkarte',
+      quelle: 'Stammdaten · Geburtstag in 24 Wochen',
+      nachricht: `Handgeschriebene Glückwunschkarte zum Geburtstag mit Hinweis auf 25 € Beitrags-Treuegutschrift (wird automatisch auf den nächsten BU-Beitrag angerechnet). Kein Verkaufsanlass, kein Cross-Sell.`,
+      ergebnis: 'Wertschätzungs-Touchpoint, NPS-Lift',
+    },
+    {
+      id: 'vers-schadenfrei-bonus', kategorie: 'glueckwunsch', status: 'versendet', icon: Award,
+      titel: '5 Jahre schadenfrei – Treue-Bonus',
+      datum: '2026-02-04', kanal: 'E-Mail',
+      quelle: 'Schadenhistorie · 5 Jahre ohne Schadenmeldung in der KFZ-Police',
+      nachricht: `Hallo ${vorname}, herzlichen Glückwunsch — Sie sind seit 5 Jahren schadenfrei in Ihrer KFZ-Vollkasko. Dafür bedanken wir uns mit einer einmaligen Beitrags-Treuegutschrift von 60 € auf Ihre nächste Hauptfälligkeit. Kein Anruf nötig, keine Bedingung.`,
+      ergebnis: 'Bindungsmoment, Schadenfreiheit honoriert',
+    },
+    HELFER.hasVisaOderReisekarte(kunde) && {
+      id: 'vers-arkv-reise', kategorie: 'service', status: 'vorschlag', icon: Plane,
+      titel: 'Auslandsreise-Krankenversicherung (Vorschlag)',
+      datum: '2026-04-26', kanal: 'In-App-Push (Vorschlag)',
+      quelle: 'Kartenumsatz · Lufthansa BCN gebucht, Aufenthalt > 14 Tage erkannt',
+      nachricht: `Vor Ihrer Barcelona-Reise: Falls noch keine Auslandsreisekrankenversicherung vorhanden ist (sehen wir nicht in Ihrem Bestand), bieten wir einen Tagesschutz für 1,40 €/Tag. Reine Information — keine automatische Buchung. Der Direkt-Link zur Online-Aktivierung ist in der Push-Nachricht.`,
+      ergebnis: 'Tagesschutz auf Bedarf',
+    },
+    h.hasBu(kunde) && {
+      id: 'vers-vorsorgevollmacht', kategorie: 'service', status: 'vorschlag', icon: FileText,
+      titel: 'Hinweis Vorsorgevollmacht & Patientenverfügung',
+      datum: '2026-05-20', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Bestand · BU-Police aktiv, keine hinterlegte Vorsorgevollmacht',
+      nachricht: `Eine BU-Versicherung greift im Berufsunfähigkeitsfall — sie regelt aber nicht, wer Sie rechtlich vertritt, wenn Sie selbst nicht handeln können. Wir bieten kostenfrei das Vorlagen-Set Vorsorgevollmacht + Patientenverfügung (notariell beglaubigte Mustertexte) per Mail an. Reine Information.`,
+      ergebnis: 'Mehrwert ohne Verkauf',
+    },
+    {
+      id: 'vers-praevention-kursangebot', kategorie: 'finanztipp', status: 'versendet', icon: Heart,
+      titel: 'Kostenfreier Präventionskurs (Rücken/Stress)',
+      datum: '2026-01-15', kanal: 'E-Mail',
+      quelle: 'Bestand · Kranken-/BU-Police aktiv',
+      nachricht: `Als Bestandskunde erhalten Sie 2 kostenfreie Online-Präventionskurse pro Jahr (Rücken, Stress, Ernährung — kooperierender Anbieter Online-Akademie Gesundheit). Wir bezuschussen den Kurs zu 100 %. Anmeldung über den Link in der Mail, keine weitere Verpflichtung.`,
+      ergebnis: 'Gesundheitsbenefit, Bindungsfaktor',
+    },
+  ];
+
+  return catalog.filter(Boolean);
+}
 
 function buildServices(kunde) {
   const h = HELFER;
@@ -255,7 +388,11 @@ function PreviewModal({ service, onClose }) {
 }
 
 export default function ServiceTab({ kunde }) {
-  const services = useMemo(() => buildServices(kunde), [kunde]);
+  const { modeId } = useMode();
+  const services = useMemo(
+    () => modeId === 'versicherung' ? buildServicesVersicherung(kunde) : buildServices(kunde),
+    [kunde, modeId]
+  );
   const [preview, setPreview] = useState(null);
 
   const counts = useMemo(() => ({

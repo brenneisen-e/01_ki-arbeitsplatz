@@ -97,6 +97,14 @@ function buildServicesVersicherung(kunde) {
   const beitrag = h.jahresbeitragGesamt(kunde);
 
   const catalog = [
+    {
+      id: 'vers-steuer-ausfuellhinweise', kategorie: 'service', status: 'versendet', icon: FileText,
+      titel: 'Ausfüllhinweise Steuererklärung 2025',
+      datum: '2026-03-01', kanal: 'E-Mail + PDF-Beihilfe',
+      quelle: `Bestand · ${h.vertragsbestand(kunde)} steuerrelevante Verträge (BU, Unfall, Haftpflicht, RLV)`,
+      nachricht: `Hallo ${vorname}, anbei die individuelle Ausfüllhilfe für Ihre Steuererklärung 2025. Wir haben alle bei uns geführten Beiträge bereits den passenden Anlagen zugeordnet:\n\n• Anlage Vorsorgeaufwand, Zeile 46–50 (Sonstige Vorsorge): BU-Beitrag 2.160 EUR + Unfallversicherung 120 EUR + Privathaftpflicht 95 EUR.\n• Anlage Vorsorgeaufwand, Zeile 14–15 (Risikolebensversicherung): RLV-Beitrag 540 EUR (sofern bei der Allianz weiterhin im Bestand).\n• Hausratversicherung: nur absetzbar, wenn häusliches Arbeitszimmer anteilig genutzt wird — Hinweise im PDF.\n\nDie Beträge sind bereits in der elektronischen Steuerbescheinigung (eDaten ELStAM) hinterlegt. Wenn Sie Mein-ELSTER nutzen, werden sie automatisch vorausgefüllt — bitte nur prüfen.`,
+      ergebnis: 'Beitragsübersicht zur Steuererklärung, kein Verkaufsanlass',
+    },
     h.vertragsbestand(kunde) > 0 && {
       id: 'vers-jahresreview', kategorie: 'service', status: 'geplant', icon: FileText,
       titel: 'Jahres-Vertragsreview – Termin-Vorschlag',

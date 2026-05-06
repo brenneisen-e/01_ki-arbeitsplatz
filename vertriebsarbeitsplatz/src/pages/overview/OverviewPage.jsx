@@ -1,18 +1,11 @@
-import { lazy, Suspense, useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import { useMode } from '../../hooks/useMode';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import KPIGrid from '../../components/ui/KPIGrid';
 import { KundenDeutschlandkarteCompact } from '../../components/ui/KundenDeutschlandkarte';
 import { KUNDEN_BY_MODE, SHOWCASE_KUNDE_IDS } from '../../data';
 import UebersichtTab from './tabs/UebersichtTab';
-
-// Lazy import mit Auto-Reload bei veralteten Chunks
-function lazyRetry(fn) {
-  return lazy(() => fn().catch(() => {
-    window.location.reload();
-    return new Promise(() => {}); // never resolves, page reloads
-  }));
-}
+import lazyRetry from '../../utils/lazyRetry';
 
 const NeugeschaeftTab = lazyRetry(() => import('./tabs/NeugeschaeftTab'));
 const BestandTab = lazyRetry(() => import('./tabs/BestandTab'));

@@ -1,16 +1,10 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { useMode } from '../../hooks/useMode';
 import useTranslation from '../../i18n/useTranslation';
 import { KUNDEN_BY_MODE, getKundeById } from '../../data';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import StammdatenDetailTab from './tabs/StammdatenDetailTab';
-
-function lazyRetry(fn) {
-  return lazy(() => fn().catch(() => {
-    window.location.reload();
-    return new Promise(() => {});
-  }));
-}
+import lazyRetry from '../../utils/lazyRetry';
 
 const VertraegeTab = lazyRetry(() => import('./tabs/VertraegeTab'));
 const OpenFinanceTab = lazyRetry(() => import('./tabs/OpenFinanceTab'));

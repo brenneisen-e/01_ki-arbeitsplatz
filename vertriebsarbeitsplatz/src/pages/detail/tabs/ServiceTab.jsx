@@ -25,6 +25,10 @@ import {
   Award,
   Eye,
   X,
+  Dog,
+  Car,
+  Users,
+  HeartHandshake,
 } from 'lucide-react';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
@@ -85,6 +89,16 @@ const VERS_HELFER = {
     (k.eigeneProdukte || []).some(p => /baufi|finanzierung|darlehen/i.test([p.typ, p.produkt].join(' ')))
     || (k.fremdProdukte || []).some(p => /baufi|finanzierung|darlehen/i.test([p.typ, p.produktart].join(' '))),
   hasRisikoSignalExtremsport: (k) => (k.risikoSignale || []).some(s => /extremsport|boulder|kletter|skydive|fallschirm/i.test([s.typ, s.titel, s.beschreibung].join(' '))),
+  hasHundIndikator: (k) => {
+    if (k.tiere && (k.tiere.typ === 'hund' || /hund|labrador|retriever|schaeferhund|terrier/i.test([k.tiere.rasse, k.tiere.name].join(' ')))) return true;
+    const umsaetze = k.tiere?.umsaetze || k.transaktionen || [];
+    return umsaetze.some(t => /hundeschule|fressnapf|futterhaus|tierarzt|tierklinik/i.test(t.empfaenger || ''));
+  },
+  hasChatbotZuThema: (k, regex) => (k.kommunikation || []).some(m => m.typ === 'chatbot' && regex.test([m.betreff, m.zusammenfassung, m.kiZusammenfassung].join(' '))),
+  hasFremdKfz: (k) => (k.fremdProdukte || []).some(p => /kfz/i.test([p.typ, p.produktart].join(' '))),
+  eigenHasKfz: (k) => (k.eigeneProdukte || []).some(p => /kfz/i.test([p.typ, p.sparte, p.produkt].join(' '))),
+  hasEfhEigentum: (k) => /eigentum|haus/i.test(k.wohnsituation || '') && (k.wohnflaeche || 0) >= 120,
+  absicherungFehlt: (k, sparte) => (k.absicherung?.fehlend || []).includes(sparte),
   vertragsbestand: (k) => (k.eigeneProdukte || []).length,
   jahresbeitragGesamt: (k) => (k.eigeneProdukte || []).reduce((s, p) => s + (p.praemie || 0), 0),
 };
@@ -177,13 +191,13 @@ function buildServicesVersicherung(kunde) {
       nachricht: `Hallo ${vorname}, herzlichen Glückwunsch — Sie sind seit 5 Jahren schadenfrei in Ihrer KFZ-Vollkasko. Dafür bedanken wir uns mit einer einmaligen Beitrags-Treuegutschrift von 60 € auf Ihre nächste Hauptfälligkeit. Kein Anruf nötig, keine Bedingung.`,
       ergebnis: 'Bindungsmoment, Schadenfreiheit honoriert',
     },
-    HELFER.hasVisaOderReisekarte(kunde) && {
+    h.hasChatbotZuThema(kunde, /auslandsreise|arkv|reisekranken/i) && {
       id: 'vers-arkv-reise', kategorie: 'service', status: 'vorschlag', icon: Plane,
-      titel: 'Auslandsreise-Krankenversicherung (Vorschlag)',
-      datum: '2026-04-26', kanal: 'In-App-Push (Vorschlag)',
-      quelle: 'Kartenumsatz · Lufthansa BCN gebucht, Aufenthalt > 14 Tage erkannt',
-      nachricht: `Vor Ihrer Barcelona-Reise: Falls noch keine Auslandsreisekrankenversicherung vorhanden ist (sehen wir nicht in Ihrem Bestand), bieten wir einen Tagesschutz für 1,40 €/Tag. Reine Information — keine automatische Buchung. Der Direkt-Link zur Online-Aktivierung ist in der Push-Nachricht.`,
-      ergebnis: 'Tagesschutz auf Bedarf',
+      titel: 'Auslandsreisekrankenversicherung Familie (Thailand)',
+      datum: '2026-05-13', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Chatbot · Anfrage vom 12.05.2026 zu Thailand-Familienreise',
+      nachricht: `Hallo ${vorname}, gestern Abend haben Sie über unseren Chatbot nach einer Auslandsreisekrankenversicherung für Ihre geplante Thailand-Reise mit Sarah, Lina und Max gefragt. Da im Bestand aktuell keine ARKV liegt und die Unfallversicherung Basis keinen Krankenrücktransport übernimmt, schlagen wir den Familien-Jahresschutz vor: weltweite Deckung, Rücktransport, ohne Selbstbeteiligung, ca. 49 €/Jahr für alle vier — gilt auch für alle weiteren Auslandsaufenthalte bis 56 Tage. Anbei das ausgefüllte Antrags-PDF, Sie müssen nur unterschreiben.`,
+      ergebnis: 'Schließt Reise-Lücke vor Sommerurlaub',
     },
     h.hasBu(kunde) && {
       id: 'vers-vorsorgevollmacht', kategorie: 'service', status: 'vorschlag', icon: FileText,
@@ -192,6 +206,46 @@ function buildServicesVersicherung(kunde) {
       quelle: 'Bestand · BU-Police aktiv, keine hinterlegte Vorsorgevollmacht',
       nachricht: `Eine BU-Versicherung greift im Berufsunfähigkeitsfall — sie regelt aber nicht, wer Sie rechtlich vertritt, wenn Sie selbst nicht handeln können. Wir bieten kostenfrei das Vorlagen-Set Vorsorgevollmacht + Patientenverfügung (notariell beglaubigte Mustertexte) per Mail an. Reine Information.`,
       ergebnis: 'Mehrwert ohne Verkauf',
+    },
+    h.hasHundIndikator(kunde) && {
+      id: 'vers-tierhalter-haftpflicht', kategorie: 'finanztipp', status: 'vorschlag', icon: Dog,
+      titel: 'Tierhalter-Haftpflicht für Balu (Pflicht in NRW)',
+      datum: '2026-05-04', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Open Finance · Fressnapf 85 €/Mon. + Hundeschule Rhein 45 €/Mon. + Tierarztpraxis Dr. Müller 120 €/Quartal',
+      nachricht: `Hallo ${vorname}, anhand Ihrer Kontoumsätze (Fressnapf Köln, Hundeschule Rhein, Tierarztpraxis Dr. Müller) gehen wir davon aus, dass Sie einen Hund in der Familie haben. Wichtig zu wissen: In Nordrhein-Westfalen ist eine Tierhalter-Haftpflichtversicherung für Hunde gesetzlich vorgeschrieben (Landeshundegesetz §5). Ihre aktuelle Privathaftpflicht (HUK, Familien-Tarif) schließt Hunde-bezogene Schäden ausdrücklich aus — bei einem Beißvorfall oder Verkehrsschaden würden Sie persönlich haften. Wir schlagen Tierhalter-Haftpflicht Premium (ca. 80 €/J.) vor, optional kombiniert mit Tierkranken Komfort (ca. 280 €/J.). Keine Gesundheitsprüfung bei jungen Hunden.`,
+      ergebnis: 'Pflichtversicherung erfüllen, Haftungsrisiko schließen',
+    },
+    (h.hasChatbotZuThema(kunde, /pflege/i) || h.absicherungFehlt(kunde, 'pflege')) && {
+      id: 'vers-pflegezusatz-eltern', kategorie: 'service', status: 'vorschlag', icon: HeartHandshake,
+      titel: 'Pflegezusatz für die Eltern — Follow-up',
+      datum: '2026-05-18', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Chatbot · Anfrage vom 20.01.2026 zu Pflegezusatz Eltern (68 + 71 J.)',
+      nachricht: `Hallo ${vorname}, im Januar hatten Sie unseren Chatbot zur Pflegezusatzversicherung für Ihre Eltern (68 und 71 Jahre) angefragt — Sie wollten das Thema in Ruhe mit Sarah besprechen. Da bei Ihrer Mutter (68) jeder Monat Wartezeit die Monatsprämie spürbar erhöht und ab dem 70. Lebensjahr in vielen Tarifen keine Annahme mehr erfolgt, möchten wir Ihnen unverbindlich zwei vorgerechnete Varianten zusenden: Pflege-Tagegeld (50 €/Tag ab PG 2, ca. 135 €/mtl.) und Pflege-Monatsgeld (1.500 €/mtl. ab PG 3, ca. 110 €/mtl.). Beide mit vereinfachter Gesundheitsprüfung. Keine Verkaufsabsicht — falls das Thema nicht mehr aktuell ist, einfach ignorieren.`,
+      ergebnis: 'Warmer Follow-up, kein Verkaufsdruck',
+    },
+    h.hasEfhEigentum(kunde) && {
+      id: 'vers-wohngebaeude-elementar', kategorie: 'sparhinweis', status: 'vorschlag', icon: Home,
+      titel: 'Wohngebäude + Elementarschutz prüfen',
+      datum: '2026-05-09', kanal: 'E-Mail (Vorschlag)',
+      quelle: `Stammdaten · Eigentum EFH ${kunde.wohnflaeche} qm, Baufinanzierung in Open Finance erkannt`,
+      nachricht: `Hallo ${vorname}, im Bestand sehen wir bislang keinen Wohngebäudevertrag bei uns — bei einem Einfamilienhaus mit ${kunde.wohnflaeche} qm in Köln und einer laufenden Baufinanzierung über 285 k ist das ein kritisches Risiko: Bei Feuer-, Leitungswasser- oder Sturmschäden haftet im Zweifel der Eigentümer, die Bank kann die Restschuld dann sofort fällig stellen. Wir schlagen Wohngebäude Premium inkl. Elementarschutz (Überschwemmung, Starkregen, Rückstau) vor — bei Bündelung mit der bereits angepassten Hausrat-Police rund 15 % Familienrabatt. Wir bringen den Vorschlag gerne in den Jahres-Vertragsreview im Mai mit.`,
+      ergebnis: 'Existenzielle Lücke schließen, Bündelrabatt nutzen',
+    },
+    h.hasFamilieMitKindern(kunde) && {
+      id: 'vers-kinder-invaliditaet', kategorie: 'service', status: 'vorschlag', icon: Users,
+      titel: 'Kinder-Invaliditätsversicherung Lina & Max',
+      datum: '2026-05-22', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Stammdaten · 2 Kinder unter 18 (Lina 7 J., Max 1 J.), keine Kinder-Invalidität im Bestand',
+      nachricht: `Hallo ${vorname}, in unseren Gesprächen zur Familie haben wir bislang über BU und Familien-Unfallschutz gesprochen. Eine wichtige Ergänzung gerade für junge Familien fehlt aber: die Kinder-Invaliditätsversicherung. Im Gegensatz zur Unfallversicherung greift sie auch, wenn ein Kind durch eine schwere Erkrankung (z. B. Meningitis, Krebs, neurologische Diagnose) dauerhaft invalide wird — laut Statistik der häufigere Fall. Für Lina (7 J.) und Max (1 J.) liegt der Beitrag bei jeweils ca. 18 €/mtl. für eine lebenslange Rente von 1.000 €/mtl. ab 50 % Invalidität. Reine Information, keine automatische Anfrage — sagen Sie kurz Bescheid, wenn Sie ein Angebot möchten.`,
+      ergebnis: 'Familienabsicherung um Krankheits-Invalidität ergänzen',
+    },
+    h.hasFremdKfz(kunde) && h.eigenHasKfz(kunde) && {
+      id: 'vers-kfz-buendel', kategorie: 'sparhinweis', status: 'vorschlag', icon: Car,
+      titel: 'Zweitwagen-Bündel mit Familienrabatt',
+      datum: '2026-05-28', kanal: 'E-Mail (Vorschlag)',
+      quelle: 'Open Finance · Fremd-KFZ in fremdProdukte (separater Versicherer), eigener KFZ-Vertrag bei uns',
+      nachricht: `Hallo ${vorname}, Ihr eigener KFZ-Vertrag (VW Tiguan, Vollkasko, SF-12) läuft bei uns — der zweite Familienwagen (VW Passat, SF-12) ist laut Open-Finance-Sicht bei der Allianz versichert (ca. 720 €/J.). Bei Zusammenführung in unseren Familien-Bündel-Tarif greift der Mehrwagenrabatt (~10 %) plus identische SF-Klasse-Übertragung — zusammen rund 130–170 €/J. Ersparnis. Wechsel zum nächsten Stichtag (01.01.2027) ist problemlos möglich, Kündigungsfrist 30.11.2026. Wenn Sie wollen, übernehmen wir die Kündigung beim Vorversicherer.`,
+      ergebnis: 'Geschätzte Ersparnis 130–170 €/J. + ein Ansprechpartner',
     },
     {
       id: 'vers-praevention-kursangebot', kategorie: 'finanztipp', status: 'versendet', icon: Heart,

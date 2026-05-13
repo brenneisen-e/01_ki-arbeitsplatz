@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
-import { Home, ChevronDown, ShieldCheck, FileText, Sparkles, Bot, BookOpen, Download, FileBarChart } from 'lucide-react';
+import { Home, ChevronDown, ShieldCheck, FileText, Sparkles, Bot, BookOpen, Download, FileBarChart, FileSpreadsheet } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useInstitut } from '../../hooks/useInstitut';
 import { useSmartIcs } from '../../hooks/useSmartIcs';
 import { getInstitutLogoUrl } from '../../data/institutConfig';
 import { DEMO_PROZESSE } from '../../data/risikoKatalog';
 import { generateArbeitsanweisungPdf, generateRichtliniePdf, generateProzessbeschreibungPdf } from '../../utils/demoPdfGenerator';
+import { generateLeitfadenKreditvergabe } from '../../utils/richDocs/leitfadenKredit';
+import { generateHandbuchZahlungsverkehr } from '../../utils/richDocs/handbuchZahlungsverkehr';
+import { generateExcelKompetenzmatrix, generateExcelSicherheitenbewertung, generateExcelZahlungslimits } from '../../utils/richDocs/excelGenerator';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -90,63 +93,139 @@ function DemoDocsDropdown({ onClose }) {
     return () => document.removeEventListener('mousedown', handler);
   }, [onClose]);
 
-  const downloads = [
+  const richDocs = [
+    {
+      id: 'leitfaden-kredit',
+      label: 'Prozessleitfaden Kreditvergabe Firmenkunden',
+      sub: 'PDF · ~20 Seiten · v4.2 · MaRisk BTO 1.2 · § 18 KWG · DORA',
+      tone: 'rich',
+      icon: BookOpen,
+      onClick: () => generateLeitfadenKreditvergabe(),
+    },
+    {
+      id: 'handbuch-zv',
+      label: 'Operations-Handbuch SEPA/SWIFT-Zahlungsverkehr',
+      sub: 'PDF · ~20 Seiten · v6.0 · PSD2 · DORA · CSCF · GwG',
+      tone: 'rich',
+      icon: BookOpen,
+      onClick: () => generateHandbuchZahlungsverkehr(),
+    },
+  ];
+
+  const excelDocs = [
+    {
+      id: 'xlsx-kompetenz',
+      label: 'Kompetenzmatrix Kreditgeschäft 2026',
+      sub: 'XLSX · 5 Sheets · Matrix + Rating-Skala + Override-Regeln',
+      icon: FileSpreadsheet,
+      onClick: () => generateExcelKompetenzmatrix(),
+    },
+    {
+      id: 'xlsx-sicherheit',
+      label: 'Sicherheiten-Bewertung Q4/2025',
+      sub: 'XLSX · 5 Sheets · Haircut-Matrix + Bewertungsmodelle + Trigger',
+      icon: FileSpreadsheet,
+      onClick: () => generateExcelSicherheitenbewertung(),
+    },
+    {
+      id: 'xlsx-zv-limits',
+      label: 'Zahlungsverkehr Limits & Schwellen',
+      sub: 'XLSX · 6 Sheets · Cut-offs + Freigaben + Sanktionslisten + CSCF',
+      icon: FileSpreadsheet,
+      onClick: () => generateExcelZahlungslimits(),
+    },
+  ];
+
+  const lightDocs = [
     {
       id: 'arbeitsanweisung',
-      label: 'Arbeitsanweisung Kreditvergabe',
-      sub: 'PDF · 4 Seiten · End-to-End-Prozess Firmenkundenkredit',
+      label: 'Arbeitsanweisung Kreditvergabe (kurz)',
+      sub: 'PDF · 4 Seiten',
       icon: FileText,
       onClick: () => generateArbeitsanweisungPdf(DEMO_PROZESSE[0]),
     },
     {
       id: 'richtlinie',
-      label: 'Richtlinie Zahlungsverkehr',
-      sub: 'PDF · 3 Seiten · MaRisk-konforme Steuerung',
+      label: 'Richtlinie Zahlungsverkehr (kurz)',
+      sub: 'PDF · 3 Seiten',
       icon: FileText,
       onClick: () => generateRichtliniePdf(DEMO_PROZESSE[2]),
     },
     {
       id: 'wpprozess',
-      label: 'Prozessbeschreibung Wertpapier-Settlement',
-      sub: 'PDF · 3 Seiten · Trade-to-Settle',
+      label: 'Prozessbeschreibung Wertpapier-Settlement (kurz)',
+      sub: 'PDF · 3 Seiten',
       icon: FileText,
       onClick: () => generateProzessbeschreibungPdf(DEMO_PROZESSE[1]),
     },
     {
       id: 'schaden',
-      label: 'Schaden-Operations Handbuch',
-      sub: 'PDF · 3 Seiten · Sach- und Lebensversicherung',
+      label: 'Schaden-Operations Handbuch (kurz)',
+      sub: 'PDF · 3 Seiten',
       icon: FileText,
       onClick: () => generateProzessbeschreibungPdf(DEMO_PROZESSE[3]),
     },
   ];
 
+  const Item = ({ d }) => {
+    const Icon = d.icon;
+    const isRich = d.tone === 'rich';
+    return (
+      <button
+        onClick={() => d.onClick()}
+        className="dropdown-item"
+        style={isRich ? { background: 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 6%, white)' } : undefined}
+      >
+        <span
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: 8,
+            background: isRich
+              ? 'var(--mode-gradient, linear-gradient(135deg,#0F4D2A,#1D7B3F))'
+              : 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 12%, white)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: isRich ? 'white' : 'var(--mode-primary, #0F4D2A)',
+            flexShrink: 0,
+          }}
+        >
+          <Icon size={16} strokeWidth={1.75} />
+        </span>
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <span className="flex items-center gap-1.5">
+            <span className="font-semibold text-[13px] leading-tight">{d.label}</span>
+            {isRich && (
+              <span style={{ background: '#FEF3C7', color: '#92400E', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4, letterSpacing: 0.4, textTransform: 'uppercase' }}>
+                Realistisch
+              </span>
+            )}
+          </span>
+          <span className="block text-[11px] text-slate-500 leading-snug">{d.sub}</span>
+        </span>
+        <Download size={14} className="text-slate-400 shrink-0" />
+      </button>
+    );
+  };
+
   return (
-    <div ref={ref} className="dropdown-menu" style={{ minWidth: 360, right: 0, left: 'auto' }}>
-      <div className="dropdown-title">Demo-Dokumente zum Hochladen</div>
+    <div ref={ref} className="dropdown-menu" style={{ minWidth: 440, right: 0, left: 'auto', maxHeight: 520 }}>
+      <div className="dropdown-title">Demo-Eingangsdokumente</div>
       <p className="px-3 pb-2 text-[12px] text-slate-500 leading-snug">
-        Laden Sie eine Demo-Datei herunter und reichen Sie sie unter „Schritt&nbsp;1 – Prozessanalyse"
-        wieder ein, um den vollständigen Smart-ICS-Workflow zu erleben.
+        Realistische Banken-Dokumente zum Hochladen — verwenden Sie sie unter
+        „Schritt&nbsp;1 – Prozessanalyse", um den vollständigen Smart-ICS-Workflow
+        zu erleben.
       </p>
-      {downloads.map(d => {
-        const Icon = d.icon;
-        return (
-          <button
-            key={d.id}
-            onClick={() => { d.onClick(); }}
-            className="dropdown-item"
-          >
-            <span style={{ width: 32, height: 32, borderRadius: 8, background: 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 12%, white)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'var(--mode-primary, #0F4D2A)' }}>
-              <Icon size={16} strokeWidth={1.75} />
-            </span>
-            <span style={{ flex: 1, minWidth: 0 }}>
-              <span className="block font-semibold text-[13px] leading-tight">{d.label}</span>
-              <span className="block text-[11px] text-slate-500 leading-snug truncate">{d.sub}</span>
-            </span>
-            <Download size={14} className="text-slate-400" />
-          </button>
-        );
-      })}
+
+      <div className="dropdown-title" style={{ marginTop: 4 }}>Vollständige Prozessleitfäden (PDF)</div>
+      {richDocs.map(d => <Item key={d.id} d={d} />)}
+
+      <div className="dropdown-title" style={{ marginTop: 8 }}>Begleit-Workbooks (Excel)</div>
+      {excelDocs.map(d => <Item key={d.id} d={d} />)}
+
+      <div className="dropdown-title" style={{ marginTop: 8 }}>Kurzfassungen</div>
+      {lightDocs.map(d => <Item key={d.id} d={d} />)}
     </div>
   );
 }

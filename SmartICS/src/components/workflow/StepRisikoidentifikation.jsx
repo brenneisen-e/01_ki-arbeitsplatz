@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react';
-import { ArrowRight, ArrowLeft, CheckCircle2, Plus, X } from 'lucide-react';
+import { useMemo, useRef, useState, useEffect } from 'react';
+import { ArrowRight, ArrowLeft, CheckCircle2, Plus, X, Info } from 'lucide-react';
 import { useSmartIcs } from '../../hooks/useSmartIcs';
 import { RISIKO_KATEGORIEN } from '../../data/risikoKatalog';
+import ProzessFlowChart from './ProzessFlowChart';
+import AiExplanationModal from './AiExplanationModal';
 
 function getKategorie(id) {
   return RISIKO_KATEGORIEN.find(k => k.id === id);
@@ -80,13 +82,31 @@ function AddRisikoModal({ aktivitaetId, onClose }) {
 export default function StepRisikoidentifikation({ onBack, onNext }) {
   const { session, toggleRisiko } = useSmartIcs();
   const [addingFor, setAddingFor] = useState(null);
+  const [activeId, setActiveId] = useState(null);
+  const [hoverId, setHoverId] = useState(null);
+  const [infoPayload, setInfoPayload] = useState(null);
+  const cardRefs = useRef({});
 
   const totalSelected = useMemo(() => {
     if (!session) return 0;
     return Object.values(session.risikoCandidates).flat().filter(r => r.selected).length;
   }, [session]);
 
+  useEffect(() => {
+    if (!activeId) return;
+    const t = setTimeout(() => setActiveId(null), 1800);
+    return () => clearTimeout(t);
+  }, [activeId]);
+
+  const handleSelectActivity = (id) => {
+    setActiveId(id);
+    const el = cardRefs.current[id];
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   if (!session) return null;
+
+  const effectiveActive = hoverId || activeId;
 
   return (
     <div className="space-y-5">
@@ -102,11 +122,31 @@ export default function StepRisikoidentifikation({ onBack, onNext }) {
         </div>
       </div>
 
+      <ProzessFlowChart
+        session={session}
+        activeId={effectiveActive}
+        onSelectActivity={handleSelectActivity}
+        onHoverActivity={setHoverId}
+        onInfoClick={(activity) => setInfoPayload({ type: 'activity', activity, session })}
+        onToggleFullscreen={() => {}}
+      />
+
+      <div className="text-[11px] text-slate-500 px-1">
+        Tipp: Beim Hover über einen Prozess-Schritt wird die zugehörige Risiko-Karte hervorgehoben — Klick scrollt dorthin.
+      </div>
+
       <div className="space-y-4">
         {session.aktivitaeten.filter(a => !a._remove && a.confirmed).map((a, idx) => {
           const candidates = session.risikoCandidates[a.id] || [];
+          const isActive = effectiveActive === a.id;
           return (
-            <div key={a.id} className="card-base">
+            <div
+              key={a.id}
+              ref={(el) => { if (el) cardRefs.current[a.id] = el; }}
+              onMouseEnter={() => setHoverId(a.id)}
+              onMouseLeave={() => setHoverId(null)}
+              className={`card-base transition-all ${isActive ? 'ring-2 ring-amber-400 ring-offset-2' : ''}`}
+            >
               <div className="px-5 py-3 border-b border-slate-200 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <div
@@ -120,12 +160,21 @@ export default function StepRisikoidentifikation({ onBack, onNext }) {
                     <div className="text-[11px] text-slate-500 truncate">{a.beschreibung}</div>
                   </div>
                 </div>
-                <button
-                  onClick={() => setAddingFor(a.id)}
-                  className="text-[11px] inline-flex items-center gap-1 px-2 py-1 rounded-md border border-slate-200 hover:bg-slate-50"
-                >
-                  <Plus size={12} /> Risiko ergänzen
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setInfoPayload({ type: 'activity', activity: a, session })}
+                    className="text-[11px] inline-flex items-center gap-1 px-2 py-1 rounded-md border border-slate-200 hover:bg-slate-50 text-slate-600"
+                    title="Wie hat die KI das erkannt?"
+                  >
+                    <Info size={12} /> Begründung
+                  </button>
+                  <button
+                    onClick={() => setAddingFor(a.id)}
+                    className="text-[11px] inline-flex items-center gap-1 px-2 py-1 rounded-md border border-slate-200 hover:bg-slate-50"
+                  >
+                    <Plus size={12} /> Risiko ergänzen
+                  </button>
+                </div>
               </div>
               {candidates.length === 0 ? (
                 <div className="px-5 py-6 text-center text-sm text-slate-500">
@@ -138,6 +187,7 @@ export default function StepRisikoidentifikation({ onBack, onNext }) {
                       <th style={{ width: 90 }}>Confidence</th>
                       <th>Risikoart / Unterart</th>
                       <th>Beschreibung</th>
+                      <th style={{ width: 40 }}></th>
                       <th style={{ width: 140 }}></th>
                     </tr>
                   </thead>
@@ -156,6 +206,15 @@ export default function StepRisikoidentifikation({ onBack, onNext }) {
                             <div className="text-[12px] text-slate-500 ml-3.5">{u?.name}</div>
                           </td>
                           <td className="text-[13px] text-slate-700">{r.beschreibung}</td>
+                          <td>
+                            <button
+                              onClick={() => setInfoPayload({ type: 'risiko', risiko: r, activity: a, session })}
+                              className="text-slate-400 hover:text-emerald-700"
+                              title="Wie wurde dieses Risiko abgeleitet?"
+                            >
+                              <Info size={14} />
+                            </button>
+                          </td>
                           <td>
                             <label className="inline-flex items-center gap-2 cursor-pointer">
                               <input
@@ -196,6 +255,7 @@ export default function StepRisikoidentifikation({ onBack, onNext }) {
       </div>
 
       {addingFor && <AddRisikoModal aktivitaetId={addingFor} onClose={() => setAddingFor(null)} />}
+      {infoPayload && <AiExplanationModal payload={infoPayload} onClose={() => setInfoPayload(null)} />}
     </div>
   );
 }

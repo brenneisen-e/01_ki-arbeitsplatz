@@ -4,7 +4,7 @@ import {
   ShieldCheck, ClipboardList, Calculator, Database, Key, BookOpen,
   Coins, Building2, Filter, ScanLine, Send, BarChart3, FileCheck2,
   Inbox, ShieldAlert, FileSearch, Banknote, Repeat, Layers, Eye,
-  ListChecks, Maximize2, X, ZoomIn, ZoomOut,
+  ListChecks, Maximize2, X, ZoomIn, ZoomOut, Info,
 } from 'lucide-react';
 
 // Mapping passender Lucide-Icons je Aktivität — Fallback: ClipboardList
@@ -54,7 +54,7 @@ function pickLane(name) {
   return { id: 'flow', label: 'Prozess', color: '#0F4D2A' };
 }
 
-function ActivityNode({ activity, index, onClick, active, zoom = 1 }) {
+function ActivityNode({ activity, index, onClick, onHover, onInfoClick, active, zoom = 1 }) {
   const Icon = pickIcon(activity.name);
   const lane = pickLane(activity.name);
   const confirmed = activity.confirmed !== false;
@@ -63,9 +63,9 @@ function ActivityNode({ activity, index, onClick, active, zoom = 1 }) {
   if (removed) return null;
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <div
+      onMouseEnter={() => onHover && onHover(activity.id)}
+      onMouseLeave={() => onHover && onHover(null)}
       className={`group relative flex flex-col items-stretch text-left rounded-xl border bg-white transition-all hover:shadow-md ${active ? 'ring-2 ring-emerald-600 ring-offset-2' : ''}`}
       style={{
         width: 200 * zoom,
@@ -73,8 +73,10 @@ function ActivityNode({ activity, index, onClick, active, zoom = 1 }) {
         boxShadow: confirmed ? `0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px color-mix(in srgb, ${lane.color} 10%, transparent)` : '0 1px 2px rgba(0,0,0,0.04)',
       }}
     >
-      <div
-        className="flex items-center gap-1.5 px-2.5 py-1 rounded-t-xl text-[10px] font-semibold uppercase tracking-wider text-white"
+      <button
+        type="button"
+        onClick={onClick}
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-t-xl text-[10px] font-semibold uppercase tracking-wider text-white w-full"
         style={{ background: lane.color, fontSize: 10 * zoom }}
       >
         <span className="opacity-80">#{String(index + 1).padStart(2, '0')}</span>
@@ -83,8 +85,12 @@ function ActivityNode({ activity, index, onClick, active, zoom = 1 }) {
           {activity.custom && <span className="bg-white/30 px-1 rounded">manuell</span>}
           {confirmed ? <CheckCircle2 size={11} /> : <AlertCircle size={11} />}
         </span>
-      </div>
-      <div className="px-3 py-2.5 flex items-start gap-2.5">
+      </button>
+      <button
+        type="button"
+        onClick={onClick}
+        className="px-3 py-2.5 flex items-start gap-2.5 text-left w-full"
+      >
         <div
           className="rounded-lg flex items-center justify-center shrink-0"
           style={{
@@ -96,7 +102,7 @@ function ActivityNode({ activity, index, onClick, active, zoom = 1 }) {
         >
           <Icon size={16 * zoom} strokeWidth={1.75} />
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="font-semibold leading-tight" style={{ fontSize: 13 * zoom, color: '#0F172A' }}>
             {activity.name}
           </div>
@@ -104,8 +110,18 @@ function ActivityNode({ activity, index, onClick, active, zoom = 1 }) {
             {activity.beschreibung}
           </div>
         </div>
-      </div>
-    </button>
+      </button>
+      {onInfoClick && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onInfoClick(activity); }}
+          className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-white/30 hover:bg-white text-white hover:text-emerald-700 flex items-center justify-center transition-colors"
+          title="Wie hat die KI das erkannt?"
+        >
+          <Info size={11} strokeWidth={2.4} />
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -148,7 +164,7 @@ function StartEndNode({ kind, color, zoom = 1 }) {
     <div className="flex flex-col items-center justify-center text-center" style={{ width: 90 * zoom }}>
       <div
         className="rounded-full flex items-center justify-center text-white"
-        style={{ width: 56 * zoom, height: 56 * zoom, background: color, boxShadow: `0 4px 12px color-mix(in srgb, ${color} 30%, transparent)` }}
+        style={{ width: 56 * zoom, height: 56 * zoom, background: color }}
       >
         <Icon size={22 * zoom} strokeWidth={2} />
       </div>
@@ -160,7 +176,7 @@ function StartEndNode({ kind, color, zoom = 1 }) {
 // =============================================================================
 // Hauptkomponente
 // =============================================================================
-export default function ProzessFlowChart({ session, onSelectActivity, activeId, fullscreen = false, onToggleFullscreen }) {
+export default function ProzessFlowChart({ session, onSelectActivity, onHoverActivity, onInfoClick, activeId, fullscreen = false, onToggleFullscreen, compact = false }) {
   const [zoom, setZoom] = useState(1);
 
   const items = useMemo(
@@ -181,16 +197,6 @@ export default function ProzessFlowChart({ session, onSelectActivity, activeId, 
   }, [items]);
 
   const accent = '#0F4D2A';
-
-  // Layout: 4 Knoten pro Zeile, danach Umbruch (Schlangenlinie)
-  const COLS = 4;
-  const rows = [];
-  for (let i = 0; i < items.length; i += COLS) {
-    const row = items.slice(i, i + COLS);
-    const rowIndex = Math.floor(i / COLS);
-    const reverse = rowIndex % 2 === 1; // Boustrophedon-Layout
-    rows.push({ row, reverse, rowIndex, offset: i });
-  }
 
   if (!items.length) return null;
 
@@ -250,100 +256,27 @@ export default function ProzessFlowChart({ session, onSelectActivity, activeId, 
         </div>
 
         <div className="p-5 overflow-x-auto scrollbar-thin">
-          <div className="min-w-fit space-y-1">
-            {rows.map((rowData, ri) => {
-              const isFirst = ri === 0;
-              const isLast = ri === rows.length - 1;
-              const reverse = rowData.reverse;
-              // arr ist die VISUELLE Reihenfolge (links → rechts); bei reverse spiegeln wir.
-              const arr = reverse ? [...rowData.row].reverse() : rowData.row;
-              // Original-Indizes (logische Position im Gesamtflow)
-              const origIdx = (idx) =>
-                rowData.offset + (reverse ? rowData.row.length - 1 - idx : idx);
-              // Verbinder zwischen zwei Knoten zeigt logisch immer "vorwärts", d.h.
-              // in einer reversen Zeile zeigt der Verbinder visuell nach LINKS.
-              const interArrow = reverse ? 'left' : 'right';
-
-              // Platzhalter-Breite, damit reverse Rows in der gleichen Spalte enden wie forward Rows.
-              const padForReverseAlign = (COLS - rowData.row.length) * (200 + 32) * zoom;
-
-              return (
-                <div key={ri}>
-                  <div className="flex items-stretch gap-0">
-                    {/* === Vorderer Bereich (links) === */}
-                    {isFirst && !reverse && (
-                      // Erste Zeile, vorwärts: Start-Node links, dann →
-                      <>
-                        <StartEndNode kind="start" color="#0F4D2A" zoom={zoom} />
-                        <FlowConnector direction="right" color={accent} zoom={zoom} />
-                      </>
-                    )}
-                    {isLast && reverse && (
-                      // Letzte Zeile, reverse: Ende-Node ganz links (visuell), Pfeil ← in den Node hinein
-                      <>
-                        <StartEndNode kind="end" color="#86BC25" zoom={zoom} />
-                        <FlowConnector direction="left" color={accent} zoom={zoom} />
-                      </>
-                    )}
-                    {/* Spalten-Auffüllung, falls reverse Row weniger als COLS Items hat —
-                        sorgt dafür, dass die reverse Row visuell rechts beginnt */}
-                    {reverse && rowData.row.length < COLS && (
-                      <div style={{ width: padForReverseAlign }} />
-                    )}
-
-                    {/* === Items === */}
-                    {arr.map((a, idx) => (
-                      <div key={a.id} className="flex items-stretch">
-                        <ActivityNode
-                          activity={a}
-                          index={origIdx(idx)}
-                          onClick={() => onSelectActivity && onSelectActivity(a.id)}
-                          active={activeId === a.id}
-                          zoom={zoom}
-                        />
-                        {idx < arr.length - 1 && (
-                          <FlowConnector direction={interArrow} color={accent} zoom={zoom} />
-                        )}
-                      </div>
-                    ))}
-
-                    {/* === Hinterer Bereich (rechts) === */}
-                    {isLast && !reverse && (
-                      <>
-                        <FlowConnector direction="right" color={accent} zoom={zoom} />
-                        <StartEndNode kind="end" color="#86BC25" zoom={zoom} />
-                      </>
-                    )}
-                  </div>
-
-                  {/* Down-Connector zur nächsten Zeile */}
-                  {!isLast && (() => {
-                    // Position der letzten visuell sichtbaren Spalte in dieser Zeile bestimmen.
-                    // Forward-Zeile: letzte Spalte = COLS-1 (rechts).
-                    // Reverse-Zeile: letzte Spalte (visuell) = 0 (links).
-                    // Der Down-Pfeil wird unter dieser Spalte zentriert.
-                    const arrowOnRight = !reverse;
-                    return (
-                      <div
-                        className="flex"
-                        style={{
-                          // Start-Node-Offset auf der ersten Zeile berücksichtigen (90 + 32 px)
-                          paddingLeft: arrowOnRight
-                            ? ((COLS - 1) * (200 + 32) + (isFirst ? 90 + 32 : 0)) * zoom
-                            : 0,
-                          paddingRight: arrowOnRight ? 0 : (isFirst ? (90 + 32) * zoom : 0),
-                          justifyContent: arrowOnRight ? 'flex-start' : 'flex-start',
-                        }}
-                      >
-                        <div style={{ width: 200 * zoom }}>
-                          <FlowConnector direction="down" color={accent} zoom={zoom} />
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              );
-            })}
+          <div className="flex items-stretch gap-0 min-w-fit">
+            <StartEndNode kind="start" color="#0F4D2A" zoom={zoom} />
+            <FlowConnector direction="right" color={accent} zoom={zoom} />
+            {items.map((a, idx) => (
+              <div key={a.id} className="flex items-stretch">
+                <ActivityNode
+                  activity={a}
+                  index={idx}
+                  onClick={() => onSelectActivity && onSelectActivity(a.id)}
+                  onHover={onHoverActivity}
+                  onInfoClick={onInfoClick}
+                  active={activeId === a.id}
+                  zoom={zoom}
+                />
+                {idx < items.length - 1 && (
+                  <FlowConnector direction="right" color={accent} zoom={zoom} />
+                )}
+              </div>
+            ))}
+            <FlowConnector direction="right" color={accent} zoom={zoom} />
+            <StartEndNode kind="end" color="#86BC25" zoom={zoom} />
           </div>
         </div>
 

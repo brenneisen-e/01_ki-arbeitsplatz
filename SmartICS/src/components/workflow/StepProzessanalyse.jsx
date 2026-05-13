@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { CheckCircle2, Plus, Trash2, Edit3, Save, FileText, ArrowRight, Sparkles } from 'lucide-react';
+import { CheckCircle2, Plus, Trash2, Edit3, Save, FileText, ArrowRight, Sparkles, Info } from 'lucide-react';
 import { useSmartIcs } from '../../hooks/useSmartIcs';
 import { DEMO_PROZESSE } from '../../data/risikoKatalog';
 import DocumentUpload from '../upload/DocumentUpload';
 import ProzessFlowChart from './ProzessFlowChart';
+import AiExplanationModal from './AiExplanationModal';
 
 function ProzessAuswahl({ onSelect }) {
   return (
@@ -47,7 +48,9 @@ export default function StepProzessanalyse({ onNext }) {
   const [adding, setAdding] = useState(false);
   const [newAct, setNewAct] = useState({ name: '', beschreibung: '' });
   const [activeId, setActiveId] = useState(null);
+  const [hoverId, setHoverId] = useState(null);
   const [fullscreen, setFullscreen] = useState(false);
+  const [infoPayload, setInfoPayload] = useState(null);
   const rowRefs = useRef({});
 
   const handleSelectActivity = (id) => {
@@ -65,6 +68,8 @@ export default function StepProzessanalyse({ onNext }) {
     const t = setTimeout(() => setActiveId(null), 1800);
     return () => clearTimeout(t);
   }, [activeId]);
+
+  const effectiveActive = hoverId || activeId;
 
   // Kein aktiver Prozess → Auswahl/Upload
   if (!session) {
@@ -144,8 +149,10 @@ export default function StepProzessanalyse({ onNext }) {
 
       <ProzessFlowChart
         session={session}
-        activeId={activeId}
+        activeId={effectiveActive}
         onSelectActivity={handleSelectActivity}
+        onHoverActivity={setHoverId}
+        onInfoClick={(activity) => setInfoPayload({ type: 'activity', activity, session })}
         fullscreen={fullscreen}
         onToggleFullscreen={() => setFullscreen(v => !v)}
       />
@@ -175,7 +182,9 @@ export default function StepProzessanalyse({ onNext }) {
               <tr
                 key={a.id}
                 ref={(el) => { if (el) rowRefs.current[a.id] = el; }}
-                className={`${editingId === a.id ? 'bg-emerald-50/40' : ''} ${activeId === a.id ? 'bg-amber-50/70 transition-colors' : 'transition-colors'}`}
+                onMouseEnter={() => setHoverId(a.id)}
+                onMouseLeave={() => setHoverId(null)}
+                className={`${editingId === a.id ? 'bg-emerald-50/40' : ''} ${effectiveActive === a.id ? 'bg-amber-50/70 transition-colors' : 'transition-colors'}`}
               >
                 <td className="font-mono text-slate-400">{String(i + 1).padStart(2, '0')}</td>
                 <td>
@@ -217,6 +226,13 @@ export default function StepProzessanalyse({ onNext }) {
                     </button>
                   ) : (
                     <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => setInfoPayload({ type: 'activity', activity: a, session })}
+                        className="text-slate-500 hover:text-emerald-700"
+                        title="Wie hat die KI das erkannt?"
+                      >
+                        <Info size={14} />
+                      </button>
                       <button onClick={() => startEdit(a)} className="text-slate-500 hover:text-emerald-700" title="Bearbeiten"><Edit3 size={14} /></button>
                       <button onClick={() => removeAkt(a)} className="text-slate-500 hover:text-red-600" title="Entfernen"><Trash2 size={14} /></button>
                     </div>
@@ -269,6 +285,8 @@ export default function StepProzessanalyse({ onNext }) {
           <ArrowRight size={16} />
         </button>
       </div>
+
+      {infoPayload && <AiExplanationModal payload={infoPayload} onClose={() => setInfoPayload(null)} />}
     </div>
   );
 }

@@ -12,7 +12,7 @@ const STEPS = [
   { id: 3, label: 'Kontrollidentifikation', icon: KeyRound,    sub: 'Schlüsselkontrollen' },
 ];
 
-function StepIndicator({ active }) {
+function StepIndicator({ active, onStepClick }) {
   return (
     <ol className="card-base p-3 flex items-stretch overflow-x-auto">
       {STEPS.map((s, i) => {
@@ -21,7 +21,12 @@ function StepIndicator({ active }) {
         const isDone = i < active;
         return (
           <li key={s.id} className="flex items-center min-w-0 flex-1 last:flex-1">
-            <div className="flex items-center gap-3 px-3 py-2 min-w-0 flex-1">
+            <button
+              type="button"
+              onClick={() => onStepClick && onStepClick(i)}
+              className="flex items-center gap-3 px-3 py-2 min-w-0 flex-1 text-left rounded-lg hover:bg-slate-50 transition-colors"
+              title={`Zu Schritt ${i + 1} springen`}
+            >
               <div
                 className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${isActive ? 'text-white' : isDone ? 'text-emerald-700' : 'text-slate-500'}`}
                 style={{
@@ -41,7 +46,7 @@ function StepIndicator({ active }) {
                 <div className="text-sm font-semibold truncate">{s.label}</div>
                 <div className="text-[11px] text-slate-500 truncate">{s.sub}</div>
               </div>
-            </div>
+            </button>
             {i < STEPS.length - 1 && (
               <div className="self-center mx-1 flex-1 h-px hidden md:block" style={{ background: isDone ? '#16A34A' : '#E2E8F0' }} />
             )}
@@ -57,7 +62,7 @@ export default function WorkflowView({ onSwitchToRkm }) {
 
   return (
     <div className="space-y-5">
-      {session && <StepIndicator active={step} />}
+      {session && <StepIndicator active={step} onStepClick={setStep} />}
 
       {step === 0 && <StepProzessanalyse onNext={() => setStep(1)} />}
       {step === 1 && <StepRisikoidentifikation onBack={() => setStep(0)} onNext={() => setStep(2)} />}

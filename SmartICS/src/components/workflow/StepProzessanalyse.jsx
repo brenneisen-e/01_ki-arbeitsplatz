@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { CheckCircle2, Plus, Trash2, Edit3, Save, FileText, ArrowRight, Sparkles } from 'lucide-react';
 import { useSmartIcs } from '../../hooks/useSmartIcs';
 import { DEMO_PROZESSE } from '../../data/risikoKatalog';
 import DocumentUpload from '../upload/DocumentUpload';
+import ProzessFlowChart from './ProzessFlowChart';
 
 function ProzessAuswahl({ onSelect }) {
   return (
@@ -45,6 +46,25 @@ export default function StepProzessanalyse({ onNext }) {
   const [editVal, setEditVal] = useState({ name: '', beschreibung: '' });
   const [adding, setAdding] = useState(false);
   const [newAct, setNewAct] = useState({ name: '', beschreibung: '' });
+  const [activeId, setActiveId] = useState(null);
+  const [fullscreen, setFullscreen] = useState(false);
+  const rowRefs = useRef({});
+
+  const handleSelectActivity = (id) => {
+    setActiveId(id);
+    const el = rowRefs.current[id];
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    setFullscreen(false);
+  };
+
+  // Highlight-Effekt nach Auswahl
+  useEffect(() => {
+    if (!activeId) return;
+    const t = setTimeout(() => setActiveId(null), 1800);
+    return () => clearTimeout(t);
+  }, [activeId]);
 
   // Kein aktiver Prozess → Auswahl/Upload
   if (!session) {
@@ -122,6 +142,14 @@ export default function StepProzessanalyse({ onNext }) {
         )}
       </div>
 
+      <ProzessFlowChart
+        session={session}
+        activeId={activeId}
+        onSelectActivity={handleSelectActivity}
+        fullscreen={fullscreen}
+        onToggleFullscreen={() => setFullscreen(v => !v)}
+      />
+
       <div className="card-base">
         <div className="px-5 py-3 border-b border-slate-200 flex items-center justify-between">
           <div className="text-sm font-semibold">Identifizierte Aktivitäten</div>
@@ -144,7 +172,11 @@ export default function StepProzessanalyse({ onNext }) {
           </thead>
           <tbody>
             {session.aktivitaeten.filter(a => !a._remove).map((a, i) => (
-              <tr key={a.id} className={editingId === a.id ? 'bg-emerald-50/40' : ''}>
+              <tr
+                key={a.id}
+                ref={(el) => { if (el) rowRefs.current[a.id] = el; }}
+                className={`${editingId === a.id ? 'bg-emerald-50/40' : ''} ${activeId === a.id ? 'bg-amber-50/70 transition-colors' : 'transition-colors'}`}
+              >
                 <td className="font-mono text-slate-400">{String(i + 1).padStart(2, '0')}</td>
                 <td>
                   {editingId === a.id ? (

@@ -1,0 +1,311 @@
+.room {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Fensterband oben */
+.windows {
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  top: 5%;
+  height: 22%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  transform: translate3d(calc(var(--px) * -6px), 0, 0);
+  z-index: 1;
+}
+
+.windowPane {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(220, 210, 188, 0.4) 100%);
+  border: 1px solid rgba(94, 70, 50, 0.45);
+  border-radius: 1px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+/* Monitor-Wand -- die Live-Charts hängen "in der Luft" als Wandkacheln */
+.monitorWall {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 8%;
+  height: 36%;
+  display: grid;
+  grid-template-columns: 1.2fr 0.7fr 1.1fr;
+  gap: 9px;
+  z-index: 4;
+  transform: translate3d(calc(var(--px) * 4px), 0, 0);
+}
+
+.monitor {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: var(--r-md);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1.5px solid #4F3A23;
+  box-shadow:
+    0 10px 22px rgba(33, 33, 33, 0.14),
+    inset 0 0 0 1px rgba(33, 33, 33, 0.04);
+  min-width: 0;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.monitor::before {
+  /* Bildschirm-Glanz */
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.monitorLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--green-dark);
+  font-weight: 600;
+}
+
+.monitorValue {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.monitorDonut {
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.monitorFlow {
+  justify-content: space-between;
+}
+
+.processFlow {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 3px;
+  margin-top: 2px;
+}
+
+.processStep {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--ink-2);
+}
+
+.processIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.processName {
+  letter-spacing: 0.04em;
+}
+
+.processArrow {
+  color: var(--ink-3);
+  margin-left: 2px;
+}
+
+/* Desks */
+.desks {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12%;
+  height: 22%;
+  z-index: 3;
+}
+
+.desk {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 12%;
+  min-width: 56px;
+  height: 100%;
+}
+
+.deskTop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background: linear-gradient(180deg, #C7A77A 0%, #8E6B45 100%);
+  border-radius: 4px 4px 1px 1px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 225, 180, 0.34),
+    0 6px 12px rgba(33, 33, 33, 0.16);
+}
+
+.deskMonitor {
+  position: absolute;
+  left: 50%;
+  bottom: 38%;
+  transform: translateX(-50%);
+  width: 62%;
+  height: 50%;
+  background:
+    linear-gradient(180deg, #103241 0%, #07151D 100%);
+  border-radius: 3px;
+  border: 1.6px solid #2C1F12;
+  box-shadow: 0 6px 14px rgba(33, 33, 33, 0.18);
+  overflow: hidden;
+}
+
+.deskMonitor::before {
+  content: '';
+  position: absolute;
+  inset: 6%;
+  background:
+    repeating-linear-gradient(0deg, rgba(126, 200, 255, 0.32) 0px, rgba(126, 200, 255, 0.32) 1px, transparent 1px, transparent 4px);
+  opacity: 0.55;
+}
+
+.deskMonitor::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 18%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #86BC25, transparent);
+  filter: blur(0.6px);
+  animation: opsLineSweep 3.2s var(--ease-in-out) infinite;
+}
+
+@keyframes opsLineSweep {
+  0%, 100% { transform: translateY(-6px) }
+  50% { transform: translateY(6px) }
+}
+
+/* Mitarbeitende -- sitzen am Schreibtisch */
+.workers {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  height: 28%;
+  z-index: 3;
+}
+
+.worker {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 4px 5px rgba(33, 33, 33, 0.16));
+  animation: workerBreathe 5.5s var(--ease-in-out) infinite;
+}
+
+.worker:nth-child(2) { animation-delay: -1.2s }
+.worker:nth-child(3) { animation-delay: -2.4s }
+.worker:nth-child(4) { animation-delay: -3.6s }
+
+@keyframes workerBreathe {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-1.2px); }
+}
+
+/* Service-Roboter */
+.robot {
+  position: absolute;
+  left: 50%;
+  bottom: 11%;
+  transform: translateX(-50%);
+  z-index: 4;
+  animation: robotMove 11s var(--ease-in-out) infinite;
+}
+
+@keyframes robotMove {
+  0%, 100% { transform: translateX(calc(-50% - 60px)) }
+  50% { transform: translateX(calc(-50% + 60px)) }
+}
+
+.robotBody {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 46px;
+  border-radius: 10px 10px 14px 14px / 18px 18px 8px 8px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #DDE3D5 80%);
+  border: 1.5px solid var(--ink);
+  color: var(--green-dark);
+  box-shadow:
+    0 8px 16px rgba(33, 33, 33, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.robotBody::before {
+  /* Antenne */
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background: var(--ink);
+}
+
+.robotBody::after {
+  content: '';
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #86BC25;
+  box-shadow: 0 0 8px rgba(134, 188, 37, 0.8);
+  animation: robotAntenna 1.4s var(--ease-in-out) infinite;
+}
+
+@keyframes robotAntenna {
+  0%, 100% { opacity: 1 }
+  50% { opacity: 0.4 }
+}
+
+.robotShadow {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 6px;
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(33, 33, 33, 0.3), transparent 70%);
+  border-radius: 50%;
+}

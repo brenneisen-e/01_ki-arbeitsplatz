@@ -1,95 +1,134 @@
-import { useEffect, useState } from 'react'
-import { Hero } from './components/Scene/Hero'
-import { HorizonsView } from './components/Scene/HorizonsView'
-import { HotspotOverlay } from './components/Scene/HotspotOverlay'
-import { Header } from './components/UI/Header'
-import { SidePanel } from './components/UI/SidePanel'
-import { Tooltip } from './components/UI/Tooltip'
-import { ThemeToggle } from './components/UI/ThemeToggle'
-import { ResetButton } from './components/UI/ResetButton'
-import { WorkshopFlow } from './components/Workshop/WorkshopFlow'
-import { useScene } from './hooks/useScene'
-import { useUrlSync } from './hooks/useUrlSync'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ArrowLeft, KeyboardIcon } from 'lucide-react'
+import styles from './App.module.css'
+import { Scene } from './components/Scene'
+import { SidePanel } from './components/SidePanel'
+import { FLOORS, HOTSPOTS, type FloorId, type HotspotDef } from './data/modules'
 
-const FLOOR_ORDER = ['top', 'ground', 'basement'] as const
+function App(): React.ReactElement {
+  const [focusedFloor, setFocusedFloor] = useState<FloorId | null>(null)
+  const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null)
 
-const PRELOAD_PATHS = [
-  'assets/scene/floor-top-detail',
-  'assets/scene/floor-ground-detail',
-  'assets/scene/floor-basement-detail',
-  'assets/scene/outdoor-plaza',
-]
+  const activeHotspot: HotspotDef | null = useMemo(
+    () => HOTSPOTS.find((h) => h.id === activeHotspotId) ?? null,
+    [activeHotspotId],
+  )
 
-export default function App() {
-  const theme = useScene((s) => s.theme)
-  const view  = useScene((s) => s.view)
-  const setStep    = useScene((s) => s.setWorkshopStep)
-  const goHero     = useScene((s) => s.goHero)
-  const openFloor  = useScene((s) => s.openFloor)
-  const activeFloor = useScene((s) => s.activeFloor)
-  const [showHint, setShowHint] = useState(true)
-
-  useUrlSync()
-
-  useEffect(() => { document.body.dataset.theme = theme }, [theme])
-  useEffect(() => { const t = setTimeout(() => setShowHint(false), 8000); return () => clearTimeout(t) }, [])
-
-  // Preload aller Detail-Bilder (lautlos, ohne Loading-State)
-  useEffect(() => {
-    PRELOAD_PATHS.forEach((base) => {
-      ;['.webp', '.png'].forEach((ext) => {
-        const img = new Image()
-        img.src = `${base}${ext}`
-      })
-    })
+  const focusFloor = useCallback((id: FloorId | null) => {
+    setFocusedFloor(id)
   }, [])
 
-  // Tastatur: Esc → goHero, ArrowUp/Down → Etagen wechseln
+  const openHotspot = useCallback((id: string) => {
+    const h = HOTSPOTS.find((x) => x.id === id)
+    if (!h) return
+    setFocusedFloor(h.floor)
+    setActiveHotspotId(id)
+  }, [])
+
+  const closePanel = useCallback(() => setActiveHotspotId(null), [])
+
+  const resetView = useCallback(() => {
+    setActiveHotspotId(null)
+    setFocusedFloor(null)
+  }, [])
+
+  // Keyboard Nav
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { goHero(); return }
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (e.key === 'Escape') {
+        if (activeHotspotId) closePanel()
+        else if (focusedFloor) setFocusedFloor(null)
+        return
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault()
-        const idx = activeFloor && (FLOOR_ORDER as readonly string[]).includes(activeFloor)
-          ? FLOOR_ORDER.indexOf(activeFloor as (typeof FLOOR_ORDER)[number])
-          : -1
-        const next = e.key === 'ArrowUp'
-          ? Math.max(0, idx <= 0 ? 0 : idx - 1)
-          : Math.min(FLOOR_ORDER.length - 1, idx < 0 ? 0 : idx + 1)
-        openFloor(FLOOR_ORDER[next])
+        const dir = e.key === 'ArrowDown' ? 1 : -1
+        const currentIndex =
+          focusedFloor != null
+            ? (FLOORS.find((f) => f.id === focusedFloor)?.order ?? 0)
+            : -1
+        const nextIndex =
+          currentIndex === -1
+            ? dir === 1
+              ? 0
+              : FLOORS.length - 1
+            : Math.min(FLOORS.length - 1, Math.max(0, currentIndex + dir))
+        const next = FLOORS.find((f) => f.order === nextIndex)
+        if (next) {
+          setFocusedFloor(next.id)
+          setActiveHotspotId(null)
+        }
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [activeFloor, openFloor, goHero])
-
-  // Klick auf die Bühne (nicht Hotspot, nicht Panel) → goHero
-  function handleStageClick(e: React.MouseEvent<HTMLElement>) {
-    const t = e.target as HTMLElement
-    if (t.closest('.hot') || t.closest('aside') || t.closest('header')) return
-    if (view !== 'hero') goHero()
-  }
+  }, [focusedFloor, activeHotspotId, closePanel])
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden" onClick={handleStageClick}>
-      <main className="absolute left-0 right-0 bottom-0 top-16">
-        {view === 'horizons'
-          ? <HorizonsView />
-          : <Hero overlay={() => <HotspotOverlay />} />}
+    <div className={styles.app}>
+      <header className={styles.header}>
+        <div className={styles.brand}>
+          <span className={styles.brandMark} aria-hidden />
+          <div className={styles.brandText}>
+            <span className={styles.brandKicker}>Banking 2035</span>
+            <span className={styles.brandTitle}>Bank der Zukunft — Querschnitt</span>
+          </div>
+        </div>
+
+        <nav className={styles.floorNav} aria-label="Etage wählen">
+          {FLOORS.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              className={
+                focusedFloor === f.id
+                  ? `${styles.floorNavBtn} ${styles.floorNavBtnActive}`
+                  : styles.floorNavBtn
+              }
+              onClick={() => {
+                setActiveHotspotId(null)
+                setFocusedFloor((current) => (current === f.id ? null : f.id))
+              }}
+            >
+              <span className={styles.floorNavIndex}>{f.order + 1}</span>
+              <span className={styles.floorNavLabel}>{f.shortLabel}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className={styles.headerRight}>
+          {(focusedFloor !== null || activeHotspotId !== null) && (
+            <button type="button" className={styles.resetBtn} onClick={resetView}>
+              <ArrowLeft size={16} aria-hidden />
+              Übersicht
+            </button>
+          )}
+        </div>
+      </header>
+
+      <main className={styles.stage}>
+        <Scene
+          focusedFloor={focusedFloor}
+          activeHotspotId={activeHotspotId}
+          onFocusFloor={focusFloor}
+          onOpenHotspot={openHotspot}
+        />
       </main>
 
-      <Header onStartWorkshop={() => setStep(0)} />
-      <Tooltip />
-      <SidePanel />
-      <ResetButton />
-      <ThemeToggle />
-      <WorkshopFlow />
+      <SidePanel hotspot={activeHotspot} onClose={closePanel} />
 
-      {showHint && view === 'hero' && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 mono-label pointer-events-none" style={{ opacity: 0.4 }}>
-          Hover · Klick · Pfeiltasten
+      <footer className={styles.footer}>
+        <div className={styles.footerHint}>
+          <KeyboardIcon size={14} aria-hidden />
+          <span>
+            <kbd>↑</kbd> <kbd>↓</kbd> Etage · <kbd>Esc</kbd> schließen · Klick auf
+            Hotspot öffnet Modul
+          </span>
         </div>
-      )}
+        <div className={styles.footerMeta}>Workshop · LBBW · Vorstandsformat</div>
+      </footer>
     </div>
   )
 }
+
+export default App

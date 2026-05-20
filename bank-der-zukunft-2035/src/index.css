@@ -1,266 +1,125 @@
-@import "tailwindcss";
+:root {
+  /* Deloitte palette */
+  --green-dark: #046A38;
+  --green-brand: #86BC25;
+  --green-soft: #E8F3D1;
+  --ink: #212121;
+  --ink-2: #4A4A4A;
+  --ink-3: #8A8A8A;
+  --bg: #FFFFFF;
+  --surface: #F7F8F5;
+  --cyan-accent: #7EC8FF;
+  --amber: #C68A12;
 
-@theme {
-  --font-sans:    "Inter", system-ui, -apple-system, sans-serif;
-  --font-display: "Inter Display", "Inter", system-ui, sans-serif;
-  --font-mono:    "IBM Plex Mono", "JetBrains Mono", monospace;
+  /* Material accents for the cross-section */
+  --wood-dark: #5C4632;
+  --wood-mid: #8E6B45;
+  --wood-light: #C39A6B;
+  --stone-warm: #E8DECC;
+  --stone-cool: #DAD3C2;
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-edge: rgba(33, 33, 33, 0.08);
 
-  --color-stage:        #070d1a;
-  --color-stage-glow:   #0a1628;
-  --color-panel:        rgba(15, 28, 50, 0.6);
-  --color-panel-strong: rgba(15, 28, 50, 0.85);
+  /* Spacing */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
 
-  --color-ink-primary:   rgba(235, 240, 250, 0.95);
-  --color-ink-secondary: rgba(180, 195, 215, 0.70);
-  --color-ink-tertiary:  rgba(140, 155, 175, 0.45);
-  --color-ink-mono:      rgba(180, 220, 255, 0.65);
+  /* Radii */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 14px;
+  --r-xl: 22px;
 
-  --color-accent-cyan:  #7ec8ff;
-  --color-accent-amber: #f5b86e;
-  --color-accent-green: #7ad5a0;
+  /* Shadows */
+  --shadow-1: 0 1px 2px rgba(33, 33, 33, 0.04);
+  --shadow-2: 0 6px 24px rgba(33, 33, 33, 0.06);
+  --shadow-3: 0 24px 60px rgba(33, 33, 33, 0.12);
 
-  --line-hairline: rgba(255, 255, 255, 0.06);
-  --line-hover:    rgba(255, 255, 255, 0.18);
-  --line-strong:   rgba(255, 255, 255, 0.32);
+  /* Parallax (written by useParallax) */
+  --px: 0;
+  --py: 0;
+
+  /* Typography */
+  --font-heading: 'Geist', 'Space Grotesk', 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Geist', 'Space Grotesk', 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast: 180ms;
+  --t-med: 320ms;
+  --t-slow: 520ms;
+
+  color-scheme: light;
 }
 
-* { box-sizing: border-box; }
-html, body, #root { margin: 0; padding: 0; min-height: 100vh; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
-  font-family: var(--font-sans);
-  font-feature-settings: 'cv11', 'ss01';
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: linear-gradient(180deg, #F8F6EF 0%, #ECE5D6 60%, #DDD3BC 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--color-ink-primary);
-  background:
-    radial-gradient(1200px 800px at 50% 35%, rgba(40, 70, 110, 0.18), transparent 60%),
-    radial-gradient(900px 600px at 15% 85%, rgba(126, 200, 255, 0.06), transparent 60%),
-    var(--color-stage);
-  overflow-x: hidden;
-  letter-spacing: -0.005em;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
 }
 
-/* Premium Glasmorphism */
-.glass {
-  background: var(--color-panel);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid var(--line-hairline);
-}
-.glass-strong {
-  background: var(--color-panel-strong);
-  backdrop-filter: blur(60px) saturate(200%);
-  -webkit-backdrop-filter: blur(60px) saturate(200%);
-  border: 1px solid var(--line-hairline);
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
 
-/* Tilt-Shift-Verstärker oben/unten zusätzlich zum KI-Bild */
-.tiltshift::before,
-.tiltshift::after {
-  content: "";
-  position: absolute; left: 0; right: 0;
-  height: 12%;
-  pointer-events: none;
-  z-index: 8;
-  backdrop-filter: blur(2px);
-}
-.tiltshift::before { top: 0;    background: linear-gradient(180deg, rgba(7,13,26,0.55), transparent); }
-.tiltshift::after  { bottom: 0; background: linear-gradient(0deg,   rgba(7,13,26,0.65), transparent); }
-
-/* Premium hairline frames */
-.hairline { border: 1px solid var(--line-hairline); }
-.hairline-hover:hover { border-color: var(--line-hover); }
-
-/* Mono-Label */
-.mono-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-ink-mono);
+button:focus-visible,
+[role='button']:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--green-dark);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
 }
 
-/* Display-Type — bewusst dünn, niemals bold */
-.display-xl { font-family: var(--font-display); font-weight: 200; font-size: 56px; line-height: 1.05; letter-spacing: -0.02em; }
-.display-lg { font-family: var(--font-display); font-weight: 250; font-size: 32px; line-height: 1.1; letter-spacing: -0.015em; }
-.display-md { font-family: var(--font-display); font-weight: 300; font-size: 22px; line-height: 1.2; letter-spacing: -0.01em; }
-
-/* Hotspot-Glow (DOM-Layer) */
-@keyframes hot-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; }
-  50%      { transform: translate(-50%, -50%) scale(1.18); opacity: 1.0; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
-.hotspot-pulse { animation: hot-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
-/* Reduced motion */
+::selection {
+  background: var(--green-soft);
+  color: var(--ink);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
-}
-
-/* ── Hotspot ───────────────────────────────────────────────────── */
-.hotspot-dot {
-  width: 24px; height: 24px;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  outline: none;
-}
-.hotspot-glow {
-  position: absolute;
-  left: 50%; top: 50%;
-  width: 24px; height: 24px;
-  border-radius: 9999px;
-  background: radial-gradient(circle, rgba(126, 200, 255, 0.55) 0%, rgba(126, 200, 255, 0) 70%);
-  pointer-events: none;
-}
-.hotspot-core {
-  position: absolute;
-  left: 50%; top: 50%;
-  width: 7px; height: 7px;
-  border-radius: 9999px;
-  background: var(--color-accent-cyan);
-  box-shadow:
-    0 0 0 1px rgba(126, 200, 255, 0.45),
-    0 0 18px 4px rgba(126, 200, 255, 0.55);
-  transform: translate(-50%, -50%);
-  transition: transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.36s;
-  pointer-events: none;
-}
-.hotspot-dot:hover .hotspot-core,
-.hotspot-dot:focus-visible .hotspot-core {
-  transform: translate(-50%, -50%) scale(1.4);
-  box-shadow:
-    0 0 0 1.5px rgba(126, 200, 255, 0.7),
-    0 0 28px 8px rgba(126, 200, 255, 0.7);
-}
-.hotspot-dot:focus-visible {
-  outline: 1px solid rgba(126, 200, 255, 0.6);
-  outline-offset: 6px;
-  border-radius: 9999px;
-}
-
-/* Hairline-Tooltip neben Hotspot */
-.tooltip-frame {
-  border: 1px solid var(--line-hairline);
-  background: var(--color-panel-strong);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-}
-
-/* Side-Panel CTA-Pfeil */
-.cta-arrow { transition: transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1); }
-.cta-arrow:hover { transform: translateX(4px); }
-
-/* ── Hero Hotspots v2 (12px core + 24px ring + 2.5s pulse) ────── */
-.hero-stage { background: transparent; }
-.hero-image { user-select: none; -webkit-user-drag: none; }
-
-@keyframes hot-pulse-ring {
-  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.85; }
-  50%      { transform: translate(-50%, -50%) scale(1.15); opacity: 1.0; }
-}
-
-.hot {
-  width: 24px; height: 24px;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  outline: none;
-}
-.hot-ring {
-  position: absolute;
-  left: 50%; top: 50%;
-  width: 24px; height: 24px;
-  border-radius: 9999px;
-  border: 1px solid rgba(126, 200, 255, 0.3);
-  transform: translate(-50%, -50%);
-  animation: hot-pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-.hot-core {
-  position: absolute;
-  left: 50%; top: 50%;
-  width: 12px; height: 12px;
-  border-radius: 9999px;
-  background: radial-gradient(circle, var(--color-accent-cyan) 0%, rgba(126,200,255,0) 75%);
-  box-shadow:
-    0 0 0 1px rgba(126, 200, 255, 0.45),
-    0 0 14px 3px rgba(126, 200, 255, 0.5);
-  transform: translate(-50%, -50%);
-  transition: transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.36s;
-}
-.hot:hover .hot-core,
-.hot:focus-visible .hot-core {
-  transform: translate(-50%, -50%) scale(1.45);
-  box-shadow:
-    0 0 0 1.5px rgba(126, 200, 255, 0.7),
-    0 0 22px 7px rgba(126, 200, 255, 0.65);
-}
-.hot:hover .hot-ring,
-.hot:focus-visible .hot-ring {
-  border-color: rgba(126, 200, 255, 0.55);
-}
-.hot:focus-visible {
-  outline: 1px solid rgba(126, 200, 255, 0.6);
-  outline-offset: 6px;
-  border-radius: 9999px;
-}
-
-/* ── Hero-Image: keine zusätzlichen Filter, damit Video pixelfrei
-   bleibt. Tilt-Shift kommt aus dem Bild/Video selbst. ─────────── */
-.hero-image {
-  image-rendering: -webkit-optimize-contrast;
-}
-/* Sehr dezente Vignette oben/unten OHNE Blur — der zusätzliche
-   blur frisst Video-Schärfe und macht das Bild pixelig. */
-.hero-stage::before,
-.hero-stage::after {
-  content: '';
-  position: absolute; left: 0; right: 0;
-  height: 5%;
-  pointer-events: none;
-  z-index: 5;
-}
-.hero-stage::before { top: 0;    background: linear-gradient(180deg, rgba(7,13,26,0.55), transparent); }
-.hero-stage::after  { bottom: 0; background: linear-gradient(0deg,   rgba(7,13,26,0.65), transparent); }
-
-/* ── Prominente Hotspots im Hero-Overview (orange + größerer Pulse) ── */
-@keyframes hot-pulse-prominent {
-  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.7; }
-  50%      { transform: translate(-50%, -50%) scale(1.55); opacity: 1.0; }
-}
-
-.hot[data-prominent="true"] {
-  width: 36px; height: 36px;
-}
-.hot[data-prominent="true"] .hot-ring {
-  width: 36px; height: 36px;
-  border: 1.5px solid rgba(255, 138, 60, 0.55);
-  animation: hot-pulse-prominent 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-.hot[data-prominent="true"] .hot-core {
-  width: 16px; height: 16px;
-  background: radial-gradient(circle, #ff9a3c 0%, rgba(255, 138, 60, 0) 75%);
-  box-shadow:
-    0 0 0 1px rgba(255, 138, 60, 0.6),
-    0 0 22px 5px rgba(255, 138, 60, 0.55);
-}
-.hot[data-prominent="true"]:hover .hot-core,
-.hot[data-prominent="true"]:focus-visible .hot-core {
-  transform: translate(-50%, -50%) scale(1.45);
-  box-shadow:
-    0 0 0 2px rgba(255, 138, 60, 0.8),
-    0 0 30px 9px rgba(255, 138, 60, 0.7);
-}
-.hot[data-prominent="true"]:hover .hot-ring,
-.hot[data-prominent="true"]:focus-visible .hot-ring {
-  border-color: rgba(255, 138, 60, 0.85);
 }

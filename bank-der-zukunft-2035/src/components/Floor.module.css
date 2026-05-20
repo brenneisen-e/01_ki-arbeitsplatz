@@ -1,0 +1,178 @@
+.floor {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--stone-warm) 0%, var(--stone-cool) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(33, 33, 33, 0.06),
+    0 2px 10px rgba(33, 33, 33, 0.06);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    flex-grow var(--t-slow) var(--ease-in-out),
+    filter var(--t-med) var(--ease-out),
+    opacity var(--t-med) var(--ease-out),
+    transform var(--t-slow) var(--ease-in-out);
+  transform: translateZ(0);
+}
+
+.floor[data-floor='boardroom'] {
+  background:
+    linear-gradient(180deg, #FBF5E5 0%, #EFE3C3 90%);
+}
+
+.floor[data-floor='operations'] {
+  background:
+    linear-gradient(180deg, #F7F2E2 0%, #E5DCC0 100%);
+}
+
+.floor[data-floor='datacenter'] {
+  background:
+    linear-gradient(180deg, #1B2A26 0%, #0F1A18 100%);
+  color: #DCEBE2;
+}
+
+.floor::before {
+  /* Bodenplatte */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6%;
+  background:
+    linear-gradient(180deg, rgba(33, 33, 33, 0.08), rgba(33, 33, 33, 0));
+  z-index: 1;
+}
+
+.floor[data-floor='datacenter']::before {
+  background:
+    linear-gradient(180deg, rgba(126, 200, 255, 0.06), rgba(126, 200, 255, 0));
+}
+
+/* Fokus-State -- diese Etage wächst */
+.floor[data-focused] {
+  flex-grow: 5.5;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(4, 106, 56, 0.5),
+    0 12px 36px rgba(33, 33, 33, 0.18);
+  z-index: 2;
+}
+
+/* Andere Etagen dimmen */
+.floor[data-dimmed] {
+  flex-grow: 0.65;
+  opacity: 0.7;
+  filter: saturate(0.7) brightness(0.96);
+}
+
+.floor[data-dimmed] .interior {
+  filter: blur(0.4px);
+}
+
+.floor[data-dimmed] .hotspots {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.floorPlate {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.floorPlate:hover ~ .label {
+  color: var(--green-dark);
+}
+
+.floor:not([data-focused]) .floorPlate:hover {
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(4, 106, 56, 0.06), transparent 70%);
+}
+
+.floor[data-focused] .floorPlate {
+  cursor: zoom-out;
+}
+
+.srLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.interior {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: filter var(--t-med) var(--ease-out);
+}
+
+/* Hotspots sollen klickbar bleiben, auch wenn interior es nicht ist */
+.hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  transition: opacity var(--t-med) var(--ease-out);
+}
+
+.hotspots > * {
+  pointer-events: auto;
+}
+
+.label {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  z-index: 4;
+  pointer-events: none;
+  transition: color var(--t-fast);
+}
+
+.floor[data-floor='datacenter'] .label {
+  color: rgba(220, 235, 226, 0.7);
+}
+
+.labelIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: rgba(33, 33, 33, 0.08);
+  color: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.floor[data-floor='datacenter'] .labelIndex {
+  background: rgba(126, 200, 255, 0.14);
+  color: var(--cyan-accent);
+}
+
+.labelShort {
+  font-weight: 600;
+  font-size: 11px;
+}

@@ -1,113 +1,119 @@
-# Bank der Zukunft 2035
+# Bank der Zukunft 2035 — Interaktives Strukturbild
 
-Interaktive Web-Animation im Tilt-Shift-Modellbau-Look — drei Etagen
-+ Außenbereich + Vorstands-Cockpit. Premium-B2B-Pitch-Tool für den
-Banking-Workshop „Banking 2035 – Bank der Zukunft im KI-Zeitalter".
+Premium 2.5D-Querschnitt einer Bank für den LBBW-Vorstands-Workshop.
+Drei Etagen plus Außenbereich, navigierbar, ruhig, beeindruckend.
 
 ## Quick Start
 
 ```bash
 cd bank-der-zukunft-2035
-npm install        # oder pnpm install
+npm install
 npm run dev        # http://localhost:5180
-npm run build      # produziert dist/
+npm run build      # erzeugt dist/
 npm run preview    # bedient dist/ lokal
 ```
 
-Stack: React 19, Vite 6, TypeScript strict, Tailwind 4, GSAP,
-Framer Motion, Zustand, Lucide React. Kein SSR, kein localStorage —
-State läuft über Zustand-Store und URL-Params.
+## Stack
+
+- React 19 + Vite 6 + TypeScript (strict)
+- Styling: vanilla CSS + CSS Modules (kein Tailwind)
+- Icons: `lucide-react` (monochrom)
+- State: lokales `useState` -- kein Browser-Storage
+- Animationen: CSS Transforms / Transitions, ein paar SVG-Pulse,
+  `requestAnimationFrame` für den Parallax-Hook
 
 ## Workshop-Bedienung
 
-- **Klick auf eine Etage** öffnet das rechte Side-Panel mit Inhalten
-  (Heading, Beschreibung, 3 Bullets, Quick-Stats)
-- **Hover auf Hotspots** (Server, KI-Avatar, Kunden …) zeigt Tooltips
-- **„Workshop starten"** im Header startet eine geführte Tour mit
-  Auto-Advance pro Schritt
-- **Tag/Nacht-Toggle** unten rechts (Lucide Sun/Moon)
-- **Tastatur**: Pfeiltaste hoch/runter wechselt Etagen, `Esc` schließt
-  Panel
-- **Deep-Link**: `?floor=top&hotspot=ai-avatar` öffnet direkt diese
-  Etage + Tooltip
+| Interaktion              | Verhalten                                              |
+|--------------------------|--------------------------------------------------------|
+| Klick auf eine Etage     | Etage zoomt in den Fokus, andere dimmen                |
+| Klick auf einen Hotspot  | Side-Panel rechts mit Modul-Inhalt + Hypothese 2035    |
+| Header-Etagen-Tabs       | Direkt zwischen den drei Etagen wechseln               |
+| `↑` / `↓`                | Etagen-Fokus auf/ab schalten                           |
+| `Esc`                    | Panel schließen, dann Fokus verlassen                  |
+| „Übersicht" oben rechts  | Zurück in die Gesamtansicht                            |
 
 ## Inhalte editieren
 
-Workshop-Texte:
-- `src/data/floors.ts` — Etagen-Inhalte (Heading, Beschreibung,
-  Bullets, Stats)
-- `src/data/hotspots.ts` — Hotspot-Definitionen mit Position +
-  Tooltip-Text
-- `src/data/workshop-steps.ts` — Sequenz für die geführte Tour
+Alle Texte, Hotspot-Definitionen, Hypothesen, Kennzahlen liegen in
+**einer** Datei:
 
-## KI-Bilder ergänzen (Asset-Slots)
+```
+src/data/modules.ts
+```
 
-Alle visuellen Layer rendern out-of-the-box als prozedurales SVG.
-Wenn du fotorealistische Tilt-Shift-Bilder von Midjourney o. ä.
-nachschieben willst, lege sie unter `public/assets/scene/` ab —
-Dateiname entspricht dem Slot-Namen, z. B.
+`FLOORS` -- die drei Etagen.
+`HOTSPOTS` -- klickbare Module mit Titel, Beschreibung, Hypothese 2035
+und optional Quick-Facts.
+`COCKPIT_INITIAL` -- Startwerte für den Live-Dashboard-Ticker.
+`TERMINAL_TEMPLATE` -- Log-Zeilen für den Datacenter-Stream.
 
-| Slot                        | Datei (optional)                          |
-|-----------------------------|-------------------------------------------|
-| `background-sky` (Nacht)    | `/assets/scene/sky-night-4k.webp`         |
-| `background-sky` (Tag)      | `/assets/scene/sky-day-4k.webp`           |
-| `building-facade`           | `/assets/scene/building-facade-4k.webp`   |
-| `floor-basement-interior`   | `/assets/scene/floor-basement-4k.webp`    |
-| `floor-ground-interior`     | `/assets/scene/floor-ground-4k.webp`      |
-| `floor-top-interior`        | `/assets/scene/floor-top-4k.webp`         |
-| `outdoor-foreground`        | `/assets/scene/outdoor-foreground-4k.webp`|
+## Hero-Bild
 
-`SceneLayer` macht ein HEAD-Request beim Mount; ist die Datei vorhanden,
-wird sie statt des prozeduralen Fallbacks gerendert. Kein Code-Change nötig.
-
-Empfohlene Midjourney-Prompts siehe `public/assets/scene/README.md`.
+Die Datei `public/hero-cross-section.png` ist das Referenz-Bild
+(Tageslicht-Version). Sie wird aktuell nicht als Layer eingebunden --
+das Querschnittsbild wird prozedural per CSS/SVG gebaut, damit es
+crisp bleibt und animierbar ist. Wer das Foto-Bild stattdessen
+einblenden will, legt es in `src/components/Scene.tsx` als unterstes
+Layer ab.
 
 ## Cloudflare Pages Deployment
 
 ```bash
 npm run build
-# Pages-Projekt anlegen, Build-Command: npm run build
-# Output-Dir: dist
-# wrangler.toml ist bereits dabei
+# Pages-Projekt: Build-Command "npm run build", Output "dist"
 ```
 
-Oder im Monorepo-Kontext (das hier liegt unter `kiarbeitsplatz/bank-der-zukunft-2035`)
-einfach via Sub-Path ausliefern: `https://kiarbeitsplatz.pages.dev/bank-der-zukunft-2035/dist/`.
+`wrangler.toml` ist dabei.
 
 ## Projektstruktur
 
 ```
 src/
-├── App.tsx · main.tsx · index.css
+├── App.tsx              -- Haupt-State (Fokus, Panel)
+├── App.module.css       -- Header / Footer / Layout
+├── index.css            -- Design-Tokens, Reset, Reduced-Motion
+├── main.tsx             -- React 19 Entry
+├── data/
+│   └── modules.ts       -- Workshop-Inhalte zentral
+├── hooks/
+│   ├── useParallax.ts   -- --px/--py via rAF, kein Re-Render
+│   ├── useReducedMotion.ts
+│   └── useTicker.ts     -- simulierter Live-Stream
+├── lib/
+│   └── format.ts        -- deutsche Locale (DE-Zahlen, Prozent, EUR)
 ├── components/
-│   ├── Scene/
-│   │   ├── BankBuilding.tsx       (Master-Komponente)
-│   │   ├── SceneLayer.tsx         (Asset-Slot-Wrapper)
-│   │   ├── Floor.tsx              (Etagen-Wrapper)
-│   │   ├── floors/                (BasementIT, GroundOperations, TopBoardroom)
-│   │   ├── Outdoor/               (Sky, Trees, Customers)
-│   │   ├── characters/            (Worker, Customer, ExecutiveFigure)
-│   │   └── effects/               (DataPulse, ServerLEDs, DashboardLoop, AIAvatarSphere)
-│   ├── UI/                        (Header, SidePanel, Tooltip, ThemeToggle, ResetButton)
-│   └── Workshop/                  (WorkshopFlow)
-├── data/                          (floors, hotspots, workshop-steps)
-├── hooks/                         (useScene, useParallax, useUrlSync)
-├── lib/                           (tokens, easings)
-└── types.ts
+│   ├── Scene.tsx        -- Building Shell + Sky + Plaza + Floors
+│   ├── Floor.tsx        -- Klickbare Etagen-Hülle, Hotspots
+│   ├── Hotspot.tsx      -- Hover-Tooltip + Klick-State
+│   ├── SidePanel.tsx    -- Slide-in von rechts
+│   ├── floors/
+│   │   ├── Boardroom.tsx       -- Etage 1: Vorstand
+│   │   ├── Operations.tsx      -- Etage 2: Operations + Bot
+│   │   ├── DataCenter.tsx      -- Etage 3: Server + Terminal
+│   │   └── Plaza.tsx           -- Außenbereich
+│   └── widgets/
+│       ├── CockpitDashboard.tsx
+│       ├── Terminal.tsx
+│       ├── Donut.tsx
+│       ├── MiniBars.tsx
+│       └── MiniLine.tsx
+└── vite-env.d.ts
 ```
 
 ## Anti-Anforderungen
 
-- Keine bunten Icons / Emojis
-- Keine externen Bilddienste (Unsplash etc.) — alles prozedural oder
-  lokale Asset-Slots
-- Kein SSR, keine Class-Components, kein `any`
-- Kein Browser-Storage — State über Zustand + URL-Params
+- Kein Tailwind, keine externen Schrift-CDNs, keine Analytics
+- Keine bunten oder mehrfarbigen Icons -- alle Icons in einer Farbe
+  (`currentColor` oder CSS-Variable)
+- Kein Browser-Storage (`localStorage` / `sessionStorage`)
+- Keine 3D-Engine -- der Tiefen-Effekt ist 2.5D via Parallax-Layern
 
 ## Performance-Notizen
 
-- Lazy-rendering der Wolken via CSS-Variablen (kein React-Re-Render bei
-  Mausbewegung — `requestAnimationFrame` schreibt nur DOM-Style)
-- SVG `<animate>` läuft GPU-beschleunigt
-- `prefers-reduced-motion` schaltet alle Animationen ab (siehe
-  `index.css`)
+- Parallax schreibt nur `--px` und `--py` per `requestAnimationFrame`
+  auf den Scene-Knoten -- React-Tree wird dabei nicht neu gerendert
+- Alle Animationen laufen über `transform` und `opacity` -- keine
+  Layout-Trigger
+- `prefers-reduced-motion` schaltet die Animationen ab (Regel in
+  `src/index.css`)

@@ -15,15 +15,15 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 // ─────────────────────────────────────────────────────────────────────────────
 // FLOORS-KONSTANTE -- hier die Etagen-Zonen kalibrieren.
 //
-// topPct / heightPct sind PROZENT der BILD-HÖHE. Das Master-Bild ist 16:9
-// und wird per object-fit: cover in den Viewport eingepasst. Bei 16:9-
-// Viewports stimmen die Prozente mit der sichtbaren Bild-Höhe überein;
-// bei stark abweichenden Viewport-Ratios kann es leichten Crop-Versatz
-// geben (siehe Hinweis bei der Zoom-Mathematik unten).
+// topPct / heightPct sind PROZENT der BILD-HÖHE (nicht der Viewport-Höhe).
+// Die Camera-Div hat exakt die Bild-Aspect-Ratio (siehe IMAGE_ASPECT) und
+// passt per max-width/max-height in die Stage; das Bild füllt die Camera
+// 1:1, daher sind die Prozente direkt die Bild-Prozente.
 //
 // Werte hier solange justieren, bis die drei Bands beim Klick die jeweilige
-// Etage exakt einrahmen. Hilfreich: kurzzeitig `outline: 2px dashed lime;`
-// auf .zone in BankExplorer.module.css einblenden, um die Boxen zu sehen.
+// Etage exakt einrahmen. Tipp: in BankExplorer.module.css kurz
+// `outline: 2px dashed lime;` auf .zone einkommentieren, um die Boxen zu
+// sehen.
 // ─────────────────────────────────────────────────────────────────────────────
 
 type FloorId = 'governance' | 'operations' | 'datacenter'
@@ -37,9 +37,11 @@ type Floor = {
   /** Höhe der Zone in % der Bildhöhe */
   heightPct: number
   /**
-   * Optional: hochauflösendes Detail-Bild für diese Etage. Wenn gesetzt,
-   * blendet die Komponente es im Zoom per Cross-Fade ein (Platzhalter
-   * unten in <CameraImage> -- die Logik dafür einfach aktivieren).
+   * Optional: hochauflösendes Detail-Bild für diese Etage. Wird (sobald
+   * gesetzt) im Zoom per Cross-Fade über das Master-Bild gelegt --
+   * NICHT innerhalb der zoomenden Camera, sondern auf Stage-Ebene, damit
+   * es bei nativer Auflösung erscheint statt nochmal hochskaliert zu
+   * werden (siehe `<DetailLayer>` weiter unten).
    */
   detailImage?: string
   chapter: {
@@ -56,7 +58,7 @@ const FLOORS: Floor[] = [
     kicker: 'Etage 1 · Vorstand',
     topPct: 4,
     heightPct: 34,
-    // detailImage: '/bank-floor-governance.png', // ← später aktivieren für Cross-Fade
+    // detailImage: './bank-floor-governance.png', // ← später aktivieren
     chapter: {
       title: 'AI-Governance, Risiko und Kapitalentscheidung',
       body:
@@ -104,54 +106,68 @@ const FLOORS: Floor[] = [
   },
 ]
 
-// Animations-Konfiguration -- aus dem Prompt: ca. 1.2 s, power3.inOut.
-const ZOOM_DURATION = 1.2
-const ZOOM_EASE = 'power3.inOut'
-const PANEL_DELAY = 0.55
-const PANEL_DURATION = 0.45
+/**
+ * Aspect-Ratio des Master-Bilds. Aktuell ~21:9 (1915×821). Wenn du das
+ * Bild austauschst, hier die echte Auflösung eintragen -- die Camera
+ * sizet sich automatisch entsprechend.
+ */
+const IMAGE_ASPECT = 1915 / 821
+
+/** Smooth, langsamer Flug -- bewusst kein „snap"-Gefühl. */
+const ZOOM_DURATION = 5.0
+const ZOOM_EASE = 'power2.inOut'
+
+/** Panel kommt ungefähr ab Halbzeit des Zooms; Cross-Fade des Details auch. */
+const PANEL_DELAY = ZOOM_DURATION * 0.55
+const PANEL_DURATION = 0.7
+const DETAIL_CROSSFADE_DELAY = ZOOM_DURATION * 0.45
+const DETAIL_CROSSFADE_DURATION = 0.6
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Zoom-Mathematik (Kommentar, damit du sie selbst nachjustieren kannst):
+// Zoom-Mathematik (jetzt mit Camera-Höhe statt Stage-Höhe):
+//
+// Die Camera ist eine Box mit der Aspect-Ratio des Bilds, per
+// max-width/max-height in die Stage eingepasst (object-fit: contain via
+// CSS aspect-ratio). Sie kann also kleiner sein als die Stage in einer
+// Dimension. Das Bild füllt die Camera 1:1.
 //
 // 1. Skalierung:
-//    Wir wollen die Etagen-Zone (heightPct % der Bildhöhe) auf 100 %
-//    Viewport-Höhe vergrößern.
+//    Wir wollen die Zone (heightPct % der CAMERA-Höhe) auf die volle
+//    Stage-Höhe vergrößern. Da die Zone vor dem Scale die Höhe
+//    `cameraH × heightPct / 100` hat, brauchen wir:
 //
-//        scale = 100 / heightPct
+//        scale = (stageH × 100) / (cameraH × heightPct)
+//
+//    Wenn die Camera die Stage in der Höhe füllt (cameraH = stageH),
+//    reduziert sich das auf scale = 100 / heightPct -- wie ursprünglich.
+//    Bei Letterboxing oben/unten (Bild AR > Stage AR) wird mehr Zoom
+//    nötig, damit die Zone die Stage füllt.
 //
 // 2. Vertikale Verschiebung:
-//    Nach reinem Scale (transform-origin: 50% 50%) bleibt das Bildzentrum
-//    am Viewport-Zentrum. Die Zone hat ihren Mittelpunkt bei
+//    Die Zone-Mitte liegt bei zoneCenterPct = topPct + heightPct/2 (in %
+//    der Camera-Höhe). Vor dem Transform ist die Camera in der Stage
+//    zentriert; nach Scale `s` ist 1 % der Camera-Höhe = s × cameraH /
+//    100. Der Versatz, um zoneCenter auf Stage-Mitte zu bringen,
+//    beträgt:
 //
-//        zoneCenterPct = topPct + heightPct / 2
+//        translateY = (50 − zoneCenterPct) × cameraH × scale / 100
+//                   = (50 − zoneCenterPct) × stageH / heightPct
 //
-//    in % der Bildhöhe. Wir verschieben das Bild so, dass dieser Punkt
-//    auf das Viewport-Zentrum rückt:
+//    (cameraH kürzt sich raus -- die Translation hängt nur von der
+//    Stage-Höhe ab.)
 //
-//        translateY (px) = (50 − zoneCenterPct) × stageHeight / heightPct
-//
-//    Herleitung: Nach Scale s ist 1 % der Bildhöhe = s × stageHeight / 100;
-//    der Versatz beträgt (50 − zoneCenterPct) % der Bildhöhe ⇒
-//        translateY = (50 − zoneCenterPct) × s × stageHeight / 100
-//                   = (50 − zoneCenterPct) × stageHeight / heightPct.
-//
-// 3. Horizontale Verschiebung:
-//    Die Etagen sind horizontale Bänder über die ganze Bildbreite,
-//    deshalb hier 0. Falls du später einen einzelnen Schreibtisch
-//    anvisieren willst, leitest du translateX analog her (centerXPct).
-//
-// 4. Viewport-AR != Bild-AR (16:9):
-//    Mit object-fit: cover wird das Bild ggf. an der schmaleren Achse
-//    beschnitten. Auf 16:9-Bildschirmen passt es exakt. Auf abweichenden
-//    ARs (Ultrawide, Hochkant) verschiebt sich die effektive Zone-
-//    Position um den Crop-Versatz; die obigen Prozente bleiben aber als
-//    Referenz die einfachste Stellschraube.
+// 3. Horizontal:
+//    Etagen sind horizontale Bänder -- translateX = 0. Wenn die Camera
+//    nach Scale > Stage-Breite wird, schneidet die Stage (overflow:
+//    hidden) den Rand ab.
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Geom = { scale: number; y: number }
 
-function computeGeom(floor: Floor, stageHeight: number): Geom {
-  const scale = 100 / floor.heightPct
+function computeGeom(floor: Floor, stageHeight: number, cameraHeight: number): Geom {
+  // Schutz vor Division durch 0, falls der Layout-Pass noch nicht durch ist.
+  const safeCameraH = Math.max(cameraHeight, 1)
+  const scale = (stageHeight * 100) / (safeCameraH * floor.heightPct)
   const zoneCenterPct = floor.topPct + floor.heightPct / 2
   const y = ((50 - zoneCenterPct) * stageHeight) / floor.heightPct
   return { scale, y }
@@ -161,6 +177,7 @@ export function BankExplorer(): React.ReactElement {
   const stageRef = useRef<HTMLDivElement>(null)
   const cameraRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const detailRef = useRef<HTMLImageElement>(null)
   const tweenRef = useRef<gsap.core.Tween | null>(null)
 
   const [activeId, setActiveId] = useState<FloorId | null>(null)
@@ -186,7 +203,7 @@ export function BankExplorer(): React.ReactElement {
       tweenRef.current?.kill()
 
       const geom: Geom = floor
-        ? computeGeom(floor, stage.clientHeight)
+        ? computeGeom(floor, stage.clientHeight, camera.clientHeight)
         : { scale: 1, y: 0 }
 
       const instant = opts.instant || reducedMotion
@@ -227,7 +244,7 @@ export function BankExplorer(): React.ReactElement {
       } else {
         gsap.fromTo(
           panel,
-          { opacity: 0, y: 16 },
+          { opacity: 0, y: 18 },
           {
             opacity: 1,
             y: 0,
@@ -244,21 +261,55 @@ export function BankExplorer(): React.ReactElement {
         gsap.to(panel, {
           opacity: 0,
           y: 12,
-          duration: 0.28,
+          duration: 0.35,
           ease: 'power2.in',
         })
       }
     }
   }, [activeFloor, reducedMotion])
 
+  // Cross-Fade des Detail-Bilds (sobald activeFloor.detailImage existiert).
+  // Das Detail-Bild liegt AUF Stage-Ebene (nicht in der Camera) und wird
+  // also bei nativer Viewport-Auflösung dargestellt -- kein weiteres
+  // Hochskalieren, kein Pixel-Matsch.
+  useEffect(() => {
+    const detail = detailRef.current
+    if (!detail) return
+    gsap.killTweensOf(detail)
+    if (activeFloor?.detailImage) {
+      if (reducedMotion) {
+        gsap.set(detail, { opacity: 1 })
+      } else {
+        gsap.fromTo(
+          detail,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: DETAIL_CROSSFADE_DURATION,
+            ease: 'power2.out',
+            delay: DETAIL_CROSSFADE_DELAY,
+          },
+        )
+      }
+    } else {
+      if (reducedMotion) {
+        gsap.set(detail, { opacity: 0 })
+      } else {
+        gsap.to(detail, { opacity: 0, duration: 0.3, ease: 'power2.in' })
+      }
+    }
+  }, [activeFloor, reducedMotion])
+
   // Resize-Listener: solange wir in einen Floor gezoomt sind, neu
-  // ausrichten, sobald sich die Stage-Höhe ändert.
+  // ausrichten, sobald sich die Stage- ODER Camera-Größe ändert.
   useEffect(() => {
     const stage = stageRef.current
-    if (!stage) return
+    const camera = cameraRef.current
+    if (!stage || !camera) return
     const onResize = () => animateTo(activeFloor, { instant: true })
     const ro = new ResizeObserver(onResize)
     ro.observe(stage)
+    ro.observe(camera)
     window.addEventListener('orientationchange', onResize)
     return () => {
       ro.disconnect()
@@ -295,10 +346,13 @@ export function BankExplorer(): React.ReactElement {
 
   return (
     <div className={styles.root}>
-      {/* STAGE = Viewport-große Bühne; hier wird gezoomt */}
       <div className={styles.stage} ref={stageRef}>
-        {/* CAMERA = Element, das transformiert wird (scale + translateY) */}
-        <div className={styles.camera} ref={cameraRef}>
+        {/* CAMERA: aspect-ratio-Box, zentriert, transformiert per GSAP */}
+        <div
+          className={styles.camera}
+          ref={cameraRef}
+          style={{ aspectRatio: `${IMAGE_ASPECT}` }}
+        >
           <img
             className={styles.master}
             src="./bank-master.png"
@@ -306,59 +360,63 @@ export function BankExplorer(): React.ReactElement {
             draggable={false}
           />
 
-          {/*
-            Cross-Fade-Slot für Detail-Bilder:
-            Sobald ein Floor ein `detailImage` hat und wir ihn aktivieren,
-            können wir hier eine zweite <img> opazitätsbasiert einblenden.
-            Beispiel (auskommentiert, weil v1 nur das Master-Bild zeigt):
-
-            {activeFloor?.detailImage && (
-              <img
-                className={`${styles.master} ${styles.masterDetail}`}
-                src={activeFloor.detailImage}
-                alt={activeFloor.label}
-                aria-hidden
-              />
-            )}
-
-            Dazu noch eine CSS-Regel ergänzen, die opacity per
-            data-attribute toggelt. (Bewusst nicht aktiviert in v1.)
-          */}
+          {/* HOVER-/KLICK-ZONEN über der Camera -- in % der Bild-Höhe */}
+          <div className={styles.zones} data-overview={isOverview || undefined}>
+            {FLOORS.map((floor) => (
+              <button
+                type="button"
+                key={floor.id}
+                className={styles.zone}
+                style={{
+                  top: `${floor.topPct}%`,
+                  height: `${floor.heightPct}%`,
+                }}
+                data-hovered={hoverId === floor.id || undefined}
+                onPointerEnter={() => setHoverId(floor.id)}
+                onPointerLeave={() =>
+                  setHoverId((h) => (h === floor.id ? null : h))
+                }
+                onFocus={() => setHoverId(floor.id)}
+                onBlur={() =>
+                  setHoverId((h) => (h === floor.id ? null : h))
+                }
+                onClick={() => handleZoneClick(floor)}
+                aria-label={`${floor.label} – Etage öffnen`}
+              >
+                <span className={styles.zoneHighlight} aria-hidden />
+                <span className={styles.zoneLabel}>
+                  <span className={styles.zoneKicker}>{floor.kicker}</span>
+                  <span className={styles.zoneTitle}>{floor.label}</span>
+                  <ArrowRight size={16} strokeWidth={1.8} aria-hidden />
+                </span>
+                <span className={styles.zoneRule} aria-hidden />
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* HIGHLIGHT-/HOVER-ZONEN -- nur sichtbar in der Übersicht.
-            Pointer-events wandern via data-overview an/aus, damit man im
-            Zoom nicht versehentlich Klicks abfängt. */}
-        <div className={styles.zones} data-overview={isOverview || undefined}>
-          {FLOORS.map((floor) => (
-            <button
-              type="button"
-              key={floor.id}
-              className={styles.zone}
-              style={{
-                top: `${floor.topPct}%`,
-                height: `${floor.heightPct}%`,
-              }}
-              data-hovered={hoverId === floor.id || undefined}
-              onPointerEnter={() => setHoverId(floor.id)}
-              onPointerLeave={() => setHoverId((h) => (h === floor.id ? null : h))}
-              onFocus={() => setHoverId(floor.id)}
-              onBlur={() => setHoverId((h) => (h === floor.id ? null : h))}
-              onClick={() => handleZoneClick(floor)}
-              aria-label={`${floor.label} – Etage öffnen`}
-            >
-              <span className={styles.zoneHighlight} aria-hidden />
-              <span className={styles.zoneLabel}>
-                <span className={styles.zoneKicker}>{floor.kicker}</span>
-                <span className={styles.zoneTitle}>{floor.label}</span>
-                <ArrowRight size={16} strokeWidth={1.8} aria-hidden />
-              </span>
-              <span className={styles.zoneRule} aria-hidden />
-            </button>
-          ))}
-        </div>
+        {/*
+          DETAIL-LAYER: hochauflösendes Etagen-Bild auf Stage-Ebene
+          (nicht in der zoomenden Camera). Wird per opacity-Cross-Fade
+          eingeblendet, sobald activeFloor.detailImage gesetzt ist.
+          So bleibt das Detail bei nativer Bildschirmauflösung scharf,
+          weil es NICHT auch noch durch den Camera-Scale läuft.
 
-        {/* ZURÜCK-BUTTON -- erscheint nur im Zoom */}
+          Damit das vernünftig aussieht, sollten Detail-Bilder etwa in
+          Viewport-Größe gerendert werden (≥ 2560×1440 für Beamer-
+          Präsentationen).
+        */}
+        <img
+          ref={detailRef}
+          className={styles.detail}
+          src={activeFloor?.detailImage ?? ''}
+          alt={activeFloor ? `Detail: ${activeFloor.label}` : ''}
+          aria-hidden={!activeFloor?.detailImage}
+          draggable={false}
+          style={{ display: activeFloor?.detailImage ? 'block' : 'none' }}
+        />
+
+        {/* ZURÜCK-BUTTON */}
         <button
           type="button"
           className={styles.backBtn}
@@ -371,7 +429,7 @@ export function BankExplorer(): React.ReactElement {
           <span>Übersicht</span>
         </button>
 
-        {/* KAPITEL-PANEL -- gefadet via gsap (siehe useEffect oben) */}
+        {/* KAPITEL-PANEL */}
         <div
           className={styles.panelLayer}
           ref={panelRef}
@@ -381,7 +439,7 @@ export function BankExplorer(): React.ReactElement {
           {activeFloor && <FloorPanel floor={activeFloor} />}
         </div>
 
-        {/* Logo / Bühnentitel oben rechts (nur Übersicht) */}
+        {/* Marken-Lockup oben rechts (nur Übersicht) */}
         <div className={styles.brand} data-visible={isOverview || undefined}>
           <span className={styles.brandKicker}>Banking 2035</span>
           <span className={styles.brandTitle}>Future Bank — Querschnitt</span>

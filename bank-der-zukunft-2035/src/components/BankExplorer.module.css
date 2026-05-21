@@ -11,43 +11,68 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: default;
 }
 
-/* Kamera = die transformierte Hülle. Wichtig: KEINE CSS-Transition,
- * sonst beißt sich das mit GSAP. */
+/*
+ * CAMERA: trägt die Aspect-Ratio des Bilds (per inline-style gesetzt).
+ * max-width / max-height + aspect-ratio sorgen dafür, dass die Camera
+ * "contain"-artig in die Stage passt -- Letterbox auf der schmaleren
+ * Achse, kein Crop, keine zusätzliche Upscaling-Stufe.
+ *
+ * WICHTIG: hier KEINE CSS-Transition. Transform setzt GSAP.
+ */
 .camera {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;        /* füllt Stage-Breite, falls Höhe der Engpass ist */
+  height: 100%;       /* füllt Stage-Höhe, falls Breite der Engpass ist */
+  /* aspect-ratio kommt vom Inline-Style aus BankExplorer.tsx */
   transform-origin: 50% 50%;
   will-change: transform;
-  /* GSAP setzt transform direkt -- keine eigene Transition hier. */
+  overflow: visible;  /* zonen außerhalb des sichtbaren Bilds nicht clippen */
 }
 
+/* Bild füllt Camera 1:1 -- Camera AR == Bild AR, kein object-fit nötig. */
 .master {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;          /* Camera-AR == Bild-AR, also exakt fill */
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  /* image-rendering: auto = browsers bilineares Upscaling = best für Photos */
+  image-rendering: auto;
+}
+
+/*
+ * DETAIL-Layer: liegt auf Stage-Ebene, NICHT in der Camera. Wird also
+ * NICHT mit-skaliert -- bleibt bei nativer Auflösung scharf.
+ * object-fit: cover füllt den Viewport komplett, opacity wird per gsap
+ * gefadet.
+ */
+.detail {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
-  pointer-events: none;
+  image-rendering: auto;
 }
 
-/* Cross-Fade-Slot (für später): zweites <img> mit dieser Klasse blendet
- * sich über das Master-Bild. */
-.masterDetail {
-  opacity: 0;
-  transition: opacity 360ms var(--ease-out);
-}
-
-.masterDetail[data-show] {
-  opacity: 1;
-}
-
-/* Klickzonen über dem Bild -- horizontale Bänder */
+/* HOVER-/KLICK-ZONEN. Liegen IN der Camera -- mit dem Bild ausgerichtet. */
 .zones {
   position: absolute;
   inset: 0;
@@ -61,7 +86,7 @@
   pointer-events: auto;
 }
 
-/* In Zoom-Modus dimmen wir die Labels aus, Klicks brauchen wir eh nicht */
+/* In Zoom-Modus blenden wir die Labels weg */
 .zones:not([data-overview]) .zoneLabel,
 .zones:not([data-overview]) .zoneHighlight,
 .zones:not([data-overview]) .zoneRule {
@@ -99,7 +124,6 @@
   opacity: 1;
 }
 
-/* Dünne Trennlinie unten/oben der Zone zur visuellen Andeutung */
 .zoneRule {
   position: absolute;
   left: 6%;
@@ -117,7 +141,6 @@
   background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
 }
 
-/* Label oben links in der Zone -- erscheint beim Hover */
 .zoneLabel {
   position: absolute;
   left: max(24px, 6vw);
@@ -231,7 +254,7 @@
   pointer-events: auto;
 }
 
-/* Marken-Lockup oben rechts -- nur in der Übersicht */
+/* Marken-Lockup -- nur in der Übersicht */
 .brand {
   position: absolute;
   top: 22px;

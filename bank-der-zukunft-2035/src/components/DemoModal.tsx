@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ExternalLink, Search, Target, X } from 'lucide-react'
 import styles from './DemoModal.module.css'
@@ -17,6 +17,13 @@ type DemoModalProps = {
   demo: DemoContent | null
 }
 
+// Logische Render-Größe des eingebetteten Demo-Iframes. Wir rendern das
+// iframe bei dieser fixen Auflösung und skalieren es per CSS-Transform in
+// den verfügbaren Platz -- so kommt das Demo IMMER ohne Scrollbalken aus,
+// unabhängig von der tatsächlichen Modal-Größe.
+const IFRAME_LOGICAL_W = 1920
+const IFRAME_LOGICAL_H = 1080
+
 export function DemoModal({
   isOpen,
   onClose,
@@ -25,6 +32,8 @@ export function DemoModal({
 }: DemoModalProps): React.ReactElement | null {
   const backdropRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const frameWrapperRef = useRef<HTMLDivElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const reducedMotion = useReducedMotion()
 
   useEffect(() => {
@@ -59,6 +68,32 @@ export function DemoModal({
       }
     }
   }, [isOpen, reducedMotion])
+
+  // Skalierung des iframes auf die tatsächliche Container-Größe. Wir
+  // rechnen `scale = min(containerW / 1920, containerH / 1080)`, damit das
+  // 16:9-Demo komplett ohne Scrollen passt. ResizeObserver hält die
+  // Skalierung bei Modal-Größenänderungen aktuell.
+  useLayoutEffect(() => {
+    if (!isOpen) return
+    const wrapper = frameWrapperRef.current
+    const iframe = iframeRef.current
+    if (!wrapper || !iframe) return
+    const updateScale = () => {
+      const w = wrapper.clientWidth
+      const h = wrapper.clientHeight
+      if (w <= 0 || h <= 0) return
+      const scale = Math.min(w / IFRAME_LOGICAL_W, h / IFRAME_LOGICAL_H)
+      iframe.style.transform = `translate(-50%, -50%) scale(${scale})`
+    }
+    updateScale()
+    const ro = new ResizeObserver(updateScale)
+    ro.observe(wrapper)
+    window.addEventListener('resize', updateScale)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', updateScale)
+    }
+  }, [isOpen])
 
   if (!isOpen || !demo) return null
 
@@ -102,7 +137,7 @@ export function DemoModal({
                   <div className={styles.statusQuo}>
                     <div className={styles.compareHead}>
                       <span className={styles.compareIcon}>
-                        <Search size={16} strokeWidth={2.2} />
+                        <Search size={14} strokeWidth={2.2} />
                       </span>
                       <span className={styles.compareLabel}>Status Quo</span>
                     </div>
@@ -111,7 +146,7 @@ export function DemoModal({
                   <div className={styles.in2035}>
                     <div className={styles.compareHead}>
                       <span className={styles.compareIcon} data-accent>
-                        <Target size={16} strokeWidth={2.2} />
+                        <Target size={14} strokeWidth={2.2} />
                       </span>
                       <span className={styles.compareLabel}>In 2035</span>
                     </div>
@@ -125,7 +160,10 @@ export function DemoModal({
           {demo.iframe && (
             <section className={styles.demoSection} aria-label="Live-Demo">
               <div className={styles.demoHeader}>
-                <span className={styles.demoKicker}>Live-Demo</span>
+                <div className={styles.demoHeaderLeft}>
+                  <span className={styles.liveDot} aria-hidden />
+                  <span className={styles.demoKicker}>Live-Demo</span>
+                </div>
                 <a
                   className={styles.demoLink}
                   href={demo.iframe.url}
@@ -137,13 +175,26 @@ export function DemoModal({
                 </a>
               </div>
               <div className={styles.iframeFrame}>
-                <iframe
-                  className={styles.iframe}
-                  src={demo.iframe.url}
-                  title={demo.iframe.title}
-                  loading="lazy"
-                  sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                />
+                <div className={styles.browserChrome} aria-hidden>
+                  <span className={styles.dot} data-color="red" />
+                  <span className={styles.dot} data-color="amber" />
+                  <span className={styles.dot} data-color="green" />
+                  <span className={styles.addressBar}>{demo.iframe.url}</span>
+                </div>
+                <div ref={frameWrapperRef} className={styles.iframeViewport}>
+                  <iframe
+                    ref={iframeRef}
+                    className={styles.iframe}
+                    style={{
+                      width: `${IFRAME_LOGICAL_W}px`,
+                      height: `${IFRAME_LOGICAL_H}px`,
+                    }}
+                    src={demo.iframe.url}
+                    title={demo.iframe.title}
+                    loading="lazy"
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                  />
+                </div>
               </div>
             </section>
           )}

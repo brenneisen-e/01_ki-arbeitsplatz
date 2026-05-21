@@ -5,29 +5,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4vh 4vw;
+  padding: 2.5vh 2vw;
 }
 
 .backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(7, 8, 9, 0.78);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  /* Sehr dunkler Vorhang -- der Raum dahinter bleibt nur als sanftes Glühen
+     erkennbar, ist aber nicht mehr lesbar. */
+  background: rgba(5, 6, 7, 0.93);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   cursor: pointer;
 }
 
 .panel {
   position: relative;
-  width: min(1320px, 100%);
-  max-height: 92vh;
+  width: min(1760px, 96vw);
+  height: min(1080px, 94vh);
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #111315 0%, #0c0e10 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
   box-shadow:
-    0 60px 140px rgba(0, 0, 0, 0.65),
+    0 60px 140px rgba(0, 0, 0, 0.75),
     inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   overflow: hidden;
 }
@@ -39,7 +41,8 @@
   gap: 24px;
   padding: 22px 26px 18px 26px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(135deg, rgba(4, 106, 56, 0.18) 0%, rgba(4, 106, 56, 0) 60%);
+  background: linear-gradient(135deg, rgba(4, 106, 56, 0.22) 0%, rgba(4, 106, 56, 0) 60%);
+  flex-shrink: 0;
 }
 
 .headerText {
@@ -60,7 +63,7 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: clamp(18px, 2.2vw, 24px);
+  font-size: clamp(20px, 2.2vw, 26px);
   font-weight: 600;
   letter-spacing: -0.01em;
   color: #fff;
@@ -70,8 +73,8 @@
 
 .closeButton {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -85,36 +88,42 @@
 
 .closeButton:hover,
 .closeButton:focus-visible {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
   outline: none;
 }
 
 .body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-  gap: 24px;
+  grid-template-columns: minmax(320px, 0.7fr) minmax(0, 1.8fr);
+  gap: 22px;
   padding: 22px 26px 26px 26px;
-  overflow-y: auto;
+  min-height: 0;
+  flex: 1;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1180px) {
   .body {
     grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow-y: auto;
   }
 }
 
 .slides {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
   min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .slide {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 18px;
+  gap: 12px;
+  padding: 16px;
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 14px;
@@ -122,18 +131,18 @@
 
 .slideTitle {
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
   color: #fff;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.32;
 }
 
 .compare {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 @media (max-width: 640px) {
@@ -146,8 +155,8 @@
 .in2035 {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 14px;
+  gap: 8px;
+  padding: 12px 13px;
   border-radius: 10px;
   min-width: 0;
 }
@@ -160,8 +169,8 @@
 
 .in2035 {
   background: linear-gradient(135deg, #046A38 0%, #035a30 100%);
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  color: #0a0b0c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .compareHead {
@@ -174,21 +183,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
 
 .compareIcon[data-accent] {
-  background: rgba(0, 0, 0, 0.18);
-  color: #0a0b0c;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
 }
 
 .compareLabel {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -199,12 +208,12 @@
 }
 
 .in2035 .compareLabel {
-  color: #0a0b0c;
+  color: #fff;
 }
 
 .compareBody {
-  font-size: 13.5px;
-  line-height: 1.55;
+  font-size: 13px;
+  line-height: 1.5;
   margin: 0;
 }
 
@@ -213,15 +222,17 @@
 }
 
 .in2035 .compareBody {
-  color: #0a0b0c;
+  color: #fff;
 }
+
+/* ───── Live-Demo / Iframe-Frame ───── */
 
 .demoSection {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
-  min-height: 360px;
+  min-height: 0;
 }
 
 .demoHeader {
@@ -229,6 +240,28 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-shrink: 0;
+}
+
+.demoHeaderLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.liveDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #2ecc71;
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.18);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.18); }
+  50%      { box-shadow: 0 0 0 6px rgba(46, 204, 113, 0.0); }
 }
 
 .demoKicker {
@@ -257,22 +290,78 @@
   border-bottom-color: var(--accent-bright);
 }
 
+/* Browser-Chrome-Optik um das iframe -- macht die Demo erkennbar als
+   eingebettete Applikation, statt nur ein nacktes iframe. */
 .iframeFrame {
   position: relative;
   flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   border-radius: 14px;
   overflow: hidden;
   background: #0a0b0c;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.4),
+    0 30px 80px rgba(0, 0, 0, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-  min-height: 480px;
+}
+
+.browserChrome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: linear-gradient(180deg, #1a1d1f 0%, #14161a 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: #555;
+}
+
+.dot[data-color='red']   { background: #ff5f57; }
+.dot[data-color='amber'] { background: #febc2e; }
+.dot[data-color='green'] { background: #28c840; }
+
+.addressBar {
+  flex: 1;
+  margin-left: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #b9bcc0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Viewport in den die 1920×1080 logische iframe-Größe per JS-Transform
+   skaliert wird. Aspect-Ratio sichert, dass das Demo immer 16:9 bleibt. */
+.iframeViewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #0a0b0c;
 }
 
 .iframe {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* width/height (logical 1920x1080) + transform (translate + scale) werden
+     im DemoModal.tsx per JS gesetzt (ResizeObserver). transform-origin im
+     Zentrum des iframes, damit die Skalierung mittig läuft. */
+  transform-origin: 50% 50%;
   border: 0;
   display: block;
   background: #0a0b0c;

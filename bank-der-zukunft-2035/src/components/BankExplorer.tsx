@@ -312,6 +312,7 @@ const FLOORS: Floor[] = [
     centerY: 55,
     width: 10,
     height: 60,
+    detailImage: './bank-floor-plaza.png',
     chapter: {
       title: 'Plaza & Self-Service: die Bank von außen gesehen',
       body:
@@ -332,15 +333,15 @@ const FLOORS: Floor[] = [
  */
 const IMAGE_ASPECT = 1672 / 941
 
-/** Kameraflug pro Spec: 1,2 s, power3.inOut. */
-const ZOOM_DURATION = 1.2
+/** Kameraflug: 3,0 s (entspannter Cinematic-Flug). */
+const ZOOM_DURATION = 3.0
 const ZOOM_EASE = 'power3.inOut'
 
 /** Panel kommt ungefähr ab Halbzeit des Zooms; Cross-Fade des Details auch. */
 const PANEL_DELAY = ZOOM_DURATION * 0.55
-const PANEL_DURATION = 0.45
-const DETAIL_CROSSFADE_DELAY = ZOOM_DURATION * 0.45
-const DETAIL_CROSSFADE_DURATION = 0.4
+const PANEL_DURATION = 0.55
+const DETAIL_CROSSFADE_DELAY = ZOOM_DURATION * 0.5
+const DETAIL_CROSSFADE_DURATION = 0.7
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Zoom-Mathematik für 2D-Räume:

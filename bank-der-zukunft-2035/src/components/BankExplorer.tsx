@@ -42,6 +42,14 @@ type Floor = {
   /** Höhe der Zone in % der Bildhöhe */
   heightPct: number
   /**
+   * Horizontaler Zoom-Mittelpunkt in % der Bildbreite (0..100).
+   * Default ist 50 (Bild-Mitte = Aufzug). Pro Etage wird hier auf den
+   * tatsächlichen Hotspot der Etage geschoben (z. B. Boardroom links
+   * statt Aufzug-Mitte), damit der gezoomte Ausschnitt das relevante
+   * Etagen-Motiv zeigt und nicht den leeren Aufzug-Schacht.
+   */
+  xCenterPct?: number
+  /**
    * Optional: hochauflösendes Detail-Bild für diese Etage. Wird (sobald
    * gesetzt) im Zoom per Cross-Fade über das Master-Bild gelegt --
    * NICHT innerhalb der zoomenden Camera, sondern auf Stage-Ebene, damit
@@ -63,6 +71,7 @@ const FLOORS: Floor[] = [
     kicker: 'Etage 1 · Vorstand',
     topPct: 2.5,
     heightPct: 24,
+    xCenterPct: 25,
     detailImage: './bank-floor-governance.png',
     chapter: {
       title: 'AI-Governance, Risiko und Kapitalentscheidung',
@@ -81,6 +90,7 @@ const FLOORS: Floor[] = [
     kicker: 'Etage 2 · Beratung',
     topPct: 26.6,
     heightPct: 20.2,
+    xCenterPct: 22,
     chapter: {
       title: 'Vermögensberatung mit Co-Pilot und Hyperpersonalisierung',
       body:
@@ -98,6 +108,7 @@ const FLOORS: Floor[] = [
     kicker: 'Etage 3 · Markets',
     topPct: 46.8,
     heightPct: 15.8,
+    xCenterPct: 35,
     chapter: {
       title: 'Markets & Trading: Sub-Sekunden-Insight',
       body:
@@ -201,15 +212,27 @@ const DETAIL_CROSSFADE_DURATION = 0.6
 //    hidden) den Rand ab.
 // ─────────────────────────────────────────────────────────────────────────────
 
-type Geom = { scale: number; y: number }
+type Geom = { scale: number; x: number; y: number }
 
-function computeGeom(floor: Floor, stageHeight: number, cameraHeight: number): Geom {
+function computeGeom(
+  floor: Floor,
+  stageHeight: number,
+  cameraWidth: number,
+  cameraHeight: number,
+): Geom {
   // Schutz vor Division durch 0, falls der Layout-Pass noch nicht durch ist.
   const safeCameraH = Math.max(cameraHeight, 1)
+  const safeCameraW = Math.max(cameraWidth, 1)
   const scale = (stageHeight * 100) / (safeCameraH * floor.heightPct)
-  const zoneCenterPct = floor.topPct + floor.heightPct / 2
-  const y = ((50 - zoneCenterPct) * stageHeight) / floor.heightPct
-  return { scale, y }
+  const zoneCenterY = floor.topPct + floor.heightPct / 2
+  const zoneCenterX = floor.xCenterPct ?? 50
+  // translateY bringt die Zone-Mitte vertikal auf Stage-Mitte (siehe
+  // Herleitung im Kommentar oben).
+  const y = ((50 - zoneCenterY) * stageHeight) / floor.heightPct
+  // translateX bringt zoneCenterX horizontal auf Stage-Mitte:
+  // translateX = scale × cameraW × (50 - zoneCenterX) / 100
+  const x = (scale * safeCameraW * (50 - zoneCenterX)) / 100
+  return { scale, x, y }
 }
 
 export function BankExplorer(): React.ReactElement {
@@ -242,18 +265,19 @@ export function BankExplorer(): React.ReactElement {
       tweenRef.current?.kill()
 
       const geom: Geom = floor
-        ? computeGeom(floor, stage.clientHeight, camera.clientHeight)
-        : { scale: 1, y: 0 }
+        ? computeGeom(floor, stage.clientHeight, camera.clientWidth, camera.clientHeight)
+        : { scale: 1, x: 0, y: 0 }
 
       const instant = opts.instant || reducedMotion
 
       if (instant) {
-        gsap.set(camera, { scale: geom.scale, y: geom.y, force3D: true })
+        gsap.set(camera, { scale: geom.scale, x: geom.x, y: geom.y, force3D: true })
         return
       }
 
       tweenRef.current = gsap.to(camera, {
         scale: geom.scale,
+        x: geom.x,
         y: geom.y,
         duration: ZOOM_DURATION,
         ease: ZOOM_EASE,

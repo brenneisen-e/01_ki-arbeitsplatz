@@ -24,6 +24,11 @@ type FloorPanelProps = {
     }
   }
   sceneNarrative?: SceneNarrative
+  /**
+   * Schrumpft das Panel horizontal (für den Hover-auf-Demo-Modus, in dem
+   * das iframe mehr Platz bekommt, ohne den Kontext komplett zu verlieren).
+   */
+  minimized?: boolean
 }
 
 // Mini-Markdown: **fett** -> <strong>fett</strong>. Keine anderen Tags.
@@ -37,14 +42,22 @@ function renderRichText(text: string): React.ReactNode[] {
   })
 }
 
-export function FloorPanel({ floor, sceneNarrative }: FloorPanelProps): React.ReactElement {
+export function FloorPanel({
+  floor,
+  sceneNarrative,
+  minimized,
+}: FloorPanelProps): React.ReactElement {
   const kicker = sceneNarrative?.kicker ?? floor.kicker
   const title = sceneNarrative?.title ?? floor.chapter.title
   const body = sceneNarrative?.body ?? floor.chapter.body
   const kpis = sceneNarrative?.kpis ?? floor.chapter.kpis
   const slides = sceneNarrative?.slides ?? []
   return (
-    <article className={styles.panel} aria-labelledby={`floor-${floor.id}-title`}>
+    <article
+      className={styles.panel}
+      data-minimized={minimized || undefined}
+      aria-labelledby={`floor-${floor.id}-title`}
+    >
       <div className={styles.shade} aria-hidden />
       <div className={styles.body}>
         <header className={styles.header}>

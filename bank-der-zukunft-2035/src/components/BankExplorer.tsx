@@ -475,6 +475,10 @@ export function BankExplorer(): React.ReactElement {
   const [hoverId, setHoverId] = useState<FloorId | null>(null)
   const [sceneIndex, setSceneIndex] = useState(0)
   const [videoPlaying, setVideoPlaying] = useState(false)
+  // True wenn der Cursor über dem eingebetteten iframe-Demo liegt --
+  // dann schrumpft das rechte Info-Panel, damit man dem Demo freie Sicht
+  // gibt, ohne den Kontext komplett zu verlieren.
+  const [demoHover, setDemoHover] = useState(false)
 
   const reducedMotion = useReducedMotion()
 
@@ -789,7 +793,10 @@ export function BankExplorer(): React.ReactElement {
               />
             ))}
             {currentScene?.screenOverlay && (
-              <ScreenOverlay overlay={currentScene.screenOverlay} />
+              <ScreenOverlay
+                overlay={currentScene.screenOverlay}
+                onHoverChange={setDemoHover}
+              />
             )}
             {currentScene?.videoLoop && videoPlaying && (
               <video
@@ -881,10 +888,11 @@ export function BankExplorer(): React.ReactElement {
           aria-hidden={isOverview}
           data-visible={!isOverview || undefined}
         >
-          {activeFloor && !currentScene?.screenOverlay && (
+          {activeFloor && (
             <FloorPanel
               floor={activeFloor}
               sceneNarrative={currentScene?.narrative}
+              minimized={demoHover}
             />
           )}
         </div>
@@ -912,8 +920,10 @@ const IFRAME_LOGICAL_H = 1080
 
 function ScreenOverlay({
   overlay,
+  onHoverChange,
 }: {
   overlay: NonNullable<DetailScene['screenOverlay']>
+  onHoverChange?: (hovered: boolean) => void
 }): React.ReactElement {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -973,7 +983,12 @@ function ScreenOverlay({
     }
   }, [overlay])
   return (
-    <div ref={wrapperRef} className={styles.screenOverlay}>
+    <div
+      ref={wrapperRef}
+      className={styles.screenOverlay}
+      onPointerEnter={() => onHoverChange?.(true)}
+      onPointerLeave={() => onHoverChange?.(false)}
+    >
       <iframe
         ref={iframeRef}
         className={styles.screenIframe}

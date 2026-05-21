@@ -5,6 +5,27 @@
   display: flex;
   align-items: stretch;
   pointer-events: auto;
+  transition:
+    width var(--t-med) var(--ease-out),
+    opacity var(--t-med) var(--ease-out);
+}
+
+/* Wenn der User mit der Maus über das eingebettete iframe-Demo fährt,
+ * schrumpft das Panel auf eine schmale Spalte (nur Kicker + Titel
+ * sichtbar, Body/Slides/KPIs ausgeblendet). So bekommt das Demo Sicht,
+ * der Kontext bleibt aber als kompakter Streifen am Rand erhalten.
+ * Cursor verlässt iframe -> Panel wächst zurück auf volle Breite. */
+.panel[data-minimized] {
+  width: min(260px, 70vw);
+  opacity: 0.78;
+}
+
+.panel[data-minimized] .copy,
+.panel[data-minimized] .slides,
+.panel[data-minimized] .kpis {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-fast) var(--ease-out);
 }
 
 /* Sehr transparenter Vorhang -- der Text hebt sich primär durch den

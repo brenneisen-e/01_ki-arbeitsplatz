@@ -6,11 +6,10 @@ import {
   useRef,
   useState,
 } from 'react'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { gsap } from 'gsap'
 import styles from './BankExplorer.module.css'
 import { FloorPanel } from './FloorPanel'
-import { DemoModal } from './DemoModal'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -62,31 +61,50 @@ type Floor = {
    */
   fit?: 'cover' | 'contain'
   /**
-   * Optional: hochauflösendes Detail-Bild für diese Zone. Wird per
-   * opacity-Cross-Fade auf Stage-Ebene (NICHT in der zoomenden Camera)
-   * eingeblendet, damit es bei nativer Auflösung scharf bleibt.
+   * Optional: hochauflösendes Detail-Bild für diese Zone (einzelne Szene,
+   * Wird per opacity-Cross-Fade auf Stage-Ebene eingeblendet. Wenn
+   * detailScenes gesetzt ist, hat dieses Feld keine Wirkung.
    */
   detailImage?: string
+  /**
+   * Optional: Mehrere Detail-Szenen, durch die der User per Pfeilen/Dots
+   * blättern kann. Pro Szene kann ein iframe als "Bildschirm" auf einer
+   * im Foto sichtbaren Display-Fläche eingeblendet werden.
+   */
+  detailScenes?: DetailScene[]
   chapter: {
     title: string
     body: string
     kpis: { label: string; value: string }[]
   }
   /**
-   * Optional: erweiterte Demo-/Vertiefungs-Inhalte, die in einem Modal
-   * geöffnet werden können (Status-Quo-↔-2035-Slides, eingebettete Demo
-   * via iframe). Wenn vorhanden, zeigt das Etagen-Panel einen
-   * "Demo & Folien"-Button.
+   * Optional: Status-Quo-↔-2035-Vergleichs-Slides, die direkt im Panel
+   * unter dem Teaser angezeigt werden. teaser ersetzt den generischen
+   * chapter.body, sobald dieses Feld vorhanden ist.
    */
   demo?: {
-    headline: string
-    /**
-     * Kurzer Einstiegstext (1-2 Sätze), der den generischen chapter.body im
-     * Panel ersetzt, sobald demo-Inhalte vorhanden sind.
-     */
     teaser: string
     slides: { title: string; statusQuo: string; in2035: string }[]
-    iframe?: { url: string; title: string }
+  }
+}
+
+type DetailScene = {
+  image: string
+  alt?: string
+  /**
+   * Optional: Falls die Szene einen sichtbaren Bildschirm/Display-Bereich
+   * zeigt, wird dort ein iframe der angegebenen URL maßstabsgetreu
+   * eingeblendet (logische 1920×1080-Auflösung, per CSS-Transform
+   * skaliert -- kein Scrollen).
+   */
+  screenOverlay?: {
+    url: string
+    title: string
+    /** Position des Bildschirms in % der Bild-Maße. */
+    leftPct: number
+    topPct: number
+    widthPct: number
+    heightPct: number
   }
 }
 
@@ -179,7 +197,26 @@ const FLOORS: Floor[] = [
     centerY: 60,
     width: 38,
     height: 18,
-    detailImage: './bank-floor-sales.png',
+    detailScenes: [
+      {
+        image: './bank-floor-sales.png',
+        alt: 'Beratungs-Desk mit Berater:in und Kund:in, SALES COCKPIT im Hintergrund',
+      },
+      {
+        image: './bank-floor-sales-2.png',
+        alt: 'Berater:in am Workstation-Desk mit eingeblendetem KI-Arbeitsplatz auf dem Bildschirm',
+        screenOverlay: {
+          url: 'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht',
+          title: 'KI-Arbeitsplatz – Vertriebsarbeitsplatz Live',
+          // Bildschirm-Rechteck per Edge-Detection auf dem Foto:
+          // x=38,3-73,6 %  y=26,0-63,8 %
+          leftPct: 38.3,
+          topPct: 26.0,
+          widthPct: 35.3,
+          heightPct: 37.8,
+        },
+      },
+    ],
     chapter: {
       title: 'Advisory & Sales: Co-Pilot am Beratungs-Desk',
       body:
@@ -191,7 +228,6 @@ const FLOORS: Floor[] = [
       ],
     },
     demo: {
-      headline: 'Vom Produktvertrieb zum Lösungsorchestrator',
       teaser:
         'Die Bank wird vom Produktvertrieb zum kontextbasierten Lösungsorchestrator — Kundenberater:innen vom Effizienzwerkzeug zu KI-augmentierten Strategieberater:innen.',
       slides: [
@@ -210,10 +246,6 @@ const FLOORS: Floor[] = [
             'Kundenberater agieren als KI-augmentierte Sparringspartner mit Branchen- und Kontextverständnis. Standardtransaktionen laufen autonom; menschliche Beratung gewinnt bei komplexen Themen an Bedeutung.',
         },
       ],
-      iframe: {
-        url: 'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht',
-        title: 'Vertriebsarbeitsplatz – Versicherung (Live-Demo)',
-      },
     },
   },
   {
@@ -400,12 +432,12 @@ export function BankExplorer(): React.ReactElement {
   const stageRef = useRef<HTMLDivElement>(null)
   const cameraRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
-  const detailRef = useRef<HTMLImageElement>(null)
+  const detailRef = useRef<HTMLDivElement>(null)
   const tweenRef = useRef<gsap.core.Tween | null>(null)
 
   const [activeId, setActiveId] = useState<FloorId | null>(null)
   const [hoverId, setHoverId] = useState<FloorId | null>(null)
-  const [demoOpen, setDemoOpen] = useState(false)
+  const [sceneIndex, setSceneIndex] = useState(0)
 
   const reducedMotion = useReducedMotion()
 
@@ -413,6 +445,26 @@ export function BankExplorer(): React.ReactElement {
     () => FLOORS.find((f) => f.id === activeId) ?? null,
     [activeId],
   )
+
+  // Effektive Szenen-Liste: explizite detailScenes oder Fallback auf das
+  // alte detailImage-Feld (genau eine Szene ohne screenOverlay).
+  const scenes: DetailScene[] = useMemo(() => {
+    if (!activeFloor) return []
+    if (activeFloor.detailScenes && activeFloor.detailScenes.length > 0) {
+      return activeFloor.detailScenes
+    }
+    if (activeFloor.detailImage) {
+      return [{ image: activeFloor.detailImage, alt: activeFloor.label }]
+    }
+    return []
+  }, [activeFloor])
+
+  // Beim Floor-Wechsel auf erste Szene zurückspringen.
+  useEffect(() => {
+    setSceneIndex(0)
+  }, [activeId])
+
+  const currentScene: DetailScene | null = scenes[sceneIndex] ?? null
 
   // Zentraler Animator: rechnet Geom für den aktiven Floor (oder Übersicht)
   // und tweenet die Kamera. Wird sowohl bei Klick als auch bei Resize
@@ -499,15 +551,16 @@ export function BankExplorer(): React.ReactElement {
     }
   }, [activeFloor, reducedMotion])
 
-  // Cross-Fade des Detail-Bilds (sobald activeFloor.detailImage existiert).
-  // Das Detail-Bild liegt AUF Stage-Ebene (nicht in der Camera) und wird
-  // also bei nativer Viewport-Auflösung dargestellt -- kein weiteres
-  // Hochskalieren, kein Pixel-Matsch.
+  // Cross-Fade des Detail-Layers (gesamter Stack aus aktueller Szene +
+  // iframe-Overlay) sobald Szenen für den aktiven Floor existieren. Der
+  // Layer liegt AUF Stage-Ebene (nicht in der zoomenden Camera), damit er
+  // bei nativer Auflösung scharf bleibt und der iframe nicht doppelt
+  // skaliert wird.
   useEffect(() => {
     const detail = detailRef.current
     if (!detail) return
     gsap.killTweensOf(detail)
-    if (activeFloor?.detailImage) {
+    if (scenes.length > 0) {
       if (reducedMotion) {
         gsap.set(detail, { opacity: 1 })
       } else {
@@ -529,7 +582,7 @@ export function BankExplorer(): React.ReactElement {
         gsap.to(detail, { opacity: 0, duration: 0.3, ease: 'power2.in' })
       }
     }
-  }, [activeFloor, reducedMotion])
+  }, [activeFloor, scenes.length, reducedMotion])
 
   // Wir halten activeFloor in einem Ref, damit der Resize-Effekt unten
   // nicht bei jedem activeFloor-Wechsel neu gemountet wird (sonst feuert
@@ -600,13 +653,16 @@ export function BankExplorer(): React.ReactElement {
 
   const handleBack = useCallback(() => {
     setActiveId(null)
-    setDemoOpen(false)
     // Zurück springt instant in die Übersicht -- kein Zoom-Out-Flug.
     animateTo(null, { instant: true })
   }, [animateTo])
 
-  const handleOpenDemo = useCallback(() => setDemoOpen(true), [])
-  const handleCloseDemo = useCallback(() => setDemoOpen(false), [])
+  const handlePrevScene = useCallback(() => {
+    setSceneIndex((i) => (scenes.length === 0 ? 0 : (i - 1 + scenes.length) % scenes.length))
+  }, [scenes.length])
+  const handleNextScene = useCallback(() => {
+    setSceneIndex((i) => (scenes.length === 0 ? 0 : (i + 1) % scenes.length))
+  }, [scenes.length])
 
   const isOverview = activeFloor === null
 
@@ -672,23 +728,61 @@ export function BankExplorer(): React.ReactElement {
         </div>
 
         {/*
-          DETAIL-LAYER: hochauflösendes Etagen-Bild auf Stage-Ebene
-          (nicht in der zoomenden Camera). Wird per opacity-Cross-Fade
-          eingeblendet, sobald activeFloor.detailImage gesetzt ist.
-          So bleibt das Detail bei nativer Bildschirmauflösung scharf,
-          weil es NICHT auch noch durch den Camera-Scale läuft.
-
-          Damit das vernünftig aussieht, sollten Detail-Bilder etwa in
-          Viewport-Größe gerendert werden (≥ 2560×1440, ideal 3840×2160).
+          DETAIL-LAYER: Stack aller Szenen + ggf. iframe-Overlay auf einer
+          im Foto sichtbaren Bildschirmfläche. Liegt auf Stage-Ebene
+          (nicht in der Camera), damit das Bild bei nativer Auflösung
+          scharf bleibt und der iframe nicht doppelt skaliert wird.
         */}
-        {activeFloor?.detailImage && (
-          <img
-            ref={detailRef}
-            className={styles.detail}
-            src={activeFloor.detailImage}
-            alt={`Detail: ${activeFloor.label}`}
-            draggable={false}
-          />
+        {scenes.length > 0 && (
+          <div ref={detailRef} className={styles.detailLayer}>
+            {scenes.map((scene, i) => (
+              <img
+                key={scene.image}
+                className={styles.detail}
+                src={scene.image}
+                alt={scene.alt ?? `Detail: ${activeFloor?.label ?? ''}`}
+                draggable={false}
+                data-active={i === sceneIndex || undefined}
+              />
+            ))}
+            {currentScene?.screenOverlay && (
+              <ScreenOverlay overlay={currentScene.screenOverlay} />
+            )}
+          </div>
+        )}
+
+        {/* SZENEN-NAVIGATION (nur bei > 1 Szene und nicht in Übersicht) */}
+        {scenes.length > 1 && !isOverview && (
+          <div className={styles.sceneNav} role="group" aria-label="Detail-Szenen">
+            <button
+              type="button"
+              className={styles.sceneNavBtn}
+              onClick={handlePrevScene}
+              aria-label="Vorheriges Foto"
+            >
+              <ChevronLeft size={18} strokeWidth={2} />
+            </button>
+            <div className={styles.sceneDots} aria-hidden>
+              {scenes.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={styles.sceneDot}
+                  data-active={i === sceneIndex || undefined}
+                  onClick={() => setSceneIndex(i)}
+                  aria-label={`Foto ${i + 1} von ${scenes.length}`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className={styles.sceneNavBtn}
+              onClick={handleNextScene}
+              aria-label="Nächstes Foto"
+            >
+              <ChevronRight size={18} strokeWidth={2} />
+            </button>
+          </div>
         )}
 
         {/* ZURÜCK-BUTTON */}
@@ -711,17 +805,8 @@ export function BankExplorer(): React.ReactElement {
           aria-hidden={isOverview}
           data-visible={!isOverview || undefined}
         >
-          {activeFloor && (
-            <FloorPanel floor={activeFloor} onOpenDemo={handleOpenDemo} />
-          )}
+          {activeFloor && <FloorPanel floor={activeFloor} />}
         </div>
-
-        <DemoModal
-          isOpen={demoOpen && Boolean(activeFloor?.demo)}
-          onClose={handleCloseDemo}
-          kicker={activeFloor?.kicker ?? ''}
-          demo={activeFloor?.demo ?? null}
-        />
 
         {/* Marken-Lockup oben rechts (nur Übersicht) */}
         <div className={styles.brand} data-visible={isOverview || undefined}>
@@ -729,6 +814,71 @@ export function BankExplorer(): React.ReactElement {
           <span className={styles.brandTitle}>Future Bank — Querschnitt</span>
         </div>
       </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ScreenOverlay: positioniert einen iframe maßstabsgetreu auf einer im Foto
+// sichtbaren Bildschirmfläche. Das iframe rendert bei fester 1920×1080-
+// Logik und wird per ResizeObserver in den Overlay-Container skaliert,
+// sodass das eingebettete Demo komplett ohne eigene Scrollbalken sichtbar
+// ist (unabhängig von der tatsächlichen Bildschirm-Größe im Foto).
+// ─────────────────────────────────────────────────────────────────────────────
+
+const IFRAME_LOGICAL_W = 1920
+const IFRAME_LOGICAL_H = 1080
+
+function ScreenOverlay({
+  overlay,
+}: {
+  overlay: NonNullable<DetailScene['screenOverlay']>
+}): React.ReactElement {
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+  useLayoutEffect(() => {
+    const wrapper = wrapperRef.current
+    const iframe = iframeRef.current
+    if (!wrapper || !iframe) return
+    const updateScale = () => {
+      const w = wrapper.clientWidth
+      const h = wrapper.clientHeight
+      if (w <= 0 || h <= 0) return
+      const scale = Math.min(w / IFRAME_LOGICAL_W, h / IFRAME_LOGICAL_H)
+      iframe.style.transform = `translate(-50%, -50%) scale(${scale})`
+    }
+    updateScale()
+    const ro = new ResizeObserver(updateScale)
+    ro.observe(wrapper)
+    window.addEventListener('resize', updateScale)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', updateScale)
+    }
+  }, [])
+  return (
+    <div
+      ref={wrapperRef}
+      className={styles.screenOverlay}
+      style={{
+        left: `${overlay.leftPct}%`,
+        top: `${overlay.topPct}%`,
+        width: `${overlay.widthPct}%`,
+        height: `${overlay.heightPct}%`,
+      }}
+    >
+      <iframe
+        ref={iframeRef}
+        className={styles.screenIframe}
+        style={{
+          width: `${IFRAME_LOGICAL_W}px`,
+          height: `${IFRAME_LOGICAL_H}px`,
+        }}
+        src={overlay.url}
+        title={overlay.title}
+        loading="lazy"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+      />
     </div>
   )
 }

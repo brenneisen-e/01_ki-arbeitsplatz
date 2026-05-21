@@ -1,4 +1,4 @@
-import { ArrowRight, Play, Search, Target } from 'lucide-react'
+import { Search, Target } from 'lucide-react'
 import styles from './FloorPanel.module.css'
 
 type Slide = { title: string; statusQuo: string; in2035: string }
@@ -18,12 +18,10 @@ type FloorPanelProps = {
       slides: Slide[]
     }
   }
-  onOpenDemo?: () => void
 }
 
-export function FloorPanel({ floor, onOpenDemo }: FloorPanelProps): React.ReactElement {
+export function FloorPanel({ floor }: FloorPanelProps): React.ReactElement {
   const { kicker, label, chapter, demo } = floor
-  const hasDemo = Boolean(demo)
   return (
     <article className={styles.panel} aria-labelledby={`floor-${floor.id}-title`}>
       <div className={styles.shade} aria-hidden />
@@ -39,24 +37,6 @@ export function FloorPanel({ floor, onOpenDemo }: FloorPanelProps): React.ReactE
         {/* Teaser ersetzt den langen chapter.body, sobald Demo-Inhalte
             vorhanden sind -- der lange Text wäre dort nur Wiederholung. */}
         <p className={styles.copy}>{demo ? demo.teaser : chapter.body}</p>
-
-        {hasDemo && onOpenDemo && (
-          <button type="button" className={styles.demoCard} onClick={onOpenDemo}>
-            <span className={styles.demoCardIcon}>
-              <Play size={16} strokeWidth={2.2} />
-            </span>
-            <span className={styles.demoCardText}>
-              <span className={styles.demoCardKicker}>Live-Demo</span>
-              <span className={styles.demoCardLabel}>Vertriebsarbeitsplatz öffnen</span>
-            </span>
-            <ArrowRight
-              size={16}
-              strokeWidth={2}
-              className={styles.demoCardArrow}
-              aria-hidden
-            />
-          </button>
-        )}
 
         {demo && (
           <section className={styles.slides} aria-label="Status Quo vs. 2035">

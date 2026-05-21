@@ -971,7 +971,12 @@ function ScreenOverlay({
       wrapper.style.top = `${top}px`
       wrapper.style.width = `${width}px`
       wrapper.style.height = `${height}px`
-      const scale = Math.min(width / IFRAME_LOGICAL_W, height / IFRAME_LOGICAL_H)
+      // Math.max = cover: iframe füllt den Bildschirm-Container komplett,
+      // ohne Letterbox. Wenn das Display im Foto nicht exakt 16:9 ist
+      // (z. B. 16:10), wird das iframe minimal auf einer Achse zugeschnitten
+      // (über overflow:hidden im .screenOverlay) statt schwarze Bänder
+      // zu zeigen.
+      const scale = Math.max(width / IFRAME_LOGICAL_W, height / IFRAME_LOGICAL_H)
       iframe.style.transform = `translate(-50%, -50%) scale(${scale})`
     }
     update()

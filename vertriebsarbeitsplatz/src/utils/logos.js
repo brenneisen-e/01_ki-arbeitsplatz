@@ -93,6 +93,7 @@ const DOMAIN_MAP = {
   'Münchener Hyp': 'muenchenerhyp.de',
   'HRK LUNIS': 'hrklunis.com',
   'Berenberg': 'berenberg.de',
+  'Zukunftsinvestment': 'zukunftsinvestment.de',
   'Flossbach von Storch': 'flossbachvonstorch.de',
   'DJE Kapital': 'dje.de',
   'Pictet': 'pictet.com',

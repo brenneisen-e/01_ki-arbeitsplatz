@@ -160,7 +160,7 @@ export const MODE_CONFIGS = {
     ],
     institutVarianten: [
       { institut: 'HRK LUNIS AG', beraterTitel: 'Senior Advisor', beraterTitelM: 'Senior Advisor', beraterTitelW: 'Senior Advisor', colors: { primary: '#1a365d', primaryLight: '#2b4c7e', gradient: 'linear-gradient(135deg, #0f2340 0%, #1a365d 40%, #2b4c7e 100%)', accent: '#c4a35a' } },
-      { institut: 'Berenberg', beraterTitel: 'Relationship Manager', beraterTitelM: 'Relationship Manager', beraterTitelW: 'Relationship Managerin', colors: { primary: '#1a3a5c', primaryLight: '#2a5a8c', gradient: 'linear-gradient(135deg, #0f2640 0%, #1a3a5c 40%, #2a5a8c 100%)', accent: '#b89d5a' } },
+      { institut: 'Zukunftsinvestment', beraterTitel: 'Relationship Manager', beraterTitelM: 'Relationship Manager', beraterTitelW: 'Relationship Managerin', colors: { primary: '#1a3a5c', primaryLight: '#2a5a8c', gradient: 'linear-gradient(135deg, #0f2640 0%, #1a3a5c 40%, #2a5a8c 100%)', accent: '#b89d5a' } },
       { institut: 'Flossbach von Storch', beraterTitel: 'Portfolio Manager', beraterTitelM: 'Portfolio Manager', beraterTitelW: 'Portfolio Managerin', colors: { primary: '#2c3e50', primaryLight: '#3d5a80', gradient: 'linear-gradient(135deg, #1a252f 0%, #2c3e50 40%, #3d5a80 100%)', accent: '#c9a85c' } },
       { institut: 'DJE Kapital', beraterTitel: 'Vermögensberater', beraterTitelM: 'Vermögensberater', beraterTitelW: 'Vermögensberaterin', colors: { primary: '#003366', primaryLight: '#005599', gradient: 'linear-gradient(135deg, #002244 0%, #003366 40%, #005599 100%)', accent: '#e6c347' } },
     ],

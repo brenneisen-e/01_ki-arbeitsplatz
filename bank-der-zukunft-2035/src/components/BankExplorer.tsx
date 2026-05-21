@@ -92,6 +92,19 @@ type DetailScene = {
   image: string
   alt?: string
   /**
+   * Optional: Pro-Szene-Inhalte, die das Floor-Default überschreiben.
+   * Damit kann das rechte Panel pro durchgeklicktem Foto eigene
+   * Überschrift, Kicker, Body-Text und KPIs zeigen -- jede Szene erzählt
+   * dann ihren eigenen Schritt der Story.
+   */
+  narrative?: {
+    kicker?: string
+    title?: string
+    body?: string
+    kpis?: { label: string; value: string }[]
+    slides?: { title: string; statusQuo: string; in2035: string }[]
+  }
+  /**
    * Optional: Falls die Szene einen sichtbaren Bildschirm/Display-Bereich
    * zeigt, wird dort ein iframe der angegebenen URL maßstabsgetreu
    * eingeblendet (logische 1920×1080-Auflösung, per CSS-Transform
@@ -211,10 +224,38 @@ const FLOORS: Floor[] = [
       {
         image: './bank-floor-sales.png',
         alt: 'Beratungs-Desk mit Berater:in und Kund:in, SALES COCKPIT im Hintergrund',
+        narrative: {
+          kicker: 'Szene 1 · Vom Produktvertrieb zum Lösungsorchestrator',
+          title: 'Beratung am Desk: Mensch entscheidet, KI orchestriert',
+          body:
+            'Berater:in und Kund:in sitzen am Beratungs-Desk; der SALES COCKPIT-Screen im Hintergrund hält Funnel, Cross-Sell-Vorschläge und Marktlage in Echtzeit fest. Die Bank ist 2035 kein Produktverkäufer mehr, sondern Lösungsorchestrator.',
+          slides: [
+            {
+              title: 'Vom Produktvertrieb zum Lösungsorchestrator',
+              statusQuo:
+                'Bankvertrieb ist produkt- und kanal-zentriert organisiert. Kundenbetreuung folgt standardisierten Modellen; Daten und Kanäle sind fragmentiert.',
+              in2035:
+                'Die Bank agiert als kontext-basierter Lösungsorchestrator: KI kombiniert Finanz-, Service- und Ökosystemleistungen dynamisch zu individuellen Lösungen. Der Kunde definiert das Ziel — nicht mehr das Produktportfolio.',
+            },
+            {
+              title: 'Vom Kund:innenberater zu KI-augmentierten Strategieberatern',
+              statusQuo:
+                'Beratung ist stark standardisiert und auf Produkte sowie Effizienz ausgerichtet. KI wird primär als Produktivitätswerkzeug eingesetzt.',
+              in2035:
+                'Kundenberater agieren als KI-augmentierte Sparringspartner mit Branchen- und Kontextverständnis. Standardtransaktionen laufen autonom; menschliche Beratung gewinnt bei komplexen Themen an Bedeutung.',
+            },
+          ],
+        },
       },
       {
         image: './bank-floor-sales-2.png',
         alt: 'Berater:in am Workstation-Desk mit eingeblendetem KI-Arbeitsplatz auf dem Bildschirm',
+        narrative: {
+          kicker: 'Szene 2 · KI-augmentierter Strategieberater',
+          title: 'Vertriebsarbeitsplatz live: Potenziale, Vorbereitung, Doku',
+          body:
+            'Auf dem Bildschirm läuft der echte Vertriebsarbeitsplatz. Bestandskundenportfolios werden laufend nach Vertriebspotenzialen gescannt, Termine vorbereitet, Cross-Sell-Vorschläge in Echtzeit eingespielt. Standardtransaktionen laufen autonom — die Beratung wird strategischer, weil Routine entfällt.',
+        },
         screenOverlay: {
           url: 'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht',
           title: 'KI-Arbeitsplatz – Vertriebsarbeitsplatz Live',
@@ -230,12 +271,8 @@ const FLOORS: Floor[] = [
     chapter: {
       title: 'Advisory & Sales: Co-Pilot am Beratungs-Desk',
       body:
-        'Berater:innen arbeiten 2035 voll integriert mit KI: Der Vertriebsarbeitsplatz scannt Bestandsportfolios laufend nach Vertriebspotenzialen, priorisiert sie nach Conversion-Wahrscheinlichkeit und liefert Cross-Sell-Vorschläge direkt im Beratungsgespräch. KI bereitet Termine vor, schreibt Protokolle mit und übersetzt Beratungsentscheidungen in regulatorisch saubere Dokumentation — der/die Berater:in bleibt Entscheider, die Datenarbeit übernimmt das System.',
-      kpis: [
-        { label: 'Pipeline-Volumen', value: '45,2 Mio. EUR' },
-        { label: 'Conversion-Rate', value: '62 %' },
-        { label: 'Beratungsproduktivität', value: '+38 %' },
-      ],
+        'Berater:innen arbeiten 2035 voll integriert mit KI: Der Vertriebsarbeitsplatz scannt Bestandsportfolios laufend nach Vertriebspotenzialen, priorisiert sie nach Conversion-Wahrscheinlichkeit und liefert Cross-Sell-Vorschläge direkt im Beratungsgespräch.',
+      kpis: [],
     },
   },
   {
@@ -844,7 +881,12 @@ export function BankExplorer(): React.ReactElement {
           aria-hidden={isOverview}
           data-visible={!isOverview || undefined}
         >
-          {activeFloor && <FloorPanel floor={activeFloor} />}
+          {activeFloor && (
+            <FloorPanel
+              floor={activeFloor}
+              sceneNarrative={currentScene?.narrative}
+            />
+          )}
         </div>
 
         {/* Marken-Lockup oben rechts (nur Übersicht) */}
@@ -879,33 +921,59 @@ function ScreenOverlay({
     const wrapper = wrapperRef.current
     const iframe = iframeRef.current
     if (!wrapper || !iframe) return
-    const updateScale = () => {
-      const w = wrapper.clientWidth
-      const h = wrapper.clientHeight
-      if (w <= 0 || h <= 0) return
-      const scale = Math.min(w / IFRAME_LOGICAL_W, h / IFRAME_LOGICAL_H)
+    const layer = wrapper.parentElement
+    if (!layer) return
+    // Overlay-Position in PIXELN berechnen statt CSS-%. Das Detail-Bild
+    // im .detailLayer rendert mit object-fit:cover -- bei jedem Stage-
+    // Aspect ungleich dem Bild-Aspect wird ein Teil oben/unten oder
+    // links/rechts beschnitten. Wir rechnen also wo das Bild tatsächlich
+    // im Stage liegt (renderedW/H + Offset) und mappen die Overlay-%
+    // (die sich auf das BILD beziehen) auf reale Stage-Pixel. So bleibt
+    // das iframe immer deckungsgleich mit dem Display im Foto.
+    const update = () => {
+      const stageW = layer.clientWidth
+      const stageH = layer.clientHeight
+      if (stageW <= 0 || stageH <= 0) return
+      const stageAR = stageW / stageH
+      let renderedW: number
+      let renderedH: number
+      let offsetX: number
+      let offsetY: number
+      if (stageAR > IMAGE_ASPECT) {
+        // Stage breiter als Bild -> Bild füllt Breite, oben/unten beschnitten.
+        renderedW = stageW
+        renderedH = stageW / IMAGE_ASPECT
+        offsetX = 0
+        offsetY = (stageH - renderedH) / 2
+      } else {
+        // Stage höher/schmaler -> Bild füllt Höhe, links/rechts beschnitten.
+        renderedH = stageH
+        renderedW = stageH * IMAGE_ASPECT
+        offsetX = (stageW - renderedW) / 2
+        offsetY = 0
+      }
+      const left = offsetX + (overlay.leftPct / 100) * renderedW
+      const top = offsetY + (overlay.topPct / 100) * renderedH
+      const width = (overlay.widthPct / 100) * renderedW
+      const height = (overlay.heightPct / 100) * renderedH
+      wrapper.style.left = `${left}px`
+      wrapper.style.top = `${top}px`
+      wrapper.style.width = `${width}px`
+      wrapper.style.height = `${height}px`
+      const scale = Math.min(width / IFRAME_LOGICAL_W, height / IFRAME_LOGICAL_H)
       iframe.style.transform = `translate(-50%, -50%) scale(${scale})`
     }
-    updateScale()
-    const ro = new ResizeObserver(updateScale)
-    ro.observe(wrapper)
-    window.addEventListener('resize', updateScale)
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(layer)
+    window.addEventListener('resize', update)
     return () => {
       ro.disconnect()
-      window.removeEventListener('resize', updateScale)
+      window.removeEventListener('resize', update)
     }
-  }, [])
+  }, [overlay])
   return (
-    <div
-      ref={wrapperRef}
-      className={styles.screenOverlay}
-      style={{
-        left: `${overlay.leftPct}%`,
-        top: `${overlay.topPct}%`,
-        width: `${overlay.widthPct}%`,
-        height: `${overlay.heightPct}%`,
-      }}
-    >
+    <div ref={wrapperRef} className={styles.screenOverlay}>
       <iframe
         ref={iframeRef}
         className={styles.screenIframe}

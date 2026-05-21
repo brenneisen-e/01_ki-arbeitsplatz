@@ -2,6 +2,15 @@ import { Search, Target } from 'lucide-react'
 import styles from './FloorPanel.module.css'
 
 type Slide = { title: string; statusQuo: string; in2035: string }
+type Kpi = { label: string; value: string }
+
+type SceneNarrative = {
+  kicker?: string
+  title?: string
+  body?: string
+  kpis?: Kpi[]
+  slides?: Slide[]
+}
 
 type FloorPanelProps = {
   floor: {
@@ -11,17 +20,23 @@ type FloorPanelProps = {
     chapter: {
       title: string
       body: string
-      kpis: { label: string; value: string }[]
-    }
-    demo?: {
-      teaser: string
-      slides: Slide[]
+      kpis: Kpi[]
     }
   }
+  /**
+   * Optional: aktive Szene überschreibt Kicker/Title/Body/KPIs/Slides
+   * für das Panel. Beim Durchklicken durch Szenen wandert die Story
+   * mit -- jede Szene erzählt ihren eigenen Schritt.
+   */
+  sceneNarrative?: SceneNarrative
 }
 
-export function FloorPanel({ floor }: FloorPanelProps): React.ReactElement {
-  const { kicker, label, chapter, demo } = floor
+export function FloorPanel({ floor, sceneNarrative }: FloorPanelProps): React.ReactElement {
+  const kicker = sceneNarrative?.kicker ?? floor.kicker
+  const title = sceneNarrative?.title ?? floor.chapter.title
+  const body = sceneNarrative?.body ?? floor.chapter.body
+  const kpis = sceneNarrative?.kpis ?? floor.chapter.kpis
+  const slides = sceneNarrative?.slides ?? []
   return (
     <article className={styles.panel} aria-labelledby={`floor-${floor.id}-title`}>
       <div className={styles.shade} aria-hidden />
@@ -29,18 +44,16 @@ export function FloorPanel({ floor }: FloorPanelProps): React.ReactElement {
         <header className={styles.header}>
           <span className={styles.kicker}>{kicker}</span>
           <h1 id={`floor-${floor.id}-title`} className={styles.title}>
-            {chapter.title}
+            {title}
           </h1>
-          <span className={styles.subLabel}>{label}</span>
+          <span className={styles.subLabel}>{floor.label}</span>
         </header>
 
-        {/* Teaser ersetzt den langen chapter.body, sobald Demo-Inhalte
-            vorhanden sind -- der lange Text wäre dort nur Wiederholung. */}
-        <p className={styles.copy}>{demo ? demo.teaser : chapter.body}</p>
+        <p className={styles.copy}>{body}</p>
 
-        {demo && (
+        {slides.length > 0 && (
           <section className={styles.slides} aria-label="Status Quo vs. 2035">
-            {demo.slides.map((s, i) => (
+            {slides.map((s, i) => (
               <article key={i} className={styles.slide}>
                 <h3 className={styles.slideTitle}>{s.title}</h3>
                 <div className={styles.compare}>
@@ -68,14 +81,16 @@ export function FloorPanel({ floor }: FloorPanelProps): React.ReactElement {
           </section>
         )}
 
-        <ul className={styles.kpis} role="list">
-          {chapter.kpis.map((k) => (
-            <li key={k.label} className={styles.kpiCard}>
-              <span className={styles.kpiLabel}>{k.label}</span>
-              <span className={styles.kpiValue}>{k.value}</span>
-            </li>
-          ))}
-        </ul>
+        {kpis.length > 0 && (
+          <ul className={styles.kpis} role="list">
+            {kpis.map((k) => (
+              <li key={k.label} className={styles.kpiCard}>
+                <span className={styles.kpiLabel}>{k.label}</span>
+                <span className={styles.kpiValue}>{k.value}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </article>
   )

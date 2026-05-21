@@ -1,7 +1,8 @@
-# Bank der Zukunft 2035 — Interaktives Strukturbild
+# Future Bank — Querschnitt-Prototyp
 
-Premium 2.5D-Querschnitt einer Bank für den LBBW-Vorstands-Workshop.
-Drei Etagen plus Außenbereich, navigierbar, ruhig, beeindruckend.
+Foto-realistischer Bank-Querschnitt mit Klick-Navigation in einzelne
+Etagen. Master-Bild als Übersicht, GSAP-Kameraflug per Klick in die
+gewählte Etagen-Zone, Kapitel-Panel mit Platzhalter-Text und KPI-Karten.
 
 ## Quick Start
 
@@ -17,103 +18,102 @@ npm run preview    # bedient dist/ lokal
 
 - React 19 + Vite 6 + TypeScript (strict)
 - Styling: vanilla CSS + CSS Modules (kein Tailwind)
-- Icons: `lucide-react` (monochrom)
-- State: lokales `useState` -- kein Browser-Storage
-- Animationen: CSS Transforms / Transitions, ein paar SVG-Pulse,
-  `requestAnimationFrame` für den Parallax-Hook
+- Animation: **GSAP 3.13** (kein Three.js, kein Framer Motion)
+- Icons: `lucide-react`
+- Akzent: Deloitte-Grün **#046A38**
+- Privacy-first: keine externen Fonts / CDNs, keine Analytics, kein
+  Browser-Storage
 
-## Workshop-Bedienung
+## Assets
 
-| Interaktion              | Verhalten                                              |
-|--------------------------|--------------------------------------------------------|
-| Klick auf eine Etage     | Etage zoomt in den Fokus, andere dimmen                |
-| Klick auf einen Hotspot  | Side-Panel rechts mit Modul-Inhalt + Hypothese 2035    |
-| Header-Etagen-Tabs       | Direkt zwischen den drei Etagen wechseln               |
-| `↑` / `↓`                | Etagen-Fokus auf/ab schalten                           |
-| `Esc`                    | Panel schließen, dann Fokus verlassen                  |
-| „Übersicht" oben rechts  | Zurück in die Gesamtansicht                            |
+| Datei                              | Zweck                              |
+|------------------------------------|------------------------------------|
+| `public/bank-master.png`           | 16:9-Master-Querschnitt (Übersicht)|
+| `public/bank-floor-governance.png` | Detail-Bild Etage 1 (Slot)         |
 
-## Inhalte editieren
+## Bedienung
 
-Alle Texte, Hotspot-Definitionen, Hypothesen, Kennzahlen liegen in
-**einer** Datei:
+- **Klick auf eine Etage** in der Übersicht → GSAP-Zoom (~1,2 s,
+  `power3.inOut`) in die jeweilige Zone, Kapitel-Panel fadet rechts ein
+- **Hover** über eine Etage → Label „… →" in Deloitte-Grün
+- **„Übersicht"-Button oben links** → Zoom zurück auf 1
+- **Esc** → Übersicht
+- **`prefers-reduced-motion: reduce`** → Kein Kameraflug, der Zustand
+  schaltet hart um
 
-```
-src/data/modules.ts
-```
+## Etagen-Zonen kalibrieren
 
-`FLOORS` -- die drei Etagen.
-`HOTSPOTS` -- klickbare Module mit Titel, Beschreibung, Hypothese 2035
-und optional Quick-Facts.
-`COCKPIT_INITIAL` -- Startwerte für den Live-Dashboard-Ticker.
-`TERMINAL_TEMPLATE` -- Log-Zeilen für den Datacenter-Stream.
+Die Zonen sind als Konstante `FLOORS` ganz oben in
+`src/components/BankExplorer.tsx` definiert:
 
-## Hero-Bild
-
-Die Datei `public/hero-cross-section.png` ist das Referenz-Bild
-(Tageslicht-Version). Sie wird aktuell nicht als Layer eingebunden --
-das Querschnittsbild wird prozedural per CSS/SVG gebaut, damit es
-crisp bleibt und animierbar ist. Wer das Foto-Bild stattdessen
-einblenden will, legt es in `src/components/Scene.tsx` als unterstes
-Layer ab.
-
-## Cloudflare Pages Deployment
-
-```bash
-npm run build
-# Pages-Projekt: Build-Command "npm run build", Output "dist"
+```ts
+const FLOORS = [
+  { id: 'governance', topPct:  4, heightPct: 34, … },
+  { id: 'operations', topPct: 40, heightPct: 26, … },
+  { id: 'datacenter', topPct: 68, heightPct: 28, … },
+]
 ```
 
-`wrangler.toml` ist dabei.
+`topPct` / `heightPct` sind Prozent der **Bild**-Höhe. Zum schnellen
+Kalibrieren: in `BankExplorer.module.css` kurz
+`outline: 2px dashed lime;` auf `.zone` einkommentieren -- du siehst
+sofort, wo die drei Bänder liegen.
+
+## Zoom-Mathematik
+
+Ausführlich im Header-Kommentar von `BankExplorer.tsx`. Kurz:
+
+```
+scale       = 100 / heightPct
+translateY  = (50 − (topPct + heightPct/2)) × stageHeight / heightPct
+```
+
+`scale` macht aus der Zone den vollen Viewport, `translateY` zentriert
+sie vertikal. Horizontal bleibt 0, weil die Etagen Bänder über die
+ganze Breite sind.
+
+## Detail-Bilder per Cross-Fade (Slot)
+
+In `FLOORS` ist pro Etage optional ein `detailImage` vorgesehen. In
+`BankExplorer.tsx` ist die Stelle, an der ein zweites `<img>`
+über das Master-Bild gefadet wird, **als Kommentar** vorbereitet:
+
+```tsx
+{activeFloor?.detailImage && (
+  <img className={`${styles.master} ${styles.masterDetail}`}
+       src={activeFloor.detailImage} ... />
+)}
+```
+
+Sobald du die Detail-Bilder ablegst und `detailImage` in `FLOORS`
+einträgst: die zwei Zeilen oben aktivieren, `data-show` per State
+toggeln (`useEffect` nach Zoom-Ende), CSS-Übergang ist in
+`.masterDetail` bereits angelegt.
 
 ## Projektstruktur
 
 ```
 src/
-├── App.tsx              -- Haupt-State (Fokus, Panel)
-├── App.module.css       -- Header / Footer / Layout
-├── index.css            -- Design-Tokens, Reset, Reduced-Motion
-├── main.tsx             -- React 19 Entry
-├── data/
-│   └── modules.ts       -- Workshop-Inhalte zentral
-├── hooks/
-│   ├── useParallax.ts   -- --px/--py via rAF, kein Re-Render
-│   ├── useReducedMotion.ts
-│   └── useTicker.ts     -- simulierter Live-Stream
-├── lib/
-│   └── format.ts        -- deutsche Locale (DE-Zahlen, Prozent, EUR)
+├── App.tsx · App.module.css
+├── main.tsx
+├── index.css                       (Tokens + Reset)
 ├── components/
-│   ├── Scene.tsx        -- Building Shell + Sky + Plaza + Floors
-│   ├── Floor.tsx        -- Klickbare Etagen-Hülle, Hotspots
-│   ├── Hotspot.tsx      -- Hover-Tooltip + Klick-State
-│   ├── SidePanel.tsx    -- Slide-in von rechts
-│   ├── floors/
-│   │   ├── Boardroom.tsx       -- Etage 1: Vorstand
-│   │   ├── Operations.tsx      -- Etage 2: Operations + Bot
-│   │   ├── DataCenter.tsx      -- Etage 3: Server + Terminal
-│   │   └── Plaza.tsx           -- Außenbereich
-│   └── widgets/
-│       ├── CockpitDashboard.tsx
-│       ├── Terminal.tsx
-│       ├── Donut.tsx
-│       ├── MiniBars.tsx
-│       └── MiniLine.tsx
+│   ├── BankExplorer.tsx            (FLOORS-Konstante + Zoom + Stage)
+│   ├── BankExplorer.module.css
+│   ├── FloorPanel.tsx              (Kapitel-Panel rechts)
+│   └── FloorPanel.module.css
+├── hooks/
+│   └── useReducedMotion.ts
 └── vite-env.d.ts
 ```
 
-## Anti-Anforderungen
+## Cloudflare Pages
 
-- Kein Tailwind, keine externen Schrift-CDNs, keine Analytics
-- Keine bunten oder mehrfarbigen Icons -- alle Icons in einer Farbe
-  (`currentColor` oder CSS-Variable)
-- Kein Browser-Storage (`localStorage` / `sessionStorage`)
-- Keine 3D-Engine -- der Tiefen-Effekt ist 2.5D via Parallax-Layern
+```bash
+npm run build           # dist/
+# Build-Command: npm run build, Output: dist
+```
 
-## Performance-Notizen
-
-- Parallax schreibt nur `--px` und `--py` per `requestAnimationFrame`
-  auf den Scene-Knoten -- React-Tree wird dabei nicht neu gerendert
-- Alle Animationen laufen über `transform` und `opacity` -- keine
-  Layout-Trigger
-- `prefers-reduced-motion` schaltet die Animationen ab (Regel in
-  `src/index.css`)
+`wrangler.toml` ist dabei. `vite.config.ts` setzt `base: './'`, damit
+ein Sub-Pfad-Deployment wie
+`https://…/bank-der-zukunft-2035/` funktioniert.

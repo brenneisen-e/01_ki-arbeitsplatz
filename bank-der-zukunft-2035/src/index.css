@@ -1,62 +1,26 @@
 :root {
-  /* Deloitte palette */
-  --green-dark: #046A38;
-  --green-brand: #86BC25;
-  --green-soft: #E8F3D1;
-  --ink: #212121;
-  --ink-2: #4A4A4A;
-  --ink-3: #8A8A8A;
-  --bg: #FFFFFF;
-  --surface: #F7F8F5;
-  --cyan-accent: #7EC8FF;
-  --amber: #C68A12;
+  /* Akzent */
+  --accent: #046A38;          /* Deloitte Dark Green */
+  --accent-soft: #E8F3D1;
+  --accent-bright: #86BC25;
 
-  /* Material accents for the cross-section */
-  --wood-dark: #5C4632;
-  --wood-mid: #8E6B45;
-  --wood-light: #C39A6B;
-  --stone-warm: #E8DECC;
-  --stone-cool: #DAD3C2;
-  --glass: rgba(255, 255, 255, 0.72);
-  --glass-edge: rgba(33, 33, 33, 0.08);
+  /* Schrift */
+  --font-heading: 'Geist', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body:    'Geist', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    'Geist Mono', 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-  /* Spacing */
-  --s-1: 4px;
-  --s-2: 8px;
-  --s-3: 12px;
-  --s-4: 16px;
-  --s-5: 24px;
-  --s-6: 32px;
-  --s-7: 48px;
-
-  /* Radii */
-  --r-sm: 4px;
-  --r-md: 8px;
-  --r-lg: 14px;
-  --r-xl: 22px;
-
-  /* Shadows */
-  --shadow-1: 0 1px 2px rgba(33, 33, 33, 0.04);
-  --shadow-2: 0 6px 24px rgba(33, 33, 33, 0.06);
-  --shadow-3: 0 24px 60px rgba(33, 33, 33, 0.12);
-
-  /* Parallax (written by useParallax) */
-  --px: 0;
-  --py: 0;
-
-  /* Typography */
-  --font-heading: 'Geist', 'Space Grotesk', 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-body: 'Geist', 'Space Grotesk', 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'Geist Mono', 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  /* Inhalte (panel) */
+  --ink: #F4F1EA;
+  --ink-2: #C8C4BA;
+  --ink-3: #8E8A82;
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --t-fast: 180ms;
   --t-med: 320ms;
   --t-slow: 520ms;
 
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 *,
@@ -71,6 +35,7 @@ html,
 body,
 #root {
   height: 100%;
+  width: 100%;
 }
 
 body {
@@ -78,7 +43,7 @@ body {
   font-size: 15px;
   line-height: 1.55;
   color: var(--ink);
-  background: linear-gradient(180deg, #F8F6EF 0%, #ECE5D6 60%, #DDD3BC 100%);
+  background: #0B0B0C;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -94,23 +59,16 @@ button {
 }
 
 button:focus-visible,
-[role='button']:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--green-dark);
+[role='button']:focus-visible {
+  outline: 2px solid var(--accent-bright);
   outline-offset: 3px;
-  border-radius: var(--r-sm);
+  border-radius: 4px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3 {
   font-family: var(--font-heading);
   font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-::selection {
-  background: var(--green-soft);
-  color: var(--ink);
+  letter-spacing: -0.015em;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -120,6 +78,5 @@ h1, h2, h3, h4, h5, h6 {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
   }
 }

@@ -1,0 +1,284 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0B0B0C;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* Kamera = die transformierte Hülle. Wichtig: KEINE CSS-Transition,
+ * sonst beißt sich das mit GSAP. */
+.camera {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  /* GSAP setzt transform direkt -- keine eigene Transition hier. */
+}
+
+.master {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* Cross-Fade-Slot (für später): zweites <img> mit dieser Klasse blendet
+ * sich über das Master-Bild. */
+.masterDetail {
+  opacity: 0;
+  transition: opacity 360ms var(--ease-out);
+}
+
+.masterDetail[data-show] {
+  opacity: 1;
+}
+
+/* Klickzonen über dem Bild -- horizontale Bänder */
+.zones {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 1;
+  transition: opacity var(--t-med) var(--ease-out);
+}
+
+.zones[data-overview] {
+  pointer-events: auto;
+}
+
+/* In Zoom-Modus dimmen wir die Labels aus, Klicks brauchen wir eh nicht */
+.zones:not([data-overview]) .zoneLabel,
+.zones:not([data-overview]) .zoneHighlight,
+.zones:not([data-overview]) .zoneRule {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.zone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  /* Debug: outline: 1px dashed rgba(0, 255, 0, 0.4); */
+}
+
+.zoneHighlight {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 106, 56, 0.0) 0%,
+    rgba(4, 106, 56, 0.16) 50%,
+    rgba(4, 106, 56, 0.0) 100%
+  );
+  opacity: 0;
+  transition: opacity var(--t-med) var(--ease-out);
+  pointer-events: none;
+}
+
+.zone[data-hovered] .zoneHighlight,
+.zone:focus-visible .zoneHighlight {
+  opacity: 1;
+}
+
+/* Dünne Trennlinie unten/oben der Zone zur visuellen Andeutung */
+.zoneRule {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  opacity: 0.65;
+  pointer-events: none;
+  transition: opacity var(--t-med) var(--ease-out);
+}
+
+.zone[data-hovered] .zoneRule {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
+}
+
+/* Label oben links in der Zone -- erscheint beim Hover */
+.zoneLabel {
+  position: absolute;
+  left: max(24px, 6vw);
+  top: 50%;
+  transform: translateY(-50%) translateX(-12px);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px 10px 14px;
+  border-radius: 999px;
+  background: rgba(11, 11, 12, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  opacity: 0;
+  transition:
+    opacity var(--t-med) var(--ease-out),
+    transform var(--t-med) var(--ease-out);
+  pointer-events: none;
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+}
+
+.zone[data-hovered] .zoneLabel,
+.zone:focus-visible .zoneLabel {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.zoneKicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+
+.zoneTitle {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.zoneLabel > svg {
+  margin-left: 2px;
+  color: var(--accent-bright);
+}
+
+.zone:hover {
+  cursor: zoom-in;
+}
+
+/* Zurück-Button -- oben links */
+.backBtn {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  z-index: 12;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 12px;
+  border-radius: 999px;
+  background: rgba(11, 11, 12, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  transform: translateX(-8px);
+  pointer-events: none;
+  transition:
+    opacity var(--t-med) var(--ease-out),
+    transform var(--t-med) var(--ease-out),
+    background var(--t-fast) var(--ease-out);
+}
+
+.backBtn[data-visible] {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.backBtn:hover {
+  background: rgba(4, 106, 56, 0.92);
+}
+
+/* Kapitel-Panel-Layer (gsap-gesteuert über opacity/y) */
+.panelLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+.panelLayer[data-visible] {
+  pointer-events: auto;
+}
+
+/* Marken-Lockup oben rechts -- nur in der Übersicht */
+.brand {
+  position: absolute;
+  top: 22px;
+  right: 26px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  line-height: 1.15;
+  color: rgba(255, 255, 255, 0.94);
+  opacity: 0;
+  transform: translateX(8px);
+  pointer-events: none;
+  transition:
+    opacity var(--t-med) var(--ease-out),
+    transform var(--t-med) var(--ease-out);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
+}
+
+.brand[data-visible] {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.brandKicker {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+
+.brandTitle {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 720px) {
+  .zoneLabel {
+    left: 16px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .zoneTitle { font-size: 14px; }
+  .backBtn { top: 14px; left: 14px; padding: 8px 14px 8px 10px; font-size: 13px; }
+  .brand { top: 14px; right: 14px; }
+}

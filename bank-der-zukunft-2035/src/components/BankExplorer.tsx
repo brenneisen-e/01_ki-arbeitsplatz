@@ -347,11 +347,11 @@ export function BankExplorer(): React.ReactElement {
   return (
     <div className={styles.root}>
       <div className={styles.stage} ref={stageRef}>
-        {/* CAMERA: aspect-ratio-Box, zentriert, transformiert per GSAP */}
+        {/* CAMERA: passt sich per CSS calc an Bild-AR an, transformiert per GSAP */}
         <div
           className={styles.camera}
           ref={cameraRef}
-          style={{ aspectRatio: `${IMAGE_ASPECT}` }}
+          style={{ ['--ar' as string]: String(IMAGE_ASPECT) }}
         >
           <img
             className={styles.master}
@@ -403,18 +403,17 @@ export function BankExplorer(): React.ReactElement {
           weil es NICHT auch noch durch den Camera-Scale läuft.
 
           Damit das vernünftig aussieht, sollten Detail-Bilder etwa in
-          Viewport-Größe gerendert werden (≥ 2560×1440 für Beamer-
-          Präsentationen).
+          Viewport-Größe gerendert werden (≥ 2560×1440, ideal 3840×2160).
         */}
-        <img
-          ref={detailRef}
-          className={styles.detail}
-          src={activeFloor?.detailImage ?? ''}
-          alt={activeFloor ? `Detail: ${activeFloor.label}` : ''}
-          aria-hidden={!activeFloor?.detailImage}
-          draggable={false}
-          style={{ display: activeFloor?.detailImage ? 'block' : 'none' }}
-        />
+        {activeFloor?.detailImage && (
+          <img
+            ref={detailRef}
+            className={styles.detail}
+            src={activeFloor.detailImage}
+            alt={`Detail: ${activeFloor.label}`}
+            draggable={false}
+          />
+        )}
 
         {/* ZURÜCK-BUTTON */}
         <button

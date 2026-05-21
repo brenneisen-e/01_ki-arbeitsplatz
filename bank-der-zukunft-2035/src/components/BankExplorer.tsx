@@ -259,13 +259,13 @@ const FLOORS: Floor[] = [
         screenOverlay: {
           url: 'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht',
           title: 'KI-Arbeitsplatz – Vertriebsarbeitsplatz Live',
-          // Bildschirm-Rechteck per Edge-Detection (1-99 Perzentil der
-          // hellen Gray-Fläche) auf dem neuen frontalen Workstation-Foto:
-          // x=36,96-77,09 %, y=18,70-62,38 %.
-          leftPct: 36.96,
-          topPct: 18.7,
-          widthPct: 40.13,
-          heightPct: 43.68,
+          // Bildschirm-Rechteck per Edge-Detection auf dem neuen Foto
+          // (Display-Aspect 1,764 -- praktisch exakt 16:9):
+          // x=34,63-75,78 %, y=22,00-63,44 %.
+          leftPct: 34.63,
+          topPct: 22.0,
+          widthPct: 41.15,
+          heightPct: 41.45,
         },
       },
     ],

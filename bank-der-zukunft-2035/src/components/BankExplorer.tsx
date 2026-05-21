@@ -80,6 +80,11 @@ type Floor = {
    */
   demo?: {
     headline: string
+    /**
+     * Kurzer Einstiegstext (1-2 Sätze), der den generischen chapter.body im
+     * Panel ersetzt, sobald demo-Inhalte vorhanden sind.
+     */
+    teaser: string
     slides: { title: string; statusQuo: string; in2035: string }[]
     iframe?: { url: string; title: string }
   }
@@ -187,6 +192,8 @@ const FLOORS: Floor[] = [
     },
     demo: {
       headline: 'Vom Produktvertrieb zum Lösungsorchestrator',
+      teaser:
+        'Die Bank wird vom Produktvertrieb zum kontextbasierten Lösungsorchestrator — Kundenberater:innen vom Effizienzwerkzeug zu KI-augmentierten Strategieberater:innen.',
       slides: [
         {
           title: 'Vom Produktvertrieb zum Lösungsorchestrator',

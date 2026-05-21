@@ -1,5 +1,7 @@
-import { ArrowRight, Play } from 'lucide-react'
+import { ArrowRight, Play, Search, Target } from 'lucide-react'
 import styles from './FloorPanel.module.css'
+
+type Slide = { title: string; statusQuo: string; in2035: string }
 
 type FloorPanelProps = {
   floor: {
@@ -11,7 +13,10 @@ type FloorPanelProps = {
       body: string
       kpis: { label: string; value: string }[]
     }
-    demo?: unknown
+    demo?: {
+      teaser: string
+      slides: Slide[]
+    }
   }
   onOpenDemo?: () => void
 }
@@ -31,16 +36,9 @@ export function FloorPanel({ floor, onOpenDemo }: FloorPanelProps): React.ReactE
           <span className={styles.subLabel}>{label}</span>
         </header>
 
-        <p className={styles.copy}>{chapter.body}</p>
-
-        <ul className={styles.kpis} role="list">
-          {chapter.kpis.map((k) => (
-            <li key={k.label} className={styles.kpiCard}>
-              <span className={styles.kpiLabel}>{k.label}</span>
-              <span className={styles.kpiValue}>{k.value}</span>
-            </li>
-          ))}
-        </ul>
+        {/* Teaser ersetzt den langen chapter.body, sobald Demo-Inhalte
+            vorhanden sind -- der lange Text wäre dort nur Wiederholung. */}
+        <p className={styles.copy}>{demo ? demo.teaser : chapter.body}</p>
 
         {hasDemo && onOpenDemo && (
           <button type="button" className={styles.demoCard} onClick={onOpenDemo}>
@@ -48,8 +46,8 @@ export function FloorPanel({ floor, onOpenDemo }: FloorPanelProps): React.ReactE
               <Play size={16} strokeWidth={2.2} />
             </span>
             <span className={styles.demoCardText}>
-              <span className={styles.demoCardKicker}>Live-Demo &amp; Folien</span>
-              <span className={styles.demoCardLabel}>Vertiefung öffnen</span>
+              <span className={styles.demoCardKicker}>Live-Demo</span>
+              <span className={styles.demoCardLabel}>Vertriebsarbeitsplatz öffnen</span>
             </span>
             <ArrowRight
               size={16}
@@ -59,6 +57,45 @@ export function FloorPanel({ floor, onOpenDemo }: FloorPanelProps): React.ReactE
             />
           </button>
         )}
+
+        {demo && (
+          <section className={styles.slides} aria-label="Status Quo vs. 2035">
+            {demo.slides.map((s, i) => (
+              <article key={i} className={styles.slide}>
+                <h3 className={styles.slideTitle}>{s.title}</h3>
+                <div className={styles.compare}>
+                  <div className={styles.statusQuo}>
+                    <div className={styles.compareHead}>
+                      <span className={styles.compareIcon}>
+                        <Search size={13} strokeWidth={2.2} />
+                      </span>
+                      <span className={styles.compareLabel}>Status Quo</span>
+                    </div>
+                    <p className={styles.compareBody}>{s.statusQuo}</p>
+                  </div>
+                  <div className={styles.in2035}>
+                    <div className={styles.compareHead}>
+                      <span className={styles.compareIcon} data-accent>
+                        <Target size={13} strokeWidth={2.2} />
+                      </span>
+                      <span className={styles.compareLabel}>In 2035</span>
+                    </div>
+                    <p className={styles.compareBody}>{s.in2035}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </section>
+        )}
+
+        <ul className={styles.kpis} role="list">
+          {chapter.kpis.map((k) => (
+            <li key={k.label} className={styles.kpiCard}>
+              <span className={styles.kpiLabel}>{k.label}</span>
+              <span className={styles.kpiValue}>{k.value}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </article>
   )

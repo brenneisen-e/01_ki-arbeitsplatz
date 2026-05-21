@@ -13,7 +13,7 @@
   inset: 0;
   /* Sehr dunkler Vorhang -- der Raum dahinter bleibt nur als sanftes Glühen
      erkennbar, ist aber nicht mehr lesbar. */
-  background: rgba(5, 6, 7, 0.93);
+  background: rgba(5, 6, 7, 0.94);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   cursor: pointer;
@@ -39,7 +39,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  padding: 22px 26px 18px 26px;
+  padding: 20px 24px 16px 26px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   background: linear-gradient(135deg, rgba(4, 106, 56, 0.22) 0%, rgba(4, 106, 56, 0) 60%);
   flex-shrink: 0;
@@ -63,7 +63,7 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: clamp(20px, 2.2vw, 26px);
+  font-size: clamp(18px, 1.9vw, 22px);
   font-weight: 600;
   letter-spacing: -0.01em;
   color: #fff;
@@ -93,205 +93,14 @@
 }
 
 .body {
-  display: grid;
-  grid-template-columns: minmax(320px, 0.7fr) minmax(0, 1.8fr);
-  gap: 22px;
-  padding: 22px 26px 26px 26px;
-  min-height: 0;
   flex: 1;
-}
-
-@media (max-width: 1180px) {
-  .body {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr);
-    overflow-y: auto;
-  }
-}
-
-.slides {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 0;
   min-height: 0;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.slide {
+  padding: 18px 22px 22px 22px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-}
-
-.slideTitle {
-  font-family: var(--font-heading);
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  color: #fff;
-  margin: 0;
-  line-height: 1.32;
-}
-
-.compare {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-@media (max-width: 640px) {
-  .compare {
-    grid-template-columns: 1fr;
-  }
-}
-
-.statusQuo,
-.in2035 {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 13px;
-  border-radius: 10px;
-  min-width: 0;
-}
-
-.statusQuo {
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #d9dbde;
-}
-
-.in2035 {
-  background: linear-gradient(135deg, #046A38 0%, #035a30 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.compareHead {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.compareIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.compareIcon[data-accent] {
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
-}
-
-.compareLabel {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.statusQuo .compareLabel {
-  color: #fff;
-}
-
-.in2035 .compareLabel {
-  color: #fff;
-}
-
-.compareBody {
-  font-size: 13px;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.statusQuo .compareBody {
-  color: #c4c7cb;
-}
-
-.in2035 .compareBody {
-  color: #fff;
 }
 
 /* ───── Live-Demo / Iframe-Frame ───── */
 
-.demoSection {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-  min-height: 0;
-}
-
-.demoHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.demoHeaderLeft {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.liveDot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #2ecc71;
-  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.18);
-  animation: pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.18); }
-  50%      { box-shadow: 0 0 0 6px rgba(46, 204, 113, 0.0); }
-}
-
-.demoKicker {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent-bright);
-}
-
-.demoLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--ink-2);
-  font-size: 12px;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  padding-bottom: 2px;
-  transition: color var(--t-fast) var(--ease-out);
-}
-
-.demoLink:hover {
-  color: var(--accent-bright);
-  border-bottom-color: var(--accent-bright);
-}
-
-/* Browser-Chrome-Optik um das iframe -- macht die Demo erkennbar als
-   eingebettete Applikation, statt nur ein nacktes iframe. */
 .iframeFrame {
   position: relative;
   flex: 1;
@@ -344,8 +153,29 @@
   text-overflow: ellipsis;
 }
 
+.openExternal {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #b9bcc0;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+}
+
+.openExternal:hover {
+  color: var(--accent-bright);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 /* Viewport in den die 1920×1080 logische iframe-Größe per JS-Transform
-   skaliert wird. Aspect-Ratio sichert, dass das Demo immer 16:9 bleibt. */
+   skaliert wird. iframe ist absolut zentriert; translate(-50%, -50%) +
+   scale(X) werden im DemoModal.tsx gesetzt. */
 .iframeViewport {
   position: relative;
   flex: 1;
@@ -358,9 +188,6 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  /* width/height (logical 1920x1080) + transform (translate + scale) werden
-     im DemoModal.tsx per JS gesetzt (ResizeObserver). transform-origin im
-     Zentrum des iframes, damit die Skalierung mittig läuft. */
   transform-origin: 50% 50%;
   border: 0;
   display: block;

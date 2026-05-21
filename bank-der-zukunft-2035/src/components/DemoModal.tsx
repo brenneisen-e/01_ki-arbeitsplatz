@@ -1,12 +1,11 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ExternalLink, Search, Target, X } from 'lucide-react'
+import { ExternalLink, X } from 'lucide-react'
 import styles from './DemoModal.module.css'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
 export type DemoContent = {
   headline: string
-  slides: { title: string; statusQuo: string; in2035: string }[]
   iframe?: { url: string; title: string }
 }
 
@@ -128,77 +127,41 @@ export function DemoModal({
           </button>
         </header>
 
-        <div className={styles.body}>
-          <section className={styles.slides} aria-label="Status Quo vs. 2035">
-            {demo.slides.map((s, i) => (
-              <article key={i} className={styles.slide}>
-                <h3 className={styles.slideTitle}>{s.title}</h3>
-                <div className={styles.compare}>
-                  <div className={styles.statusQuo}>
-                    <div className={styles.compareHead}>
-                      <span className={styles.compareIcon}>
-                        <Search size={14} strokeWidth={2.2} />
-                      </span>
-                      <span className={styles.compareLabel}>Status Quo</span>
-                    </div>
-                    <p className={styles.compareBody}>{s.statusQuo}</p>
-                  </div>
-                  <div className={styles.in2035}>
-                    <div className={styles.compareHead}>
-                      <span className={styles.compareIcon} data-accent>
-                        <Target size={14} strokeWidth={2.2} />
-                      </span>
-                      <span className={styles.compareLabel}>In 2035</span>
-                    </div>
-                    <p className={styles.compareBody}>{s.in2035}</p>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </section>
-
-          {demo.iframe && (
-            <section className={styles.demoSection} aria-label="Live-Demo">
-              <div className={styles.demoHeader}>
-                <div className={styles.demoHeaderLeft}>
-                  <span className={styles.liveDot} aria-hidden />
-                  <span className={styles.demoKicker}>Live-Demo</span>
-                </div>
+        {demo.iframe && (
+          <div className={styles.body}>
+            <div className={styles.iframeFrame}>
+              <div className={styles.browserChrome} aria-hidden>
+                <span className={styles.dot} data-color="red" />
+                <span className={styles.dot} data-color="amber" />
+                <span className={styles.dot} data-color="green" />
+                <span className={styles.addressBar}>{demo.iframe.url}</span>
                 <a
-                  className={styles.demoLink}
+                  className={styles.openExternal}
                   href={demo.iframe.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Demo in neuem Tab öffnen"
                 >
-                  <span>In neuem Tab öffnen</span>
                   <ExternalLink size={13} strokeWidth={2} />
                 </a>
               </div>
-              <div className={styles.iframeFrame}>
-                <div className={styles.browserChrome} aria-hidden>
-                  <span className={styles.dot} data-color="red" />
-                  <span className={styles.dot} data-color="amber" />
-                  <span className={styles.dot} data-color="green" />
-                  <span className={styles.addressBar}>{demo.iframe.url}</span>
-                </div>
-                <div ref={frameWrapperRef} className={styles.iframeViewport}>
-                  <iframe
-                    ref={iframeRef}
-                    className={styles.iframe}
-                    style={{
-                      width: `${IFRAME_LOGICAL_W}px`,
-                      height: `${IFRAME_LOGICAL_H}px`,
-                    }}
-                    src={demo.iframe.url}
-                    title={demo.iframe.title}
-                    loading="lazy"
-                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                  />
-                </div>
+              <div ref={frameWrapperRef} className={styles.iframeViewport}>
+                <iframe
+                  ref={iframeRef}
+                  className={styles.iframe}
+                  style={{
+                    width: `${IFRAME_LOGICAL_W}px`,
+                    height: `${IFRAME_LOGICAL_H}px`,
+                  }}
+                  src={demo.iframe.url}
+                  title={demo.iframe.title}
+                  loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                />
               </div>
-            </section>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 .panel {
   position: relative;
-  width: min(520px, 92vw);
+  width: min(580px, 94vw);
   height: 100%;
   display: flex;
   align-items: stretch;
@@ -46,7 +46,7 @@
 
 .kicker {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -55,29 +55,39 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: clamp(22px, 2.8vw, 30px);
+  font-size: clamp(26px, 3vw, 34px);
   line-height: 1.18;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: #fff;
-  max-width: 520px;
+  max-width: 540px;
   margin: 0;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
 }
 
 .subLabel {
   font-family: var(--font-heading);
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.04em;
-  color: var(--ink-3);
+  color: rgba(255, 255, 255, 0.78);
   margin-top: 0;
+  font-weight: 500;
 }
 
 .copy {
-  font-size: 14.5px;
+  font-size: 17px;
   line-height: 1.55;
-  color: var(--ink-2);
-  max-width: 520px;
+  /* Heller, damit der Text vom Foto im Hintergrund klar abhebt. */
+  color: #f1f3f4;
+  max-width: 540px;
   margin: 0;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+  font-weight: 400;
+}
+
+.copy strong {
+  color: #fff;
+  font-weight: 700;
 }
 
 /* ───── Live-Demo CTA-Card -- weit oben im Panel, direkt unter dem Teaser ───── */
@@ -211,12 +221,12 @@
 
 .slideTitle {
   font-family: var(--font-heading);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: -0.005em;
   color: #fff;
   margin: 0;
-  line-height: 1.32;
+  line-height: 1.3;
 }
 
 .compare {
@@ -275,22 +285,27 @@
 
 .compareLabel {
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #fff;
 }
 
 .compareBody {
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.5;
   margin: 0;
   color: #fff;
 }
 
+.compareBody strong {
+  color: #fff;
+  font-weight: 700;
+}
+
 .statusQuo .compareBody {
-  color: #c4c7cb;
+  color: #e2e4e6;
 }
 
 /* ───── KPIs am unteren Ende des Panels ───── */

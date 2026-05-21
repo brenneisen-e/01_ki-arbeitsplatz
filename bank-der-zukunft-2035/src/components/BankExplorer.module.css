@@ -432,7 +432,11 @@
   background: rgba(4, 106, 56, 0.92);
 }
 
-/* Kapitel-Panel-Layer (gsap-gesteuert über opacity/y) */
+/* Kapitel-Panel-Layer (gsap-gesteuert über opacity/y).
+ * WICHTIG: pointer-events bleibt IMMER 'none' auf dem Layer, sonst würde
+ * der Layer den ganzen Stage-Bereich für Klicks blockieren -- auch das
+ * leere Feld links neben der Panel-Spalte. Stattdessen aktiviert sich
+ * pointer-events nur auf der eigentlichen .panel (siehe FloorPanel.css). */
 .panelLayer {
   position: absolute;
   inset: 0;
@@ -442,10 +446,6 @@
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
-}
-
-.panelLayer[data-visible] {
-  pointer-events: auto;
 }
 
 /* Marken-Lockup -- nur in der Übersicht */

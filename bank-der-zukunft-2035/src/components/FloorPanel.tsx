@@ -23,12 +23,18 @@ type FloorPanelProps = {
       kpis: Kpi[]
     }
   }
-  /**
-   * Optional: aktive Szene überschreibt Kicker/Title/Body/KPIs/Slides
-   * für das Panel. Beim Durchklicken durch Szenen wandert die Story
-   * mit -- jede Szene erzählt ihren eigenen Schritt.
-   */
   sceneNarrative?: SceneNarrative
+}
+
+// Mini-Markdown: **fett** -> <strong>fett</strong>. Keine anderen Tags.
+function renderRichText(text: string): React.ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>
+    }
+    return <span key={i}>{part}</span>
+  })
 }
 
 export function FloorPanel({ floor, sceneNarrative }: FloorPanelProps): React.ReactElement {
@@ -49,7 +55,7 @@ export function FloorPanel({ floor, sceneNarrative }: FloorPanelProps): React.Re
           <span className={styles.subLabel}>{floor.label}</span>
         </header>
 
-        <p className={styles.copy}>{body}</p>
+        <p className={styles.copy}>{renderRichText(body)}</p>
 
         {slides.length > 0 && (
           <section className={styles.slides} aria-label="Status Quo vs. 2035">
@@ -60,20 +66,20 @@ export function FloorPanel({ floor, sceneNarrative }: FloorPanelProps): React.Re
                   <div className={styles.statusQuo}>
                     <div className={styles.compareHead}>
                       <span className={styles.compareIcon}>
-                        <Search size={13} strokeWidth={2.2} />
+                        <Search size={14} strokeWidth={2.2} />
                       </span>
                       <span className={styles.compareLabel}>Status Quo</span>
                     </div>
-                    <p className={styles.compareBody}>{s.statusQuo}</p>
+                    <p className={styles.compareBody}>{renderRichText(s.statusQuo)}</p>
                   </div>
                   <div className={styles.in2035}>
                     <div className={styles.compareHead}>
                       <span className={styles.compareIcon} data-accent>
-                        <Target size={13} strokeWidth={2.2} />
+                        <Target size={14} strokeWidth={2.2} />
                       </span>
                       <span className={styles.compareLabel}>In 2035</span>
                     </div>
-                    <p className={styles.compareBody}>{s.in2035}</p>
+                    <p className={styles.compareBody}>{renderRichText(s.in2035)}</p>
                   </div>
                 </div>
               </article>

@@ -228,21 +228,21 @@ const FLOORS: Floor[] = [
           kicker: 'Szene 1 · Vom Produktvertrieb zum Lösungsorchestrator',
           title: 'Beratung am Desk: Mensch entscheidet, KI orchestriert',
           body:
-            'Berater:in und Kund:in sitzen am Beratungs-Desk; der SALES COCKPIT-Screen im Hintergrund hält Funnel, Cross-Sell-Vorschläge und Marktlage in Echtzeit fest. Die Bank ist 2035 kein Produktverkäufer mehr, sondern Lösungsorchestrator.',
+            'Berater:in und Kund:in sitzen am **Beratungs-Desk**; der **SALES COCKPIT**-Screen im Hintergrund hält **Funnel, Cross-Sell-Vorschläge und Marktlage in Echtzeit** fest. Die Bank ist 2035 kein Produktverkäufer mehr, sondern **Lösungsorchestrator**.',
           slides: [
             {
               title: 'Vom Produktvertrieb zum Lösungsorchestrator',
               statusQuo:
-                'Bankvertrieb ist produkt- und kanal-zentriert organisiert. Kundenbetreuung folgt standardisierten Modellen; Daten und Kanäle sind fragmentiert.',
+                'Bankvertrieb ist **produkt- und kanal-zentriert** organisiert. Kundenbetreuung folgt **standardisierten Modellen**; Daten und Kanäle sind **fragmentiert**.',
               in2035:
-                'Die Bank agiert als kontext-basierter Lösungsorchestrator: KI kombiniert Finanz-, Service- und Ökosystemleistungen dynamisch zu individuellen Lösungen. Der Kunde definiert das Ziel — nicht mehr das Produktportfolio.',
+                'Die Bank agiert als **kontext-basierter Lösungsorchestrator**: KI kombiniert Finanz-, Service- und Ökosystemleistungen **dynamisch zu individuellen Lösungen**. Der Kunde definiert das **Ziel** — nicht mehr das Produktportfolio.',
             },
             {
               title: 'Vom Kund:innenberater zu KI-augmentierten Strategieberatern',
               statusQuo:
-                'Beratung ist stark standardisiert und auf Produkte sowie Effizienz ausgerichtet. KI wird primär als Produktivitätswerkzeug eingesetzt.',
+                'Beratung ist **stark standardisiert** und auf Produkte sowie Effizienz ausgerichtet. KI wird primär als **Produktivitätswerkzeug** eingesetzt.',
               in2035:
-                'Kundenberater agieren als KI-augmentierte Sparringspartner mit Branchen- und Kontextverständnis. Standardtransaktionen laufen autonom; menschliche Beratung gewinnt bei komplexen Themen an Bedeutung.',
+                'Kundenberater agieren als **KI-augmentierte Sparringspartner** mit Branchen- und Kontextverständnis. **Standardtransaktionen laufen autonom**; menschliche Beratung gewinnt bei **komplexen Themen** an Bedeutung.',
             },
           ],
         },
@@ -254,7 +254,7 @@ const FLOORS: Floor[] = [
           kicker: 'Szene 2 · KI-augmentierter Strategieberater',
           title: 'Vertriebsarbeitsplatz live: Potenziale, Vorbereitung, Doku',
           body:
-            'Auf dem Bildschirm läuft der echte Vertriebsarbeitsplatz. Bestandskundenportfolios werden laufend nach Vertriebspotenzialen gescannt, Termine vorbereitet, Cross-Sell-Vorschläge in Echtzeit eingespielt. Standardtransaktionen laufen autonom — die Beratung wird strategischer, weil Routine entfällt.',
+            'Auf dem Bildschirm läuft der **echte Vertriebsarbeitsplatz**. Bestandskundenportfolios werden laufend **nach Vertriebspotenzialen gescannt**, Termine vorbereitet, **Cross-Sell-Vorschläge in Echtzeit** eingespielt. **Standardtransaktionen laufen autonom** — die Beratung wird **strategischer**, weil Routine entfällt.',
         },
         screenOverlay: {
           url: 'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht',

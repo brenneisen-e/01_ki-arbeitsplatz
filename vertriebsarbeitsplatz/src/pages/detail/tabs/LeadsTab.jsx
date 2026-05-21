@@ -318,6 +318,8 @@ export default function LeadsTab({ kunde }) {
                     t={t}
                     stadiumLabels={stadiumLabels}
                     quellenLabels={quellenLabels}
+                    letterSent={letterSent}
+                    onOpenLetter={() => setLetterModal({ lead })}
                   />
                 );
               })}
@@ -507,7 +509,7 @@ function getHerleitungEn(lead, lang) {
   return en?.herleitung ?? lead.herleitung;
 }
 
-function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenLabels }) {
+function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenLabels, letterSent, onOpenLetter }) {
   const { config, navigateTo } = useMode();
   const { lang } = useTranslation();
 
@@ -634,13 +636,13 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
               {/* Aktionen */}
               <div className="flex flex-wrap gap-2 pt-2">
                 <button
-                  onClick={() => setLetterModal({ lead })}
+                  onClick={onOpenLetter}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white transition-all shadow-sm hover:shadow-md"
                   style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
                 >
                   <Sparkles size={14} />
                   Kunde ansprechen
-                  {letterSent[lead.id] && <Check size={12} className="ml-1" />}
+                  {letterSent?.[lead.id] && <Check size={12} className="ml-1" />}
                 </button>
                 {lead.naechsterSchritt && (
                   <button

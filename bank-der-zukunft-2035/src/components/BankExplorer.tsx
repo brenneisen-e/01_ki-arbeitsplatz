@@ -208,43 +208,23 @@ const FLOORS: Floor[] = [
         screenOverlay: {
           url: 'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht',
           title: 'KI-Arbeitsplatz – Vertriebsarbeitsplatz Live',
-          // Bildschirm-Rechteck per Edge-Detection auf dem Foto:
-          // x=38,3-73,6 %  y=26,0-63,8 %
-          leftPct: 38.3,
-          topPct: 26.0,
-          widthPct: 35.3,
-          heightPct: 37.8,
+          // Bildschirm-Rechteck per Edge-Detection (1-99 Perzentil der
+          // hellen Gray-Fläche) auf dem Foto: x=39,0-73,0 %, y=26,8-62,3 %.
+          leftPct: 39.0,
+          topPct: 26.8,
+          widthPct: 33.97,
+          heightPct: 35.49,
         },
       },
     ],
     chapter: {
       title: 'Advisory & Sales: Co-Pilot am Beratungs-Desk',
       body:
-        'Berater:innen sitzen 2035 mit Kund:innen am Desk, das SALES COCKPIT zeigt Funnel (€45,2 Mio., 62 % Conversion), Cross-Sell-Ansätze und Marktlage in Echtzeit. Der Co-Pilot bereitet Termine vor, schreibt mit und übersetzt Beratungsentscheidungen automatisch in regulatorisch saubere Dokumentation.',
+        'Berater:innen arbeiten 2035 voll integriert mit KI: Der Vertriebsarbeitsplatz scannt Bestandsportfolios laufend nach Vertriebspotenzialen, priorisiert sie nach Conversion-Wahrscheinlichkeit und liefert Cross-Sell-Vorschläge direkt im Beratungsgespräch. KI bereitet Termine vor, schreibt Protokolle mit und übersetzt Beratungsentscheidungen in regulatorisch saubere Dokumentation — der/die Berater:in bleibt Entscheider, die Datenarbeit übernimmt das System.',
       kpis: [
         { label: 'Pipeline-Volumen', value: '45,2 Mio. EUR' },
         { label: 'Conversion-Rate', value: '62 %' },
         { label: 'Beratungsproduktivität', value: '+38 %' },
-      ],
-    },
-    demo: {
-      teaser:
-        'Die Bank wird vom Produktvertrieb zum kontextbasierten Lösungsorchestrator — Kundenberater:innen vom Effizienzwerkzeug zu KI-augmentierten Strategieberater:innen.',
-      slides: [
-        {
-          title: 'Vom Produktvertrieb zum Lösungsorchestrator',
-          statusQuo:
-            'Bankvertrieb ist produkt- und kanal-zentriert organisiert. Kundenbetreuung folgt standardisierten Modellen; Daten und Kanäle sind fragmentiert.',
-          in2035:
-            'Die Bank agiert als kontext-basierter Lösungsorchestrator: KI kombiniert Finanz-, Service- und Ökosystemleistungen dynamisch zu individuellen Lösungen. Der Kunde definiert das Ziel — nicht mehr das Produktportfolio.',
-        },
-        {
-          title: 'Vom Kund:innenberater zu KI-augmentierten Strategieberatern',
-          statusQuo:
-            'Beratung ist stark standardisiert und auf Produkte sowie Effizienz ausgerichtet. KI wird primär als Produktivitätswerkzeug eingesetzt.',
-          in2035:
-            'Kundenberater agieren als KI-augmentierte Sparringspartner mit Branchen- und Kontextverständnis. Standardtransaktionen laufen autonom; menschliche Beratung gewinnt bei komplexen Themen an Bedeutung.',
-        },
       ],
     },
   },

@@ -260,11 +260,12 @@ const FLOORS: Floor[] = [
           url: 'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht',
           title: 'KI-Arbeitsplatz – Vertriebsarbeitsplatz Live',
           // Bildschirm-Rechteck per Edge-Detection (1-99 Perzentil der
-          // hellen Gray-Fläche) auf dem Foto: x=39,0-73,0 %, y=26,8-62,3 %.
-          leftPct: 39.0,
-          topPct: 26.8,
-          widthPct: 33.97,
-          heightPct: 35.49,
+          // hellen Gray-Fläche) auf dem neuen frontalen Workstation-Foto:
+          // x=36,96-77,09 %, y=18,70-62,38 %.
+          leftPct: 36.96,
+          topPct: 18.7,
+          widthPct: 40.13,
+          heightPct: 43.68,
         },
       },
     ],

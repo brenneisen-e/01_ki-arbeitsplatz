@@ -114,24 +114,43 @@
   font-variant-numeric: tabular-nums;
 }
 
-.footer {
+.demoButton {
   margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px 12px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(4, 106, 56, 0.55);
+  background: linear-gradient(135deg, #046A38 0%, #035a30 100%);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  box-shadow:
+    0 14px 36px rgba(4, 106, 56, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  transition:
+    transform var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out),
+    background var(--t-fast) var(--ease-out);
 }
 
-.footerHint {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ink-3);
-  letter-spacing: 0.02em;
+.demoButton:hover,
+.demoButton:focus-visible {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #057a40 0%, #046A38 100%);
+  box-shadow:
+    0 18px 44px rgba(4, 106, 56, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  outline: none;
 }
 
-.footerHint code {
-  background: rgba(255, 255, 255, 0.06);
-  padding: 1px 6px;
-  border-radius: 4px;
-  color: var(--ink-2);
+.demoButton > svg {
+  color: #d6f3e3;
 }
 
 @media (max-width: 720px) {

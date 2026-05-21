@@ -94,16 +94,13 @@
 
 /* In Zoom-Modus blenden wir die Labels weg */
 .zones:not([data-overview]) .zoneLabel,
-.zones:not([data-overview]) .zoneHighlight,
-.zones:not([data-overview]) .zoneRule {
+.zones:not([data-overview]) .zoneHighlight {
   opacity: 0;
-  transform: translateY(8px);
 }
 
 .zone {
   position: absolute;
-  left: 0;
-  right: 0;
+  /* top/left/width/height kommen per inline-style aus dem Komponenten-Code */
   background: transparent;
   border: 0;
   padding: 0;
@@ -114,50 +111,38 @@
 .zoneHighlight {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(4, 106, 56, 0.0) 0%,
-    rgba(4, 106, 56, 0.16) 50%,
-    rgba(4, 106, 56, 0.0) 100%
+  /* Sanfter Deloitte-Grün-Glow + 1 px Border, sobald die Zone hovered ist. */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(4, 106, 56, 0.22) 0%,
+    rgba(4, 106, 56, 0.08) 55%,
+    rgba(4, 106, 56, 0) 80%
   );
+  box-shadow: inset 0 0 0 1px rgba(4, 106, 56, 0);
   opacity: 0;
-  transition: opacity var(--t-med) var(--ease-out);
+  transition:
+    opacity var(--t-med) var(--ease-out),
+    box-shadow var(--t-med) var(--ease-out);
   pointer-events: none;
 }
 
 .zone[data-hovered] .zoneHighlight,
 .zone:focus-visible .zoneHighlight {
   opacity: 1;
-}
-
-.zoneRule {
-  position: absolute;
-  left: 6%;
-  right: 6%;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
-  opacity: 0.65;
-  pointer-events: none;
-  transition: opacity var(--t-med) var(--ease-out);
-}
-
-.zone[data-hovered] .zoneRule {
-  opacity: 1;
-  background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
+  box-shadow: inset 0 0 0 1px rgba(4, 106, 56, 0.65);
 }
 
 .zoneLabel {
   position: absolute;
-  left: max(24px, 6vw);
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%) translateX(-12px);
+  transform: translate(-50%, -50%) translateY(6px);
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px 10px 14px;
+  gap: 10px;
+  padding: 8px 14px 8px 12px;
   border-radius: 999px;
-  background: rgba(11, 11, 12, 0.78);
+  background: rgba(11, 11, 12, 0.82);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   color: #fff;
@@ -167,15 +152,16 @@
     transform var(--t-med) var(--ease-out);
   pointer-events: none;
   box-shadow:
-    0 14px 36px rgba(0, 0, 0, 0.35),
+    0 12px 28px rgba(0, 0, 0, 0.45),
     inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   white-space: nowrap;
+  max-width: 92%;
 }
 
 .zone[data-hovered] .zoneLabel,
 .zone:focus-visible .zoneLabel {
   opacity: 1;
-  transform: translateY(-50%) translateX(0);
+  transform: translate(-50%, -50%) translateY(0);
 }
 
 .zoneKicker {

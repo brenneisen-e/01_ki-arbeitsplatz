@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { gsap } from 'gsap'
 import styles from './BankExplorer.module.css'
 import { FloorPanel } from './FloorPanel'
+import { DemoModal } from './DemoModal'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -26,35 +27,44 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 // sehen.
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Räume gemäß 9-Räume-Spec: 4 Etagen × 2 Räume (links/rechts) + Keller (volle
+// Breite) + Plaza außen + goldener Glas-Aufzug = 11 Räume gesamt.
 type FloorId =
   | 'governance'
-  | 'advisory'
-  | 'markets'
-  | 'backoffice'
+  | 'businessmodel'
+  | 'corporate-l'
+  | 'corporate-r'
+  | 'sales-l'
+  | 'sales-r'
+  | 'backoffice-l'
+  | 'backoffice-r'
   | 'datacenter'
+  | 'elevator'
+  | 'plaza'
 
 type Floor = {
   id: FloorId
   label: string
   kicker: string
-  /** Anteil der Bildhöhe, ab dem die Zone beginnt (0..100) */
-  topPct: number
-  /** Höhe der Zone in % der Bildhöhe */
-  heightPct: number
+  /** Mittelpunkt X in % der Bildbreite (0..100). */
+  centerX: number
+  /** Mittelpunkt Y in % der Bildhöhe (0..100). */
+  centerY: number
+  /** Breite des Raumes in % der Bildbreite (0..100). */
+  width: number
+  /** Höhe des Raumes in % der Bildhöhe (0..100). */
+  height: number
   /**
-   * Horizontaler Zoom-Mittelpunkt in % der Bildbreite (0..100).
-   * Default ist 50 (Bild-Mitte = Aufzug). Pro Etage wird hier auf den
-   * tatsächlichen Hotspot der Etage geschoben (z. B. Boardroom links
-   * statt Aufzug-Mitte), damit der gezoomte Ausschnitt das relevante
-   * Etagen-Motiv zeigt und nicht den leeren Aufzug-Schacht.
+   * Zoom-Strategie: 'cover' (Default) füllt die Stage und schneidet ggf.
+   * eine Dimension. 'contain' zeigt die Zone vollständig und lässt die
+   * andere Dimension letterboxen. Für sehr schmale oder sehr breite
+   * Zonen (Aufzug, Plaza) ist 'contain' ehrlicher.
    */
-  xCenterPct?: number
+  fit?: 'cover' | 'contain'
   /**
-   * Optional: hochauflösendes Detail-Bild für diese Etage. Wird (sobald
-   * gesetzt) im Zoom per Cross-Fade über das Master-Bild gelegt --
-   * NICHT innerhalb der zoomenden Camera, sondern auf Stage-Ebene, damit
-   * es bei nativer Auflösung erscheint statt nochmal hochskaliert zu
-   * werden (siehe `<DetailLayer>` weiter unten).
+   * Optional: hochauflösendes Detail-Bild für diese Zone. Wird per
+   * opacity-Cross-Fade auf Stage-Ebene (NICHT in der zoomenden Camera)
+   * eingeblendet, damit es bei nativer Auflösung scharf bleibt.
    */
   detailImage?: string
   chapter: {
@@ -62,74 +72,174 @@ type Floor = {
     body: string
     kpis: { label: string; value: string }[]
   }
+  /**
+   * Optional: erweiterte Demo-/Vertiefungs-Inhalte, die in einem Modal
+   * geöffnet werden können (Status-Quo-↔-2035-Slides, eingebettete Demo
+   * via iframe). Wenn vorhanden, zeigt das Etagen-Panel einen
+   * "Demo & Folien"-Button.
+   */
+  demo?: {
+    headline: string
+    slides: { title: string; statusQuo: string; in2035: string }[]
+    iframe?: { url: string; title: string }
+  }
 }
 
+// 9 Räume + Aufzug + Plaza. Koordinaten sind Startwerte aus der Spec — im
+// Browser ggf. um 1-2 % nachjustieren. centerX/centerY = Raumzentrum
+// (Zoom-Ziel), width/height = Raumgröße.
 const FLOORS: Floor[] = [
   {
     id: 'governance',
-    label: 'Governance Cockpit',
-    kicker: 'Etage 1 · Vorstand',
-    topPct: 2.5,
-    heightPct: 24,
-    xCenterPct: 25,
+    label: 'Compliance & Risk',
+    kicker: 'Kapitel 06 · Top Floor links',
+    centerX: 30,
+    centerY: 15,
+    width: 36,
+    height: 25,
     detailImage: './bank-floor-governance.png',
     chapter: {
-      title: 'AI-Governance, Risiko und Kapitalentscheidung',
+      title: 'Governance Cockpit: Capital, Liquidity & Risk in Echtzeit',
       body:
-        'Vorstand und Aufsichts-Funktion arbeiten 2035 mit einem Governance-Cockpit, das Kapitaladäquanz, Liquidität und Modell-Risiken in Echtzeit zusammenführt. Entscheidungen werden nicht mehr im Quartal getroffen, sondern als laufende Konversation zwischen Vorstand, Modell und Aufsicht.',
+        'Vorstand und Aufsichts-Funktion arbeiten 2035 mit einem Governance-Cockpit, das Kapitaladäquanz, Liquidität, Risikoexposition und ESG-Score in Echtzeit zusammenführt. Compliance ist keine Quartalsübung mehr, sondern eine laufende Konversation zwischen Vorstand, Modell und Aufsicht.',
       kpis: [
         { label: 'Capital Adequacy', value: '17,8 %' },
         { label: 'Liquidity Coverage', value: '138,4 %' },
-        { label: 'Modelle im Audit', value: '47 aktiv · 3 in Quarantäne' },
+        { label: 'Risk Exposure', value: '42 %' },
       ],
     },
   },
   {
-    id: 'advisory',
-    label: 'Wealth & Advisory',
-    kicker: 'Etage 2 · Beratung',
-    topPct: 26.6,
-    heightPct: 20.2,
-    xCenterPct: 22,
+    id: 'businessmodel',
+    label: 'Geschäftsmodell der Zukunft',
+    kicker: 'Top Floor rechts · Executive Lounge',
+    centerX: 70,
+    centerY: 15,
+    width: 36,
+    height: 25,
     chapter: {
-      title: 'Vermögensberatung mit Co-Pilot und Hyperpersonalisierung',
+      title: 'Executive Lounge: der strategische Rückzugsraum',
       body:
-        'Wealth- und Private-Banking-Berater:innen arbeiten 2035 mit einem persönlichen Assistenten, der Kundensituation, Marktlage und regulatorische Leitplanken in einer Sitzung zusammenführt. Vorschläge kommen szenariobasiert -- die finale Empfehlung bleibt menschlich.',
+        'Die Lounge auf der Vorstandsebene ist 2035 der informelle Denkraum: Hier formt sich das Geschäftsmodell der Zukunft. Strategie ist keine Folie, sondern ein laufendes Gespräch zwischen Vorstand, Aufsicht und Eigentümer:innen — ergänzt um Modelle, die Szenarien durchspielen und nicht entscheiden.',
       kpis: [
+        { label: 'Strategie-Reviews / Jahr', value: '12' },
+        { label: 'Modell-gestützte Szenarien', value: '> 200' },
+        { label: 'Vorstandsentscheidungen mit KI-Co-Pilot', value: '74 %' },
+      ],
+    },
+  },
+  {
+    id: 'corporate-l',
+    label: 'Corporate Services',
+    kicker: 'Kapitel 04 · 2. Etage links',
+    centerX: 30,
+    centerY: 40,
+    width: 36,
+    height: 24,
+    chapter: {
+      title: 'Organisation & Talent: Steuerung der Menschen-Seite',
+      body:
+        'Die Organization-Charts und Talent-Dashboards auf der Corporate-Services-Etage zeigen Struktur, Skills-Lücken, Engagement und Nachfolgeplanung in Echtzeit. HR ist 2035 weitgehend automatisiert — Führungskräfte sehen, wo es brennt, und können punktuell eingreifen, statt Listen abzuarbeiten.',
+      kpis: [
+        { label: 'Skill-Match-Quote', value: '86 %' },
+        { label: 'Time-to-Fill (Schlüsselrollen)', value: '32 Tage' },
+        { label: 'Engagement-Score', value: '78 / 100' },
+      ],
+    },
+  },
+  {
+    id: 'corporate-r',
+    label: 'People & Culture',
+    kicker: 'Kapitel 04 · 2. Etage rechts',
+    centerX: 70,
+    centerY: 40,
+    width: 36,
+    height: 24,
+    chapter: {
+      title: 'People & Culture: der menschliche Teil der Bank',
+      body:
+        'Gegenüber den Dashboards liegt die People-&-Culture-Lounge — Ort für 1:1-Gespräche, Mentoring und kulturelle Routinen. Während die Algorithmen Skills und Auslastung tracken, kümmert sich der Mensch um das, was Modelle nicht messen: Vertrauen, Zugehörigkeit, gemeinsame Sprache.',
+      kpis: [
+        { label: 'Mentoring-Stunden / Person', value: '36 / Jahr' },
+        { label: 'Kultur-Index', value: '+12' },
+        { label: 'Freiwillige Fluktuation', value: '4,8 %' },
+      ],
+    },
+  },
+  {
+    id: 'sales-l',
+    label: 'Markt & Vertrieb',
+    kicker: 'Kapitel 02 · Mittlere Etage links',
+    centerX: 31,
+    centerY: 60,
+    width: 38,
+    height: 18,
+    detailImage: './bank-floor-sales.png',
+    chapter: {
+      title: 'Advisory & Sales: Co-Pilot am Beratungs-Desk',
+      body:
+        'Berater:innen sitzen 2035 mit Kund:innen am Desk, das SALES COCKPIT zeigt Funnel (€45,2 Mio., 62 % Conversion), Cross-Sell-Ansätze und Marktlage in Echtzeit. Der Co-Pilot bereitet Termine vor, schreibt mit und übersetzt Beratungsentscheidungen automatisch in regulatorisch saubere Dokumentation.',
+      kpis: [
+        { label: 'Pipeline-Volumen', value: '45,2 Mio. EUR' },
+        { label: 'Conversion-Rate', value: '62 %' },
         { label: 'Beratungsproduktivität', value: '+38 %' },
-        { label: 'Cross-Sell-Quote', value: '24 %' },
-        { label: 'Net Promoter Score', value: '+62' },
       ],
+    },
+    demo: {
+      headline: 'Vom Produktvertrieb zum Lösungsorchestrator',
+      slides: [
+        {
+          title: 'Vom Produktvertrieb zum Lösungsorchestrator',
+          statusQuo:
+            'Bankvertrieb ist produkt- und kanal-zentriert organisiert. Kundenbetreuung folgt standardisierten Modellen; Daten und Kanäle sind fragmentiert.',
+          in2035:
+            'Die Bank agiert als kontext-basierter Lösungsorchestrator: KI kombiniert Finanz-, Service- und Ökosystemleistungen dynamisch zu individuellen Lösungen. Der Kunde definiert das Ziel — nicht mehr das Produktportfolio.',
+        },
+        {
+          title: 'Vom Kund:innenberater zu KI-augmentierten Strategieberatern',
+          statusQuo:
+            'Beratung ist stark standardisiert und auf Produkte sowie Effizienz ausgerichtet. KI wird primär als Produktivitätswerkzeug eingesetzt.',
+          in2035:
+            'Kundenberater agieren als KI-augmentierte Sparringspartner mit Branchen- und Kontextverständnis. Standardtransaktionen laufen autonom; menschliche Beratung gewinnt bei komplexen Themen an Bedeutung.',
+        },
+      ],
+      iframe: {
+        url: 'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht',
+        title: 'Vertriebsarbeitsplatz – Versicherung (Live-Demo)',
+      },
     },
   },
   {
-    id: 'markets',
-    label: 'Markt-Berater',
-    kicker: 'Etage 3 · Markets',
-    topPct: 46.8,
-    heightPct: 15.8,
-    xCenterPct: 35,
+    id: 'sales-r',
+    label: 'Meeting-Pods',
+    kicker: 'Kapitel 02 · Mittlere Etage rechts',
+    centerX: 70,
+    centerY: 60,
+    width: 36,
+    height: 18,
     chapter: {
-      title: 'Markets & Trading: Sub-Sekunden-Insight',
+      title: 'Meeting-Pods: vertrauliche Beratung & Co-Browsing',
       body:
-        'Die Markt-Spezialist:innen bekommen Ideenflüsse aus Forschung, Sentiment- und Mikrostruktur-Modellen vorgefiltert. Ein RL-Routing-Agent verteilt Orders über Venues und führt Best-Execution-Begründungen automatisiert mit.',
+        'Hinter den Glaswänden der Pods passieren die längeren Beratungen — Vermögensplanung, Nachfolge, komplexe Kreditstrukturen. Der Co-Pilot teilt den Bildschirm, blendet Szenarien und regulatorische Hinweise ein, und protokolliert das Gespräch in einer für die Kund:innen verständlichen Zusammenfassung.',
       kpis: [
-        { label: 'Tages-Volumen Eigenhandel', value: '3,2 Mrd. EUR' },
-        { label: 'Best-Ex-Quote', value: '99,4 %' },
-        { label: 'Modell-Drift-Inzidenz', value: '0,3 / Woche' },
+        { label: 'Pods aktiv', value: '8 parallel' },
+        { label: 'Ø Gesprächsdauer', value: '42 Min' },
+        { label: 'Folge-Termin-Quote', value: '71 %' },
       ],
     },
   },
   {
-    id: 'backoffice',
-    label: 'Marketplace Back-Office',
-    kicker: 'Etage 4 · Hybride Teams',
-    topPct: 62.6,
-    heightPct: 18,
+    id: 'backoffice-l',
+    label: 'Marktfolge',
+    kicker: 'Kapitel 03 · 4. Etage links',
+    centerX: 31,
+    centerY: 76,
+    width: 38,
+    height: 14,
     chapter: {
-      title: 'Marketplace & Back-Office Processing',
+      title: 'Back-Office Processing: STP & autonome Service-Worker',
       body:
-        'Im Back-Office teilen sich Spezialist:innen, KI-Copilots und autonome Service-Worker das Workflow-Backbone. Routine-Begründungen entfallen, Eskalationen kommen vorab annotiert. Der Mensch bleibt verantwortlich -- aber nur noch für das, was wirklich Entscheidung ist.',
+        'Die Marktfolge ist 2035 ein hybrides Team aus Spezialist:innen, KI-Copilots und autonomen Service-Robotern. Routine-Begründungen entfallen, Eskalationen kommen vorab annotiert. Der Mensch bleibt verantwortlich — aber nur noch für das, was wirklich Entscheidung ist.',
       kpis: [
         { label: 'STP-Quote', value: '62 %' },
         { label: 'Tagesvolumen', value: '12,4 Mio. EUR' },
@@ -138,19 +248,78 @@ const FLOORS: Floor[] = [
     },
   },
   {
-    id: 'datacenter',
-    label: 'Data & Infrastruktur',
-    kicker: 'Etage 5 · Plattform',
-    topPct: 80.6,
-    heightPct: 17.4,
+    id: 'backoffice-r',
+    label: 'Workflow Automation',
+    kicker: 'Kapitel 03 · 4. Etage rechts',
+    centerX: 70,
+    centerY: 76,
+    width: 36,
+    height: 14,
     chapter: {
-      title: 'Datenplattform und Post-Quantum-Fundament',
+      title: 'Document Processing Pipeline & Workflow Automation',
       body:
-        'Die Plattform ist 2035 ein Data Mesh aus 11 Domänen mit 212 Datenprodukten. Schlüsselmaterial wandert kontinuierlich auf quantenresistente Verfahren. Observability ist eine Feedback-Schleife: 81 % aller Incidents werden geschlossen, bevor sie überhaupt ein Mensch sieht.',
+        'Die Wandscreens zeigen die Pipeline live: Eingang → Klassifikation → Extraktion → Prüfung → Buchung. Fehler werden im Modell selbst korrigiert; Eskalationen treffen menschliche Reviewer:innen vorgefiltert. Workflow Automation ist 2035 die Marktfolge — der Mensch macht den Rest.',
+      kpis: [
+        { label: 'Automations-Tiefe', value: '94 %' },
+        { label: 'Dokumente / Tag', value: '> 380.000' },
+        { label: 'Reklamationsquote', value: '0,4 %' },
+      ],
+    },
+  },
+  {
+    id: 'datacenter',
+    label: 'Technologie & IT',
+    kicker: 'Kapitel 05 · Basement',
+    centerX: 50,
+    centerY: 92,
+    width: 80,
+    height: 16,
+    chapter: {
+      title: 'Data Center: Plattform & Post-Quantum-Fundament',
+      body:
+        'Im Basement liegt das technologische Fundament: Server-Reihen, holografische Konsole, Datenströme zwischen Domänen. Die Plattform ist 2035 ein Data Mesh aus 11 Domänen mit 212 Datenprodukten. Schlüsselmaterial wandert kontinuierlich auf quantenresistente Verfahren, 81 % aller Incidents werden geschlossen, bevor sie sichtbar werden.',
       kpis: [
         { label: 'Datenprodukte live', value: '212' },
         { label: 'PQ-Migration', value: '74 %' },
         { label: 'Auto-Recovery', value: '81 %' },
+      ],
+    },
+  },
+  {
+    id: 'elevator',
+    label: 'Transformationspfad',
+    kicker: 'Kapitel 07 · Goldener Aufzug',
+    centerX: 50,
+    centerY: 50,
+    width: 14,
+    height: 96,
+    chapter: {
+      title: 'Aufzug-Spine: Transformation über alle Ebenen',
+      body:
+        'Der goldene Glas-Aufzug verbindet alle Etagen — vom Boardroom oben bis zum Data Center im Fundament. Er ist die visuelle Klammer der Transformation: keine Etage steht für sich, jede Veränderung wirkt vertikal durchs ganze Haus.',
+      kpis: [
+        { label: 'Verbundene Etagen', value: '5' },
+        { label: 'Narrative Klammer', value: 'vertikal' },
+        { label: 'Akzentfarbe', value: 'Deloitte-Grün' },
+      ],
+    },
+  },
+  {
+    id: 'plaza',
+    label: 'Kundenperspektive',
+    kicker: 'Kapitel 01 · Plaza außen',
+    centerX: 5,
+    centerY: 55,
+    width: 10,
+    height: 60,
+    chapter: {
+      title: 'Plaza & Self-Service: die Bank von außen gesehen',
+      body:
+        'Vor dem Haus stehen Self-Service-Terminals und das FUTURE BANK-Schild. Die Kund:innenperspektive ist 2035 der Startpunkt: Kontakt findet jederzeit statt — Plaza, App, Pod oder Beraterin. Die Bank ist nicht mehr ein Ort, sondern ein Dienst.',
+      kpis: [
+        { label: 'Touchpoints / Kund:in / Jahr', value: '52' },
+        { label: 'Self-Service-Quote (Standardvorgänge)', value: '88 %' },
+        { label: 'Net Promoter Score', value: '+62' },
       ],
     },
   },
@@ -163,59 +332,42 @@ const FLOORS: Floor[] = [
  */
 const IMAGE_ASPECT = 1672 / 941
 
-/** Smooth, langsamer Flug -- bewusst kein „snap"-Gefühl. */
-const ZOOM_DURATION = 5.0
-const ZOOM_EASE = 'power2.inOut'
+/** Kameraflug pro Spec: 1,2 s, power3.inOut. */
+const ZOOM_DURATION = 1.2
+const ZOOM_EASE = 'power3.inOut'
 
 /** Panel kommt ungefähr ab Halbzeit des Zooms; Cross-Fade des Details auch. */
 const PANEL_DELAY = ZOOM_DURATION * 0.55
-const PANEL_DURATION = 0.7
+const PANEL_DURATION = 0.45
 const DETAIL_CROSSFADE_DELAY = ZOOM_DURATION * 0.45
-const DETAIL_CROSSFADE_DURATION = 0.6
+const DETAIL_CROSSFADE_DURATION = 0.4
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Zoom-Mathematik (jetzt mit Camera-Höhe statt Stage-Höhe):
+// Zoom-Mathematik für 2D-Räume:
 //
-// Die Camera ist eine Box mit der Aspect-Ratio des Bilds, per
-// max-width/max-height in die Stage eingepasst (object-fit: contain via
-// CSS aspect-ratio). Sie kann also kleiner sein als die Stage in einer
-// Dimension. Das Bild füllt die Camera 1:1.
+// Jeder Raum hat ein Zentrum (centerX, centerY) und eine Größe (width, height)
+// in % der Bild-Maße. Die Camera trägt die Bild-Aspect-Ratio und liegt
+// zentriert in der Stage.
 //
-// 1. Skalierung:
-//    Wir wollen die Zone (heightPct % der CAMERA-Höhe) auf die volle
-//    Stage-Höhe vergrößern. Da die Zone vor dem Scale die Höhe
-//    `cameraH × heightPct / 100` hat, brauchen wir:
+// 1. Skalierung -- separat für beide Achsen:
 //
-//        scale = (stageH × 100) / (cameraH × heightPct)
+//      scale_h = stageH × 100 / (cameraH × room.height)
+//      scale_w = stageW × 100 / (cameraW × room.width)
 //
-//    Wenn die Camera die Stage in der Höhe füllt (cameraH = stageH),
-//    reduziert sich das auf scale = 100 / heightPct -- wie ursprünglich.
-//    Bei Letterboxing oben/unten (Bild AR > Stage AR) wird mehr Zoom
-//    nötig, damit die Zone die Stage füllt.
+//    'cover' (Default) = max(scale_h, scale_w) → Stage komplett gefüllt,
+//    ggf. wird eine Dimension des Raums beschnitten. 'contain' = min →
+//    der Raum ist vollständig sichtbar, andere Dimension letterboxed.
 //
-// 2. Vertikale Verschiebung:
-//    Die Zone-Mitte liegt bei zoneCenterPct = topPct + heightPct/2 (in %
-//    der Camera-Höhe). Vor dem Transform ist die Camera in der Stage
-//    zentriert; nach Scale `s` ist 1 % der Camera-Höhe = s × cameraH /
-//    100. Der Versatz, um zoneCenter auf Stage-Mitte zu bringen,
-//    beträgt:
-//
-//        translateY = (50 − zoneCenterPct) × cameraH × scale / 100
-//                   = (50 − zoneCenterPct) × stageH / heightPct
-//
-//    (cameraH kürzt sich raus -- die Translation hängt nur von der
-//    Stage-Höhe ab.)
-//
-// 3. Horizontal:
-//    Etagen sind horizontale Bänder -- translateX = 0. Wenn die Camera
-//    nach Scale > Stage-Breite wird, schneidet die Stage (overflow:
-//    hidden) den Rand ab.
+// 2. Translation: scale × cameraDim × (50 − roomCenter) / 100. Bringt
+//    den Raum-Mittelpunkt auf Stage-Mitte (sowohl horizontal als
+//    auch vertikal).
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Geom = { scale: number; x: number; y: number }
 
 function computeGeom(
   floor: Floor,
+  stageWidth: number,
   stageHeight: number,
   cameraWidth: number,
   cameraHeight: number,
@@ -223,15 +375,16 @@ function computeGeom(
   // Schutz vor Division durch 0, falls der Layout-Pass noch nicht durch ist.
   const safeCameraH = Math.max(cameraHeight, 1)
   const safeCameraW = Math.max(cameraWidth, 1)
-  const scale = (stageHeight * 100) / (safeCameraH * floor.heightPct)
-  const zoneCenterY = floor.topPct + floor.heightPct / 2
-  const zoneCenterX = floor.xCenterPct ?? 50
-  // translateY bringt die Zone-Mitte vertikal auf Stage-Mitte (siehe
-  // Herleitung im Kommentar oben).
-  const y = ((50 - zoneCenterY) * stageHeight) / floor.heightPct
-  // translateX bringt zoneCenterX horizontal auf Stage-Mitte:
-  // translateX = scale × cameraW × (50 - zoneCenterX) / 100
-  const x = (scale * safeCameraW * (50 - zoneCenterX)) / 100
+  const scaleH = (stageHeight * 100) / (safeCameraH * floor.height)
+  const scaleW = (stageWidth * 100) / (safeCameraW * floor.width)
+  // Spec-Default: 'contain' (Math.min) -- beide Achsen passen rein, Raum ist
+  // vollständig sichtbar, andere Dimension letterboxed. 'cover' (Math.max)
+  // wäre formatfüllend mit Beschnitt; aktuell nicht verwendet.
+  const fit = floor.fit ?? 'contain'
+  const scale = fit === 'cover' ? Math.max(scaleH, scaleW) : Math.min(scaleH, scaleW)
+  // Translation bringt (centerX, centerY) auf Stage-Mitte.
+  const x = (scale * safeCameraW * (50 - floor.centerX)) / 100
+  const y = (scale * safeCameraH * (50 - floor.centerY)) / 100
   return { scale, x, y }
 }
 
@@ -244,6 +397,7 @@ export function BankExplorer(): React.ReactElement {
 
   const [activeId, setActiveId] = useState<FloorId | null>(null)
   const [hoverId, setHoverId] = useState<FloorId | null>(null)
+  const [demoOpen, setDemoOpen] = useState(false)
 
   const reducedMotion = useReducedMotion()
 
@@ -265,7 +419,13 @@ export function BankExplorer(): React.ReactElement {
       tweenRef.current?.kill()
 
       const geom: Geom = floor
-        ? computeGeom(floor, stage.clientHeight, camera.clientWidth, camera.clientHeight)
+        ? computeGeom(
+            floor,
+            stage.clientWidth,
+            stage.clientHeight,
+            camera.clientWidth,
+            camera.clientHeight,
+          )
         : { scale: 1, x: 0, y: 0 }
 
       const instant = opts.instant || reducedMotion
@@ -432,9 +592,13 @@ export function BankExplorer(): React.ReactElement {
 
   const handleBack = useCallback(() => {
     setActiveId(null)
+    setDemoOpen(false)
     // Zurück springt instant in die Übersicht -- kein Zoom-Out-Flug.
     animateTo(null, { instant: true })
   }, [animateTo])
+
+  const handleOpenDemo = useCallback(() => setDemoOpen(true), [])
+  const handleCloseDemo = useCallback(() => setDemoOpen(false), [])
 
   const isOverview = activeFloor === null
 
@@ -454,38 +618,48 @@ export function BankExplorer(): React.ReactElement {
             draggable={false}
           />
 
-          {/* HOVER-/KLICK-ZONEN über der Camera -- in % der Bild-Höhe */}
+          {/* HOVER-/KLICK-ZONEN über der Camera -- Rechtecke in % der Bild-Maße */}
           <div className={styles.zones} data-overview={isOverview || undefined}>
-            {FLOORS.map((floor) => (
-              <button
-                type="button"
-                key={floor.id}
-                className={styles.zone}
-                style={{
-                  top: `${floor.topPct}%`,
-                  height: `${floor.heightPct}%`,
-                }}
-                data-hovered={hoverId === floor.id || undefined}
-                onPointerEnter={() => setHoverId(floor.id)}
-                onPointerLeave={() =>
-                  setHoverId((h) => (h === floor.id ? null : h))
-                }
-                onFocus={() => setHoverId(floor.id)}
-                onBlur={() =>
-                  setHoverId((h) => (h === floor.id ? null : h))
-                }
-                onClick={() => handleZoneClick(floor)}
-                aria-label={`${floor.label} – Etage öffnen`}
-              >
-                <span className={styles.zoneHighlight} aria-hidden />
-                <span className={styles.zoneLabel}>
-                  <span className={styles.zoneKicker}>{floor.kicker}</span>
-                  <span className={styles.zoneTitle}>{floor.label}</span>
-                  <ArrowRight size={16} strokeWidth={1.8} aria-hidden />
-                </span>
-                <span className={styles.zoneRule} aria-hidden />
-              </button>
-            ))}
+            {FLOORS.map((floor) => {
+              const top = floor.centerY - floor.height / 2
+              const left = floor.centerX - floor.width / 2
+              // Aufzug und Plaza liegen z-index-mäßig über den Etagen-Zonen,
+              // damit ihre schmalen Bereiche bei Overlap (z. B. Aufzug 43-57 %
+              // vs. Etagen-Räume bis 50 %) den Hover-Klick gewinnen.
+              const zIndex = floor.id === 'elevator' || floor.id === 'plaza' ? 2 : 1
+              return (
+                <button
+                  type="button"
+                  key={floor.id}
+                  className={styles.zone}
+                  style={{
+                    top: `${top}%`,
+                    left: `${left}%`,
+                    height: `${floor.height}%`,
+                    width: `${floor.width}%`,
+                    zIndex,
+                  }}
+                  data-hovered={hoverId === floor.id || undefined}
+                  onPointerEnter={() => setHoverId(floor.id)}
+                  onPointerLeave={() =>
+                    setHoverId((h) => (h === floor.id ? null : h))
+                  }
+                  onFocus={() => setHoverId(floor.id)}
+                  onBlur={() =>
+                    setHoverId((h) => (h === floor.id ? null : h))
+                  }
+                  onClick={() => handleZoneClick(floor)}
+                  aria-label={`${floor.label} – Zone öffnen`}
+                >
+                  <span className={styles.zoneHighlight} aria-hidden />
+                  <span className={styles.zoneLabel}>
+                    <span className={styles.zoneKicker}>{floor.kicker}</span>
+                    <span className={styles.zoneTitle}>{floor.label}</span>
+                    <ArrowRight size={16} strokeWidth={1.8} aria-hidden />
+                  </span>
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -529,8 +703,17 @@ export function BankExplorer(): React.ReactElement {
           aria-hidden={isOverview}
           data-visible={!isOverview || undefined}
         >
-          {activeFloor && <FloorPanel floor={activeFloor} />}
+          {activeFloor && (
+            <FloorPanel floor={activeFloor} onOpenDemo={handleOpenDemo} />
+          )}
         </div>
+
+        <DemoModal
+          isOpen={demoOpen && Boolean(activeFloor?.demo)}
+          onClose={handleCloseDemo}
+          kicker={activeFloor?.kicker ?? ''}
+          demo={activeFloor?.demo ?? null}
+        />
 
         {/* Marken-Lockup oben rechts (nur Übersicht) */}
         <div className={styles.brand} data-visible={isOverview || undefined}>

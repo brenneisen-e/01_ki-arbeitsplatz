@@ -1,3 +1,4 @@
+import { Play } from 'lucide-react'
 import styles from './FloorPanel.module.css'
 
 type FloorPanelProps = {
@@ -10,11 +11,14 @@ type FloorPanelProps = {
       body: string
       kpis: { label: string; value: string }[]
     }
+    demo?: unknown
   }
+  onOpenDemo?: () => void
 }
 
-export function FloorPanel({ floor }: FloorPanelProps): React.ReactElement {
-  const { kicker, label, chapter } = floor
+export function FloorPanel({ floor, onOpenDemo }: FloorPanelProps): React.ReactElement {
+  const { kicker, label, chapter, demo } = floor
+  const hasDemo = Boolean(demo)
   return (
     <article className={styles.panel} aria-labelledby={`floor-${floor.id}-title`}>
       <div className={styles.shade} aria-hidden />
@@ -38,12 +42,12 @@ export function FloorPanel({ floor }: FloorPanelProps): React.ReactElement {
           ))}
         </ul>
 
-        <footer className={styles.footer}>
-          <span className={styles.footerHint}>
-            Kapitel-Inhalt · Platzhalter · später editierbar in&nbsp;
-            <code>src/components/BankExplorer.tsx → FLOORS</code>
-          </span>
-        </footer>
+        {hasDemo && onOpenDemo && (
+          <button type="button" className={styles.demoButton} onClick={onOpenDemo}>
+            <Play size={16} strokeWidth={2.2} />
+            <span>Demo &amp; Folien öffnen</span>
+          </button>
+        )}
       </div>
     </article>
   )

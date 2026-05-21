@@ -881,7 +881,7 @@ export function BankExplorer(): React.ReactElement {
           aria-hidden={isOverview}
           data-visible={!isOverview || undefined}
         >
-          {activeFloor && (
+          {activeFloor && !currentScene?.screenOverlay && (
             <FloorPanel
               floor={activeFloor}
               sceneNarrative={currentScene?.narrative}

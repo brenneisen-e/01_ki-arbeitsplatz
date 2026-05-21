@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Play, X } from 'lucide-react'
 import { gsap } from 'gsap'
 import styles from './BankExplorer.module.css'
 import { FloorPanel } from './FloorPanel'
@@ -105,6 +105,16 @@ type DetailScene = {
     topPct: number
     widthPct: number
     heightPct: number
+  }
+  /**
+   * Optional: ein looped Video, das per Play-Button mittig im
+   * Detail-Foto abgespielt werden kann. Cover-fit über die gesamte
+   * Szenen-Fläche, muted (für Browser-Autoplay-Policy), keine
+   * Controls (nur Stop-Button oben rechts).
+   */
+  videoLoop?: {
+    url: string
+    title?: string
   }
 }
 
@@ -331,7 +341,16 @@ const FLOORS: Floor[] = [
     centerY: 55,
     width: 10,
     height: 60,
-    detailImage: './bank-floor-plaza.png',
+    detailScenes: [
+      {
+        image: './bank-floor-plaza.png',
+        alt: 'Plaza vor der Future Bank mit Self-Service-Terminal, Personen mit Tablet und Smartphone',
+        videoLoop: {
+          url: './plaza-video.mp4',
+          title: 'Plaza-Sequenz im Loop',
+        },
+      },
+    ],
     chapter: {
       title: 'Plaza & Self-Service: die Bank von außen gesehen',
       body:
@@ -418,6 +437,7 @@ export function BankExplorer(): React.ReactElement {
   const [activeId, setActiveId] = useState<FloorId | null>(null)
   const [hoverId, setHoverId] = useState<FloorId | null>(null)
   const [sceneIndex, setSceneIndex] = useState(0)
+  const [videoPlaying, setVideoPlaying] = useState(false)
 
   const reducedMotion = useReducedMotion()
 
@@ -439,10 +459,16 @@ export function BankExplorer(): React.ReactElement {
     return []
   }, [activeFloor])
 
-  // Beim Floor-Wechsel auf erste Szene zurückspringen.
+  // Beim Floor- oder Szenen-Wechsel auf erste Szene zurückspringen und
+  // ein evtl. laufendes Video stoppen.
   useEffect(() => {
     setSceneIndex(0)
+    setVideoPlaying(false)
   }, [activeId])
+
+  useEffect(() => {
+    setVideoPlaying(false)
+  }, [sceneIndex])
 
   const currentScene: DetailScene | null = scenes[sceneIndex] ?? null
 
@@ -727,6 +753,39 @@ export function BankExplorer(): React.ReactElement {
             ))}
             {currentScene?.screenOverlay && (
               <ScreenOverlay overlay={currentScene.screenOverlay} />
+            )}
+            {currentScene?.videoLoop && videoPlaying && (
+              <video
+                className={styles.sceneVideo}
+                src={currentScene.videoLoop.url}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                aria-label={currentScene.videoLoop.title}
+              />
+            )}
+            {currentScene?.videoLoop && !videoPlaying && (
+              <button
+                type="button"
+                className={styles.scenePlayBtn}
+                onClick={() => setVideoPlaying(true)}
+                aria-label="Video abspielen"
+              >
+                <Play size={32} strokeWidth={2} fill="currentColor" />
+              </button>
+            )}
+            {currentScene?.videoLoop && videoPlaying && (
+              <button
+                type="button"
+                className={styles.sceneStopBtn}
+                onClick={() => setVideoPlaying(false)}
+                aria-label="Video stoppen"
+              >
+                <X size={16} strokeWidth={2} />
+                <span>Video stoppen</span>
+              </button>
             )}
           </div>
         )}

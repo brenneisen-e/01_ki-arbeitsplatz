@@ -58,7 +58,7 @@ const FLOORS: Floor[] = [
     kicker: 'Etage 1 · Vorstand',
     topPct: 4,
     heightPct: 34,
-    // detailImage: './bank-floor-governance.png', // ← später aktivieren
+    detailImage: './bank-floor-governance.png',
     chapter: {
       title: 'AI-Governance, Risiko und Kapitalentscheidung',
       body:
@@ -300,22 +300,52 @@ export function BankExplorer(): React.ReactElement {
     }
   }, [activeFloor, reducedMotion])
 
+  // Wir halten activeFloor in einem Ref, damit der Resize-Effekt unten
+  // nicht bei jedem activeFloor-Wechsel neu gemountet wird (sonst feuert
+  // der frische ResizeObserver SOFORT synchron und killt die gerade
+  // gestartete Zoom-Tween).
+  const activeFloorRef = useRef<Floor | null>(null)
+  useEffect(() => {
+    activeFloorRef.current = activeFloor
+  }, [activeFloor])
+
   // Resize-Listener: solange wir in einen Floor gezoomt sind, neu
-  // ausrichten, sobald sich die Stage- ODER Camera-Größe ändert.
+  // ausrichten, sobald sich die Stage- oder Camera-Größe ändert.
+  // WICHTIG: ResizeObserver feuert synchron beim observe() einmal --
+  // die initiale Messung würden wir sonst als „Resize" interpretieren
+  // und die Zoom-Tween zerschießen. Deshalb der `firstCall`-Skip.
   useEffect(() => {
     const stage = stageRef.current
     const camera = cameraRef.current
     if (!stage || !camera) return
-    const onResize = () => animateTo(activeFloor, { instant: true })
+    let firstCall = true
+    let lastW = stage.clientWidth
+    let lastH = stage.clientHeight
+    const onResize = () => {
+      if (firstCall) {
+        firstCall = false
+        return
+      }
+      const w = stage.clientWidth
+      const h = stage.clientHeight
+      if (w === lastW && h === lastH) return
+      lastW = w
+      lastH = h
+      animateTo(activeFloorRef.current, { instant: true })
+    }
     const ro = new ResizeObserver(onResize)
     ro.observe(stage)
     ro.observe(camera)
-    window.addEventListener('orientationchange', onResize)
+    const onOrient = () => {
+      // orientationchange braucht keinen first-call-Skip
+      animateTo(activeFloorRef.current, { instant: true })
+    }
+    window.addEventListener('orientationchange', onOrient)
     return () => {
       ro.disconnect()
-      window.removeEventListener('orientationchange', onResize)
+      window.removeEventListener('orientationchange', onOrient)
     }
-  }, [activeFloor, animateTo])
+  }, [animateTo])
 
   // Tastatur: Esc verlässt den Fokus.
   useEffect(() => {

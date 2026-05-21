@@ -61,8 +61,8 @@ const FLOORS: Floor[] = [
     id: 'governance',
     label: 'Governance Cockpit',
     kicker: 'Etage 1 · Vorstand',
-    topPct: 2,
-    heightPct: 19,
+    topPct: 2.5,
+    heightPct: 24,
     detailImage: './bank-floor-governance.png',
     chapter: {
       title: 'AI-Governance, Risiko und Kapitalentscheidung',
@@ -79,8 +79,8 @@ const FLOORS: Floor[] = [
     id: 'advisory',
     label: 'Wealth & Advisory',
     kicker: 'Etage 2 · Beratung',
-    topPct: 22,
-    heightPct: 14,
+    topPct: 26.6,
+    heightPct: 20.2,
     chapter: {
       title: 'Vermögensberatung mit Co-Pilot und Hyperpersonalisierung',
       body:
@@ -96,8 +96,8 @@ const FLOORS: Floor[] = [
     id: 'markets',
     label: 'Markt-Berater',
     kicker: 'Etage 3 · Markets',
-    topPct: 37,
-    heightPct: 17,
+    topPct: 46.8,
+    heightPct: 15.8,
     chapter: {
       title: 'Markets & Trading: Sub-Sekunden-Insight',
       body:
@@ -113,8 +113,8 @@ const FLOORS: Floor[] = [
     id: 'backoffice',
     label: 'Marketplace Back-Office',
     kicker: 'Etage 4 · Hybride Teams',
-    topPct: 55,
-    heightPct: 17,
+    topPct: 62.6,
+    heightPct: 18,
     chapter: {
       title: 'Marketplace & Back-Office Processing',
       body:
@@ -130,8 +130,8 @@ const FLOORS: Floor[] = [
     id: 'datacenter',
     label: 'Data & Infrastruktur',
     kicker: 'Etage 5 · Plattform',
-    topPct: 73,
-    heightPct: 16,
+    topPct: 80.6,
+    heightPct: 17.4,
     chapter: {
       title: 'Datenplattform und Post-Quantum-Fundament',
       body:
@@ -408,7 +408,8 @@ export function BankExplorer(): React.ReactElement {
 
   const handleBack = useCallback(() => {
     setActiveId(null)
-    animateTo(null)
+    // Zurück springt instant in die Übersicht -- kein Zoom-Out-Flug.
+    animateTo(null, { instant: true })
   }, [animateTo])
 
   const isOverview = activeFloor === null

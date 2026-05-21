@@ -26,7 +26,12 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 // sehen.
 // ─────────────────────────────────────────────────────────────────────────────
 
-type FloorId = 'governance' | 'operations' | 'datacenter'
+type FloorId =
+  | 'governance'
+  | 'advisory'
+  | 'markets'
+  | 'backoffice'
+  | 'datacenter'
 
 type Floor = {
   id: FloorId
@@ -54,10 +59,10 @@ type Floor = {
 const FLOORS: Floor[] = [
   {
     id: 'governance',
-    label: 'AI-Governance',
+    label: 'Governance Cockpit',
     kicker: 'Etage 1 · Vorstand',
-    topPct: 4,
-    heightPct: 34,
+    topPct: 2,
+    heightPct: 19,
     detailImage: './bank-floor-governance.png',
     chapter: {
       title: 'AI-Governance, Risiko und Kapitalentscheidung',
@@ -71,15 +76,49 @@ const FLOORS: Floor[] = [
     },
   },
   {
-    id: 'operations',
-    label: 'Operations',
-    kicker: 'Etage 2 · Hybride Teams',
-    topPct: 40,
-    heightPct: 26,
+    id: 'advisory',
+    label: 'Wealth & Advisory',
+    kicker: 'Etage 2 · Beratung',
+    topPct: 22,
+    heightPct: 14,
     chapter: {
-      title: 'Hybride Operations: Mensch, Copilot und Agent',
+      title: 'Vermögensberatung mit Co-Pilot und Hyperpersonalisierung',
       body:
-        'Auf der Operations-Ebene teilen sich Spezialist:innen, KI-Copilots und autonome Service-Worker das Workflow-Backbone. Routine-Begründungen entfallen, Eskalationen kommen vorab annotiert. Der Mensch bleibt verantwortlich -- aber nur noch für das, was wirklich Entscheidung ist.',
+        'Wealth- und Private-Banking-Berater:innen arbeiten 2035 mit einem persönlichen Assistenten, der Kundensituation, Marktlage und regulatorische Leitplanken in einer Sitzung zusammenführt. Vorschläge kommen szenariobasiert -- die finale Empfehlung bleibt menschlich.',
+      kpis: [
+        { label: 'Beratungsproduktivität', value: '+38 %' },
+        { label: 'Cross-Sell-Quote', value: '24 %' },
+        { label: 'Net Promoter Score', value: '+62' },
+      ],
+    },
+  },
+  {
+    id: 'markets',
+    label: 'Markt-Berater',
+    kicker: 'Etage 3 · Markets',
+    topPct: 37,
+    heightPct: 17,
+    chapter: {
+      title: 'Markets & Trading: Sub-Sekunden-Insight',
+      body:
+        'Die Markt-Spezialist:innen bekommen Ideenflüsse aus Forschung, Sentiment- und Mikrostruktur-Modellen vorgefiltert. Ein RL-Routing-Agent verteilt Orders über Venues und führt Best-Execution-Begründungen automatisiert mit.',
+      kpis: [
+        { label: 'Tages-Volumen Eigenhandel', value: '3,2 Mrd. EUR' },
+        { label: 'Best-Ex-Quote', value: '99,4 %' },
+        { label: 'Modell-Drift-Inzidenz', value: '0,3 / Woche' },
+      ],
+    },
+  },
+  {
+    id: 'backoffice',
+    label: 'Marketplace Back-Office',
+    kicker: 'Etage 4 · Hybride Teams',
+    topPct: 55,
+    heightPct: 17,
+    chapter: {
+      title: 'Marketplace & Back-Office Processing',
+      body:
+        'Im Back-Office teilen sich Spezialist:innen, KI-Copilots und autonome Service-Worker das Workflow-Backbone. Routine-Begründungen entfallen, Eskalationen kommen vorab annotiert. Der Mensch bleibt verantwortlich -- aber nur noch für das, was wirklich Entscheidung ist.',
       kpis: [
         { label: 'STP-Quote', value: '62 %' },
         { label: 'Tagesvolumen', value: '12,4 Mio. EUR' },
@@ -90,9 +129,9 @@ const FLOORS: Floor[] = [
   {
     id: 'datacenter',
     label: 'Data & Infrastruktur',
-    kicker: 'Etage 3 · Plattform',
-    topPct: 68,
-    heightPct: 28,
+    kicker: 'Etage 5 · Plattform',
+    topPct: 73,
+    heightPct: 16,
     chapter: {
       title: 'Datenplattform und Post-Quantum-Fundament',
       body:
@@ -107,11 +146,11 @@ const FLOORS: Floor[] = [
 ]
 
 /**
- * Aspect-Ratio des Master-Bilds. Aktuell ~21:9 (1915×821). Wenn du das
+ * Aspect-Ratio des Master-Bilds. Aktuell ~16:9 (1672×941). Wenn du das
  * Bild austauschst, hier die echte Auflösung eintragen -- die Camera
  * sizet sich automatisch entsprechend.
  */
-const IMAGE_ASPECT = 1915 / 821
+const IMAGE_ASPECT = 1672 / 941
 
 /** Smooth, langsamer Flug -- bewusst kein „snap"-Gefühl. */
 const ZOOM_DURATION = 5.0

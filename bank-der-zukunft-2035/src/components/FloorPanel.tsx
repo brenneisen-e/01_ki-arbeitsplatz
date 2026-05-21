@@ -1,4 +1,4 @@
-import { Play } from 'lucide-react'
+import { ArrowRight, Play } from 'lucide-react'
 import styles from './FloorPanel.module.css'
 
 type FloorPanelProps = {
@@ -43,9 +43,20 @@ export function FloorPanel({ floor, onOpenDemo }: FloorPanelProps): React.ReactE
         </ul>
 
         {hasDemo && onOpenDemo && (
-          <button type="button" className={styles.demoButton} onClick={onOpenDemo}>
-            <Play size={16} strokeWidth={2.2} />
-            <span>Demo &amp; Folien öffnen</span>
+          <button type="button" className={styles.demoCard} onClick={onOpenDemo}>
+            <span className={styles.demoCardIcon}>
+              <Play size={16} strokeWidth={2.2} />
+            </span>
+            <span className={styles.demoCardText}>
+              <span className={styles.demoCardKicker}>Live-Demo &amp; Folien</span>
+              <span className={styles.demoCardLabel}>Vertiefung öffnen</span>
+            </span>
+            <ArrowRight
+              size={16}
+              strokeWidth={2}
+              className={styles.demoCardArrow}
+              aria-hidden
+            />
           </button>
         )}
       </div>

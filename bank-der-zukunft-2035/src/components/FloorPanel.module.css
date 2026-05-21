@@ -114,43 +114,117 @@
   font-variant-numeric: tabular-nums;
 }
 
-.demoButton {
+/* CTA-Card im gleichen Glas-Look wie die KPI-Cards -- nur mit einem
+ * subtilen Deloitte-Grün-Border und einer animierten Akzent-Linie links,
+ * damit sich der Demo-Aufruf optisch in das Panel einfügt statt als
+ * eigenständiges Pill-Button daneben zu kleben. */
+.demoCard {
   margin-top: auto;
-  align-self: flex-start;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 20px 12px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(4, 106, 56, 0.55);
-  background: linear-gradient(135deg, #046A38 0%, #035a30 100%);
+  gap: 14px;
+  width: 100%;
+  max-width: 440px;
+  padding: 14px 18px 14px 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(4, 106, 56, 0.18) 0%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  border: 1px solid rgba(4, 106, 56, 0.42);
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   color: #fff;
-  font-family: var(--font-heading);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
+  text-align: left;
   cursor: pointer;
-  box-shadow:
-    0 14px 36px rgba(4, 106, 56, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  position: relative;
   transition:
-    transform var(--t-fast) var(--ease-out),
-    box-shadow var(--t-fast) var(--ease-out),
-    background var(--t-fast) var(--ease-out);
+    border-color var(--t-fast) var(--ease-out),
+    background var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
 }
 
-.demoButton:hover,
-.demoButton:focus-visible {
+.demoCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14%;
+  bottom: 14%;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--accent-bright);
+  opacity: 0.85;
+  transition: opacity var(--t-fast) var(--ease-out);
+}
+
+.demoCard:hover,
+.demoCard:focus-visible {
+  border-color: rgba(4, 106, 56, 0.85);
+  background: linear-gradient(
+    135deg,
+    rgba(4, 106, 56, 0.32) 0%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
   transform: translateY(-1px);
-  background: linear-gradient(135deg, #057a40 0%, #046A38 100%);
-  box-shadow:
-    0 18px 44px rgba(4, 106, 56, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
   outline: none;
 }
 
-.demoButton > svg {
-  color: #d6f3e3;
+.demoCard:hover::before,
+.demoCard:focus-visible::before {
+  opacity: 1;
+}
+
+.demoCardIcon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--accent-bright);
+  color: #0a0b0c;
+  box-shadow:
+    0 8px 18px rgba(4, 106, 56, 0.38),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.demoCardText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.demoCardKicker {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.demoCardLabel {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: #fff;
+}
+
+.demoCardArrow {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  transition: transform var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+
+.demoCard:hover .demoCardArrow,
+.demoCard:focus-visible .demoCardArrow {
+  color: var(--accent-bright);
+  transform: translateX(3px);
 }
 
 @media (max-width: 720px) {

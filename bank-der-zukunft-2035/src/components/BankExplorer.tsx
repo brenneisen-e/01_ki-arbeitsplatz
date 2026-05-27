@@ -222,10 +222,36 @@ const FLOORS: Floor[] = [
     height: 18,
     detailScenes: [
       {
+        image: './bank-floor-sales-3.png',
+        alt: 'Status Quo (klassische Beratung am Desk) im Vergleich zu 2035 mit vier Touchpoints: Persönliche Beratung, Video-Beratung, Chat und autonomer Agent',
+        narrative: {
+          kicker: 'Szene 1 · Vom Filial-Kanal zum Multi-Touchpoint-Erlebnis',
+          title: 'Status Quo ↔ 2035: vier Kanäle, ein nahtloses Beratungserlebnis',
+          body:
+            'Links der **Status Quo**: Beratung findet überwiegend am Desk in der Filiale statt — ein Kanal, ein Modus. Rechts **2035**: Kund:innen wechseln nahtlos zwischen **Persönlicher Beratung**, **Video-Beratung**, **Chat** und **autonomem Agent** auf der Smartwatch. Der KI-Co-Pilot kennt den Kontext über alle Kanäle hinweg und übergibt fließend zwischen ihnen.',
+          slides: [
+            {
+              title: 'Vom Single-Channel zur orchestrierten Multi-Touchpoint-Bank',
+              statusQuo:
+                'Beratung ist **kanalgebunden**: Termin in der Filiale, Telefonate für Rückfragen, Chat für triviale Anliegen. Die Übergänge sind **manuell und verlustbehaftet** — der Berater beginnt jedes Gespräch von vorn.',
+              in2035:
+                'Vier Touchpoints — **Persönlich, Video, Chat, Agent** — teilen sich **denselben Kontext**. Die KI begleitet den Kunden kanalübergreifend, **autonome Agents** erledigen Standardanliegen direkt auf der Smartwatch, **komplexe Themen eskalieren nahtlos** zur Beraterin.',
+            },
+            {
+              title: 'Vom Berater-zentrierten Modell zur Kunden-Zeitachse',
+              statusQuo:
+                'Die Bank ist **Filial- und Beraterin-zentriert**. Kund:innen passen sich an Öffnungszeiten und Termine an. **Self-Service** ist auf Standardvorgänge limitiert.',
+              in2035:
+                'Die Bank ist **24/7 entlang der Kunden-Zeitachse** verfügbar. **88 % der Standardvorgänge** laufen über Chat oder Agent, **Beraterin-Zeit** wird gezielt für strategische Themen reserviert. Der Kunde entscheidet **Kanal, Tempo und Tiefe**.',
+            },
+          ],
+        },
+      },
+      {
         image: './bank-floor-sales.png',
         alt: 'Beratungs-Desk mit Berater:in und Kund:in, SALES COCKPIT im Hintergrund',
         narrative: {
-          kicker: 'Szene 1 · Vom Produktvertrieb zum Lösungsorchestrator',
+          kicker: 'Szene 2 · Vom Produktvertrieb zum Lösungsorchestrator',
           title: 'Beratung am Desk: Mensch entscheidet, KI orchestriert',
           body:
             'Berater:in und Kund:in sitzen am **Beratungs-Desk**; der **SALES COCKPIT**-Screen im Hintergrund hält **Funnel, Cross-Sell-Vorschläge und Marktlage in Echtzeit** fest. Die Bank ist 2035 kein Produktverkäufer mehr, sondern **Lösungsorchestrator**.',
@@ -251,7 +277,7 @@ const FLOORS: Floor[] = [
         image: './bank-floor-sales-2.png',
         alt: 'Berater:in am Workstation-Desk mit eingeblendetem KI-Arbeitsplatz auf dem Bildschirm',
         narrative: {
-          kicker: 'Szene 2 · KI-augmentierter Strategieberater',
+          kicker: 'Szene 3 · KI-augmentierter Strategieberater',
           title: 'Vertriebsarbeitsplatz live: Potenziale, Vorbereitung, Doku',
           body:
             'Auf dem Bildschirm läuft der **echte Vertriebsarbeitsplatz**. Bestandskundenportfolios werden laufend **nach Vertriebspotenzialen gescannt**, Termine vorbereitet, **Cross-Sell-Vorschläge in Echtzeit** eingespielt. **Standardtransaktionen laufen autonom** — die Beratung wird **strategischer**, weil Routine entfällt.',
@@ -266,32 +292,6 @@ const FLOORS: Floor[] = [
           topPct: 22.0,
           widthPct: 41.15,
           heightPct: 41.45,
-        },
-      },
-      {
-        image: './bank-floor-sales-3.png',
-        alt: 'Status Quo (klassische Beratung am Desk) im Vergleich zu 2035 mit vier Touchpoints: Persönliche Beratung, Video-Beratung, Chat und autonomer Agent',
-        narrative: {
-          kicker: 'Szene 3 · Vom Filial-Kanal zum Multi-Touchpoint-Erlebnis',
-          title: 'Status Quo ↔ 2035: vier Kanäle, ein nahtloses Beratungserlebnis',
-          body:
-            'Links der **Status Quo**: Beratung findet überwiegend am Desk in der Filiale statt — ein Kanal, ein Modus. Rechts **2035**: Kund:innen wechseln nahtlos zwischen **Persönlicher Beratung**, **Video-Beratung**, **Chat** und **autonomem Agent** auf der Smartwatch. Der KI-Co-Pilot kennt den Kontext über alle Kanäle hinweg und übergibt fließend zwischen ihnen.',
-          slides: [
-            {
-              title: 'Vom Single-Channel zur orchestrierten Multi-Touchpoint-Bank',
-              statusQuo:
-                'Beratung ist **kanalgebunden**: Termin in der Filiale, Telefonate für Rückfragen, Chat für triviale Anliegen. Die Übergänge sind **manuell und verlustbehaftet** — der Berater beginnt jedes Gespräch von vorn.',
-              in2035:
-                'Vier Touchpoints — **Persönlich, Video, Chat, Agent** — teilen sich **denselben Kontext**. Die KI begleitet den Kunden kanalübergreifend, **autonome Agents** erledigen Standardanliegen direkt auf der Smartwatch, **komplexe Themen eskalieren nahtlos** zur Beraterin.',
-            },
-            {
-              title: 'Vom Berater-zentrierten Modell zur Kunden-Zeitachse',
-              statusQuo:
-                'Die Bank ist **Filial- und Beraterin-zentriert**. Kund:innen passen sich an Öffnungszeiten und Termine an. **Self-Service** ist auf Standardvorgänge limitiert.',
-              in2035:
-                'Die Bank ist **24/7 entlang der Kunden-Zeitachse** verfügbar. **88 % der Standardvorgänge** laufen über Chat oder Agent, **Beraterin-Zeit** wird gezielt für strategische Themen reserviert. Der Kunde entscheidet **Kanal, Tempo und Tiefe**.',
-            },
-          ],
         },
       },
     ],

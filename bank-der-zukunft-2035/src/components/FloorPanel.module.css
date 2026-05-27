@@ -1,6 +1,6 @@
 .panel {
   position: relative;
-  width: min(580px, 94vw);
+  width: min(760px, 94vw);
   height: 100%;
   display: flex;
   align-items: stretch;
@@ -10,11 +10,10 @@
     opacity var(--t-med) var(--ease-out);
 }
 
-/* Wenn der User mit der Maus über das eingebettete iframe-Demo fährt,
- * schrumpft das Panel auf eine schmale Spalte (nur Kicker + Titel
- * sichtbar, Body/Slides/KPIs ausgeblendet). So bekommt das Demo Sicht,
- * der Kontext bleibt aber als kompakter Streifen am Rand erhalten.
- * Cursor verlässt iframe -> Panel wächst zurück auf volle Breite. */
+/* Minimiert wird das Panel entweder per User-Klick auf den Toggle (oben
+ * rechts im Panel) ODER automatisch, wenn der User über ein eingebettetes
+ * iframe-Demo hovert. Geschrumpft auf eine schmale Spalte (nur Kicker +
+ * Titel sichtbar, Body/Slides/KPIs ausgeblendet). */
 .panel[data-minimized] {
   width: min(260px, 70vw);
   opacity: 0.78;
@@ -57,6 +56,45 @@
   padding: 72px 28px 24px 28px;
   overflow-y: auto;
   color: var(--ink);
+}
+
+/* Minimieren/Maximieren-Toggle oben rechts im Panel. Bleibt sichtbar,
+ * auch wenn das Panel geschrumpft ist, damit der User es wieder
+ * aufziehen kann. */
+.toggle {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(11, 11, 12, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.toggle:hover,
+.toggle:focus-visible {
+  background: rgba(4, 106, 56, 0.85);
+  border-color: rgba(4, 106, 56, 1);
+  outline: none;
+  transform: scale(1.04);
+}
+
+.panel[data-minimized] .toggle {
+  opacity: 1;
 }
 
 .header {

@@ -1,4 +1,5 @@
-import { Search, Target } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Maximize2, Minimize2, Search, Target } from 'lucide-react'
 import styles from './FloorPanel.module.css'
 
 type Slide = { title: string; statusQuo: string; in2035: string }
@@ -52,13 +53,35 @@ export function FloorPanel({
   const body = sceneNarrative?.body ?? floor.chapter.body
   const kpis = sceneNarrative?.kpis ?? floor.chapter.kpis
   const slides = sceneNarrative?.slides ?? []
+
+  // Manuelles Minimieren via Button (unabhängig vom hover-getriebenen
+  // `minimized`-Prop): wird beim Wechsel der Etage zurückgesetzt.
+  const [userMinimized, setUserMinimized] = useState(false)
+  useEffect(() => {
+    setUserMinimized(false)
+  }, [floor.id])
+  const isMinimized = userMinimized || Boolean(minimized)
+
   return (
     <article
       className={styles.panel}
-      data-minimized={minimized || undefined}
+      data-minimized={isMinimized || undefined}
       aria-labelledby={`floor-${floor.id}-title`}
     >
       <div className={styles.shade} aria-hidden />
+      <button
+        type="button"
+        className={styles.toggle}
+        onClick={() => setUserMinimized((v) => !v)}
+        aria-label={userMinimized ? 'Panel maximieren' : 'Panel minimieren'}
+        title={userMinimized ? 'Maximieren' : 'Minimieren'}
+      >
+        {userMinimized ? (
+          <Maximize2 size={16} strokeWidth={2} aria-hidden />
+        ) : (
+          <Minimize2 size={16} strokeWidth={2} aria-hidden />
+        )}
+      </button>
       <div className={styles.body}>
         <header className={styles.header}>
           <span className={styles.kicker}>{kicker}</span>

@@ -138,11 +138,11 @@ const FLOORS: Floor[] = [
   {
     id: 'governance',
     label: 'Compliance & Risk',
-    kicker: 'Kapitel 06 · Top Floor links',
+    kicker: 'Kapitel 06 · 5. Etage links',
     centerX: 30,
-    centerY: 15,
+    centerY: 12,
     width: 36,
-    height: 25,
+    height: 19,
     detailImage: './bank-floor-governance.png',
     chapter: {
       title: 'Governance Cockpit: Capital, Liquidity & Risk in Echtzeit',
@@ -158,11 +158,11 @@ const FLOORS: Floor[] = [
   {
     id: 'businessmodel',
     label: 'Geschäftsmodell der Zukunft',
-    kicker: 'Top Floor rechts · Executive Lounge',
+    kicker: 'Kapitel 06 · 5. Etage rechts · Executive Lounge',
     centerX: 70,
-    centerY: 15,
+    centerY: 12,
     width: 36,
-    height: 25,
+    height: 19,
     chapter: {
       title: 'Executive Lounge: der strategische Rückzugsraum',
       body:
@@ -177,11 +177,11 @@ const FLOORS: Floor[] = [
   {
     id: 'corporate-l',
     label: 'Corporate Services',
-    kicker: 'Kapitel 04 · 2. Etage links',
+    kicker: 'Kapitel 04 · 4. Etage links',
     centerX: 30,
-    centerY: 40,
+    centerY: 31,
     width: 36,
-    height: 24,
+    height: 19,
     chapter: {
       title: 'Organisation & Talent: Steuerung der Menschen-Seite',
       body:
@@ -196,11 +196,11 @@ const FLOORS: Floor[] = [
   {
     id: 'corporate-r',
     label: 'People & Culture',
-    kicker: 'Kapitel 04 · 2. Etage rechts',
+    kicker: 'Kapitel 04 · 4. Etage rechts',
     centerX: 70,
-    centerY: 40,
+    centerY: 31,
     width: 36,
-    height: 24,
+    height: 19,
     chapter: {
       title: 'People & Culture: der menschliche Teil der Bank',
       body:
@@ -215,11 +215,11 @@ const FLOORS: Floor[] = [
   {
     id: 'sales-l',
     label: 'Markt & Vertrieb',
-    kicker: 'Kapitel 02 · Mittlere Etage links',
+    kicker: 'Kapitel 02 · 3. Etage links',
     centerX: 31,
-    centerY: 60,
+    centerY: 50,
     width: 38,
-    height: 18,
+    height: 19,
     detailScenes: [
       {
         image: './bank-floor-sales-3.png',
@@ -305,11 +305,11 @@ const FLOORS: Floor[] = [
   {
     id: 'sales-r',
     label: 'Meeting-Pods',
-    kicker: 'Kapitel 02 · Mittlere Etage rechts',
+    kicker: 'Kapitel 02 · 3. Etage rechts',
     centerX: 70,
-    centerY: 60,
+    centerY: 50,
     width: 36,
-    height: 18,
+    height: 19,
     chapter: {
       title: 'Meeting-Pods: vertrauliche Beratung & Co-Browsing',
       body:
@@ -324,11 +324,11 @@ const FLOORS: Floor[] = [
   {
     id: 'backoffice-l',
     label: 'Marktfolge',
-    kicker: 'Kapitel 03 · 4. Etage links',
+    kicker: 'Kapitel 03 · 2. Etage links',
     centerX: 31,
-    centerY: 76,
+    centerY: 69,
     width: 38,
-    height: 14,
+    height: 19,
     chapter: {
       title: 'Back-Office Processing: STP & autonome Service-Worker',
       body:
@@ -343,11 +343,11 @@ const FLOORS: Floor[] = [
   {
     id: 'backoffice-r',
     label: 'Workflow Automation',
-    kicker: 'Kapitel 03 · 4. Etage rechts',
+    kicker: 'Kapitel 03 · 2. Etage rechts',
     centerX: 70,
-    centerY: 76,
+    centerY: 69,
     width: 36,
-    height: 14,
+    height: 19,
     chapter: {
       title: 'Document Processing Pipeline & Workflow Automation',
       body:
@@ -362,11 +362,11 @@ const FLOORS: Floor[] = [
   {
     id: 'datacenter',
     label: 'Technologie & IT',
-    kicker: 'Kapitel 05 · Basement',
+    kicker: 'Kapitel 05 · 1. Etage · Rechenzentrum',
     centerX: 50,
-    centerY: 92,
+    centerY: 88,
     width: 80,
-    height: 16,
+    height: 19,
     chapter: {
       title: 'Data Center: Plattform & Post-Quantum-Fundament',
       body:
@@ -429,11 +429,11 @@ const FLOORS: Floor[] = [
 ]
 
 /**
- * Aspect-Ratio des Master-Bilds. Aktuell 3:2 (1536×1024). Wenn du das
+ * Aspect-Ratio des Master-Bilds. Aktuell ~16:9 (1672×941). Wenn du das
  * Bild austauschst, hier die echte Auflösung eintragen -- die Camera
  * sizet sich automatisch entsprechend.
  */
-const IMAGE_ASPECT = 1536 / 1024
+const IMAGE_ASPECT = 1672 / 941
 
 /** Kameraflug: 3,0 s (entspannter Cinematic-Flug). */
 const ZOOM_DURATION = 3.0

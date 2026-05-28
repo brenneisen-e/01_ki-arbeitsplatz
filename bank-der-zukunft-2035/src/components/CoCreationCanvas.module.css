@@ -1,0 +1,622 @@
+/* CoCreationCanvas — Vollbild-Overlay für Co-Creation-Sessions.
+ * Alle Farben via CSS-Custom-Properties aus index.css.
+ * Kein max-width auf dem Overlay selbst; Content-Box auf ~1180px begrenzt.
+ */
+
+/* ─── Overlay ────────────────────────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 20px 48px 20px;
+  overflow-y: auto;
+}
+
+/* ─── Content-Box ────────────────────────────────────────────────────────────── */
+
+.content {
+  width: 100%;
+  max-width: 1180px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--bg-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 36px 40px 28px 40px;
+  border-bottom: 1px solid var(--border-soft);
+  background: linear-gradient(
+    180deg,
+    rgba(4, 106, 56, 0.08) 0%,
+    rgba(4, 106, 56, 0.0) 100%
+  );
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #fff;
+  margin: 0;
+}
+
+.intro {
+  font-size: 15px;
+  color: var(--ink-2);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Zurücksetzen-Button */
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
+}
+
+.resetBtn:hover,
+.resetBtn:focus-visible {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--ink);
+  outline: none;
+}
+
+/* Schließen-Button */
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.closeBtn:hover,
+.closeBtn:focus-visible {
+  background: rgba(209, 73, 91, 0.18);
+  border-color: var(--bad);
+  color: var(--bad);
+  transform: scale(1.06);
+  outline: none;
+}
+
+/* ─── Body ───────────────────────────────────────────────────────────────────── */
+
+.body {
+  padding: 36px 40px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ─── Dimensions-Grid (Organisations-Variant) ────────────────────────────────── */
+
+.dimGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 860px) {
+  .dimGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Dimensions-Karte ───────────────────────────────────────────────────────── */
+
+.dimCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 24px 20px 24px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+  transition: border-color var(--t-fast) var(--ease-out);
+}
+
+.dimCard:hover {
+  border-color: var(--border-strong);
+}
+
+.dimCardTitle {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin: 0;
+}
+
+.dimCardPrompt {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ─── Segmented Toggle ───────────────────────────────────────────────────────── */
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  padding: 3px;
+  gap: 2px;
+  width: 100%;
+}
+
+.toggleBtn {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: calc(var(--r-sm) - 2px);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.toggleBtn:hover {
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.toggleBtn[data-active] {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* ─── Notiz-Eingabe + Chips ──────────────────────────────────────────────────── */
+
+.noteArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.noteRow {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.noteInput {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-xs);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.4;
+  outline: none;
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    background var(--t-fast) var(--ease-out);
+}
+
+.noteInput::placeholder {
+  color: var(--ink-3);
+}
+
+.noteInput:focus {
+  border-color: var(--accent);
+  background: var(--surface-3);
+}
+
+.noteAddBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--accent);
+  background: var(--accent-tint);
+  color: var(--accent-bright);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out);
+}
+
+.noteAddBtn:hover:not(:disabled) {
+  background: var(--accent);
+  color: #fff;
+}
+
+.noteAddBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 10px;
+  background: var(--accent-tint);
+  border: 1px solid rgba(4, 106, 56, 0.35);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  max-width: 240px;
+}
+
+.chipText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  color: var(--ink-3);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color var(--t-fast) var(--ease-out);
+}
+
+.chipRemove:hover {
+  color: var(--bad);
+}
+
+/* ─── Sektionen (Future-Interaction) ────────────────────────────────────────── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sectionHeading {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* ─── Control-Shift-Tabelle (Section A) ──────────────────────────────────────── */
+
+.controlTable {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controlRow {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  transition: border-color var(--t-fast) var(--ease-out);
+}
+
+.controlRow:hover {
+  border-color: var(--border-strong);
+}
+
+.controlLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+
+@media (max-width: 680px) {
+  .controlRow {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* ─── Priorisierungs-Matrix (Section B) ──────────────────────────────────────── */
+
+.matrixHint {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: -8px 0 0 0;
+}
+
+.matrix {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 10px;
+  padding: 32px 32px 32px 52px; /* links Platz für Y-Achsen-Label */
+}
+
+/* Y-Achsen-Label */
+.matrixYLabel {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* X-Achsen-Label */
+.matrixXLabel {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Quadranten-Zellen */
+.matrixQuadrant {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 120px;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+  transition: border-color var(--t-fast) var(--ease-out);
+}
+
+/* high-high (oben rechts) → Pilot-Quadrant: grüner Akzent */
+.matrixQuadrant[data-quadrant='high-high'] {
+  background: linear-gradient(
+    135deg,
+    rgba(4, 106, 56, 0.14) 0%,
+    rgba(4, 106, 56, 0.04) 100%
+  );
+  border-color: rgba(4, 106, 56, 0.45);
+}
+
+/* high-high im ersten Row → grid row 1 col 2 */
+.matrix > .matrixQuadrant:nth-child(3) {   /* low-high  = row1 col1 */
+  grid-row: 1;
+  grid-column: 1;
+}
+.matrix > .matrixQuadrant:nth-child(4) {   /* high-high = row1 col2 */
+  grid-row: 1;
+  grid-column: 2;
+}
+.matrix > .matrixQuadrant:nth-child(5) {   /* low-low   = row2 col1 */
+  grid-row: 2;
+  grid-column: 1;
+}
+.matrix > .matrixQuadrant:nth-child(6) {   /* high-low  = row2 col2 */
+  grid-row: 2;
+  grid-column: 2;
+}
+
+.quadrantLabel {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+
+.matrixQuadrant[data-quadrant='high-high'] .quadrantLabel {
+  color: var(--accent-bright);
+}
+
+/* Matrix-Chips (klickbar) */
+.matrixChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  align-self: flex-start;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.matrixChip:hover {
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.matrixChip:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
+}
+
+/* Pilot-Chips im high-high-Quadrant */
+.matrixChip[data-pilot] {
+  background: var(--accent-tint);
+  border-color: rgba(4, 106, 56, 0.5);
+  color: #fff;
+  font-weight: 600;
+}
+
+.matrixChip[data-pilot]:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ─── Zusammenfassung (Section C) ────────────────────────────────────────────── */
+
+.summaryText {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  padding: 16px 20px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-md);
+  margin: 0;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .header {
+    flex-direction: column;
+    gap: 18px;
+    padding: 28px 24px 22px 24px;
+  }
+
+  .headerActions {
+    align-self: flex-end;
+  }
+
+  .body {
+    padding: 28px 24px 36px 24px;
+    gap: 32px;
+  }
+
+  .matrix {
+    grid-template-columns: 1fr 1fr;
+    padding: 28px 16px 28px 44px;
+  }
+}
+
+@media (max-width: 520px) {
+  .overlay {
+    padding: 12px 8px 32px 8px;
+  }
+
+  .content {
+    border-radius: var(--r-lg);
+  }
+
+  .matrix {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .matrix > .matrixQuadrant:nth-child(3),
+  .matrix > .matrixQuadrant:nth-child(4),
+  .matrix > .matrixQuadrant:nth-child(5),
+  .matrix > .matrixQuadrant:nth-child(6) {
+    grid-column: 1;
+  }
+}

@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0B0B0C;
+  background: var(--bg-deep);
 }
 
 .stage {
@@ -18,16 +18,11 @@
 }
 
 /*
- * CAMERA: trägt die Aspect-Ratio des Bilds (per --ar Custom Property
- * aus BankExplorer.tsx). Wichtige Falle: wenn BEIDE Dimensionen
- * explizit gesetzt sind, ignoriert der Browser aspect-ratio. Deshalb
- * setzen wir die Breite per min(100vw, 100vh × AR) -- der Wert ergibt
- * automatisch eine "contain"-Anpassung, und die aspect-ratio leitet
- * die Höhe daraus ab.
- *
- * Voraussetzung: Stage = Viewport (sonst vw/vh durch eine eigene
- * Mess-Logik ersetzen).
- *
+ * CAMERA: trägt die Aspect-Ratio des Bilds (per --ar Custom Property aus
+ * BankExplorer.tsx). Falle: wenn BEIDE Dimensionen explizit gesetzt sind,
+ * ignoriert der Browser aspect-ratio. Deshalb Breite per
+ * min(100vw, 100vh × AR) -- ergibt automatisch ein "contain"-Fit, die
+ * aspect-ratio leitet die Höhe ab. Voraussetzung: Stage = Viewport.
  * WICHTIG: hier KEINE CSS-Transition. Transform setzt GSAP.
  */
 .camera {
@@ -35,7 +30,6 @@
   --ar: 1;
   width: min(100vw, calc(100vh * var(--ar)));
   aspect-ratio: var(--ar);
-  /* min-* = 0, damit Flex-Eltern die Camera nicht aufblähen */
   min-width: 0;
   min-height: 0;
   transform-origin: 50% 50%;
@@ -43,261 +37,11 @@
   overflow: visible;
 }
 
-/* Bild füllt Camera vollständig. Camera-AR == Bild-AR -> object-fit:
- * cover ist sicher, auch bei sub-pixel-Rundung. */
-.master {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  user-select: none;
-  -webkit-user-drag: none;
-  pointer-events: none;
-  image-rendering: auto;
-}
-
-/*
- * DETAIL-Layer: liegt auf Stage-Ebene, NICHT in der Camera. Wird also
- * NICHT mit-skaliert -- bleibt bei nativer Auflösung scharf. Enthält
- * mehrere Szenen-Bilder (stacked) + optionales iframe-Overlay auf einer
- * im Foto sichtbaren Bildschirmfläche.
- */
-.detailLayer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  opacity: 0;
-}
-
-.detail {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  opacity: 0;
-  z-index: 1;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  image-rendering: auto;
-  transition: opacity 0.5s ease-out;
-}
-
-.detail[data-active] {
-  opacity: 1;
-  z-index: 2;
-}
-
-/* iframe-Overlay auf einer im Foto sichtbaren Bildschirmfläche. left/top/
- * width/height kommen pro Szene per inline-style. Der iframe darin wird
- * von 1920×1080 logischer Größe per JS-transform in diesen Container
- * skaliert -- so kommt das Demo IMMER ohne Scrollbalken aus. */
-.screenOverlay {
-  position: absolute;
-  z-index: 3;
-  overflow: hidden;
-  background: #0a0b0c;
-  box-shadow:
-    inset 0 0 24px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-.screenIframe {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform-origin: 50% 50%;
-  border: 0;
-  background: transparent;
-  display: block;
-}
-
-/* Looped Video, liegt auf Szenen-Ebene und füllt die ganze Stage cover. */
-.sceneVideo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  z-index: 4;
-  background: #0a0b0c;
-}
-
-/* Großer Play-Button mittig im Detail-Foto. Pulsiert leicht, damit klar
- * ist, dass etwas Interaktives da ist. */
-.scenePlayBtn {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-  width: 96px;
-  height: 96px;
-  border-radius: 999px;
-  background: rgba(4, 106, 56, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow:
-    0 24px 60px rgba(4, 106, 56, 0.55),
-    0 0 0 0 rgba(4, 106, 56, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-  transition:
-    transform var(--t-fast) var(--ease-out),
-    box-shadow var(--t-med) var(--ease-out),
-    background var(--t-fast) var(--ease-out);
-  animation: scenePlayPulse 2.4s ease-in-out infinite;
-}
-
-.scenePlayBtn:hover,
-.scenePlayBtn:focus-visible {
-  transform: translate(-50%, -50%) scale(1.06);
-  background: rgba(5, 124, 66, 0.96);
-  outline: none;
-}
-
-.scenePlayBtn > svg {
-  margin-left: 4px; /* optisch zentriert (Play-Dreieck ist links-lastig) */
-}
-
-@keyframes scenePlayPulse {
-  0%, 100% {
-    box-shadow:
-      0 24px 60px rgba(4, 106, 56, 0.55),
-      0 0 0 0 rgba(4, 106, 56, 0.45),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-  }
-  50% {
-    box-shadow:
-      0 24px 60px rgba(4, 106, 56, 0.55),
-      0 0 0 18px rgba(4, 106, 56, 0),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-  }
-}
-
-/* Stop-Button für laufendes Video -- oben rechts in der Stage, gleicher
- * Stil wie der Back-Button, damit Layout konsistent ist. */
-.sceneStopBtn {
-  position: absolute;
-  top: 22px;
-  right: 22px;
-  z-index: 6;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px 10px 12px;
-  border-radius: 999px;
-  background: rgba(11, 11, 12, 0.82);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: #fff;
-  font-size: 13.5px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  border: 0;
-  cursor: pointer;
-  box-shadow:
-    0 14px 32px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  transition: background var(--t-fast) var(--ease-out);
-}
-
-.sceneStopBtn:hover,
-.sceneStopBtn:focus-visible {
-  background: rgba(4, 106, 56, 0.92);
-  outline: none;
-}
-
-/* Szenen-Navigation: Pfeile + Dots, mittig unten auf der Stage. Nur
- * sichtbar bei > 1 Szene und im Zoom-Modus. */
-.sceneNav {
-  position: absolute;
-  bottom: 26px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 12;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(11, 11, 12, 0.82);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow:
-    0 18px 44px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-
-.sceneNavBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background var(--t-fast) var(--ease-out);
-}
-
-.sceneNavBtn:hover,
-.sceneNavBtn:focus-visible {
-  background: rgba(4, 106, 56, 0.6);
-  outline: none;
-}
-
-.sceneDots {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.sceneDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.28);
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  transition:
-    background var(--t-fast) var(--ease-out),
-    width var(--t-fast) var(--ease-out);
-}
-
-.sceneDot[data-active] {
-  background: var(--accent-bright);
-  width: 22px;
-}
-
 /* HOVER-/KLICK-ZONEN. Liegen IN der Camera -- mit dem Bild ausgerichtet. */
 .zones {
   position: absolute;
   inset: 0;
-  pointer-events: none;
   z-index: 3;
-  opacity: 1;
-  transition: opacity var(--t-med) var(--ease-out);
-}
-
-.zones[data-overview] {
-  pointer-events: auto;
-}
-
-/* In Zoom-Modus blenden wir die Labels weg */
-.zones:not([data-overview]) .zoneLabel,
-.zones:not([data-overview]) .zoneHighlight {
-  opacity: 0;
 }
 
 .zone {
@@ -306,58 +50,71 @@
   background: transparent;
   border: 0;
   padding: 0;
-  cursor: pointer;
-  /* Debug: outline: 1px dashed rgba(0, 255, 0, 0.4); */
+  cursor: zoom-in;
 }
 
-.zoneHighlight {
+.zoneFill {
   position: absolute;
   inset: 0;
-  /* Sanfter Deloitte-Grün-Glow + 1 px Border, sobald die Zone hovered ist. */
+  border-radius: 8px;
   background: radial-gradient(
     ellipse at center,
-    rgba(4, 106, 56, 0.22) 0%,
-    rgba(4, 106, 56, 0.08) 55%,
+    var(--accent-tint) 0%,
+    rgba(4, 106, 56, 0.06) 55%,
     rgba(4, 106, 56, 0) 80%
   );
   box-shadow: inset 0 0 0 1px rgba(4, 106, 56, 0);
   opacity: 0;
-  transition:
-    opacity var(--t-med) var(--ease-out),
-    box-shadow var(--t-med) var(--ease-out);
+  transition: opacity var(--t-med) var(--ease-out), box-shadow var(--t-med) var(--ease-out);
   pointer-events: none;
 }
 
-.zone[data-hovered] .zoneHighlight,
-.zone:focus-visible .zoneHighlight {
+.zone[data-hovered] .zoneFill,
+.zone:focus-visible .zoneFill {
   opacity: 1;
-  box-shadow: inset 0 0 0 1px rgba(4, 106, 56, 0.65);
+  box-shadow: inset 0 0 0 1px rgba(4, 106, 56, 0.7);
+}
+
+/* Schlüsselobjekt-Hotspot: dezent pulsierender Akzentpunkt im Zonen-Zentrum. */
+.hotspot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--accent-bright);
+  box-shadow: 0 0 0 4px var(--accent-tint), 0 4px 14px var(--accent-glow);
+  opacity: 0.85;
+  animation: hotspotPulse 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.zone[data-hovered] .hotspot,
+.zone:focus-visible .hotspot {
+  opacity: 0;
 }
 
 .zoneLabel {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) translateY(6px);
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 22px 14px 20px;
-  border-radius: 999px;
-  background: rgba(11, 11, 12, 0.82);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: #fff;
+  transform: translate(-50%, -50%) translateY(8px);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 13px 20px;
+  border-radius: 16px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-align: center;
   opacity: 0;
-  transition:
-    opacity var(--t-med) var(--ease-out),
-    transform var(--t-med) var(--ease-out);
+  transition: opacity var(--t-med) var(--ease-out), transform var(--t-med) var(--ease-out);
   pointer-events: none;
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-  white-space: nowrap;
-  max-width: 92%;
+  box-shadow: var(--shadow-1), inset 0 0 0 1px var(--border-soft);
+  max-width: 94%;
 }
 
 .zone[data-hovered] .zoneLabel,
@@ -370,82 +127,25 @@
   font-family: var(--font-mono);
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   color: var(--accent-bright);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .zoneTitle {
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: #fff;
+  color: var(--ink);
+  white-space: nowrap;
 }
 
-.zoneLabel > svg {
-  margin-left: 2px;
-  color: var(--accent-bright);
-}
-
-.zone:hover {
-  cursor: zoom-in;
-}
-
-/* Zurück-Button -- oben links */
-.backBtn {
-  position: absolute;
-  top: 22px;
-  left: 22px;
-  z-index: 12;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px 10px 12px;
-  border-radius: 999px;
-  background: rgba(11, 11, 12, 0.78);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: #fff;
-  font-size: 13.5px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  opacity: 0;
-  transform: translateX(-8px);
-  pointer-events: none;
-  transition:
-    opacity var(--t-med) var(--ease-out),
-    transform var(--t-med) var(--ease-out),
-    background var(--t-fast) var(--ease-out);
-}
-
-.backBtn[data-visible] {
-  opacity: 1;
-  transform: translateX(0);
-  pointer-events: auto;
-}
-
-.backBtn:hover {
-  background: rgba(4, 106, 56, 0.92);
-}
-
-/* Kapitel-Panel-Layer (gsap-gesteuert über opacity/y).
- * WICHTIG: pointer-events bleibt IMMER 'none' auf dem Layer, sonst würde
- * der Layer den ganzen Stage-Bereich für Klicks blockieren -- auch das
- * leere Feld links neben der Panel-Spalte. Stattdessen aktiviert sich
- * pointer-events nur auf der eigentlichen .panel (siehe FloorPanel.css). */
-.panelLayer {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  pointer-events: none;
-  opacity: 0;
-  display: flex;
-  align-items: stretch;
-  justify-content: flex-end;
+.zoneObject {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  white-space: nowrap;
 }
 
 /* Marken-Lockup -- nur in der Übersicht */
@@ -458,13 +158,10 @@
   flex-direction: column;
   text-align: right;
   line-height: 1.15;
-  color: rgba(255, 255, 255, 0.94);
   opacity: 0;
   transform: translateX(8px);
   pointer-events: none;
-  transition:
-    opacity var(--t-med) var(--ease-out),
-    transform var(--t-med) var(--ease-out);
+  transition: opacity var(--t-med) var(--ease-out), transform var(--t-med) var(--ease-out);
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
 }
 
@@ -487,15 +184,47 @@
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* Hinweis-Pille -- nur in der Übersicht */
+.hint {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  z-index: 12;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-1);
+  font-size: 12.5px;
+  color: var(--ink-2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-med) var(--ease-out), transform var(--t-med) var(--ease-out);
+}
+
+.hint[data-visible] {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@keyframes hotspotPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px var(--accent-tint), 0 4px 14px var(--accent-glow);
+  }
+  50% {
+    box-shadow: 0 0 0 10px transparent, 0 4px 14px var(--accent-glow);
+  }
 }
 
 @media (max-width: 720px) {
-  .zoneLabel {
-    left: 16px;
-    padding: 8px 12px;
-    gap: 8px;
-  }
+  .zoneLabel { padding: 9px 14px; }
   .zoneTitle { font-size: 14px; }
-  .backBtn { top: 14px; left: 14px; padding: 8px 14px 8px 10px; font-size: 13px; }
   .brand { top: 14px; right: 14px; }
+  .hint { bottom: 14px; font-size: 11.5px; }
 }

@@ -23,6 +23,24 @@ function SourceBadge({ sourceKey, onActivate, label = 'Quelle anzeigen' }) {
   );
 }
 
+// Maps an uploaded file name back to one of the downloadable demo CVs so the
+// tool shows the matching analysis. Falls back to null if nothing matches.
+function matchProfileByFileName(fileName, demoProfiles) {
+  if (!fileName) return null;
+  const norm = (s) => (s || '').toLowerCase().replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/g, '');
+  const target = norm(fileName);
+  if (!target) return null;
+  for (const p of demoProfiles) {
+    if (p.cvPdf) {
+      const base = norm(p.cvPdf.split('/').pop());
+      if (base && (target === base || target.includes(base) || base.includes(target))) return p.id;
+    }
+    const nameNorm = norm(p.name);
+    if (nameNorm && target.includes(nameNorm)) return p.id;
+  }
+  return null;
+}
+
 function getMatchesForProfile(profile, positions, mode) {
   return positions.map(pos => {
     const score = getHPMatchScoreExt(profile, pos, mode);
@@ -67,10 +85,22 @@ function KiSummary({ text }) {
 // ======== Upload / Landing Section ========
 function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
   const { institut } = useInstitut();
+  const showToast = useToast();
   const [linkedinChecked, setLinkedinChecked] = useState(true);
   const [demosExpanded, setDemosExpanded] = useState(false);
   const fileInputRef = useRef(null);
   const { positions, ui } = hrData;
+
+  const handleFileSelected = (e) => {
+    const file = e.target.files?.[0];
+    const matchedId = file ? matchProfileByFileName(file.name, ui.demoProfiles) : null;
+    if (matchedId) {
+      const matched = ui.demoProfiles.find(p => p.id === matchedId);
+      showToast?.(`Lebenslauf erkannt: ${matched?.name}`, 'success');
+    }
+    e.target.value = '';
+    onLoadProfile(matchedId || ui.defaultProfileId);
+  };
 
   return (
     <div className="hp-upload-section">
@@ -93,7 +123,7 @@ function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
               ref={fileInputRef}
               type="file"
               accept=".pdf,.docx"
-              onChange={() => onLoadProfile(ui.defaultProfileId)}
+              onChange={handleFileSelected}
               style={{ display: 'none' }}
             />
           </div>

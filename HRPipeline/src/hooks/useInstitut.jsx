@@ -30,6 +30,9 @@ export function InstitutProvider({ children }) {
     el.style.setProperty('--mode-primary-light', c.primaryLight);
     el.style.setProperty('--mode-gradient', c.gradient);
     if (c.accent) el.style.setProperty('--mode-accent', c.accent);
+    el.style.setProperty('--ai-primary', c.primary);
+    el.style.setProperty('--ai-primary-light', c.primaryLight);
+    el.style.setProperty('--ai-gradient', c.gradient);
   }, [selected]);
 
   const value = useMemo(() => ({

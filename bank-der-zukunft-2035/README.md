@@ -26,16 +26,18 @@ npm run preview    # bedient dist/ lokal (http://localhost:4173)
 - Privacy-first: keine externen Fonts / CDNs / Analytics, kein Browser-Storage
 - `prefers-reduced-motion: reduce` → Animationen entfallen / harter Schnitt
 
-## Ablauf (State-Machine)
+## Ablauf
 
 ```
-Intro-Chatbot  →  Übersicht  →  Kameraflug  →  ChapterReader            →  Handoff
-(scripted)        (7 Zonen)     (GSAP zoom)    (Hypothese 1·2·3 → Akt.)     (Demo / Tool)
+Chatbot-Landing  →  Übersicht  →  Kameraflug  →  ChapterReader            →  Handoff
+(externe App)       (7 Zonen)     (GSAP zoom)    (Hypothese 1·2·3 → Akt.)     (Demo / Tool)
 ```
 
-- **Intro** (`IntroChatbot`): vorbereitete Frage → Reasoning-Animation →
-  Reveal des Strukturbilds → „Strukturbild betreten". Deterministisch
-  (Variante A), kein Live-API-Risiko.
+- **Einstieg**: Die Chatbot-Landing lebt in der separaten App `BankDerZukunft/`
+  (Q&A mit Charts/Tabellen/Quellen) und verlinkt direkt hierher
+  (`/bank-der-zukunft-2035/dist/`). Diese App startet daher **unmittelbar mit
+  der Übersicht** — kein eigener Intro-Chat. Ein dezenter „Zum Chat"-Link
+  oben links führt zurück (`/BankDerZukunft/dist/`).
 - **Übersicht** (`BankExplorer`): Master-Bild füllt den Viewport, 7 Zonen mit
   Hover-Glow, Label und pulsierendem Schlüsselobjekt-Hotspot.
 - **Kameraflug**: Klick auf eine Zone → GSAP-Zoom (`transform: scale` +
@@ -119,12 +121,11 @@ Eigene, voll interaktive Scaffolds (deutschsprachig, ohne Storage):
 
 ```
 src/
-├── App.tsx                         (Phasen: Intro → Explorer)
+├── App.tsx                         (rendert direkt den Explorer)
 ├── main.tsx · index.css            (Tokens + Reset)
 ├── data/chapters.ts                (zentrale Datenquelle: 7 Kapitel, Zonen, Bild-Slots, Handoffs)
 ├── hooks/useReducedMotion.ts
 └── components/
-    ├── IntroChatbot.tsx            (scripted Intro + Reveal)
     ├── BankExplorer.tsx            (Übersicht, Zonen, Kameraflug, Orchestrierung)
     ├── ChapterReader.tsx           (Hypothesen → Aktivität, Bild + Panel + Pager)
     ├── ImageSlot.tsx               (Bild mit Platzhalter-Fallback)

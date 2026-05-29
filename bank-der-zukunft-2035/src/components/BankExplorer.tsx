@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 import { gsap } from 'gsap'
+import { MessageSquare } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
 import { ChapterReader } from './ChapterReader'
@@ -235,6 +236,18 @@ export function BankExplorer(): React.ReactElement {
             </div>
           )}
         </div>
+
+        {/* Zurück zur Chatbot-Landing (separate App), nur Übersicht */}
+        <a
+          className={styles.chatLink}
+          data-visible={isOverview || undefined}
+          href="/BankDerZukunft/dist/"
+          aria-label="Zurück zum Chat-Assistenten"
+          tabIndex={isOverview ? 0 : -1}
+        >
+          <MessageSquare size={15} strokeWidth={1.8} aria-hidden />
+          <span>Zum Chat</span>
+        </a>
 
         {/* Marken-Lockup + Hinweis (nur Übersicht) */}
         <div className={styles.brand} data-visible={isOverview || undefined}>

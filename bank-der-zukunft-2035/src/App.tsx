@@ -1,19 +1,13 @@
-import { useState } from 'react'
 import styles from './App.module.css'
-import { IntroChatbot } from './components/IntroChatbot'
 import { BankExplorer } from './components/BankExplorer'
 
-// Phasen: Intro-Chatbot (erzeugt das Strukturbild) → begehbare Übersicht.
+// Der Einstieg ins Haus erfolgt über die Chatbot-Landing (separate App
+// „BankDerZukunft", verlinkt direkt hierher). Diese App startet daher
+// unmittelbar mit der begehbaren Übersicht — ohne eigenen Intro-Chat.
 function App(): React.ReactElement {
-  const [entered, setEntered] = useState(false)
-
   return (
     <div className={styles.app}>
-      {entered ? (
-        <BankExplorer />
-      ) : (
-        <IntroChatbot onEnter={() => setEntered(true)} />
-      )}
+      <BankExplorer />
     </div>
   )
 }

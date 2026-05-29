@@ -1,13 +1,22 @@
+import { useState } from 'react'
 import styles from './App.module.css'
+import { IntroChatbot } from './components/IntroChatbot'
 import { BankExplorer } from './components/BankExplorer'
 
-// Der Einstieg ins Haus erfolgt über die Chatbot-Landing (separate App
-// „BankDerZukunft", verlinkt direkt hierher). Diese App startet daher
-// unmittelbar mit der begehbaren Übersicht — ohne eigenen Intro-Chat.
+// Auftakt: „Bank der Zukunft"-Chatbot stellt die vorbereitete Frage, denkt
+// sichtbar nach und baut daraus das Strukturbild auf (Reveal) -> danach das
+// begehbare Haus. Die äußere Chatbot-Landing (App „BankDerZukunft") verlinkt
+// hierher; der „Zum Chat"-Link im Haus führt zurück.
 function App(): React.ReactElement {
+  const [entered, setEntered] = useState(false)
+
   return (
     <div className={styles.app}>
-      <BankExplorer />
+      {entered ? (
+        <BankExplorer />
+      ) : (
+        <IntroChatbot onEnter={() => setEntered(true)} />
+      )}
     </div>
   )
 }

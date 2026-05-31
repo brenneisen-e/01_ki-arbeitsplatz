@@ -1,24 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { ArrowRight, Bot, Home, Send, Sparkles } from 'lucide-react'
+import { ArrowRight, Bot, Home, Sparkles } from 'lucide-react'
 import styles from './IntroChatbot.module.css'
 import { ImageSlot } from './ImageSlot'
 import { MASTER_IMAGE } from '../data/chapters'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// IntroChatbot — der „Bank der Zukunft"-Auftakt (BdZ-Look).
+// IntroChatbot — der „AI Banking Assistant"-Auftakt (BdZ-Look).
 //
-// Kernmoment: vorbereitete Frage -> sichtbares „Reasoning" (Thinking) ->
-// statt einer Textantwort BAUT sich das Strukturbild auf (Reveal) -> Einstieg
-// ins begehbare Haus. Deterministisch (scripted), kein Live-API-Risiko.
+// Ablauf:
+//   1. Name abfragen  →  2. „Willkommen zurück, {Name} — was kann ich heute
+//   für dich tun?" + mehrere Vorschlags-Prompts. Einer davon ist „Bank der
+//   Zukunft 2035": Klick darauf → sichtbares Thinking → das Strukturbild baut
+//   sich auf → Einstieg ins begehbare Haus.
 //
-// Gestaltung bewusst im blauen BdZ-Stil (deep-space Stage + Grid, Sky/Indigo-
-// Akzent) passend zur Chatbot-Landing der Bank-der-Zukunft-App.
+// Die übrigen Prompts geben eine kurze, glaubwürdige Assistenten-Antwort, die
+// thematisch zum Workshop zurückführt. Deterministisch (scripted), kein Netz.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const QUESTION =
-  'Wie sieht eigentlich eine Bank 2026 aus — und wo steht sie im Vergleich zur Bank 2035?'
+const DEFAULT_NAME = 'Eike'
 
 const REASONING = [
   'Analysiere Geschäftsmodell',
@@ -28,27 +29,106 @@ const REASONING = [
   'Komponiere Strukturbild',
 ]
 
+type Prompt = { id: string; label: string; primary?: boolean; reply?: string }
+
+const PROMPTS: Prompt[] = [
+  { id: 'bank2035', label: 'Bank der Zukunft 2035', primary: true },
+  {
+    id: 'aufgaben',
+    label: 'Meine offenen Aufgaben heute',
+    reply:
+      'Drei Themen liegen heute an — das größte ist strategisch: Wie sieht deine Bank 2035 aus? Genau da würde ich anfangen.',
+  },
+  {
+    id: 'markt',
+    label: 'Marktlage & Zinsen kompakt',
+    reply:
+      'Die Märkte sind heute ruhig. Die spannendere Bewegung ist der Sprung ins KI-Zeitalter — den zeige ich dir gern.',
+  },
+  {
+    id: 'portfolio',
+    label: 'Portfolio-Überblick',
+    reply:
+      'Dein Portfolio ist stabil. Die größere Frage ist, wie die Bank dahinter 2035 arbeitet. Soll ich dir das Zielbild zeigen?',
+  },
+]
+
 const LINE_INTERVAL = 720
 const REVEAL_PAUSE = 600
 
-type Phase = 'idle' | 'thinking' | 'revealed'
+type Msg = { id: number; role: 'user' | 'assistant'; text: string }
+type Phase = 'name' | 'chat' | 'thinking' | 'revealed'
 
 export function IntroChatbot({
   onEnter,
 }: {
   onEnter: () => void
 }): React.ReactElement {
-  const [phase, setPhase] = useState<Phase>('idle')
+  const [phase, setPhase] = useState<Phase>('name')
+  const [nameInput, setNameInput] = useState(DEFAULT_NAME)
+  const [name, setName] = useState('')
+  const [messages, setMessages] = useState<Msg[]>([])
+  const [replying, setReplying] = useState(false)
   const [visibleLines, setVisibleLines] = useState(0)
+
+  const idRef = useRef(0)
+  const nameRef = useRef<HTMLInputElement>(null)
+  const endRef = useRef<HTMLDivElement>(null)
   const revealRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
   const reducedMotion = useReducedMotion()
 
-  const ask = useCallback(() => {
-    setPhase((p) => (p === 'idle' ? 'thinking' : p))
+  const pushMsg = useCallback((role: Msg['role'], text: string) => {
+    idRef.current += 1
+    const id = idRef.current
+    setMessages((m) => [...m, { id, role, text }])
   }, [])
 
-  // Reasoning-Sequenz: Zeilen nacheinander, dann Reveal.
+  useEffect(() => {
+    nameRef.current?.focus()
+  }, [])
+
+  const submitName = useCallback(() => {
+    if (phase !== 'name') return
+    const clean = nameInput.trim()
+    setName(clean)
+    idRef.current += 1
+    setMessages([
+      {
+        id: idRef.current,
+        role: 'assistant',
+        text: clean
+          ? `Willkommen zurück, ${clean}. Was kann ich heute für dich tun?`
+          : 'Willkommen zurück! Was kann ich heute für dich tun?',
+      },
+    ])
+    setPhase('chat')
+  }, [phase, nameInput])
+
+  const clickPrompt = useCallback(
+    (p: Prompt) => {
+      if (phase !== 'chat' || replying) return
+      pushMsg('user', p.label)
+      if (p.primary) {
+        setPhase('thinking')
+        return
+      }
+      if (p.reply) {
+        const reply = p.reply
+        setReplying(true)
+        window.setTimeout(
+          () => {
+            pushMsg('assistant', reply)
+            setReplying(false)
+          },
+          reducedMotion ? 200 : 950,
+        )
+      }
+    },
+    [phase, replying, pushMsg, reducedMotion],
+  )
+
+  // Reasoning-Sequenz (nur „Bank 2035"-Pfad), dann Reveal.
   useEffect(() => {
     if (phase !== 'thinking') return
     if (reducedMotion) {
@@ -97,18 +177,17 @@ export function IntroChatbot({
     }
   }, [phase, reducedMotion])
 
-  // Tastatur: Enter stellt die Frage (idle) bzw. betritt das Haus (revealed).
+  // Auto-Scroll ans Ende bei neuen Nachrichten / Phasen.
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Enter') return
-      if (phase === 'idle') ask()
-      else if (phase === 'revealed') onEnter()
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [phase, ask, onEnter])
+    endRef.current?.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'end',
+    })
+  }, [messages, replying, phase, visibleLines, reducedMotion])
 
-  const started = phase !== 'idle'
+  const statusLabel =
+    phase === 'thinking' ? 'Denkt nach' : phase === 'revealed' ? 'Antwort bereit' : 'Bereit'
+  const showSuggestions = phase === 'chat'
 
   return (
     <div className={styles.root}>
@@ -119,41 +198,81 @@ export function IntroChatbot({
           <span className={styles.mark} aria-hidden>BdZ</span>
           <span className={styles.brandText}>
             <span className={styles.brandName}>Bank der Zukunft</span>
-            <span className={styles.brandSub}>Banking im KI-Zeitalter · Workshop 2026</span>
+            <span className={styles.brandSub}>AI Banking Assistant · Workshop 2026</span>
           </span>
         </div>
-        <span className={styles.status} data-on={started || undefined}>
+        <span className={styles.status} data-on={phase !== 'name' || undefined}>
           <span className={styles.statusDot} aria-hidden />
-          {phase === 'thinking' ? 'Denkt nach' : phase === 'revealed' ? 'Antwort bereit' : 'Bereit'}
+          {statusLabel}
         </span>
       </header>
 
       <div className={styles.main}>
         <div className={styles.column}>
-          {!started && (
-            <div className={styles.hero}>
-              <span className={styles.badge}>
-                <span className={styles.badgePing} aria-hidden>
-                  <span />
-                  <span />
-                </span>
-                Workshop-Erlebnis · Banking 2035
+          {phase === 'name' && (
+            <div className={styles.nameCard}>
+              <span className={styles.nameAvatar} aria-hidden>
+                <Bot size={22} strokeWidth={1.8} />
               </span>
-              <h1 className={styles.heroTitle}>
-                Frag mich was zur <span className={styles.heroAccent}>Bank der Zukunft</span>
-              </h1>
-              <p className={styles.heroSub}>
-                Vom Banking von heute zum Zielbild 2035 — ich mache den Sprung sichtbar:
-                als begehbares Strukturbild, Etage für Etage.
+              <h1 className={styles.nameTitle}>Schön, dass du da bist.</h1>
+              <p className={styles.nameSub}>
+                Ich bin dein AI Banking Assistant. Wie darf ich dich begrüßen?
               </p>
+              <form
+                className={styles.nameForm}
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  submitName()
+                }}
+              >
+                <input
+                  ref={nameRef}
+                  className={styles.nameInput}
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  placeholder="Dein Name"
+                  aria-label="Dein Name"
+                  maxLength={40}
+                />
+                <button type="submit" className={styles.nameSubmit} aria-label="Weiter">
+                  <span>Weiter</span>
+                  <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
+                </button>
+              </form>
             </div>
           )}
 
-          {started && (
+          {phase !== 'name' && (
             <div className={styles.thread}>
-              <div className={styles.userRow}>
-                <div className={styles.userBubble}>{QUESTION}</div>
-              </div>
+              {messages.map((m) =>
+                m.role === 'user' ? (
+                  <div key={m.id} className={styles.userRow}>
+                    <div className={styles.userBubble}>{m.text}</div>
+                  </div>
+                ) : (
+                  <div key={m.id} className={styles.assistantRow}>
+                    <span className={styles.avatar} aria-hidden>
+                      <Bot size={15} strokeWidth={1.9} />
+                    </span>
+                    <div className={styles.bubble}>{m.text}</div>
+                  </div>
+                ),
+              )}
+
+              {replying && (
+                <div className={styles.assistantRow}>
+                  <span className={styles.avatar} aria-hidden>
+                    <Bot size={15} strokeWidth={1.9} />
+                  </span>
+                  <div className={styles.bubble}>
+                    <span className={styles.dots} aria-hidden>
+                      <span />
+                      <span />
+                      <span />
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {phase === 'thinking' && (
                 <div className={styles.assistantRow}>
@@ -190,8 +309,9 @@ export function IntroChatbot({
                   </span>
                   <div className={styles.answer}>
                     <p className={styles.answerLead}>
-                      Hier ist deine Bank im Zustand 2026 — als begehbares Strukturbild. Jede Etage
-                      zeigt den Sprung von heute auf 2035.
+                      {name ? `${name}, hier ist deine ` : 'Hier ist deine '}
+                      Bank im Zustand 2026 — als begehbares Strukturbild. Jede Etage zeigt den
+                      Sprung von heute auf 2035.
                     </p>
                     <div ref={revealRef} className={styles.reveal}>
                       <ImageSlot
@@ -213,24 +333,26 @@ export function IntroChatbot({
                   </div>
                 </div>
               )}
-            </div>
-          )}
 
-          {!started && (
-            <div className={styles.composer}>
-              <div className={styles.fauxInput}>
-                <span className={styles.fauxText}>{QUESTION}</span>
-                <span className={styles.caret} aria-hidden />
-              </div>
-              <button
-                type="button"
-                className={styles.askBtn}
-                onClick={ask}
-                aria-label="Frage stellen"
-              >
-                <span>Frage stellen</span>
-                <Send size={16} strokeWidth={2.25} aria-hidden />
-              </button>
+              {showSuggestions && (
+                <div className={styles.suggestions} role="group" aria-label="Vorschläge">
+                  {PROMPTS.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      className={styles.suggestion}
+                      data-primary={p.primary || undefined}
+                      onClick={() => clickPrompt(p)}
+                    >
+                      {p.primary && <Sparkles size={14} strokeWidth={2} aria-hidden />}
+                      {p.label}
+                      {p.primary && <ArrowRight size={14} strokeWidth={2} aria-hidden />}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div ref={endRef} />
             </div>
           )}
         </div>

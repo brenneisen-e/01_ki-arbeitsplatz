@@ -58,33 +58,31 @@ Intro-Reveal     →  Übersicht  →  Kameraflug  →  ChapterReader           
 | 06 Compliance & Risk | Etage 5 | Governance-Cockpit | Kredit-Dilemma | `KreditDilemma` |
 | 07 Transformation | Glas-Aufzug | Aufzug-Spine | Co-Creation | `CoCreationCanvas` (future-interaction) |
 
-## Bild-Slots (29 Bilder) — hier die Firefly-Renders ablegen
+## Bild-Slots (29 Bilder · `public/images/`)
 
-Alle Bildpfade sind in `src/data/chapters.ts` verdrahtet. Die Dateien gehören
-nach **`public/`**. Solange ein Slot leer ist, zeigt die App einen sauberen
-Platzhalter mit Dateiname — **kein** Code-Eingriff nötig, einfach die Datei
-ablegen. Die zugehörigen Firefly-Prompts stehen im Konzept-Dokument
+Alle Bildpfade sind in `src/data/chapters.ts` verdrahtet und zeigen auf
+**`public/images/`** (per `.gitkeep` schon versioniert, bevor Bilder drin
+liegen). Format: **WebP**. Solange ein Slot leer ist, zeigt die App einen
+sauberen Platzhalter mit Dateiname — **kein** Code-Eingriff nötig, einfach die
+Datei dort ablegen. Die zugehörigen Firefly-Prompts stehen im Konzept-Dokument
 (Abschnitt 5 Master, Abschnitt 6 je Kapitel).
 
-**Master (1):**
-
-- `bank-master.png` — Strukturbild „Bank'26" (Übersicht + Intro-Reveal).
-  *Liegt aktuell als Platzhalter-Render vor; durch den finalen „Bank'26"-Render
-  ersetzen. Die Zonen-Koordinaten sind auf diesen Prompt kalibriert.*
-
-**Pro Kapitel: 3 Hypothesen + 1 Aktivität (7 × 4 = 28):**
+**Schema:** `master.webp` (Strukturbild „Bank'26", Übersicht + Intro-Reveal),
+dann pro Kapitel `NN-h1.webp` / `NN-h2.webp` / `NN-h3.webp` (3 Hypothesen) und
+`NN-demo.webp` (Aktivität/Demo). `NN` = Kapitelnummer 01–07:
 
 ```
-ch01-kunde-hyp1.png        ch01-kunde-hyp2.png        ch01-kunde-hyp3.png        ch01-kunde-activity.png
-ch02-vertrieb-hyp1.png     ch02-vertrieb-hyp2.png     ch02-vertrieb-hyp3.png     ch02-vertrieb-activity.png
-ch03-marktfolge-hyp1.png   ch03-marktfolge-hyp2.png   ch03-marktfolge-hyp3.png   ch03-marktfolge-activity.png
-ch04-corporate-hyp1.png    ch04-corporate-hyp2.png    ch04-corporate-hyp3.png    ch04-corporate-activity.png
-ch05-it-hyp1.png           ch05-it-hyp2.png           ch05-it-hyp3.png           ch05-it-activity.png
-ch06-compliance-hyp1.png   ch06-compliance-hyp2.png   ch06-compliance-hyp3.png   ch06-compliance-activity.png
-ch07-transformation-hyp1.png  …-hyp2.png  …-hyp3.png  ch07-transformation-activity.png
+master.webp
+01-h1.webp  01-h2.webp  01-h3.webp  01-demo.webp     (01 Kundenperspektive)
+02-h1.webp  02-h2.webp  02-h3.webp  02-demo.webp     (02 Markt & Vertrieb)
+03-h1.webp  03-h2.webp  03-h3.webp  03-demo.webp     (03 Marktfolge)
+04-h1.webp  04-h2.webp  04-h3.webp  04-demo.webp     (04 Corporate Services)
+05-h1.webp  05-h2.webp  05-h3.webp  05-demo.webp     (05 Technologie / IT)
+06-h1.webp  06-h2.webp  06-h3.webp  06-demo.webp     (06 Compliance & Risk)
+07-h1.webp  07-h2.webp  07-h3.webp  07-demo.webp     (07 Transformation)
 ```
 
-> Die `*-activity.png` der Demo-Kapitel (01, 02, 05) sollten einen frontalen,
+> Die `NN-demo.webp` der Demo-Kapitel (01, 02, 05) sollten einen frontalen,
 > achsenparallelen, **leeren grauen 16:9-Bildschirm** zeigen — dort wächst beim
 > Absprung der Demo-iframe auf.
 
@@ -126,7 +124,7 @@ src/
 ├── data/chapters.ts                (zentrale Datenquelle: 7 Kapitel, Zonen, Bild-Slots, Handoffs)
 ├── hooks/useReducedMotion.ts
 └── components/
-    ├── IntroChatbot.tsx            (BdZ-Auftakt: Frage → Thinking → Strukturbild-Reveal)
+    ├── IntroChatbot.tsx            (AI-Banking-Assistant: Name → Begrüßung → Vorschläge → Reveal)
     ├── BankExplorer.tsx            (Übersicht, Zonen, Kameraflug, Orchestrierung)
     ├── ChapterReader.tsx           (Hypothesen → Aktivität, Bild + Panel + Pager)
     ├── ImageSlot.tsx               (Bild mit Platzhalter-Fallback)
@@ -145,6 +143,8 @@ npm run build           # → dist/ (Build-Command: npm run build, Output: dist)
 `vite.config.ts` setzt `base: './'`, damit ein Sub-Pfad-Deployment wie
 `https://…/bank-der-zukunft-2035/` funktioniert. `wrangler.toml` liegt bei.
 
-> Hinweis: `public/bank-floor-*.png` und `public/plaza-video.mp4` stammen aus
-> dem vorherigen Konzept und werden vom neuen Flow nicht mehr referenziert
+> Hinweis: `public/bank-master.png`, `public/bank-floor-*.png` und
+> `public/plaza-video.mp4` stammen aus dem vorherigen Konzept und werden vom
+> neuen Flow nicht mehr referenziert (Master liegt jetzt als
+> `public/images/master.webp` vor)
 > (können nach Bedarf entfernt werden).

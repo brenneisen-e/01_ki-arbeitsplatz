@@ -114,7 +114,8 @@
   transition: opacity var(--t-med) var(--ease-out), transform var(--t-med) var(--ease-out);
   pointer-events: none;
   box-shadow: var(--shadow-1), inset 0 0 0 1px var(--border-soft);
-  max-width: 94%;
+  width: max-content;
+  max-width: 92vw;
 }
 
 .zone[data-hovered] .zoneLabel,

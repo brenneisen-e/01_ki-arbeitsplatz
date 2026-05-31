@@ -115,20 +115,19 @@ export function IntroChatbot({
   const clickPrompt = useCallback(
     (p: Prompt) => {
       if (phase !== 'chat' || replying) return
-      pushMsg('user', p.label)
+      // Die gestellte Frage steht oben in der Eingabezeile (keine separate Bubble).
+      setChatInput(p.label)
       if (p.primary) setPhase('thinking')
       else if (p.reply) cannedReply(p.reply)
     },
-    [phase, replying, pushMsg, cannedReply],
+    [phase, replying, cannedReply],
   )
 
   const submitChat = useCallback(() => {
     const q = chatInput.trim()
     if (phase !== 'chat' || replying || !q) return
-    setChatInput('')
-    pushMsg('user', q)
     cannedReply(GENERIC_REPLY)
-  }, [chatInput, phase, replying, pushMsg, cannedReply])
+  }, [chatInput, phase, replying, cannedReply])
 
   // Reasoning-Sequenz (nur „Bank 2035"-Pfad), dann Reveal.
   useEffect(() => {
@@ -309,20 +308,14 @@ export function IntroChatbot({
 
               {(messages.length > 0 || replying || phase !== 'chat') && (
                 <div className={styles.thread}>
-                  {messages.map((m) =>
-                    m.role === 'user' ? (
-                      <div key={m.id} className={styles.userRow}>
-                        <div className={styles.userBubble}>{m.text}</div>
-                      </div>
-                    ) : (
-                      <div key={m.id} className={styles.assistantRow}>
-                        <span className={styles.avatar} aria-hidden>
-                          <Bot size={15} strokeWidth={1.9} />
-                        </span>
-                        <div className={styles.bubble}>{m.text}</div>
-                      </div>
-                    ),
-                  )}
+                  {messages.map((m) => (
+                    <div key={m.id} className={styles.assistantRow}>
+                      <span className={styles.avatar} aria-hidden>
+                        <Bot size={15} strokeWidth={1.9} />
+                      </span>
+                      <div className={styles.bubble}>{m.text}</div>
+                    </div>
+                  ))}
 
                   {replying && (
                     <div className={styles.assistantRow}>

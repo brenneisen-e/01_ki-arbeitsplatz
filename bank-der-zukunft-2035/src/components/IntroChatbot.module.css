@@ -141,6 +141,7 @@
   border-radius: 22px;
   background: #ffffff;
   color: #1e293b;
+  color-scheme: light;
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
 }
 
@@ -186,6 +187,7 @@
   padding: 12px 15px;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
+  background: #ffffff;
   color: #1e293b;
   font-family: var(--font-body);
   font-size: 15px;

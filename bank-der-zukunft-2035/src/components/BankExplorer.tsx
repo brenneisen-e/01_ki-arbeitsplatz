@@ -67,10 +67,13 @@ export function BankExplorer(): React.ReactElement {
   const stageRef = useRef<HTMLDivElement>(null)
   const cameraRef = useRef<HTMLDivElement>(null)
   const tweenRef = useRef<gsap.core.Tween | null>(null)
+  const flyTimeoutRef = useRef<number | null>(null)
 
   const [activeId, setActiveId] = useState<ChapterId | null>(null)
   const [hoverId, setHoverId] = useState<ChapterId | null>(null)
   const [handoff, setHandoff] = useState<Handoff | null>(null)
+  // Reader erst NACH dem Kameraflug zeigen, damit der Zoom sichtbar bleibt.
+  const [readerShown, setReaderShown] = useState(false)
 
   const reducedMotion = useReducedMotion()
   const activeChapter = useMemo(() => getChapter(activeId), [activeId])
@@ -119,6 +122,11 @@ export function BankExplorer(): React.ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Beim Unmount einen evtl. laufenden Kameraflug-Timer aufräumen.
+  useEffect(() => () => {
+    if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
+  }, [])
+
   // Resize-Listener: bei aktivem Zoom neu ausrichten. Der ResizeObserver
   // feuert synchron beim observe() einmal — diesen ersten Call überspringen,
   // sonst zerschießt er eine gerade gestartete Tween.
@@ -160,13 +168,20 @@ export function BankExplorer(): React.ReactElement {
     (chapter: Chapter) => {
       setHoverId(null)
       setActiveId(chapter.id)
+      setReaderShown(false)
       animateTo(chapter)
+      if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
+      // Reader nach ~60 % des Flugs einblenden (instant bei reduced motion).
+      const delay = reducedMotion ? 0 : ZOOM_DURATION * 600
+      flyTimeoutRef.current = window.setTimeout(() => setReaderShown(true), delay)
     },
-    [animateTo],
+    [animateTo, reducedMotion],
   )
 
   const handleBack = useCallback(() => {
+    if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
     setHandoff(null)
+    setReaderShown(false)
     setActiveId(null)
     animateTo(null, { instant: true })
   }, [animateTo])
@@ -245,8 +260,8 @@ export function BankExplorer(): React.ReactElement {
           Zone wählen — von der Steuerung bis zum Fundament
         </div>
 
-        {/* Kapitel-Reader (Hypothesen → Aktivität) */}
-        {activeChapter && (
+        {/* Kapitel-Reader (Hypothesen → Aktivität) — erst nach dem Kameraflug */}
+        {activeChapter && readerShown && (
           <ChapterReader
             chapter={activeChapter}
             onBack={handleBack}

@@ -235,8 +235,8 @@ export const CHAPTERS: Chapter[] = [
     ],
     activity: {
       image: {
-        src: './images/Kapitel 2_Demo.png',
-        alt: 'Over-the-Shoulder-Blick eines Bankberaters auf einen großen Desktop-Monitor, dessen Bildschirm als leere 16:9-Fläche frontal zur Kamera zeigt.',
+        src: './bank-floor-sales-2.png',
+        alt: 'Over-the-Shoulder-Blick am Workstation-Desk auf einen großen, frontal stehenden 16:9-Monitor; im Hintergrund das „MARKT & VERTRIEB"-Schild.',
       },
       title: 'Vertriebscockpit: KI-augmentiert am Berater-Desktop',
       text: 'Der Berater bereitet sich auf den nächsten Termin vor. Das Vertriebscockpit läuft direkt auf seinem Monitor — KI-augmentiert, kontextbasiert, lösungsorientiert. Per Klick auf Vollbild.',
@@ -246,15 +246,16 @@ export const CHAPTERS: Chapter[] = [
         url: VERTRIEBSCOCKPIT_URL,
         title: 'KI-Arbeitsplatz — Vertriebscockpit (Live)',
       },
-      // iframe direkt auf dem Monitor im Foto (Koordinaten in % von Kapitel 2_Demo.png).
-      // Monitor + Bild sind 16:9 → widthPct ≈ heightPct. Klick auf den Button → Vollbild.
+      // Exakt vermessenes Foto aus der Vorversion (bank-floor-sales-2.png,
+      // 1672×941, Display-Aspect ~1,764): Screen-Rechteck per Edge-Detection.
+      // Klick auf den Button → Vollbild.
       screenOverlay: {
         url: VERTRIEBSCOCKPIT_URL,
         title: 'KI-Arbeitsplatz — Vertriebscockpit (Live)',
-        leftPct: 36,
-        topPct: 23,
-        widthPct: 48,
-        heightPct: 48,
+        leftPct: 34.63,
+        topPct: 22.0,
+        widthPct: 41.15,
+        heightPct: 41.45,
       },
     },
   },

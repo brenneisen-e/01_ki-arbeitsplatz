@@ -39,6 +39,12 @@ export type Zone = {
    * letterboxed), 'cover' füllt die Stage formatfüllend mit Beschnitt.
    */
   fit?: 'cover' | 'contain'
+  /**
+   * Optional: Position von Label + Hotspot (% der Bild-Maße) — z. B. im
+   * jeweiligen Raum statt im Zonen-Zentrum. Default: centerX / centerY.
+   */
+  labelX?: number
+  labelY?: number
 }
 
 export type ImageRef = {
@@ -155,7 +161,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Markt & Vertrieb',
     ort: 'Etage 3 (Advisory)',
     keyObject: '„VERTRIEBS-COCKPIT"-Screen',
-    zone: { centerX: 50, centerY: 50, width: 48, height: 18 },
+    zone: { centerX: 50, centerY: 50, width: 56, height: 18, labelX: 28, labelY: 51 },
     hypotheses: [
       {
         title: 'Vom Produktvertrieb zum Lösungsorchestrator',
@@ -205,7 +211,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Marktfolge',
     ort: 'Etage 2 (Back-Office)',
     keyObject: '„WORKFLOW AUTOMATION"-Screen',
-    zone: { centerX: 50, centerY: 68, width: 48, height: 18 },
+    zone: { centerX: 50, centerY: 68, width: 56, height: 18, labelX: 70, labelY: 68 },
     hypotheses: [
       {
         title: 'Marktfolge wird zur autonomen Dunkelverarbeitung',
@@ -251,7 +257,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Corporate Services',
     ort: 'Etage 4 (HR / People & Culture)',
     keyObject: '„ORGANISATION"-Screen',
-    zone: { centerX: 50, centerY: 32, width: 48, height: 17 },
+    zone: { centerX: 50, centerY: 32, width: 56, height: 17, labelX: 30, labelY: 33 },
     hypotheses: [
       {
         title: 'Vom Training zum kontinuierlichen Skill-Aufbau',
@@ -297,7 +303,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Technologie / IT',
     ort: 'Keller / Etage 1 (Data Center)',
     keyObject: 'Monitoring-Arbeitsplatz',
-    zone: { centerX: 50, centerY: 88, width: 60, height: 18 },
+    zone: { centerX: 50, centerY: 88, width: 64, height: 18, labelX: 30, labelY: 88 },
     hypotheses: [
       {
         title: 'Selbstoptimierende AI-Delivery ersetzt Entwicklung',
@@ -344,7 +350,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Compliance & Risk',
     ort: 'Etage 5 (Boardroom)',
     keyObject: '„GOVERNANCE COCKPIT"-Screen',
-    zone: { centerX: 50, centerY: 15, width: 48, height: 17 },
+    zone: { centerX: 50, centerY: 15, width: 56, height: 17, labelX: 32, labelY: 16 },
     hypotheses: [
       {
         title: 'Von ex-post-Kontrolle zu Echtzeitsteuerung',

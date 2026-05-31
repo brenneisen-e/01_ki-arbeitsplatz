@@ -211,6 +211,12 @@ export function BankExplorer(): React.ReactElement {
                 const { zone } = chapter
                 const top = zone.centerY - zone.height / 2
                 const left = zone.centerX - zone.width / 2
+                // Label + Hotspot im jeweiligen Raum positionieren (labelX/labelY,
+                // % der Bild-Maße) — als % relativ zur Zonen-Box umgerechnet.
+                const lX = zone.labelX ?? zone.centerX
+                const lY = zone.labelY ?? zone.centerY
+                const spotLeft = ((lX - left) / zone.width) * 100
+                const spotTop = ((lY - top) / zone.height) * 100
                 const zIndex =
                   chapter.id === 'transformation' ? 3 : chapter.id === 'kunde' ? 2 : 1
                 return (
@@ -236,8 +242,15 @@ export function BankExplorer(): React.ReactElement {
                     aria-label={`${chapter.label} — Kapitel ${chapter.kapitel} öffnen`}
                   >
                     <span className={styles.zoneFill} aria-hidden />
-                    <span className={styles.hotspot} aria-hidden />
-                    <span className={styles.zoneLabel}>
+                    <span
+                      className={styles.hotspot}
+                      style={{ left: `${spotLeft}%`, top: `${spotTop}%` }}
+                      aria-hidden
+                    />
+                    <span
+                      className={styles.zoneLabel}
+                      style={{ left: `${spotLeft}%`, top: `${spotTop}%` }}
+                    >
                       <span className={styles.zoneKicker}>
                         Kapitel {chapter.kapitel} · {chapter.ort}
                       </span>

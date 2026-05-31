@@ -143,8 +143,8 @@ export function IntroChatbot({
                 Frag mich was zur <span className={styles.heroAccent}>Bank der Zukunft</span>
               </h1>
               <p className={styles.heroSub}>
-                Stell die vorbereitete Frage — ich denke sichtbar nach und baue daraus das
-                begehbare Strukturbild deiner Bank.
+                Vom Banking von heute zum Zielbild 2035 — ich mache den Sprung sichtbar:
+                als begehbares Strukturbild, Etage für Etage.
               </p>
             </div>
           )}

@@ -29,15 +29,15 @@ npm run preview    # bedient dist/ lokal (http://localhost:4173)
 ## Ablauf
 
 ```
-Chatbot-Landing  →  Übersicht  →  Kameraflug  →  ChapterReader            →  Handoff
-(externe App)       (7 Zonen)     (GSAP zoom)    (Hypothese 1·2·3 → Akt.)     (Demo / Tool)
+Intro-Reveal     →  Übersicht  →  Kameraflug  →  ChapterReader            →  Handoff
+(Frage→Thinking)    (7 Zonen)     (GSAP zoom)    (Hypothese 1·2·3 → Akt.)     (Demo / Tool)
 ```
 
-- **Einstieg**: Die Chatbot-Landing lebt in der separaten App `BankDerZukunft/`
-  (Q&A mit Charts/Tabellen/Quellen) und verlinkt direkt hierher
-  (`/bank-der-zukunft-2035/dist/`). Diese App startet daher **unmittelbar mit
-  der Übersicht** — kein eigener Intro-Chat. Ein dezenter „Zum Chat"-Link
-  oben links führt zurück (`/BankDerZukunft/dist/`).
+- **Einstieg**: Der Workshop startet **direkt mit dem Intro-Reveal**
+  (`IntroChatbot`, blauer BdZ-Look): vorbereitete Frage → sichtbares Thinking →
+  das Strukturbild baut sich auf → „als Haus erkunden". Die frühere Q&A-Landing
+  (App `BankDerZukunft/`) ist nicht mehr der Einstieg und leitet automatisch
+  hierher weiter (`/bank-der-zukunft-2035/dist/`).
 - **Übersicht** (`BankExplorer`): Master-Bild füllt den Viewport, 7 Zonen mit
   Hover-Glow, Label und pulsierendem Schlüsselobjekt-Hotspot.
 - **Kameraflug**: Klick auf eine Zone → GSAP-Zoom (`transform: scale` +
@@ -121,11 +121,12 @@ Eigene, voll interaktive Scaffolds (deutschsprachig, ohne Storage):
 
 ```
 src/
-├── App.tsx                         (rendert direkt den Explorer)
+├── App.tsx                         (Phasen: Intro-Reveal → Explorer)
 ├── main.tsx · index.css            (Tokens + Reset)
 ├── data/chapters.ts                (zentrale Datenquelle: 7 Kapitel, Zonen, Bild-Slots, Handoffs)
 ├── hooks/useReducedMotion.ts
 └── components/
+    ├── IntroChatbot.tsx            (BdZ-Auftakt: Frage → Thinking → Strukturbild-Reveal)
     ├── BankExplorer.tsx            (Übersicht, Zonen, Kameraflug, Orchestrierung)
     ├── ChapterReader.tsx           (Hypothesen → Aktivität, Bild + Panel + Pager)
     ├── ImageSlot.tsx               (Bild mit Platzhalter-Fallback)

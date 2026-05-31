@@ -110,9 +110,9 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  padding: 0 clamp(16px, 4vw, 40px) clamp(24px, 5vh, 56px);
+  padding: clamp(16px, 3vh, 40px) clamp(16px, 4vw, 40px);
   overflow-y: auto;
 }
 
@@ -122,20 +122,20 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 22px;
+  justify-content: center;
+  gap: 26px;
 }
 
 /* ── Hero (idle) ── */
 .hero {
-  flex: 1;
+  flex: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   gap: 18px;
-  padding: 24px 0;
+  padding: 8px 0 0;
 }
 
 .badge {

@@ -246,15 +246,15 @@ export const CHAPTERS: Chapter[] = [
         url: VERTRIEBSCOCKPIT_URL,
         title: 'KI-Arbeitsplatz — Vertriebscockpit (Live)',
       },
-      // iframe direkt auf dem Monitor im Foto (Koordinaten in % von Kapitel 2_Demo.png;
-      // im Browser ggf. um 1–2 % nachziehen). Klick auf den Button → Vollbild.
+      // iframe direkt auf dem Monitor im Foto (Koordinaten in % von Kapitel 2_Demo.png).
+      // Monitor + Bild sind 16:9 → widthPct ≈ heightPct. Klick auf den Button → Vollbild.
       screenOverlay: {
         url: VERTRIEBSCOCKPIT_URL,
         title: 'KI-Arbeitsplatz — Vertriebscockpit (Live)',
-        leftPct: 36.5,
-        topPct: 27.5,
-        widthPct: 41,
-        heightPct: 43,
+        leftPct: 36,
+        topPct: 23,
+        widthPct: 48,
+        heightPct: 48,
       },
     },
   },

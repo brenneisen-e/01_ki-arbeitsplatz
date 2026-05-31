@@ -60,31 +60,29 @@ Intro-Reveal     →  Übersicht  →  Kameraflug  →  ChapterReader           
 
 ## Bild-Slots (29 Bilder · `public/images/`)
 
-Alle Bildpfade sind in `src/data/chapters.ts` verdrahtet und zeigen auf
-**`public/images/`** (per `.gitkeep` schon versioniert, bevor Bilder drin
-liegen). Format: **WebP**. Solange ein Slot leer ist, zeigt die App einen
-sauberen Platzhalter mit Dateiname — **kein** Code-Eingriff nötig, einfach die
-Datei dort ablegen. Die zugehörigen Firefly-Prompts stehen im Konzept-Dokument
-(Abschnitt 5 Master, Abschnitt 6 je Kapitel).
+Die Workshop-Bilder liegen als **PNG** unter **`public/images/`** und sind in
+`src/data/chapters.ts` verdrahtet. Fehlt eine Datei, zeigt die App einen
+sauberen Platzhalter mit Dateiname — Datei dort ablegen, fertig.
 
-**Schema:** `master.webp` (Strukturbild „Bank'26", Übersicht + Intro-Reveal),
-dann pro Kapitel `NN-h1.webp` / `NN-h2.webp` / `NN-h3.webp` (3 Hypothesen) und
-`NN-demo.webp` (Aktivität/Demo). `NN` = Kapitelnummer 01–07:
+**Schema:** `Strukturbild.png` (Master · Übersicht + Intro-Reveal), dann pro
+Kapitel `Kapitel N_1.png` / `Kapitel N_2.png` / `Kapitel N_3.png` (3 Hypothesen)
+und `Kapitel N_Demo.png` (Aktivität/Demo). `N` = Kapitelnummer 1–7:
 
 ```
-master.webp
-01-h1.webp  01-h2.webp  01-h3.webp  01-demo.webp     (01 Kundenperspektive)
-02-h1.webp  02-h2.webp  02-h3.webp  02-demo.webp     (02 Markt & Vertrieb)
-03-h1.webp  03-h2.webp  03-h3.webp  03-demo.webp     (03 Marktfolge)
-04-h1.webp  04-h2.webp  04-h3.webp  04-demo.webp     (04 Corporate Services)
-05-h1.webp  05-h2.webp  05-h3.webp  05-demo.webp     (05 Technologie / IT)
-06-h1.webp  06-h2.webp  06-h3.webp  06-demo.webp     (06 Compliance & Risk)
-07-h1.webp  07-h2.webp  07-h3.webp  07-demo.webp     (07 Transformation)
+Strukturbild.png
+Kapitel 1_1.png  Kapitel 1_2.png  Kapitel 1_3.png  Kapitel 1_Demo.png   (01 Kundenperspektive)
+Kapitel 2_1.png  Kapitel 2_2.png  Kapitel 2_3.png  Kapitel 2_Demo.png   (02 Markt & Vertrieb)
+Kapitel 3_1.png  Kapitel 3_2.png  Kapitel 3_3.png  Kapitel 3_Demo.png   (03 Marktfolge)
+Kapitel 4_1.png  Kapitel 4_2.png  Kapitel 4_3.png  Kapitel 4_Demo.png   (04 Corporate Services)
+Kapitel 5_1.png  Kapitel 5_2.png  Kapitel 5_3.png  Kapitel 5_Demo.png   (05 Technologie / IT)
+Kapitel 6_1.png  Kapitel 6_2.png  Kapitel 6_3.png  Kapitel 6_Demo.png   (06 Compliance & Risk)
+Kapitel 7_1.png  Kapitel 7_2.png  Kapitel 7_3.png  Kapitel 7_Demo.png   (07 Transformation)
 ```
 
-> Die `NN-demo.webp` der Demo-Kapitel (01, 02, 05) sollten einen frontalen,
-> achsenparallelen, **leeren grauen 16:9-Bildschirm** zeigen — dort wächst beim
-> Absprung der Demo-iframe auf.
+> `Strukturbild.png` ist 1536×1024 (3:2); die `ZONES`-Koordinaten in
+> `chapters.ts` sind darauf kalibriert. Die `Kapitel N_Demo.png` der Demo-
+> Kapitel (01, 02, 05) zeigen idealerweise einen frontalen, leeren grauen
+> 16:9-Bildschirm — dort wächst beim Absprung der Demo-iframe auf.
 
 ## Demo-URLs hinterlegen
 

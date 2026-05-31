@@ -113,6 +113,26 @@
   background: var(--bg-1);
 }
 
+/* Live-iframe auf der Bildschirmfläche im Aktivitäts-Foto. */
+.screen {
+  position: absolute;
+  overflow: hidden;
+  background: #0a0b0c;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 0 28px rgba(0, 0, 0, 0.5);
+}
+
+.screenIframe {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: 50% 50%;
+  border: 0;
+  background: #fff;
+  display: block;
+}
+
 /* Status-Quo / 2035 Split-Markierung (verstärkt das Vergleichsbild) */
 .split {
   position: absolute;

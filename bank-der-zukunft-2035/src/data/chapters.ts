@@ -550,3 +550,16 @@ export function getChapter(id: ChapterId | null): Chapter | null {
   if (!id) return null
   return CHAPTERS.find((c) => c.id === id) ?? null
 }
+
+/**
+ * Alle Bildpfade (Master + 21 Hypothesen + 7 Aktivitäten) — zum Vorladen beim
+ * App-Start, damit das Öffnen eines Kapitels ohne Ladeverzögerung erfolgt.
+ */
+export function getAllImageSrcs(): string[] {
+  const srcs = [MASTER_IMAGE.src]
+  for (const c of CHAPTERS) {
+    for (const h of c.hypotheses) srcs.push(h.image.src)
+    srcs.push(c.activity.image.src)
+  }
+  return srcs
+}

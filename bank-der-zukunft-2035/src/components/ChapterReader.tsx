@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   ArrowDown,
   ArrowLeft,
@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import styles from './ChapterReader.module.css'
 import { ImageSlot } from './ImageSlot'
-import type { Chapter, Handoff } from '../data/chapters'
+import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ChapterReader — die Kapitel-Sequenz nach dem Kameraflug:
@@ -52,6 +52,59 @@ function handoffMeta(handoff: Handoff): { label: string; icon: React.ReactElemen
     case 'kredit-dilemma':
       return { label: 'Interaktives Szenario', icon: <Phone size={17} strokeWidth={2} aria-hidden /> }
   }
+}
+
+// iframe rendert bei fester Logik-Auflösung und wird per CSS-Transform passgenau
+// auf die Bildschirmfläche im Foto skaliert (cover, kein Scrollbalken).
+const IFRAME_LOGICAL_W = 1920
+const IFRAME_LOGICAL_H = 1080
+
+/** Live-iframe auf einer im Aktivitäts-Bild sichtbaren Bildschirmfläche. */
+function ScreenIframe({ overlay }: { overlay: ScreenOverlay }): React.ReactElement {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current
+    const iframe = iframeRef.current
+    if (!wrap || !iframe) return
+    const update = () => {
+      const w = wrap.clientWidth
+      const h = wrap.clientHeight
+      if (w <= 0 || h <= 0) return
+      const scale = Math.max(w / IFRAME_LOGICAL_W, h / IFRAME_LOGICAL_H)
+      iframe.style.transform = `translate(-50%, -50%) scale(${scale})`
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(wrap)
+    window.addEventListener('resize', update)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', update)
+    }
+  }, [])
+  return (
+    <div
+      ref={wrapRef}
+      className={styles.screen}
+      style={{
+        left: `${overlay.leftPct}%`,
+        top: `${overlay.topPct}%`,
+        width: `${overlay.widthPct}%`,
+        height: `${overlay.heightPct}%`,
+      }}
+    >
+      <iframe
+        ref={iframeRef}
+        className={styles.screenIframe}
+        style={{ width: `${IFRAME_LOGICAL_W}px`, height: `${IFRAME_LOGICAL_H}px` }}
+        src={overlay.url}
+        title={overlay.title}
+        loading="lazy"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+      />
+    </div>
+  )
 }
 
 export function ChapterReader({
@@ -126,6 +179,9 @@ export function ChapterReader({
                 <span className={styles.splitLeft}>Status Quo</span>
                 <span className={styles.splitRight}>2035</span>
               </div>
+            )}
+            {isActivity && activity.screenOverlay && (
+              <ScreenIframe overlay={activity.screenOverlay} />
             )}
           </div>
         </div>

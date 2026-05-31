@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
+  ArrowDown,
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
+  Clock,
   LayoutGrid,
+  Lightbulb,
   Phone,
   Play,
+  Sparkles,
   Users,
 } from 'lucide-react'
 import styles from './ChapterReader.module.css'
@@ -82,7 +86,6 @@ export function ChapterReader({
 
   const image = hypothesis ? hypothesis.image : activity.image
   const title = hypothesis ? hypothesis.title : activity.title
-  const text = hypothesis ? hypothesis.text : activity.text
   const kicker = hypothesis
     ? `Kapitel ${chapter.kapitel} · Hypothese ${step + 1} von 3`
     : `Kapitel ${chapter.kapitel} · Aktivität & Absprung`
@@ -133,28 +136,56 @@ export function ChapterReader({
         <div className={styles.panelInner}>
           <div className={styles.panelBody} key={`body-${step}`}>
             <span className={styles.kicker}>{kicker}</span>
-            {hypothesis ? (
-              <span className={styles.compareTag}>Status Quo &nbsp;↔&nbsp; 2035</span>
-            ) : (
-              <span className={styles.compareTag} data-accent>
-                {meta.icon}
-                {meta.label}
-              </span>
-            )}
             <h1 className={styles.title}>{title}</h1>
-            <p className={styles.copy}>{renderRichText(text)}</p>
 
-            {isActivity && (
-              <div className={styles.ctaRow}>
-                <button
-                  type="button"
-                  className={styles.cta}
-                  onClick={() => onHandoff(activity.handoff)}
-                >
-                  {meta.icon}
-                  <span>{activity.buttonLabel}</span>
-                </button>
+            {hypothesis ? (
+              <div className={styles.compare}>
+                <article className={styles.compareCard} data-quo>
+                  <span className={styles.compareHead}>
+                    <Clock size={13} strokeWidth={2.2} aria-hidden />
+                    Heute · Status Quo
+                  </span>
+                  <p className={styles.compareText}>
+                    {renderRichText(hypothesis.statusQuo)}
+                  </p>
+                </article>
+                <span className={styles.compareArrow} aria-hidden>
+                  <ArrowDown size={18} strokeWidth={2.4} />
+                </span>
+                <article className={styles.compareCard} data-future>
+                  <span className={styles.compareHead}>
+                    <Sparkles size={13} strokeWidth={2.2} aria-hidden />
+                    2035
+                  </span>
+                  <p className={styles.compareText}>
+                    {renderRichText(hypothesis.in2035)}
+                  </p>
+                </article>
+                {hypothesis.leitfrage && (
+                  <p className={styles.leitfrage}>
+                    <Lightbulb size={15} strokeWidth={2} aria-hidden />
+                    <span>{hypothesis.leitfrage}</span>
+                  </p>
+                )}
               </div>
+            ) : (
+              <>
+                <span className={styles.compareTag} data-accent>
+                  {meta.icon}
+                  {meta.label}
+                </span>
+                <p className={styles.copy}>{renderRichText(activity.text)}</p>
+                <div className={styles.ctaRow}>
+                  <button
+                    type="button"
+                    className={styles.cta}
+                    onClick={() => onHandoff(activity.handoff)}
+                  >
+                    {meta.icon}
+                    <span>{activity.buttonLabel}</span>
+                  </button>
+                </div>
+              </>
             )}
           </div>
 

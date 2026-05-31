@@ -246,6 +246,96 @@
   font-weight: 650;
 }
 
+/* ── Heute → 2035 Vergleich (Hypothesen) ── */
+.compare {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.compareCard {
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+}
+
+.compareCard[data-quo] {
+  border-left: 3px solid var(--ink-3);
+  filter: saturate(0.85);
+}
+
+.compareCard[data-future] {
+  border: 1px solid var(--accent);
+  border-left: 3px solid var(--accent-bright);
+  background: var(--accent-tint);
+  box-shadow: 0 12px 34px rgba(4, 106, 56, 0.18);
+}
+
+.compareHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.compareCard[data-quo] .compareHead {
+  color: var(--ink-3);
+}
+
+.compareCard[data-future] .compareHead {
+  color: var(--accent-bright);
+}
+
+.compareText {
+  font-size: clamp(13.5px, 1.15vw, 15.5px);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.compareCard[data-future] .compareText {
+  color: var(--ink);
+}
+
+.compareText strong {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.compareArrow {
+  align-self: center;
+  display: inline-flex;
+  margin: -3px 0;
+  color: var(--accent-bright);
+  opacity: 0.85;
+}
+
+.leitfrage {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 6px;
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  background: var(--surface-1);
+  border: 1px dashed var(--border-strong);
+  font-size: 13.5px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.leitfrage > svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-bright);
+}
+
 .ctaRow {
   display: flex;
   justify-content: flex-end;

@@ -187,6 +187,29 @@ const translationsCommon = {
   'termineHeute': { de: 'Termine heute', en: 'Appointments today' },
   'rueckrufLabel': { de: 'Rückruf', en: 'Callback' },
 
+  // ─── KIAssistentCard (inline AI card) ───
+  'fidaKontextLive': { de: 'FIDA-Kontext · Live', en: 'FIDA context · Live' },
+  'wieKannIchDirHelfen': { de: 'Wie kann ich dir helfen?', en: 'How can I help you?' },
+  'kiCardSubtext': { de: 'Frag mich zu Tagesplanung, Kundenanalyse, Gesprächsvorbereitung, Formulierungen oder Rechenbeispielen.', en: 'Ask me about daily planning, customer analysis, meeting preparation, drafting, or calculation examples.' },
+  'senden': { de: 'Senden', en: 'Send' },
+
+  // ─── LebenszeitstrahlCard (customer life timeline) ───
+  'lzsTitel': { de: 'Kunden-Lebenszeitstrahl', en: 'Customer Life Timeline' },
+  'lzsLeben': { de: 'Leben', en: 'Life' },
+  'lzsOeffentlich': { de: 'Öffentlich', en: 'Public' },
+  'lzsFinanzen': { de: 'Finanzen', en: 'Finances' },
+  'lzsZoom1j': { de: '1 J', en: '1 yr' },
+  'lzsZoom3j': { de: '3 J', en: '3 yrs' },
+  'lzsZoom5j': { de: '5 J', en: '5 yrs' },
+  'lzsZoomAll': { de: 'Alles', en: 'All' },
+  'lzsHeute': { de: 'HEUTE', en: 'TODAY' },
+  'lzsZukunft': { de: 'Zukunft', en: 'Future' },
+  'lzsWarnung': { de: 'Warnung', en: 'Warning' },
+  'lzsQuelle': { de: 'Quelle', en: 'Source' },
+  'lzsErkannteSignale': { de: 'Erkannte Signale', en: 'Detected signals' },
+  'lzsKiErkannt': { de: 'KI erkannt', en: 'AI detected' },
+  'lzsHoverHinweis': { de: 'Hover über einen Punkt für Details', en: 'Hover over a point for details' },
+
   // ─── Vertriebsassistent / Banking Quick Actions ───
   'qaWasStehtHeuteAn': { de: 'Was steht heute an?', en: "What's on today?" },
   'qaMeineNeuenLeads': { de: 'Meine neuen Leads', en: 'My new leads' },

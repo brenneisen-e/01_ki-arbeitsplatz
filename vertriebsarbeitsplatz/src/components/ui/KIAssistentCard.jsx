@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Sparkles, Send, Calendar, Search, PenLine, Calculator, MessageCircle } from 'lucide-react';
+import { tx } from '../../utils/langHelper';
+import useTranslation from '../../i18n/useTranslation';
 
 /**
  * Inline AI assistant card with a subtle purple accent.
@@ -8,40 +10,43 @@ import { Sparkles, Send, Calendar, Search, PenLine, Calculator, MessageCircle } 
  * listens for so both surfaces stay in sync.
  */
 
+// Suggestion chips for the inline assistant. Labels/prompts are resolved
+// via tx() at render time so they react to language switches.
 const SUGGESTION_CATEGORIES = [
   {
     id: 'tagesplanung',
-    label: 'Tagesplanung',
+    label: () => tx('Tagesplanung', 'Daily Planning'),
     icon: Calendar,
-    prompt: 'Was steht heute an?',
+    prompt: () => tx('Was steht heute an?', "What's on today?"),
   },
   {
     id: 'analyse',
-    label: 'Kunden-Analyse',
+    label: () => tx('Kunden-Analyse', 'Customer Analysis'),
     icon: Search,
-    prompt: 'Welche Kunden haben auslaufende Kredite in den nächsten 6 Monaten?',
+    prompt: () => tx('Welche Kunden haben auslaufende Kredite in den nächsten 6 Monaten?', 'Which customers have loans expiring in the next 6 months?'),
   },
   {
     id: 'gespraech',
-    label: 'Gespräch vorbereiten',
+    label: () => tx('Gespräch vorbereiten', 'Prepare Meeting'),
     icon: MessageCircle,
-    prompt: 'Bereite mir ein Erstgespräch mit Markus Wagner vor',
+    prompt: () => tx('Bereite mir ein Erstgespräch mit Markus Wagner vor', 'Prepare an initial meeting with Markus Wagner for me'),
   },
   {
     id: 'formulierung',
-    label: 'Mail formulieren',
+    label: () => tx('Mail formulieren', 'Draft Email'),
     icon: PenLine,
-    prompt: 'Schreib eine Einladung zur Immobilienfinanzierung für Markus Wagner',
+    prompt: () => tx('Schreib eine Einladung zur Immobilienfinanzierung für Markus Wagner', 'Write an invitation about mortgage financing for Markus Wagner'),
   },
   {
     id: 'rechnen',
-    label: 'Rechenbeispiel',
+    label: () => tx('Rechenbeispiel', 'Calculation Example'),
     icon: Calculator,
-    prompt: 'Rechne mir eine Baufinanzierung für Wagner – 42k Eigenkapital, 840€ Rate',
+    prompt: () => tx('Rechne mir eine Baufinanzierung für Wagner – 42k Eigenkapital, 840€ Rate', 'Calculate a mortgage for Wagner – €42k equity, €840 installment'),
   },
 ];
 
 export default function KIAssistentCard() {
+  const { t } = useTranslation();
   const [input, setInput] = useState('');
 
   const sendPrompt = (message) => {
@@ -81,8 +86,8 @@ export default function KIAssistentCard() {
           <Sparkles size={18} className="text-white" strokeWidth={2} />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-slate-900 text-sm">KI-Vertriebsassistent</h3>
-          <div className="text-[11px] text-slate-500">FIDA-Kontext · Live</div>
+          <h3 className="font-bold text-slate-900 text-sm">{t('kiVertriebsassistent')}</h3>
+          <div className="text-[11px] text-slate-500">{t('fidaKontextLive')}</div>
         </div>
         <span
           className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white uppercase tracking-wider"
@@ -95,10 +100,10 @@ export default function KIAssistentCard() {
       {/* Prompt */}
       <div className="relative mb-4">
         <h4 className="text-lg font-bold text-slate-800 leading-tight mb-1">
-          Wie kann ich dir helfen?
+          {t('wieKannIchDirHelfen')}
         </h4>
         <p className="text-xs text-slate-600 leading-snug">
-          Frag mich zu Tagesplanung, Kundenanalyse, Gesprächsvorbereitung, Formulierungen oder Rechenbeispielen.
+          {t('kiCardSubtext')}
         </p>
       </div>
 
@@ -106,12 +111,13 @@ export default function KIAssistentCard() {
       <div className="relative grid grid-cols-2 gap-2 mb-4">
         {SUGGESTION_CATEGORIES.map((cat) => {
           const Icon = cat.icon;
+          const prompt = cat.prompt();
           return (
             <button
               key={cat.id}
-              onClick={() => sendPrompt(cat.prompt)}
+              onClick={() => sendPrompt(prompt)}
               className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/80 backdrop-blur border border-white hover:bg-white hover:shadow-md transition-all text-left group"
-              title={cat.prompt}
+              title={prompt}
             >
               <div
                 className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
@@ -120,7 +126,7 @@ export default function KIAssistentCard() {
                 <Icon size={14} style={{ color: '#7c3aed' }} strokeWidth={2} />
               </div>
               <span className="text-xs font-semibold text-slate-700 truncate group-hover:text-slate-900">
-                {cat.label}
+                {cat.label()}
               </span>
             </button>
           );
@@ -139,7 +145,7 @@ export default function KIAssistentCard() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Nachricht eingeben …"
+          placeholder={t('nachrichtEingeben')}
           className="flex-1 bg-transparent outline-none text-sm text-slate-700 placeholder-slate-400"
         />
         <button
@@ -149,7 +155,7 @@ export default function KIAssistentCard() {
           style={{
             background: 'linear-gradient(135deg, #8b5cf6, #6366f1)',
           }}
-          aria-label="Senden"
+          aria-label={t('senden')}
         >
           <Send size={14} className="text-white" strokeWidth={2.5} />
         </button>

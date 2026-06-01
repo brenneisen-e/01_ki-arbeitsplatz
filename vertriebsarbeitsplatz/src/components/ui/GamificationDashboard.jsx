@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Trophy, Target, TrendingUp, Flame, Zap, Calendar, ArrowRight, Award, Repeat } from 'lucide-react';
 import Card from './Card';
 import { formatEur } from '../../utils/formatters';
+import useTranslation from '../../i18n/useTranslation';
 
 /**
  * Gamification dashboard above the Potenziale Kanban board.
@@ -13,6 +14,7 @@ import { formatEur } from '../../utils/formatters';
  * actual moves the advisor makes during the demo.
  */
 export default function GamificationDashboard({ potentiale, kanbanState, onQuickWinClick }) {
+  const { t, lang } = useTranslation();
   const stats = useMemo(() => {
     const abgeschlossen = potentiale.filter(p => p.status === 'abgeschlossen');
     const nichtSinnvoll = potentiale.filter(p => p.status === 'nicht_sinnvoll');
@@ -64,10 +66,10 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
       const active = baseActive || moved;
       if (i === 0 && !active) streakActive = false;
       if (active && streakActive) count++;
-      days.unshift({ date: key, active, label: d.toLocaleDateString('de-DE', { weekday: 'short' }).replace('.', '') });
+      days.unshift({ date: key, active, label: d.toLocaleDateString(lang === 'en' ? 'en-US' : 'de-DE', { weekday: 'short' }).replace('.', '') });
     }
     return { count, days };
-  }, [kanbanState]);
+  }, [kanbanState, lang]);
 
   // Quick Wins — drei niedrig-effort, hoch-konfidente Potenziale.
   // Nur Status „identifiziert" (noch nicht in Bearbeitung / nicht in Termin
@@ -90,10 +92,10 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <Trophy size={20} className="text-amber-500" strokeWidth={1.75} />
-          <h3 className="font-semibold text-slate-800">Dein Monat</h3>
+          <h3 className="font-semibold text-slate-800">{t('gamiDeinMonat')}</h3>
         </div>
         <div className="text-xs text-slate-400 font-mono">
-          {new Date().toLocaleDateString('de-DE', { month: 'long', year: 'numeric' })}
+          {new Date().toLocaleDateString(lang === 'en' ? 'en-US' : 'de-DE', { month: 'long', year: 'numeric' })}
         </div>
       </div>
 
@@ -101,21 +103,24 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
         <ProgressCard
           icon={Target}
-          label="Abschlüsse"
+          label={t('gamiAbschluesse')}
+          zielLabel={t('gamiZiel')}
           current={stats.abschluesse}
           target={targets.abschluesse}
           format={(n) => n}
         />
         <ProgressCard
           icon={TrendingUp}
-          label="Abschluss-Volumen"
+          label={t('gamiAbschlussVolumen')}
+          zielLabel={t('gamiZiel')}
           current={stats.abschlussVolumen}
           target={targets.volumen}
           format={(n) => formatEur(n)}
         />
         <ProgressCard
           icon={Zap}
-          label="Conversion-Rate"
+          label={t('gamiConversionRate')}
+          zielLabel={t('gamiZiel')}
           current={stats.convRate}
           target={targets.convRate}
           format={(n) => `${n.toFixed(1)}%`}
@@ -136,10 +141,10 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-bold text-slate-800">
-                  {streak.count} {streak.count === 1 ? 'Tag' : 'Tage'} in Folge mindestens 1 Potenzial bearbeitet
+                  {t('gamiStreakText', { count: streak.count, tage: streak.count === 1 ? t('gamiTag') : t('gamiTage') })}
                 </div>
                 <div className="text-xs text-slate-500 mt-0.5">
-                  {streak.count >= 20 ? 'Unaufhaltsam' : streak.count >= 10 ? 'Auf Kurs' : streak.count >= 5 ? 'Solide Woche' : 'Streak aufbauen'}
+                  {streak.count >= 20 ? t('gamiUnaufhaltsam') : streak.count >= 10 ? t('gamiAufKurs') : streak.count >= 5 ? t('gamiSolideWoche') : t('gamiStreakAufbauen')}
                 </div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
@@ -171,10 +176,10 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-bold text-slate-800">
-                  Platz 2 von 7 in der Filiale
+                  {t('gamiPlatz2von7')}
                 </div>
                 <div className="text-xs text-slate-500 mt-0.5">
-                  Nur 3 Abschlüsse hinter Spitzenreiter · Aufstieg möglich
+                  {t('gamiPlatzSub')}
                 </div>
               </div>
               <div className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-emerald-200">
@@ -192,10 +197,10 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-bold text-slate-800">
-                  62% Cross-Sell-Anteil bei Abschlüssen
+                  {t('gamiCrossSellAnteil')}
                 </div>
                 <div className="text-xs text-slate-500 mt-0.5">
-                  Filialschnitt 47% · +15 Pp besser
+                  {t('gamiCrossSellSub')}
                 </div>
               </div>
               <div className="shrink-0 w-24">
@@ -212,7 +217,7 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
         <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/60 to-blue-50/30 p-4">
           <div className="flex items-center gap-2 mb-3">
             <Calendar size={16} className="text-indigo-600" strokeWidth={2} />
-            <span className="text-sm font-bold text-slate-800">Die KI empfiehlt diese {quickWins.length} Potenziale für heute:</span>
+            <span className="text-sm font-bold text-slate-800">{t('gamiKiEmpfiehlt', { count: quickWins.length })}</span>
           </div>
         <div className="space-y-2">
           {quickWins.map((qw, i) => (

@@ -5,6 +5,7 @@ import {
   Mail, CreditCard, LineChart, PiggyBank, ShieldCheck, Plane, HandCoins,
 } from 'lucide-react';
 import Card from './Card';
+import useTranslation from '../../i18n/useTranslation';
 
 // Hochzeitsringe: Lucide hat dafuer kein Icon, also ein kurzes Inline-SVG
 // mit zwei sich ueberlappenden Kreisen im selben Stroke-Stil wie Lucide.
@@ -64,9 +65,9 @@ function pickEventIcon(label, trackIcon) {
 // unabhängig.
 const TRACK_BASELINE = '#e2e8f0';   // slate-200
 const TRACKS = [
-  { key: 'leben',       label: 'Leben',      icon: Heart,      color: '#166534' }, // green-800
-  { key: 'oeffentlich', label: 'Öffentlich', icon: Globe,      color: '#1e3a8a' }, // blue-900 (navy)
-  { key: 'finanzen',    label: 'Finanzen',   icon: TrendingUp, color: '#881337' }, // rose-900 (bordeaux)
+  { key: 'leben',       labelKey: 'lzsLeben',      icon: Heart,      color: '#166534' }, // green-800
+  { key: 'oeffentlich', labelKey: 'lzsOeffentlich', icon: Globe,      color: '#1e3a8a' }, // blue-900 (navy)
+  { key: 'finanzen',    labelKey: 'lzsFinanzen',   icon: TrendingUp, color: '#881337' }, // rose-900 (bordeaux)
 ];
 
 /* ── Demo timeline data per Banking Kunde ─────────────────── */
@@ -168,14 +169,17 @@ function parseDate(s) {
   return new Date(y || 2020, (m || 1) - 1, 1);
 }
 
-function formatTooltipDate(s) {
+function formatTooltipDate(s, lang) {
   const [y, m] = s.split('-').map(Number);
-  const months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  const monthsDe = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const months = lang === 'en' ? monthsEn : monthsDe;
   return `${months[(m || 1) - 1]} ${y}`;
 }
 
 /* ── Component ────────────────────────────────────────────── */
 export default function LebenszeitstrahlCard({ kunde }) {
+  const { t, lang } = useTranslation();
   const [hovered, setHovered] = useState(null); // { track, idx, x, y }
   const [zoom, setZoom] = useState('5j');
 
@@ -245,14 +249,14 @@ export default function LebenszeitstrahlCard({ kunde }) {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sparkles size={18} className="text-slate-500" strokeWidth={1.75} />
-          <h3 className="font-semibold text-slate-700 text-sm tracking-wide">Kunden-Lebenszeitstrahl</h3>
+          <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('lzsTitel')}</h3>
         </div>
         <div className="flex items-center gap-1 bg-slate-100 rounded-full p-0.5">
           {[
-            { key: '1j', label: '1 J' },
-            { key: '3j', label: '3 J' },
-            { key: '5j', label: '5 J' },
-            { key: 'all', label: 'Alles' },
+            { key: '1j', label: t('lzsZoom1j') },
+            { key: '3j', label: t('lzsZoom3j') },
+            { key: '5j', label: t('lzsZoom5j') },
+            { key: 'all', label: t('lzsZoomAll') },
           ].map((z) => (
             <button
               key={z.key}
@@ -288,7 +292,7 @@ export default function LebenszeitstrahlCard({ kunde }) {
                     <Icon size={16} className="text-white" strokeWidth={2.25} />
                   </div>
                   <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: tr.color }}>
-                    {tr.label}
+                    {t(tr.labelKey)}
                   </span>
                 </div>
               );
@@ -305,7 +309,7 @@ export default function LebenszeitstrahlCard({ kunde }) {
               style={{ left: `${todayPct}%`, borderColor: '#ef4444' }}
             >
               <span className="absolute -top-1 left-1.5 text-[10px] font-bold text-red-500 whitespace-nowrap bg-slate-50 px-1 rounded">
-                HEUTE
+                {t('lzsHeute')}
               </span>
             </div>
           )}
@@ -445,10 +449,10 @@ export default function LebenszeitstrahlCard({ kunde }) {
                                 className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full text-white"
                                 style={{ backgroundColor: tr.color }}
                               >
-                                {tr.label}
+                                {t(tr.labelKey)}
                               </span>
                               <span className="text-[10px] font-mono font-semibold text-slate-500">
-                                {formatTooltipDate(event.date)}
+                                {formatTooltipDate(event.date, lang)}
                               </span>
                               {event.aiDetected && (
                                 <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-violet-700 bg-violet-50 border border-violet-200 px-1.5 py-0.5 rounded-full">
@@ -462,12 +466,12 @@ export default function LebenszeitstrahlCard({ kunde }) {
                               )}
                               {event.isFuture && (
                                 <span className="text-[9px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded-full">
-                                  Zukunft
+                                  {t('lzsZukunft')}
                                 </span>
                               )}
                               {event.isWarning && (
                                 <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-red-700 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded-full">
-                                  <AlertTriangle size={9} /> Warnung
+                                  <AlertTriangle size={9} /> {t('lzsWarnung')}
                                 </span>
                               )}
                             </div>
@@ -476,13 +480,13 @@ export default function LebenszeitstrahlCard({ kunde }) {
                             </div>
                             {event.source && (
                               <div className="text-[11px] text-slate-500 italic mt-0.5">
-                                Quelle: {event.source}
+                                {t('lzsQuelle')}: {event.source}
                               </div>
                             )}
                             {event.signals && event.signals.length > 0 && (
                               <div className="mt-1.5 pt-1.5 border-t border-slate-100">
                                 <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">
-                                  Erkannte Signale
+                                  {t('lzsErkannteSignale')}
                                 </div>
                                 <ul className="space-y-0.5">
                                   {event.signals.map((s, si) => (
@@ -543,15 +547,15 @@ export default function LebenszeitstrahlCard({ kunde }) {
               >
                 <Icon size={9} className="text-white" strokeWidth={2.5} />
               </span>
-              <span className="font-medium" style={{ color: tr.color }}>{tr.label}</span>
+              <span className="font-medium" style={{ color: tr.color }}>{t(tr.labelKey)}</span>
             </div>
           );
         })}
         <span className="text-slate-300">·</span>
-        <span className="flex items-center gap-1"><Sparkles size={11} className="text-violet-600" /> KI erkannt</span>
+        <span className="flex items-center gap-1"><Sparkles size={11} className="text-violet-600" /> {t('lzsKiErkannt')}</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-slate-700" /> FIDA</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full border-2 border-dashed border-slate-400 bg-white" /> Zukunft</span>
-        <span className="ml-auto text-[10px] italic text-slate-400">Hover über einen Punkt für Details</span>
+        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full border-2 border-dashed border-slate-400 bg-white" /> {t('lzsZukunft')}</span>
+        <span className="ml-auto text-[10px] italic text-slate-400">{t('lzsHoverHinweis')}</span>
       </div>
     </Card>
   );

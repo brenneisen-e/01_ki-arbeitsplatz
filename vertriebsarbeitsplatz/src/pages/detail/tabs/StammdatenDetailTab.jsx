@@ -401,12 +401,12 @@ export default function StammdatenDetailTab({ kunde }) {
               })).length;
               const score = Math.min(100, Math.round((abgedeckt / sparten.length) * 100));
               const color = score >= 75 ? 'text-emerald-600' : score >= 50 ? 'text-amber-600' : 'text-red-600';
-              const label = score >= 75 ? 'gut' : score >= 50 ? 'mittel' : 'ausbaufähig';
+              const label = score >= 75 ? t('scoreGut') : score >= 50 ? t('scoreMittel') : t('scoreAusbaufaehig');
               return (
-                <div className="flex items-baseline gap-2 text-sm" title="Basiert auf Open-Finance-Daten: Anzahl abgedeckter Versicherungssparten">
-                  <span className="text-slate-400 shrink-0">Absicherungsscore:</span>
+                <div className="flex items-baseline gap-2 text-sm" title={t('absicherungsscoreTooltip')}>
+                  <span className="text-slate-400 shrink-0">{t('absicherungsscore')}:</span>
                   <span className={`font-medium ${color}`}>{score}/100</span>
-                  <span className="text-xs text-slate-400">({label}, {abgedeckt}/{sparten.length} Sparten)</span>
+                  <span className="text-xs text-slate-400">({label}, {abgedeckt}/{sparten.length} {t('spartenLabel')})</span>
                 </div>
               );
             })()}
@@ -414,7 +414,7 @@ export default function StammdatenDetailTab({ kunde }) {
               const seit = kunde.eigeneProdukte?.[0]?.seit;
               if (!seit) return null;
               const jahre = new Date().getFullYear() - parseInt(seit.slice(0, 4), 10);
-              return <InfoRow label={t('kundeSeit')} value={`${seit} (${jahre} Jahre)`} />;
+              return <InfoRow label={t('kundeSeit')} value={`${seit} (${jahre} ${t('jahre')})`} />;
             })()}
             {(() => {
               // Bonitätsscore (Schufa-Score nach dem im März 2026 reformierten Modell).
@@ -424,13 +424,13 @@ export default function StammdatenDetailTab({ kunde }) {
               // Niedriger Risikoscore → hoher Schufa-Score.
               // Skala des neuen Schufa-Modells (gültig seit 03/2026): 0–999.
               const schufa = Math.max(250, Math.min(999, Math.round(975 - risiko * 6)));
-              const klasse = schufa >= 950 ? { label: 'sehr gut', color: 'text-emerald-600', dot: 'bg-emerald-500' }
-                          : schufa >= 850 ? { label: 'gut', color: 'text-lime-600', dot: 'bg-lime-500' }
-                          : schufa >= 700 ? { label: 'mittel', color: 'text-amber-600', dot: 'bg-amber-500' }
-                          : { label: 'erhöhtes Risiko', color: 'text-red-600', dot: 'bg-red-500' };
+              const klasse = schufa >= 950 ? { label: t('schufaSehrGut'), color: 'text-emerald-600', dot: 'bg-emerald-500' }
+                          : schufa >= 850 ? { label: t('schufaGut'), color: 'text-lime-600', dot: 'bg-lime-500' }
+                          : schufa >= 700 ? { label: t('schufaMittel'), color: 'text-amber-600', dot: 'bg-amber-500' }
+                          : { label: t('schufaErhoehtesRisiko'), color: 'text-red-600', dot: 'bg-red-500' };
               return (
-                <div className="flex items-center gap-2 text-sm" title="Schufa-Score (neues Modell, gültig seit März 2026)">
-                  <span className="text-slate-400 shrink-0">Bonitätsscore:</span>
+                <div className="flex items-center gap-2 text-sm" title={t('schufaTooltip')}>
+                  <span className="text-slate-400 shrink-0">{t('bonitaetsscore')}:</span>
                   <span className="flex items-center gap-2">
                     {/*
                       Schufa-Logo via logo.dev. Primärdomain der SCHUFA Holding AG
@@ -460,7 +460,7 @@ export default function StammdatenDetailTab({ kunde }) {
                     />
                     <span className={`font-semibold ${klasse.color}`}>{schufa}/999</span>
                     <span className={`inline-block w-1.5 h-1.5 rounded-full ${klasse.dot}`} />
-                    <span className="text-xs text-slate-400">({klasse.label}, neues Schufa-Modell 03/2026)</span>
+                    <span className="text-xs text-slate-400">({klasse.label}, {t('schufaModellHinweis')})</span>
                   </span>
                 </div>
               );
@@ -471,7 +471,7 @@ export default function StammdatenDetailTab({ kunde }) {
                 <span className="flex items-center gap-1">
                   <span className="text-slate-700 font-medium">{kunde.risikoscore} ({kunde.risikoscore < 30 ? t('niedrig') : kunde.risikoscore < 50 ? t('mittel') : t('hoch')})</span>
                   {kunde.risikoSignale?.length > 0 && (
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 ml-1" title="Risiko-Signal aus Kontoumsätzen">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 ml-1" title={t('risikoSignalTooltip')}>
                       <ShieldAlert size={12} strokeWidth={2.5} />
                     </span>
                   )}
@@ -501,24 +501,24 @@ export default function StammdatenDetailTab({ kunde }) {
               let schmerz = null;
               let impuls = null;
               if (nps <= 6) {
-                schmerz = 'Kritikpunkt: „Ich habe das Gefühl, dass sich nie jemand proaktiv bei mir meldet."';
-                impuls = 'Kontaktfrequenz auf Quartalsrhythmus erhöhen, proaktiven Check-In-Termin anbieten.';
+                schmerz = t('kritikpunktNiedrig');
+                impuls = t('impulsNiedrig');
               } else if (nps <= 8) {
-                schmerz = 'Kritikpunkt: „Kontakt passt grundsätzlich, aber zu wenig proaktiv."';
-                impuls = 'Kontaktfrequenz leicht erhöhen (z. B. halbjährlicher Review-Termin), Gesprächsimpulse senden.';
+                schmerz = t('kritikpunktMittel');
+                impuls = t('impulsMittel');
               } else {
-                schmerz = 'Promotor — äußerte: „Fühle mich gut betreut, bitte so weitermachen."';
-                impuls = 'Als Empfehlungsgeber aktivieren (Next-Gen / Bekanntenkreis einladen).';
+                schmerz = t('kritikpunktPromotor');
+                impuls = t('impulsPromotor');
               }
               return (
                 <>
-                  <InfoRow label="NPS" value={`${nps}/10 (erhoben ${datum})`} />
+                  <InfoRow label="NPS" value={`${nps}/10 (${t('npsErhoben', { datum })})`} />
                   <div className="pl-1 -mt-1 flex items-start gap-1.5 text-[11px] leading-snug">
                     <Sparkles size={11} className="text-violet-600 mt-0.5 shrink-0" />
                     <span className="text-slate-600">
                       <span className="italic">{schmerz}</span>
                       <br />
-                      <strong className="text-slate-800">KI-Empfehlung:</strong> {impuls}
+                      <strong className="text-slate-800">{t('kiEmpfehlung')}:</strong> {impuls}
                     </span>
                   </div>
                 </>
@@ -574,7 +574,7 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
         <LogoImg name={arbeitgeber.name} size={16} />
         <span className="text-slate-700 font-medium">{arbeitgeber.name}</span>
         <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-          <CheckCircle size={11} /> bestätigt durch Kontoumsätze
+          <CheckCircle size={11} /> {t('bestaetigtDurchKontoumsaetze')}
         </span>
         <span className="text-xs text-slate-400 font-mono">{fmt(lastSalaryDate)}</span>
       </div>
@@ -582,10 +582,10 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
       {/* Position/Abteilung aus LinkedIn — gleiche Spalte wie die anderen InfoRows */}
       {beruf && (
         <div className="flex items-baseline gap-2 text-sm flex-wrap">
-          <span className="text-slate-400 shrink-0">Position:</span>
+          <span className="text-slate-400 shrink-0">{t('positionLabel')}:</span>
           <span className="text-slate-700 font-medium">{beruf}</span>
           <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full">
-            <Linkedin size={11} /> Durch LinkedIn Abgleich
+            <Linkedin size={11} /> {t('durchLinkedInAbgleich')}
           </span>
           <span className="text-xs text-slate-400 font-mono">{fmt(linkedInUpdate)}</span>
         </div>
@@ -722,7 +722,7 @@ function HaustiereRow({ haustiere, t, kundeId }) {
   };
 
   const bestaetigtDatum = bestaetigtAm
-    ? new Date(bestaetigtAm).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    ? new Date(bestaetigtAm).toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
     : null;
 
   return (
@@ -732,7 +732,7 @@ function HaustiereRow({ haustiere, t, kundeId }) {
           <div className="flex items-center gap-2 flex-wrap">
             <span className="flex items-center gap-1.5 text-amber-700 shrink-0 text-sm">
               <PawPrint size={14} />
-              {haustiere.vermutet ? 'Haustier' : t('haustierHinweis')}
+              {haustiere.vermutet ? t('haustierFallback') : t('haustierHinweis')}
             </span>
             {!haustiere.vermutet && (
               <span className="text-sm text-slate-500 italic">
@@ -740,7 +740,7 @@ function HaustiereRow({ haustiere, t, kundeId }) {
               </span>
             )}
             <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
-              Aus Kontoumsätzen erkannt
+              {t('ausKontoumsaetzenErkanntCaps')}
             </span>
             <button
               onClick={() => setShowDetail(!showDetail)}
@@ -776,7 +776,7 @@ function HaustiereRow({ haustiere, t, kundeId }) {
                   />
                   <input
                     type="text"
-                    placeholder="Name des Tieres"
+                    placeholder={t('nameDesTieres')}
                     value={tierName}
                     onChange={e => setTierName(e.target.value)}
                     className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
@@ -804,7 +804,7 @@ function HaustiereRow({ haustiere, t, kundeId }) {
           </span>
           <span className="flex items-center gap-1 text-xs text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
             <CheckCircle size={11} />
-            {bestaetigtDatum ? `Bestätigt am ${bestaetigtDatum}` : t('bestaetigt')}
+            {bestaetigtDatum ? t('bestaetigtAm', { datum: bestaetigtDatum }) : t('bestaetigt')}
           </span>
         </div>
       )}
@@ -822,9 +822,9 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
             type="button"
             onClick={onJumpToKfz}
             className="w-full flex items-center gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer flex-wrap"
-            title="Zur Finanzübersicht — KFZ-Versicherung anzeigen"
+            title={t('zurFinanzuebersichtKfz')}
           >
-            <span className="text-slate-400 shrink-0">Fahrzeug:</span>
+            <span className="text-slate-400 shrink-0">{t('fahrzeugInline')}:</span>
             {(() => {
               const parts = (fz.modell || '').split(' ');
               const brand = parts[0] || '';
@@ -844,7 +844,7 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
               </span>
             )}
             <span className="text-slate-500">
-              · {fz.versicherer || 'Unbekannt'}
+              · {fz.versicherer || t('unbekannt')}
               {fz.praemie > 0 && <span className="font-mono"> ({fz.praemie}€/J.)</span>}
             </span>
             {fz.quelle === 'psd2' && (
@@ -869,7 +869,7 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
         <div className="flex items-baseline gap-2 text-sm flex-wrap">
           <span className="text-slate-400 shrink-0">{t('mobilitaetsausgaben')}:</span>
           <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">Kontoumsätze</span>
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">{t('kontoumsaetze')}</span>
         </div>
       )}
     </>
@@ -927,15 +927,15 @@ function ExpandableProduktRow({ produkt, isVV, t }) {
                 <div className="font-medium text-slate-700 mt-0.5">{produkt.seit}</div>
               </div>
               <div>
-                <span className="text-slate-400 uppercase tracking-wider">Status</span>
+                <span className="text-slate-400 uppercase tracking-wider">{t('status')}</span>
                 <div className="mt-0.5"><StatusBadge status={produkt.status} /></div>
               </div>
               <div>
-                <span className="text-slate-400 uppercase tracking-wider">Sparte</span>
+                <span className="text-slate-400 uppercase tracking-wider">{t('sparte')}</span>
                 <div className="font-medium text-slate-700 mt-0.5">{(lang === 'en' ? SPARTE_EN[produkt.sparte] : null) || produkt.sparte || '-'}</div>
               </div>
               <div>
-                <span className="text-slate-400 uppercase tracking-wider">Details</span>
+                <span className="text-slate-400 uppercase tracking-wider">{t('details')}</span>
                 <div className="font-medium text-slate-700 mt-0.5">{translateDetails(produkt.details, lang)}</div>
               </div>
               {produkt.status === 'optimierbar' && (
@@ -957,6 +957,7 @@ function ExpandableProduktRow({ produkt, isVV, t }) {
 // Adresse wird beim Hover einmalig per Mapbox-Geocoding geokodiert,
 // danach wird eine kleine Kartengrafik mit Pin angezeigt.
 function AddressHoverMap({ address }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -1000,11 +1001,11 @@ function AddressHoverMap({ address }) {
             {staticUrl ? (
               <img src={staticUrl} alt={address} className="w-full h-full object-cover" />
             ) : loading ? (
-              <span className="text-xs text-slate-400">Lade Karte …</span>
+              <span className="text-xs text-slate-400">{t('ladeKarte')}</span>
             ) : (
               <div className="flex items-center gap-1.5 text-xs text-slate-400">
                 <MapPin size={14} />
-                <span>Karte nicht verfügbar</span>
+                <span>{t('karteNichtVerfuegbar')}</span>
               </div>
             )}
           </div>
@@ -1038,6 +1039,7 @@ function personHash(s) {
   return h;
 }
 function PersonLink({ name, role }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 
@@ -1082,11 +1084,11 @@ function PersonLink({ name, role }) {
           </div>
           <div className="mt-2 pt-2 border-t border-slate-100 space-y-0.5 text-[11px]">
             <div className="flex justify-between gap-2">
-              <span className="text-slate-400">Kunden-ID</span>
+              <span className="text-slate-400">{t('kundenId')}</span>
               <span className="font-mono text-slate-700">{syntheticId}</span>
             </div>
             <div className="flex justify-between gap-2">
-              <span className="text-slate-400">Kunde seit</span>
+              <span className="text-slate-400">{t('kundeSeit')}</span>
               <span className="font-mono text-slate-700">{kundeSeit}</span>
             </div>
           </div>
@@ -1095,7 +1097,7 @@ function PersonLink({ name, role }) {
             onClick={() => { /* Navigation wird ergaenzt sobald eigener Datensatz existiert */ }}
             className="mt-2 w-full text-[11px] font-semibold text-white bg-slate-800 hover:bg-slate-900 rounded-lg px-2 py-1.5 transition-colors"
           >
-            Zum Kunden
+            {t('zumKunden')}
           </button>
         </div>
       )}
@@ -1108,6 +1110,7 @@ function PersonLink({ name, role }) {
 // nicht alarmrot. Die Versicherungslücke wird in einem separaten kleinen
 // Block hervorgehoben.
 function RisikoSignale({ signale, institut }) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(null);
   const ctx = { institut };
   return (
@@ -1119,13 +1122,13 @@ function RisikoSignale({ signale, institut }) {
               <ShieldAlert size={14} />
               {interpolateDynamicDates(s.titel, ctx)}
             </span>
-            <span className="text-sm text-slate-500 italic">Aus Kontoumsätzen erkannt</span>
+            <span className="text-sm text-slate-500 italic">{t('ausKontoumsaetzenErkanntCaps')}</span>
             <button
               onClick={() => setExpanded(expanded === i ? null : i)}
               className="flex items-center gap-1 text-xs text-slate-600 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200 hover:bg-slate-100 transition-colors"
             >
               <Info size={11} />
-              Details
+              {t('details')}
             </button>
           </div>
           {expanded === i && (
@@ -1134,7 +1137,7 @@ function RisikoSignale({ signale, institut }) {
 
               {s.transaktionen?.length > 0 && (
                 <div className="pt-2 border-t border-amber-200">
-                  <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">Erkannte Transaktionen</div>
+                  <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">{t('erkannteTransaktionenCaps')}</div>
                   <div className="space-y-0.5">
                     {s.transaktionen.map((t, ti) => (
                       <div key={ti} className="flex items-baseline justify-between text-sm">
@@ -1150,7 +1153,7 @@ function RisikoSignale({ signale, institut }) {
                 <div className="rounded bg-white border border-amber-200 p-2 flex items-start gap-2">
                   <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-0.5">Versicherungslücke</div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-0.5">{t('versicherungsluecke')}</div>
                     <div className="text-sm text-slate-700 leading-snug">{interpolateDynamicDates(s.konsequenz, ctx)}</div>
                   </div>
                 </div>
@@ -1159,7 +1162,7 @@ function RisikoSignale({ signale, institut }) {
               {s.empfehlung && (
                 <div className="flex items-start gap-1.5 text-sm pt-1">
                   <Sparkles size={13} className="text-violet-600 mt-0.5 shrink-0" />
-                  <span className="text-slate-700"><strong className="text-violet-700">Empfehlung:</strong> {interpolateDynamicDates(s.empfehlung, ctx)}</span>
+                  <span className="text-slate-700"><strong className="text-violet-700">{t('empfehlungInline')}:</strong> {interpolateDynamicDates(s.empfehlung, ctx)}</span>
                 </div>
               )}
             </div>
@@ -1175,6 +1178,7 @@ function RisikoSignale({ signale, institut }) {
 //   - 'stammdaten' (default): persönlicher Überblick / CRM-Sicht
 //   - 'finanzuebersicht': Fokus auf Bilanz, Liquidität, Open-Finance-Sicht
 export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'stammdaten' }) {
+  const { t } = useTranslation();
   const summary = variant === 'finanzuebersicht'
     ? generateFinanzKISummary(kunde)
     : generateKISummary(kunde);
@@ -1191,9 +1195,9 @@ export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'sta
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-0.5 gap-2">
-            <h3 className="font-semibold text-slate-700 text-sm tracking-wide">KI-Zusammenfassung</h3>
+            <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('kiZusammenfassung')}</h3>
             <span className="text-[11px] text-slate-400 font-mono shrink-0">
-              Aktualisiert {new Date().toLocaleDateString('de-DE')}
+              {t('kiZusammenfassungAktualisiert', { datum: new Date().toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE') })}
             </span>
           </div>
           <p className="text-[13px] text-slate-700 leading-snug">{summary.text}</p>
@@ -1201,7 +1205,7 @@ export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'sta
             <div className="mt-1 flex items-start gap-1.5 text-[13px]">
               <Sparkles size={12} className="text-violet-600 mt-0.5 shrink-0" />
               <span className="text-slate-700">
-                <strong className="text-slate-800">Empfehlung:</strong> {summary.recommendation}
+                <strong className="text-slate-800">{t('empfehlungInline')}:</strong> {summary.recommendation}
               </span>
             </div>
           )}
@@ -1348,6 +1352,7 @@ function generateKISummary(kunde) {
 
 // ─── Aktivitäten: letzte Gespräche & Notizen ───
 function AktivitaetenCard({ kunde }) {
+  const { t } = useTranslation();
   const dayAdvanced = useDayAdvanced();
   const [showTerminPrep, setShowTerminPrep] = useState(false);
 
@@ -1384,15 +1389,15 @@ function AktivitaetenCard({ kunde }) {
     <Card hover={false} className="flex flex-col h-full">
       <div className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-amber-100 flex items-center gap-2 bg-amber-50/70">
         <MessageSquare size={18} className="text-amber-600" strokeWidth={1.75} />
-        <h3 className="font-semibold text-slate-700 text-sm tracking-wide">Aktivitäten</h3>
+        <h3 className="font-semibold text-slate-700 text-sm tracking-wide">{t('aktivitaeten')}</h3>
         <span className="text-xs text-slate-500 ml-auto">
-          {komms.length === 0 ? 'Keine' : `${komms.length} letzte`}
+          {komms.length === 0 ? t('aktivitaetenKeine') : t('aktivitaetenLetzte', { count: komms.length })}
         </span>
       </div>
 
       {komms.length === 0 ? (
         <div className="text-sm text-slate-400 italic text-center py-6">
-          Noch keine Aktivitäten erfasst.
+          {t('aktivitaetenNochKeine')}
         </div>
       ) : (
         <div className="space-y-3">
@@ -1400,9 +1405,9 @@ function AktivitaetenCard({ kunde }) {
             const Icon = iconForType(k.typ);
             const c = colorForType();
             const isNeu = k.istNeuZugestimmt;
-            const date = new Date(k.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const date = new Date(k.datum).toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const appointmentLabel = isNeu
-              ? `${formatAppointmentDate(getSimulatedAppointment())} · ${formatAppointmentTime(getSimulatedAppointment())} Uhr`
+              ? `${formatAppointmentDate(getSimulatedAppointment())} · ${formatAppointmentTime(getSimulatedAppointment())}${getLang() === 'en' ? '' : ' Uhr'}`
               : null;
             return (
               <div
@@ -1423,7 +1428,7 @@ function AktivitaetenCard({ kunde }) {
                     <span className="text-xs text-slate-400 font-mono shrink-0">{date}</span>
                     {isNeu && (
                       <span className="rh-badge inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold uppercase tracking-wide">
-                        <Sparkles size={9} /> Neu
+                        <Sparkles size={9} /> {t('badgeNeu')}
                       </span>
                     )}
                   </div>
@@ -1442,7 +1447,7 @@ function AktivitaetenCard({ kunde }) {
                         onClick={(e) => { e.stopPropagation(); setShowTerminPrep(true); }}
                         className="text-[11px] font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-2.5 py-1 rounded-full transition-colors inline-flex items-center gap-1 shadow-sm"
                       >
-                        <Sparkles size={11} strokeWidth={2.5} /> Gesprächsvorbereitung öffnen
+                        <Sparkles size={11} strokeWidth={2.5} /> {t('gespraechsvorbereitungOeffnen')}
                       </button>
                     </div>
                   )}

@@ -386,19 +386,19 @@ export default function OpenFinanceTab({ kunde }) {
           <Card hover={false} padding={false} className="overflow-hidden">
             <div className="grid grid-cols-3 divide-x divide-slate-100">
               <div className="px-5 py-4">
-                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Anlagevolumen gesamt</div>
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">{t('anlagevolumenGesamt')}</div>
                 <div className="font-mono text-2xl font-bold text-slate-800">{formatEur(anlageGesamt)}</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">eigene Bestände + Open-Finance-Depots</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">{t('eigeneBestaendeDepots')}</div>
               </div>
               <div className="px-5 py-4">
-                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Kreditvolumen gesamt</div>
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">{t('kreditvolumenGesamt')}</div>
                 <div className="font-mono text-2xl font-bold text-amber-700">{formatEur(kreditGesamt)}</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">offene Finanzierungen</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">{t('offeneFinanzierungenLabel')}</div>
               </div>
               <div className="px-5 py-4">
-                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Netto-Vermögen</div>
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">{t('nettoVermoegen')}</div>
                 <div className={`font-mono text-2xl font-bold ${netto >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{formatEur(netto)}</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Anlagen − Verbindlichkeiten</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">{t('anlagenMinusVerbindlichkeiten')}</div>
               </div>
             </div>
           </Card>
@@ -411,7 +411,7 @@ export default function OpenFinanceTab({ kunde }) {
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={PiggyBank}
-            title="Sparen & Vorsorgen"
+            title={t('sparenVorsorgen')}
             color="bg-emerald-500"
             count={(bf.geldmarkt?.length || 0) + (bf.kapitalmarkt?.flatMap(k => k.positionen || [k]).length || 0)}
           />
@@ -419,16 +419,16 @@ export default function OpenFinanceTab({ kunde }) {
           {/* Geldmarkt */}
           {bf.geldmarkt.length > 0 && (
             <div className="mb-5">
-              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Geldmarkt</h4>
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">{t('geldmarkt')}</h4>
               <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-slate-50">
-                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Produkt</th>
-                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Anbieter</th>
-                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Volumen</th>
-                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Zinssatz</th>
-                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Laufzeit</th>
+                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('produkt')}</th>
+                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('anbieter')}</th>
+                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('volumen')}</th>
+                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('zinssatz')}</th>
+                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('laufzeit')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -456,19 +456,19 @@ export default function OpenFinanceTab({ kunde }) {
             const anySparrate = allPositions.some(p => p.sparrate);
             return (
             <div>
-              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Kapitalmarkt</h4>
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">{t('kapitalmarkt')}</h4>
               <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-slate-50">
-                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Produkt</th>
-                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Anbieter</th>
-                      {anySeit && <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Gekauft</th>}
-                      {anyEinkauf && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Ø Einkauf</th>}
-                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Aktueller Wert</th>
-                      {anyGewinn && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Gewinn (nicht real.)</th>}
-                      {anySparrate && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Sparrate</th>}
-                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Performance</th>
+                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('produkt')}</th>
+                      <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('anbieter')}</th>
+                      {anySeit && <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('gekauft')}</th>}
+                      {anyEinkauf && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('oeEinkauf')}</th>}
+                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('aktuellerWert')}</th>
+                      {anyGewinn && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('gewinnNichtReal')}</th>}
+                      {anySparrate && <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('sparrate')}</th>}
+                      <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('performance')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -496,7 +496,7 @@ export default function OpenFinanceTab({ kunde }) {
                       const colCount = 3 + (anySeit ? 1 : 0) + (anyEinkauf ? 1 : 0) + (anyGewinn ? 1 : 0) + (anySparrate ? 1 : 0);
                       return (
                         <tr className="border-t-2 border-slate-200 bg-slate-50/80 font-semibold">
-                          <td className="px-4 py-2.5">Gesamt Depot</td>
+                          <td className="px-4 py-2.5">{t('gesamtDepot')}</td>
                           <td className="px-4 py-2.5"></td>
                           {anySeit && <td className="px-4 py-2.5"></td>}
                           {anyEinkauf && <td className="px-4 py-2.5 text-right font-mono">{totalEinkauf > 0 ? formatEur(totalEinkauf) : ''}</td>}
@@ -532,8 +532,8 @@ export default function OpenFinanceTab({ kunde }) {
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={Shield}
-            title="Absichern"
-            source="Wettbewerber-Versicherungen"
+            title={t('absichern')}
+            source={t('wettbewerberVersicherungen')}
             color="bg-blue-500"
             count={bf.versicherungenFremd.length}
           />

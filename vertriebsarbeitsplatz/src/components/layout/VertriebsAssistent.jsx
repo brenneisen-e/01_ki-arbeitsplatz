@@ -796,13 +796,13 @@ Volksbank Mittelhessen`)}</div>
     if (lower.includes('tierhalter') || lower.includes('tierschutz') || (lower.includes('haftpflicht') && lower.includes('tier'))) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Gesprächsleitfaden — Tierhalterhaftpflicht</p>
+          <p class="font-semibold">${tx('Gesprächsleitfaden — Tierhalterhaftpflicht', 'Conversation guide — Pet owner liability insurance')}</p>
           <ol class="list-decimal pl-4 space-y-1 text-[13px]">
-            <li><strong>Eröffnung</strong> — "Sie haben ja Hund/Katze — wie ist dort aktuell der Schutz geregelt?"</li>
-            <li><strong>Risiko aufzeigen</strong> — Beispiel-Schaden (fremde Person gebissen: 15k–40k)</li>
-            <li><strong>Angebot</strong> — R+V TierSchutz ab ~3,50€/Monat</li>
-            <li><strong>Bezug zu FIDA</strong> — Fressnapf/Tierarzt-Umsätze sichtbar → natürlicher Anlass</li>
-            <li><strong>Abschluss</strong> — Sofort online abschließen oder Unterlagen mitgeben</li>
+            <li><strong>${tx('Eröffnung', 'Opening')}</strong> — ${tx('"Sie haben ja Hund/Katze — wie ist dort aktuell der Schutz geregelt?"', '"You have a dog/cat — how is the cover arranged there at the moment?"')}</li>
+            <li><strong>${tx('Risiko aufzeigen', 'Highlight risk')}</strong> — ${tx('Beispiel-Schaden (fremde Person gebissen: 15k–40k)', 'Example claim (third party bitten: 15k–40k)')}</li>
+            <li><strong>${tx('Angebot', 'Offer')}</strong> — ${tx('R+V TierSchutz ab ~3,50€/Monat', 'R+V TierSchutz from ~€3.50/month')}</li>
+            <li><strong>${tx('Bezug zu FIDA', 'Link to FIDA')}</strong> — ${tx('Fressnapf/Tierarzt-Umsätze sichtbar → natürlicher Anlass', 'Pet store/vet transactions visible → natural occasion')}</li>
+            <li><strong>${tx('Abschluss', 'Closing')}</strong> — ${tx('Sofort online abschließen oder Unterlagen mitgeben', 'Conclude online immediately or hand over documents')}</li>
           </ol>
         </div>`,
       };

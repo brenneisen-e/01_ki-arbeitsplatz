@@ -1,5 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
+import useTranslation from '../../i18n/useTranslation';
 
 /**
  * Wraps a legacy app.html module inside an iframe.
@@ -7,6 +8,7 @@ import { useMode } from '../../hooks/useMode';
  */
 export default function LegacyModule() {
   const { legacyRoute, legacyTitle, goBack } = useMode();
+  const { t } = useTranslation();
 
   // Build the iframe URL pointing to app.html with the legacy hash route
   const basePath = window.location.pathname;
@@ -26,10 +28,10 @@ export default function LegacyModule() {
           <ArrowLeft size={20} strokeWidth={1.75} />
         </button>
         <span className="text-white text-sm font-medium">
-          {legacyTitle || 'Modul'}
+          {legacyTitle || t('modul')}
         </span>
         <span className="text-white/40 text-xs ml-auto">
-          Zurück zur Startseite
+          {t('zurueckStartseite')}
         </span>
       </header>
       {/* iframe fills the remaining space */}

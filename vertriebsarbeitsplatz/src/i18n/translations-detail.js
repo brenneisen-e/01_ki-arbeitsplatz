@@ -846,6 +846,9 @@ const translationsDetail = {
 
   // ─── ProduktabschlussTab ───
   'kanalOnline': { de: 'Online', en: 'Online' },
+
+  // ─── Misc reused labels ───
+  'performance': { de: 'Performance', en: 'Performance' },
 };
 
 export default translationsDetail;

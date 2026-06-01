@@ -404,7 +404,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = config.colors.primary}
               >
                 <Sparkles size={14} />
-                Anschreiben formulieren
+                {t('anschreibenFormulieren')}
               </button>
               <button
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors"

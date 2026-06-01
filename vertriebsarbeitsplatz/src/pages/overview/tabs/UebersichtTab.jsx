@@ -400,11 +400,18 @@ const LEBENSLAGEN_RADAR_BANKING = [
     customerName: 'Markus Wagner',
     initials: 'MW',
     event: 'Kind bekommen',
+    eventEn: 'New baby',
     signals: [
       'Regelmäßige Transaktionen bei DM / Babymarkt seit 2 Mon.',
       'Kindergeld-Eingang Familienkasse neu erkannt',
       'Ausgaben für Kinderarzt + Hebamme in Kontoumsätzen',
       'Recherche: „Riester für Familien" (Newsletter-Klick)',
+    ],
+    signalsEn: [
+      'Regular transactions at DM / baby store for 2 months',
+      'New child-benefit credit from family fund detected',
+      'Pediatrician + midwife expenses in account activity',
+      'Research: "Riester for families" (newsletter click)',
     ],
     signalCount: 4,
     confidence: 96,
@@ -417,11 +424,18 @@ const LEBENSLAGEN_RADAR_BANKING = [
     customerName: 'Andrea Lang',
     initials: 'AL',
     event: 'Praxis-Erweiterung',
+    eventEn: 'Practice expansion',
     signals: [
       'Gewerbeanmeldung Zweitstandort erkannt',
       'Umsatzsteuer-Vorauszahlungen seit 2 Mon. erhöht',
       'Recherche: Gewerbeversicherungen (Newsletter-Klicks)',
       'Kontoumsätze: Praxisausstattung, Webhosting',
+    ],
+    signalsEn: [
+      'Business registration for second location detected',
+      'VAT prepayments increased for 2 months',
+      'Research: commercial insurance (newsletter clicks)',
+      'Account activity: practice equipment, web hosting',
     ],
     signalCount: 4,
     confidence: 89,
@@ -434,11 +448,18 @@ const LEBENSLAGEN_RADAR_BANKING = [
     customerName: 'Sandra Müller',
     initials: 'SM',
     event: 'Selbstständigkeit',
+    eventEn: 'Self-employment',
     signals: [
       'Wegfall regelmäßiger Gehaltseingang seit 3 Monaten',
       'Stattdessen 4 unterschiedliche Rechnungseingänge / Monat',
       'Gewerbeanmeldung beim Finanzamt erkannt (USt-ID-Nutzung)',
       'Recherche: „Gewerbe-Girokonto", „Steuerrücklage" (Newsletter-Klicks)',
+    ],
+    signalsEn: [
+      'No regular salary credit for 3 months',
+      'Instead 4 different invoice payments per month',
+      'Business registration with tax office detected (VAT-ID usage)',
+      'Research: "business current account", "tax reserve" (newsletter clicks)',
     ],
     signalCount: 4,
     confidence: 92,
@@ -451,11 +472,18 @@ const LEBENSLAGEN_RADAR_BANKING = [
     customerName: 'Peter Hoffmann',
     initials: 'PH',
     event: 'Ruhestand / Nachfolge',
+    eventEn: 'Retirement / succession',
     signals: [
       'Recherche „GmbH-Nachfolge" über das Online-Banking',
       'Erste Steuerberater-Termine in den Kontoumsätzen',
       'M&A-Beratungs-Anfrage erkannt',
       'Newsletter „Vermögen & Übergabe" aktiviert',
+    ],
+    signalsEn: [
+      'Research "GmbH succession" via online banking',
+      'First tax-advisor appointments in account activity',
+      'M&A advisory inquiry detected',
+      'Newsletter "Wealth & handover" activated',
     ],
     signalCount: 4,
     confidence: 82,
@@ -474,13 +502,22 @@ const ABWANDERUNGS_RADAR_BANKING = [
     riskLevel: 'high',
     riskScore: 87,
     riskType: 'Gehaltskonto-Wechsel',
+    riskTypeEn: 'Salary account switch',
     summary: 'Dauerauftrag 500€ → N26 · Tagesgeld ING neu',
+    summaryEn: 'Standing order €500 → N26 · new ING call money',
     signals: [
       'Neuer Dauerauftrag 500 €/Mon. an N26-Konto seit 6 Wochen',
       'Tagesgeldkonto bei ING eröffnet, 15.000 € übertragen',
       'Lastschriften für Strom/Internet auf Fremdkonto umgestellt',
       'Geschäftskonto: Aktivität -40% in 3 Monaten',
       'Kreditanfrage bei Smava erkannt (SCHUFA-Abfrage)',
+    ],
+    signalsEn: [
+      'New standing order €500/mo to N26 account for 6 weeks',
+      'Call-money account opened at ING, €15,000 transferred',
+      'Direct debits for electricity/internet moved to third-party account',
+      'Business account: activity -40% in 3 months',
+      'Loan inquiry at Smava detected (SCHUFA query)',
     ],
     clvAtRisk: 24480,
     trend: 'steigend',
@@ -492,12 +529,20 @@ const ABWANDERUNGS_RADAR_BANKING = [
     riskLevel: 'medium',
     riskScore: 64,
     riskType: 'Depot-Abwanderung',
+    riskTypeEn: 'Portfolio churn',
     summary: 'Trade Republic Sparplan ↑ · Hauptdepot ↓',
+    summaryEn: 'Trade Republic savings plan ↑ · main portfolio ↓',
     signals: [
       'Trade Republic Sparplan um 200 €/Mon. erhöht',
       'Hauptdepot-Sparplan um 100 €/Mon. reduziert',
       '3 Wertpapierverkäufe im Hauptdepot in 4 Wochen',
       'Newsletter-Tracking: Suche nach „Depotübertrag Trade Republic"',
+    ],
+    signalsEn: [
+      'Trade Republic savings plan increased by €200/mo',
+      'Main-portfolio savings plan reduced by €100/mo',
+      '3 securities sales in main portfolio within 4 weeks',
+      'Newsletter tracking: search for "portfolio transfer Trade Republic"',
     ],
     clvAtRisk: 14210,
     trend: 'stabil',
@@ -511,11 +556,18 @@ const LEBENSLAGEN_RADAR_VERSICHERUNG = [
     customerName: 'Anna Hoffmann',
     initials: 'AH',
     event: 'Zweites Kind erwartet',
+    eventEn: 'Second child expected',
     signals: [
       'Wiederkehrende Umsätze bei Babymarkt + DM seit 2 Mon.',
       'Newsletter „Familienabsicherung" angeklickt',
       'Hebammen-Rechnungen in den Kontoumsätzen erkannt',
       'Termin beim Gynäkologen ohne Reise-Muster (Vorsorge)',
+    ],
+    signalsEn: [
+      'Recurring purchases at baby store + DM for 2 months',
+      'Newsletter "family protection" clicked',
+      'Midwife invoices detected in account activity',
+      'Gynecologist appointment without travel pattern (check-up)',
     ],
     signalCount: 4,
     confidence: 93,
@@ -528,11 +580,18 @@ const LEBENSLAGEN_RADAR_VERSICHERUNG = [
     customerName: 'Thomas Weber',
     initials: 'TW',
     event: 'Betriebsübergabe Handwerk',
+    eventEn: 'Trade business handover',
     signals: [
       'Sohn Jan (25) tritt ins Unternehmen ein (LinkedIn)',
       'Recherche „Betriebsnachfolge Handwerk" über die Webseite',
       'Neuer Steuerberater-Dauerauftrag sichtbar',
       'Anfrage Betriebshaftpflicht-Anpassung',
+    ],
+    signalsEn: [
+      'Son Jan (25) joins the company (LinkedIn)',
+      'Research "trade business succession" via website',
+      'New tax-advisor standing order visible',
+      'Request to adjust commercial liability cover',
     ],
     signalCount: 4,
     confidence: 87,
@@ -545,11 +604,18 @@ const LEBENSLAGEN_RADAR_VERSICHERUNG = [
     customerName: 'Michael Braun',
     initials: 'MB',
     event: 'Näherrückender Ruhestand',
+    eventEn: 'Approaching retirement',
     signals: [
       'Pension in 36 Monaten fällig (Beamter Gymnasium)',
       'Recherche „Sofortrente vs. Auszahlplan" im Portal',
       'Sparplan-Erhöhung um 200 €/Mon.',
       'Newsletter „Ruhestandsplanung" aktiviert',
+    ],
+    signalsEn: [
+      'Pension due in 36 months (civil-servant teacher)',
+      'Research "immediate annuity vs. payout plan" in portal',
+      'Savings plan increased by €200/mo',
+      'Newsletter "retirement planning" activated',
     ],
     signalCount: 4,
     confidence: 82,
@@ -577,12 +643,20 @@ const ABWANDERUNGS_RADAR_VERSICHERUNG = [
     riskLevel: 'high',
     riskScore: 84,
     riskType: 'KFZ-Wechsel zum Online-Versicherer',
+    riskTypeEn: 'Switch of motor cover to online insurer',
     summary: 'FiDA-Datenanfrage von HUK24 · Portal-Kündigungsassistent geöffnet',
+    summaryEn: 'FiDA data request from HUK24 · portal cancellation assistant opened',
     signals: [
       'FiDA-Datenübermittlungsanfrage von „HUK24 Versicherung AG" (Consent via SCA am 08.04.) — Umfang: Kfz-Vertragsdaten, Schadenhistorie, aktuelle Prämie',
       'Kündigungsassistent im eigenen Kundenportal für Kfz-Vertrag 2× gestartet (keine Absendung)',
       'Kein Portal-Login seit 11 Wochen, E-Mail-Öffnungsrate auf 0 % gefallen',
       'Jahresgespräch 2× abgesagt, keine Reaktion auf letzte 3 Servicemails',
+    ],
+    signalsEn: [
+      'FiDA data-transfer request from "HUK24 Versicherung AG" (consent via SCA on 08.04.) — scope: motor policy data, claims history, current premium',
+      'Cancellation assistant for motor policy started 2× in own customer portal (not submitted)',
+      'No portal login for 11 weeks, email open rate dropped to 0%',
+      'Annual review cancelled 2×, no response to last 3 service emails',
     ],
     clvAtRisk: 14600,
     trend: 'steigend',
@@ -594,12 +668,20 @@ const ABWANDERUNGS_RADAR_VERSICHERUNG = [
     riskLevel: 'medium',
     riskScore: 58,
     riskType: 'Betriebshaftpflicht-Verlagerung',
+    riskTypeEn: 'Commercial liability migration',
     summary: 'FiDA-Anfrage eines Maklers · negatives NPS · offener Großschaden',
+    summaryEn: 'FiDA request from a broker · negative NPS · open major claim',
     signals: [
       'FiDA-Datenübermittlungsanfrage eines unabhängigen Maklers (FISP „AssekuranzFinder GmbH") — Umfang: Gewerbehaftpflicht, Prämienhistorie 3 Jahre',
       'NPS-Score von 8 auf 3 gefallen, Kommentar: „Beitrag unverhältnismäßig"',
       'Offener Betriebsschaden seit 6 Wochen nicht abschließend reguliert',
       'Beitragsrückerstattungsanfrage für Jahresprämie 2025 eingegangen',
+    ],
+    signalsEn: [
+      'FiDA data-transfer request from an independent broker (FISP "AssekuranzFinder GmbH") — scope: commercial liability, 3-year premium history',
+      'NPS score dropped from 8 to 3, comment: "premium disproportionate"',
+      'Open business claim not fully settled for 6 weeks',
+      'Premium-refund request received for 2025 annual premium',
     ],
     clvAtRisk: 8900,
     trend: 'stabil',
@@ -642,74 +724,110 @@ const HYPERPERSONALISIERTE_PRODUKTE = {
     {
       id: 'hnw-unfall',
       titel: 'Premium Unfallschutz HNW Plus',
+      titelEn: 'Premium Accident Cover HNW Plus',
       tagline: 'Unfallpolice exklusiv für vermögende Privatkunden',
+      taglineEn: 'Accident policy exclusively for high-net-worth private clients',
       zielgruppe: 'Privatvermögen ≥ 1 Mio EUR oder Haushaltsnetto ≥ 10.000 EUR',
+      zielgruppeEn: 'Private assets ≥ €1m or household net income ≥ €10,000',
       timeToMarket: 18,
       releaseZyklus: '6 Wochen',
+      releaseZyklusEn: '6 weeks',
       versionsLabel: 'v2026.03 — Live seit 02.05.2026',
+      versionsLabelEn: 'v2026.03 — Live since 02 May 2026',
       monatsBeitrag: '89–240 EUR',
+      monatsBeitragEn: '€89–240',
       photoGradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #6d28d9 100%)',
       photoAccent: '#c4b5fd',
       icon: 'Gem',
       bausteinIcon: 'Plane',
       bausteinTitel: 'Concierge & Privatklinik-Garantie',
+      bausteinTitelEn: 'Concierge & private-clinic guarantee',
       bausteinBeschreibung:
         'Bei Unfall im In- und Ausland weltweit medizinischer Privatjet-Rücktransport mit Notarztteam. Garantierter Aufnahmeplatz in einer kooperierenden Privatklinik (Beta-Klinik Bonn, Schön Klinik München, Klinik Hirslanden Zürich) ohne Wartezeit. 24/7-Familien-Concierge übernimmt Reise-, Hotel- und Schulmanagement der Angehörigen während der Genesung — bis zu 90 Tage, weltweit.',
+      bausteinBeschreibungEn:
+        'In the event of an accident at home or abroad, worldwide medical private-jet repatriation with an emergency doctor team. Guaranteed admission to a partner private clinic (Beta-Klinik Bonn, Schön Klinik Munich, Klinik Hirslanden Zurich) with no waiting time. A 24/7 family concierge handles travel, hotel and school management for relatives during recovery — up to 90 days, worldwide.',
       bausteinHighlights: [
         'Privatjet-Rückführung weltweit (max. 4 Std. Reaktionszeit)',
         'Privatklinik-Aufnahmegarantie ohne Wartezeit',
         '24/7-Familien-Concierge bis zu 90 Tage',
         'Zweitmeinungs-Netzwerk Top-50 Universitätskliniken',
       ],
+      bausteinHighlightsEn: [
+        'Worldwide private-jet repatriation (max. 4h response time)',
+        'Private-clinic admission guarantee with no waiting time',
+        '24/7 family concierge for up to 90 days',
+        'Second-opinion network of top-50 university hospitals',
+      ],
       passendeKunden: [
         {
           kundeId: 'KD00003', name: 'Thomas Weber', match: 96,
           begruendung: 'GmbH-Geschäftsführer (Weber Sanitär), 4.800 EUR netto + Geschäftsanteil ≈ 1,4 Mio EUR. Reist quartalsweise zu Lieferanten in Italien — Auslandsschutz dringend.',
+          begruendungEn: 'Managing director (Weber Sanitär), €4,800 net + company stake ≈ €1.4m. Travels quarterly to suppliers in Italy — international cover urgent.',
         },
         {
           kundeId: 'KD00004', name: 'Anna Hoffmann', match: 94,
           begruendung: 'Ärztin Uniklinik Köln, 5.500 EUR netto, hohe Kreditrate (Eigenheim), keine bestehende Unfallpolice. HNW-Familienprofil mit Kind Emma (3 J.).',
+          begruendungEn: 'Physician at Cologne university hospital, €5,500 net, high loan instalment (own home), no existing accident policy. HNW family profile with child Emma (3 yrs).',
         },
         {
           kundeId: 'KD00008', name: 'Sandra Yilmaz', match: 91,
           begruendung: 'Pharma-Referentin (5.200 EUR) + Partner Mehmet Zahnarzt (selbstständig, 6.500 EUR). Gemeinsames HH-Netto 11.700 EUR, Praxisinventar als Vermögenswert.',
+          begruendungEn: 'Pharma rep (€5,200) + partner Mehmet, dentist (self-employed, €6,500). Joint household net €11,700, practice inventory as an asset.',
         },
       ],
     },
     {
       id: 'flexcare-pflege',
       titel: 'FlexCare Pflege Eltern-Kind 360',
+      titelEn: 'FlexCare Care Parent-Child 360',
       tagline: 'Cross-Generations-Pflegeschutz mit Eltern-Modul',
+      taglineEn: 'Cross-generation long-term-care cover with a parent module',
       zielgruppe: 'Berufstätige 35–55 J. mit pflegerelevanten Eltern',
+      zielgruppeEn: 'Working professionals aged 35–55 with care-relevant parents',
       timeToMarket: 21,
       releaseZyklus: '8 Wochen',
+      releaseZyklusEn: '8 weeks',
       versionsLabel: 'v2026.02 — Live seit 14.04.2026',
+      versionsLabelEn: 'v2026.02 — Live since 14 Apr 2026',
       monatsBeitrag: '49–138 EUR',
+      monatsBeitragEn: '€49–138',
       photoGradient: 'linear-gradient(135deg, #064e3b 0%, #0d9488 50%, #0891b2 100%)',
       photoAccent: '#a7f3d0',
       icon: 'Heart',
       bausteinIcon: 'Hourglass',
       bausteinTitel: 'Pflegeplatz-Garantie 72 Std. + Steuer-Service',
+      bausteinTitelEn: '72-hour care-place guarantee + tax service',
       bausteinBeschreibung:
         'Modular eine oder beide Elternteile in dieselbe Police einschließen — Vorerkrankungen werden modular eingepreist statt ausgeschlossen. Im Pflegefall garantiert das Heimplatz-Netzwerk die Aufnahme binnen 72 Stunden in einer kooperierenden Einrichtung (Korian, Alloheim, Pro Seniore). Automatisierter Steuer-Service erfasst alle absetzbaren Pflegekosten und reicht sie quartalsweise ans Finanzamt.',
+      bausteinBeschreibungEn:
+        'Include one or both parents in the same policy modularly — pre-existing conditions are priced in modularly instead of excluded. In a care event, the care-home network guarantees admission within 72 hours to a partner facility (Korian, Alloheim, Pro Seniore). An automated tax service captures all deductible care costs and files them with the tax office every quarter.',
       bausteinHighlights: [
         'Eltern-Mit-Versicherung trotz Vorerkrankung',
         '72-h-Pflegeplatz-Garantie (Korian, Alloheim, Pro Seniore)',
         'Quartalsweise Steuer-Rückerstattung Pflegekosten',
         'Digitaler Pflegegrad-Antrag via App in 12 Min.',
       ],
+      bausteinHighlightsEn: [
+        'Co-insurance of parents despite pre-existing conditions',
+        '72h care-place guarantee (Korian, Alloheim, Pro Seniore)',
+        'Quarterly tax refund of care costs',
+        'Digital care-level application via app in 12 min.',
+      ],
       passendeKunden: [
         {
           kundeId: 'KD00001', name: 'Klaus Fischer', match: 92,
           begruendung: 'Sandwich-Generation: 42 J., 2 kleine Kinder, Eltern Mitte 70 (laut FIDA-Scoring keine Pflegeabsicherung). Konsolidierungs-Lebenslage.',
+          begruendungEn: 'Sandwich generation: 42 yrs, 2 young children, parents mid-70s (no care cover per FIDA scoring). Consolidation life stage.',
         },
         {
           kundeId: 'KD00003', name: 'Thomas Weber', match: 88,
           begruendung: 'Mutter Renate, 79 J., laut Praxis-Buchhaltung regelmäßige Apothekenüberweisungen — Pflegerisiko steigend. Eigene Police bisher ohne Eltern-Modul.',
+          begruendungEn: 'Mother Renate, 79 yrs, regular pharmacy transfers per practice accounting — care risk rising. Own policy so far without parent module.',
         },
         {
           kundeId: 'KD00007', name: 'Michael Braun', match: 86,
           begruendung: 'Gymnasiallehrer, 62 J., Frau Renate bereits in Ruhestand. Eltern verstorben — Police als Eigenabsicherung mit Pflegegrad-Trigger besonders relevant.',
+          begruendungEn: 'Grammar-school teacher, 62 yrs, wife Renate already retired. Parents deceased — policy as self-cover with care-level trigger especially relevant.',
         },
       ],
     },
@@ -718,74 +836,110 @@ const HYPERPERSONALISIERTE_PRODUKTE = {
     {
       id: 'family-office-liquidity',
       titel: 'Family-Office Liquiditätsbridge',
+      titelEn: 'Family-Office Liquidity Bridge',
       tagline: 'Multi-Custody Tagesgeld-Sweep für Privatkunden',
+      taglineEn: 'Multi-custody call-money sweep for private clients',
       zielgruppe: 'Einlagen ≥ 500.000 EUR oder eigene Stiftung/Holding',
+      zielgruppeEn: 'Deposits ≥ €500,000 or own foundation/holding company',
       timeToMarket: 12,
       releaseZyklus: '4 Wochen',
+      releaseZyklusEn: '4 weeks',
       versionsLabel: 'v2026.04 — Live seit 22.04.2026',
+      versionsLabelEn: 'v2026.04 — Live since 22 Apr 2026',
       monatsBeitrag: '0 EUR (erfolgsbasiert 0,12 % p.a.)',
+      monatsBeitragEn: '€0 (performance-based 0.12% p.a.)',
       photoGradient: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #0ea5e9 100%)',
       photoAccent: '#bfdbfe',
       icon: 'Layers',
       bausteinIcon: 'GitMerge',
       bausteinTitel: 'Stiftungs-Bridge & Treasury-AI',
+      bausteinTitelEn: 'Foundation bridge & treasury AI',
       bausteinBeschreibung:
         'Automatischer Tagesgeld-Sweep zwischen drei kooperierenden Custody-Banken (DZ BANK, BNP Paribas, J. Safra Sarasin) — der Algorithmus alloziert Liquidität täglich auf das beste Tagesgeld-Konto. Zusätzlicher Stiftungs-Bridge-Baustein: stundungsfähige Liquiditätsbrücke zwischen Privatvermögen und eigener Privatstiftung/Holding inkl. KI-gestützter Cashflow-Prognose über 36 Monate.',
+      bausteinBeschreibungEn:
+        'Automatic call-money sweep across three partner custody banks (DZ BANK, BNP Paribas, J. Safra Sarasin) — the algorithm allocates liquidity daily to the best call-money account. Additional foundation-bridge module: a deferrable liquidity bridge between private assets and your own private foundation/holding, including AI-assisted 36-month cash-flow forecasting.',
       bausteinHighlights: [
         'Tagesgeld-Sweep über 3 Custody-Banken',
         'Stiftungs-Bridge mit Stundungsmodell',
         'KI-Cashflow-Prognose 36 Monate',
         'Konsolidiertes Reporting & e-Bilanz-Export',
       ],
+      bausteinHighlightsEn: [
+        'Call-money sweep across 3 custody banks',
+        'Foundation bridge with deferral model',
+        'AI cash-flow forecast 36 months',
+        'Consolidated reporting & e-balance-sheet export',
+      ],
       passendeKunden: [
         {
           kundeId: 'BK00003', name: 'Peter Hoffmann', match: 95,
           begruendung: 'GmbH-Geschäftsführer Siemens Healthineers, 8.500 EUR netto, hohe Bonus-Tranchen. Liquidität schwankt zwischen 280k und 1,2 Mio EUR.',
+          begruendungEn: 'Managing director at Siemens Healthineers, €8,500 net, large bonus tranches. Liquidity fluctuates between €280k and €1.2m.',
         },
         {
           kundeId: 'BK00005', name: 'Andrea Lang', match: 90,
           begruendung: 'Ärztin mit eigener Praxis (laufender Praxiskredit 85.000 EUR). Liquiditätspuffer Praxis + privat ≈ 620.000 EUR auf zwei Konten.',
+          begruendungEn: 'Physician with own practice (active practice loan €85,000). Liquidity buffer practice + private ≈ €620,000 across two accounts.',
         },
         {
           kundeId: 'BK00001', name: 'Klaus Fischer', match: 78,
           begruendung: 'Vertriebsleiter Bosch (4.500 EUR) + Bonusvereinbarung. Erbschaftsantritt 2025 (≈ 480.000 EUR) bisher nur Tagesgeld 0,5 %.',
+          begruendungEn: 'Sales manager at Bosch (€4,500) + bonus agreement. Inheritance received 2025 (≈ €480,000) so far only in call money at 0.5%.',
         },
       ],
     },
     {
       id: 'nextgen-erbe',
       titel: 'NextGen Erbe-Coach Bundle',
+      titelEn: 'NextGen Inheritance-Coach Bundle',
       tagline: 'Konto + Robo + Lifecoach für junge Erben',
+      taglineEn: 'Account + robo + life coach for young heirs',
       zielgruppe: '25–40 J., Erbschaft/Schenkung ≥ 100.000 EUR',
+      zielgruppeEn: 'Aged 25–40, inheritance/gift ≥ €100,000',
       timeToMarket: 9,
       releaseZyklus: '3 Wochen',
+      releaseZyklusEn: '3 weeks',
       versionsLabel: 'v2026.05 — Live seit 28.04.2026',
+      versionsLabelEn: 'v2026.05 — Live since 28 Apr 2026',
       monatsBeitrag: '19,90 EUR All-in',
+      monatsBeitragEn: '€19.90 all-in',
       photoGradient: 'linear-gradient(135deg, #831843 0%, #be185d 50%, #f59e0b 100%)',
       photoAccent: '#fbcfe8',
       icon: 'Rocket',
       bausteinIcon: 'Users',
       bausteinTitel: 'Erbschafts-Mediator & Family-Charta-Workshop',
+      bausteinTitelEn: 'Inheritance mediator & family-charter workshop',
       bausteinBeschreibung:
         'Bundle aus Tagesgeldkonto, Robo-Advisor (3 ESG-Strategien) und persönlichem Lifecoach-Buddy mit monatlichem 1:1. USP-Baustein: rechtliche und psychologische Begleitung bei Familien-Erbkonflikten — Notar, Mediator und Coach erstellen gemeinsam mit der Familie eine schriftliche Family-Charta für Vermögen, Werte und Generationenübergang.',
+      bausteinBeschreibungEn:
+        'Bundle of a call-money account, a robo-advisor (3 ESG strategies) and a personal life-coach buddy with a monthly 1:1. USP module: legal and psychological support for family inheritance conflicts — notary, mediator and coach work with the family to draw up a written family charter for assets, values and generational handover.',
       bausteinHighlights: [
         'Robo-Advisor 3 ESG-Strategien',
         'Monatlicher Lifecoach-Buddy 1:1',
         'Mediation & Family-Charta inkl.',
         'Steuer-Optimierungs-Check Erbschaft',
       ],
+      bausteinHighlightsEn: [
+        'Robo-advisor with 3 ESG strategies',
+        'Monthly life-coach buddy 1:1',
+        'Mediation & family charter included',
+        'Tax-optimisation check for inheritance',
+      ],
       passendeKunden: [
         {
           kundeId: 'BK00004', name: 'Markus Wagner', match: 93,
           begruendung: '29 J., junge Familie mit Neugeborenem, Schenkung Eltern 180.000 EUR (laut Kontoeingang 03/2026). Sucht Anlagestrategie + Beratung.',
+          begruendungEn: '29 yrs, young family with newborn, gift from parents €180,000 (per account credit 03/2026). Looking for investment strategy + advice.',
         },
         {
           kundeId: 'BK00006', name: 'Stefan Braun', match: 89,
           begruendung: '36 J., Tech-Lead, Erbschaft Großmutter 240.000 EUR Q4/2025 unverändert auf Girokonto. Hohe Affinität für digitale Tools.',
+          begruendungEn: '36 yrs, tech lead, inheritance from grandmother €240,000 Q4/2025 untouched in current account. High affinity for digital tools.',
         },
         {
           kundeId: 'BK00002', name: 'Sandra Müller', match: 84,
           begruendung: '33 J., Schenkung Eltern für Hauskauf in Vorbereitung. Wunsch nach Beratung zu Schenkung-Steuer und Familien-Charta für Kinder.',
+          begruendungEn: '33 yrs, gift from parents for home purchase in preparation. Wants advice on gift tax and a family charter for the children.',
         },
       ],
     },
@@ -797,6 +951,11 @@ const PRODUKT_ICONS = { Gem, Heart, Layers, Rocket, Plane, Hourglass, GitMerge, 
 export default function UebersichtTab() {
   const { modeId, config, navigateTo, setActiveTab } = useMode();
   const { t, tn, lang } = useTranslation();
+  // Picks the English variant of a demo-data field when the UI is in English,
+  // otherwise falls back to the German original. Keeps the long marketing
+  // strings (radar signals, USP-Bausteine, Begründungen) reactive to the
+  // language switch without restructuring every data object.
+  const L = (de, en) => (lang === 'en' && en != null ? en : de);
   const [mandatFilter, setMandatFilter] = useState('alle');
   const [expandedKampagne, setExpandedKampagne] = useState('fruehlings-baufi');
   const [kampagneModal, setKampagneModal] = useState(null);
@@ -1214,11 +1373,11 @@ export default function UebersichtTab() {
                         <div className="flex items-center justify-between gap-2 mb-0.5">
                           <span className="text-sm font-bold text-slate-800 truncate">{l.customerName}</span>
                           <span className="text-xs font-semibold whitespace-nowrap" style={{ color: stripe }}>
-                            {l.event}
+                            {L(l.event, l.eventEn)}
                           </span>
                         </div>
                         <div className="text-[11px] text-slate-500 truncate">
-                          {l.signals.slice(0, 1).join(' · ')} <span className="text-slate-400">→ {t('quellenAnzahl', { count: l.signalCount })}</span>
+                          {L(l.signals, l.signalsEn).slice(0, 1).join(' · ')} <span className="text-slate-400">→ {t('quellenAnzahl', { count: l.signalCount })}</span>
                         </div>
                         <div className="flex items-center justify-between gap-2 mt-1.5">
                           <span className="text-xs text-slate-500">{t('potenzialLabel')}: <span className="font-bold text-slate-800">{l.revenue.toLocaleString(lang === 'en' ? 'en-GB' : 'de-DE')}€</span></span>
@@ -1278,8 +1437,8 @@ export default function UebersichtTab() {
                             <span style={{ color: trendColor }}>{trendArrow}</span> {t(risk.labelKey)}
                           </span>
                         </div>
-                        <div className="text-[11px] text-slate-500 truncate">{r.summary}</div>
-                        <div className="text-[11px] text-slate-400 italic truncate">{r.riskType} {t('wahrscheinlich')}</div>
+                        <div className="text-[11px] text-slate-500 truncate">{L(r.summary, r.summaryEn)}</div>
+                        <div className="text-[11px] text-slate-400 italic truncate">{L(r.riskType, r.riskTypeEn)} {t('wahrscheinlich')}</div>
                         <div className="text-xs mt-1.5">
                           <span className="text-slate-500">{t('clvAtRisk')}: </span>
                           <span className="font-bold" style={{ color: risk.stripe }}>{r.clvAtRisk.toLocaleString(lang === 'en' ? 'en-GB' : 'de-DE')}€</span>
@@ -1309,13 +1468,13 @@ export default function UebersichtTab() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Rocket size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-                <h3 className="font-semibold text-slate-800">Individuelle Produktbausteine</h3>
+                <h3 className="font-semibold text-slate-800">{t('individuelleProduktbausteine')}</h3>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-violet-100 text-violet-700 ml-1">
-                  Hyperpersonalisiert
+                  {t('hyperpersonalisiert')}
                 </span>
               </div>
               <span className="text-sm text-slate-400">
-                {hyperPersonalisierteProdukte.length} Produkte · Time-to-Market &lt; 21 Tage
+                {t('produktbausteineHeader', { count: hyperPersonalisierteProdukte.length })}
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1349,37 +1508,37 @@ export default function UebersichtTab() {
                         </div>
                         <div className="min-w-0">
                           <div className="text-[10px] font-bold text-white/80 uppercase tracking-wider">
-                            Time-to-Market: {produkt.timeToMarket} Tage
+                            {t('timeToMarketLabel')}: {produkt.timeToMarket} {t('tage')}
                           </div>
                           <div className="text-xs text-white/70 mt-0.5 truncate">
-                            Release-Zyklus: {produkt.releaseZyklus}
+                            {t('releaseZyklusLabel')}: {L(produkt.releaseZyklus, produkt.releaseZyklusEn)}
                           </div>
                         </div>
                       </div>
                       <span
                         className="relative z-10 inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-extrabold text-slate-800 bg-white shadow-sm"
-                        title={`${produkt.passendeKunden.length} passende Kunden`}
+                        title={t('passendeKundenTitle', { count: produkt.passendeKunden.length })}
                       >
                         {produkt.passendeKunden.length}
                       </span>
                     </div>
 
                     <div className="p-4 flex-1 flex flex-col">
-                      <div className="text-base font-bold text-slate-800 mb-1 line-clamp-1">{produkt.titel}</div>
-                      <div className="text-xs text-slate-500 mb-3 line-clamp-1">{produkt.tagline}</div>
+                      <div className="text-base font-bold text-slate-800 mb-1 line-clamp-1">{L(produkt.titel, produkt.titelEn)}</div>
+                      <div className="text-xs text-slate-500 mb-3 line-clamp-1">{L(produkt.tagline, produkt.taglineEn)}</div>
 
                       <div className="rounded-lg bg-violet-50/70 border border-violet-100 p-2.5 mb-3">
                         <div className="flex items-center gap-1.5 mb-1">
                           <BausteinIcon size={13} className="text-violet-700" strokeWidth={2} />
-                          <span className="text-[10px] font-bold text-violet-800 uppercase tracking-wider">USP-Baustein</span>
+                          <span className="text-[10px] font-bold text-violet-800 uppercase tracking-wider">{t('uspBaustein')}</span>
                         </div>
-                        <div className="text-xs font-semibold text-slate-800 leading-snug line-clamp-2">{produkt.bausteinTitel}</div>
+                        <div className="text-xs font-semibold text-slate-800 leading-snug line-clamp-2">{L(produkt.bausteinTitel, produkt.bausteinTitelEn)}</div>
                       </div>
 
                       <div className="mt-auto flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
-                        <span className="font-mono truncate">{produkt.versionsLabel}</span>
+                        <span className="font-mono truncate">{L(produkt.versionsLabel, produkt.versionsLabelEn)}</span>
                         <span className="text-violet-700 font-semibold flex items-center gap-0.5 whitespace-nowrap">
-                          Details <ChevronRight size={12} strokeWidth={2.5} />
+                          {t('detailsLabel')} <ChevronRight size={12} strokeWidth={2.5} />
                         </span>
                       </div>
                     </div>
@@ -1687,17 +1846,17 @@ export default function UebersichtTab() {
                 <div className="relative z-10 flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-violet-500 text-white">
-                      Hyperpersonalisiert
+                      {t('hyperpersonalisiert')}
                     </span>
-                    <span className="text-[11px] font-mono text-white/80">{p.versionsLabel}</span>
+                    <span className="text-[11px] font-mono text-white/80">{L(p.versionsLabel, p.versionsLabelEn)}</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-white truncate">{p.titel}</h2>
-                  <p className="text-sm text-white/80 mt-1 truncate">{p.tagline}</p>
+                  <h2 className="text-2xl font-bold text-white truncate">{L(p.titel, p.titelEn)}</h2>
+                  <p className="text-sm text-white/80 mt-1 truncate">{L(p.tagline, p.taglineEn)}</p>
                 </div>
                 <button
                   onClick={() => setProduktModal(null)}
                   className="relative z-10 w-9 h-9 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors"
-                  aria-label="Schließen"
+                  aria-label={t('schliessen')}
                 >
                   <X size={18} strokeWidth={2} />
                 </button>
@@ -1706,28 +1865,28 @@ export default function UebersichtTab() {
               <div className="p-6 space-y-5">
                 <div className="grid grid-cols-4 gap-3">
                   <div className="rounded-xl border border-slate-200 p-3 text-center">
-                    <div className="text-xs text-slate-500 mb-1">Time-to-Market</div>
-                    <div className="text-xl font-bold text-violet-700">{p.timeToMarket} Tage</div>
+                    <div className="text-xs text-slate-500 mb-1">{t('timeToMarketLabel')}</div>
+                    <div className="text-xl font-bold text-violet-700">{p.timeToMarket} {t('tage')}</div>
                   </div>
                   <div className="rounded-xl border border-slate-200 p-3 text-center">
-                    <div className="text-xs text-slate-500 mb-1">Release-Zyklus</div>
-                    <div className="text-xl font-bold text-slate-800">{p.releaseZyklus}</div>
+                    <div className="text-xs text-slate-500 mb-1">{t('releaseZyklusLabel')}</div>
+                    <div className="text-xl font-bold text-slate-800">{L(p.releaseZyklus, p.releaseZyklusEn)}</div>
                   </div>
                   <div className="rounded-xl border border-slate-200 p-3 text-center">
-                    <div className="text-xs text-slate-500 mb-1">Ø Match</div>
+                    <div className="text-xs text-slate-500 mb-1">{t('oeMatch')}</div>
                     <div className="text-xl font-bold text-emerald-600">{avg}%</div>
                   </div>
                   <div className="rounded-xl border border-slate-200 p-3 text-center">
-                    <div className="text-xs text-slate-500 mb-1">Beitrag</div>
-                    <div className="text-xl font-bold text-slate-800">{p.monatsBeitrag}</div>
+                    <div className="text-xs text-slate-500 mb-1">{t('beitragLabel')}</div>
+                    <div className="text-xl font-bold text-slate-800">{L(p.monatsBeitrag, p.monatsBeitragEn)}</div>
                   </div>
                 </div>
 
                 <div>
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Target size={12} /> Zielgruppe
+                    <Target size={12} /> {t('zielgruppeLabel')}
                   </h4>
-                  <p className="text-sm text-slate-700 leading-relaxed">{p.zielgruppe}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">{L(p.zielgruppe, p.zielgruppeEn)}</p>
                 </div>
 
                 <div className="rounded-xl border-2 border-violet-200 bg-violet-50/50 p-4">
@@ -1736,13 +1895,13 @@ export default function UebersichtTab() {
                       <BausteinIcon size={16} className="text-violet-700" strokeWidth={2} />
                     </div>
                     <div>
-                      <div className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">USP-Baustein</div>
-                      <div className="text-base font-bold text-slate-800">{p.bausteinTitel}</div>
+                      <div className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">{t('uspBaustein')}</div>
+                      <div className="text-base font-bold text-slate-800">{L(p.bausteinTitel, p.bausteinTitelEn)}</div>
                     </div>
                   </div>
-                  <p className="text-sm text-slate-700 leading-relaxed mb-3">{p.bausteinBeschreibung}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed mb-3">{L(p.bausteinBeschreibung, p.bausteinBeschreibungEn)}</p>
                   <div className="grid grid-cols-2 gap-2">
-                    {p.bausteinHighlights.map((h, i) => (
+                    {L(p.bausteinHighlights, p.bausteinHighlightsEn).map((h, i) => (
                       <div key={i} className="flex items-start gap-1.5 text-xs text-slate-700">
                         <CheckCircle size={13} className="text-violet-600 shrink-0 mt-0.5" strokeWidth={2.25} />
                         <span className="leading-snug">{h}</span>
@@ -1753,7 +1912,7 @@ export default function UebersichtTab() {
 
                 <div>
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Users size={12} /> Gemappte Bestandskunden ({total})
+                    <Users size={12} /> {t('gemappteBestandskunden')} ({total})
                   </h4>
                   <div className="space-y-2">
                     {p.passendeKunden.map((kd) => (
@@ -1773,9 +1932,9 @@ export default function UebersichtTab() {
                               kd.match >= 90 ? 'bg-emerald-100 text-emerald-800'
                               : kd.match >= 80 ? 'bg-lime-100 text-lime-800'
                               : 'bg-amber-100 text-amber-800'
-                            }`}>{kd.match}% Match</span>
+                            }`}>{kd.match}% {t('matchLabel')}</span>
                           </div>
-                          <div className="text-xs text-slate-600 leading-snug">{kd.begruendung}</div>
+                          <div className="text-xs text-slate-600 leading-snug">{L(kd.begruendung, kd.begruendungEn)}</div>
                         </div>
                         <ChevronRight size={16} className="text-slate-400 shrink-0" strokeWidth={2} />
                       </div>
@@ -1786,16 +1945,16 @@ export default function UebersichtTab() {
 
               <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex flex-wrap items-center justify-end gap-2 rounded-b-2xl">
                 <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
-                  <Copy size={14} /> Produktblatt
+                  <Copy size={14} /> {t('produktblatt')}
                 </button>
                 <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
-                  <Mail size={14} /> An passende Kunden
+                  <Mail size={14} /> {t('anPassendeKunden')}
                 </button>
                 <button
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-white transition-colors"
                   style={{ background: 'var(--mode-primary)' }}
                 >
-                  <PlayCircle size={14} /> Angebot starten
+                  <PlayCircle size={14} /> {t('angebotStarten')}
                 </button>
               </div>
             </div>

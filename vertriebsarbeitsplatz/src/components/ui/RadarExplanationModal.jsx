@@ -3,6 +3,7 @@ import { X, ExternalLink, Sparkles, AlertTriangle, TrendingUp, RefreshCw, Credit
   Globe, Briefcase, PiggyBank, LineChart, Info, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import Avatar from './Avatar';
 import { getKundeFoto } from '../../utils/kundenFotos';
+import useTranslation from '../../i18n/useTranslation';
 
 // Modal fuer Lebenslagen- und Abwanderungs-Radar. Nimmt einen Entry (egal
 // ob Lebenslage oder Abwanderung) + type und rendert daraus eine reich
@@ -32,20 +33,30 @@ function pickSignalIcon(text) {
   return Info;
 }
 
-// Aus einem Signal-String herleiten: Kategorie-Label fuer die „Quelle"-Spalte
-function pickSignalSource(text) {
+// Aus einem Signal-String (immer der deutsche Original-Text, damit die
+// Keyword-Erkennung stabil ist) den Übersetzungs-Key der „Quelle" herleiten.
+function pickSignalSourceKey(text) {
   const s = (text || '').toLowerCase();
-  if (/dauerauftrag|lastschrift|übertrag|tagesgeld|girokonto|festgeld|sparkonto|konto\b/.test(s)) return 'PSD2 · Kontoumsätze';
-  if (/sparplan|depot|wertpapier|aktien|etf|fonds/.test(s)) return 'Open Finance · Depot';
-  if (/kreditanfrage|schufa/.test(s)) return 'Bonität';
-  if (/newsletter|mail/.test(s)) return 'Marketing · Newsletter';
-  if (/recherche|such|webseite/.test(s)) return 'Web-Tracking';
-  if (/linkedin/.test(s)) return 'LinkedIn';
-  if (/gewerbeanmeldung|gmbh|handelsregister/.test(s)) return 'Öffentliche Register';
-  if (/umsatzsteuer|steuerberater|steuer/.test(s)) return 'Bestand · Buchhaltung';
-  if (/kindergeld/.test(s)) return 'PSD2 · Familienkasse';
-  if (/baby|kinderarzt|hebamme|gynäkologen/.test(s)) return 'PSD2 · Kontoumsätze';
-  return 'KI-Erkennung';
+  if (/dauerauftrag|lastschrift|übertrag|tagesgeld|girokonto|festgeld|sparkonto|konto\b/.test(s)) return 'radarSrc.psd2Konto';
+  if (/sparplan|depot|wertpapier|aktien|etf|fonds/.test(s)) return 'radarSrc.openFinanceDepot';
+  if (/kreditanfrage|schufa/.test(s)) return 'radarSrc.bonitaet';
+  if (/newsletter|mail/.test(s)) return 'radarSrc.marketingNewsletter';
+  if (/recherche|such|webseite/.test(s)) return 'radarSrc.webTracking';
+  if (/linkedin/.test(s)) return 'radarSrc.linkedin';
+  if (/gewerbeanmeldung|gmbh|handelsregister/.test(s)) return 'radarSrc.register';
+  if (/umsatzsteuer|steuerberater|steuer/.test(s)) return 'radarSrc.buchhaltung';
+  if (/kindergeld/.test(s)) return 'radarSrc.familienkasse';
+  if (/baby|kinderarzt|hebamme|gynäkologen/.test(s)) return 'radarSrc.psd2Konto';
+  return 'radarSrc.kiErkennung';
+}
+
+// Zeitraum-Einheiten im Transaktions-Hinweis lokalisieren (Demo-Anzeige).
+function localizeZeitraum(zeitraum, lang) {
+  if (!zeitraum || lang !== 'en') return zeitraum;
+  return zeitraum
+    .replace(/Wochen/i, 'weeks')
+    .replace(/Monate|Mon\./i, 'months')
+    .replace(/Tage/i, 'days');
 }
 
 // Fuer Abwanderungs-Signale: synthetische Transaktions-Zeilen ableiten, wenn
@@ -61,14 +72,14 @@ function extractTransactionFromSignal(text) {
   return { euro, partner, zeitraum };
 }
 
-function RiskBadge({ risk }) {
+function RiskBadge({ risk, t }) {
   if (!risk) return null;
   const colors = risk === 'high'
     ? 'bg-red-50 text-red-700 border-red-200'
     : risk === 'medium'
       ? 'bg-amber-50 text-amber-700 border-amber-200'
       : 'bg-slate-50 text-slate-700 border-slate-200';
-  const label = risk === 'high' ? 'Hohes Risiko' : risk === 'medium' ? 'Mittleres Risiko' : 'Risiko beobachten';
+  const label = risk === 'high' ? t('radar.risikoHoch') : risk === 'medium' ? t('radar.risikoMittel') : t('radar.risikoBeobachten');
   return (
     <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${colors}`}>
       {label}
@@ -77,9 +88,16 @@ function RiskBadge({ risk }) {
 }
 
 export default function RadarExplanationModal({ type, entry, onClose, onOpenKunde }) {
+  const { t, lang } = useTranslation();
   if (!entry) return null;
   const isAbwanderung = type === 'abwanderung';
   const foto = getKundeFoto(entry.kundeId);
+  // Lokalisierte Anzeige-Werte: Erkennung läuft weiter auf dem deutschen
+  // Originaltext, angezeigt wird die EN-Variante, sofern vorhanden.
+  const L = (de, en) => (lang === 'en' && en != null ? en : de);
+  const displayEvent = L(entry.event, entry.eventEn);
+  const displayRiskType = L(entry.riskType, entry.riskTypeEn);
+  const numberLocale = lang === 'en' ? 'en-GB' : 'de-DE';
 
   return (
     <div
@@ -105,10 +123,10 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-semibold text-slate-900 truncate">{entry.customerName}</h3>
                 {isAbwanderung ? (
-                  <RiskBadge risk={entry.riskLevel} />
+                  <RiskBadge risk={entry.riskLevel} t={t} />
                 ) : (
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-emerald-50 text-emerald-700 border-emerald-200">
-                    Neues Signal
+                    {t('radar.neuesSignal')}
                   </span>
                 )}
               </div>
@@ -116,12 +134,12 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
                 {isAbwanderung ? (
                   <>
                     <AlertTriangle size={11} className="text-red-500" />
-                    <span>{entry.riskType}</span>
+                    <span>{displayRiskType}</span>
                   </>
                 ) : (
                   <>
                     <Sparkles size={11} className="text-emerald-500" />
-                    <span>{entry.event}</span>
+                    <span>{displayEvent}</span>
                   </>
                 )}
               </div>
@@ -130,7 +148,7 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors shrink-0"
-            aria-label="Schließen"
+            aria-label={t('schliessen')}
           >
             <X size={18} />
           </button>
@@ -141,13 +159,13 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
           {isAbwanderung ? (
             <>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">CLV at risk</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">{t('clvAtRisk')}</div>
                 <div className="text-xl font-bold text-red-700 font-mono">
-                  {entry.clvAtRisk?.toLocaleString('de-DE')}€
+                  {entry.clvAtRisk?.toLocaleString(numberLocale)}€
                 </div>
               </div>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Risiko-Score</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">{t('radar.risikoScore')}</div>
                 <div className="flex items-center gap-2">
                   <div className="w-24 h-2 rounded-full bg-slate-100 overflow-hidden">
                     <div
@@ -162,22 +180,22 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
                 </div>
               </div>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Trend</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">{t('radar.trend')}</div>
                 <div className={`text-sm font-semibold ${entry.trend === 'steigend' ? 'text-red-700' : entry.trend === 'fallend' ? 'text-emerald-700' : 'text-amber-700'}`}>
-                  {entry.trend === 'steigend' ? '↑ steigend' : entry.trend === 'fallend' ? '↓ fallend' : '→ stabil'}
+                  {entry.trend === 'steigend' ? t('radar.trendSteigend') : entry.trend === 'fallend' ? t('radar.trendFallend') : t('radar.trendStabil')}
                 </div>
               </div>
             </>
           ) : (
             <>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Potenzial</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">{t('potenzialLabel')}</div>
                 <div className="text-xl font-bold text-emerald-700 font-mono">
-                  {entry.revenue?.toLocaleString('de-DE')}€
+                  {entry.revenue?.toLocaleString(numberLocale)}€
                 </div>
               </div>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">KI-Konfidenz</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">{t('radar.kiKonfidenz')}</div>
                 <div className="flex items-center gap-2">
                   <div className="w-24 h-2 rounded-full bg-slate-100 overflow-hidden">
                     <div
@@ -189,7 +207,7 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
                 </div>
               </div>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Quellen</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">{t('radar.quellen')}</div>
                 <div className="text-sm font-semibold text-slate-700">{entry.signalCount || entry.signals?.length || 0}</div>
               </div>
             </>
@@ -203,19 +221,9 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
             <div className="flex items-start gap-2">
               <Sparkles size={14} className="text-violet-600 mt-0.5 shrink-0" />
               <div className="text-[13px] text-slate-700 leading-relaxed">
-                {isAbwanderung ? (
-                  <>
-                    Die KI hat <strong>{entry.signals?.length}</strong> Signale erkannt, die eine{' '}
-                    <strong>{entry.riskType?.toLowerCase()}</strong> wahrscheinlich machen. Je stärker die Kombination
-                    aus Kontoumsätzen, Bestand und externen Anfragen, desto höher der Risiko-Score.
-                  </>
-                ) : (
-                  <>
-                    Die KI hat <strong>{entry.signalCount || entry.signals?.length}</strong> unabhängige Signale kombiniert
-                    und daraus die Lebenslage <strong>„{entry.event}"</strong> abgeleitet. Jedes Signal steht hier mit
-                    seiner Datenquelle.
-                  </>
-                )}
+                {isAbwanderung
+                  ? t('radar.introAbwanderung', { count: entry.signals?.length, riskType: displayRiskType?.toLowerCase() })
+                  : t('radar.introLebenslage', { count: entry.signalCount || entry.signals?.length, event: displayEvent })}
               </div>
             </div>
           </div>
@@ -223,13 +231,15 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
           {/* Signal-Liste */}
           <div>
             <div className="text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-2">
-              Erkannte Signale
+              {t('radar.erkannteSignale')}
             </div>
             <ul className="space-y-2">
-              {(entry.signals || []).map((s, i) => {
-                const Icon = pickSignalIcon(s);
-                const source = pickSignalSource(s);
-                const tx = isAbwanderung ? extractTransactionFromSignal(s) : null;
+              {(entry.signals || []).map((sDe, i) => {
+                // Erkennung auf dem deutschen Originaltext, Anzeige lokalisiert.
+                const s = L(sDe, entry.signalsEn?.[i]);
+                const Icon = pickSignalIcon(sDe);
+                const source = t(pickSignalSourceKey(sDe));
+                const tx = isAbwanderung ? extractTransactionFromSignal(sDe) : null;
                 return (
                   <li key={i} className="rounded-xl border border-slate-200 bg-white p-3">
                     <div className="flex items-start gap-3">
@@ -245,8 +255,8 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
                           <div className="mt-2 rounded-lg bg-slate-50 border border-slate-200 p-2 font-mono text-[11px] text-slate-600">
                             <div className="flex items-center justify-between gap-3">
                               <span className="truncate">
-                                {tx.partner ? <span className="text-slate-800 font-semibold">{tx.partner}</span> : 'Transaktion'}
-                                {tx.zeitraum ? <span className="text-slate-400"> · {tx.zeitraum}</span> : ''}
+                                {tx.partner ? <span className="text-slate-800 font-semibold">{tx.partner}</span> : t('radar.transaktion')}
+                                {tx.zeitraum ? <span className="text-slate-400"> · {localizeZeitraum(tx.zeitraum, lang)}</span> : ''}
                               </span>
                               {tx.euro && (
                                 <span className="text-red-700 font-semibold shrink-0">−{tx.euro} €</span>
@@ -268,8 +278,7 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
               <div className="flex items-start gap-2">
                 <TrendingUp size={14} className="text-emerald-600 mt-0.5 shrink-0" />
                 <div className="text-[13px] text-emerald-900 leading-relaxed">
-                  <strong>Handlungsimpuls:</strong> Kombinierte Signale in einem persönlichen Gespräch
-                  adressieren — Empfehlung passt in die Lebenslage und erhöht die Abschlusswahrscheinlichkeit.
+                  <strong>{t('radar.handlungsimpulsLabel')}:</strong> {t('radar.handlungsimpulsText')}
                 </div>
               </div>
             </div>
@@ -280,9 +289,7 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
               <div className="flex items-start gap-2">
                 <AlertTriangle size={14} className="text-red-600 mt-0.5 shrink-0" />
                 <div className="text-[13px] text-red-900 leading-relaxed">
-                  <strong>Empfohlene Reaktion:</strong> Persönliches Bindungsgespräch priorisieren. Nachfragen,
-                  was der Auslöser ist, und ein konkretes Gegenangebot vorbereiten (z. B. Kontomodell-Wechsel
-                  mit Gutschrift oder Konditions-Upgrade).
+                  <strong>{t('radar.empfohleneReaktionLabel')}:</strong> {t('radar.empfohleneReaktionText')}
                 </div>
               </div>
             </div>
@@ -295,13 +302,13 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
             onClick={onClose}
             className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors"
           >
-            Schließen
+            {t('schliessen')}
           </button>
           <button
             onClick={() => onOpenKunde?.(entry.kundeId)}
             className="px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
           >
-            Kunden öffnen <ExternalLink size={14} />
+            {t('radar.kundenOeffnen')} <ExternalLink size={14} />
           </button>
         </div>
       </div>

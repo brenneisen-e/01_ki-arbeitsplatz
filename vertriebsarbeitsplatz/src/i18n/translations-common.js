@@ -279,6 +279,88 @@ const translationsCommon = {
   'nachtSimulieren': { de: 'Nacht simulieren …', en: 'Simulating night …' },
   'nachtSimulierenText': { de: 'KI wartet auf Reaktionen Ihrer Kunden und sammelt neue Aktivitäten für den nächsten Tag.', en: 'AI is waiting for your clients’ reactions and collecting new activity for the next day.' },
   'neueTerminzusage': { de: 'Neue Terminzusage eingegangen', en: 'New appointment confirmation received' },
+
+  // ─── TerminPrepModal (AI meeting preparation) ───
+  'tpm.titel': { de: 'KI-Gesprächsvorbereitung', en: 'AI Meeting Preparation' },
+  'tpm.kunde': { de: 'Kunde', en: 'Customer' },
+  'tpm.uhr': { de: 'Uhr', en: '' },
+  'tpm.filialeGiessen': { de: 'Filiale Gießen', en: 'Gießen branch' },
+  'tpm.titelKreditgespraech': { de: 'Kreditgespräch Immobilienfinanzierung', en: 'Loan meeting on real estate financing' },
+  'tpm.titelVersicherung': { de: 'Versicherungs-Optimierung: KFZ, Haftpflicht-Bündel & Familienabsicherung', en: 'Insurance optimization: motor, liability bundle & family protection' },
+  'tpm.titelBeratungstermin': { de: 'Beratungstermin', en: 'Advisory meeting' },
+  'tpm.loadingTitel': { de: 'KI bereitet das Gespräch vor …', en: 'AI is preparing the meeting …' },
+  'tpm.loadingSub': { de: 'Analysiert Stammdaten, Potenzial und bisherige Kommunikation.', en: 'Analyzing master data, potential and previous communication.' },
+
+  // Sections
+  'tpm.sec.ausgangslage': { de: 'Ausgangslage', en: 'Starting Situation' },
+  'tpm.sec.kennzahlen': { de: 'Schlüssel-Kennzahlen', en: 'Key Figures' },
+  'tpm.sec.finanzuebersicht': { de: 'Finanzübersicht (kompakt)', en: 'Financial Overview (compact)' },
+  'tpm.sec.externeVerbindungen': { de: 'Externe Verbindungen (Open Finance)', en: 'External Connections (Open Finance)' },
+  'tpm.sec.gespraechsziele': { de: 'Gesprächsziele', en: 'Meeting Objectives' },
+  'tpm.sec.gespraechsleitfaden': { de: 'Gesprächsleitfaden', en: 'Conversation Guide' },
+  'tpm.sec.moeglicheFragen': { de: 'Mögliche Fragen des Kunden', en: "Customer's Possible Questions" },
+  'tpm.sec.todosVor': { de: 'To-Dos VOR dem Termin', en: 'To-Dos BEFORE the meeting' },
+  'tpm.sec.todosNach': { de: 'To-Dos AFTER the meeting', en: 'To-Dos AFTER the meeting' },
+  'tpm.sec.kontakt': { de: 'Kontakt', en: 'Contact' },
+
+  // KPIs — Immo
+  'tpm.kpi.freieLiquiditaet': { de: 'Freie Liquidität ab 06/2026', en: 'Free liquidity from 06/2026' },
+  'tpm.kpi.bausparZuteilung': { de: 'Bauspar-Zuteilung (Q2/2026)', en: 'Building-savings allocation (Q2/2026)' },
+  'tpm.kpi.vrSparkonto': { de: 'VR-Sparkonto', en: 'VR savings account' },
+  'tpm.kpi.kreditrahmen': { de: 'Machbarer Kreditrahmen (ca.)', en: 'Feasible credit line (approx.)' },
+  'tpm.val.mtl': { de: '840 €/mtl.', en: '€840/mo.' },
+  // KPIs — Versicherung
+  'tpm.kpi.hukVollkasko': { de: 'HUK KFZ-Vollkasko (heute)', en: 'HUK comprehensive motor (today)' },
+  'tpm.kpi.partnerTarif': { de: 'Unser Partner-Tarif', en: 'Our partner tariff' },
+  'tpm.kpi.ersparnisKfz': { de: 'Ersparnis KFZ', en: 'Motor savings' },
+  'tpm.kpi.buendelHaftpflicht': { de: 'Bündel-Effekt Haftpflicht', en: 'Bundle effect liability' },
+  'tpm.val.proJahr780': { de: '780 €/J.', en: '€780/yr' },
+  'tpm.val.proJahr620': { de: '620 €/J.', en: '€620/yr' },
+  'tpm.val.proJahrMinus160': { de: '−160 €/J.', en: '−€160/yr' },
+  'tpm.val.ohneMehrkosten': { de: 'ohne Mehrkosten', en: 'at no extra cost' },
+
+  // Finanzübersicht KPIs
+  'tpm.fin.haushaltsnetto': { de: 'Haushaltsnetto', en: 'Net household income' },
+  'tpm.fin.freiVerfuegbar': { de: 'Frei verfügbar', en: 'Freely available' },
+  'tpm.fin.anlagevolumen': { de: 'Anlagevolumen', en: 'Investment volume' },
+  'tpm.fin.kreditvolumen': { de: 'Kreditvolumen', en: 'Loan volume' },
+  'tpm.fin.nettoVermoegen': { de: 'Netto-Vermögen', en: 'Net assets' },
+  'tpm.fin.proMtl': { de: '/mtl.', en: '/mo.' },
+
+  // External connections
+  'tpm.ext.keine': { de: 'Keine externen Verbindungen erfasst.', en: 'No external connections recorded.' },
+  'tpm.ext.detailsGesperrt': { de: 'Details gesperrt', en: 'Details locked' },
+  'tpm.ext.consentOk': { de: 'Consent OK', en: 'Consent OK' },
+  'tpm.ext.consentFehlt': { de: 'Consent fehlt', en: 'Consent missing' },
+  'tpm.cat.depot': { de: 'Depot', en: 'Securities portfolio' },
+  'tpm.cat.sparGeldmarkt': { de: 'Spar/Geldmarkt', en: 'Savings/Money market' },
+  'tpm.cat.kredit': { de: 'Kredit', en: 'Loan' },
+  'tpm.cat.versicherung': { de: 'Versicherung', en: 'Insurance' },
+  'tpm.cat.konto': { de: 'Konto', en: 'Account' },
+  'tpm.cat.sonstige': { de: 'Sonstige', en: 'Other' },
+
+  // Footer buttons
+  'tpm.btn.kundeOeffnen': { de: 'Kunde öffnen', en: 'Open customer' },
+  'tpm.btn.kiGespraechAnbieten': { de: 'KI-Gespräch anbieten', en: 'Offer AI conversation' },
+  'tpm.btn.vorbereitungDrucken': { de: 'Vorbereitung drucken', en: 'Print preparation' },
+
+  // KiOfferModal
+  'tpm.offer.titel': { de: 'KI-Gespräch anbieten', en: 'Offer AI conversation' },
+  'tpm.offer.derKunde': { de: 'der Kunde', en: 'the customer' },
+  'tpm.offer.sub': { de: '{name} kann das Gespräch zunächst mit der KI führen — Sie schalten sich auf Wunsch dazu.', en: '{name} can start the conversation with the AI — you can join in whenever you like.' },
+  'tpm.offer.versendet': { de: 'Vorschlag versendet', en: 'Proposal sent' },
+  'tpm.offer.versendetText': { de: '{name} erhält jetzt eine Einladung zum {modus}{eskalation}.', en: '{name} now receives an invitation to the {modus}{eskalation}.' },
+  'tpm.offer.modusAvatar': { de: 'KI-Avatar-Termin', en: 'AI avatar meeting' },
+  'tpm.offer.modusChat': { de: 'KI-Chat', en: 'AI chat' },
+  'tpm.offer.eskalationSuffix': { de: ' mit Option, Sie jederzeit dazuzuholen', en: ' with the option to bring you in at any time' },
+  'tpm.offer.mensch': { de: 'Mensch danach optional dazuziehen — der Kunde kann jederzeit auf einen Live-Termin mit Ihnen wechseln.', en: 'Optionally bring in a human afterwards — the customer can switch to a live meeting with you at any time.' },
+  'tpm.offer.senden': { de: 'Vorschlag an {name} senden', en: 'Send proposal to {name}' },
+  'tpm.offer.avatarTitel': { de: 'KI-Avatar (Video-Call)', en: 'AI avatar (video call)' },
+  'tpm.offer.avatarBeschr': { de: 'Foto-realistischer Avatar im Look der Bank, spricht mit dem Kunden im Live-Video. Empathisch, mit Lippensync, kann Unterlagen einblenden.', en: 'Photo-realistic avatar in the bank\'s look, speaks with the customer in live video. Empathetic, with lip-sync, can display documents.' },
+  'tpm.offer.avatarEignung': { de: 'Geeignet für klassische Beratungsgespräche, Wunschtermin außerhalb Bürozeiten, Vor-Klärung vor Filialtermin.', en: 'Suitable for classic advisory meetings, preferred times outside office hours, pre-clarification ahead of a branch meeting.' },
+  'tpm.offer.chatbotTitel': { de: 'KI-Chatbot (Text)', en: 'AI chatbot (text)' },
+  'tpm.offer.chatbotBeschr': { de: 'Schriftlicher Dialog im Online-Banking oder per WhatsApp Business. Kunde kann jederzeit pausieren, antworten wann es passt.', en: 'Written dialogue in online banking or via WhatsApp Business. The customer can pause at any time and reply whenever convenient.' },
+  'tpm.offer.chatbotEignung': { de: 'Geeignet für Routine-Fragen, Dokumenten-Upload, asynchrone Vorbereitung.', en: 'Suitable for routine questions, document upload, asynchronous preparation.' },
 };
 
 export default translationsCommon;

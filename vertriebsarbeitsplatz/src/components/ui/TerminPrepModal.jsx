@@ -8,6 +8,8 @@ import { formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment }
 import { useMode } from '../../hooks/useMode';
 import LogoImg from './LogoImg';
 import { formatEur, berechneAnlagevolumen, berechneKreditvolumen, berechneHaushaltsnetto, berechneFrei } from '../../utils/formatters';
+import useTranslation from '../../i18n/useTranslation';
+import { tx } from '../../utils/langHelper';
 
 /**
  * TerminPrepModal
@@ -17,6 +19,7 @@ import { formatEur, berechneAnlagevolumen, berechneKreditvolumen, berechneHausha
  * Gesprächsbausteinen sowie To-Dos vor und nach dem Termin.
  */
 export default function TerminPrepModal({ kunde, termin, onClose }) {
+  const { t, lang } = useTranslation();
   const [phase, setPhase] = useState('loading');
   const [kiOfferOpen, setKiOfferOpen] = useState(false);
   const [kiOfferMode, setKiOfferMode] = useState('avatar');
@@ -33,8 +36,8 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
   // aber auch fehlen, dann fallen wir auf einen sinnvollen Default zurück.
   const isKlausVersicherung = kunde?.id === 'KD00001' && (!termin?.betreff || /optimierung|kfz|haftpflicht|familien|versicherung/i.test(termin.betreff));
   const terminTitel = termin?.betreff || (isKlausImmo
-    ? 'Kreditgespräch Immobilienfinanzierung'
-    : (isKlausVersicherung ? 'Versicherungs-Optimierung: KFZ, Haftpflicht-Bündel & Familienabsicherung' : 'Beratungstermin'));
+    ? t('tpm.titelKreditgespraech')
+    : (isKlausVersicherung ? t('tpm.titelVersicherung') : t('tpm.titelBeratungstermin')));
 
   // KI-Generierung simulieren
   useEffect(() => {
@@ -68,19 +71,19 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               <Sparkles size={22} className="text-white" strokeWidth={2} />
             </div>
             <div>
-              <h2 className="font-semibold text-slate-800">KI-Gesprächsvorbereitung</h2>
+              <h2 className="font-semibold text-slate-800">{t('tpm.titel')}</h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                {terminTitel} · {kunde?.name || 'Kunde'}
+                {terminTitel} · {kunde?.name || t('tpm.kunde')}
               </p>
               <div className="flex items-center gap-3 mt-2 text-xs">
                 <span className="inline-flex items-center gap-1 text-slate-600 bg-white/80 border border-slate-200 px-2 py-0.5 rounded-full">
                   <Calendar size={11} /> {formatAppointmentDate(appointment)}
                 </span>
                 <span className="inline-flex items-center gap-1 text-slate-600 bg-white/80 border border-slate-200 px-2 py-0.5 rounded-full">
-                  <Clock size={11} /> {formatAppointmentTime(appointment)} Uhr
+                  <Clock size={11} /> {formatAppointmentTime(appointment)}{lang === 'en' ? '' : ` ${t('tpm.uhr')}`}
                 </span>
                 <span className="inline-flex items-center gap-1 text-slate-600 bg-white/80 border border-slate-200 px-2 py-0.5 rounded-full">
-                  <MapPin size={11} /> Filiale Gießen
+                  <MapPin size={11} /> {t('tpm.filialeGiessen')}
                 </span>
               </div>
             </div>
@@ -98,9 +101,9 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
           <div className="flex-1 flex flex-col items-center justify-center gap-3 py-20 text-center">
             <Loader2 size={26} className="text-violet-600 animate-spin" />
             <div>
-              <p className="text-sm font-semibold text-slate-700">KI bereitet das Gespräch vor …</p>
+              <p className="text-sm font-semibold text-slate-700">{t('tpm.loadingTitel')}</p>
               <p className="text-xs text-slate-500 mt-1">
-                Analysiert Stammdaten, Potenzial und bisherige Kommunikation.
+                {t('tpm.loadingSub')}
               </p>
             </div>
           </div>
@@ -108,35 +111,30 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
           <div className="flex-1 overflow-y-auto p-5 space-y-3">
             {/* Ausgangslage */}
             <Section color="indigo">
-              <SectionTitle icon={Target} label="Ausgangslage" color="indigo" />
+              <SectionTitle icon={Target} label={t('tpm.sec.ausgangslage')} color="indigo" />
               <div className="text-sm text-slate-700 leading-relaxed pt-2">
                 {isKlausImmo ? (
-                  <>Klaus Fischer (32) ist seit 2018 Kunde der Volksbank Mittelhessen. Er arbeitet als
-                  Vertriebsleiter bei Bosch, ist verheiratet mit Sabine und hat zwei
-                  Kinder (Lukas, 4 und Marie, 1). Nettohaushaltseinkommen: ca. 5.700 €/mtl.
-                  Die drei erkannten Signale — auslaufender Ratenkredit bei der Commerzbank, zuteilungsreifer
-                  Bausparvertrag und langjähriges Newsletter-Interesse — bilden einen sehr
-                  starken Vertriebsimpuls für ein Erstgespräch zur Immobilienfinanzierung.</>
+                  <>{tx(
+                    'Klaus Fischer (32) ist seit 2018 Kunde der Volksbank Mittelhessen. Er arbeitet als Vertriebsleiter bei Bosch, ist verheiratet mit Sabine und hat zwei Kinder (Lukas, 4 und Marie, 1). Nettohaushaltseinkommen: ca. 5.700 €/mtl. Die drei erkannten Signale — auslaufender Ratenkredit bei der Commerzbank, zuteilungsreifer Bausparvertrag und langjähriges Newsletter-Interesse — bilden einen sehr starken Vertriebsimpuls für ein Erstgespräch zur Immobilienfinanzierung.',
+                    'Klaus Fischer (32) has been a customer of Volksbank Mittelhessen since 2018. He works as a sales manager at Bosch, is married to Sabine and has two children (Lukas, 4 and Marie, 1). Net household income: approx. €5,700/mo. The three detected signals — an expiring installment loan at Commerzbank, a building-savings contract ready for allocation, and long-standing newsletter interest — form a very strong sales trigger for an initial meeting on real estate financing.'
+                  )}</>
                 ) : isKlausVersicherung ? (
-                  <>Klaus Fischer (42) ist seit 2018 Kunde, verheiratet mit Sarah, zwei Kinder
-                  (Lina, 7 und Max, 1), wohnt im EFH (145 m²) in Köln. Nettoeinkommen 4.200 €/Mon.
-                  Auslöser des Termins: Über die Open-Finance-Einwilligung wurden drei konkrete
-                  Optimierungsgelegenheiten erkannt — die HUK-KFZ-Vollkasko liegt rund 160 €/J. über
-                  unserem Tarif, die Haftpflicht läuft separat bei einem Drittanbieter und ließe sich
-                  ohne Mehrkosten ins Bündel überführen, und die Familienabsicherung weist mehrere
-                  bekannte Lücken auf (BU 1.800 €/Mon. unter Bedarf, Hausrat unterversichert,
-                  keine Familien-Unfallversicherung).</>
+                  <>{tx(
+                    'Klaus Fischer (42) ist seit 2018 Kunde, verheiratet mit Sarah, zwei Kinder (Lina, 7 und Max, 1), wohnt im EFH (145 m²) in Köln. Nettoeinkommen 4.200 €/Mon. Auslöser des Termins: Über die Open-Finance-Einwilligung wurden drei konkrete Optimierungsgelegenheiten erkannt — die HUK-KFZ-Vollkasko liegt rund 160 €/J. über unserem Tarif, die Haftpflicht läuft separat bei einem Drittanbieter und ließe sich ohne Mehrkosten ins Bündel überführen, und die Familienabsicherung weist mehrere bekannte Lücken auf (BU 1.800 €/Mon. unter Bedarf, Hausrat unterversichert, keine Familien-Unfallversicherung).',
+                    'Klaus Fischer (42) has been a customer since 2018, married to Sarah, two children (Lina, 7 and Max, 1), living in a detached house (145 m²) in Cologne. Net income €4,200/mo. Trigger for the meeting: the Open Finance consent revealed three concrete optimization opportunities — the HUK comprehensive motor cover is around €160/yr above our tariff, the liability cover runs separately with a third-party provider and could be moved into the bundle at no extra cost, and the family protection shows several known gaps (occupational disability €1,800/mo. below requirement, home contents underinsured, no family accident insurance).'
+                  )}</>
                 ) : (
                   <>{kunde?.name}{kunde?.alter ? ` (${kunde.alter})` : ''}
-                  {kunde?.eigeneProdukte?.[0]?.seit ? ` ist seit ${kunde.eigeneProdukte[0].seit.slice(0,4)} Kunde` : ' ist Kunde'}
-                  {kunde?.beruf ? `, arbeitet als ${kunde.beruf}` : ''}
-                  {kunde?.arbeitgeber?.name ? ` bei ${kunde.arbeitgeber.name}` : ''}
+                  {kunde?.eigeneProdukte?.[0]?.seit ? tx(` ist seit ${kunde.eigeneProdukte[0].seit.slice(0,4)} Kunde`, ` has been a customer since ${kunde.eigeneProdukte[0].seit.slice(0,4)}`) : tx(' ist Kunde', ' is a customer')}
+                  {kunde?.beruf ? tx(`, arbeitet als ${kunde.beruf}`, `, works as ${kunde.beruf}`) : ''}
+                  {kunde?.arbeitgeber?.name ? tx(` bei ${kunde.arbeitgeber.name}`, ` at ${kunde.arbeitgeber.name}`) : ''}
                   {kunde?.familienstand ? `, ${kunde.familienstand}` : ''}
-                  {kunde?.partner?.name ? ` mit ${kunde.partner.name}` : ''}
-                  {(kunde?.kinder?.length || 0) > 0 ? `, ${kunde.kinder.length} ${kunde.kinder.length === 1 ? 'Kind' : 'Kinder'}` : ''}.
-                  {' '}Anlass des Termins: <strong>{terminTitel}</strong>. Die KI hat Stammdaten,
-                  Bestand und letzte Kommunikation analysiert und unten passende Bausteine
-                  für die Vorbereitung zusammengestellt.</>
+                  {kunde?.partner?.name ? tx(` mit ${kunde.partner.name}`, ` with ${kunde.partner.name}`) : ''}
+                  {(kunde?.kinder?.length || 0) > 0 ? `, ${kunde.kinder.length} ${tx(kunde.kinder.length === 1 ? 'Kind' : 'Kinder', kunde.kinder.length === 1 ? 'child' : 'children')}` : ''}.
+                  {' '}{tx('Anlass des Termins:', 'Reason for the meeting:')} <strong>{terminTitel}</strong>. {tx(
+                    'Die KI hat Stammdaten, Bestand und letzte Kommunikation analysiert und unten passende Bausteine für die Vorbereitung zusammengestellt.',
+                    'The AI analyzed master data, portfolio and recent communication and compiled suitable building blocks for the preparation below.'
+                  )}</>
                 )}
               </div>
             </Section>
@@ -144,12 +142,12 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* Kennzahlen — Klaus-spezifische Story für die Immobilien-Demo */}
             {isKlausImmo && (
               <Section color="slate">
-                <SectionTitle icon={FileText} label="Schlüssel-Kennzahlen" color="slate" />
+                <SectionTitle icon={FileText} label={t('tpm.sec.kennzahlen')} color="slate" />
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm pt-2">
-                  <KPI label="Freie Liquidität ab 06/2026" value="840 €/mtl." accent="text-emerald-600" />
-                  <KPI label="Bauspar-Zuteilung (Q2/2026)" value="30.000 €" accent="text-emerald-600" />
-                  <KPI label="VR-Sparkonto" value="15.000 €" />
-                  <KPI label="Machbarer Kreditrahmen (ca.)" value="250.000 €" accent="text-indigo-600" />
+                  <KPI label={t('tpm.kpi.freieLiquiditaet')} value={t('tpm.val.mtl')} accent="text-emerald-600" />
+                  <KPI label={t('tpm.kpi.bausparZuteilung')} value={lang === 'en' ? '€30,000' : '30.000 €'} accent="text-emerald-600" />
+                  <KPI label={t('tpm.kpi.vrSparkonto')} value={lang === 'en' ? '€15,000' : '15.000 €'} />
+                  <KPI label={t('tpm.kpi.kreditrahmen')} value={lang === 'en' ? '€250,000' : '250.000 €'} accent="text-indigo-600" />
                 </div>
               </Section>
             )}
@@ -157,19 +155,19 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* Kennzahlen — Klaus-Versicherung-Story (KFZ + Haftpflicht + Familie) */}
             {isKlausVersicherung && (
               <Section color="slate">
-                <SectionTitle icon={FileText} label="Schlüssel-Kennzahlen" color="slate" />
+                <SectionTitle icon={FileText} label={t('tpm.sec.kennzahlen')} color="slate" />
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm pt-2">
-                  <KPI label="HUK KFZ-Vollkasko (heute)" value="780 €/J." accent="text-amber-700" />
-                  <KPI label="Unser Partner-Tarif" value="620 €/J." accent="text-emerald-600" />
-                  <KPI label="Ersparnis KFZ" value="−160 €/J." accent="text-emerald-700" />
-                  <KPI label="Bündel-Effekt Haftpflicht" value="ohne Mehrkosten" accent="text-emerald-600" />
+                  <KPI label={t('tpm.kpi.hukVollkasko')} value={t('tpm.val.proJahr780')} accent="text-amber-700" />
+                  <KPI label={t('tpm.kpi.partnerTarif')} value={t('tpm.val.proJahr620')} accent="text-emerald-600" />
+                  <KPI label={t('tpm.kpi.ersparnisKfz')} value={t('tpm.val.proJahrMinus160')} accent="text-emerald-700" />
+                  <KPI label={t('tpm.kpi.buendelHaftpflicht')} value={t('tpm.val.ohneMehrkosten')} accent="text-emerald-600" />
                 </div>
               </Section>
             )}
 
             {/* Kompakte Finanzübersicht inkl. externe Verbindungen */}
             <Section color="emerald">
-              <SectionTitle icon={Wallet} label="Finanzübersicht (kompakt)" color="emerald" />
+              <SectionTitle icon={Wallet} label={t('tpm.sec.finanzuebersicht')} color="emerald" />
             {(() => {
               const haushalt = berechneHaushaltsnetto(kunde);
               const frei = berechneFrei(kunde);
@@ -178,11 +176,11 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               const netto = anlage - kredit;
               return (
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-sm pt-2">
-                  <KPI label="Haushaltsnetto" value={`${formatEur(haushalt)}/mtl.`} />
-                  <KPI label="Frei verfügbar" value={`${formatEur(Math.max(0, frei))}/mtl.`} accent="text-emerald-600" />
-                  <KPI label="Anlagevolumen" value={formatEur(anlage)} />
-                  <KPI label="Kreditvolumen" value={formatEur(kredit)} accent="text-amber-700" />
-                  <KPI label="Netto-Vermögen" value={formatEur(netto)} accent={netto >= 0 ? 'text-emerald-700' : 'text-red-600'} />
+                  <KPI label={t('tpm.fin.haushaltsnetto')} value={`${formatEur(haushalt)}${t('tpm.fin.proMtl')}`} />
+                  <KPI label={t('tpm.fin.freiVerfuegbar')} value={`${formatEur(Math.max(0, frei))}${t('tpm.fin.proMtl')}`} accent="text-emerald-600" />
+                  <KPI label={t('tpm.fin.anlagevolumen')} value={formatEur(anlage)} />
+                  <KPI label={t('tpm.fin.kreditvolumen')} value={formatEur(kredit)} accent="text-amber-700" />
+                  <KPI label={t('tpm.fin.nettoVermoegen')} value={formatEur(netto)} accent={netto >= 0 ? 'text-emerald-700' : 'text-red-600'} />
                 </div>
               );
             })()}

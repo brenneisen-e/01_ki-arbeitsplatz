@@ -95,7 +95,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
             </div>
             <h3 className="font-semibold text-slate-700 mb-1">{t('familiendatenNichtVerfuegbar')}</h3>
             <p className="text-sm text-slate-400 max-w-md">
-              {t('familiendatenFehlen', { name: kunde?.name || 'diesen Mandanten' })}
+              {t('familiendatenFehlen', { name: kunde?.name || t('diesenMandanten') })}
             </p>
           </div>
         </Card>

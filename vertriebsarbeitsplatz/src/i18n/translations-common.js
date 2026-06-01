@@ -187,6 +187,11 @@ const translationsCommon = {
   'termineHeute': { de: 'Termine heute', en: 'Appointments today' },
   'rueckrufLabel': { de: 'Rückruf', en: 'Callback' },
 
+  // ─── Vertriebsassistent / Banking Quick Actions ───
+  'qaWasStehtHeuteAn': { de: 'Was steht heute an?', en: "What's on today?" },
+  'qaMeineNeuenLeads': { de: 'Meine neuen Leads', en: 'My new leads' },
+  'qaAuslaufendeKredite6Monate': { de: 'Auslaufende Kredite 6 Monate', en: 'Expiring loans (6 months)' },
+
   // ─── Seit / Since ───
   'seit': { de: 'Seit', en: 'Since' },
 

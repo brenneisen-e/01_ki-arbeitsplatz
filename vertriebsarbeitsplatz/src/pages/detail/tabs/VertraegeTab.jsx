@@ -15,6 +15,7 @@ import { resolveVersicherungspartner, interpolateDynamicDates } from '../../../u
 // Portal in document.body gerendert, damit Card-Containment (contain: paint)
 // es nicht clippt.
 function RisikoBadge({ warnung, institut }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState(null);
   const triggerRef = useRef(null);
@@ -70,7 +71,7 @@ function RisikoBadge({ warnung, institut }) {
             {konsequenz && (
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-0.5">
-                  Versicherungslücke
+                  {t('versicherungsluecke')}
                 </div>
                 <p className="text-slate-700">{konsequenz}</p>
               </div>
@@ -80,7 +81,7 @@ function RisikoBadge({ warnung, institut }) {
                 <Sparkles size={12} className="text-violet-600 mt-0.5 shrink-0" />
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-wider text-violet-700 mb-0.5">
-                    Empfehlung
+                    {t('empfehlungLabel')}
                   </div>
                   <p className="text-slate-700">{empfehlung}</p>
                 </div>

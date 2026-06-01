@@ -1,5 +1,6 @@
 import { Suspense, useMemo } from 'react';
 import { useMode } from '../../hooks/useMode';
+import useTranslation from '../../i18n/useTranslation';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import KPIGrid from '../../components/ui/KPIGrid';
 import { KundenDeutschlandkarteCompact } from '../../components/ui/KundenDeutschlandkarte';
@@ -45,6 +46,7 @@ const TabFallback = (
 
 export default function OverviewPage() {
   const { config, activeTab, modeId, navigateTo } = useMode();
+  const { t } = useTranslation();
   const TabComponent = TAB_COMPONENTS[activeTab] || UebersichtTab;
 
   // Dynamische KPI-Werte: Mandate-Zahl aus echten Kundendaten berechnen
@@ -75,7 +77,7 @@ export default function OverviewPage() {
                     k => k.id !== SHOWCASE_KUNDE_IDS.banking
                   )}
                   totalCount={kpiValues.kundenzahl?.wert}
-                  title="Kundenkarte"
+                  title={t('kundenkarte')}
                   onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
                 />
               ) : null

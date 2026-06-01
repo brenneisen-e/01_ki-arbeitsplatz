@@ -129,7 +129,7 @@ export default function EngagementTab() {
                 li.aktivitaet === 'mittel' ? 'bg-amber-50 text-amber-700' :
                 'bg-slate-100 text-slate-500',
               )}>
-                {t('aktivitaet')} {li.aktivitaet || 'Keine'}
+                {t('aktivitaet')} {li.aktivitaet || t('keineAngabe')}
               </span>
             </div>
 

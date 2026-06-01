@@ -174,9 +174,9 @@ function KommunikationEntry({ entry: k, isLast, isExpanded, onToggle, t, typLabe
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-xs text-slate-400 mb-3 pb-2 border-b border-slate-200">
                   <Mail size={12} />
-                  <span>{t('von')} {k.absender || 'Berater'}</span>
+                  <span>{t('von')} {k.absender || t('beraterRolle')}</span>
                   <span>&middot;</span>
-                  <span>{t('an')} {k.empfaenger || 'Kunde'}</span>
+                  <span>{t('an')} {k.empfaenger || t('kundeRolle')}</span>
                 </div>
                 <div className="text-sm text-slate-700 whitespace-pre-line">{k.emailBody}</div>
               </div>

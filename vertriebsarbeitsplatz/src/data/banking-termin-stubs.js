@@ -1,3 +1,5 @@
+import { tx } from '../utils/langHelper';
+
 // Demo-Stammdaten für Termin-Stub-Kunden (KDB00X).
 // Diese Kunden tauchen in den "Anstehenden Terminen" der Uebersicht auf,
 // sind aber bewusst NICHT im regulaeren KUNDEN_BY_MODE-Bestand (sonst
@@ -26,10 +28,10 @@ export const TERMIN_STUB_KUNDEN = {
     nps: 8,
     risikoscore: 25,
     eigeneProdukte: [
-      { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: 'Hauptkonto', praemie: 0, seit: '2009-04', status: 'aktiv' },
-      { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Sparkonto', details: 'Notgroschen', praemie: 0, seit: '2009-04', status: 'aktiv', volumen: 32000 },
-      { typ: 'depot', sparte: 'wertpapiere', produkt: 'UnionDepot Klassik', details: 'Ausgewogen', praemie: 0, seit: '2012-09', status: 'aktiv', volumen: 78000 },
-      { typ: 'bausparvertrag', sparte: 'sparen', produkt: 'VR-Bausparvertrag', details: 'Tarif Klassik', praemie: 0, seit: '2015-01', status: 'aktiv', volumen: 24000 },
+      { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: tx('Hauptkonto', 'Main account'), praemie: 0, seit: '2009-04', status: 'aktiv' },
+      { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Sparkonto', details: tx('Notgroschen', 'Emergency fund'), praemie: 0, seit: '2009-04', status: 'aktiv', volumen: 32000 },
+      { typ: 'depot', sparte: 'wertpapiere', produkt: 'UnionDepot Klassik', details: tx('Ausgewogen', 'Balanced'), praemie: 0, seit: '2012-09', status: 'aktiv', volumen: 78000 },
+      { typ: 'bausparvertrag', sparte: 'sparen', produkt: 'VR-Bausparvertrag', details: tx('Tarif Klassik', 'Classic plan'), praemie: 0, seit: '2015-01', status: 'aktiv', volumen: 24000 },
     ],
     fremdProdukte: [],
   },
@@ -50,12 +52,12 @@ export const TERMIN_STUB_KUNDEN = {
     nps: 9,
     risikoscore: 20,
     eigeneProdukte: [
-      { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: 'Gehaltskonto', praemie: 0, seit: '2019-06', status: 'aktiv' },
-      { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Tagesgeld', details: 'Eigenkapital Immobilie', praemie: 0, seit: '2021-03', status: 'aktiv', volumen: 68000 },
+      { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: tx('Gehaltskonto', 'Salary account'), praemie: 0, seit: '2019-06', status: 'aktiv' },
+      { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Tagesgeld', details: tx('Eigenkapital Immobilie', 'Equity for property'), praemie: 0, seit: '2021-03', status: 'aktiv', volumen: 68000 },
       { typ: 'visa', sparte: 'karte', produkt: 'VR-Visa Classic', details: 'Limit 3k', praemie: 35, seit: '2019-06', status: 'aktiv' },
     ],
     fremdProdukte: [
-      { typ: 'depot', institut: 'Trade Republic', details: 'ETF-Sparplan (MSCI World)', volumen: 18500, consent: true },
+      { typ: 'depot', institut: 'Trade Republic', details: tx('ETF-Sparplan (MSCI World)', 'ETF savings plan (MSCI World)'), volumen: 18500, consent: true },
     ],
   },
 
@@ -75,13 +77,13 @@ export const TERMIN_STUB_KUNDEN = {
     nps: 7,
     risikoscore: 28,
     eigeneProdukte: [
-      { typ: 'girokonto', sparte: 'konto', produkt: 'VR-PremiumKonto', details: 'Geschäfts- und Privatkonto', praemie: 0, seit: '2011-10', status: 'aktiv' },
-      { typ: 'depot', sparte: 'wertpapiere', produkt: 'UnionDepot Select', details: 'Wachstum', praemie: 0, seit: '2014-02', status: 'aktiv', volumen: 245000 },
-      { typ: 'rente', sparte: 'vorsorge', produkt: 'R+V Rürup-Rente', details: 'Steueroptimiert', praemie: 4800, seit: '2013-11', status: 'aktiv', volumen: 128000 },
+      { typ: 'girokonto', sparte: 'konto', produkt: 'VR-PremiumKonto', details: tx('Geschäfts- und Privatkonto', 'Business and personal account'), praemie: 0, seit: '2011-10', status: 'aktiv' },
+      { typ: 'depot', sparte: 'wertpapiere', produkt: 'UnionDepot Select', details: tx('Wachstum', 'Growth'), praemie: 0, seit: '2014-02', status: 'aktiv', volumen: 245000 },
+      { typ: 'rente', sparte: 'vorsorge', produkt: 'R+V Rürup-Rente', details: tx('Steueroptimiert', 'Tax-optimised'), praemie: 4800, seit: '2013-11', status: 'aktiv', volumen: 128000 },
       { typ: 'visa', sparte: 'karte', produkt: 'VR-Visa Gold', details: 'Limit 15k', praemie: 120, seit: '2012-01', status: 'aktiv' },
     ],
     fremdProdukte: [
-      { typ: 'depot', institut: 'Deutsche Bank', details: 'Vermögensverwaltung', volumen: 180000, consent: false },
+      { typ: 'depot', institut: 'Deutsche Bank', details: tx('Vermögensverwaltung', 'Asset management'), volumen: 180000, consent: false },
     ],
   },
 
@@ -101,13 +103,13 @@ export const TERMIN_STUB_KUNDEN = {
     nps: 9,
     risikoscore: 18,
     eigeneProdukte: [
-      { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: 'Hauptkonto', praemie: 0, seit: '2008-05', status: 'aktiv' },
-      { typ: 'depot', sparte: 'wertpapiere', produkt: 'UnionDepot Dynamik', details: 'Aktien-ETF + Einzeltitel', praemie: 0, seit: '2010-08', status: 'aktiv', volumen: 310000 },
-      { typ: 'rente', sparte: 'vorsorge', produkt: 'R+V Privatrente Performance', details: 'Fondsgebunden', praemie: 3600, seit: '2011-01', status: 'aktiv', volumen: 142000 },
-      { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Sparkonto', details: 'Notgroschen', praemie: 0, seit: '2008-05', status: 'aktiv', volumen: 45000 },
+      { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: tx('Hauptkonto', 'Main account'), praemie: 0, seit: '2008-05', status: 'aktiv' },
+      { typ: 'depot', sparte: 'wertpapiere', produkt: 'UnionDepot Dynamik', details: tx('Aktien-ETF + Einzeltitel', 'Equity ETF + single stocks'), praemie: 0, seit: '2010-08', status: 'aktiv', volumen: 310000 },
+      { typ: 'rente', sparte: 'vorsorge', produkt: 'R+V Privatrente Performance', details: tx('Fondsgebunden', 'Unit-linked'), praemie: 3600, seit: '2011-01', status: 'aktiv', volumen: 142000 },
+      { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Sparkonto', details: tx('Notgroschen', 'Emergency fund'), praemie: 0, seit: '2008-05', status: 'aktiv', volumen: 45000 },
     ],
     fremdProdukte: [
-      { typ: 'versicherung', produktart: 'Berufshaftpflicht', institut: 'HDI', details: 'Ärzte-Tarif', volumen: 1800, consent: true },
+      { typ: 'versicherung', produktart: 'Berufshaftpflicht', institut: 'HDI', details: tx('Ärzte-Tarif', 'Physicians plan'), volumen: 1800, consent: true },
     ],
   },
 };

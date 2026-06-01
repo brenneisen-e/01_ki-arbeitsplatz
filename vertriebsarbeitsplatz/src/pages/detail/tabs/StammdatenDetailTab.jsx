@@ -252,7 +252,7 @@ export default function StammdatenDetailTab({ kunde }) {
                   <>
                     <PersonLink
                       name={kunde.partner.name}
-                      role={`Partner${kunde.partner.beruf ? ' · ' + translateBeruf(kunde.partner.beruf, lang) : ''}`}
+                      role={`${t('partnerRolle')}${kunde.partner.beruf ? ' · ' + translateBeruf(kunde.partner.beruf, lang) : ''}`}
                     />
                     {kunde.partner.beruf ? ` (${translateBeruf(kunde.partner.beruf, lang)})` : ''}
                   </>
@@ -266,7 +266,7 @@ export default function StammdatenDetailTab({ kunde }) {
                   <span>
                     {kunde.kinder.map((k, i) => (
                       <span key={i}>
-                        <PersonLink name={k.name} role={`Kind · ${k.alter} Jahre`} />
+                        <PersonLink name={k.name} role={t('kindRolle', { alter: k.alter })} />
                         {` (${k.alter})`}
                         {i < kunde.kinder.length - 1 ? ', ' : ''}
                       </span>
@@ -362,7 +362,7 @@ export default function StammdatenDetailTab({ kunde }) {
                       type="button"
                       onClick={() => jumpToFinanzuebersicht('anlage')}
                       className="w-full flex items-baseline gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer"
-                      title="Zur Finanzübersicht – relevante Verträge anzeigen"
+                      title={t('zurFinanzuebersichtVertraege')}
                     >
                       <span className="text-slate-400 shrink-0">{t('anlagevolumen') !== 'anlagevolumen' ? t('anlagevolumen') : 'Anlagevolumen'}:</span>
                       <span className="text-slate-700 font-medium group-hover:underline">{formatEur(anlageVol)}</span>
@@ -374,7 +374,7 @@ export default function StammdatenDetailTab({ kunde }) {
                       type="button"
                       onClick={() => jumpToFinanzuebersicht('kredit')}
                       className="w-full flex items-baseline gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer"
-                      title="Zur Finanzübersicht – relevante Finanzierungen anzeigen"
+                      title={t('zurFinanzuebersichtFinanzierungen')}
                     >
                       <span className="text-slate-400 shrink-0">{t('kreditvolumen') !== 'kreditvolumen' ? t('kreditvolumen') : 'Kreditvolumen'}:</span>
                       <span className="text-slate-700 font-medium group-hover:underline">{formatEur(kreditVol)}</span>

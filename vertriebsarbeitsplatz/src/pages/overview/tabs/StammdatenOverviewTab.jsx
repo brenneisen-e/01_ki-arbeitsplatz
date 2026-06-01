@@ -68,11 +68,11 @@ export default function StammdatenOverviewTab() {
         </div>
         <div className="space-y-3 text-sm">
           {(data.leistung || [
-            { label: t('rangImVertrieb'), value: 'Top 15%' },
-            { label: t('kundenzufriedenheit'), value: '4,2 / 5,0' },
-            { label: t('bestandsentwicklung'), value: '+8,3% YoY' },
-            { label: t('durchschnVertragsgroesse'), value: '1.850€' },
-            { label: t('letzteAuszeichnung'), value: 'Silber Award 2025' },
+            { label: t('rangImVertrieb'), value: t('stammVal.rangTop15') },
+            { label: t('kundenzufriedenheit'), value: t('stammVal.kundenzufriedenheit') },
+            { label: t('bestandsentwicklung'), value: t('stammVal.bestandsentwicklung') },
+            { label: t('durchschnVertragsgroesse'), value: t('stammVal.vertragsgroesse') },
+            { label: t('letzteAuszeichnung'), value: t('stammVal.auszeichnung') },
           ]).map((row, i) => (
             <InfoRow key={i} label={row.label} value={row.value} />
           ))}
@@ -86,11 +86,11 @@ export default function StammdatenOverviewTab() {
         </div>
         <div className="space-y-3 text-sm">
           {(data.digital || [
-            { label: t('appNutzung'), value: '78% der Kunden' },
-            { label: t('onlineAbschluesse'), value: '12 YTD' },
-            { label: t('videoBeratungen'), value: '8 / Monat' },
-            { label: t('emailResponse'), value: 'Ø 2,4h' },
-            { label: t('socialMedia'), value: 'LinkedIn aktiv' },
+            { label: t('appNutzung'), value: t('stammVal.appNutzung') },
+            { label: t('onlineAbschluesse'), value: t('stammVal.onlineAbschluesse') },
+            { label: t('videoBeratungen'), value: t('stammVal.videoBeratungen') },
+            { label: t('emailResponse'), value: t('stammVal.emailResponse') },
+            { label: t('socialMedia'), value: t('stammVal.socialMedia') },
           ]).map((row, i) => (
             <InfoRow key={i} label={row.label} value={row.value} />
           ))}

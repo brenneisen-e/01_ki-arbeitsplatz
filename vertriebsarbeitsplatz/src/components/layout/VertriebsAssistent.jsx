@@ -33,7 +33,7 @@ function getWelcomeMessage(modeId, t) {
 function getQuickActions(modeId, t) {
   const actions = {
     versicherung: [t('neueLeadsAnzeigen'), t('kundenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('crossSellingChancen')],
-    banking: ['Was steht heute an?', 'Meine neuen Leads', 'Auslaufende Kredite 6 Monate'],
+    banking: [t('qaWasStehtHeuteAn'), t('qaMeineNeuenLeads'), t('qaAuslaufendeKredite6Monate')],
     vermoegensverwaltung: [t('neueLeadsAnzeigen'), t('mandantenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('portfolioAnalyse')],
   };
   return actions[modeId] || actions.versicherung;
@@ -43,45 +43,45 @@ function getQuickActions(modeId, t) {
 // so the advisor can discover what the assistant can do with FIDA context.
 const BANKING_SUGGESTIONS = [
   {
-    category: 'Tagesplanung',
+    category: tx('Tagesplanung', 'Daily Planning'),
     prompts: [
-      'Was steht heute an?',
-      'Meine neuen Leads',
-      'Priorisiere meine offenen Leads nach Ertragspotenzial',
-      'Welche FIDA-Consents fehlen mir noch?',
+      tx('Was steht heute an?', "What's on today?"),
+      tx('Meine neuen Leads', 'My new leads'),
+      tx('Priorisiere meine offenen Leads nach Ertragspotenzial', 'Prioritize my open leads by revenue potential'),
+      tx('Welche FIDA-Consents fehlen mir noch?', 'Which FIDA consents am I still missing?'),
     ],
   },
   {
-    category: 'Gesprächsvorbereitung',
+    category: tx('Gesprächsvorbereitung', 'Meeting Preparation'),
     prompts: [
-      'Bereite mir ein Erstgespräch mit Markus Wagner vor',
-      'Was sollte ich bei Sandra Müller ansprechen?',
-      'Gib mir Argumente für den Depot-Wechsel zu uns',
+      tx('Bereite mir ein Erstgespräch mit Markus Wagner vor', 'Prepare an initial meeting with Markus Wagner for me'),
+      tx('Was sollte ich bei Sandra Müller ansprechen?', 'What should I bring up with Sandra Müller?'),
+      tx('Gib mir Argumente für den Depot-Wechsel zu uns', 'Give me arguments for switching the securities account to us'),
     ],
   },
   {
-    category: 'Analyse on-the-fly',
+    category: tx('Analyse on-the-fly', 'Analysis On-the-Fly'),
     prompts: [
-      'Welche Kunden haben auslaufende Kredite in den nächsten 6 Monaten?',
-      'Wer von meinen Kunden hat Fremdbank-Depots über 20.000€?',
-      'Zeig mir alle Kunden ohne BU-Versicherung unter 40',
-      'Welche Kunden passen zur neuen Baufi-Aktion?',
+      tx('Welche Kunden haben auslaufende Kredite in den nächsten 6 Monaten?', 'Which customers have loans expiring in the next 6 months?'),
+      tx('Wer von meinen Kunden hat Fremdbank-Depots über 20.000€?', 'Which of my customers have third-party bank securities accounts above €20,000?'),
+      tx('Zeig mir alle Kunden ohne BU-Versicherung unter 40', 'Show me all customers without disability insurance under 40'),
+      tx('Welche Kunden passen zur neuen Baufi-Aktion?', 'Which customers fit the new mortgage campaign?'),
     ],
   },
   {
-    category: 'Formulierungshilfe',
+    category: tx('Formulierungshilfe', 'Drafting Assistance'),
     prompts: [
-      'Schreib ein Anschreiben zum Kreditgespräch Immobilienfinanzierung für Klaus Fischer',
-      'Formuliere eine Nachfass-Mail für die Depot-Wechsel-Prämie an Peter Hoffmann',
-      'Erstelle einen Gesprächsleitfaden Tierhalterhaftpflicht',
+      tx('Schreib ein Anschreiben zum Kreditgespräch Immobilienfinanzierung für Klaus Fischer', 'Write a letter about the mortgage financing meeting for Klaus Fischer'),
+      tx('Formuliere eine Nachfass-Mail für die Depot-Wechsel-Prämie an Peter Hoffmann', 'Draft a follow-up email about the account transfer bonus for Peter Hoffmann'),
+      tx('Erstelle einen Gesprächsleitfaden Tierhalterhaftpflicht', 'Create a conversation guide for pet owner liability insurance'),
     ],
   },
   {
-    category: 'Rechenbeispiele',
+    category: tx('Rechenbeispiele', 'Calculation Examples'),
     prompts: [
-      'Rechne mir eine Baufinanzierung für Wagner – 42k Eigenkapital, 840€ Rate',
-      'Was spart Fischer beim Trade-Republic-Wechsel zu uns?',
-      'Wie viel Risikoleben braucht ein 34-Jähriger mit Neugeborenem bei 3.200€ Netto?',
+      tx('Rechne mir eine Baufinanzierung für Wagner – 42k Eigenkapital, 840€ Rate', 'Calculate a mortgage for Wagner – €42k equity, €840 installment'),
+      tx('Was spart Fischer beim Trade-Republic-Wechsel zu uns?', 'What does Fischer save by switching from Trade Republic to us?'),
+      tx('Wie viel Risikoleben braucht ein 34-Jähriger mit Neugeborenem bei 3.200€ Netto?', 'How much term life cover does a 34-year-old with a newborn and €3,200 net income need?'),
     ],
   },
 ];
@@ -536,6 +536,7 @@ export function getDemoResponse(message, { currentView, modeId }) {
   // ─── Extended Banking handlers (FIDA-powered assistant scenarios) ───
 
   if (modeId === 'banking') {
+    const isEn = getLang() === 'en';
     // Tagesstart / Was steht heute an — liest aus denselben Datenquellen,
     // die auch in der Übersichts-Ansicht (TERMINE_BY_MODE, AUFGABEN_BY_MODE)
     // angezeigt werden, damit die Antwort konsistent ist.
@@ -550,12 +551,12 @@ export function getDemoResponse(message, { currentView, modeId }) {
 
       const formatDatum = (iso) => {
         const d = new Date(iso);
-        return d.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
+        return d.toLocaleDateString(isEn ? 'en-US' : 'de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
       };
 
       const terminLines = [
         ...termineToday.map(t =>
-          `<div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5"></span><div><strong>${t.zeit} ${t.kunde}</strong> — ${t.betreff} <span class="text-xs text-red-500">· heute</span></div></div>`
+          `<div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5"></span><div><strong>${t.zeit} ${t.kunde}</strong> — ${t.betreff} <span class="text-xs text-red-500">· ${tx('heute', 'today')}</span></div></div>`
         ),
         ...termineRest.map(t =>
           `<div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5"></span><div><strong>${formatDatum(t.datum)} · ${t.zeit} ${t.kunde}</strong> — ${t.betreff}</div></div>`
@@ -576,13 +577,13 @@ export function getDemoResponse(message, { currentView, modeId }) {
 
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Dein Tag im Überblick</p>
+          <p class="font-semibold">${tx('Dein Tag im Überblick', 'Your day at a glance')}</p>
           <div class="space-y-1.5 text-[13px]">
-            ${terminLines || '<div class="text-slate-500 italic text-xs">Keine Termine geplant.</div>'}
+            ${terminLines || `<div class="text-slate-500 italic text-xs">${tx('Keine Termine geplant.', 'No appointments scheduled.')}</div>`}
             ${aufgabenLines}
           </div>
           ${topPrio ? `<div class="mt-2 p-2 bg-indigo-50 border border-indigo-200 rounded text-xs text-indigo-800">
-            <strong>Top-Priorität:</strong> ${topPrio}
+            <strong>${tx('Top-Priorität:', 'Top priority:')}</strong> ${topPrio}
           </div>` : ''}
         </div>`,
       };
@@ -593,13 +594,13 @@ export function getDemoResponse(message, { currentView, modeId }) {
         && (lower.includes('kredit') || lower.includes('loan') || lower.includes('6 monat'))) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Auslaufende Kredite (nächste 6 Monate)</p>
+          <p class="font-semibold">${tx('Auslaufende Kredite (nächste 6 Monate)', 'Expiring loans (next 6 months)')}</p>
           <table class="w-full text-xs mt-1">
             <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 font-mono">1.680€ (Commerzbank)</td><td class="py-1.5 text-emerald-600">06/2026</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Peter Hoffmann</strong></td><td class="py-1.5 font-mono">45.000€ Rahmen</td><td class="py-1.5 text-amber-600">07/2026</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Peter Hoffmann</strong></td><td class="py-1.5 font-mono">45.000€ ${tx('Rahmen', 'credit line')}</td><td class="py-1.5 text-amber-600">07/2026</td></tr>
             <tr><td class="py-1.5"><strong>Andrea Lang</strong></td><td class="py-1.5 font-mono">85.000€</td><td class="py-1.5 text-amber-600">09/2026</td></tr>
           </table>
-          <p class="text-xs text-slate-500 mt-2">→ <em>Bei Fischer werden 840€/Mon. frei → Immobilienfinanzierung ansprechen!</em></p>
+          <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Bei Fischer werden 840€/Mon. frei → Immobilienfinanzierung ansprechen!', 'Fischer frees up €840/mo. → bring up mortgage financing!')}</em></p>
         </div>`,
       };
     }
@@ -608,14 +609,14 @@ export function getDemoResponse(message, { currentView, modeId }) {
     if (lower.includes('fremdbank') || (lower.includes('depot') && (lower.includes('über') || lower.includes('ueber')))) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Kunden mit Fremdbank-Depots</p>
+          <p class="font-semibold">${tx('Kunden mit Fremdbank-Depots', 'Customers with third-party bank securities accounts')}</p>
           <div class="space-y-1.5 text-[13px]">
             <div class="flex items-center justify-between py-1 border-b border-slate-200"><span><strong>Klaus Fischer</strong> — Trade Republic</span><span class="font-mono text-slate-600">28.000€</span></div>
-            <div class="flex items-center justify-between py-1 border-b border-slate-200"><span><strong>Klaus Fischer</strong> — ING Tagesgeld</span><span class="font-mono text-slate-600">22.000€</span></div>
-            <div class="flex items-center justify-between py-1 border-b border-slate-200"><span><strong>Peter Hoffmann</strong> — Union Investment Firmendepot</span><span class="font-mono text-slate-600">85.000€</span></div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-200"><span><strong>Klaus Fischer</strong> — ${tx('ING Tagesgeld', 'ING call money')}</span><span class="font-mono text-slate-600">22.000€</span></div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-200"><span><strong>Peter Hoffmann</strong> — ${tx('Union Investment Firmendepot', 'Union Investment corporate account')}</span><span class="font-mono text-slate-600">85.000€</span></div>
             <div class="flex items-center justify-between py-1"><span><strong>Stefan Braun</strong> — comdirect ETF</span><span class="font-mono text-slate-600">18.500€</span></div>
           </div>
-          <p class="text-xs text-slate-500 mt-2">→ <em>4 Kunden passen zur Depot-Wechsel-Prämie.</em></p>
+          <p class="text-xs text-slate-500 mt-2">→ <em>${tx('4 Kunden passen zur Depot-Wechsel-Prämie.', '4 customers qualify for the account transfer bonus.')}</em></p>
         </div>`,
       };
     }
@@ -624,14 +625,14 @@ export function getDemoResponse(message, { currentView, modeId }) {
     if (lower.includes('ohne bu') || lower.includes('keine bu') || (lower.includes('bu') && lower.includes('unter'))) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Bestandslücken-Analyse — BU-Versicherung (&lt;40 Jahre)</p>
+          <p class="font-semibold">${tx('Bestandslücken-Analyse — BU-Versicherung (&lt;40 Jahre)', 'Coverage gap analysis — disability insurance (&lt;40 years)')}</p>
           <ol class="list-decimal pl-4 space-y-1 text-[13px]">
-            <li><strong>Markus Wagner</strong> — 29, junge Familie mit Neugeborenem, keine BU</li>
-            <li><strong>Sandra Müller</strong> — 33, junge Familie, keine BU/RL</li>
-            <li><strong>Stefan Braun</strong> — 36, IT-Selbstständig, kein Schutz</li>
+            <li><strong>Markus Wagner</strong> — ${tx('29, junge Familie mit Neugeborenem, keine BU', '29, young family with newborn, no disability cover')}</li>
+            <li><strong>Sandra Müller</strong> — ${tx('33, junge Familie, keine BU/RL', '33, young family, no disability/term life cover')}</li>
+            <li><strong>Stefan Braun</strong> — ${tx('36, IT-Selbstständig, kein Schutz', '36, self-employed in IT, no cover')}</li>
           </ol>
           <div class="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
-            Alle drei qualifizieren für die R+V VorsorgePlus-Aktion.
+            ${tx('Alle drei qualifizieren für die R+V VorsorgePlus-Aktion.', 'All three qualify for the R+V VorsorgePlus campaign.')}
           </div>
         </div>`,
       };
@@ -641,11 +642,11 @@ export function getDemoResponse(message, { currentView, modeId }) {
     if ((lower.includes('baufi') && lower.includes('aktion')) || lower.includes('passen zur') || lower.includes('kampagne')) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Kampagnen-Matching — Frühlings-Baufi-Aktion</p>
+          <p class="font-semibold">${tx('Kampagnen-Matching — Frühlings-Baufi-Aktion', 'Campaign matching — Spring mortgage campaign')}</p>
           <table class="w-full text-xs mt-1">
-            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">97%</span></td><td class="py-1.5 text-slate-500">Commerzbank-Ratenkredit läuft aus, Bausparer zuteilungsreif, Newsletter-Interesse</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Sandra Müller</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">92%</span></td><td class="py-1.5 text-slate-500">Baufi vorbereiten, Ehepartner als Neukunde</td></tr>
-            <tr><td class="py-1.5"><strong>Markus Wagner</strong></td><td class="py-1.5 text-center"><span class="font-bold text-lime-700">78%</span></td><td class="py-1.5 text-slate-500">Junge Familie mit Neugeborenem – Eigenheim-Wunsch</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">97%</span></td><td class="py-1.5 text-slate-500">${tx('Commerzbank-Ratenkredit läuft aus, Bausparer zuteilungsreif, Newsletter-Interesse', 'Commerzbank installment loan expiring, building-society savings ready for allocation, newsletter interest')}</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Sandra Müller</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">92%</span></td><td class="py-1.5 text-slate-500">${tx('Baufi vorbereiten, Ehepartner als Neukunde', 'Prepare mortgage, spouse as new customer')}</td></tr>
+            <tr><td class="py-1.5"><strong>Markus Wagner</strong></td><td class="py-1.5 text-center"><span class="font-bold text-lime-700">78%</span></td><td class="py-1.5 text-slate-500">${tx('Junge Familie mit Neugeborenem – Eigenheim-Wunsch', 'Young family with newborn – desire for own home')}</td></tr>
           </table>
         </div>`,
       };
@@ -660,24 +661,24 @@ export function getDemoResponse(message, { currentView, modeId }) {
                   : 'Markus Wagner';
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Gesprächsvorbereitung ${kunde}</p>
-          <p class="text-xs text-slate-500">Kombinierte FIDA-Analyse · Impulse · Kampagnen-Matches</p>
+          <p class="font-semibold">${tx('Gesprächsvorbereitung', 'Meeting preparation')} ${kunde}</p>
+          <p class="text-xs text-slate-500">${tx('Kombinierte FIDA-Analyse · Impulse · Kampagnen-Matches', 'Combined FIDA analysis · prompts · campaign matches')}</p>
           <div class="mt-2 space-y-2">
             <div class="border-l-2 border-emerald-500 pl-2">
-              <div class="text-xs font-bold text-emerald-700">1. Einstieg</div>
-              <div class="text-[12px] text-slate-700">Bezug auf letzten Kontakt, allgemeine Lebenssituation</div>
+              <div class="text-xs font-bold text-emerald-700">1. ${tx('Einstieg', 'Opening')}</div>
+              <div class="text-[12px] text-slate-700">${tx('Bezug auf letzten Kontakt, allgemeine Lebenssituation', 'Reference last contact, general life situation')}</div>
             </div>
             <div class="border-l-2 border-indigo-500 pl-2">
-              <div class="text-xs font-bold text-indigo-700">2. Top-Thema: Immobilienfinanzierung</div>
-              <div class="text-[12px] text-slate-700">Höchstes Ertragspotenzial · Kunde zeigt Such-Signale im Baufi-Rechner</div>
+              <div class="text-xs font-bold text-indigo-700">2. ${tx('Top-Thema: Immobilienfinanzierung', 'Top topic: mortgage financing')}</div>
+              <div class="text-[12px] text-slate-700">${tx('Höchstes Ertragspotenzial · Kunde zeigt Such-Signale im Baufi-Rechner', 'Highest revenue potential · customer shows search signals in the mortgage calculator')}</div>
             </div>
             <div class="border-l-2 border-amber-500 pl-2">
-              <div class="text-xs font-bold text-amber-700">3. Quick Win: BU-Versicherung</div>
-              <div class="text-[12px] text-slate-700">Bei 29 Jahren optimaler Einstiegszeitpunkt · VR-VorsorgePlus Aktion läuft</div>
+              <div class="text-xs font-bold text-amber-700">3. ${tx('Quick Win: BU-Versicherung', 'Quick win: disability insurance')}</div>
+              <div class="text-[12px] text-slate-700">${tx('Bei 29 Jahren optimaler Einstiegszeitpunkt · VR-VorsorgePlus Aktion läuft', 'At 29 the ideal entry point · VR-VorsorgePlus campaign is running')}</div>
             </div>
             <div class="border-l-2 border-slate-400 pl-2">
-              <div class="text-xs font-bold text-slate-600">4. Abschluss</div>
-              <div class="text-[12px] text-slate-700">Folgetermin, Unterlagen-Checkliste</div>
+              <div class="text-xs font-bold text-slate-600">4. ${tx('Abschluss', 'Closing')}</div>
+              <div class="text-[12px] text-slate-700">${tx('Folgetermin, Unterlagen-Checkliste', 'Follow-up appointment, document checklist')}</div>
             </div>
           </div>
         </div>`,
@@ -688,16 +689,16 @@ export function getDemoResponse(message, { currentView, modeId }) {
     if ((lower.includes('baufinanzierung') || lower.includes('baufi')) && (lower.includes('rechn') || lower.includes('eigenkapital') || lower.includes('rate'))) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Baufi-Kalkulation — Markus Wagner</p>
+          <p class="font-semibold">${tx('Baufi-Kalkulation — Markus Wagner', 'Mortgage calculation — Markus Wagner')}</p>
           <table class="w-full text-xs mt-1">
-            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Eigenkapital</td><td class="py-1 text-right font-mono">42.000€</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Gewünschte Rate</td><td class="py-1 text-right font-mono">840€/Mon.</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Zins (10J. Bindung)</td><td class="py-1 text-right font-mono">3,45%</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Tilgung</td><td class="py-1 text-right font-mono">2,00%</td></tr>
-            <tr class="border-b-2 border-slate-300"><td class="py-1 font-semibold">Darlehenshöhe</td><td class="py-1 text-right font-mono font-bold">184.000€</td></tr>
-            <tr><td class="py-1 font-semibold">Kaufpreis inkl. EK</td><td class="py-1 text-right font-mono font-bold text-emerald-600">226.000€</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Eigenkapital', 'Equity')}</td><td class="py-1 text-right font-mono">42.000€</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Gewünschte Rate', 'Desired installment')}</td><td class="py-1 text-right font-mono">840€/${tx('Mon.', 'mo.')}</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Zins (10J. Bindung)', 'Interest (10-yr fixed)')}</td><td class="py-1 text-right font-mono">3,45%</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Tilgung', 'Repayment')}</td><td class="py-1 text-right font-mono">2,00%</td></tr>
+            <tr class="border-b-2 border-slate-300"><td class="py-1 font-semibold">${tx('Darlehenshöhe', 'Loan amount')}</td><td class="py-1 text-right font-mono font-bold">184.000€</td></tr>
+            <tr><td class="py-1 font-semibold">${tx('Kaufpreis inkl. EK', 'Purchase price incl. equity')}</td><td class="py-1 text-right font-mono font-bold text-emerald-600">226.000€</td></tr>
           </table>
-          <p class="text-xs text-slate-500 mt-2">→ <em>KfW-Förderung prüfen (bis 100k zusätzlich möglich).</em></p>
+          <p class="text-xs text-slate-500 mt-2">→ <em>${tx('KfW-Förderung prüfen (bis 100k zusätzlich möglich).', 'Check KfW funding (up to 100k additionally possible).')}</em></p>
         </div>`,
       };
     }
@@ -706,14 +707,14 @@ export function getDemoResponse(message, { currentView, modeId }) {
     if ((lower.includes('spart') || lower.includes('wechsel') || lower.includes('vergleich')) && (lower.includes('depot') || lower.includes('trade republic') || lower.includes('sparplan'))) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Depot-Wechsel Vergleich — Klaus Fischer</p>
+          <p class="font-semibold">${tx('Depot-Wechsel Vergleich — Klaus Fischer', 'Account transfer comparison — Klaus Fischer')}</p>
           <table class="w-full text-xs mt-1">
-            <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Trade Republic (aktuell)</td><td class="py-1.5 text-right font-mono">1€/Trade · 0% Depotgebühr</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">VR-MeinDepot</td><td class="py-1.5 text-right font-mono">0€ bis 2026 (Aktion)</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Depot-Wechsel-Prämie</td><td class="py-1.5 text-right font-mono text-emerald-600">+ 250€</td></tr>
-            <tr><td class="py-1.5 font-semibold">Vorteil über 3 Jahre</td><td class="py-1.5 text-right font-mono font-bold text-emerald-600">~ 430€</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Trade Republic (aktuell)', 'Trade Republic (current)')}</td><td class="py-1.5 text-right font-mono">1€/Trade · ${tx('0% Depotgebühr', '0% custody fee')}</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">VR-MeinDepot</td><td class="py-1.5 text-right font-mono">${tx('0€ bis 2026 (Aktion)', '€0 until 2026 (campaign)')}</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Depot-Wechsel-Prämie', 'Account transfer bonus')}</td><td class="py-1.5 text-right font-mono text-emerald-600">+ 250€</td></tr>
+            <tr><td class="py-1.5 font-semibold">${tx('Vorteil über 3 Jahre', 'Benefit over 3 years')}</td><td class="py-1.5 text-right font-mono font-bold text-emerald-600">~ 430€</td></tr>
           </table>
-          <p class="text-xs text-slate-500 mt-2">→ <em>Plus Beratungskontinuität und ESG-Fonds im Sortiment.</em></p>
+          <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Plus Beratungskontinuität und ESG-Fonds im Sortiment.', 'Plus advisory continuity and ESG funds in the range.')}</em></p>
         </div>`,
       };
     }
@@ -722,13 +723,13 @@ export function getDemoResponse(message, { currentView, modeId }) {
     if (lower.includes('risikoleben') || lower.includes('wie viel') && lower.includes('schutz')) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Risikoleben-Bedarf (34J., Kind, 3.200€ Netto)</p>
+          <p class="font-semibold">${tx('Risikoleben-Bedarf (34J., Kind, 3.200€ Netto)', 'Term life needs (age 34, child, €3,200 net)')}</p>
           <table class="w-full text-xs mt-1">
-            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Einkommensersatz (5×Jahresnetto)</td><td class="py-1 text-right font-mono">192.000€</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Restschulden (Annahme Baufi)</td><td class="py-1 text-right font-mono">180.000€</td></tr>
-            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Ausbildung Kind bis 25</td><td class="py-1 text-right font-mono">80.000€</td></tr>
-            <tr class="border-b-2 border-slate-300"><td class="py-1 font-semibold">Empfohlene Summe</td><td class="py-1 text-right font-mono font-bold">~ 450.000€</td></tr>
-            <tr><td class="py-1 text-slate-500">Monatsbeitrag R+V</td><td class="py-1 text-right font-mono text-emerald-600">ca. 22€</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Einkommensersatz (5×Jahresnetto)', 'Income replacement (5× annual net)')}</td><td class="py-1 text-right font-mono">192.000€</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Restschulden (Annahme Baufi)', 'Remaining debt (assumed mortgage)')}</td><td class="py-1 text-right font-mono">180.000€</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Ausbildung Kind bis 25', 'Child education until 25')}</td><td class="py-1 text-right font-mono">80.000€</td></tr>
+            <tr class="border-b-2 border-slate-300"><td class="py-1 font-semibold">${tx('Empfohlene Summe', 'Recommended sum')}</td><td class="py-1 text-right font-mono font-bold">~ 450.000€</td></tr>
+            <tr><td class="py-1 text-slate-500">${tx('Monatsbeitrag R+V', 'Monthly premium R+V')}</td><td class="py-1 text-right font-mono text-emerald-600">${tx('ca. 22€', 'approx. €22')}</td></tr>
           </table>
         </div>`,
       };
@@ -738,8 +739,8 @@ export function getDemoResponse(message, { currentView, modeId }) {
     if (lower.includes('einladung') || lower.includes('schreib') || lower.includes('formuliere') || lower.includes('mail')) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Entwurf — Einladung zur Beratung</p>
-          <div class="bg-slate-50 border border-slate-200 rounded p-3 text-[12px] whitespace-pre-line font-mono leading-relaxed">Sehr geehrter Herr Wagner,
+          <p class="font-semibold">${tx('Entwurf — Einladung zur Beratung', 'Draft — Invitation to a consultation')}</p>
+          <div class="bg-slate-50 border border-slate-200 rounded p-3 text-[12px] whitespace-pre-line font-mono leading-relaxed">${tx(`Sehr geehrter Herr Wagner,
 
 in unseren letzten Gesprächen hat sich gezeigt, dass Sie sich mit dem Thema Immobilienfinanzierung auseinandersetzen. Die aktuellen Rahmenbedingungen sind für Ihre Ausgangslage sehr interessant – gerne zeige ich Ihnen in einem persönlichen Gespräch, welche Optionen sich für Sie konkret ergeben.
 
@@ -747,8 +748,16 @@ Darf ich Ihnen einen Termin in den kommenden zwei Wochen vorschlagen?
 
 Mit freundlichen Grüßen
 Nadine Müller
-Volksbank Mittelhessen</div>
-          <p class="text-xs text-slate-500 mt-2">→ <em>FIDA-Interna bleiben unerwähnt, Anlass wird persönlich formuliert.</em></p>
+Volksbank Mittelhessen`, `Dear Mr. Wagner,
+
+our recent conversations have shown that you are exploring the topic of mortgage financing. The current conditions are very attractive for your situation – I would be glad to show you in a personal meeting which options are available to you specifically.
+
+May I suggest an appointment within the next two weeks?
+
+Kind regards,
+Nadine Müller
+Volksbank Mittelhessen`)}</div>
+          <p class="text-xs text-slate-500 mt-2">→ <em>${tx('FIDA-Interna bleiben unerwähnt, Anlass wird persönlich formuliert.', 'FIDA internals remain unmentioned, the occasion is phrased personally.')}</em></p>
         </div>`,
       };
     }
@@ -757,13 +766,13 @@ Volksbank Mittelhessen</div>
     if (lower.includes('priorisiere') || lower.includes('ertragspotenzial') || (lower.includes('leads') && lower.includes('prio'))) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Leads nach Ertragspotenzial</p>
+          <p class="font-semibold">${tx('Leads nach Ertragspotenzial', 'Leads by revenue potential')}</p>
           <ol class="list-decimal pl-4 space-y-1 text-[13px]">
-            <li><strong>Klaus Fischer</strong> — Kreditgespräch Immobilienfinanzierung 250k <span class="text-emerald-600 font-semibold">· ~12.085€</span></li>
-            <li><strong>Sandra Müller</strong> — Baufi + Ehemann als Neukunde <span class="text-emerald-600 font-semibold">· ~12.011€</span></li>
-            <li><strong>Peter Hoffmann</strong> — Firmendepot + bAV <span class="text-emerald-600 font-semibold">· ~6.135€</span></li>
-            <li><strong>Andrea Lang</strong> — Praxiskredit + Absicherung <span class="text-emerald-600 font-semibold">· ~3.186€</span></li>
-            <li><strong>Stefan Braun</strong> — Gewerbekonto Umstellung <span class="text-emerald-600 font-semibold">· ~3.102€</span></li>
+            <li><strong>Klaus Fischer</strong> — ${tx('Kreditgespräch Immobilienfinanzierung 250k', 'Mortgage financing meeting 250k')} <span class="text-emerald-600 font-semibold">· ~12.085€</span></li>
+            <li><strong>Sandra Müller</strong> — ${tx('Baufi + Ehemann als Neukunde', 'Mortgage + husband as new customer')} <span class="text-emerald-600 font-semibold">· ~12.011€</span></li>
+            <li><strong>Peter Hoffmann</strong> — ${tx('Firmendepot + bAV', 'Corporate account + company pension')} <span class="text-emerald-600 font-semibold">· ~6.135€</span></li>
+            <li><strong>Andrea Lang</strong> — ${tx('Praxiskredit + Absicherung', 'Practice loan + cover')} <span class="text-emerald-600 font-semibold">· ~3.186€</span></li>
+            <li><strong>Stefan Braun</strong> — ${tx('Gewerbekonto Umstellung', 'Business account migration')} <span class="text-emerald-600 font-semibold">· ~3.102€</span></li>
           </ol>
         </div>`,
       };
@@ -773,12 +782,12 @@ Volksbank Mittelhessen</div>
     if (lower.includes('consent') || lower.includes('fida')) {
       return {
         content: `<div class="space-y-2">
-          <p class="font-semibold">Offene FIDA-Consents</p>
+          <p class="font-semibold">${tx('Offene FIDA-Consents', 'Pending FIDA consents')}</p>
           <div class="space-y-1 text-[13px]">
-            <div class="flex items-center justify-between py-1 border-b border-slate-200"><span><strong>Peter Hoffmann</strong> — GmbH-Konten</span><span class="text-xs text-amber-600 font-semibold">ausstehend</span></div>
-            <div class="flex items-center justify-between py-1"><span><strong>Andrea Lang</strong> — Praxiskonto</span><span class="text-xs text-amber-600 font-semibold">ausstehend</span></div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-200"><span><strong>Peter Hoffmann</strong> — ${tx('GmbH-Konten', 'GmbH accounts')}</span><span class="text-xs text-amber-600 font-semibold">${tx('ausstehend', 'pending')}</span></div>
+            <div class="flex items-center justify-between py-1"><span><strong>Andrea Lang</strong> — ${tx('Praxiskonto', 'Practice account')}</span><span class="text-xs text-amber-600 font-semibold">${tx('ausstehend', 'pending')}</span></div>
           </div>
-          <p class="text-xs text-slate-500 mt-2">→ <em>Empfehlung: beim nächsten Besuch persönlich ansprechen.</em></p>
+          <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Empfehlung: beim nächsten Besuch persönlich ansprechen.', 'Recommendation: bring it up in person at the next visit.')}</em></p>
         </div>`,
       };
     }

@@ -267,6 +267,22 @@ const translationsOverview = {
   // ─── Stammdaten Overview (additional) ───
   'vertragsinformationen': { de: 'Vertragsinformationen', en: 'Contract Information' },
 
+  // ─── Stammdaten Overview fallback values ───
+  'stammVal.rangTop15': { de: 'Top 15%', en: 'Top 15%' },
+  'stammVal.kundenzufriedenheit': { de: '4,2 / 5,0', en: '4.2 / 5.0' },
+  'stammVal.bestandsentwicklung': { de: '+8,3% YoY', en: '+8.3% YoY' },
+  'stammVal.vertragsgroesse': { de: '1.850€', en: '€1,850' },
+  'stammVal.auszeichnung': { de: 'Silber Award 2025', en: 'Silver Award 2025' },
+  'stammVal.appNutzung': { de: '78% der Kunden', en: '78% of customers' },
+  'stammVal.onlineAbschluesse': { de: '12 YTD', en: '12 YTD' },
+  'stammVal.videoBeratungen': { de: '8 / Monat', en: '8 / month' },
+  'stammVal.emailResponse': { de: 'Ø 2,4h', en: 'Ø 2.4h' },
+  'stammVal.socialMedia': { de: 'LinkedIn aktiv', en: 'LinkedIn active' },
+
+  // ─── Overview / Kunden misc ───
+  'kundenkarte': { de: 'Kundenkarte', en: 'Customer Map' },
+  'kundeSuchen': { de: '{label} suchen...', en: 'Search {label}...' },
+
   // ─── UebersichtTab MiniKPI labels ───
   'abschluesse': { de: 'Abschlüsse', en: 'Closings' },
   'neugeschaeft': { de: 'Neugeschäft', en: 'New Business' },

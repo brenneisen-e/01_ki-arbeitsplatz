@@ -126,7 +126,7 @@ export default function WpHGComplianceTab({ kunde }) {
             </div>
             <h3 className="font-semibold text-slate-700 mb-1">{t('wphgDatenNichtVerfuegbar')}</h3>
             <p className="text-sm text-slate-400 max-w-md">
-              {t('wphgDatenFehlen', { name: kunde?.name || 'diesen Mandanten' })}
+              {t('wphgDatenFehlen', { name: kunde?.name || t('diesenMandanten') })}
             </p>
           </div>
         </Card>

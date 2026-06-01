@@ -304,7 +304,7 @@ export default function KundenTab() {
             type="text"
             value={filter}
             onChange={e => setFilter(e.target.value)}
-            placeholder={isVV ? t('mandantSuchen') : `${kundenLabel} suchen...`}
+            placeholder={isVV ? t('mandantSuchen') : t('kundeSuchen', { label: kundenLabel })}
             className="pl-9 pr-4 py-2 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 w-64"
           />
         </div>

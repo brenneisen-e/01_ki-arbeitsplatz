@@ -361,6 +361,108 @@ const translationsCommon = {
   'tpm.offer.chatbotTitel': { de: 'KI-Chatbot (Text)', en: 'AI chatbot (text)' },
   'tpm.offer.chatbotBeschr': { de: 'Schriftlicher Dialog im Online-Banking oder per WhatsApp Business. Kunde kann jederzeit pausieren, antworten wann es passt.', en: 'Written dialogue in online banking or via WhatsApp Business. The customer can pause at any time and reply whenever convenient.' },
   'tpm.offer.chatbotEignung': { de: 'Geeignet für Routine-Fragen, Dokumenten-Upload, asynchrone Vorbereitung.', en: 'Suitable for routine questions, document upload, asynchronous preparation.' },
+
+  // ─── TerminPrepModal — Immo objectives ───
+  'tpm.immo.ziel1': { de: 'Immobilienwunsch konkretisieren (Region, Objekttyp, Zeitpunkt).', en: 'Define the property plans (region, property type, timing).' },
+  'tpm.immo.ziel2': { de: 'Gemeinsames Finanzierungsmodell mit BSV-Einsatz und KfW-Förderung aufzeigen.', en: 'Present a joint financing model using the BSV and KfW funding.' },
+  'tpm.immo.ziel3': { de: 'Vertrauen durch transparente Beispielrechnung schaffen.', en: 'Build trust through a transparent sample calculation.' },
+  'tpm.immo.ziel4': { de: 'Folgetermin (Feinbedarf + Dokumenten-Check) innerhalb von 3 Wochen setzen.', en: 'Schedule a follow-up meeting (detailed needs + document check) within 3 weeks.' },
+
+  // ─── TerminPrepModal — Versicherung objectives ───
+  'tpm.vers.ziel1': { de: 'KFZ-Wechsel zur Zukunftsversicherung greifbar machen (160 €/J. Ersparnis).', en: 'Make the motor switch to Zukunftsversicherung tangible (€160/yr saving).' },
+  'tpm.vers.ziel2': { de: 'Haftpflicht ins Bündel überführen — Vorteil ohne Mehrkosten zeigen.', en: 'Move the liability cover into the bundle — show the benefit at no extra cost.' },
+  'tpm.vers.ziel3': { de: 'Offene Familien-Lücken (BU-Höhe, Hausrat, Unfall) anhand der Open-Finance-Daten priorisieren.', en: 'Prioritize open family gaps (occupational disability amount, home contents, accident) based on the Open Finance data.' },
+  'tpm.vers.ziel4': { de: 'Konkretes Bündel-Angebot inkl. Bestandskunden-Bonus innerhalb von 5 Tagen versenden.', en: 'Send a concrete bundle offer including the existing-customer bonus within 5 days.' },
+
+  // ─── TerminPrepModal — Immo conversation guide ───
+  'tpm.immo.lf1Titel': { de: 'Warm-up & Beziehung', en: 'Warm-up & relationship' },
+  'tpm.immo.lf1Text': { de: 'Kurzer Rückblick auf die letzte Chatbot-Interaktion zur Auslandsreisekrankenversicherung (geplante Familienreise nach Thailand). Aktiv zuhören, familiäre Situation aufgreifen (Kinder, neue Lebensphase).', en: 'Brief recap of the last chatbot interaction on travel health insurance (planned family trip to Thailand). Listen actively, pick up on the family situation (children, new stage of life).' },
+  'tpm.immo.lf2Titel': { de: 'Bedarfsanalyse', en: 'Needs analysis' },
+  'tpm.immo.lf2Text': { de: 'Was stellt sich Klaus konkret vor? Neubau oder Bestand? Region Gießen oder Umgebung? Zeitlicher Horizont? Welche Rolle spielt Sabine bei der Entscheidung?', en: 'What exactly does Klaus have in mind? New build or existing property? Gießen region or surrounding area? Time horizon? What role does Sabine play in the decision?' },
+  'tpm.immo.lf3Titel': { de: 'Signale spiegeln', en: 'Reflect the signals' },
+  'tpm.immo.lf3Text': { de: '„Drei Dinge passen bei Ihnen gerade zusammen": Commerzbank-Ratenkredit läuft aus, BSV wird zuteilungsreif, Newsletter-Interesse. Dem Kunden die KI-Erkennung als Mehrwert erlebbar machen.', en: '"Three things are coming together for you right now": the Commerzbank installment loan is expiring, the BSV is becoming ready for allocation, newsletter interest. Let the customer experience the AI detection as added value.' },
+  'tpm.immo.lf4Titel': { de: 'Zahlenbeispiel', en: 'Numerical example' },
+  'tpm.immo.lf4Text': { de: 'Exemplarisches Szenario: 250.000 € Darlehen, 10 Jahre fest, 1,5% Tilgung, BSV als Eigenkapital, KfW-Wohneigentumsprogramm 2026. Monatsrate dem Haushaltseinkommen gegenüberstellen.', en: 'Sample scenario: €250,000 loan, 10-year fixed rate, 1.5% repayment, BSV as equity, KfW home ownership program 2026. Compare the monthly installment with the household income.' },
+  'tpm.immo.lf5Titel': { de: 'Absicherung ansprechen', en: 'Address protection' },
+  'tpm.immo.lf5Text': { de: 'Hinweis: Für eine Baufinanzierung benötigen wir eine Risikolebensversicherung. Gelegenheit, das Versicherungsbündel (R+V) gleich mitzudenken.', en: 'Note: a mortgage requires term life insurance. An opportunity to consider the insurance bundle (R+V) right away.' },
+  'tpm.immo.lf6Titel': { de: 'Nächste Schritte', en: 'Next steps' },
+  'tpm.immo.lf6Text': { de: 'Unterlagenliste übergeben, Einwilligung zur Bonitätsauskunft, Termin für Detailgespräch in 3 Wochen.', en: 'Hand over the document checklist, consent for the credit report, schedule a detailed meeting in 3 weeks.' },
+
+  // ─── TerminPrepModal — Versicherung conversation guide ───
+  'tpm.vers.lf1Titel': { de: 'Warm-up & Beziehung', en: 'Warm-up & relationship' },
+  'tpm.vers.lf1Text': { de: 'Kurzer persönlicher Einstieg, Familie ansprechen (Sarah, Lina 7, Max 1). An die letzte Mail anknüpfen, kurz erläutern, was Open Finance konkret leistet.', en: 'Brief personal opening, mention the family (Sarah, Lina 7, Max 1). Reconnect to the last email, briefly explain what Open Finance actually delivers.' },
+  'tpm.vers.lf2Titel': { de: 'Open-Finance-Befund spiegeln', en: 'Reflect the Open Finance findings' },
+  'tpm.vers.lf2Text': { de: '„Mit Ihrer Einwilligung sehen wir Ihre Verträge bei HUK und dem Haftpflicht-Anbieter. Drei Punkte sind aufgefallen…“ — die drei Befunde nennen, ohne Bewertung.', en: '"With your consent we can see your contracts at HUK and the liability provider. Three points stood out…" — state the three findings without judgment.' },
+  'tpm.vers.lf3Titel': { de: 'Zahlenbeispiel KFZ', en: 'Numerical example motor' },
+  'tpm.vers.lf3Text': { de: 'Direktvergleich HUK 780 € vs. Zukunftsversicherung 620 € (gleiche Deckung, SF-12, 500 € SB). Differenz greifbar machen: 160 €/J. = ein Familien-Restaurantbesuch im Monat.', en: 'Direct comparison HUK €780 vs. Zukunftsversicherung €620 (same cover, SF-12, €500 deductible). Make the difference tangible: €160/yr = one family restaurant visit per month.' },
+  'tpm.vers.lf4Titel': { de: 'Bündel-Effekt Haftpflicht', en: 'Bundle effect liability' },
+  'tpm.vers.lf4Text': { de: 'Zeigen, dass die Haftpflicht im Bündel ohne Mehrkosten enthalten ist. Argument: Ein Ansprechpartner, ein Schadensprozess, kein Doppelpapier.', en: 'Show that the liability cover is included in the bundle at no extra cost. Argument: one point of contact, one claims process, no duplicate paperwork.' },
+  'tpm.vers.lf5Titel': { de: 'Familien-Absicherung', en: 'Family protection' },
+  'tpm.vers.lf5Text': { de: 'Auf die bekannten Lücken eingehen: BU-Anpassung (heute 1.800 €/Mon. — Bedarf 3.360 €), Hausrat (Vertrag auf 65 m² statt 145 m² EFH), Familien-Unfall. Priorität gemeinsam festlegen.', en: 'Address the known gaps: occupational disability adjustment (currently €1,800/mo. — requirement €3,360), home contents (contract for 65 m² instead of the 145 m² detached house), family accident. Set priorities together.' },
+  'tpm.vers.lf6Titel': { de: 'Entscheidung & Nächste Schritte', en: 'Decision & next steps' },
+  'tpm.vers.lf6Text': { de: 'Bündel-Angebot innerhalb 5 Tagen, Folgetermin (Detailgespräch BU + Hausrat) in 3 Wochen, Wechselformular HUK-KFZ direkt mitnehmen.', en: 'Bundle offer within 5 days, follow-up meeting (detailed discussion on occupational disability + home contents) in 3 weeks, take the HUK motor switch form along right away.' },
+
+  // ─── TerminPrepModal — generic conversation guide ───
+  'tpm.gen.lf1Titel': { de: 'Warm-up & Beziehung', en: 'Warm-up & relationship' },
+  'tpm.gen.lf1Text': { de: 'Persönliche Begrüßung, kurze familiäre/berufliche Aktualisierung, an letzten Kontakt anknüpfen.', en: 'Personal greeting, brief family/professional update, reconnect to the last contact.' },
+  'tpm.gen.lf2Titel': { de: 'Bedarfsanalyse', en: 'Needs analysis' },
+  'tpm.gen.lf2Text': { de: 'Ziele und Hintergrund zum Anlass „{titel}" klären — was treibt den Kunden gerade um?', en: 'Clarify the goals and background of the reason "{titel}" — what is currently on the customer\'s mind?' },
+  'tpm.gen.lf3Titel': { de: 'Status-quo spiegeln', en: 'Reflect the status quo' },
+  'tpm.gen.lf3Text': { de: 'Aktuelle Bestände und Open-Finance-Daten nutzen, um die heutige Situation transparent darzustellen.', en: 'Use the current portfolio and Open Finance data to present the current situation transparently.' },
+  'tpm.gen.lf4Titel': { de: 'Lösungsoptionen', en: 'Solution options' },
+  'tpm.gen.lf4Text': { de: 'Zwei bis drei konkrete Vorschläge aus dem Bestand ableiten, Vor- und Nachteile gegenüberstellen.', en: 'Derive two or three concrete proposals from the portfolio, weigh the pros and cons.' },
+  'tpm.gen.lf5Titel': { de: 'Entscheidung & Commitment', en: 'Decision & commitment' },
+  'tpm.gen.lf5Text': { de: 'Konkreten nächsten Schritt vereinbaren und schriftlich festhalten.', en: 'Agree on a concrete next step and record it in writing.' },
+  'tpm.gen.lf6Titel': { de: 'Nächste Schritte', en: 'Next steps' },
+  'tpm.gen.lf6Text': { de: 'Folgetermin terminieren, Unterlagen übergeben, Notiz in der Kundenakte.', en: 'Schedule a follow-up meeting, hand over documents, note in the customer file.' },
+
+  // ─── TerminPrepModal — Immo possible questions ───
+  'tpm.immo.q1': { de: 'Wie viel Eigenkapital brauchen wir mindestens für 350 k Kaufpreis?', en: 'How much equity do we need at minimum for a €350k purchase price?' },
+  'tpm.immo.a1': { de: 'Faustregel: 20 % Kaufpreis + Nebenkosten (~10 %). Mit BSV (30 k) + VR-Sparkonto (15 k) decken Sie etwa 13 % ab — gemeinsam mit der KfW-Förderung ist das machbar.', en: 'Rule of thumb: 20% of the purchase price + incidental costs (~10%). With the BSV (€30k) + VR savings account (€15k) you cover about 13% — together with the KfW funding this is feasible.' },
+  'tpm.immo.q2': { de: 'Was passiert mit dem Bausparvertrag bei der Zuteilung?', en: 'What happens to the building-savings contract upon allocation?' },
+  'tpm.immo.a2': { de: 'Sie haben drei Optionen: Auszahlung als Eigenkapital, Sondertilgung einer bestehenden Finanzierung, oder Fortsetzung als Guthaben.', en: 'You have three options: pay-out as equity, special repayment of an existing loan, or continuation as a credit balance.' },
+  'tpm.immo.q3': { de: 'Welche Zinsbindung ist gerade sinnvoll?', en: 'Which fixed-interest period makes sense right now?' },
+  'tpm.immo.a3': { de: 'Bei aktuellem Zinsniveau und Ihrer Lebenssituation (junge Familie) tendieren wir zu 15 oder 20 Jahren — Planungssicherheit hat Vorrang vor minimaler Zinsoptimierung.', en: 'At the current interest level and given your life situation (young family) we lean towards 15 or 20 years — planning security takes priority over marginal interest optimization.' },
+  'tpm.immo.q4': { de: 'Brauchen wir wirklich eine Risikolebensversicherung?', en: 'Do we really need term life insurance?' },
+  'tpm.immo.a4': { de: 'Ja, die Bank verlangt sie für die Baufinanzierung. Im Bündel mit Ihrer KFZ und Haftpflicht oft günstiger als separat.', en: 'Yes, the bank requires it for the mortgage. Bundled with your motor and liability cover it is often cheaper than separately.' },
+  'tpm.immo.q5': { de: 'Wie schnell könnte das gehen?', en: 'How quickly could this happen?' },
+  'tpm.immo.a5': { de: 'Bei vollständigen Unterlagen ca. 4–6 Wochen bis zum Darlehensvertrag.', en: 'With complete documents, around 4–6 weeks to the loan agreement.' },
+
+  // ─── TerminPrepModal — Versicherung possible questions ───
+  'tpm.vers.q1': { de: 'Heißt das, ihr habt jetzt vollen Einblick in alle meine Versicherungen?', en: 'Does that mean you now have full insight into all my insurance policies?' },
+  'tpm.vers.a1': { de: 'Nur in die Verträge, für die Sie explizit eingewilligt haben. Sie können den Zugriff jederzeit im Kundenportal entziehen.', en: 'Only into the contracts you have explicitly consented to. You can revoke access at any time in the customer portal.' },
+  'tpm.vers.q2': { de: 'Ist die Deckung im Partner-Tarif wirklich identisch zur HUK?', en: 'Is the cover in the partner tariff really identical to HUK?' },
+  'tpm.vers.a2': { de: 'Ja — gleiche SB (500 €), SF-12, dieselben Bausteine (Vollkasko, Schutzbrief, GAP). Wir vergleichen die Bedingungen Zeile für Zeile vor Wechsel.', en: 'Yes — same deductible (€500), SF-12, the same modules (comprehensive cover, breakdown protection, GAP). We compare the terms line by line before switching.' },
+  'tpm.vers.q3': { de: 'Was passiert, wenn ich die HUK kündige und die neue Police nicht zustande kommt?', en: 'What happens if I cancel HUK and the new policy does not materialize?' },
+  'tpm.vers.a3': { de: 'Wir kündigen erst, wenn die neue Police aktiviert ist — keine Deckungslücke, kein Risiko.', en: 'We only cancel once the new policy is active — no coverage gap, no risk.' },
+  'tpm.vers.q4': { de: 'Lohnt sich der Wechsel der Haftpflicht überhaupt, wenn er mich nicht spart?', en: 'Is switching the liability cover even worth it if it does not save me money?' },
+  'tpm.vers.a4': { de: 'Der Vorteil ist nicht der Preis, sondern der Service: Ein Ansprechpartner, ein Schadensprozess, gemeinsamer Bestandsbonus für die ganze Familie.', en: 'The benefit is not the price but the service: one point of contact, one claims process, a joint loyalty bonus for the whole family.' },
+  'tpm.vers.q5': { de: 'Reden wir über Bündel oder über meine BU?', en: 'Are we talking about the bundle or about my occupational disability cover?' },
+  'tpm.vers.a5': { de: 'Beides — der Wechsel ist heute der Anlass, die offenen Familienthemen (BU, Hausrat, Unfall) sind aber das größere Thema. Die nehmen wir Schritt für Schritt mit.', en: 'Both — the switch is today\'s occasion, but the open family topics (occupational disability, home contents, accident) are the bigger theme. We address those step by step.' },
+
+  // ─── TerminPrepModal — Versicherung to-dos ───
+  'tpm.vers.todoVor1': { de: 'Bedingungen HUK KFZ-Vollkasko vs. Zukunftsversicherung Tarif Komfort vergleichen (Zeile für Zeile).', en: 'Compare the terms of HUK comprehensive motor vs. Zukunftsversicherung Komfort tariff (line by line).' },
+  'tpm.vers.todoVor2': { de: 'Kalkulation Bündel-Effekt KFZ + Haftpflicht + Hausrat ausdrucken.', en: 'Print the calculation of the bundle effect for motor + liability + home contents.' },
+  'tpm.vers.todoVor3': { de: 'BU-Bedarfsrechnung mit aktuellem Nettoeinkommen 4.200 €/Mon. aktualisieren.', en: 'Update the occupational disability needs calculation with the current net income of €4,200/mo.' },
+  'tpm.vers.todoVor4': { de: 'Familien-Unfall-Tarif (Familie 4 Personen) als Sofort-Angebot vorbereiten.', en: 'Prepare the family accident tariff (family of 4) as an instant offer.' },
+  'tpm.vers.todoVor5': { de: 'Wechsel-Vollmacht HUK ausdrucken, damit Kündigung sofort übergeben werden kann.', en: 'Print the HUK switch authorization so the cancellation can be handed over immediately.' },
+  'tpm.vers.todoNach1': { de: 'Gesprächsnotiz inkl. Bestands-Befund (KFZ/Haftpflicht/Familie) in der Akte ablegen.', en: 'File the meeting note including the portfolio findings (motor/liability/family) in the records.' },
+  'tpm.vers.todoNach2': { de: 'Bündel-Angebot innerhalb von 5 Tagen versenden.', en: 'Send the bundle offer within 5 days.' },
+  'tpm.vers.todoNach3': { de: 'Wechsel HUK-KFZ initiieren, Bestätigung der neuen Police abwarten, dann Kündigung absenden.', en: 'Initiate the HUK motor switch, await confirmation of the new policy, then submit the cancellation.' },
+  'tpm.vers.todoNach4': { de: 'Folgetermin BU-Anpassung + Hausrat-Update in 3 Wochen einplanen.', en: 'Schedule a follow-up meeting on occupational disability adjustment + home contents update in 3 weeks.' },
+  'tpm.vers.todoNach5': { de: 'Lead-Status im Pipeline-Board auf „Angebot" setzen.', en: 'Set the lead status on the pipeline board to "Offer".' },
+
+  // ─── TerminPrepModal — Immo to-dos ───
+  'tpm.immo.todoVor1': { de: 'Aktuelle KfW-Wohneigentum-Förderbedingungen recherchieren (Stand 04/2026).', en: 'Research the current KfW home ownership funding conditions (as of 04/2026).' },
+  'tpm.immo.todoVor2': { de: 'Exemplarische Finanzierungsrechnung (250.000 €, 10/20 J., mit + ohne BSV) vorbereiten.', en: 'Prepare a sample financing calculation (€250,000, 10/20 yrs, with + without BSV).' },
+  'tpm.immo.todoVor3': { de: 'Schwäbisch-Hall-Zuteilungsunterlagen abrufen (Vertrag SH-BSV-332).', en: 'Retrieve the Schwäbisch Hall allocation documents (contract SH-BSV-332).' },
+  'tpm.immo.todoVor4': { de: 'Kurze Marktübersicht „Immobilien Gießen 2026" drucken.', en: 'Print a short market overview "Real Estate Gießen 2026".' },
+  'tpm.immo.todoVor5': { de: 'Einladung kalendarisch bestätigen + Tagesordnung per Mail senden.', en: 'Confirm the invitation in the calendar + send the agenda by email.' },
+  'tpm.immo.todoNach1': { de: 'Gesprächsnotiz in der Kundenakte hinterlegen (strukturiert nach Leitfaden).', en: 'Record the meeting note in the customer file (structured along the guide).' },
+  'tpm.immo.todoNach2': { de: 'Individuelles Finanzierungsangebot innerhalb von 48 h versenden.', en: 'Send the individual financing offer within 48 hours.' },
+  'tpm.immo.todoNach3': { de: 'Folgetermin in 3 Wochen fixieren (Dokumenten-Check + Detailangebot).', en: 'Set the follow-up meeting in 3 weeks (document check + detailed offer).' },
+  'tpm.immo.todoNach4': { de: 'Risikolebensversicherungs-Vergleich anstoßen (R+V Bündelangebot).', en: 'Initiate a term life insurance comparison (R+V bundle offer).' },
+  'tpm.immo.todoNach5': { de: 'Lead-Status im Pipeline-Board auf „Angebot" setzen.', en: 'Set the lead status on the pipeline board to "Offer".' },
 };
 
 export default translationsCommon;

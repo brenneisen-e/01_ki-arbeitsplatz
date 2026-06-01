@@ -188,23 +188,23 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
 
             {/* Externe Verbindungen (Open Finance / FIDA) */}
             <Section color="sky">
-              <SectionTitle icon={Link2} label="Externe Verbindungen (Open Finance)" color="sky" />
+              <SectionTitle icon={Link2} label={t('tpm.sec.externeVerbindungen')} color="sky" />
             {(() => {
               const fremd = kunde?.fremdProdukte || [];
               if (fremd.length === 0) {
-                return <p className="text-xs text-slate-500 italic">Keine externen Verbindungen erfasst.</p>;
+                return <p className="text-xs text-slate-500 italic">{t('tpm.ext.keine')}</p>;
               }
               // Pro Institut zusammenfassen (analog OpenFinanceTab) — Volumen
               // pro Institut + Liste der Produktkategorien.
               const byInst = new Map();
               const cat = (p) => {
-                const t = p.typ || '';
-                if (/depot|fonds/.test(t)) return 'Depot';
-                if (/tagesgeld|festgeld|sparkonto|bauspar/.test(t)) return 'Spar/Geldmarkt';
-                if (/kredit|baufinanzierung|kffw|kfw/.test(t)) return 'Kredit';
-                if (/kfz|haftpflicht|hausrat|rlv|bu|du|unfall|rechtsschutz|wohngeb|lebensvers|pkv|vers/.test(t)) return 'Versicherung';
-                if (/giro|konto/.test(t)) return 'Konto';
-                return 'Sonstige';
+                const typ = p.typ || '';
+                if (/depot|fonds/.test(typ)) return t('tpm.cat.depot');
+                if (/tagesgeld|festgeld|sparkonto|bauspar/.test(typ)) return t('tpm.cat.sparGeldmarkt');
+                if (/kredit|baufinanzierung|kffw|kfw/.test(typ)) return t('tpm.cat.kredit');
+                if (/kfz|haftpflicht|hausrat|rlv|bu|du|unfall|rechtsschutz|wohngeb|lebensvers|pkv|vers/.test(typ)) return t('tpm.cat.versicherung');
+                if (/giro|konto/.test(typ)) return t('tpm.cat.konto');
+                return t('tpm.cat.sonstige');
               };
               fremd.forEach(p => {
                 const inst = p.institut || '–';
@@ -228,7 +228,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium text-slate-700 truncate">{row.institut}</div>
                         <div className="text-[11px] text-slate-500 truncate">
-                          {row.consent ? (Array.from(row.kategorien).join(' · ') || '—') : 'Details gesperrt'}
+                          {row.consent ? (Array.from(row.kategorien).join(' · ') || '—') : t('tpm.ext.detailsGesperrt')}
                         </div>
                       </div>
                       <div className="text-right shrink-0">
@@ -236,7 +236,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                           {row.consent ? (row.vol > 0 ? formatEur(row.vol) : '—') : '•••'}
                         </div>
                         <div className={`text-[10px] font-medium ${row.consent ? 'text-emerald-600' : 'text-amber-600'}`}>
-                          {row.consent ? 'Consent OK' : 'Consent fehlt'}
+                          {row.consent ? t('tpm.ext.consentOk') : t('tpm.ext.consentFehlt')}
                         </div>
                       </div>
                     </div>
@@ -249,12 +249,12 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* Ziele */}
             {isKlausImmo && (
               <Section color="amber">
-                <SectionTitle icon={Target} label="Gesprächsziele" color="amber" />
+                <SectionTitle icon={Target} label={t('tpm.sec.gespraechsziele')} color="amber" />
                 <ul className="list-disc list-inside text-sm text-slate-700 space-y-1 pt-2 pl-1">
-                  <li>Immobilienwunsch konkretisieren (Region, Objekttyp, Zeitpunkt).</li>
-                  <li>Gemeinsames Finanzierungsmodell mit BSV-Einsatz und KfW-Förderung aufzeigen.</li>
-                  <li>Vertrauen durch transparente Beispielrechnung schaffen.</li>
-                  <li>Folgetermin (Feinbedarf + Dokumenten-Check) innerhalb von 3 Wochen setzen.</li>
+                  <li>{t('tpm.immo.ziel1')}</li>
+                  <li>{t('tpm.immo.ziel2')}</li>
+                  <li>{t('tpm.immo.ziel3')}</li>
+                  <li>{t('tpm.immo.ziel4')}</li>
                 </ul>
               </Section>
             )}
@@ -262,12 +262,12 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* Ziele — Versicherung-Klaus */}
             {isKlausVersicherung && (
               <Section color="amber">
-                <SectionTitle icon={Target} label="Gesprächsziele" color="amber" />
+                <SectionTitle icon={Target} label={t('tpm.sec.gespraechsziele')} color="amber" />
                 <ul className="list-disc list-inside text-sm text-slate-700 space-y-1 pt-2 pl-1">
-                  <li>KFZ-Wechsel zur Zukunftsversicherung greifbar machen (160 €/J. Ersparnis).</li>
-                  <li>Haftpflicht ins Bündel überführen — Vorteil ohne Mehrkosten zeigen.</li>
-                  <li>Offene Familien-Lücken (BU-Höhe, Hausrat, Unfall) anhand der Open-Finance-Daten priorisieren.</li>
-                  <li>Konkretes Bündel-Angebot inkl. Bestandskunden-Bonus innerhalb von 5 Tagen versenden.</li>
+                  <li>{t('tpm.vers.ziel1')}</li>
+                  <li>{t('tpm.vers.ziel2')}</li>
+                  <li>{t('tpm.vers.ziel3')}</li>
+                  <li>{t('tpm.vers.ziel4')}</li>
                 </ul>
               </Section>
             )}
@@ -277,38 +277,14 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                 generischen Phasen-Leitfaden weiter unten. */}
             {isKlausImmo && (
             <Section color="violet">
-              <SectionTitle icon={MessageSquare} label="Gesprächsleitfaden" color="violet" />
+              <SectionTitle icon={MessageSquare} label={t('tpm.sec.gespraechsleitfaden')} color="violet" />
               <div className="space-y-2 pt-2">
-              <LeitfadenStep
-                nr={1}
-                title="Warm-up & Beziehung"
-                text="Kurzer Rückblick auf die letzte Chatbot-Interaktion zur Auslandsreisekrankenversicherung (geplante Familienreise nach Thailand). Aktiv zuhören, familiäre Situation aufgreifen (Kinder, neue Lebensphase)."
-              />
-              <LeitfadenStep
-                nr={2}
-                title="Bedarfsanalyse"
-                text="Was stellt sich Klaus konkret vor? Neubau oder Bestand? Region Gießen oder Umgebung? Zeitlicher Horizont? Welche Rolle spielt Sabine bei der Entscheidung?"
-              />
-              <LeitfadenStep
-                nr={3}
-                title="Signale spiegeln"
-                text={'„Drei Dinge passen bei Ihnen gerade zusammen": Commerzbank-Ratenkredit läuft aus, BSV wird zuteilungsreif, Newsletter-Interesse. Dem Kunden die KI-Erkennung als Mehrwert erlebbar machen.'}
-              />
-              <LeitfadenStep
-                nr={4}
-                title="Zahlenbeispiel"
-                text="Exemplarisches Szenario: 250.000 € Darlehen, 10 Jahre fest, 1,5% Tilgung, BSV als Eigenkapital, KfW-Wohneigentumsprogramm 2026. Monatsrate dem Haushaltseinkommen gegenüberstellen."
-              />
-              <LeitfadenStep
-                nr={5}
-                title="Absicherung ansprechen"
-                text="Hinweis: Für eine Baufinanzierung benötigen wir eine Risikolebensversicherung. Gelegenheit, das Versicherungsbündel (R+V) gleich mitzudenken."
-              />
-              <LeitfadenStep
-                nr={6}
-                title="Nächste Schritte"
-                text="Unterlagenliste übergeben, Einwilligung zur Bonitätsauskunft, Termin für Detailgespräch in 3 Wochen."
-              />
+              <LeitfadenStep nr={1} title={t('tpm.immo.lf1Titel')} text={t('tpm.immo.lf1Text')} />
+              <LeitfadenStep nr={2} title={t('tpm.immo.lf2Titel')} text={t('tpm.immo.lf2Text')} />
+              <LeitfadenStep nr={3} title={t('tpm.immo.lf3Titel')} text={t('tpm.immo.lf3Text')} />
+              <LeitfadenStep nr={4} title={t('tpm.immo.lf4Titel')} text={t('tpm.immo.lf4Text')} />
+              <LeitfadenStep nr={5} title={t('tpm.immo.lf5Titel')} text={t('tpm.immo.lf5Text')} />
+              <LeitfadenStep nr={6} title={t('tpm.immo.lf6Titel')} text={t('tpm.immo.lf6Text')} />
               </div>
             </Section>
             )}
@@ -316,14 +292,14 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* Versicherungs-Klaus-Showcase: ausformulierter Leitfaden */}
             {isKlausVersicherung && (
               <Section color="violet">
-                <SectionTitle icon={MessageSquare} label="Gesprächsleitfaden" color="violet" />
+                <SectionTitle icon={MessageSquare} label={t('tpm.sec.gespraechsleitfaden')} color="violet" />
                 <div className="space-y-2 pt-2">
-                  <LeitfadenStep nr={1} title="Warm-up & Beziehung" text="Kurzer persönlicher Einstieg, Familie ansprechen (Sarah, Lina 7, Max 1). An die letzte Mail anknüpfen, kurz erläutern, was Open Finance konkret leistet." />
-                  <LeitfadenStep nr={2} title="Open-Finance-Befund spiegeln" text={'„Mit Ihrer Einwilligung sehen wir Ihre Verträge bei HUK und dem Haftpflicht-Anbieter. Drei Punkte sind aufgefallen…“ — die drei Befunde nennen, ohne Bewertung.'} />
-                  <LeitfadenStep nr={3} title="Zahlenbeispiel KFZ" text="Direktvergleich HUK 780 € vs. Zukunftsversicherung 620 € (gleiche Deckung, SF-12, 500 € SB). Differenz greifbar machen: 160 €/J. = ein Familien-Restaurantbesuch im Monat." />
-                  <LeitfadenStep nr={4} title="Bündel-Effekt Haftpflicht" text="Zeigen, dass die Haftpflicht im Bündel ohne Mehrkosten enthalten ist. Argument: Ein Ansprechpartner, ein Schadensprozess, kein Doppelpapier." />
-                  <LeitfadenStep nr={5} title="Familien-Absicherung" text="Auf die bekannten Lücken eingehen: BU-Anpassung (heute 1.800 €/Mon. — Bedarf 3.360 €), Hausrat (Vertrag auf 65 m² statt 145 m² EFH), Familien-Unfall. Priorität gemeinsam festlegen." />
-                  <LeitfadenStep nr={6} title="Entscheidung & Nächste Schritte" text="Bündel-Angebot innerhalb 5 Tagen, Folgetermin (Detailgespräch BU + Hausrat) in 3 Wochen, Wechselformular HUK-KFZ direkt mitnehmen." />
+                  <LeitfadenStep nr={1} title={t('tpm.vers.lf1Titel')} text={t('tpm.vers.lf1Text')} />
+                  <LeitfadenStep nr={2} title={t('tpm.vers.lf2Titel')} text={t('tpm.vers.lf2Text')} />
+                  <LeitfadenStep nr={3} title={t('tpm.vers.lf3Titel')} text={t('tpm.vers.lf3Text')} />
+                  <LeitfadenStep nr={4} title={t('tpm.vers.lf4Titel')} text={t('tpm.vers.lf4Text')} />
+                  <LeitfadenStep nr={5} title={t('tpm.vers.lf5Titel')} text={t('tpm.vers.lf5Text')} />
+                  <LeitfadenStep nr={6} title={t('tpm.vers.lf6Titel')} text={t('tpm.vers.lf6Text')} />
                 </div>
               </Section>
             )}
@@ -331,14 +307,14 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* Generischer Phasen-Leitfaden für alle anderen Termine */}
             {!isKlausImmo && !isKlausVersicherung && (
               <Section color="violet">
-                <SectionTitle icon={MessageSquare} label="Gesprächsleitfaden" color="violet" />
+                <SectionTitle icon={MessageSquare} label={t('tpm.sec.gespraechsleitfaden')} color="violet" />
                 <div className="space-y-2 pt-2">
-                  <LeitfadenStep nr={1} title="Warm-up & Beziehung" text="Persönliche Begrüßung, kurze familiäre/berufliche Aktualisierung, an letzten Kontakt anknüpfen." />
-                  <LeitfadenStep nr={2} title="Bedarfsanalyse" text={`Ziele und Hintergrund zum Anlass „${terminTitel}" klären — was treibt den Kunden gerade um?`} />
-                  <LeitfadenStep nr={3} title="Status-quo spiegeln" text="Aktuelle Bestände und Open-Finance-Daten nutzen, um die heutige Situation transparent darzustellen." />
-                  <LeitfadenStep nr={4} title="Lösungsoptionen" text="Zwei bis drei konkrete Vorschläge aus dem Bestand ableiten, Vor- und Nachteile gegenüberstellen." />
-                  <LeitfadenStep nr={5} title="Entscheidung & Commitment" text="Konkreten nächsten Schritt vereinbaren und schriftlich festhalten." />
-                  <LeitfadenStep nr={6} title="Nächste Schritte" text="Folgetermin terminieren, Unterlagen übergeben, Notiz in der Kundenakte." />
+                  <LeitfadenStep nr={1} title={t('tpm.gen.lf1Titel')} text={t('tpm.gen.lf1Text')} />
+                  <LeitfadenStep nr={2} title={t('tpm.gen.lf2Titel')} text={t('tpm.gen.lf2Text', { titel: terminTitel })} />
+                  <LeitfadenStep nr={3} title={t('tpm.gen.lf3Titel')} text={t('tpm.gen.lf3Text')} />
+                  <LeitfadenStep nr={4} title={t('tpm.gen.lf4Titel')} text={t('tpm.gen.lf4Text')} />
+                  <LeitfadenStep nr={5} title={t('tpm.gen.lf5Titel')} text={t('tpm.gen.lf5Text')} />
+                  <LeitfadenStep nr={6} title={t('tpm.gen.lf6Titel')} text={t('tpm.gen.lf6Text')} />
                 </div>
               </Section>
             )}
@@ -346,14 +322,14 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* Mögliche Fragen des Kunden */}
             {isKlausImmo && (
             <Section color="rose">
-              <SectionTitle icon={HelpCircle} label="Mögliche Fragen des Kunden" color="rose" />
+              <SectionTitle icon={HelpCircle} label={t('tpm.sec.moeglicheFragen')} color="rose" />
               <ul className="space-y-1.5 pt-2">
               {[
-                { q: 'Wie viel Eigenkapital brauchen wir mindestens für 350 k Kaufpreis?', a: 'Faustregel: 20 % Kaufpreis + Nebenkosten (~10 %). Mit BSV (30 k) + VR-Sparkonto (15 k) decken Sie etwa 13 % ab — gemeinsam mit der KfW-Förderung ist das machbar.' },
-                { q: 'Was passiert mit dem Bausparvertrag bei der Zuteilung?', a: 'Sie haben drei Optionen: Auszahlung als Eigenkapital, Sondertilgung einer bestehenden Finanzierung, oder Fortsetzung als Guthaben.' },
-                { q: 'Welche Zinsbindung ist gerade sinnvoll?', a: 'Bei aktuellem Zinsniveau und Ihrer Lebenssituation (junge Familie) tendieren wir zu 15 oder 20 Jahren — Planungssicherheit hat Vorrang vor minimaler Zinsoptimierung.' },
-                { q: 'Brauchen wir wirklich eine Risikolebensversicherung?', a: 'Ja, die Bank verlangt sie für die Baufinanzierung. Im Bündel mit Ihrer KFZ und Haftpflicht oft günstiger als separat.' },
-                { q: 'Wie schnell könnte das gehen?', a: 'Bei vollständigen Unterlagen ca. 4–6 Wochen bis zum Darlehensvertrag.' },
+                { q: t('tpm.immo.q1'), a: t('tpm.immo.a1') },
+                { q: t('tpm.immo.q2'), a: t('tpm.immo.a2') },
+                { q: t('tpm.immo.q3'), a: t('tpm.immo.a3') },
+                { q: t('tpm.immo.q4'), a: t('tpm.immo.a4') },
+                { q: t('tpm.immo.q5'), a: t('tpm.immo.a5') },
               ].map((item, i) => (
                 <li key={i} className="rounded-lg border border-rose-200 bg-white px-3 py-2">
                   <div className="text-sm font-medium text-slate-700 flex items-start gap-2">
@@ -370,14 +346,14 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* Mögliche Fragen — Versicherung-Klaus */}
             {isKlausVersicherung && (
               <Section color="rose">
-                <SectionTitle icon={HelpCircle} label="Mögliche Fragen des Kunden" color="rose" />
+                <SectionTitle icon={HelpCircle} label={t('tpm.sec.moeglicheFragen')} color="rose" />
                 <ul className="space-y-1.5 pt-2">
                   {[
-                    { q: 'Heißt das, ihr habt jetzt vollen Einblick in alle meine Versicherungen?', a: 'Nur in die Verträge, für die Sie explizit eingewilligt haben. Sie können den Zugriff jederzeit im Kundenportal entziehen.' },
-                    { q: 'Ist die Deckung im Partner-Tarif wirklich identisch zur HUK?', a: 'Ja — gleiche SB (500 €), SF-12, dieselben Bausteine (Vollkasko, Schutzbrief, GAP). Wir vergleichen die Bedingungen Zeile für Zeile vor Wechsel.' },
-                    { q: 'Was passiert, wenn ich die HUK kündige und die neue Police nicht zustande kommt?', a: 'Wir kündigen erst, wenn die neue Police aktiviert ist — keine Deckungslücke, kein Risiko.' },
-                    { q: 'Lohnt sich der Wechsel der Haftpflicht überhaupt, wenn er mich nicht spart?', a: 'Der Vorteil ist nicht der Preis, sondern der Service: Ein Ansprechpartner, ein Schadensprozess, gemeinsamer Bestandsbonus für die ganze Familie.' },
-                    { q: 'Reden wir über Bündel oder über meine BU?', a: 'Beides — der Wechsel ist heute der Anlass, die offenen Familienthemen (BU, Hausrat, Unfall) sind aber das größere Thema. Die nehmen wir Schritt für Schritt mit.' },
+                    { q: t('tpm.vers.q1'), a: t('tpm.vers.a1') },
+                    { q: t('tpm.vers.q2'), a: t('tpm.vers.a2') },
+                    { q: t('tpm.vers.q3'), a: t('tpm.vers.a3') },
+                    { q: t('tpm.vers.q4'), a: t('tpm.vers.a4') },
+                    { q: t('tpm.vers.q5'), a: t('tpm.vers.a5') },
                   ].map((item, i) => (
                     <li key={i} className="rounded-lg border border-rose-200 bg-white px-3 py-2">
                       <div className="text-sm font-medium text-slate-700 flex items-start gap-2">
@@ -394,15 +370,15 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* To-Dos VOR / NACH — Versicherung-Klaus */}
             {isKlausVersicherung && (
               <Section color="sky">
-                <SectionTitle icon={CheckSquare} label="To-Dos VOR dem Termin" color="sky" />
+                <SectionTitle icon={CheckSquare} label={t('tpm.sec.todosVor')} color="sky" />
                 <div className="pt-2">
                   <TodoList
                     items={[
-                      'Bedingungen HUK KFZ-Vollkasko vs. Zukunftsversicherung Tarif Komfort vergleichen (Zeile für Zeile).',
-                      'Kalkulation Bündel-Effekt KFZ + Haftpflicht + Hausrat ausdrucken.',
-                      'BU-Bedarfsrechnung mit aktuellem Nettoeinkommen 4.200 €/Mon. aktualisieren.',
-                      'Familien-Unfall-Tarif (Familie 4 Personen) als Sofort-Angebot vorbereiten.',
-                      'Wechsel-Vollmacht HUK ausdrucken, damit Kündigung sofort übergeben werden kann.',
+                      t('tpm.vers.todoVor1'),
+                      t('tpm.vers.todoVor2'),
+                      t('tpm.vers.todoVor3'),
+                      t('tpm.vers.todoVor4'),
+                      t('tpm.vers.todoVor5'),
                     ]}
                   />
                 </div>
@@ -410,15 +386,15 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             )}
             {isKlausVersicherung && (
               <Section color="emerald">
-                <SectionTitle icon={ListChecks} label="To-Dos NACH dem Termin" color="emerald" />
+                <SectionTitle icon={ListChecks} label={t('tpm.sec.todosNach')} color="emerald" />
                 <div className="pt-2">
                   <TodoList
                     items={[
-                      'Gesprächsnotiz inkl. Bestands-Befund (KFZ/Haftpflicht/Familie) in der Akte ablegen.',
-                      'Bündel-Angebot innerhalb von 5 Tagen versenden.',
-                      'Wechsel HUK-KFZ initiieren, Bestätigung der neuen Police abwarten, dann Kündigung absenden.',
-                      'Folgetermin BU-Anpassung + Hausrat-Update in 3 Wochen einplanen.',
-                      'Lead-Status im Pipeline-Board auf „Angebot" setzen.',
+                      t('tpm.vers.todoNach1'),
+                      t('tpm.vers.todoNach2'),
+                      t('tpm.vers.todoNach3'),
+                      t('tpm.vers.todoNach4'),
+                      t('tpm.vers.todoNach5'),
                     ]}
                   />
                 </div>
@@ -428,15 +404,15 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             {/* To-Dos vor + nach dem Termin (nur Klaus-Demo, weil sehr spezifisch) */}
             {isKlausImmo && (
               <Section color="sky">
-                <SectionTitle icon={CheckSquare} label="To-Dos VOR dem Termin" color="sky" />
+                <SectionTitle icon={CheckSquare} label={t('tpm.sec.todosVor')} color="sky" />
                 <div className="pt-2">
                   <TodoList
                     items={[
-                      'Aktuelle KfW-Wohneigentum-Förderbedingungen recherchieren (Stand 04/2026).',
-                      'Exemplarische Finanzierungsrechnung (250.000 €, 10/20 J., mit + ohne BSV) vorbereiten.',
-                      'Schwäbisch-Hall-Zuteilungsunterlagen abrufen (Vertrag SH-BSV-332).',
-                      'Kurze Marktübersicht „Immobilien Gießen 2026" drucken.',
-                      'Einladung kalendarisch bestätigen + Tagesordnung per Mail senden.',
+                      t('tpm.immo.todoVor1'),
+                      t('tpm.immo.todoVor2'),
+                      t('tpm.immo.todoVor3'),
+                      t('tpm.immo.todoVor4'),
+                      t('tpm.immo.todoVor5'),
                     ]}
                   />
                 </div>
@@ -444,15 +420,15 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             )}
             {isKlausImmo && (
               <Section color="emerald">
-                <SectionTitle icon={ListChecks} label="To-Dos NACH dem Termin" color="emerald" />
+                <SectionTitle icon={ListChecks} label={t('tpm.sec.todosNach')} color="emerald" />
                 <div className="pt-2">
                   <TodoList
                     items={[
-                      'Gesprächsnotiz in der Kunden­akte hinterlegen (strukturiert nach Leitfaden).',
-                      'Individuelles Finanzierungsangebot innerhalb von 48 h versenden.',
-                      'Folgetermin in 3 Wochen fixieren (Dokumenten-Check + Detailangebot).',
-                      'Risikolebensversicherungs-Vergleich anstoßen (R+V Bündelangebot).',
-                      'Lead-Status im Pipeline-Board auf „Angebot" setzen.',
+                      t('tpm.immo.todoNach1'),
+                      t('tpm.immo.todoNach2'),
+                      t('tpm.immo.todoNach3'),
+                      t('tpm.immo.todoNach4'),
+                      t('tpm.immo.todoNach5'),
                     ]}
                   />
                 </div>
@@ -461,7 +437,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
 
             {/* Mitzubringen / Kontakt */}
             <Section color="slate">
-              <SectionTitle icon={User} label="Kontakt" color="slate" />
+              <SectionTitle icon={User} label={t('tpm.sec.kontakt')} color="slate" />
               <div className="grid grid-cols-2 gap-2 text-sm pt-2">
                 <div className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 bg-white">
                   <Phone size={14} className="text-slate-400" />
@@ -482,7 +458,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             onClick={onClose}
             className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors"
           >
-            Schließen
+            {t('schliessen')}
           </button>
           {kunde?.id && (
             <button
@@ -492,7 +468,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               }}
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition-colors"
             >
-              <ArrowRight size={14} /> Kunde öffnen
+              <ArrowRight size={14} /> {t('tpm.btn.kundeOeffnen')}
             </button>
           )}
           <button
@@ -500,13 +476,13 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm"
             style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)' }}
           >
-            <Bot size={14} /> KI-Gespräch anbieten
+            <Bot size={14} /> {t('tpm.btn.kiGespraechAnbieten')}
           </button>
           <button
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm"
             style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
           >
-            <FileText size={14} /> Vorbereitung drucken
+            <FileText size={14} /> {t('tpm.btn.vorbereitungDrucken')}
           </button>
         </div>
         {kiOfferOpen && (
@@ -602,21 +578,22 @@ const KI_OPTIONS = [
   {
     id: 'avatar',
     icon: Video,
-    titel: 'KI-Avatar (Video-Call)',
-    beschreibung: 'Foto-realistischer Avatar im Look der Bank, spricht mit dem Kunden im Live-Video. Empathisch, mit Lippensync, kann Unterlagen einblenden.',
-    eignung: 'Geeignet für klassische Beratungsgespräche, Wunschtermin außerhalb Bürozeiten, Vor-Klärung vor Filialtermin.',
+    titelKey: 'tpm.offer.avatarTitel',
+    beschreibungKey: 'tpm.offer.avatarBeschr',
+    eignungKey: 'tpm.offer.avatarEignung',
   },
   {
     id: 'chatbot',
     icon: MessageSquare,
-    titel: 'KI-Chatbot (Text)',
-    beschreibung: 'Schriftlicher Dialog im Online-Banking oder per WhatsApp Business. Kunde kann jederzeit pausieren, antworten wann es passt.',
-    eignung: 'Geeignet für Routine-Fragen, Dokumenten-Upload, asynchrone Vorbereitung.',
+    titelKey: 'tpm.offer.chatbotTitel',
+    beschreibungKey: 'tpm.offer.chatbotBeschr',
+    eignungKey: 'tpm.offer.chatbotEignung',
   },
 ];
 
 function KiOfferModal({ kunde, mode, setMode, eskalation, setEskalation, sent, onSend, onClose }) {
-  const vorname = kunde?.name?.split(' ')[0] || 'der Kunde';
+  const { t } = useTranslation();
+  const vorname = kunde?.name?.split(' ')[0] || t('tpm.offer.derKunde');
   return (
     <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-white rounded-2xl shadow-xl max-w-xl w-full max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
@@ -624,19 +601,19 @@ function KiOfferModal({ kunde, mode, setMode, eskalation, setEskalation, sent, o
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center"><Bot size={18} /></div>
             <div>
-              <h3 className="text-base font-semibold text-slate-900">KI-Gespräch anbieten</h3>
-              <p className="text-xs text-slate-500">{vorname} kann das Gespräch zunächst mit der KI führen — Sie schalten sich auf Wunsch dazu.</p>
+              <h3 className="text-base font-semibold text-slate-900">{t('tpm.offer.titel')}</h3>
+              <p className="text-xs text-slate-500">{t('tpm.offer.sub', { name: vorname })}</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500" aria-label="Schließen"><X size={18} /></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500" aria-label={t('schliessen')}><X size={18} /></button>
         </div>
 
         {sent ? (
           <div className="px-6 py-8 text-center space-y-3">
             <div className="w-12 h-12 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center"><Check size={24} /></div>
-            <h4 className="text-base font-semibold text-slate-900">Vorschlag versendet</h4>
-            <p className="text-sm text-slate-600">{vorname} erhält jetzt eine Einladung zum {mode === 'avatar' ? 'KI-Avatar-Termin' : 'KI-Chat'}{eskalation ? ' mit Option, Sie jederzeit dazuzuholen' : ''}.</p>
-            <button onClick={onClose} className="mt-2 text-sm px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Schließen</button>
+            <h4 className="text-base font-semibold text-slate-900">{t('tpm.offer.versendet')}</h4>
+            <p className="text-sm text-slate-600">{t('tpm.offer.versendetText', { name: vorname, modus: mode === 'avatar' ? t('tpm.offer.modusAvatar') : t('tpm.offer.modusChat'), eskalation: eskalation ? t('tpm.offer.eskalationSuffix') : '' })}</p>
+            <button onClick={onClose} className="mt-2 text-sm px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">{t('schliessen')}</button>
           </div>
         ) : (
           <>
@@ -655,9 +632,9 @@ function KiOfferModal({ kunde, mode, setMode, eskalation, setEskalation, sent, o
                       <Icon size={18} />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-slate-900">{opt.titel}</div>
-                      <p className="text-xs text-slate-600 mt-0.5">{opt.beschreibung}</p>
-                      <p className="text-xs text-slate-500 mt-1 italic">{opt.eignung}</p>
+                      <div className="text-sm font-semibold text-slate-900">{t(opt.titelKey)}</div>
+                      <p className="text-xs text-slate-600 mt-0.5">{t(opt.beschreibungKey)}</p>
+                      <p className="text-xs text-slate-500 mt-1 italic">{t(opt.eignungKey)}</p>
                     </div>
                   </button>
                 );
@@ -671,15 +648,15 @@ function KiOfferModal({ kunde, mode, setMode, eskalation, setEskalation, sent, o
                 />
                 <span className="flex items-start gap-1.5">
                   <UserPlus size={14} className="text-slate-500 mt-0.5" />
-                  Mensch danach optional dazuziehen — der Kunde kann jederzeit auf einen Live-Termin mit Ihnen wechseln.
+                  {t('tpm.offer.mensch')}
                 </span>
               </label>
             </div>
             <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-2">
-              <button onClick={onClose} className="text-sm px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Abbrechen</button>
+              <button onClick={onClose} className="text-sm px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">{t('abbrechen')}</button>
               <button onClick={onSend} className="text-sm px-4 py-2 rounded-lg text-white inline-flex items-center gap-1.5" style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)' }}>
                 <Send size={14} />
-                Vorschlag an {vorname} senden
+                {t('tpm.offer.senden', { name: vorname })}
               </button>
             </div>
           </>

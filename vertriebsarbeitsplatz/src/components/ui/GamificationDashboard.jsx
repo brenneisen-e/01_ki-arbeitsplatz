@@ -238,7 +238,7 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
                 <div className="text-[11px] text-slate-500 mt-0.5">
                   {qw.volumen ? (
                     <span className="font-mono font-semibold text-slate-700">
-                      {formatEur(qw.volumen)}{qw.volumenTyp === 'jaehrlich' ? '/J.' : ''}
+                      {formatEur(qw.volumen)}{qw.volumenTyp === 'jaehrlich' ? t('gamiProJahrSuffix') : ''}
                     </span>
                   ) : null}
                   {qw.beschreibung && qw.volumen ? ' · ' : ''}
@@ -250,7 +250,7 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
           ))}
           {quickWins.length === 0 && (
             <div className="text-xs text-slate-500 italic text-center py-2">
-              Keine offenen Quick Wins.
+              {t('gamiKeineQuickWins')}
             </div>
           )}
           </div>
@@ -260,7 +260,7 @@ export default function GamificationDashboard({ potentiale, kanbanState, onQuick
   );
 }
 
-function ProgressCard({ icon: Icon, label, current, target, format }) {
+function ProgressCard({ icon: Icon, label, zielLabel, current, target, format }) {
   const pct = target > 0 ? Math.min(100, (current / target) * 100) : 0;
   const pctRounded = Math.round(pct);
 

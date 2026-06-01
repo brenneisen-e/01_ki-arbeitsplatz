@@ -541,17 +541,17 @@ export default function OpenFinanceTab({ kunde }) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-slate-50">
-                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Versicherung</th>
-                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Anbieter</th>
-                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Details</th>
+                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('versicherung')}</th>
+                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('anbieter')}</th>
+                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('details')}</th>
                   {bf.versicherungenFremd.some(v => v.deckungssumme) && (
-                    <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Deckungssumme</th>
+                    <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('deckungssumme')}</th>
                   )}
                   {bf.versicherungenFremd.some(v => v.leistungen) && (
-                    <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Leistungen</th>
+                    <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('leistungen')}</th>
                   )}
-                  <th className="px-4 py-2.5 text-center text-xs uppercase tracking-wider font-semibold text-slate-400">Bewertung</th>
-                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Prämie</th>
+                  <th className="px-4 py-2.5 text-center text-xs uppercase tracking-wider font-semibold text-slate-400">{t('bewertung')}</th>
+                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('praemie')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -560,11 +560,11 @@ export default function OpenFinanceTab({ kunde }) {
                     <td className="px-4 py-2.5 font-medium capitalize">
                       {v.produkt}
                       {v.consent === false && (
-                        <span className="ml-2 text-[10px] font-semibold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded">Consent fehlt</span>
+                        <span className="ml-2 text-[10px] font-semibold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded">{t('consentFehlt')}</span>
                       )}
                     </td>
                     <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={v.institut} size={18} />{v.institut}</div></td>
-                    <td className="px-4 py-2.5 text-slate-500">{v.consent === false ? 'Details gesperrt' : (v.details || '–')}</td>
+                    <td className="px-4 py-2.5 text-slate-500">{v.consent === false ? t('detailsGesperrt') : (translateDetails(v.details, lang) || '–')}</td>
                     {bf.versicherungenFremd.some(x => x.deckungssumme) && (
                       <td className="px-4 py-2.5 text-slate-600">{v.consent === false ? '•••' : (v.deckungssumme || '–')}</td>
                     )}

@@ -77,6 +77,57 @@ const translationsCommon = {
   'vertriebspotenzialeAnalysiert': { de: 'Vertriebspotenziale analysiert...', en: 'Analyzing sales potentials...' },
   'uebersichtWirdVorbereitet': { de: 'Übersicht wird vorbereitet...', en: 'Preparing overview...' },
 
+  // ─── Landing Page – Quick-Prompt Chips ───
+  'chip.vertriebsCockpit': { de: 'Vertriebs-Cockpit', en: 'Sales Cockpit' },
+  'chip.produktlandschaft': { de: 'Übersicht Produktlandschaft', en: 'Product Landscape Overview' },
+  'chip.ansprechpartner': { de: 'Ansprechpartner', en: 'Contact Persons' },
+  'chip.kommendeGespraeche': { de: 'Übersicht kommende Gespräche', en: 'Upcoming Meetings Overview' },
+  'chip.gespraechsvorbereitung': { de: 'Vorbereitung Gesprächstermin', en: 'Prepare Meeting' },
+
+  // ─── Landing Page – Quick-Prompt Dropdowns ───
+  'kundeFuerGespraechWaehlen': { de: 'Kunde für Gesprächsvorbereitung wählen', en: 'Select customer for meeting preparation' },
+  'ansprechpartnerNachAbteilung': { de: 'Ansprechpartner nach Abteilung', en: 'Contacts by department' },
+  'andereAbteilungThema': { de: 'Andere Abteilung / Thema', en: 'Other department / topic' },
+  'andereAbteilungPlaceholder': { de: 'z. B. Baufinanzierung Team Nord, Treasury, …', en: 'e.g. Mortgage Team North, Treasury, …' },
+  'vorbereitungGespraechMit': { de: 'Vorbereitung Gesprächstermin — {kunde}', en: 'Prepare meeting — {kunde}' },
+  'ansprechpartnerThema': { de: 'Ansprechpartner — {thema}', en: 'Contact — {thema}' },
+
+  // ─── Landing Page – Ansprechpartner-Abteilungen ───
+  'abt.privateBanking': { de: 'Private Banking', en: 'Private Banking' },
+  'abt.privateBankingDesc': { de: 'Vermögende Privatkunden, Family Office', en: 'High-net-worth private clients, family office' },
+  'abt.baufinanzierung': { de: 'Baufinanzierung', en: 'Mortgage Financing' },
+  'abt.baufinanzierungDesc': { de: 'Immobiliendarlehen, Bausparverträge', en: 'Real estate loans, building-society savings' },
+  'abt.anlageberatung': { de: 'Anlageberatung', en: 'Investment Advisory' },
+  'abt.anlageberatungDesc': { de: 'Wertpapiere, Fonds, ETFs', en: 'Securities, funds, ETFs' },
+  'abt.firmenkunden': { de: 'Firmenkundenbetreuung', en: 'Corporate Banking' },
+  'abt.firmenkundenDesc': { de: 'Geschäftskonten, Betriebsmittelkredite', en: 'Business accounts, working capital loans' },
+  'abt.kreditabteilung': { de: 'Kreditabteilung', en: 'Credit Department' },
+  'abt.kreditabteilungDesc': { de: 'Konsumkredit, Rahmenkredit, Dispo', en: 'Consumer loans, revolving credit, overdraft' },
+  'abt.versicherungsberatung': { de: 'Versicherungsberatung', en: 'Insurance Advisory' },
+  'abt.versicherungsberatungDesc': { de: 'Zukunftsversicherung, BU, RLV', en: 'Life insurance, occupational disability, term life' },
+  'abt.compliance': { de: 'Compliance & Recht', en: 'Compliance & Legal' },
+  'abt.complianceDesc': { de: 'Regulatorik, FIDA/PSD2, Geldwäsche', en: 'Regulation, FIDA/PSD2, anti-money laundering' },
+  'abt.kundenservice': { de: 'Kundenservice', en: 'Customer Service' },
+  'abt.kundenserviceDesc': { de: 'Allgemeine Anfragen, Beschwerden', en: 'General inquiries, complaints' },
+
+  // ─── Landing Page – Settings & Misc ───
+  'modul': { de: 'Modul', en: 'Module' },
+  'zurueckModuluebersicht': { de: 'Zurück zur Modulübersicht', en: 'Back to module overview' },
+  'spracheingabe': { de: 'Spracheingabe', en: 'Voice input' },
+  'kiVertriebsarbeitsplatz': { de: 'KI-Vertriebsarbeitsplatz', en: 'AI Sales Workstation' },
+  'antwortEntfernen': { de: 'Antwort entfernen', en: 'Remove response' },
+  'kiAntwortet': { de: 'KI antwortet…', en: 'AI is responding…' },
+  'bildschirmaufnahme': { de: 'Bildschirmaufnahme', en: 'Screen Recording' },
+  'bildschirmaufnahmeHinweis': {
+    de: 'Tab/Fenster im Share-Dialog wählen — dann startet die Aufnahme nach 5 Sekunden. Während der Aufnahme erscheint ein grüner Cursor; Klicks erzeugen sichtbare Wellen.',
+    en: 'Select a tab/window in the share dialog — recording then starts after 5 seconds. During recording a green cursor appears; clicks create visible ripples.',
+  },
+  'aufnahmeStoppen': { de: 'Aufnahme stoppen', en: 'Stop recording' },
+  'aufnahmeStarten': { de: 'Aufnahme starten', en: 'Start recording' },
+  'aufnahmeStartIn': { de: 'Start in {n}…', en: 'Starting in {n}…' },
+  'zuhoeren': { de: 'Zuhören...', en: 'Listening...' },
+  'tagesueberblickPhrase': { de: 'Gib mir meinen Tagesüberblick', en: 'Give me my daily overview' },
+
   // ─── Month Names ───
   'monat.jan': { de: 'Jan', en: 'Jan' },
   'monat.feb': { de: 'Feb', en: 'Feb' },

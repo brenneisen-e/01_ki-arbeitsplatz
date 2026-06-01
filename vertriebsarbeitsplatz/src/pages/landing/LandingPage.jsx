@@ -18,14 +18,14 @@ import TerminPrepModal from '../../components/ui/TerminPrepModal';
 // Fachbereich aufrufen kann. Freitext-Feld unten ermöglicht beliebige
 // Themen, die nicht in der Liste stehen.
 const ANSPRECHPARTNER_ABTEILUNGEN = [
-  { abteilung: 'Private Banking',       beschreibung: 'Vermögende Privatkunden, Family Office' },
-  { abteilung: 'Baufinanzierung',       beschreibung: 'Immobiliendarlehen, Bausparverträge' },
-  { abteilung: 'Anlageberatung',        beschreibung: 'Wertpapiere, Fonds, ETFs' },
-  { abteilung: 'Firmenkundenbetreuung', beschreibung: 'Geschäftskonten, Betriebsmittelkredite' },
-  { abteilung: 'Kreditabteilung',       beschreibung: 'Konsumkredit, Rahmenkredit, Dispo' },
-  { abteilung: 'Versicherungsberatung', beschreibung: 'Zukunftsversicherung, BU, RLV' },
-  { abteilung: 'Compliance & Recht',    beschreibung: 'Regulatorik, FIDA/PSD2, Geldwäsche' },
-  { abteilung: 'Kundenservice',         beschreibung: 'Allgemeine Anfragen, Beschwerden' },
+  { abteilungKey: 'abt.privateBanking',       beschreibungKey: 'abt.privateBankingDesc' },
+  { abteilungKey: 'abt.baufinanzierung',      beschreibungKey: 'abt.baufinanzierungDesc' },
+  { abteilungKey: 'abt.anlageberatung',       beschreibungKey: 'abt.anlageberatungDesc' },
+  { abteilungKey: 'abt.firmenkunden',         beschreibungKey: 'abt.firmenkundenDesc' },
+  { abteilungKey: 'abt.kreditabteilung',      beschreibungKey: 'abt.kreditabteilungDesc' },
+  { abteilungKey: 'abt.versicherungsberatung', beschreibungKey: 'abt.versicherungsberatungDesc' },
+  { abteilungKey: 'abt.compliance',           beschreibungKey: 'abt.complianceDesc' },
+  { abteilungKey: 'abt.kundenservice',        beschreibungKey: 'abt.kundenserviceDesc' },
 ];
 
 // Sicherheitsnetz: das Produkt erlaubt weder Emojis noch Markdown. Wir
@@ -318,11 +318,11 @@ export default function LandingPage() {
 
     setIsListening(true);
     setShowSuggestions(false);
-    setChatInput('Zuhören...');
+    setChatInput(t('zuhoeren'));
 
     // Wait 1-3 seconds before "transcribing"
     const initialDelay = 1000 + Math.random() * 2000;
-    const phrase = 'Gib mir meinen Tagesüberblick';
+    const phrase = t('tagesueberblickPhrase');
     const words = phrase.split(' ');
 
     const startTyping = setTimeout(() => {
@@ -410,7 +410,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-slate-800">{t('willkommen')}!</h2>
-                <p className="text-sm text-slate-500">KI-Vertriebsarbeitsplatz</p>
+                <p className="text-sm text-slate-500">{t('kiVertriebsarbeitsplatz')}</p>
               </div>
             </div>
             <label className="block text-sm font-medium text-slate-700 mb-2">{t('wieDarfIchDichNennen')}</label>
@@ -462,7 +462,7 @@ export default function LandingPage() {
           <a
             href="../../index.html"
             className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors shrink-0"
-            title="Zurück zur Modulübersicht"
+            title={t('zurueckModuluebersicht')}
           >
             <ArrowLeft size={16} className="text-white/70" strokeWidth={1.75} />
           </a>
@@ -582,7 +582,7 @@ export default function LandingPage() {
             </button>
             <button
               onClick={handleMicClick}
-              aria-label="Spracheingabe"
+              aria-label={t('spracheingabe')}
               className={clsx(
                 'p-4 rounded-2xl transition-colors backdrop-blur-sm border',
                 isListening
@@ -598,17 +598,17 @@ export default function LandingPage() {
               Gesprächstermin", "Ansprechpartner Private Banking") klappen
               beim Klick ein Kunden-/Kollegen-Auswahl-Dropdown auf. */}
           <div className="flex flex-wrap justify-center gap-2 mt-3">
-            <QuickPromptChip label="Vertriebs-Cockpit" onClick={() => { setChatInput('Vertriebs-Cockpit'); executeSuggestion({ action: 'overview' }); }} />
-            <QuickPromptChip label="Übersicht Produktlandschaft" onClick={() => { setChatInput('Übersicht Produktlandschaft'); executeSuggestion({ action: 'overview' }); }} />
+            <QuickPromptChip label={t('chip.vertriebsCockpit')} onClick={() => { setChatInput(t('chip.vertriebsCockpit')); executeSuggestion({ action: 'overview' }); }} />
+            <QuickPromptChip label={t('chip.produktlandschaft')} onClick={() => { setChatInput(t('chip.produktlandschaft')); executeSuggestion({ action: 'overview' }); }} />
             <QuickPromptChip
-              label="Ansprechpartner"
+              label={t('chip.ansprechpartner')}
               active={openPromptDropdown === 'ansprechpartner'}
               onClick={() => setOpenPromptDropdown(d => d === 'ansprechpartner' ? null : 'ansprechpartner')}
               hasDropdown
             />
-            <QuickPromptChip label="Übersicht kommende Gespräche" onClick={() => { setChatInput('Übersicht kommende Gespräche'); executeSuggestion({ action: 'overview' }); }} />
+            <QuickPromptChip label={t('chip.kommendeGespraeche')} onClick={() => { setChatInput(t('chip.kommendeGespraeche')); executeSuggestion({ action: 'overview' }); }} />
             <QuickPromptChip
-              label="Vorbereitung Gesprächstermin"
+              label={t('chip.gespraechsvorbereitung')}
               active={openPromptDropdown === 'termin'}
               onClick={() => setOpenPromptDropdown(d => d === 'termin' ? null : 'termin')}
               hasDropdown
@@ -619,7 +619,7 @@ export default function LandingPage() {
           {openPromptDropdown === 'termin' && (
             <div className="mt-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 p-3 animate-fade-in">
               <div className="text-[11px] uppercase tracking-wider text-white/60 font-semibold px-2 py-1">
-                Kunde für Gesprächsvorbereitung wählen
+                {t('kundeFuerGespraechWaehlen')}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
                 {(TERMINE_BY_MODE[activeModule] || []).map((termin, i) => (
@@ -627,7 +627,7 @@ export default function LandingPage() {
                     key={i}
                     onClick={() => {
                       setOpenPromptDropdown(null);
-                      setChatInput(`Vorbereitung Gesprächstermin — ${termin.kunde}`);
+                      setChatInput(t('vorbereitungGespraechMit', { kunde: termin.kunde }));
                       // Kunde aus den Stammdaten ziehen – falls nicht
                       // vorhanden (reine Termin-Stubs), fallback auf einen
                       // minimalen Kunde-Datensatz aus dem Termin selbst.
@@ -658,14 +658,14 @@ export default function LandingPage() {
           {openPromptDropdown === 'ansprechpartner' && (
             <div className="mt-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 p-3 animate-fade-in">
               <div className="text-[11px] uppercase tracking-wider text-white/60 font-semibold px-2 py-1">
-                Ansprechpartner nach Abteilung
+                {t('ansprechpartnerNachAbteilung')}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
                 {ANSPRECHPARTNER_ABTEILUNGEN.map((a, i) => (
                   <button
                     key={i}
                     onClick={() => {
-                      setChatInput(`Ansprechpartner — ${a.abteilung}`);
+                      setChatInput(t('ansprechpartnerThema', { thema: t(a.abteilungKey) }));
                       setOpenPromptDropdown(null);
                       executeSuggestion({ action: 'overview' });
                     }}
@@ -675,8 +675,8 @@ export default function LandingPage() {
                       <Briefcase size={16} className="text-white/80" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-sm font-semibold text-white truncate">{a.abteilung}</div>
-                      <div className="text-[11px] text-white/60 truncate">{a.beschreibung}</div>
+                      <div className="text-sm font-semibold text-white truncate">{t(a.abteilungKey)}</div>
+                      <div className="text-[11px] text-white/60 truncate">{t(a.beschreibungKey)}</div>
                     </div>
                   </button>
                 ))}
@@ -684,7 +684,7 @@ export default function LandingPage() {
               {/* Freitext-Feld für Abteilungen, die nicht in der Liste sind */}
               <div className="mt-3 pt-3 border-t border-white/10">
                 <label className="block text-[10px] uppercase tracking-wider text-white/50 font-semibold px-1 mb-1.5">
-                  Andere Abteilung / Thema
+                  {t('andereAbteilungThema')}
                 </label>
                 <input
                   type="text"
@@ -692,13 +692,13 @@ export default function LandingPage() {
                   onChange={(e) => setAnsprechpartnerFreitext(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && ansprechpartnerFreitext.trim()) {
-                      setChatInput(`Ansprechpartner — ${ansprechpartnerFreitext.trim()}`);
+                      setChatInput(t('ansprechpartnerThema', { thema: ansprechpartnerFreitext.trim() }));
                       setOpenPromptDropdown(null);
                       setAnsprechpartnerFreitext('');
                       executeSuggestion({ action: 'overview' });
                     }
                   }}
-                  placeholder="z. B. Baufinanzierung Team Nord, Treasury, …"
+                  placeholder={t('andereAbteilungPlaceholder')}
                   className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/15 text-white text-sm placeholder-white/40 focus:outline-none focus:bg-white/15 focus:border-white/30 transition-all"
                 />
               </div>
@@ -725,7 +725,7 @@ export default function LandingPage() {
                   {claudeLoading ? (
                     <span className="flex items-center gap-2 text-white/70">
                       <Loader2 size={14} className="animate-spin" />
-                      KI antwortet…
+                      {t('kiAntwortet')}
                     </span>
                   ) : claudeReply?.error ? (
                     <span className="text-red-200">{claudeReply.error}</span>
@@ -738,7 +738,7 @@ export default function LandingPage() {
                     type="button"
                     onClick={() => setClaudeReply(null)}
                     className="text-white/40 hover:text-white/80 mt-1"
-                    aria-label="Antwort entfernen"
+                    aria-label={t('antwortEntfernen')}
                   >
                     <X size={14} />
                   </button>
@@ -768,7 +768,7 @@ export default function LandingPage() {
             {/* Modul-Auswahl */}
             <h3 className="text-white text-sm font-semibold mb-3 flex items-center gap-2">
               <Briefcase size={16} />
-              Modul
+              {t('modul')}
             </h3>
             <div className="flex gap-2 mb-3 flex-wrap">
               {MODULE_TABS.map(tab => {
@@ -914,18 +914,17 @@ export default function LandingPage() {
             {/* Bildschirmaufnahme */}
             <h3 className="text-white text-sm font-semibold mb-2 flex items-center gap-2">
               <Video size={16} />
-              Bildschirmaufnahme
+              {t('bildschirmaufnahme')}
             </h3>
             <p className="text-[11px] text-white/50 mb-3 leading-relaxed">
-              Tab/Fenster im Share-Dialog wählen — dann startet die Aufnahme nach 5 Sekunden.
-              Während der Aufnahme erscheint ein grüner Cursor; Klicks erzeugen sichtbare Wellen.
+              {t('bildschirmaufnahmeHinweis')}
             </p>
             {recordPhase === 'recording' ? (
               <button
                 onClick={stopRecording}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/90 hover:bg-red-500 text-white text-xs font-medium transition-colors mb-4"
               >
-                <Square size={12} fill="currentColor" /> Aufnahme stoppen
+                <Square size={12} fill="currentColor" /> {t('aufnahmeStoppen')}
               </button>
             ) : (
               <button
@@ -934,7 +933,7 @@ export default function LandingPage() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white/80 text-xs font-medium transition-colors mb-4 disabled:opacity-60"
               >
                 <Video size={12} />
-                {recordPhase === 'countdown' ? `Start in ${recordCountdown}…` : 'Aufnahme starten'}
+                {recordPhase === 'countdown' ? t('aufnahmeStartIn', { n: recordCountdown }) : t('aufnahmeStarten')}
               </button>
             )}
 

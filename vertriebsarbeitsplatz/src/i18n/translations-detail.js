@@ -4,6 +4,10 @@
  * Impulse, Produktabschluss, generated data/labels.
  */
 const translationsDetail = {
+  'beraterRolle': { de: 'Berater', en: 'Advisor' },
+  'kundeRolle': { de: 'Kunde', en: 'Client' },
+  'keineAngabe': { de: 'keine Angabe', en: 'no information' },
+  'diesenMandanten': { de: 'diesen Mandanten', en: 'this client' },
   // ─── Performance Tab (Detail) ───
   'performanceDatenNichtVerfuegbar': { de: 'Performance-Daten nicht verfügbar', en: 'Performance data not available' },
   'performanceDatenFehlen': { de: 'Für {name} liegen noch keine Performance-Daten vor.', en: 'No performance data available for {name} yet.' },

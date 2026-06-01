@@ -5,6 +5,7 @@ import Card from './Card';
 import Avatar from './Avatar';
 import { getKundeFoto } from '../../utils/kundenFotos';
 import { LeafletMap, geocodeKundeLeaflet } from './KundenKarteLeaflet';
+import { tx } from '../../utils/langHelper';
 
 /* ── Mercator projection helpers ──────────────────────────────── */
 const DEG2RAD = Math.PI / 180;

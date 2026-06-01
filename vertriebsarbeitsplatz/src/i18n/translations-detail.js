@@ -849,6 +849,9 @@ const translationsDetail = {
 
   // ─── Misc reused labels ───
   'performance': { de: 'Performance', en: 'Performance' },
+  'anlagevolumen': { de: 'Anlagevolumen', en: 'Investment Volume' },
+  'privat': { de: 'Privat', en: 'Private' },
+  'firma': { de: 'Firma', en: 'Company' },
 };
 
 export default translationsDetail;

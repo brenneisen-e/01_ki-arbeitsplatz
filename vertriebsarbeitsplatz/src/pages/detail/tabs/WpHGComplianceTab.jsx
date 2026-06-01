@@ -204,7 +204,7 @@ export default function WpHGComplianceTab({ kunde }) {
       <Section title={t('wphgBogen')} icon={FileText}>
         <div className="space-y-1">
           <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
-            <span className="text-slate-500 text-[15px]">Status</span>
+            <span className="text-slate-500 text-[15px]">{t('status')}</span>
             <StatusBadge status={wphg.status} t={t} />
           </div>
           <InfoRow label={t('letzteAktualisierung')} value={fmtDate(wphg.letzteAktualisierung)} icon={Clock} />
@@ -326,7 +326,7 @@ export default function WpHGComplianceTab({ kunde }) {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-[10px] text-slate-400">Trigger</div>
+                  <div className="text-[10px] text-slate-400">{t('trigger')}</div>
                   <div className="text-sm font-mono font-semibold text-red-600">{vs.grenze}%</div>
                 </div>
               </div>
@@ -342,14 +342,14 @@ export default function WpHGComplianceTab({ kunde }) {
         <Section title={t('kosteninformation')} icon={Receipt}>
           <div className="space-y-0">
             <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
-              <span className="text-slate-500 text-[15px]">Ex-Ante</span>
+              <span className="text-slate-500 text-[15px]">{t('exAnte')}</span>
               <span className="flex items-center gap-2">
                 <StatusBadge status={ki.exAnte?.status || '-'} t={t} />
                 <span className="text-xs text-slate-400">{fmtDate(ki.exAnte?.datum)}</span>
               </span>
             </div>
             <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
-              <span className="text-slate-500 text-[15px]">Ex-Post</span>
+              <span className="text-slate-500 text-[15px]">{t('exPost')}</span>
               <span className="flex items-center gap-2">
                 <StatusBadge status={ki.exPost?.status || '-'} t={t} />
                 <span className="text-xs text-slate-400">{fmtDate(ki.exPost?.datum)}</span>

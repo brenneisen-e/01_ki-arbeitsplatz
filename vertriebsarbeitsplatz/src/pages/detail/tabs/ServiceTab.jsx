@@ -32,6 +32,21 @@ import {
 } from 'lucide-react';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
+import { getLang } from '../../../utils/langHelper';
+
+const STATUS_LABEL_KEYS = {
+  versendet: 'serviceStatus.versendet',
+  geplant: 'serviceStatus.geplant',
+  vorschlag: 'serviceStatus.vorschlag',
+};
+const KATEGORIE_LABEL_KEYS = {
+  finanztipp: 'serviceKategorie.finanztipp',
+  geschenk: 'serviceKategorie.geschenk',
+  glueckwunsch: 'serviceKategorie.glueckwunsch',
+  sparhinweis: 'serviceKategorie.sparhinweis',
+  service: 'serviceKategorie.service',
+};
 
 const STATUS = {
   versendet: { label: 'Automatisch versendet', icon: CheckCircle2, color: '#16a34a', bg: '#f0fdf4', border: '#bbf7d0' },
@@ -351,11 +366,12 @@ function buildServices(kunde) {
 }
 
 function ServiceCard({ service, onPreview }) {
+  const { t } = useTranslation();
   const status = STATUS[service.status];
   const kat = KATEGORIE_FARBEN[service.kategorie];
   const StatusIcon = status.icon;
   const Icon = service.icon;
-  const datumDe = new Date(service.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const datumDe = new Date(service.datum).toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   return (
     <div className="card-base p-5 flex flex-col gap-3">
@@ -366,11 +382,11 @@ function ServiceCard({ service, onPreview }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: kat.bg, color: kat.color }}>
-              {kat.label}
+              {t(KATEGORIE_LABEL_KEYS[service.kategorie] || '') || kat.label}
             </span>
             <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full border" style={{ background: status.bg, color: status.color, borderColor: status.border }}>
               <StatusIcon size={12} />
-              {status.label}
+              {t(STATUS_LABEL_KEYS[service.status] || '') || status.label}
             </span>
             <span className="text-xs text-slate-500">{datumDe} · {service.kanal}</span>
           </div>
@@ -380,14 +396,14 @@ function ServiceCard({ service, onPreview }) {
 
       <div className="flex items-start gap-2 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
         <Info size={14} className="shrink-0 mt-0.5 text-slate-500" />
-        <span><span className="font-medium text-slate-700">Trigger:</span> {service.quelle}</span>
+        <span><span className="font-medium text-slate-700">{t('serviceTrigger')}</span> {service.quelle}</span>
       </div>
 
       <p className="text-sm text-slate-700 leading-relaxed line-clamp-3">{service.nachricht}</p>
 
       <div className="flex items-center justify-between pt-1 mt-auto">
         <div className="text-xs text-slate-500">
-          <span className="font-medium text-slate-700">Effekt:</span> {service.ergebnis}
+          <span className="font-medium text-slate-700">{t('serviceEffekt')}</span> {service.ergebnis}
         </div>
         <button
           type="button"
@@ -395,7 +411,7 @@ function ServiceCard({ service, onPreview }) {
           className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700"
         >
           <Eye size={14} />
-          Vorschau
+          {t('serviceVorschau')}
         </button>
       </div>
     </div>
@@ -403,10 +419,11 @@ function ServiceCard({ service, onPreview }) {
 }
 
 function PreviewModal({ service, onClose }) {
+  const { t } = useTranslation();
   if (!service) return null;
   const status = STATUS[service.status];
   const StatusIcon = status.icon;
-  const datumDe = new Date(service.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const datumDe = new Date(service.datum).toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={onClose}>
@@ -419,28 +436,28 @@ function PreviewModal({ service, onClose }) {
               <div className="text-xs text-slate-500">{datumDe} · {service.kanal}</div>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500" aria-label="Schließen">
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500" aria-label={t('serviceSchliessen')}>
             <X size={18} />
           </button>
         </div>
         <div className="px-6 py-5 space-y-4">
           <div className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border" style={{ background: status.bg, color: status.color, borderColor: status.border }}>
             <StatusIcon size={12} />
-            {status.label}
+            {t(STATUS_LABEL_KEYS[service.status] || '') || status.label}
           </div>
           <div className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">{service.nachricht}</div>
           <div className="text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-            <span className="font-medium text-slate-700">Trigger:</span> {service.quelle}
+            <span className="font-medium text-slate-700">{t('serviceTrigger')}</span> {service.quelle}
           </div>
         </div>
         {service.status === 'vorschlag' && (
           <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-2">
             <button onClick={onClose} className="text-sm px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">
-              Verwerfen
+              {t('serviceVerwerfen')}
             </button>
             <button onClick={onClose} className="text-sm px-4 py-2 rounded-lg text-white inline-flex items-center gap-1.5" style={{ background: 'var(--mode-primary)' }}>
               <Send size={14} />
-              Freigeben &amp; senden
+              {t('serviceFreigebenSenden')}
             </button>
           </div>
         )}
@@ -450,6 +467,7 @@ function PreviewModal({ service, onClose }) {
 }
 
 export default function ServiceTab({ kunde }) {
+  const { t } = useTranslation();
   const { modeId } = useMode();
   const services = useMemo(
     () => modeId === 'versicherung' ? buildServicesVersicherung(kunde) : buildServices(kunde),
@@ -471,21 +489,19 @@ export default function ServiceTab({ kunde }) {
             <Sparkles size={20} />
           </div>
           <div className="min-w-0">
-            <h2 className="text-lg font-semibold text-slate-900">Automatisierte KI-Service-Kommunikation</h2>
+            <h2 className="text-lg font-semibold text-slate-900">{t('automatisierteKiService')}</h2>
             <p className="text-sm text-slate-600 mt-1">
-              Auf Basis von Open-Finance-Daten, Transaktionsmustern und Lebenslagen erkennt die KI passende
-              Service-Anlässe und versendet — nach Freigabe-Regeln — Hinweise, Glückwünsche oder kleine
-              Aufmerksamkeiten. Ziel: dem Kunden einen Mehrwert bieten, ohne sofort zu verkaufen.
+              {t('serviceIntro')}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border" style={{ background: STATUS.versendet.bg, color: STATUS.versendet.color, borderColor: STATUS.versendet.border }}>
-                <CheckCircle2 size={12} /> {counts.versendet} versendet
+                <CheckCircle2 size={12} /> {t('serviceVersendet', { count: counts.versendet })}
               </span>
               <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border" style={{ background: STATUS.geplant.bg, color: STATUS.geplant.color, borderColor: STATUS.geplant.border }}>
-                <Clock size={12} /> {counts.geplant} geplant
+                <Clock size={12} /> {t('serviceGeplant', { count: counts.geplant })}
               </span>
               <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border" style={{ background: STATUS.vorschlag.bg, color: STATUS.vorschlag.color, borderColor: STATUS.vorschlag.border }}>
-                <Sparkles size={12} /> {counts.vorschlag} zur Freigabe
+                <Sparkles size={12} /> {t('serviceZurFreigabe', { count: counts.vorschlag })}
               </span>
             </div>
           </div>
@@ -500,7 +516,7 @@ export default function ServiceTab({ kunde }) {
 
       {services.length === 0 && (
         <div className="card-base p-8 text-center text-sm text-slate-500">
-          Aktuell keine automatisierten Service-Anlässe erkannt.
+          {t('serviceKeineAnlaesse')}
         </div>
       )}
 

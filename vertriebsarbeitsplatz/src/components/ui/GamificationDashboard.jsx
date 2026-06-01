@@ -299,7 +299,7 @@ function ProgressCard({ icon: Icon, label, zielLabel, current, target, format })
         />
       </div>
       <div className="text-[11px] text-slate-500 mt-1.5 font-medium">
-        {pctRounded}% Ziel
+        {pctRounded}% {zielLabel}
       </div>
     </div>
   );

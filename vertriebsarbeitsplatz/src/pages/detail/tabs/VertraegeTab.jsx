@@ -186,13 +186,13 @@ function ProduktRow({ produkt, modeId, institut, onNavigateKontoumsaetze, t }) {
                       )}
                       {produkt._risikoWarnung.konsequenz && (
                         <div className="mt-1 font-medium">
-                          <span className="uppercase tracking-wider text-[10px] text-amber-700">Versicherungslücke: </span>
+                          <span className="uppercase tracking-wider text-[10px] text-amber-700">{t('versicherungsluecke')}: </span>
                           {interpolateDynamicDates(produkt._risikoWarnung.konsequenz, { institut })}
                         </div>
                       )}
                       {produkt._risikoWarnung.empfehlung && (
                         <div className="mt-1">
-                          <span className="uppercase tracking-wider text-[10px] text-amber-700">Empfehlung: </span>
+                          <span className="uppercase tracking-wider text-[10px] text-amber-700">{t('empfehlungInline')}: </span>
                           {interpolateDynamicDates(produkt._risikoWarnung.empfehlung, { institut })}
                         </div>
                       )}

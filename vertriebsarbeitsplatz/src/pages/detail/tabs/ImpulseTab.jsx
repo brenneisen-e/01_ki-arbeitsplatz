@@ -532,9 +532,10 @@ function ScoreBadge({ score }) {
 }
 
 function EinzelVergleiche({ einzelVergleiche }) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-4">
-      <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Einzelvergleich pro Versicherung</h5>
+      <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider">{t('einzelvergleichProVersicherung')}</h5>
       {einzelVergleiche.map((v, idx) => {
         const delta = (v.neu?.score ?? 0) - (v.bisher?.score ?? 0);
         const alleMerkmale = Array.from(new Set([
@@ -554,26 +555,26 @@ function EinzelVergleiche({ einzelVergleiche }) {
                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
                   delta > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'
                 }`}>
-                  {delta > 0 ? `+${delta}` : delta} Punkte Bewertung
+                  {delta > 0 ? `+${delta}` : delta} {t('punkteBewertung')}
                 </span>
               )}
             </div>
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-white border-b border-slate-100">
-                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-slate-400 w-1/3">Merkmal</th>
-                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-slate-500">Bisher — {v.bisher?.anbieter || '–'}</th>
-                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-emerald-700">Neu — {v.neu?.anbieter || '–'}</th>
+                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-slate-400 w-1/3">{t('merkmal')}</th>
+                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-slate-500">{t('bisher')} — {v.bisher?.anbieter || '–'}</th>
+                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-emerald-700">{t('neu')} — {v.neu?.anbieter || '–'}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-t border-slate-100">
-                  <td className="px-4 py-2 text-slate-500 font-medium">Bewertung</td>
+                  <td className="px-4 py-2 text-slate-500 font-medium">{t('bewertung')}</td>
                   <td className="px-4 py-2"><ScoreBadge score={v.bisher?.score ?? 0} /></td>
                   <td className="px-4 py-2"><ScoreBadge score={v.neu?.score ?? 0} /></td>
                 </tr>
                 <tr className="border-t border-slate-100 bg-slate-50/40">
-                  <td className="px-4 py-2 text-slate-500 font-medium">Prämie</td>
+                  <td className="px-4 py-2 text-slate-500 font-medium">{t('praemie')}</td>
                   <td className="px-4 py-2 font-mono text-slate-700">{v.bisher?.praemie || '–'}</td>
                   <td className="px-4 py-2 font-mono text-emerald-700 font-semibold">{v.neu?.praemie || '–'}</td>
                 </tr>
@@ -600,6 +601,7 @@ function EinzelVergleiche({ einzelVergleiche }) {
 }
 
 function VergleichsTabelle({ data }) {
+  const { t } = useTranslation();
   const { titel, spalten, zeilen, fbVergleich } = data;
 
   return (
@@ -618,7 +620,7 @@ function VergleichsTabelle({ data }) {
           />
           <div className="flex items-center gap-6 flex-1">
             <div className="text-center">
-              <div className="text-[10px] text-slate-400 uppercase tracking-wider">Bisherig</div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider">{t('bisherig')}</div>
               <div className={`text-lg font-bold ${fbVergleich.alt >= 75 ? 'text-emerald-600' : fbVergleich.alt >= 55 ? 'text-amber-600' : 'text-red-600'}`}>
                 {fbVergleich.alt}
               </div>
@@ -626,7 +628,7 @@ function VergleichsTabelle({ data }) {
             </div>
             <ArrowRight size={16} className="text-slate-300" />
             <div className="text-center">
-              <div className="text-[10px] text-slate-400 uppercase tracking-wider">Empfehlung</div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider">{t('empfehlungLabel')}</div>
               <div className={`text-lg font-bold ${fbVergleich.neu >= 75 ? 'text-emerald-600' : fbVergleich.neu >= 55 ? 'text-amber-600' : 'text-red-600'}`}>
                 {fbVergleich.neu}
               </div>
@@ -634,7 +636,7 @@ function VergleichsTabelle({ data }) {
             </div>
             {fbVergleich.neu > fbVergleich.alt && (
               <span className="ml-auto text-xs font-medium px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                +{fbVergleich.neu - fbVergleich.alt} Punkte
+                +{fbVergleich.neu - fbVergleich.alt} {t('punkte')}
               </span>
             )}
           </div>

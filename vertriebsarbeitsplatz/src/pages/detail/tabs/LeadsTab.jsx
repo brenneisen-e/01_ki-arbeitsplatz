@@ -362,6 +362,7 @@ export default function LeadsTab({ kunde }) {
 
 // ─── KI-Anschreiben Modal ───
 function KundenAnspracheModal({ lead, kunde, onClose, onSent }) {
+  const { t } = useTranslation();
   const initialText = generateLetterText(lead, kunde);
   const [text, setText] = useState(initialText);
   const [subject, setSubject] = useState(generateLetterSubject(lead));
@@ -393,7 +394,7 @@ function KundenAnspracheModal({ lead, kunde, onClose, onSent }) {
             <Sparkles size={18} className="text-white" strokeWidth={2} />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-bold text-slate-900">KI-Anschreiben</h3>
+            <h3 className="text-sm font-bold text-slate-900">{t('kiAnschreiben')}</h3>
             <p className="text-xs text-slate-500 truncate">
               {kunde?.name} · {lead.name}
             </p>
@@ -409,7 +410,7 @@ function KundenAnspracheModal({ lead, kunde, onClose, onSent }) {
         {/* Body */}
         <div className="p-5 space-y-3 overflow-y-auto">
           <div>
-            <label className="text-xs font-semibold text-slate-600 mb-1 block">Betreff</label>
+            <label className="text-xs font-semibold text-slate-600 mb-1 block">{t('betreff')}</label>
             <input
               type="text"
               value={subject}
@@ -418,9 +419,9 @@ function KundenAnspracheModal({ lead, kunde, onClose, onSent }) {
             />
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-600 mb-1 block">Anschreiben</label>
+            <label className="text-xs font-semibold text-slate-600 mb-1 block">{t('anschreiben')}</label>
             <textarea
-              value={generating ? 'KI generiert ein neues Anschreiben…' : text}
+              value={generating ? t('kiGeneriertAnschreiben') : text}
               onChange={e => setText(e.target.value)}
               rows={14}
               className={`w-full border border-slate-200 rounded-lg p-3 text-sm leading-relaxed font-mono focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-300 ${generating ? 'animate-pulse text-slate-400' : ''}`}
@@ -430,8 +431,7 @@ function KundenAnspracheModal({ lead, kunde, onClose, onSent }) {
           <div className="rounded-lg bg-violet-50 border border-violet-200 px-3 py-2 flex items-start gap-2">
             <Sparkles size={14} className="text-violet-600 mt-0.5 shrink-0" />
             <p className="text-xs text-violet-800 leading-relaxed">
-              Anschreiben generiert basierend auf dem Lead-Anlass und allen Datenquellen.
-              Bitte vor dem Versand prüfen und ggf. anpassen.
+              {t('anschreibenInfo')}
             </p>
           </div>
         </div>
@@ -443,21 +443,21 @@ function KundenAnspracheModal({ lead, kunde, onClose, onSent }) {
             disabled={generating}
             className="flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg hover:bg-white border border-slate-200 disabled:opacity-50"
           >
-            <Sparkles size={13} /> Neu generieren
+            <Sparkles size={13} /> {t('neuGenerieren')}
           </button>
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
               className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-white"
             >
-              Abbrechen
+              {t('abbrechen')}
             </button>
             <button
               onClick={onSent}
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm"
               style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
             >
-              <Send size={14} /> Senden
+              <Send size={14} /> {t('senden')}
             </button>
           </div>
         </div>

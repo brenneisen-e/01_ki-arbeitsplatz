@@ -239,6 +239,7 @@ function formatSeit(iso) {
 }
 
 function KiDepotHinweis({ hinweis, depot }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-xl border border-violet-200 bg-gradient-to-br from-violet-50 to-indigo-50 p-4">
       <div className="flex items-start gap-3">
@@ -247,7 +248,7 @@ function KiDepotHinweis({ hinweis, depot }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-violet-700">KI-Hinweis</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-violet-700">{t('kiHinweis')}</span>
             {depot && (
               <span className="text-[10px] text-violet-500">· {depot}</span>
             )}
@@ -256,7 +257,7 @@ function KiDepotHinweis({ hinweis, depot }) {
           <p className="text-sm text-violet-900/90 leading-relaxed mt-1.5">{hinweis.text}</p>
           {hinweis.empfehlung && (
             <div className="mt-3 pt-3 border-t border-violet-200">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-violet-600 mb-1">Empfehlung</div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-violet-600 mb-1">{t('empfehlungLabel')}</div>
               <p className="text-sm text-violet-900 leading-relaxed">{hinweis.empfehlung}</p>
             </div>
           )}
@@ -582,7 +583,7 @@ export default function OpenFinanceTab({ kunde }) {
                       </td>
                     )}
                     <td className="px-4 py-2.5 text-center">
-                      {v.consent === false ? <span className="text-slate-300 text-xs">keine Daten</span> : <InsuranceScore score={scoreVersicherung(kunde.id, v)} />}
+                      {v.consent === false ? <span className="text-slate-300 text-xs">{t('keineDaten')}</span> : <InsuranceScore score={scoreVersicherung(kunde.id, v)} />}
                     </td>
                     <td className="px-4 py-2.5 text-right font-mono">{v.consent === false ? '•••' : (v.praemie ? `${formatEur(v.praemie)}/J.` : '–')}</td>
                   </tr>
@@ -628,7 +629,7 @@ export default function OpenFinanceTab({ kunde }) {
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={Home}
-            title="Finanzieren"
+            title={t('finanzieren')}
             color="bg-violet-500"
             count={bf.finanzierungen.length}
           />
@@ -636,12 +637,12 @@ export default function OpenFinanceTab({ kunde }) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-slate-50">
-                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Kredit</th>
-                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Kreditgeber</th>
-                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Restschuld</th>
-                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Zinssatz</th>
-                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Rate</th>
-                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Details</th>
+                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('typ.kredit')}</th>
+                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('kreditgeber')}</th>
+                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('restschuld')}</th>
+                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('zinssatz')}</th>
+                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">{t('rate')}</th>
+                  <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('details')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -652,12 +653,12 @@ export default function OpenFinanceTab({ kunde }) {
                     <td className="px-4 py-2.5 text-right font-mono">{formatEur(f.restschuld)}</td>
                     <td className="px-4 py-2.5 text-right font-mono">{f.zinssatz || '–'}</td>
                     <td className="px-4 py-2.5 text-right font-mono">{f.rate || '–'}</td>
-                    <td className="px-4 py-2.5 text-slate-500">{f.details}</td>
+                    <td className="px-4 py-2.5 text-slate-500">{translateDetails(f.details, lang)}</td>
                   </tr>
                 ))}
                 {bf.finanzierungen.length > 1 && (
                   <tr className="border-t-2 border-slate-200 bg-slate-50/80 font-semibold">
-                    <td className="px-4 py-2.5">Gesamt Verbindlichkeiten</td>
+                    <td className="px-4 py-2.5">{t('gesamtVerbindlichkeiten')}</td>
                     <td className="px-4 py-2.5"></td>
                     <td className="px-4 py-2.5 text-right font-mono">{formatEur(bf.finanzierungen.reduce((s, f) => s + (f.restschuld || 0), 0))}</td>
                     <td className="px-4 py-2.5"></td>
@@ -673,7 +674,7 @@ export default function OpenFinanceTab({ kunde }) {
             <div className="flex items-center gap-2 mt-3 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
               <AlertTriangle size={16} className="text-amber-500 shrink-0" />
               <span className="text-sm text-amber-800">
-                <strong>Risiko:</strong> Baufinanzierung ohne Risikolebensversicherung! Bei Todesfall: Familie kann Kredit nicht bedienen.
+                <strong>{t('risikoBaufiTitel')}</strong> {t('risikoBaufiText')}
               </span>
             </div>
           )}

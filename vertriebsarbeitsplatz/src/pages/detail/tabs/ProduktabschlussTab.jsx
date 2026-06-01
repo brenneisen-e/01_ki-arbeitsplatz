@@ -119,7 +119,7 @@ export default function ProduktabschlussTab({ kunde }) {
               <ShoppingCart size={20} className="text-purple-600" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-slate-800">Online</div>
+              <div className="text-2xl font-bold text-slate-800">{t('kanalOnline')}</div>
               <div className="text-xs text-slate-400">{t('kanalDirektvertrieb')}</div>
             </div>
           </div>

@@ -210,6 +210,27 @@ const translationsCommon = {
   'lzsKiErkannt': { de: 'KI erkannt', en: 'AI detected' },
   'lzsHoverHinweis': { de: 'Hover über einen Punkt für Details', en: 'Hover over a point for details' },
 
+  // ─── GamificationDashboard ───
+  'gamiDeinMonat': { de: 'Dein Monat', en: 'Your Month' },
+  'gamiAbschluesse': { de: 'Abschlüsse', en: 'Closings' },
+  'gamiAbschlussVolumen': { de: 'Abschluss-Volumen', en: 'Closing Volume' },
+  'gamiConversionRate': { de: 'Conversion-Rate', en: 'Conversion Rate' },
+  'gamiZiel': { de: 'Ziel', en: 'Target' },
+  'gamiTag': { de: 'Tag', en: 'day' },
+  'gamiTage': { de: 'Tage', en: 'days' },
+  'gamiStreakText': { de: '{count} {tage} in Folge mindestens 1 Potenzial bearbeitet', en: '{count} {tage} in a row with at least 1 potential worked on' },
+  'gamiUnaufhaltsam': { de: 'Unaufhaltsam', en: 'Unstoppable' },
+  'gamiAufKurs': { de: 'Auf Kurs', en: 'On track' },
+  'gamiSolideWoche': { de: 'Solide Woche', en: 'Solid week' },
+  'gamiStreakAufbauen': { de: 'Streak aufbauen', en: 'Build a streak' },
+  'gamiPlatz2von7': { de: 'Platz 2 von 7 in der Filiale', en: 'Rank 2 of 7 in the branch' },
+  'gamiPlatzSub': { de: 'Nur 3 Abschlüsse hinter Spitzenreiter · Aufstieg möglich', en: 'Only 3 closings behind the leader · climb within reach' },
+  'gamiCrossSellAnteil': { de: '62% Cross-Sell-Anteil bei Abschlüssen', en: '62% cross-sell share on closings' },
+  'gamiCrossSellSub': { de: 'Filialschnitt 47% · +15 Pp besser', en: 'Branch average 47% · +15 pts better' },
+  'gamiKiEmpfiehlt': { de: 'Die KI empfiehlt diese {count} Potenziale für heute:', en: 'The AI recommends these {count} potentials for today:' },
+  'gamiProJahrSuffix': { de: '/J.', en: '/yr' },
+  'gamiKeineQuickWins': { de: 'Keine offenen Quick Wins.', en: 'No open quick wins.' },
+
   // ─── Vertriebsassistent / Banking Quick Actions ───
   'qaWasStehtHeuteAn': { de: 'Was steht heute an?', en: "What's on today?" },
   'qaMeineNeuenLeads': { de: 'Meine neuen Leads', en: 'My new leads' },

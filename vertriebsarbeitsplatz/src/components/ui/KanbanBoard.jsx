@@ -17,6 +17,7 @@ import {
 import { PrioBadge, QuellenBadge } from './Badge';
 import { formatEur } from '../../utils/formatters';
 import { getKundeFoto } from '../../utils/kundenFotos';
+import { tx } from '../../utils/langHelper';
 
 // Avatar fuer eine Kanban-Karte: versucht zuerst das Kundenfoto; faellt auf
 // die farbige Initialen-Bubble zurueck, wenn kein Foto vorhanden ist oder
@@ -46,12 +47,20 @@ function KundenAvatar({ kundeId, kundeName, columnColor, size = 24 }) {
   );
 }
 
+const COLUMN_LABELS = {
+  identifiziert: () => tx('Identifiziert', 'Identified'),
+  angeschrieben: () => tx('Angeschrieben', 'Contacted'),
+  termin: () => tx('Termin', 'Appointment'),
+  abgeschlossen: () => tx('Abgeschlossen', 'Closed'),
+  nicht_sinnvoll: () => tx('Nicht sinnvoll', 'Not relevant'),
+};
+const colLabel = (id) => (COLUMN_LABELS[id] ? COLUMN_LABELS[id]() : id);
 const COLUMNS = [
-  { id: 'identifiziert', label: 'Identifiziert', color: '#3b82f6', bg: '#eff6ff', border: '#bfdbfe' },
-  { id: 'angeschrieben', label: 'Angeschrieben', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a' },
-  { id: 'termin', label: 'Termin', color: '#22c55e', bg: '#f0fdf4', border: '#bbf7d0' },
-  { id: 'abgeschlossen', label: 'Abgeschlossen', color: '#16a34a', bg: '#ecfdf5', border: '#a7f3d0' },
-  { id: 'nicht_sinnvoll', label: 'Nicht sinnvoll', color: '#64748b', bg: '#f8fafc', border: '#cbd5e1' },
+  { id: 'identifiziert', color: '#3b82f6', bg: '#eff6ff', border: '#bfdbfe' },
+  { id: 'angeschrieben', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a' },
+  { id: 'termin', color: '#22c55e', bg: '#f0fdf4', border: '#bbf7d0' },
+  { id: 'abgeschlossen', color: '#16a34a', bg: '#ecfdf5', border: '#a7f3d0' },
+  { id: 'nicht_sinnvoll', color: '#64748b', bg: '#f8fafc', border: '#cbd5e1' },
 ];
 
 // Welche Bewegungen erlaubt sind. Abschlüsse sind final.
@@ -64,15 +73,18 @@ const ALLOWED_MOVES = {
 };
 
 const REASON_OPTIONS = [
-  { id: 'bereits_abgesichert', label: 'Kunde hat bereits Absicherung (anderer Anbieter)' },
-  { id: 'kein_interesse', label: 'Kunde hat kein Interesse signalisiert' },
-  { id: 'falsche_erkennung', label: 'Falsche Erkennung – trifft nicht zu' },
-  { id: 'timing', label: 'Timing passt nicht – vielleicht später' },
-  { id: 'kunde_wechselt', label: 'Kunde wechselt / ist in Kündigung' },
-  { id: 'anderer_grund', label: 'Anderer Grund' },
+  { id: 'bereits_abgesichert', label: () => tx('Kunde hat bereits Absicherung (anderer Anbieter)', 'Customer already covered (other provider)') },
+  { id: 'kein_interesse', label: () => tx('Kunde hat kein Interesse signalisiert', 'Customer signalled no interest') },
+  { id: 'falsche_erkennung', label: () => tx('Falsche Erkennung – trifft nicht zu', 'False detection – does not apply') },
+  { id: 'timing', label: () => tx('Timing passt nicht – vielleicht später', 'Timing not right – maybe later') },
+  { id: 'kunde_wechselt', label: () => tx('Kunde wechselt / ist in Kündigung', 'Customer switching / cancelling') },
+  { id: 'anderer_grund', label: () => tx('Anderer Grund', 'Other reason') },
 ];
 
-const REASON_LABELS = REASON_OPTIONS.reduce((acc, r) => ({ ...acc, [r.id]: r.label }), {});
+const reasonLabel = (id) => {
+  const r = REASON_OPTIONS.find((o) => o.id === id);
+  return r ? r.label() : id;
+};
 
 export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactivate, onCardClick }) {
   const [filters, setFilters] = useState({
@@ -231,7 +243,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
     const isCluster = Array.isArray(potential.items) && potential.items.length > 1;
     setTrainingToast({
       kundeName: potential.kundeName,
-      titel: isCluster ? `${potential.items.length} Potenziale` : potential.titel,
+      titel: isCluster ? tx(`${potential.items.length} Potenziale`, `${potential.items.length} potentials`) : potential.titel,
       reason,
     });
   };
@@ -265,45 +277,45 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
             type="text"
             value={filters.suche}
             onChange={e => setFilters(f => ({ ...f, suche: e.target.value }))}
-            placeholder="Potenzial, Kunde, Beschreibung…"
+            placeholder={tx('Potenzial, Kunde, Beschreibung…', 'Potential, customer, description…')}
             className="w-full pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
           />
         </div>
         <FilterSelect
           value={filters.kunde}
           onChange={v => setFilters(f => ({ ...f, kunde: v }))}
-          options={[{ value: 'alle', label: 'Alle Kunden' }, ...kunden.map(k => ({ value: k.id, label: k.name }))]}
+          options={[{ value: 'alle', label: tx('Alle Kunden', 'All customers') }, ...kunden.map(k => ({ value: k.id, label: k.name }))]}
         />
         <FilterSelect
           value={filters.prio}
           onChange={v => setFilters(f => ({ ...f, prio: v }))}
           options={[
-            { value: 'alle', label: 'Alle Prios' },
-            { value: 'sehr_hoch', label: 'Sehr hoch' },
-            { value: 'hoch', label: 'Hoch' },
-            { value: 'mittel', label: 'Mittel' },
-            { value: 'niedrig', label: 'Niedrig' },
+            { value: 'alle', label: tx('Alle Prios', 'All priorities') },
+            { value: 'sehr_hoch', label: tx('Sehr hoch', 'Very high') },
+            { value: 'hoch', label: tx('Hoch', 'High') },
+            { value: 'mittel', label: tx('Mittel', 'Medium') },
+            { value: 'niedrig', label: tx('Niedrig', 'Low') },
           ]}
         />
         <FilterSelect
           value={filters.quelle}
           onChange={v => setFilters(f => ({ ...f, quelle: v }))}
           options={[
-            { value: 'alle', label: 'Alle Quellen' },
+            { value: 'alle', label: tx('Alle Quellen', 'All sources') },
             { value: 'finanztransaktion', label: 'FinTx' },
-            { value: 'bestand', label: 'Bestand' },
-            { value: 'wettbewerb', label: 'Wettbewerb' },
-            { value: 'lebensereignis', label: 'Lebensereignis' },
-            { value: 'direktvertrieb', label: 'Direktvertrieb' },
+            { value: 'bestand', label: tx('Bestand', 'Portfolio') },
+            { value: 'wettbewerb', label: tx('Wettbewerb', 'Competition') },
+            { value: 'lebensereignis', label: tx('Lebensereignis', 'Life event') },
+            { value: 'direktvertrieb', label: tx('Direktvertrieb', 'Direct sales') },
           ]}
         />
         <FilterSelect
           value={sortMode}
           onChange={setSortMode}
           options={[
-            { value: 'prioritaet', label: 'Sort: Priorität' },
-            { value: 'volumen', label: 'Sort: Volumen' },
-            { value: 'kunde', label: 'Sort: Kunde' },
+            { value: 'prioritaet', label: tx('Sort: Priorität', 'Sort: Priority') },
+            { value: 'volumen', label: tx('Sort: Volumen', 'Sort: Volume') },
+            { value: 'kunde', label: tx('Sort: Kunde', 'Sort: Customer') },
           ]}
         />
       </div>
@@ -349,7 +361,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, col.id)}
                 onClick={() => toggleColumnCollapsed(col.id)}
-                title={`${col.label} aufklappen`}
+                title={`${colLabel(col.id)} ${tx('aufklappen', 'expand')}`}
               >
                 {/* Column header (wie ausgeklappt, nur mit Aufklapp-Chevron) */}
                 <div className="px-3 py-3 border-b" style={{ borderColor: col.border, backgroundColor: col.bg }}>
@@ -359,7 +371,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                         className="w-2 h-2 rounded-full shrink-0"
                         style={{ backgroundColor: col.color }}
                       />
-                      <span className="font-bold text-sm text-slate-800 truncate">{col.label}</span>
+                      <span className="font-bold text-sm text-slate-800 truncate">{colLabel(col.id)}</span>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
                       <span
@@ -385,8 +397,8 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                   style={{ minHeight: 140, backgroundColor: col.bg }}
                 >
                   <div className="text-center">
-                    <div className="font-semibold text-slate-500 not-italic mb-0.5">Eingeklappt</div>
-                    <div>Klick zum Aufklappen</div>
+                    <div className="font-semibold text-slate-500 not-italic mb-0.5">{tx('Eingeklappt', 'Collapsed')}</div>
+                    <div>{tx('Klick zum Aufklappen', 'Click to expand')}</div>
                   </div>
                 </div>
               </div>
@@ -414,7 +426,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                       className="w-2 h-2 rounded-full shrink-0"
                       style={{ backgroundColor: col.color }}
                     />
-                    <span className="font-bold text-sm text-slate-800 truncate">{col.label}</span>
+                    <span className="font-bold text-sm text-slate-800 truncate">{colLabel(col.id)}</span>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <span
@@ -427,7 +439,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                       type="button"
                       onClick={() => toggleColumnCollapsed(col.id)}
                       className="p-0.5 rounded hover:bg-white/60 text-slate-500 hover:text-slate-800 transition-colors"
-                      title={`${col.label} einklappen`}
+                      title={`${colLabel(col.id)} ${tx('einklappen', 'collapse')}`}
                     >
                       <ChevronDown size={14} />
                     </button>
@@ -440,11 +452,9 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                 )}
                 {col.id === 'nicht_sinnvoll' && nichtSinnvollStats.total > 0 && (
                   <div className="mt-2 pt-2 border-t border-slate-200">
-                    <div className="text-[11px] text-slate-600 leading-snug">
-                      Dein Feedback hat die KI-Trefferquote von <strong>78%</strong> auf <strong>86%</strong> verbessert.
-                    </div>
+                    <div className="text-[11px] text-slate-600 leading-snug" dangerouslySetInnerHTML={{ __html: tx('Dein Feedback hat die KI-Trefferquote von <strong>78%</strong> auf <strong>86%</strong> verbessert.', 'Your feedback improved the AI hit rate from <strong>78%</strong> to <strong>86%</strong>.') }} />
                     <div className="text-[10px] text-slate-400 mt-0.5">
-                      {nichtSinnvollStats.total} verworfen · {nichtSinnvollStats.falscheErkennung} Fehlerkennungen korrigiert
+                      {tx(`${nichtSinnvollStats.total} verworfen · ${nichtSinnvollStats.falscheErkennung} Fehlerkennungen korrigiert`, `${nichtSinnvollStats.total} dismissed · ${nichtSinnvollStats.falscheErkennung} false detections corrected`)}
                     </div>
                   </div>
                 )}
@@ -513,7 +523,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                       })}
                       {cards.length === 0 && (
                         <div className="text-center text-[11px] text-slate-400 italic py-4">
-                          {isDropTarget ? 'Hier ablegen' : '—'}
+                          {isDropTarget ? tx('Hier ablegen', 'Drop here') : '—'}
                         </div>
                       )}
                       {groups.length > CARDS_PER_COLUMN && (
@@ -529,8 +539,8 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                           style={{ color: col.color, borderColor: col.border }}
                         >
                           {isExpanded
-                            ? 'Weniger anzeigen'
-                            : `Mehr anzeigen (+${hiddenGroupCount} Kunden)`}
+                            ? tx('Weniger anzeigen', 'Show less')
+                            : tx(`Mehr anzeigen (+${hiddenGroupCount} Kunden)`, `Show more (+${hiddenGroupCount} customers)`)}
                         </button>
                       )}
                     </>
@@ -625,12 +635,12 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
         <KundenAvatar kundeId={p.kundeId} kundeName={p.kundeName} columnColor={columnColor} size={24} />
         <span className={`text-xs font-semibold truncate flex-1 ${isClosed ? 'text-slate-500 line-through' : 'text-slate-700'}`}>{p.kundeName}</span>
         {isClosed && (
-          <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500 shrink-0" title="Abgeschlossen">
+          <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500 shrink-0" title={tx('Abgeschlossen', 'Closed')}>
             <Check size={11} className="text-white" strokeWidth={3} />
           </span>
         )}
         {!isClosed && fida && (
-          <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" title="FIDA-Daten" />
+          <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" title={tx('FIDA-Daten', 'FIDA data')} />
         )}
         {ageWarn && !isDismissed && !isClosed && (
           <AlertTriangle size={11} className="text-red-500 shrink-0" />
@@ -646,7 +656,7 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
       {isDismissed && p._override && (
         <div className="mb-1.5 px-1.5 py-1 bg-slate-50 rounded border border-slate-200">
           <div className="text-[10px] font-bold text-slate-600 flex items-center gap-1">
-            <X size={10} /> {REASON_LABELS[p._override.reason] || 'Verworfen'}
+            <X size={10} /> {reasonLabel(p._override.reason) || tx('Verworfen', 'Dismissed')}
           </div>
           {p._override.comment && (
             <div className="text-[10px] text-slate-500 italic mt-0.5 line-clamp-2">
@@ -669,14 +679,14 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
       {/* Volumen + Alter */}
       <div className="flex items-center justify-between text-[11px] mt-1">
         <span className="font-mono font-semibold text-slate-700">
-          {p.volumen ? `${formatEur(p.volumen)}${p.volumenTyp === 'jaehrlich' ? ' /J.' : ''}` : '—'}
+          {p.volumen ? `${formatEur(p.volumen)}${p.volumenTyp === 'jaehrlich' ? tx(' /J.', ' /yr') : ''}` : '—'}
         </span>
         {ageInDays != null && !isDismissed && (
           <span
             className="flex items-center gap-0.5 text-[10px]"
             style={{ color: ageWarn ? '#dc2626' : '#94a3b8' }}
           >
-            <Clock size={10} /> {ageInDays}T
+            <Clock size={10} /> {ageInDays}{tx('T', 'd')}
           </span>
         )}
       </div>
@@ -695,7 +705,7 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
           {(p.quellen || []).length > 0 && (
             <div>
               <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">
-                Quellen
+                {tx('Quellen', 'Sources')}
               </div>
               <div className="flex items-center gap-1 flex-wrap">
                 {(p.quellen || []).map((q, qi) => (
@@ -707,7 +717,7 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
           {p.produktEmpfehlung && (
             <div>
               <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-0.5">
-                Produkt-Empfehlung
+                {tx('Produkt-Empfehlung', 'Product recommendation')}
               </div>
               <div className="text-[11px] text-slate-700 font-semibold">
                 {p.produktEmpfehlung}
@@ -720,7 +730,7 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
             className="w-full text-[11px] font-semibold text-white rounded px-2 py-1.5 transition-colors hover:opacity-90"
             style={{ backgroundColor: columnColor }}
           >
-            Zum Kundenprofil
+            {tx('Zum Kundenprofil', 'To customer profile')}
           </button>
         </div>
       )}
@@ -733,9 +743,9 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
           className="mt-1.5 w-full flex items-center justify-center gap-0.5 text-[10px] font-semibold text-slate-500 hover:text-slate-900 rounded py-0.5 hover:bg-slate-100 transition-colors"
         >
           {isExpanded ? (
-            <>Weniger anzeigen <ChevronDown size={10} /></>
+            <>{tx('Weniger anzeigen', 'Show less')} <ChevronDown size={10} /></>
           ) : (
-            <>Details <ChevronRight size={10} /></>
+            <>{tx('Details', 'Details')} <ChevronRight size={10} /></>
           )}
         </button>
       )}
@@ -746,7 +756,7 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
           onClick={(e) => { e.stopPropagation(); onReactivate(p._id); }}
           className="mt-1.5 w-full text-[10px] font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded px-2 py-1 flex items-center justify-center gap-1 transition-colors"
         >
-          <RotateCcw size={10} /> Reaktivieren
+          <RotateCcw size={10} /> {tx('Reaktivieren', 'Reactivate')}
         </button>
       )}
     </div>
@@ -754,16 +764,17 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
 }
 
 const QUELLEN_THEME_LABELS = {
-  finanztransaktion: 'FIDA-Signal',
-  bestand: 'Bestandssignal',
-  wettbewerb: 'Wettbewerb',
-  lebensereignis: 'Lebensereignis',
-  direktvertrieb: 'Direktvertrieb',
-  kontoumsaetze: 'Kontoumsätze',
-  risikosignal: 'Risikosignal',
-  kommunikation: 'Kommunikation',
-  markt: 'Marktdaten',
+  finanztransaktion: () => tx('FIDA-Signal', 'FIDA signal'),
+  bestand: () => tx('Bestandssignal', 'Portfolio signal'),
+  wettbewerb: () => tx('Wettbewerb', 'Competition'),
+  lebensereignis: () => tx('Lebensereignis', 'Life event'),
+  direktvertrieb: () => tx('Direktvertrieb', 'Direct sales'),
+  kontoumsaetze: () => tx('Kontoumsätze', 'Account transactions'),
+  risikosignal: () => tx('Risikosignal', 'Risk signal'),
+  kommunikation: () => tx('Kommunikation', 'Communication'),
+  markt: () => tx('Marktdaten', 'Market data'),
 };
+const quellenThemeLabel = (q) => (QUELLEN_THEME_LABELS[q] ? QUELLEN_THEME_LABELS[q]() : q);
 
 function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onReactivate, onCardClick, isExpanded, onToggleExpand }) {
   const [localExpanded, setLocalExpanded] = useState(false);
@@ -806,16 +817,16 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
   let themaText = '';
   if (sortedQuellen.length > 0) {
     const [topQ, topCount] = sortedQuellen[0];
-    const topLabel = QUELLEN_THEME_LABELS[topQ] || topQ;
+    const topLabel = quellenThemeLabel(topQ);
     if (topCount >= 2) {
       themaText = `${topCount}× ${topLabel}`;
       if (sortedQuellen.length > 1) {
-        const secondLabel = QUELLEN_THEME_LABELS[sortedQuellen[1][0]] || sortedQuellen[1][0];
+        const secondLabel = quellenThemeLabel(sortedQuellen[1][0]);
         themaText += ` + ${secondLabel}`;
       }
-      themaText += ' — Bestandskonsolidierung';
+      themaText += ` — ${tx('Bestandskonsolidierung', 'Portfolio consolidation')}`;
     } else if (sortedQuellen.length > 1) {
-      const secondLabel = QUELLEN_THEME_LABELS[sortedQuellen[1][0]] || sortedQuellen[1][0];
+      const secondLabel = quellenThemeLabel(sortedQuellen[1][0]);
       themaText = `${topLabel} + ${secondLabel}`;
     } else {
       themaText = topLabel;
@@ -823,7 +834,7 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
   }
 
   const topVolText = top.volumen
-    ? `${formatEur(top.volumen)}${top.volumenTyp === 'jaehrlich' ? ' /J.' : ''}`
+    ? `${formatEur(top.volumen)}${top.volumenTyp === 'jaehrlich' ? tx(' /J.', ' /yr') : ''}`
     : '';
 
   if (expanded) {
@@ -833,14 +844,14 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
           <div className="flex items-center gap-2 min-w-0">
             <KundenAvatar kundeId={top.kundeId} kundeName={kundeName} columnColor={columnColor} size={20} />
             <span className="text-[11px] font-bold text-slate-700 truncate">{kundeName}</span>
-            <span className="text-[10px] text-slate-400 shrink-0">· {items.length} Potenziale</span>
+            <span className="text-[10px] text-slate-400 shrink-0">· {items.length} {tx('Potenziale', 'potentials')}</span>
           </div>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); toggleExpanded(); }}
             className="text-[10px] font-semibold text-slate-500 hover:text-slate-900 px-1.5 py-0.5 rounded hover:bg-slate-100 shrink-0"
           >
-            Einklappen
+            {tx('Einklappen', 'Collapse')}
           </button>
         </div>
         <div className="space-y-2">
@@ -876,19 +887,19 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
         <KundenAvatar kundeId={top.kundeId} kundeName={kundeName} columnColor={columnColor} size={24} />
         <span className="text-xs font-semibold truncate flex-1 text-slate-700">{kundeName}</span>
         {fida && (
-          <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" title="FIDA-Daten" />
+          <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" title={tx('FIDA-Daten', 'FIDA data')} />
         )}
       </div>
 
       {/* Summary line */}
       <div className="text-[11px] font-mono text-slate-500 mb-1.5">
-        {items.length} Potenziale
+        {items.length} {tx('Potenziale', 'potentials')}
         {(totalEinmalig + totalJaehrlich) > 0 && (
           <>
             {' · Σ '}
             {totalEinmalig > 0 && formatEur(totalEinmalig)}
             {totalEinmalig > 0 && totalJaehrlich > 0 && ' + '}
-            {totalJaehrlich > 0 && `${formatEur(totalJaehrlich)} /J.`}
+            {totalJaehrlich > 0 && `${formatEur(totalJaehrlich)}${tx(' /J.', ' /yr')}`}
           </>
         )}
       </div>
@@ -898,7 +909,7 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
         <li className="text-[11px] text-slate-700 leading-snug flex gap-1.5">
           <span className="text-slate-400 shrink-0">•</span>
           <span className="min-w-0">
-            <span className="font-semibold">Top:</span>{' '}
+            <span className="font-semibold">{tx('Top:', 'Top:')}</span>{' '}
             <span className="text-slate-800">{top.titel}</span>
             {topVolText && <span className="text-slate-500"> ({topVolText})</span>}
           </span>
@@ -907,7 +918,7 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
           <li className="text-[11px] text-slate-700 leading-snug flex gap-1.5">
             <span className="text-slate-400 shrink-0">•</span>
             <span className="min-w-0">
-              <span className="font-semibold">Thema:</span>{' '}
+              <span className="font-semibold">{tx('Thema:', 'Topic:')}</span>{' '}
               <span className="text-slate-600">{themaText}</span>
             </span>
           </li>
@@ -930,7 +941,7 @@ function PotenzialClusterCard({ items, columnColor, onDragStart, onDragEnd, onRe
           className="flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded hover:bg-slate-100 shrink-0"
           style={{ color: columnColor }}
         >
-          Aufklappen <ChevronRight size={10} />
+          {tx('Aufklappen', 'Expand')} <ChevronRight size={10} />
         </button>
       </div>
     </div>
@@ -956,7 +967,7 @@ function FeedbackModal({ potential, onClose, onConfirm }) {
     <ModalShell onClose={onClose}>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-bold text-slate-900">Potenzial verwerfen</h3>
+          <h3 className="text-lg font-bold text-slate-900">{tx('Potenzial verwerfen', 'Dismiss potential')}</h3>
           <p className="text-xs text-slate-500 mt-0.5">
             {potential.kundeName} · {potential.titel}
           </p>
@@ -970,7 +981,7 @@ function FeedbackModal({ potential, onClose, onConfirm }) {
       </div>
 
       <div className="text-sm font-semibold text-slate-800 mb-2">
-        Warum passt dieses Potenzial nicht?
+        {tx('Warum passt dieses Potenzial nicht?', 'Why does this potential not fit?')}
       </div>
       <div className="space-y-1.5 mb-4">
         {REASON_OPTIONS.map(r => (
@@ -989,20 +1000,20 @@ function FeedbackModal({ potential, onClose, onConfirm }) {
               onChange={() => setReason(r.id)}
               className="accent-indigo-600"
             />
-            <span className="text-sm text-slate-700">{r.label}</span>
+            <span className="text-sm text-slate-700">{r.label()}</span>
           </label>
         ))}
       </div>
 
       <div className="mb-4">
         <label className="text-xs font-semibold text-slate-600 mb-1 block">
-          Optionaler Kommentar
+          {tx('Optionaler Kommentar', 'Optional comment')}
         </label>
         <textarea
           value={comment}
           onChange={e => setComment(e.target.value)}
           rows={3}
-          placeholder='z.B. "Hund gehört der Ex-Partnerin"'
+          placeholder={tx('z.B. "Hund gehört der Ex-Partnerin"', 'e.g. "Dog belongs to the ex-partner"')}
           className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
         />
       </div>
@@ -1011,8 +1022,7 @@ function FeedbackModal({ potential, onClose, onConfirm }) {
         <div className="flex items-start gap-2">
           <Sparkles size={14} className="text-indigo-600 mt-0.5 shrink-0" />
           <div className="text-xs text-indigo-800 leading-relaxed">
-            Dieses Feedback hilft der KI, zukünftige Potenziale besser zu bewerten.
-            Je präziser deine Begründung, desto weniger Fehlerkennungen.
+            {tx('Dieses Feedback hilft der KI, zukünftige Potenziale besser zu bewerten. Je präziser deine Begründung, desto weniger Fehlerkennungen.', 'This feedback helps the AI assess future potentials better. The more precise your reasoning, the fewer false detections.')}
           </div>
         </div>
       </div>
@@ -1022,13 +1032,13 @@ function FeedbackModal({ potential, onClose, onConfirm }) {
           onClick={onClose}
           className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100"
         >
-          Abbrechen
+          {tx('Abbrechen', 'Cancel')}
         </button>
         <button
           onClick={() => onConfirm(reason, comment)}
           className="px-4 py-2 rounded-lg text-sm font-semibold bg-slate-800 text-white hover:bg-slate-900"
         >
-          Potenzial verwerfen
+          {tx('Potenzial verwerfen', 'Dismiss potential')}
         </button>
       </div>
     </ModalShell>
@@ -1044,7 +1054,7 @@ function AbschlussModal({ potential, onClose, onConfirm }) {
     <ModalShell onClose={onClose}>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-bold text-slate-900">Abschluss erfassen</h3>
+          <h3 className="text-lg font-bold text-slate-900">{tx('Abschluss erfassen', 'Record closing')}</h3>
           <p className="text-xs text-slate-500 mt-0.5">
             {potential.kundeName} · {potential.titel}
           </p>
@@ -1059,7 +1069,7 @@ function AbschlussModal({ potential, onClose, onConfirm }) {
 
       <div className="space-y-3 mb-4">
         <div>
-          <label className="text-xs font-semibold text-slate-600 mb-1 block">Produkt</label>
+          <label className="text-xs font-semibold text-slate-600 mb-1 block">{tx('Produkt', 'Product')}</label>
           <input
             type="text"
             value={produkt}
@@ -1068,7 +1078,7 @@ function AbschlussModal({ potential, onClose, onConfirm }) {
           />
         </div>
         <div>
-          <label className="text-xs font-semibold text-slate-600 mb-1 block">Volumen (€)</label>
+          <label className="text-xs font-semibold text-slate-600 mb-1 block">{tx('Volumen (€)', 'Volume (€)')}</label>
           <input
             type="number"
             value={volumen}
@@ -1077,7 +1087,7 @@ function AbschlussModal({ potential, onClose, onConfirm }) {
           />
         </div>
         <div>
-          <label className="text-xs font-semibold text-slate-600 mb-1 block">Abschlussdatum</label>
+          <label className="text-xs font-semibold text-slate-600 mb-1 block">{tx('Abschlussdatum', 'Closing date')}</label>
           <input
             type="date"
             value={datum}
@@ -1092,13 +1102,13 @@ function AbschlussModal({ potential, onClose, onConfirm }) {
           onClick={onClose}
           className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100"
         >
-          Abbrechen
+          {tx('Abbrechen', 'Cancel')}
         </button>
         <button
           onClick={() => onConfirm({ produkt, volumen: Number(volumen) || 0, datum })}
           className="px-4 py-2 rounded-lg text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700"
         >
-          Abschluss erfassen
+          {tx('Abschluss erfassen', 'Record closing')}
         </button>
       </div>
     </ModalShell>
@@ -1113,14 +1123,14 @@ function KITrainingToast({ kundeName, titel, reason, onDone }) {
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState(0); // 0 → lernend, 1 → fertig
   const REASON_LABELS_FULL = {
-    bereits_abgesichert: 'Kunde hat bereits Absicherung',
-    kein_interesse: 'Kunde hat kein Interesse',
-    falsche_erkennung: 'Fehlerkennung',
-    timing: 'Timing passt nicht',
-    kunde_wechselt: 'Kunde wechselt / kündigt',
-    anderer_grund: 'Anderer Grund',
+    bereits_abgesichert: tx('Kunde hat bereits Absicherung', 'Customer already covered'),
+    kein_interesse: tx('Kunde hat kein Interesse', 'Customer not interested'),
+    falsche_erkennung: tx('Fehlerkennung', 'False detection'),
+    timing: tx('Timing passt nicht', 'Timing not right'),
+    kunde_wechselt: tx('Kunde wechselt / kündigt', 'Customer switching / cancelling'),
+    anderer_grund: tx('Anderer Grund', 'Other reason'),
   };
-  const reasonLabel = REASON_LABELS_FULL[reason] || 'Feedback';
+  const reasonLabelText = REASON_LABELS_FULL[reason] || tx('Feedback', 'Feedback');
 
   useEffect(() => {
     // Progress-Bar in Schritten hochziehen.
@@ -1172,21 +1182,21 @@ function KITrainingToast({ kundeName, titel, reason, onDone }) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 mb-0.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-violet-700 bg-violet-100 px-1.5 py-0.5 rounded-full">
-                  <Cpu size={9} className="inline mr-0.5" /> KI lernt
+                  <Cpu size={9} className="inline mr-0.5" /> {tx('KI lernt', 'AI learning')}
                 </span>
-                <span className="text-[10px] text-slate-400">&middot; aus deinem Feedback</span>
+                <span className="text-[10px] text-slate-400">&middot; {tx('aus deinem Feedback', 'from your feedback')}</span>
               </div>
               <div className="text-sm font-semibold text-slate-800 leading-snug">
                 {phase === 0
-                  ? 'Feedback wird in das Scoring-Modell eingearbeitet…'
-                  : 'Modell aktualisiert — ähnliche Potenziale werden künftig besser bewertet.'}
+                  ? tx('Feedback wird in das Scoring-Modell eingearbeitet…', 'Feedback is being incorporated into the scoring model…')
+                  : tx('Modell aktualisiert — ähnliche Potenziale werden künftig besser bewertet.', 'Model updated — similar potentials will be scored better in future.')}
               </div>
               <div className="text-[11px] text-slate-500 mt-1 leading-snug">
                 {titel && <span className="font-medium">„{titel}"</span>}
                 {titel && kundeName && <span> · </span>}
                 {kundeName && <span>{kundeName}</span>}
-                {reasonLabel && (
-                  <span className="block mt-0.5">Grund: <span className="text-slate-700 font-medium">{reasonLabel}</span></span>
+                {reasonLabelText && (
+                  <span className="block mt-0.5">{tx('Grund', 'Reason')}: <span className="text-slate-700 font-medium">{reasonLabelText}</span></span>
                 )}
               </div>
             </div>
@@ -1201,7 +1211,7 @@ function KITrainingToast({ kundeName, titel, reason, onDone }) {
             />
           </div>
           <div className="flex items-center justify-between mt-1.5 text-[10px] text-slate-500">
-            <span>{progress < 100 ? 'Re-Training läuft…' : 'Abgeschlossen'}</span>
+            <span>{progress < 100 ? tx('Re-Training läuft…', 'Re-training in progress…') : tx('Abgeschlossen', 'Completed')}</span>
             <span className="font-mono">{progress}%</span>
           </div>
         </div>

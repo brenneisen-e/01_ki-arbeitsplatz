@@ -11,12 +11,15 @@
 
 import { TrendingDown, TrendingUp, ArrowRight, Sparkles, Circle, MessageSquare, Bot, User, Receipt } from 'lucide-react';
 import { formatEur } from '../../utils/formatters';
+import { tx, getLang } from '../../utils/langHelper';
 import LogoImg from './LogoImg';
 
 function formatMonth(iso) {
-  // "2026-05" → "Mai 2026"
+  // "2026-05" → "Mai 2026" / "May 2026"
   const [y, m] = iso.split('-').map(Number);
-  const MONATE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  const MONATE_DE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  const MONATE_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const MONATE = getLang() === 'en' ? MONATE_EN : MONATE_DE;
   return `${MONATE[(m || 1) - 1]} ${y}`;
 }
 
@@ -34,8 +37,8 @@ export function LiquiditaetsVerlauf({ title, subtitle, zahlungen, waehrung = 'EU
           {subtitle && <div className="text-xs text-slate-500 mt-0.5">{subtitle}</div>}
         </div>
         <div className="flex items-center gap-3 text-[10px] text-slate-500">
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-slate-400" /> Ratenzahlung</span>
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-emerald-500" /> frei geworden</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-slate-400" /> {tx('Ratenzahlung', 'Installment')}</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-emerald-500" /> {tx('frei geworden', 'freed up')}</span>
         </div>
       </div>
       <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${zahlungen.length}, minmax(0, 1fr))` }}>
@@ -68,11 +71,11 @@ export function LiquiditaetsVerlauf({ title, subtitle, zahlungen, waehrung = 'EU
                 {z.label}
               </div>
               {istLetzte && (
-                <div className="text-[9px] text-slate-500 font-semibold uppercase tracking-wider">letzte Rate</div>
+                <div className="text-[9px] text-slate-500 font-semibold uppercase tracking-wider">{tx('letzte Rate', 'last installment')}</div>
               )}
               {istFrei && i === zahlungen.findIndex(x => x.freigeworden) && (
                 <div className="text-[9px] text-emerald-700 font-semibold uppercase tracking-wider flex items-center gap-0.5">
-                  <Sparkles size={9} /> ab hier frei
+                  <Sparkles size={9} /> {tx('ab hier frei', 'freed up here')}
                 </div>
               )}
             </div>
@@ -99,13 +102,13 @@ export function DeckungsluckenBar({ title, subtitle, aktuell, empfohlen, einheit
           {subtitle && <div className="text-xs text-slate-500 mt-0.5">{subtitle}</div>}
         </div>
         <div className="text-xs font-semibold text-red-700 bg-red-50 border border-red-200 rounded-full px-2 py-0.5">
-          Lücke: {formatEur(luecke)} {einheit}
+          {tx('Lücke', 'Gap')}: {formatEur(luecke)} {einheit}
         </div>
       </div>
       <div className="space-y-2">
         <div>
           <div className="flex justify-between text-[11px] text-slate-500 mb-0.5">
-            <span>Aktuell abgesichert</span>
+            <span>{tx('Aktuell abgesichert', 'Currently covered')}</span>
             <span className="font-mono">{formatEur(aktuell || 0)} {einheit}</span>
           </div>
           <div className="h-3 rounded-full bg-slate-100 overflow-hidden">
@@ -114,7 +117,7 @@ export function DeckungsluckenBar({ title, subtitle, aktuell, empfohlen, einheit
         </div>
         <div>
           <div className="flex justify-between text-[11px] text-slate-500 mb-0.5">
-            <span>Empfohlen</span>
+            <span>{tx('Empfohlen', 'Recommended')}</span>
             <span className="font-mono">{formatEur(empfohlen || 0)} {einheit}</span>
           </div>
           <div className="h-3 rounded-full bg-slate-100 overflow-hidden relative">
@@ -123,7 +126,7 @@ export function DeckungsluckenBar({ title, subtitle, aktuell, empfohlen, einheit
               <div
                 className="absolute top-0 h-full bg-red-200 border-l-2 border-red-400 rounded-r-full"
                 style={{ left: `${aktuellPct}%`, width: `${empfohlenPct - aktuellPct}%` }}
-                title={`Deckungslücke: ${formatEur(luecke)} ${einheit}`}
+                title={`${tx('Deckungslücke', 'Coverage gap')}: ${formatEur(luecke)} ${einheit}`}
               />
             )}
           </div>
@@ -140,7 +143,7 @@ export function DeckungsluckenBar({ title, subtitle, aktuell, empfohlen, einheit
 export function SignaleStack({ title, signale }) {
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-4">
-      <div className="text-sm font-semibold text-slate-700 mb-3">{title || 'Erkannte Signale'}</div>
+      <div className="text-sm font-semibold text-slate-700 mb-3">{title || tx('Erkannte Signale', 'Detected signals')}</div>
       <div className="space-y-2.5">
         {signale.map((s, i) => (
           <div key={i}>
@@ -186,16 +189,16 @@ export function ZinsSzenarioMatrix({ title, subtitle, volumen, szenarien }) {
         </div>
         {volumen && (
           <div className="text-xs text-slate-500">
-            Finanzierung: <span className="font-mono font-semibold text-slate-700">{formatEur(volumen)}</span>
+            {tx('Finanzierung', 'Financing')}: <span className="font-mono font-semibold text-slate-700">{formatEur(volumen)}</span>
           </div>
         )}
       </div>
       <table className="w-full text-sm">
         <thead>
           <tr className="text-[10px] uppercase tracking-wider text-slate-400">
-            <th className="text-left py-1.5 pr-2 font-semibold">Zins</th>
-            <th className="text-right py-1.5 px-2 font-semibold">Rate/mtl.</th>
-            <th className="text-right py-1.5 pl-2 font-semibold">Gesamtzins</th>
+            <th className="text-left py-1.5 pr-2 font-semibold">{tx('Zins', 'Rate')}</th>
+            <th className="text-right py-1.5 px-2 font-semibold">{tx('Rate/mtl.', 'Payment/mo.')}</th>
+            <th className="text-right py-1.5 pl-2 font-semibold">{tx('Gesamtzins', 'Total interest')}</th>
           </tr>
         </thead>
         <tbody>
@@ -206,7 +209,7 @@ export function ZinsSzenarioMatrix({ title, subtitle, volumen, szenarien }) {
             >
               <td className="py-1.5 pr-2 text-slate-700 font-semibold">
                 {s.empfohlen && <Sparkles size={10} className="inline text-emerald-600 mr-1" />}
-                {s.zinssatz}% · {s.laufzeit} J.
+                {s.zinssatz}% · {s.laufzeit} {tx('J.', 'yrs')}
               </td>
               <td className="py-1.5 px-2 text-right font-mono text-slate-700">{formatEur(s.rate)}</td>
               <td className={`py-1.5 pl-2 text-right font-mono ${s.empfohlen ? 'text-emerald-700 font-semibold' : 'text-slate-500'}`}>
@@ -228,7 +231,7 @@ export function Chatverlauf({ title, subtitle, datum, nachrichten = [] }) {
       <div className="flex items-baseline justify-between mb-3 gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <MessageSquare size={14} className="text-slate-500" />
-          <div className="text-sm font-semibold text-slate-700">{title || 'Chatverlauf'}</div>
+          <div className="text-sm font-semibold text-slate-700">{title || tx('Chatverlauf', 'Chat history')}</div>
         </div>
         {datum && (
           <div className="text-[11px] font-mono text-slate-500">{datum}</div>
@@ -272,15 +275,15 @@ export function Transaktionen({ title, subtitle, transaktionen = [] }) {
     <div className="bg-white rounded-xl border border-slate-200 p-4">
       <div className="flex items-center gap-2 mb-1">
         <Receipt size={14} className="text-slate-500" />
-        <div className="text-sm font-semibold text-slate-700">{title || 'Erkannte Kontoumsätze'}</div>
+        <div className="text-sm font-semibold text-slate-700">{title || tx('Erkannte Kontoumsätze', 'Detected account transactions')}</div>
       </div>
       {subtitle && <div className="text-xs text-slate-500 mb-2">{subtitle}</div>}
       <table className="w-full text-sm mt-2">
         <thead>
           <tr className="text-[10px] uppercase tracking-wider text-slate-400">
-            <th className="text-left py-1.5 pr-2 font-semibold">Empfänger / Händler</th>
-            <th className="text-left py-1.5 px-2 font-semibold">Häufigkeit</th>
-            <th className="text-right py-1.5 pl-2 font-semibold">Betrag</th>
+            <th className="text-left py-1.5 pr-2 font-semibold">{tx('Empfänger / Händler', 'Payee / Merchant')}</th>
+            <th className="text-left py-1.5 px-2 font-semibold">{tx('Häufigkeit', 'Frequency')}</th>
+            <th className="text-right py-1.5 pl-2 font-semibold">{tx('Betrag', 'Amount')}</th>
           </tr>
         </thead>
         <tbody>
@@ -311,16 +314,16 @@ export function Depotpositionen({ title, subtitle, positionen = [] }) {
     <div className="bg-white rounded-xl border border-slate-200 p-4">
       <div className="flex items-center gap-2 mb-1">
         <TrendingUp size={14} className="text-slate-500" />
-        <div className="text-sm font-semibold text-slate-700">{title || 'Depot-Positionen'}</div>
+        <div className="text-sm font-semibold text-slate-700">{title || tx('Depot-Positionen', 'Securities Positions')}</div>
       </div>
       {subtitle && <div className="text-xs text-slate-500 mb-2">{subtitle}</div>}
       <table className="w-full text-sm mt-2">
         <thead>
           <tr className="text-[10px] uppercase tracking-wider text-slate-400">
-            <th className="text-left py-1.5 pr-2 font-semibold">Position</th>
-            <th className="text-left py-1.5 px-2 font-semibold">Seit</th>
-            <th className="text-right py-1.5 px-2 font-semibold">Wert</th>
-            <th className="text-right py-1.5 px-2 font-semibold">Gewinn</th>
+            <th className="text-left py-1.5 pr-2 font-semibold">{tx('Position', 'Position')}</th>
+            <th className="text-left py-1.5 px-2 font-semibold">{tx('Seit', 'Since')}</th>
+            <th className="text-right py-1.5 px-2 font-semibold">{tx('Wert', 'Value')}</th>
+            <th className="text-right py-1.5 px-2 font-semibold">{tx('Gewinn', 'Gain')}</th>
             <th className="text-right py-1.5 pl-2 font-semibold">Performance</th>
           </tr>
         </thead>
@@ -348,7 +351,7 @@ export function Depotpositionen({ title, subtitle, positionen = [] }) {
           })}
           {gesamt > 0 && (
             <tr className="border-t-2 border-slate-200 bg-slate-50/60 font-semibold">
-              <td className="py-1.5 pr-2 text-slate-700">Gesamt</td>
+              <td className="py-1.5 pr-2 text-slate-700">{tx('Gesamt', 'Total')}</td>
               <td className="py-1.5 px-2"></td>
               <td className="py-1.5 px-2 text-right font-mono text-slate-800">{formatEur(gesamt)}</td>
               <td className="py-1.5 px-2"></td>

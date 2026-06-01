@@ -1,7 +1,9 @@
 import { getLang } from './langHelper';
 function numLoc() { return getLang() === 'en' ? 'en-US' : 'de-DE'; }
 function dateLoc() { return getLang() === 'en' ? 'en-GB' : 'de-DE'; }
-function cur() { return getLang() === 'en' ? '$' : '\u20ac'; }
+// Das Produkt rechnet in Euro \u2013 auch in der englischen Sprachversion wird
+// daher der Euro ausgegeben, nicht der Dollar.
+function cur() { return '\u20ac'; }
 
 export function formatEur(val) {
   if (val == null) return '-';

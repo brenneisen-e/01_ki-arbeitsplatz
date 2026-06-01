@@ -81,9 +81,9 @@ function deriveAbsicherung(kunde) {
 // Produkt-Kategorien nach denen die Leads/Potenziale geclustert werden.
 // Die Reihenfolge ist die Anzeige-Reihenfolge.
 const PRODUKT_KATEGORIEN = [
-  { key: 'anlage',        label: 'Anlageprodukte',        icon: LineChart,   color: '#6d28d9' },
-  { key: 'versicherung',  label: 'Versicherungsprodukte', icon: ShieldCheck, color: '#b45309' },
-  { key: 'bank',          label: 'Bankprodukte',          icon: Landmark,    color: '#0f766e' },
+  { key: 'anlage',        labelKey: 'anlageprodukte',        icon: LineChart,   color: '#6d28d9' },
+  { key: 'versicherung',  labelKey: 'versicherungsprodukte', icon: ShieldCheck, color: '#b45309' },
+  { key: 'bank',          labelKey: 'bankprodukte',          icon: Landmark,    color: '#0f766e' },
 ];
 
 // Priorität → numerische Sortier-Reihenfolge
@@ -192,7 +192,7 @@ export default function ImpulseTab({ kunde }) {
             >
               <div className="flex items-center gap-2">
                 <Icon size={20} style={{ color: kat.color }} strokeWidth={1.75} />
-                <h3 className="font-semibold text-slate-800">{kat.label}</h3>
+                <h3 className="font-semibold text-slate-800">{t(kat.labelKey)}</h3>
                 <span className="ml-1 inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
                   {list.length}
                 </span>

@@ -2,6 +2,19 @@
  * Common translations: Global/Header, Tabs, Landing Page, Months, Weekdays, general labels.
  */
 const translationsCommon = {
+  'kiAnschreiben': { de: 'KI-Anschreiben', en: 'AI Letter' },
+  'kiFormuliertAnschreiben': { de: 'KI formuliert Ihr Anschreiben …', en: 'AI is drafting your letter …' },
+  'anschreibenAuswertung': { de: 'Werte Herleitung, Produktangebot und bisherige Kommunikation aus.', en: 'Analyzing the rationale, product offer and previous communication.' },
+  'anschreibenWirdVersendet': { de: 'Anschreiben wird verpackt und versendet …', en: 'Packaging and sending the letter …' },
+  'kiBegruendungAnschreiben': { de: 'KI-Begründung des Anschreibens', en: 'AI rationale for the letter' },
+  'anLabel': { de: 'An', en: 'To' },
+  'betreffLabel': { de: 'Betreff', en: 'Subject' },
+  'anschreibenVersendet': { de: 'Anschreiben versendet', en: 'Letter sent' },
+  'anschreibenGeneriertHinweis': { de: 'Text wurde generiert – du kannst ihn vor dem Versand noch anpassen.', en: 'The text has been generated — you can edit it before sending.' },
+  'versendeKurz': { de: 'Versende …', en: 'Sending …' },
+  'generiereAnschreiben': { de: 'Generiere Anschreiben mit KI …', en: 'Generating letter with AI …' },
+  'abbrechen': { de: 'Abbrechen', en: 'Cancel' },
+  'jetztVersenden': { de: 'Jetzt versenden', en: 'Send now' },
   // ─── Global / Header ───
   'startseite': { de: 'Startseite', en: 'Home' },
   'zurueckStartseite': { de: 'Zurück zur Startseite', en: 'Back to Home' },

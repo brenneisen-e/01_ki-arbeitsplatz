@@ -8,7 +8,7 @@ import { getLang } from '../../utils/langHelper';
 
 function formatValue(wert, format) {
   const loc = getLang() === 'en' ? 'en-US' : 'de-DE';
-  const cur = getLang() === 'en' ? '$' : '\u20ac';
+  const cur = '\u20ac';
   if (format === 'eur') {
     return `${Math.round(wert).toLocaleString(loc)}${cur}`;
   }
@@ -44,7 +44,7 @@ function generateMonthlyData(currentValue, trend) {
 
 function formatCompact(wert, format) {
   const loc = getLang() === 'en' ? 'en-US' : 'de-DE';
-  const cur = getLang() === 'en' ? '$' : '\u20ac';
+  const cur = '\u20ac';
   if (format === 'eur') {
     if (wert >= 1000000) return `${(wert / 1000000).toLocaleString(loc, { maximumFractionDigits: 1 })}M${cur}`;
     if (wert >= 1000) return `${Math.round(wert / 1000).toLocaleString(loc)}k${cur}`;

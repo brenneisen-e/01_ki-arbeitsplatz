@@ -4,6 +4,9 @@
  * Impulse, Produktabschluss, generated data/labels.
  */
 const translationsDetail = {
+  'anlageprodukte': { de: 'Anlageprodukte', en: 'Investment products' },
+  'versicherungsprodukte': { de: 'Versicherungsprodukte', en: 'Insurance products' },
+  'bankprodukte': { de: 'Bankprodukte', en: 'Banking products' },
   'beraterRolle': { de: 'Berater', en: 'Advisor' },
   'kundeRolle': { de: 'Kunde', en: 'Client' },
   'keineAngabe': { de: 'keine Angabe', en: 'no information' },

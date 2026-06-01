@@ -604,14 +604,25 @@ export default function OpenFinanceTab({ kunde }) {
             });
             const summePraemie = (bf.versicherungenFremd || []).reduce((s, v) => s + (v.praemie || 0), 0);
             if (inst.size < 2 && schwache.length === 0) return null;
+            const isEn = lang === 'en';
+            const anbieterListe = Array.from(inst).join(', ');
+            const schwacheListe = schwache.map(v => `${v.produkt} (${v.institut})`).join(', ');
             const hinweis = {
               titel: inst.size >= 2
-                ? `Fragmentierter Versicherungsbestand — ${inst.size} Anbieter, ${bf.versicherungenFremd.length} Policen`
-                : 'Schwach bewertete Policen im Bestand',
+                ? (isEn
+                    ? `Fragmented insurance portfolio — ${inst.size} providers, ${bf.versicherungenFremd.length} policies`
+                    : `Fragmentierter Versicherungsbestand — ${inst.size} Anbieter, ${bf.versicherungenFremd.length} Policen`)
+                : (isEn ? 'Poorly rated policies in the portfolio' : 'Schwach bewertete Policen im Bestand'),
               text: inst.size >= 2
-                ? `Die Wettbewerber-Policen liegen auf ${inst.size} verschiedenen Anbietern (${Array.from(inst).join(', ')}) verteilt — aktuelle Jahresprämie zusammen ca. ${formatEur(summePraemie)}. Mehrere Ansprechpartner, doppelte Verwaltung und im Schadenfall abgestimmtes Vorgehen erschwert. Zusätzlich liegt die Bewertung einzelner Tarife unter dem Marktdurchschnitt.`
-                : `Mindestens eine Police im Bestand erreicht eine Bewertung < 75. Betroffen: ${schwache.map(v => `${v.produkt} (${v.institut})`).join(', ')}. Preis-Leistungs-Optimierung möglich.`,
-              empfehlung: 'Bestandskonsolidierung bei einem Hausversicherer anbieten (Bündel-Rabatt, ein Ansprechpartner). Im Lead-System als Potenzial „Versicherungscheck — Bestand konsolidieren" hinterlegt.',
+                ? (isEn
+                    ? `The competitor policies are spread across ${inst.size} different providers (${anbieterListe}) — combined current annual premium approx. ${formatEur(summePraemie)}. Multiple points of contact, duplicate administration and harder coordination in the event of a claim. On top of that, some tariffs are rated below the market average.`
+                    : `Die Wettbewerber-Policen liegen auf ${inst.size} verschiedenen Anbietern (${anbieterListe}) verteilt — aktuelle Jahresprämie zusammen ca. ${formatEur(summePraemie)}. Mehrere Ansprechpartner, doppelte Verwaltung und im Schadenfall abgestimmtes Vorgehen erschwert. Zusätzlich liegt die Bewertung einzelner Tarife unter dem Marktdurchschnitt.`)
+                : (isEn
+                    ? `At least one policy in the portfolio scores below 75. Affected: ${schwacheListe}. Price-performance optimization possible.`
+                    : `Mindestens eine Police im Bestand erreicht eine Bewertung < 75. Betroffen: ${schwacheListe}. Preis-Leistungs-Optimierung möglich.`),
+              empfehlung: isEn
+                ? 'Offer portfolio consolidation with a single primary insurer (bundle discount, one point of contact). Logged in the lead system as the potential "Insurance check — consolidate portfolio".'
+                : 'Bestandskonsolidierung bei einem Hausversicherer anbieten (Bündel-Rabatt, ein Ansprechpartner). Im Lead-System als Potenzial „Versicherungscheck — Bestand konsolidieren" hinterlegt.',
             };
             return (
               <div className="mt-3">

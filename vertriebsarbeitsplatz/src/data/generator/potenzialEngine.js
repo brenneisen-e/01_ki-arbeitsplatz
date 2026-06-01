@@ -18,7 +18,7 @@ function hatFremd(p, typ) {
 }
 
 function fmtEur(v) {
-  return v.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE') + (getLang() === 'en' ? '$' : '€');
+  return v.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE') + '€';
 }
 
 // ═══ Versicherung ═══

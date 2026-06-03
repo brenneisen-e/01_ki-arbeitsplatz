@@ -1,0 +1,350 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 40px);
+}
+
+/* Backdrop: zeichnet das Strukturbild dahinter weich + dunkel. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 8, 10, 0.62);
+  backdrop-filter: blur(22px) saturate(118%);
+  -webkit-backdrop-filter: blur(22px) saturate(118%);
+}
+
+.panel {
+  position: relative;
+  width: min(1180px, 95vw);
+  max-height: min(92vh, 920px);
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(130% 80% at 50% -10%, var(--accent-tint), transparent 60%),
+    var(--glass-strong);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  transform-origin: center center;
+}
+
+/* Dünne Akzentlinie ganz oben (Deloitte-Grün). */
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent), var(--accent-bright));
+  opacity: 0.9;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px clamp(20px, 3vw, 34px);
+  border-bottom: 1px solid var(--border-soft);
+  background: linear-gradient(180deg, var(--surface-1), transparent);
+  flex: none;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+/* Weißer Tile, damit die dunkle Deloitte-Wortmarke sauber sitzt. */
+.logoTile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  padding: 0 16px;
+  border-radius: var(--r-md);
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  flex: none;
+}
+
+.logoImg {
+  display: block;
+  height: 34px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+}
+
+.logoFallback {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #111;
+  line-height: 1;
+}
+
+.logoDot {
+  color: var(--accent-bright);
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+}
+
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+  flex: none;
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out);
+}
+
+.closeBtn:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+
+/* ── Lead / Framing ────────────────────────────────────────────────────── */
+.lead {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px clamp(20px, 3vw, 34px);
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--accent-tint);
+  flex: none;
+}
+
+.leadIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  color: var(--accent-bright);
+  flex: none;
+}
+
+.lead p {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.lead strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── Body (scrollt) ────────────────────────────────────────────────────── */
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(18px, 2.6vw, 28px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+
+.body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.body::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 880px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* Transformation als integrierender Abschluss über die volle Breite. */
+  .card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── Vision-Karte ──────────────────────────────────────────────────────── */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 22px 18px;
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent);
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out),
+    transform var(--t-med) var(--ease-out);
+}
+
+.card:hover {
+  background: var(--surface-2);
+  border-left-color: var(--accent-bright);
+  transform: translateY(-2px);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(150deg, var(--accent-deep), var(--accent));
+  box-shadow: 0 6px 16px var(--accent-glow), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  flex: none;
+}
+
+.cardHeadText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.cardLabel {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.cardOrt {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.visionText {
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--ink-2);
+}
+
+/* Das fett Markierte „poppt" gegen den ruhigeren Fließtext. */
+.visionText strong {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.visionTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  border: 1px solid rgba(134, 188, 37, 0.28);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  color: var(--accent-bright);
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px clamp(20px, 3vw, 34px);
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface-1);
+  flex: none;
+}
+
+.footNote,
+.footHint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.footHint {
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .header {
+    padding: 16px 18px;
+  }
+  .logoTile {
+    height: 46px;
+    padding: 0 12px;
+  }
+  .logoImg {
+    height: 28px;
+  }
+  .footNote {
+    display: none;
+  }
+  .footer {
+    justify-content: flex-end;
+  }
+}

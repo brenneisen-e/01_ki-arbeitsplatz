@@ -123,6 +123,12 @@ export type Chapter = {
   /** Schlüsselobjekt der Zone (glüht beim Erreichen). */
   keyObject: string
   zone: Zone
+  /**
+   * Aus den drei Hypothesen abgeleitetes Vision Statement für diesen Bereich
+   * der „Bank 2035" — wird in der Management Summary (Overlay über dem
+   * Strukturbild) gerendert. `**fett**` markiert das besonders Wichtige.
+   */
+  vision: string
   hypotheses: [Hypothesis, Hypothesis, Hypothesis]
   activity: Activity
 }
@@ -141,6 +147,8 @@ export const CHAPTERS: Chapter[] = [
     ort: 'Plaza (außen)',
     keyObject: 'Smartphone mit Banking-App',
     zone: { centerX: 6, centerY: 64, width: 12, height: 48, fit: 'contain' },
+    vision:
+      'Für unsere Kund:innen wird Banking 2035 **unsichtbar und Teil des Alltags** statt eigener Interaktion: Persönliche KI-Finanzassistenten begleiten kontinuierlich, verwandeln eine Flut von Optionen in **klare, simulierte und begründete Empfehlungen** und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus reaktivem Warten wird **teilautonome Finanzsteuerung mit Vertrauensmandat — die Kund:in entscheidet, aber auf KI-vorbereiteter Grundlage**.',
     hypotheses: [
       {
         title: 'Banking verschwindet als eigener Moment',
@@ -197,6 +205,8 @@ export const CHAPTERS: Chapter[] = [
     ort: 'Etage 3 (Advisory)',
     keyObject: '„VERTRIEBS-COCKPIT"-Screen',
     zone: { centerX: 50, centerY: 50, width: 56, height: 18, labelX: 28, labelY: 51 },
+    vision:
+      '2035 verkaufen wir keine Produkte mehr, sondern **orchestrieren Lösungen entlang der Ziele unserer Kund:innen**. KI kombiniert Finanz-, Service- und Ökosystemleistungen in Echtzeit; unsere Berater:innen werden zu **KI-augmentierten Sparringspartnern**, die bei komplexen Entscheidungen den Unterschied machen, während Standardvorgänge autonom laufen. Die Kundenbeziehung wird **permanent, kanalübergreifend und hyperpersonalisiert**.',
     hypotheses: [
       {
         title: 'Vom Produktvertrieb zum Lösungsorchestrator',
@@ -268,6 +278,8 @@ export const CHAPTERS: Chapter[] = [
     ort: 'Etage 2 (Back-Office)',
     keyObject: '„WORKFLOW AUTOMATION"-Screen',
     zone: { centerX: 50, centerY: 68, width: 56, height: 18, labelX: 70, labelY: 68 },
+    vision:
+      'Unsere Marktfolge entwickelt sich 2035 **vom internen Kostenblock zur wertschöpfenden Plattform**. Standardvorfälle laufen als **vollautonome Dunkelverarbeitung Ende-zu-Ende**, Menschen lösen nur noch komplexe Sonderfälle. Wir entscheiden bewusst, **was intern bleibt und was ein orchestriertes Ökosystem übernimmt — und bieten unsere besten Services als skalierbares Banking-as-a-Service für Dritte an**.',
     hypotheses: [
       {
         title: 'Marktfolge wird zur autonomen Dunkelverarbeitung',
@@ -323,6 +335,8 @@ export const CHAPTERS: Chapter[] = [
     ort: 'Etage 4 (HR / People & Culture)',
     keyObject: '„ORGANISATION"-Screen',
     zone: { centerX: 50, centerY: 32, width: 56, height: 17, labelX: 30, labelY: 33 },
+    vision:
+      'Corporate Services sind 2035 der **Enabler des Wandels**. Lernen ist kein Event mehr, sondern **kontinuierlicher, KI-gestützter Skill-Aufbau** für neue Profile wie den AI-Translator. Unsere Organisation wird **nicht mehr von starren Strukturen, sondern von Skills, Rollen und Teams in Echtzeit gesteuert** — und datenbasierte, vorausschauende Workforce-Steuerung wird zum Wettbewerbsvorteil.',
     hypotheses: [
       {
         title: 'Vom Training zum kontinuierlichen Skill-Aufbau',
@@ -380,6 +394,8 @@ export const CHAPTERS: Chapter[] = [
     ort: 'Keller / Etage 1 (Data Center)',
     keyObject: 'Monitoring-Arbeitsplatz',
     zone: { centerX: 50, centerY: 88, width: 64, height: 18, labelX: 30, labelY: 88 },
+    vision:
+      '2035 **entwickelt, testet und deployt sich unsere Software weitgehend selbst**. KI entscheidet autonom innerhalb der von uns gesetzten **Governance und Leitplanken**, während die IT zur **modularen, API-basierten Plattform** wird. Fachbereiche steuern diese Systeme zunehmend direkt — die **Gatekeeper-Rolle der klassischen IT verschwindet**, und unser Vorsprung entsteht aus der Geschwindigkeit, mit der wir Anforderungen in Lösungen verwandeln.',
     hypotheses: [
       {
         title: 'Selbstoptimierende AI-Delivery ersetzt Softwareentwicklung As-Is',
@@ -435,6 +451,8 @@ export const CHAPTERS: Chapter[] = [
     ort: 'Etage 5 (Boardroom)',
     keyObject: '„GOVERNANCE COCKPIT"-Screen',
     zone: { centerX: 50, centerY: 15, width: 56, height: 17, labelX: 32, labelY: 16 },
+    vision:
+      'Compliance ist 2035 **kein nachgelagerter Bremsklotz mehr, sondern in jede Entscheidung eingebaut**. Regulatorik ist direkt in Systeme und Entscheidungslogiken integriert; aus dem Three-Lines-of-Defense-Modell wird **kontinuierliche, technisch integrierte Echtzeit-Kontrolle mit dem CAIO im Zentrum**. Cyber- und Operational Risk werden **untrennbarer Teil des Betriebsmodells — Sicherheit heißt permanente Resilienzsteuerung statt nachträglicher Schutzwall**.',
     hypotheses: [
       {
         title: 'Von ex-post-Kontrolle zu kontinuierlicher Echtzeitsteuerung',
@@ -490,6 +508,8 @@ export const CHAPTERS: Chapter[] = [
     ort: 'Glas-Aufzug (vertikal)',
     keyObject: 'der Aufzug-Spine',
     zone: { centerX: 50, centerY: 50, width: 9, height: 90, fit: 'contain' },
+    vision:
+      'Wir wandeln uns bis 2035 **zur AI-nativen Plattform-Bank** — aufgebaut aus Daten, Ökosystem und **integrierter Governance statt nachgelagerter Kontrolle**. Unser Operating Model folgt der Entscheidungslogik: **Journey-Teams mit End-to-End-Ownership, Human-in-the-loop und AI-Governance**. Wir transformieren **decision-first** — zuerst die wenigen kritischen Decision Journeys und eine **skalierbare Decision Spine**, dann der systematische Roll-out von KI und Technologie.',
     hypotheses: [
       {
         title: 'Ökosystem-Plattform mit integrierter Governance',

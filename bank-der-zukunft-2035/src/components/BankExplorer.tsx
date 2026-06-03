@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 import { gsap } from 'gsap'
+import { ScrollText } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
 import { ChapterReader } from './ChapterReader'
@@ -14,6 +15,7 @@ import { IframeStage } from './IframeStage'
 import { StrategyLab } from './StrategyLab'
 import { CoCreationCanvas } from './CoCreationCanvas'
 import { KreditDilemma } from './KreditDilemma'
+import { ManagementSummary } from './ManagementSummary'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import {
   CHAPTERS,
@@ -74,6 +76,8 @@ export function BankExplorer(): React.ReactElement {
   const [handoff, setHandoff] = useState<Handoff | null>(null)
   // Reader erst NACH dem Kameraflug zeigen, damit der Zoom sichtbar bleibt.
   const [readerShown, setReaderShown] = useState(false)
+  // Management-Summary-Overlay (Vision der Bank 2035) — nur aus der Übersicht.
+  const [summaryOpen, setSummaryOpen] = useState(false)
 
   const reducedMotion = useReducedMotion()
   const activeChapter = useMemo(() => getChapter(activeId), [activeId])
@@ -273,6 +277,19 @@ export function BankExplorer(): React.ReactElement {
           Zone wählen — von der Steuerung bis zum Fundament
         </div>
 
+        {/* Management Summary — Vision der Bank 2035 (unten rechts, nur Übersicht) */}
+        <button
+          type="button"
+          className={styles.summaryBtn}
+          data-visible={isOverview || undefined}
+          tabIndex={isOverview ? 0 : -1}
+          onClick={() => setSummaryOpen(true)}
+          aria-label="Management Summary öffnen — Vision der Bank 2035"
+        >
+          <ScrollText size={17} strokeWidth={1.9} aria-hidden />
+          <span>Management Summary</span>
+        </button>
+
         {/* Kapitel-Reader (Hypothesen → Aktivität) — erst nach dem Kameraflug */}
         {activeChapter && readerShown && (
           <ChapterReader
@@ -291,6 +308,9 @@ export function BankExplorer(): React.ReactElement {
           <CoCreationCanvas variant={handoff.variant} onClose={handleHandoffClose} />
         )}
         {handoff?.kind === 'kredit-dilemma' && <KreditDilemma onClose={handleHandoffClose} />}
+
+        {/* Management-Summary-Overlay (Vision der Bank 2035) */}
+        {summaryOpen && <ManagementSummary onClose={() => setSummaryOpen(false)} />}
       </div>
     </div>
   )

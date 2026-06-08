@@ -17,6 +17,11 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 const LOGO_TOKEN = 'pk_H7vb5Y2lTsW47U4Xq-w3HA'
 const DELOITTE_LOGO = `https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=240&retina=true`
 
+// Gesamtzusammenfassung — synthetisiert die sieben Bereichs-Visionen zu einem
+// durchgehenden Zielbild der „Bank 2035". `**fett**` markiert die Kernaussagen.
+const GESAMT_SUMMARY =
+  'Bis 2035 wird aus unserer Bank eine **AI-native Plattform-Bank**: Für Kund:innen wird Banking **unsichtbar und Teil des Alltags** — persönliche KI-Finanzassistenten übernehmen eine teilautonome Finanzsteuerung mit Vertrauensmandat. Im Vertrieb verkaufen wir keine Produkte mehr, sondern **orchestrieren hyperpersonalisierte Lösungen** entlang der Kundenziele, während KI-augmentierte Berater:innen bei komplexen Entscheidungen den Unterschied machen. Die Marktfolge wandelt sich **vom Kostenblock zur wertschöpfenden Plattform** mit vollautonomer Dunkelverarbeitung und Banking-as-a-Service, und Corporate Services werden zum **Enabler des Wandels**, der Skills, Rollen und Teams in Echtzeit steuert. Technologisch **entwickelt, testet und deployt sich Software weitgehend selbst** innerhalb klarer Leitplanken, während Compliance **in jede Entscheidung eingebaut** ist statt nachgelagert zu bremsen. Den Weg dorthin gehen wir **decision-first** — über wenige kritische Decision Journeys und eine skalierbare Decision Spine.'
+
 // Mini-Markdown: **fett** → <strong>. Sonst Klartext (analog ChapterReader).
 function renderRichText(text: string): React.ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
@@ -115,11 +120,10 @@ export function ManagementSummary({
           <span className={styles.leadIcon} aria-hidden>
             <Telescope size={17} strokeWidth={1.9} />
           </span>
-          <p>
-            Sieben Bereiche, ein Zielbild: aus den drei Hypothesen je Kapitel
-            abgeleitet — wie die <strong>Bank im Jahr 2035</strong> in jedem
-            Bereich aussehen wird.
-          </p>
+          <div className={styles.leadText}>
+            <span className={styles.leadTitle}>Gesamtzusammenfassung</span>
+            <p>{renderRichText(GESAMT_SUMMARY)}</p>
+          </div>
         </div>
 
         <div className={styles.body}>
@@ -130,7 +134,6 @@ export function ManagementSummary({
                   <span className={styles.num}>{chapter.kapitel}</span>
                   <span className={styles.cardHeadText}>
                     <span className={styles.cardLabel}>{chapter.label}</span>
-                    <span className={styles.cardOrt}>{chapter.ort}</span>
                   </span>
                 </div>
                 <p className={styles.visionText}>{renderRichText(chapter.vision)}</p>

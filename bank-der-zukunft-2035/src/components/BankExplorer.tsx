@@ -250,7 +250,9 @@ export function BankExplorer(): React.ReactElement {
                       className={styles.hotspot}
                       style={{ left: `${spotLeft}%`, top: `${spotTop}%` }}
                       aria-hidden
-                    />
+                    >
+                      {chapter.kapitel}
+                    </span>
                     <span
                       className={styles.zoneLabel}
                       style={{ left: `${spotLeft}%`, top: `${spotTop}%` }}

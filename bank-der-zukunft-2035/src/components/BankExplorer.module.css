@@ -75,20 +75,29 @@
   box-shadow: inset 0 0 0 1px rgba(4, 106, 56, 0.7);
 }
 
-/* Schlüsselobjekt-Hotspot: dezent pulsierender Akzentpunkt im Zonen-Zentrum. */
+/* Schlüsselobjekt-Hotspot: pulsierender Akzentkreis mit Kapitelnummer (weiß). */
 .hotspot {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 14px;
-  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  background: var(--accent-bright);
+  background: linear-gradient(150deg, var(--accent-deep), var(--accent));
   box-shadow: 0 0 0 4px var(--accent-tint), 0 4px 14px var(--accent-glow);
-  opacity: 0.85;
+  opacity: 1;
   animation: hotspotPulse 2.6s ease-in-out infinite;
   pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: #fff;
 }
 
 .zone[data-hovered] .hotspot,

@@ -199,6 +199,23 @@ export function ChapterReader({
               Auf schmalen Screens unsichtbar — dort greift die Leiste unten. */}
           {hypothesis?.leitfrage && (
             <aside className={styles.calloutFloat}>
+              {/* Echte Sprechblase: weich geschwungener Tail als SVG-Pfad
+                  (gefüllt + Kontur), zeigt nach links auf das 2035-Bild. */}
+              <svg
+                className={styles.calloutTail}
+                viewBox="0 0 18 36"
+                aria-hidden
+                focusable="false"
+              >
+                <path
+                  className={styles.calloutTailFill}
+                  d="M18,7 Q4,11 1,18 Q4,25 18,29 Z"
+                />
+                <path
+                  className={styles.calloutTailStroke}
+                  d="M18,7 Q4,11 1,18 Q4,25 18,29"
+                />
+              </svg>
               <span className={styles.calloutHead}>
                 <Lightbulb size={14} strokeWidth={2} aria-hidden />
                 Leitfrage

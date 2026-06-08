@@ -94,9 +94,12 @@
 
 /* ── Content: zentrierte Spalte, scrollt bei Bedarf ── */
 .content {
-  /* Bild groß (wie zuvor). Auf sehr breiten Screens bleibt rechts daneben Platz
-     für die Leitfrage-Sprechblase; sonst rutscht sie unter das Bild. */
-  --media-w: min(1180px, 106vh);
+  /* Bild füllt die Höhe: verfügbare Höhe (abzüglich Titel, Karten, Topbar,
+     Pager ≈ Reserve) bestimmt die 16:9-Bildhöhe — und daraus die Breite, die
+     Bild UND Karten gemeinsam nutzen (perfekt untereinander ausgerichtet).
+     Auf sehr breiten Screens bleibt rechts Platz für die Leitfrage-Sprechblase. */
+  --img-h: clamp(400px, calc(100vh - 300px), 900px);
+  --media-w: min(calc(var(--img-h) * 16 / 9), 95vw);
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -104,8 +107,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(14px, 1.8vw, 24px);
-  padding: clamp(16px, 2.2vw, 28px) clamp(18px, 3vw, 48px) clamp(20px, 2.6vw, 34px);
+  justify-content: safe center;
+  gap: clamp(12px, 1.5vw, 20px);
+  padding: clamp(14px, 1.8vw, 24px) clamp(18px, 3vw, 48px);
   animation: fadeIn 0.45s var(--ease-out) both;
 }
 
@@ -113,7 +117,7 @@
   width: 100%;
   max-width: var(--media-w);
   text-align: center;
-  font-size: clamp(23px, 2.5vw, 34px);
+  font-size: clamp(26px, 2.8vw, 40px);
   font-weight: 600;
   line-height: 1.18;
   letter-spacing: -0.02em;
@@ -216,7 +220,7 @@
 
 .compareCard {
   border-radius: var(--r-md);
-  padding: clamp(16px, 1.5vw, 22px) clamp(18px, 1.6vw, 26px);
+  padding: clamp(18px, 1.7vw, 26px) clamp(20px, 1.9vw, 30px);
   border: 1px solid var(--border-soft);
   background: var(--surface-1);
 }
@@ -239,7 +243,7 @@
   gap: 8px;
   margin-bottom: 12px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -254,8 +258,8 @@
 }
 
 .compareText {
-  font-size: clamp(15px, 1.15vw, 18px);
-  line-height: 1.62;
+  font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.6;
   color: var(--ink-2);
 }
 
@@ -310,10 +314,33 @@
 }
 
 .calloutText {
-  font-size: clamp(14px, 0.95vw, 16px);
+  font-size: clamp(15px, 1vw, 17px);
   font-style: italic;
   line-height: 1.5;
   color: var(--ink);
+}
+
+/* Sprechblasen-Tail (SVG): gefüllte Fläche + weiche Kontur, zeigt nach links. */
+.calloutTail {
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 36px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.calloutTailFill {
+  fill: var(--surface-2);
+}
+
+.calloutTailStroke {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
 }
 
 /* ── Aktivitäts-Schritt (Demo / Tool) ── */
@@ -475,34 +502,12 @@
     left: calc(100% + clamp(16px, 1.2vw, 24px));
     top: 50%;
     transform: translateY(-50%);
-    width: clamp(195px, 12.5vw, 230px);
+    width: clamp(190px, 12vw, 220px);
     padding: 16px 18px;
-    border-radius: 16px;
+    border-radius: 18px;
     background: var(--surface-2);
     border: 1px solid var(--accent);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--accent-glow);
-  }
-  /* Echte Sprechblase: dreieckiger Tail nach links auf das 2035-Bild.
-     ::before = Rand-Dreieck (Akzent), ::after = Füll-Dreieck (1px innen). */
-  .calloutFloat::before {
-    content: '';
-    position: absolute;
-    left: -12px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-width: 11px 12px 11px 0;
-    border-style: solid;
-    border-color: transparent var(--accent) transparent transparent;
-  }
-  .calloutFloat::after {
-    content: '';
-    position: absolute;
-    left: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-width: 10px 11px 10px 0;
-    border-style: solid;
-    border-color: transparent var(--surface-2) transparent transparent;
   }
   .leitfrage {
     display: none;

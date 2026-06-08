@@ -94,12 +94,13 @@
 
 /* ── Content: zentrierte Spalte, scrollt bei Bedarf ── */
 .content {
-  /* Bildbreite so begrenzt, dass das 16:9-Bild nie höher als ~60vh wird —
-     Textspalten teilen sich exakt diese Breite (Ausrichtung unter den Hälften). */
-  --media-w: min(1180px, 106vh);
+  /* Bildbreite nach Viewport-Breite begrenzt — der rechte Rand bietet dann auf
+     breiten Screens Platz für den Leitfrage-Callout neben dem 2035-Bild. */
+  --media-w: min(920px, 88vw);
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -120,6 +121,7 @@
 }
 
 .media {
+  position: relative;
   width: 100%;
   max-width: var(--media-w);
 }
@@ -288,6 +290,32 @@
   color: var(--accent-bright);
 }
 
+/* Leitfrage-Sprechblase rechts neben dem 2035-Bild — nur auf breiten Screens
+   (siehe @media unten). Standardmäßig ausgeblendet; dann greift .leitfrage. */
+.calloutFloat {
+  display: none;
+}
+
+.calloutHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.calloutText {
+  font-size: clamp(14px, 0.95vw, 16px);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
 /* ── Aktivitäts-Schritt (Demo / Tool) ── */
 .activityBox {
   width: 100%;
@@ -435,6 +463,40 @@
   }
   .title {
     font-size: clamp(20px, 6vw, 26px);
+  }
+}
+
+/* Breite Screens: Leitfrage als Sprechblase rechts neben das 2035-Bild legen
+   und die Leiste unten ausblenden. */
+@media (min-width: 1500px) {
+  .calloutFloat {
+    display: block;
+    position: absolute;
+    left: calc(100% + clamp(16px, 1.4vw, 26px));
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(190px, 14vw, 230px);
+    padding: 15px 17px;
+    border-radius: 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--accent);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--accent-glow);
+  }
+  /* Sprechblasen-Tail, zeigt nach links auf das 2035-Bild. */
+  .calloutFloat::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+    transform: translateY(-50%) rotate(45deg);
+    background: var(--surface-2);
+    border-left: 1px solid var(--accent);
+    border-bottom: 1px solid var(--accent);
+  }
+  .leitfrage {
+    display: none;
   }
 }
 

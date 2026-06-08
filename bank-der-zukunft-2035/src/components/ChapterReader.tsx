@@ -195,6 +195,17 @@ export function ChapterReader({
               <ScreenIframe overlay={activity.screenOverlay} />
             )}
           </div>
+          {/* Leitfrage als Sprechblase rechts neben dem 2035-Bild (breite Screens).
+              Auf schmalen Screens unsichtbar — dort greift die Leiste unten. */}
+          {hypothesis?.leitfrage && (
+            <aside className={styles.calloutFloat}>
+              <span className={styles.calloutHead}>
+                <Lightbulb size={14} strokeWidth={2} aria-hidden />
+                Leitfrage
+              </span>
+              <p className={styles.calloutText}>{hypothesis.leitfrage}</p>
+            </aside>
+          )}
         </div>
 
         {hypothesis ? (

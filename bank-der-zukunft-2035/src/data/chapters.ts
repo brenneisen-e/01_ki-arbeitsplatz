@@ -47,6 +47,14 @@ export type Zone = {
    */
   labelX?: number
   labelY?: number
+  /**
+   * Optional: Trefferfläche für Hover/Klick, abweichend von der (größeren)
+   * Zoom-Zone. Wird am Label-/Schlüsselobjekt-Punkt (labelX/labelY) zentriert,
+   * sodass z. B. nur der Back-Office-Raum reagiert statt des ganzen Stockwerks.
+   * Default: width / height (gesamte Zone).
+   */
+  hitWidth?: number
+  hitHeight?: number
 }
 
 export type ImageRef = {
@@ -204,7 +212,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Markt & Vertrieb',
     ort: 'Etage 3 (Advisory)',
     keyObject: '„VERTRIEBS-COCKPIT"-Screen',
-    zone: { centerX: 50, centerY: 50, width: 56, height: 18, labelX: 28, labelY: 51 },
+    zone: { centerX: 50, centerY: 50, width: 56, height: 18, labelX: 28, labelY: 51, hitWidth: 24 },
     vision:
       '2035 verkaufen wir keine Produkte mehr, sondern **orchestrieren Lösungen entlang der Ziele unserer Kund:innen**. KI kombiniert Finanz-, Service- und Ökosystemleistungen in Echtzeit; unsere Berater:innen werden zu **KI-augmentierten Sparringspartnern**, die bei komplexen Entscheidungen den Unterschied machen, während Standardvorgänge autonom laufen. Die Kundenbeziehung wird **permanent, kanalübergreifend und hyperpersonalisiert**.',
     hypotheses: [
@@ -277,7 +285,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Marktfolge',
     ort: 'Etage 2 (Back-Office)',
     keyObject: '„WORKFLOW AUTOMATION"-Screen',
-    zone: { centerX: 50, centerY: 68, width: 56, height: 18, labelX: 70, labelY: 68 },
+    zone: { centerX: 50, centerY: 68, width: 56, height: 18, labelX: 70, labelY: 68, hitWidth: 24 },
     vision:
       'Unsere Marktfolge entwickelt sich 2035 **vom internen Kostenblock zur wertschöpfenden Plattform**. Standardvorfälle laufen als **vollautonome Dunkelverarbeitung Ende-zu-Ende**, Menschen lösen nur noch komplexe Sonderfälle. Wir entscheiden bewusst, **was intern bleibt und was ein orchestriertes Ökosystem übernimmt — und bieten unsere besten Services als skalierbares Banking-as-a-Service für Dritte an**.',
     hypotheses: [
@@ -334,7 +342,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Corporate Services',
     ort: 'Etage 4 (HR / People & Culture)',
     keyObject: '„ORGANISATION"-Screen',
-    zone: { centerX: 50, centerY: 32, width: 56, height: 17, labelX: 30, labelY: 33 },
+    zone: { centerX: 50, centerY: 32, width: 56, height: 17, labelX: 30, labelY: 33, hitWidth: 24 },
     vision:
       'Corporate Services sind 2035 der **Enabler des Wandels**. Lernen ist kein Event mehr, sondern **kontinuierlicher, KI-gestützter Skill-Aufbau** für neue Profile wie den AI-Translator. Unsere Organisation wird **nicht mehr von starren Strukturen, sondern von Skills, Rollen und Teams in Echtzeit gesteuert** — und datenbasierte, vorausschauende Workforce-Steuerung wird zum Wettbewerbsvorteil.',
     hypotheses: [
@@ -393,7 +401,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Technologie / IT',
     ort: 'Keller / Etage 1 (Data Center)',
     keyObject: 'Monitoring-Arbeitsplatz',
-    zone: { centerX: 50, centerY: 88, width: 64, height: 18, labelX: 30, labelY: 88 },
+    zone: { centerX: 50, centerY: 88, width: 64, height: 18, labelX: 30, labelY: 88, hitWidth: 28 },
     vision:
       '2035 **entwickelt, testet und deployt sich unsere Software weitgehend selbst**. KI entscheidet autonom innerhalb der von uns gesetzten **Governance und Leitplanken**, während die IT zur **modularen, API-basierten Plattform** wird. Fachbereiche steuern diese Systeme zunehmend direkt — die **Gatekeeper-Rolle der klassischen IT verschwindet**, und unser Vorsprung entsteht aus der Geschwindigkeit, mit der wir Anforderungen in Lösungen verwandeln.',
     hypotheses: [
@@ -450,7 +458,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Compliance & Risk',
     ort: 'Etage 5 (Boardroom)',
     keyObject: '„GOVERNANCE COCKPIT"-Screen',
-    zone: { centerX: 50, centerY: 15, width: 56, height: 17, labelX: 32, labelY: 16 },
+    zone: { centerX: 50, centerY: 15, width: 56, height: 17, labelX: 32, labelY: 16, hitWidth: 24 },
     vision:
       'Compliance ist 2035 **kein nachgelagerter Bremsklotz mehr, sondern in jede Entscheidung eingebaut**. Regulatorik ist direkt in Systeme und Entscheidungslogiken integriert; aus dem Three-Lines-of-Defense-Modell wird **kontinuierliche, technisch integrierte Echtzeit-Kontrolle mit dem CAIO im Zentrum**. Cyber- und Operational Risk werden **untrennbarer Teil des Betriebsmodells — Sicherheit heißt permanente Resilienzsteuerung statt nachträglicher Schutzwall**.',
     hypotheses: [

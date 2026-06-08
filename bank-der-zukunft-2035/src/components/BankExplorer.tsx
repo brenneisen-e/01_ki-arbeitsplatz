@@ -254,14 +254,20 @@ export function BankExplorer(): React.ReactElement {
             <div className={styles.zones}>
               {CHAPTERS.map((chapter) => {
                 const { zone } = chapter
-                const top = zone.centerY - zone.height / 2
-                const left = zone.centerX - zone.width / 2
-                // Label + Hotspot im jeweiligen Raum positionieren (labelX/labelY,
-                // % der Bild-Maße) — als % relativ zur Zonen-Box umgerechnet.
-                const lX = zone.labelX ?? zone.centerX
-                const lY = zone.labelY ?? zone.centerY
-                const spotLeft = ((lX - left) / zone.width) * 100
-                const spotTop = ((lY - top) / zone.height) * 100
+                // Trefferfläche (Hover/Klick) am Label-/Schlüsselobjekt-Punkt
+                // zentrieren und auf den jeweiligen Raum begrenzen (hitWidth/
+                // hitHeight). So reagiert nicht der ganze Stock — die Zoom-Zone
+                // (computeGeom) bleibt davon unberührt.
+                const hitCX = zone.labelX ?? zone.centerX
+                const hitCY = zone.labelY ?? zone.centerY
+                const hitW = zone.hitWidth ?? zone.width
+                const hitH = zone.hitHeight ?? zone.height
+                const top = hitCY - hitH / 2
+                const left = hitCX - hitW / 2
+                // Hotspot + Label sitzen mittig in der Trefferfläche (= am
+                // Schlüsselobjekt-Punkt).
+                const spotLeft = ((hitCX - left) / hitW) * 100
+                const spotTop = ((hitCY - top) / hitH) * 100
                 const zIndex =
                   chapter.id === 'transformation' ? 3 : chapter.id === 'kunde' ? 2 : 1
                 return (
@@ -272,8 +278,8 @@ export function BankExplorer(): React.ReactElement {
                     style={{
                       top: `${top}%`,
                       left: `${left}%`,
-                      height: `${zone.height}%`,
-                      width: `${zone.width}%`,
+                      height: `${hitH}%`,
+                      width: `${hitW}%`,
                       zIndex,
                     }}
                     data-hovered={hoverId === chapter.id || undefined}
@@ -286,7 +292,6 @@ export function BankExplorer(): React.ReactElement {
                     onClick={() => handleZoneClick(chapter)}
                     aria-label={`${chapter.label} — Kapitel ${chapter.kapitel} öffnen`}
                   >
-                    <span className={styles.zoneFill} aria-hidden />
                     <span
                       className={styles.hotspot}
                       style={{ left: `${spotLeft}%`, top: `${spotTop}%` }}
@@ -298,11 +303,8 @@ export function BankExplorer(): React.ReactElement {
                       className={styles.zoneLabel}
                       style={{ left: `${spotLeft}%`, top: `${spotTop}%` }}
                     >
-                      <span className={styles.zoneKicker}>
-                        Kapitel {chapter.kapitel} · {chapter.ort}
-                      </span>
+                      <span className={styles.zoneKicker}>Kapitel {chapter.kapitel}</span>
                       <span className={styles.zoneTitle}>{chapter.label}</span>
-                      <span className={styles.zoneObject}>{chapter.keyObject}</span>
                     </span>
                   </button>
                 )

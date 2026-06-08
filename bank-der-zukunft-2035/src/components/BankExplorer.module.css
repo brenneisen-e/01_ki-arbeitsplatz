@@ -53,27 +53,8 @@
   cursor: zoom-in;
 }
 
-.zoneFill {
-  position: absolute;
-  inset: 0;
-  border-radius: 8px;
-  background: radial-gradient(
-    ellipse at center,
-    var(--accent-tint) 0%,
-    rgba(4, 106, 56, 0.06) 55%,
-    rgba(4, 106, 56, 0) 80%
-  );
-  box-shadow: inset 0 0 0 1px rgba(4, 106, 56, 0);
-  opacity: 0;
-  transition: opacity var(--t-med) var(--ease-out), box-shadow var(--t-med) var(--ease-out);
-  pointer-events: none;
-}
-
-.zone[data-hovered] .zoneFill,
-.zone:focus-visible .zoneFill {
-  opacity: 1;
-  box-shadow: inset 0 0 0 1px rgba(4, 106, 56, 0.7);
-}
+/* Beim Hover wird bewusst KEINE Etagen-Umrandung/Füllung gezeigt — es genügt
+   die Label-Box mit der Kapitelbezeichnung (siehe .zoneLabel). */
 
 /* Schlüsselobjekt-Hotspot: pulsierender Akzentkreis mit Kapitelnummer (weiß). */
 .hotspot {
@@ -149,12 +130,6 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--ink);
-  white-space: nowrap;
-}
-
-.zoneObject {
-  font-size: 11.5px;
-  color: var(--ink-3);
   white-space: nowrap;
 }
 

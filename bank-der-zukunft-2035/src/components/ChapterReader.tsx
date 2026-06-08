@@ -199,28 +199,24 @@ export function ChapterReader({
               Auf schmalen Screens unsichtbar — dort greift die Leiste unten. */}
           {hypothesis?.leitfrage && (
             <aside className={styles.calloutFloat}>
-              {/* Echte Sprechblase: weich geschwungener Tail als SVG-Pfad
-                  (gefüllt + Kontur), zeigt nach links auf das 2035-Bild. */}
+              {/* Echte Sprechblase: komplette Silhouette (Körper + Tail nach
+                  links auf das 2035-Bild) als ein einziger SVG-Pfad. */}
               <svg
-                className={styles.calloutTail}
-                viewBox="0 0 18 36"
+                className={styles.calloutBubble}
+                viewBox="0 0 250 162"
+                preserveAspectRatio="none"
                 aria-hidden
                 focusable="false"
               >
-                <path
-                  className={styles.calloutTailFill}
-                  d="M18,7 Q4,11 1,18 Q4,25 18,29 Z"
-                />
-                <path
-                  className={styles.calloutTailStroke}
-                  d="M18,7 Q4,11 1,18 Q4,25 18,29"
-                />
+                <path d="M34,3 L226,3 Q247,3 247,26 L247,136 Q247,159 226,159 L34,159 Q13,159 13,136 L13,99 C7,96 3,91 2,83 C4,79 9,77 13,69 L13,26 Q13,3 34,3 Z" />
               </svg>
-              <span className={styles.calloutHead}>
-                <Lightbulb size={14} strokeWidth={2} aria-hidden />
-                Leitfrage
-              </span>
-              <p className={styles.calloutText}>{hypothesis.leitfrage}</p>
+              <div className={styles.calloutInner}>
+                <span className={styles.calloutHead}>
+                  <Lightbulb size={14} strokeWidth={2} aria-hidden />
+                  Leitfrage
+                </span>
+                <p className={styles.calloutText}>{hypothesis.leitfrage}</p>
+              </div>
             </aside>
           )}
         </div>

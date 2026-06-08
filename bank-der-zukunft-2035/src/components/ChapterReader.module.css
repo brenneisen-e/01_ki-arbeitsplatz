@@ -186,7 +186,7 @@
 .panel {
   position: relative;
   flex: none;
-  width: clamp(360px, 31vw, 470px);
+  width: clamp(440px, 44vw, 760px);
   display: flex;
   flex-direction: column;
   background: var(--glass-strong);
@@ -256,8 +256,8 @@
 }
 
 .copy {
-  font-size: clamp(15px, 1.3vw, 17px);
-  line-height: 1.65;
+  font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.7;
   color: var(--ink-2);
 }
 
@@ -313,8 +313,8 @@
 }
 
 .compareText {
-  font-size: clamp(13.5px, 1.15vw, 15.5px);
-  line-height: 1.55;
+  font-size: clamp(14.5px, 1.25vw, 17.5px);
+  line-height: 1.6;
   color: var(--ink-2);
 }
 

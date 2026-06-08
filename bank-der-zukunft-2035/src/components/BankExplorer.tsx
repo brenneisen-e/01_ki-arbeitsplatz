@@ -10,7 +10,7 @@ import { gsap } from 'gsap'
 import { ScrollText } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
-import { ChapterReader } from './ChapterReader'
+import { ChapterReader, STEP_COUNT } from './ChapterReader'
 import { IframeStage } from './IframeStage'
 import { StrategyLab } from './StrategyLab'
 import { CoCreationCanvas } from './CoCreationCanvas'
@@ -26,6 +26,32 @@ import {
   type ChapterId,
   type Handoff,
 } from '../data/chapters'
+
+// Persistenz: aktueller Navigationsstand (offenes Kapitel + Schritt) wird in der
+// Browser-Sitzung gehalten, damit ein Refresh an genau dieser Stelle bleibt
+// statt auf die Übersicht/Landing-Page zurückzuspringen.
+const NAV_KEY = 'bz2035:nav'
+
+type SavedNav = { chapter: ChapterId | null; step: number }
+
+function loadNav(): SavedNav {
+  try {
+    const raw = sessionStorage.getItem(NAV_KEY)
+    if (!raw) return { chapter: null, step: 0 }
+    const parsed = JSON.parse(raw) as Partial<SavedNav>
+    const chapter =
+      typeof parsed.chapter === 'string' && CHAPTERS.some((c) => c.id === parsed.chapter)
+        ? (parsed.chapter as ChapterId)
+        : null
+    const step =
+      typeof parsed.step === 'number'
+        ? Math.min(Math.max(0, Math.floor(parsed.step)), STEP_COUNT - 1)
+        : 0
+    return { chapter, step }
+  } catch {
+    return { chapter: null, step: 0 }
+  }
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // BankExplorer — die begehbare Navigations-Karte.
@@ -71,11 +97,15 @@ export function BankExplorer(): React.ReactElement {
   const tweenRef = useRef<gsap.core.Tween | null>(null)
   const flyTimeoutRef = useRef<number | null>(null)
 
-  const [activeId, setActiveId] = useState<ChapterId | null>(null)
+  // Gemerkten Navigationsstand einmalig laden (Refresh-Wiederherstellung).
+  const [initialNav] = useState(loadNav)
+  const [activeId, setActiveId] = useState<ChapterId | null>(initialNav.chapter)
+  const [step, setStep] = useState(initialNav.step)
   const [hoverId, setHoverId] = useState<ChapterId | null>(null)
   const [handoff, setHandoff] = useState<Handoff | null>(null)
-  // Reader erst NACH dem Kameraflug zeigen, damit der Zoom sichtbar bleibt.
-  const [readerShown, setReaderShown] = useState(false)
+  // Reader erst NACH dem Kameraflug zeigen, damit der Zoom sichtbar bleibt —
+  // bei einem wiederhergestellten Kapitel jedoch sofort.
+  const [readerShown, setReaderShown] = useState(initialNav.chapter !== null)
   // Management-Summary-Overlay (Vision der Bank 2035) — nur aus der Übersicht.
   const [summaryOpen, setSummaryOpen] = useState(false)
 
@@ -116,15 +146,25 @@ export function BankExplorer(): React.ReactElement {
     [reducedMotion],
   )
 
-  // Mount: Übersicht fixieren + sanft einblenden (Übergang aus dem Intro).
+  // Mount: Kamera sofort auf den gemerkten Stand setzen (Übersicht ODER ein
+  // per Refresh wiederhergestelltes Kapitel) + sanft einblenden.
   useLayoutEffect(() => {
-    animateTo(null, { instant: true })
+    animateTo(activeChapter, { instant: true })
     const root = rootRef.current
     if (root && !reducedMotion) {
       gsap.fromTo(root, { opacity: 0 }, { opacity: 1, duration: 0.7, ease: 'power2.out' })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Navigationsstand persistieren, sobald sich Kapitel oder Schritt ändern.
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(NAV_KEY, JSON.stringify({ chapter: activeId, step }))
+    } catch {
+      // Persistenz optional — ohne sessionStorage läuft die App normal weiter.
+    }
+  }, [activeId, step])
 
   // Beim Unmount einen evtl. laufenden Kameraflug-Timer aufräumen.
   useEffect(() => () => {
@@ -172,6 +212,7 @@ export function BankExplorer(): React.ReactElement {
     (chapter: Chapter) => {
       setHoverId(null)
       setActiveId(chapter.id)
+      setStep(0)
       setReaderShown(false)
       animateTo(chapter)
       if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
@@ -296,6 +337,8 @@ export function BankExplorer(): React.ReactElement {
         {activeChapter && readerShown && (
           <ChapterReader
             chapter={activeChapter}
+            step={step}
+            onStepChange={setStep}
             onBack={handleBack}
             onHandoff={handleHandoff}
           />

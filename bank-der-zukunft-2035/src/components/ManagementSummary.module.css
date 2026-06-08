@@ -19,8 +19,8 @@
 
 .panel {
   position: relative;
-  width: min(1440px, 96vw);
-  max-height: min(92vh, 920px);
+  width: min(1680px, 97vw);
+  max-height: min(93vh, 980px);
   display: flex;
   flex-direction: column;
   background:
@@ -174,7 +174,7 @@
 
 .leadTitle {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-weight: 600;
@@ -182,8 +182,8 @@
 }
 
 .lead p {
-  font-size: 14.5px;
-  line-height: 1.6;
+  font-size: clamp(16px, 1.25vw, 19px);
+  line-height: 1.62;
   color: var(--ink-2);
 }
 
@@ -288,7 +288,7 @@
 }
 
 .visionText {
-  font-size: 14.5px;
+  font-size: clamp(15px, 1.05vw, 17px);
   line-height: 1.62;
   color: var(--ink-2);
 }

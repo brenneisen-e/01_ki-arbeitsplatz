@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import {
-  ArrowDown,
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
@@ -19,12 +18,19 @@ import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
 // ─────────────────────────────────────────────────────────────────────────────
 // ChapterReader — die Kapitel-Sequenz nach dem Kameraflug:
 //   Hypothese 1 → 2 → 3 → Aktivität/Demo.
-// Layout einheitlich: Bild links/mittig, Textpanel rechts, Akzent #046A38,
-// Absprung-Button unten rechts (auf dem Aktivitäts-Schritt).
+// Layout: Vergleichsbild oben (Status Quo | 2035), darunter die beiden
+// Hypothesen-Texte je unter ihrer Bildhälfte (links Status Quo, rechts 2035).
+// Akzent #046A38, Absprung-Button auf dem Aktivitäts-Schritt.
+// `step` wird von außen (BankExplorer) gesteuert, damit ein Refresh die Stelle
+// wiederherstellen kann.
 // ─────────────────────────────────────────────────────────────────────────────
+
+export const STEP_COUNT = 4 // 3 Hypothesen + 1 Aktivität
 
 type ChapterReaderProps = {
   chapter: Chapter
+  step: number
+  onStepChange: (step: number) => void
   onBack: () => void
   onHandoff: (handoff: Handoff) => void
 }
@@ -38,8 +44,6 @@ function renderRichText(text: string): React.ReactNode[] {
     return <span key={i}>{part}</span>
   })
 }
-
-const STEP_COUNT = 4 // 3 Hypothesen + 1 Aktivität
 
 function handoffMeta(handoff: Handoff): { label: string; icon: React.ReactElement } {
   switch (handoff.kind) {
@@ -109,18 +113,19 @@ function ScreenIframe({ overlay }: { overlay: ScreenOverlay }): React.ReactEleme
 
 export function ChapterReader({
   chapter,
+  step,
+  onStepChange,
   onBack,
   onHandoff,
 }: ChapterReaderProps): React.ReactElement {
-  const [step, setStep] = useState(0)
-
-  // Beim Kapitelwechsel auf Schritt 1 zurück.
-  useEffect(() => {
-    setStep(0)
-  }, [chapter.id])
-
-  const goPrev = useCallback(() => setStep((s) => Math.max(0, s - 1)), [])
-  const goNext = useCallback(() => setStep((s) => Math.min(STEP_COUNT - 1, s + 1)), [])
+  const goPrev = useCallback(
+    () => onStepChange(Math.max(0, step - 1)),
+    [step, onStepChange],
+  )
+  const goNext = useCallback(
+    () => onStepChange(Math.min(STEP_COUNT - 1, step + 1)),
+    [step, onStepChange],
+  )
 
   // Tastatur: Esc → zurück, Pfeile blättern.
   useEffect(() => {
@@ -150,21 +155,27 @@ export function ChapterReader({
 
   return (
     <div className={styles.root}>
-      <button type="button" className={styles.back} onClick={onBack}>
-        <ArrowLeft size={16} strokeWidth={1.8} aria-hidden />
-        <span>Übersicht</span>
-      </button>
+      <header className={styles.topbar}>
+        <button type="button" className={styles.back} onClick={onBack}>
+          <ArrowLeft size={16} strokeWidth={1.8} aria-hidden />
+          <span>Übersicht</span>
+        </button>
 
-      <div className={styles.chapterChip} aria-hidden>
-        <span className={styles.chipNum}>{chapter.kapitel}</span>
-        <span className={styles.chipText}>
-          <span className={styles.chipLabel}>{chapter.label}</span>
-          <span className={styles.chipOrt}>{chapter.ort}</span>
-        </span>
-      </div>
+        <div className={styles.chapterChip} aria-hidden>
+          <span className={styles.chipNum}>{chapter.kapitel}</span>
+          <span className={styles.chipText}>
+            <span className={styles.chipLabel}>{chapter.label}</span>
+            <span className={styles.chipOrt}>{chapter.ort}</span>
+          </span>
+        </div>
 
-      <div className={styles.stage}>
-        <div className={styles.imageWrap} key={`img-${step}`}>
+        <span className={styles.kicker}>{kicker}</span>
+      </header>
+
+      <div className={styles.content} key={`content-${step}`}>
+        <h1 className={styles.title}>{title}</h1>
+
+        <div className={styles.media}>
           <div className={styles.imageInner}>
             <ImageSlot
               src={image.src}
@@ -185,107 +196,94 @@ export function ChapterReader({
             )}
           </div>
         </div>
+
+        {hypothesis ? (
+          <>
+            <div className={styles.compareGrid}>
+              <article className={styles.compareCard} data-quo>
+                <span className={styles.compareHead}>
+                  <Clock size={14} strokeWidth={2.2} aria-hidden />
+                  Heute · Status Quo
+                </span>
+                <p className={styles.compareText}>
+                  {renderRichText(hypothesis.statusQuo)}
+                </p>
+              </article>
+              <article className={styles.compareCard} data-future>
+                <span className={styles.compareHead}>
+                  <Sparkles size={14} strokeWidth={2.2} aria-hidden />
+                  2035
+                </span>
+                <p className={styles.compareText}>
+                  {renderRichText(hypothesis.in2035)}
+                </p>
+              </article>
+            </div>
+            {hypothesis.leitfrage && (
+              <p className={styles.leitfrage}>
+                <Lightbulb size={16} strokeWidth={2} aria-hidden />
+                <span>{hypothesis.leitfrage}</span>
+              </p>
+            )}
+          </>
+        ) : (
+          <div className={styles.activityBox}>
+            <span className={styles.compareTag} data-accent>
+              {meta.icon}
+              {meta.label}
+            </span>
+            <p className={styles.copy}>{renderRichText(activity.text)}</p>
+            <div className={styles.ctaRow}>
+              <button
+                type="button"
+                className={styles.cta}
+                onClick={() => onHandoff(activity.handoff)}
+              >
+                {meta.icon}
+                <span>{activity.buttonLabel}</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      <aside className={styles.panel}>
-        <div className={styles.panelShade} aria-hidden />
-        <div className={styles.panelInner}>
-          <div className={styles.panelBody} key={`body-${step}`}>
-            <span className={styles.kicker}>{kicker}</span>
-            <h1 className={styles.title}>{title}</h1>
+      <footer className={styles.pager}>
+        <button
+          type="button"
+          className={styles.pagerBtn}
+          onClick={goPrev}
+          disabled={step === 0}
+          aria-label="Vorheriger Schritt"
+        >
+          <ChevronLeft size={18} strokeWidth={2} />
+        </button>
 
-            {hypothesis ? (
-              <div className={styles.compare}>
-                <article className={styles.compareCard} data-quo>
-                  <span className={styles.compareHead}>
-                    <Clock size={13} strokeWidth={2.2} aria-hidden />
-                    Heute · Status Quo
-                  </span>
-                  <p className={styles.compareText}>
-                    {renderRichText(hypothesis.statusQuo)}
-                  </p>
-                </article>
-                <span className={styles.compareArrow} aria-hidden>
-                  <ArrowDown size={18} strokeWidth={2.4} />
-                </span>
-                <article className={styles.compareCard} data-future>
-                  <span className={styles.compareHead}>
-                    <Sparkles size={13} strokeWidth={2.2} aria-hidden />
-                    2035
-                  </span>
-                  <p className={styles.compareText}>
-                    {renderRichText(hypothesis.in2035)}
-                  </p>
-                </article>
-                {hypothesis.leitfrage && (
-                  <p className={styles.leitfrage}>
-                    <Lightbulb size={15} strokeWidth={2} aria-hidden />
-                    <span>{hypothesis.leitfrage}</span>
-                  </p>
-                )}
-              </div>
-            ) : (
-              <>
-                <span className={styles.compareTag} data-accent>
-                  {meta.icon}
-                  {meta.label}
-                </span>
-                <p className={styles.copy}>{renderRichText(activity.text)}</p>
-                <div className={styles.ctaRow}>
-                  <button
-                    type="button"
-                    className={styles.cta}
-                    onClick={() => onHandoff(activity.handoff)}
-                  >
-                    {meta.icon}
-                    <span>{activity.buttonLabel}</span>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-
-          <footer className={styles.pager}>
+        <div className={styles.dots} role="tablist" aria-label="Kapitel-Schritte">
+          {Array.from({ length: STEP_COUNT }).map((_, i) => (
             <button
+              key={i}
               type="button"
-              className={styles.pagerBtn}
-              onClick={goPrev}
-              disabled={step === 0}
-              aria-label="Vorheriger Schritt"
-            >
-              <ChevronLeft size={18} strokeWidth={2} />
-            </button>
-
-            <div className={styles.dots} role="tablist" aria-label="Kapitel-Schritte">
-              {Array.from({ length: STEP_COUNT }).map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === step}
-                  className={styles.dot}
-                  data-active={i === step || undefined}
-                  data-activity={i === STEP_COUNT - 1 || undefined}
-                  onClick={() => setStep(i)}
-                  aria-label={
-                    i === STEP_COUNT - 1 ? 'Aktivität' : `Hypothese ${i + 1}`
-                  }
-                />
-              ))}
-            </div>
-
-            <button
-              type="button"
-              className={styles.pagerBtn}
-              onClick={goNext}
-              disabled={isActivity}
-              aria-label="Nächster Schritt"
-            >
-              <ChevronRight size={18} strokeWidth={2} />
-            </button>
-          </footer>
+              role="tab"
+              aria-selected={i === step}
+              className={styles.dot}
+              data-active={i === step || undefined}
+              data-activity={i === STEP_COUNT - 1 || undefined}
+              onClick={() => onStepChange(i)}
+              aria-label={i === STEP_COUNT - 1 ? 'Aktivität' : `Hypothese ${i + 1}`}
+            />
+          ))}
         </div>
-      </aside>
+
+        <button
+          type="button"
+          className={styles.pagerBtn}
+          onClick={goNext}
+          disabled={isActivity}
+          aria-label="Nächster Schritt"
+        >
+          <ChevronRight size={18} strokeWidth={2} />
+        </button>
+      </footer>
     </div>
   )
 }

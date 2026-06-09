@@ -1,7 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // CHAPTERS — die zentrale, editierbare Datenquelle für „Banking Horizon 2035".
 //
-// 7 Kapitel = 7 Zonen im Strukturbild. Jedes Kapitel besteht aus
+// 8 Kapitel = 8 Zonen im Strukturbild. 7 raumgebundene Kapitel + der Aufzug
+// (Glas-Spine) als vertikale Zone für die Transformation. Jedes Kapitel besteht
+// aus
 //   · 3 Hypothesen mit je einer Status-Quo- und einer In-2035-Aussage
 //     (Vergleichsbild + zwei Text-Blöcke im Panel rechts)
 //   · 1 Aktivitäts-/Demo-Bild mit Absprung (iframe-Demo, Strategy Lab,
@@ -12,10 +14,20 @@
 // BILD-SLOTS: Alle Bild-Pfade sind hier verdrahtet. Die Workshop-Bilder liegen
 // als PNG unter `public/images/` — Schema: `Strukturbild.png` (Master) sowie
 // pro Kapitel `Kapitel N_1.png` / `Kapitel N_2.png` / `Kapitel N_3.png`
-// (Hypothesen) und `Kapitel N_Demo.png` (Aktivität), N = 1..7.
+// (Hypothesen) und `Kapitel N_Demo.png` (Aktivität), N = 1..8.
+//
+// RAUM-MAPPING (neues Strukturbild, 4 Etagen über Grund):
+//   3. OG links  → 06 Compliance & Risk (Boardroom / Governance Cockpit)
+//   3. OG rechts → 08 Projektfläche (Projektraum, NEU)
+//   2. OG links  → 04 Corporate Services (Corporate / HR)
+//   2. OG rechts → 05 Technologie / IT (Serverraum)
+//   1. OG links  → 02 Markt & Vertrieb (Advisory)
+//   1. OG rechts → 03 Marktfolge (Backoffice-Großraum)
+//   EG           → 01 Kundenperspektive (Filiale: Schalter links, Self-Service rechts)
+//   Aufzug       → 07 Transformation (Glas-Spine durch alle Etagen)
 //
 // Zoom-Koordinaten (ZONES) sind auf das echte `Strukturbild.png`
-// (1536×1024, 5 Etagen) kalibriert. Im Browser ggf. um 1–2 % nachjustieren.
+// (1536×1024, 4 Etagen) kalibriert. Im Browser ggf. um 1–2 % nachjustieren.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type ChapterId =
@@ -26,6 +38,7 @@ export type ChapterId =
   | 'it'
   | 'compliance'
   | 'transformation'
+  | 'projekt'
 
 export type Zone = {
   /** Mittelpunkt X in % der Bildbreite (0..100) — Zoom-Ziel. */
@@ -147,14 +160,16 @@ const VERTRIEBSCOCKPIT_URL =
   'https://kiarbeitsplatz.pages.dev/vertriebsarbeitsplatz/dist/#/versicherung/landing/uebersicht'
 
 export const CHAPTERS: Chapter[] = [
-  // ── 01 Kundenperspektive · Plaza ──────────────────────────────────────────
+  // ── 01 Kundenperspektive · Erdgeschoss (Filiale) ──────────────────────────
   {
     id: 'kunde',
     kapitel: '01',
     label: 'Kundenperspektive',
-    ort: 'Plaza (außen)',
-    keyObject: 'Smartphone mit Banking-App',
-    zone: { centerX: 6, centerY: 64, width: 12, height: 48, fit: 'contain' },
+    ort: 'Erdgeschoss (Filiale)',
+    keyObject: 'Self-Service-Lounge & Schalter',
+    // Ganzes Erdgeschoss: Schalter links, Self-Service-Lounge rechts. Bewusst
+    // etwas weiter herausgezoomt, sodass die ATMs an beiden Rändern im Bild sind.
+    zone: { centerX: 50, centerY: 86, width: 96, height: 26, fit: 'contain', labelX: 50, labelY: 85, hitWidth: 84, hitHeight: 22 },
     vision:
       'Für unsere Kund:innen wird Banking 2035 **unsichtbar und Teil des Alltags** statt eigener Interaktion: Persönliche KI-Finanzassistenten begleiten kontinuierlich, verwandeln eine Flut von Optionen in **klare, simulierte und begründete Empfehlungen** und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus reaktivem Warten wird **teilautonome Finanzsteuerung mit Vertrauensmandat — die Kund:in entscheidet, aber auf KI-vorbereiteter Grundlage**.',
     hypotheses: [
@@ -205,14 +220,14 @@ export const CHAPTERS: Chapter[] = [
     },
   },
 
-  // ── 02 Markt & Vertrieb · Etage 3 ─────────────────────────────────────────
+  // ── 02 Markt & Vertrieb · 1. OG links (Advisory) ──────────────────────────
   {
     id: 'vertrieb',
     kapitel: '02',
     label: 'Markt & Vertrieb',
-    ort: 'Etage 3 (Advisory)',
+    ort: '1. OG links (Advisory)',
     keyObject: '„VERTRIEBS-COCKPIT"-Screen',
-    zone: { centerX: 50, centerY: 50, width: 56, height: 18, labelX: 28, labelY: 51, hitWidth: 24 },
+    zone: { centerX: 26, centerY: 60, width: 38, height: 22, labelX: 30, labelY: 60, hitWidth: 32, hitHeight: 18 },
     vision:
       '2035 verkaufen wir keine Produkte mehr, sondern **orchestrieren Lösungen entlang der Ziele unserer Kund:innen**. KI kombiniert Finanz-, Service- und Ökosystemleistungen in Echtzeit; unsere Berater:innen werden zu **KI-augmentierten Sparringspartnern**, die bei komplexen Entscheidungen den Unterschied machen, während Standardvorgänge autonom laufen. Die Kundenbeziehung wird **permanent, kanalübergreifend und hyperpersonalisiert**.',
     hypotheses: [
@@ -278,14 +293,14 @@ export const CHAPTERS: Chapter[] = [
     },
   },
 
-  // ── 03 Marktfolge · Etage 2 ───────────────────────────────────────────────
+  // ── 03 Marktfolge · 1. OG rechts (Backoffice-Großraum) ────────────────────
   {
     id: 'marktfolge',
     kapitel: '03',
     label: 'Marktfolge',
-    ort: 'Etage 2 (Back-Office)',
+    ort: '1. OG rechts (Backoffice-Großraum)',
     keyObject: '„WORKFLOW AUTOMATION"-Screen',
-    zone: { centerX: 50, centerY: 68, width: 56, height: 18, labelX: 70, labelY: 68, hitWidth: 24 },
+    zone: { centerX: 74, centerY: 60, width: 40, height: 22, labelX: 72, labelY: 60, hitWidth: 32, hitHeight: 18 },
     vision:
       'Unsere Marktfolge entwickelt sich 2035 **vom internen Kostenblock zur wertschöpfenden Plattform**. Standardvorfälle laufen als **vollautonome Dunkelverarbeitung Ende-zu-Ende**, Menschen lösen nur noch komplexe Sonderfälle. Wir entscheiden bewusst, **was intern bleibt und was ein orchestriertes Ökosystem übernimmt — und bieten unsere besten Services als skalierbares Banking-as-a-Service für Dritte an**.',
     hypotheses: [
@@ -335,14 +350,14 @@ export const CHAPTERS: Chapter[] = [
     },
   },
 
-  // ── 04 Corporate Services · Etage 4 ───────────────────────────────────────
+  // ── 04 Corporate Services · 2. OG links (Corporate / HR) ──────────────────
   {
     id: 'corporate',
     kapitel: '04',
     label: 'Corporate Services',
-    ort: 'Etage 4 (HR / People & Culture)',
+    ort: '2. OG links (Corporate / HR)',
     keyObject: '„ORGANISATION"-Screen',
-    zone: { centerX: 50, centerY: 32, width: 56, height: 17, labelX: 30, labelY: 33, hitWidth: 24 },
+    zone: { centerX: 26, centerY: 37, width: 38, height: 22, labelX: 30, labelY: 38, hitWidth: 32, hitHeight: 18 },
     vision:
       'Corporate Services sind 2035 der **Enabler des Wandels**. Lernen ist kein Event mehr, sondern **kontinuierlicher, KI-gestützter Skill-Aufbau** für neue Profile wie den AI-Translator. Unsere Organisation wird **nicht mehr von starren Strukturen, sondern von Skills, Rollen und Teams in Echtzeit gesteuert** — und datenbasierte, vorausschauende Workforce-Steuerung wird zum Wettbewerbsvorteil.',
     hypotheses: [
@@ -394,14 +409,14 @@ export const CHAPTERS: Chapter[] = [
     },
   },
 
-  // ── 05 Technologie / IT · Keller / Etage 1 ────────────────────────────────
+  // ── 05 Technologie / IT · 2. OG rechts (Serverraum) ───────────────────────
   {
     id: 'it',
     kapitel: '05',
     label: 'Technologie / IT',
-    ort: 'Keller / Etage 1 (Data Center)',
-    keyObject: 'Monitoring-Arbeitsplatz',
-    zone: { centerX: 50, centerY: 88, width: 64, height: 18, labelX: 30, labelY: 88, hitWidth: 28 },
+    ort: '2. OG rechts (Serverraum)',
+    keyObject: 'Monitoring-Arbeitsplatz am Server-Rack',
+    zone: { centerX: 74, centerY: 37, width: 40, height: 22, labelX: 72, labelY: 38, hitWidth: 32, hitHeight: 18 },
     vision:
       '2035 **entwickelt, testet und deployt sich unsere Software weitgehend selbst**. KI entscheidet autonom innerhalb der von uns gesetzten **Governance und Leitplanken**, während die IT zur **modularen, API-basierten Plattform** wird. Fachbereiche steuern diese Systeme zunehmend direkt — die **Gatekeeper-Rolle der klassischen IT verschwindet**, und unser Vorsprung entsteht aus der Geschwindigkeit, mit der wir Anforderungen in Lösungen verwandeln.',
     hypotheses: [
@@ -451,14 +466,14 @@ export const CHAPTERS: Chapter[] = [
     },
   },
 
-  // ── 06 Compliance & Risk · Etage 5 ────────────────────────────────────────
+  // ── 06 Compliance & Risk · 3. OG links (Boardroom) ────────────────────────
   {
     id: 'compliance',
     kapitel: '06',
     label: 'Compliance & Risk',
-    ort: 'Etage 5 (Boardroom)',
+    ort: '3. OG links (Boardroom)',
     keyObject: '„GOVERNANCE COCKPIT"-Screen',
-    zone: { centerX: 50, centerY: 15, width: 56, height: 17, labelX: 32, labelY: 16, hitWidth: 24 },
+    zone: { centerX: 26, centerY: 15, width: 38, height: 23, labelX: 30, labelY: 15, hitWidth: 32, hitHeight: 19 },
     vision:
       'Compliance ist 2035 **kein nachgelagerter Bremsklotz mehr, sondern in jede Entscheidung eingebaut**. Regulatorik ist direkt in Systeme und Entscheidungslogiken integriert; aus dem Three-Lines-of-Defense-Modell wird **kontinuierliche, technisch integrierte Echtzeit-Kontrolle mit dem CAIO im Zentrum**. Cyber- und Operational Risk werden **untrennbarer Teil des Betriebsmodells — Sicherheit heißt permanente Resilienzsteuerung statt nachträglicher Schutzwall**.',
     hypotheses: [
@@ -508,14 +523,14 @@ export const CHAPTERS: Chapter[] = [
     },
   },
 
-  // ── 07 Transformation · Glas-Aufzug ───────────────────────────────────────
+  // ── 07 Transformation · Glas-Aufzug (Spine) ───────────────────────────────
   {
     id: 'transformation',
     kapitel: '07',
     label: 'Transformation',
-    ort: 'Glas-Aufzug (vertikal)',
-    keyObject: 'der Aufzug-Spine',
-    zone: { centerX: 50, centerY: 50, width: 9, height: 90, fit: 'contain' },
+    ort: 'Glas-Aufzug (vertikal, alle Etagen)',
+    keyObject: 'die Glas-Spine durch alle Etagen',
+    zone: { centerX: 50, centerY: 50, width: 16, height: 92, fit: 'contain', labelX: 50, labelY: 50, hitWidth: 13, hitHeight: 86 },
     vision:
       'Wir wandeln uns bis 2035 **zur AI-nativen Plattform-Bank** — aufgebaut aus Daten, Ökosystem und **integrierter Governance statt nachgelagerter Kontrolle**. Unser Operating Model folgt der Entscheidungslogik: **Journey-Teams mit End-to-End-Ownership, Human-in-the-loop und AI-Governance**. Wir transformieren **decision-first** — zuerst die wenigen kritischen Decision Journeys und eine **skalierbare Decision Spine**, dann der systematische Roll-out von KI und Technologie.',
     hypotheses: [
@@ -564,12 +579,78 @@ export const CHAPTERS: Chapter[] = [
       handoff: { kind: 'cocreation', variant: 'future-interaction' },
     },
   },
+
+  // ── 08 Projektfläche · 3. OG rechts (Projektraum) ─────────────────────────
+  // NEU. Raumgebundenes 8. Kapitel oben rechts (Whiteboard-/Kanban-Wand,
+  // Co-Creation am Stehtisch). Die zwei Etagen-Räume rechts und links oben
+  // bilden so das Dach: links Steuerung (Boardroom), rechts Umsetzung (Projekt).
+  //
+  // TODO(Auftraggeber): Finale Hypothesen (3×) und Demo/Absprung werden noch
+  // geliefert. Bis dahin stehen hier provisorische Inhalte; Bild-Slots
+  // `Kapitel 8_1..3.png` / `Kapitel 8_Demo.png` zeigen bis zum Ablegen der
+  // Dateien automatisch einen beschrifteten Platzhalter.
+  {
+    id: 'projekt',
+    kapitel: '08',
+    label: 'Projektfläche',
+    ort: '3. OG rechts (Projektraum)',
+    keyObject: 'Whiteboard-/Kanban-Wand',
+    vision:
+      'Die Projektfläche ist 2035 der Ort, an dem **Strategie zu lauffähiger Lösung wird**: cross-funktionale Journey-Teams arbeiten hier KI-augmentiert an den priorisierten Decision Journeys, von der Hypothese bis zum produktiven Piloten. _Provisorisches Vision-Statement — finaler Text folgt._',
+    hypotheses: [
+      {
+        title: 'Vom Projektportfolio zur kontinuierlichen Lösungslieferung',
+        image: {
+          src: './images/Kapitel 8_1.png',
+          alt: 'Status Quo: klassische Projektorganisation mit Lenkungsausschüssen und Statusberichten. 2035: kontinuierlich liefernde, KI-augmentierte Journey-Teams am Whiteboard.',
+        },
+        statusQuo:
+          'Vorläufiger Platzhalter-Text. Veränderungen laufen über **abgegrenzte Projekte** mit Lenkungsausschüssen, Statusberichten und langen Vorlaufzeiten.',
+        in2035:
+          'Vorläufiger Platzhalter-Text. **Cross-funktionale Journey-Teams** liefern kontinuierlich entlang priorisierter Decision Journeys – von der Hypothese bis zum produktiven Piloten.',
+        leitfrage: 'Provisorische Leitfrage — finaler Text folgt vom Auftraggeber.',
+      },
+      {
+        title: 'Co-Creation wird zum Standard-Betriebsmodell',
+        image: {
+          src: './images/Kapitel 8_2.png',
+          alt: 'Status Quo: Fachbereich und IT arbeiten sequentiell mit Übergaben. 2035: gemeinsame Co-Creation von Business, IT und KI an einer Kanban-Wand.',
+        },
+        statusQuo:
+          'Vorläufiger Platzhalter-Text. Business und IT arbeiten **sequentiell mit Übergaben**; Anforderungen werden weitergereicht statt gemeinsam gestaltet.',
+        in2035:
+          'Vorläufiger Platzhalter-Text. Business, IT und KI gestalten **gemeinsam in Echtzeit** – Co-Creation am Stehtisch wird zum Standard-Betriebsmodell der Veränderung.',
+      },
+      {
+        title: 'KI-augmentierte Teams verkürzen Idee-zu-Wirkung drastisch',
+        image: {
+          src: './images/Kapitel 8_3.png',
+          alt: 'Status Quo: lange Wege von der Idee bis zur Umsetzung über viele Gremien. 2035: KI-augmentiertes Team setzt eine Idee im selben Raum in einen lauffähigen Prototyp um.',
+        },
+        statusQuo:
+          'Vorläufiger Platzhalter-Text. Der Weg von der **Idee zur Wirkung** ist lang und führt über viele Gremien und Abstimmungsschleifen.',
+        in2035:
+          'Vorläufiger Platzhalter-Text. KI-Werkzeuge verdichten Analyse, Prototyping und Test, sodass aus einer Idee **innerhalb von Tagen ein lauffähiger Pilot** wird.',
+      },
+    ],
+    activity: {
+      image: {
+        src: './images/Kapitel 8_Demo.png',
+        alt: 'Projektraum mit Whiteboard- und Kanban-Wand; großer, frontal stehender 16:9-Bildschirm für die Demo des Projekt-Cockpits.',
+      },
+      title: 'Projektraum: von der Hypothese zum Piloten',
+      text: 'Provisorischer Platzhalter. **Demo und Absprung folgen vom Auftraggeber.** Hier soll der Projektraum zeigen, wie ein KI-augmentiertes Team eine priorisierte Decision Journey umsetzt.',
+      buttonLabel: 'Demo folgt',
+      // TODO(Auftraggeber): finalen Handoff einsetzen (iframe-Demo / Tool).
+      handoff: { kind: 'iframe', url: '', title: 'Projektraum-Demo (folgt)' },
+    },
+  },
 ]
 
 /** Master-Strukturbild („Bank'26"), Übersicht + Intro-Reveal. */
 export const MASTER_IMAGE: ImageRef = {
   src: './images/Strukturbild.png',
-  alt: 'Orthografischer fotorealistischer Querschnitt einer Bank im Jahr 2026 — fünf Etagen von Compliance & Risk oben bis Technologie/IT unten, Plaza außen, zentraler Glas-Aufzug.',
+  alt: 'Fotorealistischer Gebäude-Querschnitt einer Bank — vier Etagen mit je zwei Räumen: oben Boardroom und Projektraum, darunter Corporate/HR und Serverraum, darunter Advisory und Backoffice-Großraum, im Erdgeschoss die Filiale (Schalter und Self-Service-Lounge); ein zentraler Glas-Aufzug verbindet alle Etagen.',
 }
 
 /** Echte Pixel-Auflösung des Master-Bildes (für die Kamera-Aspect-Ratio). */
@@ -581,7 +662,7 @@ export function getChapter(id: ChapterId | null): Chapter | null {
 }
 
 /**
- * Alle Bildpfade (Master + 21 Hypothesen + 7 Aktivitäten) — zum Vorladen beim
+ * Alle Bildpfade (Master + 24 Hypothesen + 8 Aktivitäten) — zum Vorladen beim
  * App-Start, damit das Öffnen eines Kapitels ohne Ladeverzögerung erfolgt.
  */
 export function getAllImageSrcs(): string[] {

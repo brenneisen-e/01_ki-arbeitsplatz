@@ -17,7 +17,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 const LOGO_TOKEN = 'pk_H7vb5Y2lTsW47U4Xq-w3HA'
 const DELOITTE_LOGO = `https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=240&retina=true`
 
-// Gesamtzusammenfassung — synthetisiert die sieben Bereichs-Visionen zu einem
+// Gesamtzusammenfassung — synthetisiert die acht Bereichs-Visionen zu einem
 // durchgehenden Zielbild der „Bank 2035". `**fett**` markiert die Kernaussagen.
 const GESAMT_SUMMARY =
   'Bis 2035 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kund:innen **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.'

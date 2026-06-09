@@ -2,7 +2,7 @@
 
 Interaktives Workshop-Tool für einen Vorstands-Workshop. Ein KI-Chatbot
 „erzeugt" zum Auftakt das Strukturbild der Bank (Zustand 2026); danach ist
-das Bild eine **begehbare Navigations-Karte** mit 7 Zonen. Pro Zone führt der
+das Bild eine **begehbare Navigations-Karte** mit 8 Zonen. Pro Zone führt der
 Flow durch **drei Hypothesen-Vergleichsbilder** (Status Quo ↔ 2035) und ein
 **Aktivitäts-/Demo-Bild** mit Absprung in eine Live-Demo oder ein interaktives
 Tool.
@@ -38,7 +38,7 @@ Intro-Reveal     →  Übersicht  →  Kameraflug  →  ChapterReader           
   das Strukturbild baut sich auf → „als Haus erkunden". Die frühere Q&A-Landing
   (App `BankDerZukunft/`) ist nicht mehr der Einstieg und leitet automatisch
   hierher weiter (`/bank-der-zukunft-2035/dist/`).
-- **Übersicht** (`BankExplorer`): Master-Bild füllt den Viewport, 7 Zonen mit
+- **Übersicht** (`BankExplorer`): Master-Bild füllt den Viewport, 8 Zonen mit
   Hover-Glow, Label und pulsierendem Schlüsselobjekt-Hotspot.
 - **Kameraflug**: Klick auf eine Zone → GSAP-Zoom (`transform: scale` +
   Translation auf das Zonen-Zentrum).
@@ -46,19 +46,29 @@ Intro-Reveal     →  Übersicht  →  Kameraflug  →  ChapterReader           
   3 Hypothesen und die Aktivität blättern (Pfeile/Dots, Pfeiltasten, Esc).
 - **Handoff** je Kapitel unterschiedlich (siehe Tabelle).
 
-## Die 7 Kapitel & ihre Absprünge
+## Die 8 Kapitel & ihre Absprünge
 
-| Kap. | Zone | Schlüsselobjekt | Absprung | Umsetzung |
+Mapping auf das neue Strukturbild (4 Etagen, je zwei Räume + Glas-Aufzug):
+
+| Kap. | Zone (Raum) | Schlüsselobjekt | Absprung | Umsetzung |
 |---|---|---|---|---|
-| 01 Kundenperspektive | Plaza (außen) | Smartphone-App | Demo „Liquid" | `IframeStage` (URL offen) |
-| 02 Markt & Vertrieb | Etage 3 | Vertriebs-Cockpit | Vertriebscockpit | `IframeStage` (Live-URL) |
-| 03 Marktfolge | Etage 2 | Workflow-Screen | Strategy Lab | `StrategyLab` |
-| 04 Corporate Services | Etage 4 | Organisations-Screen | Co-Creation | `CoCreationCanvas` (organisation) |
-| 05 Technologie / IT | Keller / Etage 1 | Monitoring-Platz | Demo „SDLC" | `IframeStage` (URL offen) |
-| 06 Compliance & Risk | Etage 5 | Governance-Cockpit | Kredit-Dilemma | `KreditDilemma` |
-| 07 Transformation | Glas-Aufzug | Aufzug-Spine | Co-Creation | `CoCreationCanvas` (future-interaction) |
+| 01 Kundenperspektive | Erdgeschoss (Filiale) | Self-Service-Lounge & Schalter | Demo „Liquid" | `IframeStage` (URL offen) |
+| 02 Markt & Vertrieb | 1. OG links (Advisory) | Vertriebs-Cockpit | Vertriebscockpit | `IframeStage` (Live-URL) |
+| 03 Marktfolge | 1. OG rechts (Backoffice-Großraum) | Workflow-Screen | Strategy Lab | `StrategyLab` |
+| 04 Corporate Services | 2. OG links (Corporate / HR) | Organisations-Screen | Co-Creation | `CoCreationCanvas` (organisation) |
+| 05 Technologie / IT | 2. OG rechts (Serverraum) | Monitoring-Platz | Demo „SDLC" | `IframeStage` (URL offen) |
+| 06 Compliance & Risk | 3. OG links (Boardroom) | Governance-Cockpit | Kredit-Dilemma | `KreditDilemma` |
+| 07 Transformation | Glas-Aufzug (vertikal) | Glas-Spine | Co-Creation | `CoCreationCanvas` (future-interaction) |
+| 08 Projektfläche | 3. OG rechts (Projektraum) | Whiteboard-/Kanban-Wand | _folgt_ | `IframeStage` (URL offen, provisorisch) |
 
-## Bild-Slots (29 Bilder · `public/images/`)
+> Verschiebungen gegenüber dem alten 5-Etagen-Bild: **05 IT** zieht aus dem
+> Keller in den **Serverraum (2. OG rechts)**, **03 Marktfolge** bekommt mit dem
+> **Backoffice-Großraum (1. OG rechts)** einen eigenen Raum, und oben rechts
+> kommt mit **08 Projektfläche (Projektraum)** ein komplett neues Kapitel hinzu.
+> Inhalte (3 Hypothesen + Demo) für Kapitel 08 sind noch provisorisch und werden
+> nachgeliefert.
+
+## Bild-Slots (33 Bilder · `public/images/`)
 
 Die Workshop-Bilder liegen als **PNG** unter **`public/images/`** und sind in
 `src/data/chapters.ts` verdrahtet. Fehlt eine Datei, zeigt die App einen
@@ -66,7 +76,7 @@ sauberen Platzhalter mit Dateiname — Datei dort ablegen, fertig.
 
 **Schema:** `Strukturbild.png` (Master · Übersicht + Intro-Reveal), dann pro
 Kapitel `Kapitel N_1.png` / `Kapitel N_2.png` / `Kapitel N_3.png` (3 Hypothesen)
-und `Kapitel N_Demo.png` (Aktivität/Demo). `N` = Kapitelnummer 1–7:
+und `Kapitel N_Demo.png` (Aktivität/Demo). `N` = Kapitelnummer 1–8:
 
 ```
 Strukturbild.png
@@ -77,6 +87,7 @@ Kapitel 4_1.png  Kapitel 4_2.png  Kapitel 4_3.png  Kapitel 4_Demo.png   (04 Corp
 Kapitel 5_1.png  Kapitel 5_2.png  Kapitel 5_3.png  Kapitel 5_Demo.png   (05 Technologie / IT)
 Kapitel 6_1.png  Kapitel 6_2.png  Kapitel 6_3.png  Kapitel 6_Demo.png   (06 Compliance & Risk)
 Kapitel 7_1.png  Kapitel 7_2.png  Kapitel 7_3.png  Kapitel 7_Demo.png   (07 Transformation)
+Kapitel 8_1.png  Kapitel 8_2.png  Kapitel 8_3.png  Kapitel 8_Demo.png   (08 Projektfläche · NEU, Bilder folgen)
 ```
 
 > `Strukturbild.png` ist 1536×1024 (3:2); die `ZONES`-Koordinaten in

@@ -63,8 +63,10 @@ function eurJahr(val, lang) {
 // openFinance.versicherungenFremd). Drumherum liegt – wie vom Kunden gewünscht
 // – ein normaler Kontoauszug mit Alltagsbuchungen. Die Versicherungs-
 // Lastschriften werden aus den Jahresprämien des Bestands monatlich abgeleitet,
-// damit sie zur Finanzübersicht passen.
-function buildKontoauszug(kunde, lang) {
+// damit sie zur Finanzübersicht passen. `institut` ist die aktive Marke
+// (Zukunftsversicherung, ERGO, Allianz, …) – der eigene Vertrag ("bei uns")
+// läuft auf diese Marke, nicht auf den Demo-Default ERGO.
+function buildKontoauszug(kunde, lang, institut) {
   const tt = (de, en) => (lang === 'en' ? en : de);
   const heute = new Date();
   const tag = (n) => {
@@ -90,8 +92,8 @@ function buildKontoauszug(kunde, lang) {
     { n: 6, e: 'Telekom Deutschland', z: tt('Mobilfunk Vertrag', 'Mobile contract'), b: -49.95, art: 'wohnen' },
 
     // ── Versicherungs-Lastschriften (Signal) ──
-    { n: 4, e: 'ERGO Versicherung AG', z: tt('Vertrag BU/Kfz/Unfall', 'Policy DI/Motor/Accident'), b: -246.67, art: 'versicherung',
-      vertrag: { institut: 'ERGO', produkt: tt('BU Comfort + Kfz + Unfall', 'Disability + Motor + Accident'), praemieJahr: 2960, eigen: true } },
+    { n: 4, e: institut, z: tt('Vertrag BU/Kfz/Unfall', 'Policy DI/Motor/Accident'), b: -246.67, art: 'versicherung',
+      vertrag: { institut, produkt: tt('BU Comfort + Kfz + Unfall', 'Disability + Motor + Accident'), praemieJahr: 2960, eigen: true } },
     { n: 9, e: 'Allianz Versicherungs-AG', z: tt('Kfz-Vollkasko VW Passat', 'Motor comprehensive VW Passat'), b: -60, art: 'versicherung',
       vertrag: { institut: 'Allianz', produkt: tt('Kfz-Vollkasko (VW Passat, SF-12)', 'Motor comprehensive (VW Passat)'), praemieJahr: 720, eigen: false } },
     { n: 9, e: 'Allianz Lebensvers.-AG', z: tt('Risikolebensversicherung', 'Term life insurance'), b: -45, art: 'versicherung',
@@ -220,7 +222,7 @@ export default function DatenabfrageFlow({ open, onClose }) {
     try { return getKundeById(modeId, kundeId); } catch { return null; }
   }, [modeId, kundeId, open]);
   const kundeName = kunde?.name || 'Klaus Fischer';
-  const umsaetze = useMemo(() => (kunde ? buildKontoauszug(kunde, lang) : []), [kunde, lang]);
+  const umsaetze = useMemo(() => (kunde ? buildKontoauszug(kunde, lang, config.institut) : []), [kunde, lang, config.institut]);
 
   const erkannteVertraege = useMemo(
     () => umsaetze.filter((u) => u.art === 'versicherung' && u.vertrag).map((u) => u.vertrag),

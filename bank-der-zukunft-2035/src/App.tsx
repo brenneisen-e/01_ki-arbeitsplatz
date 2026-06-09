@@ -31,6 +31,17 @@ function App(): React.ReactElement {
     setEntered(true)
   }, [])
 
+  // Zurück zum Chatbot (aus der Strukturbild-Übersicht): Intro-Persistenz
+  // löschen, damit auch ein Refresh wieder auf dem Chatbot landet.
+  const handleExitToIntro = useCallback(() => {
+    try {
+      sessionStorage.removeItem(ENTERED_KEY)
+    } catch {
+      // siehe oben — ohne sessionStorage einfach nur der State-Wechsel.
+    }
+    setEntered(false)
+  }, [])
+
   // Alle Strukturbild-/Kapitel-Fotos schon beim App-Start (während des Intros)
   // im Hintergrund vorladen, damit beim Öffnen eines Kapitels keine
   // Ladeverzögerung entsteht.
@@ -48,7 +59,7 @@ function App(): React.ReactElement {
   return (
     <div className={styles.app}>
       {entered ? (
-        <BankExplorer />
+        <BankExplorer onExitToIntro={handleExitToIntro} />
       ) : (
         <IntroChatbot onEnter={handleEnter} />
       )}

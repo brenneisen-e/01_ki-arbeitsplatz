@@ -20,7 +20,7 @@ const DELOITTE_LOGO = `https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&for
 // Gesamtzusammenfassung — synthetisiert die acht Bereichs-Visionen zu einem
 // durchgehenden Zielbild der „Bank 2035". `**fett**` markiert die Kernaussagen.
 const GESAMT_SUMMARY =
-  'Bis 2035 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kund:innen **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.'
+  'Bis 2035 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kund:innen **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Produkte entstehen als **lebende, adaptive Services für das Segment of One** — komponiert in Tagen statt Jahren. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.'
 
 // Mini-Markdown: **fett** → <strong>. Sonst Klartext (analog ChapterReader).
 function renderRichText(text: string): React.ReactNode[] {
@@ -148,7 +148,7 @@ export function ManagementSummary({
 
         <footer className={styles.footer}>
           <span className={styles.footNote}>
-            Vorstands-Workshop · abgeleitet aus 21 Hypothesen (3 je Kapitel)
+            Vorstands-Workshop · abgeleitet aus 24 Hypothesen (3 je Kapitel)
           </span>
           <span className={styles.footHint}>Esc oder Klick außerhalb schließt</span>
         </footer>

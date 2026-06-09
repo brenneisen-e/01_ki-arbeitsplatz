@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import { gsap } from 'gsap'
-import { ScrollText } from 'lucide-react'
+import { ArrowLeft, ScrollText } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
 import { ChapterReader, STEP_COUNT } from './ChapterReader'
@@ -90,7 +90,12 @@ function computeGeom(
   return { scale, x, y }
 }
 
-export function BankExplorer(): React.ReactElement {
+type BankExplorerProps = {
+  /** Zurück zur Chatbot-Landing (nur aus der Übersicht erreichbar). */
+  onExitToIntro?: () => void
+}
+
+export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactElement {
   const rootRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const cameraRef = useRef<HTMLDivElement>(null)
@@ -234,6 +239,17 @@ export function BankExplorer(): React.ReactElement {
   const handleHandoff = useCallback((h: Handoff) => setHandoff(h), [])
   const handleHandoffClose = useCallback(() => setHandoff(null), [])
 
+  // Zurück zum Chatbot: gemerkten Navigationsstand verwerfen, damit der
+  // nächste Einstieg wieder sauber auf der Übersicht beginnt.
+  const handleExitToIntro = useCallback(() => {
+    try {
+      sessionStorage.removeItem(NAV_KEY)
+    } catch {
+      // Persistenz optional.
+    }
+    onExitToIntro?.()
+  }, [onExitToIntro])
+
   return (
     <div className={styles.root} ref={rootRef}>
       <div className={styles.stage} ref={stageRef}>
@@ -312,6 +328,21 @@ export function BankExplorer(): React.ReactElement {
             </div>
           )}
         </div>
+
+        {/* Zurück zum Chatbot (oben links, nur Übersicht) */}
+        {onExitToIntro && (
+          <button
+            type="button"
+            className={styles.introBtn}
+            data-visible={isOverview || undefined}
+            tabIndex={isOverview ? 0 : -1}
+            onClick={handleExitToIntro}
+            aria-label="Zurück zum Chatbot"
+          >
+            <ArrowLeft size={16} strokeWidth={2} aria-hidden />
+            <span>Zurück zum Chat</span>
+          </button>
+        )}
 
         {/* Marken-Lockup + Hinweis (nur Übersicht) */}
         <div className={styles.brand} data-visible={isOverview || undefined}>

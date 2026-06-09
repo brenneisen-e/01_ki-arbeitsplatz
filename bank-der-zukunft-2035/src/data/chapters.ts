@@ -601,6 +601,7 @@ export const CHAPTERS: Chapter[] = [
     label: 'Produkte & Innovation',
     ort: '3. OG rechts (Projektraum)',
     keyObject: 'Whiteboard-Wand mit Produkt-Mockups',
+    zone: { centerX: 74, centerY: 15, width: 40, height: 23, labelX: 72, labelY: 15, hitWidth: 32, hitHeight: 19 },
     vision:
       '2035 gibt es keinen Produktkatalog mehr: KI komponiert aus modularen Bausteinen **hyperpersonalisierte Lösungen für das Segment of One** — im Moment des Bedarfs. Produkte sind **lebende, adaptive Services**, die sich innerhalb definierter Leitplanken selbst an Lebensereignisse und Marktlage anpassen. Und sie entstehen **kontinuierlich statt in Jahresprojekten**: KI entwirft, simuliert und testet compliant by design — **Time-to-Market sinkt von Jahren auf Tage**.',
     hypotheses: [

@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
-import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X, Clock, Sparkles, CheckCircle, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X, Clock, Sparkles, CheckCircle, RotateCcw, ScanLine } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';
 import { downloadDemoData } from '../../utils/downloadDemoData';
 import useTranslation from '../../i18n/useTranslation';
 import { isDayAdvanced, setDayAdvanced, useDayAdvanced, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../utils/demoClock';
+import DatenabfrageFlow from '../datenabfrage/DatenabfrageFlow';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -95,6 +96,7 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
   const { t, lang } = useTranslation();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showDatenabfrage, setShowDatenabfrage] = useState(false);
   const [showDayAdvanceOverlay, setShowDayAdvanceOverlay] = useState(false);
   const dayAdvanced = useDayAdvanced();
   const [headerImage, setHeaderImage] = useState(() => readHeaderImage());
@@ -252,6 +254,16 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
               <span className="text-white/50">{t(weather.conditionKey)}</span>
             </div>
           )}
+
+          {/* Datenabfrage – PSD2/Open-Banking-Landingpage für den Kunden */}
+          <button
+            onClick={() => setShowDatenabfrage(true)}
+            title={lang === 'en' ? 'PSD2 / Open Banking customer data request' : 'PSD2 / Open-Banking Kunden-Datenabfrage'}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 ring-1 ring-white/20 text-white text-xs font-medium transition-colors"
+          >
+            <ScanLine size={15} strokeWidth={1.9} />
+            <span>{lang === 'en' ? 'Data request' : 'Datenabfrage'}</span>
+          </button>
 
           <div className="relative">
             <button
@@ -644,6 +656,9 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
           </div>
         </div>
       )}
+
+      {/* PSD2 / Open-Banking Kunden-Datenabfrage (Landingpage für den Kunden) */}
+      <DatenabfrageFlow open={showDatenabfrage} onClose={() => setShowDatenabfrage(false)} />
     </header>
   );
 }

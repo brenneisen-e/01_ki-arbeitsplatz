@@ -70,6 +70,13 @@ const DOMAIN_MAP = {
   'Bausparkasse LBS': 'lbs.de',
   'Targobank': 'targobank.de',
   'N26': 'n26.com',
+  'Postbank': 'postbank.de',
+  'HypoVereinsbank': 'hypovereinsbank.de',
+  'Sparkasse KölnBonn': 'sparkasse-koelnbonn.de',
+  'Sparkasse Köln': 'sparkasse-koelnbonn.de',
+  // AISP / Open-Banking-Anbieter (Kontoinformationsdienste)
+  'finAPI': 'finapi.io',
+  'Tink': 'tink.com',
   'Trade Republic': 'traderepublic.com',
   'Scalable Capital': 'scalable.capital',
   'Commerzbank': 'commerzbank.de',

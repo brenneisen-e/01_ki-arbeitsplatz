@@ -26,55 +26,6 @@
   padding: 16px clamp(18px, 4vw, 40px);
 }
 
-.deloitte {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 7px 16px 7px 7px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-/* Deloitte „D."-Marke: schwarzes Quadrat, weißes D, grüner Punkt. */
-.dMark {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: #000;
-  color: #fff;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 1;
-}
-
-.dDot {
-  position: absolute;
-  right: 8px;
-  bottom: 9px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #86bc25;
-}
-
-.demoWord {
-  color: #fff;
-  font-size: 19px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  line-height: 1;
-}
-
 .topRight {
   display: inline-flex;
   align-items: center;

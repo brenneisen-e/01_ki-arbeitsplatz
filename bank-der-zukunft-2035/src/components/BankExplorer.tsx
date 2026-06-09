@@ -16,6 +16,7 @@ import { StrategyLab } from './StrategyLab'
 import { CoCreationCanvas } from './CoCreationCanvas'
 import { KreditDilemma } from './KreditDilemma'
 import { ManagementSummary } from './ManagementSummary'
+import { DeloitteBadge } from './DeloitteBadge'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import {
   CHAPTERS,
@@ -329,28 +330,28 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
           )}
         </div>
 
-        {/* Zurück zum Chatbot (oben links, nur Übersicht) */}
-        {onExitToIntro && (
-          <button
-            type="button"
-            className={styles.introBtn}
-            data-visible={isOverview || undefined}
-            tabIndex={isOverview ? 0 : -1}
-            onClick={handleExitToIntro}
-            aria-label="Zurück zum Chatbot"
-          >
-            <ArrowLeft size={16} strokeWidth={2} aria-hidden />
-            <span>Zurück zum Chat</span>
-          </button>
-        )}
-
-        {/* Marken-Lockup + Hinweis (nur Übersicht) */}
-        <div className={styles.brand} data-visible={isOverview || undefined}>
-          <span className={styles.brandKicker}>Banking Horizon 2035</span>
-          <span className={styles.brandTitle}>Bank'26 — begehbares Strukturbild</span>
+        {/* Oben links (nur Übersicht): Zurück zum Chatbot + Deloitte-„Demo" */}
+        <div className={styles.topLeft} data-visible={isOverview || undefined}>
+          {onExitToIntro && (
+            <button
+              type="button"
+              className={styles.introBtn}
+              tabIndex={isOverview ? 0 : -1}
+              onClick={handleExitToIntro}
+              aria-label="Zurück zum Chatbot"
+            >
+              <ArrowLeft size={16} strokeWidth={2} aria-hidden />
+              <span>Zurück zum Chat</span>
+            </button>
+          )}
+          <DeloitteBadge />
         </div>
-        <div className={styles.hint} data-visible={isOverview || undefined} aria-hidden>
-          Zone wählen — von der Steuerung bis zum Fundament
+
+        {/* Titel-Box, kommt oben mittig herein (nur Übersicht) */}
+        <div className={styles.topbar} data-visible={isOverview || undefined}>
+          <span className={styles.topbarKicker}>Banking Horizon 2035</span>
+          <span className={styles.topbarSep} aria-hidden />
+          <span className={styles.topbarTitle}>Interaktive Demo</span>
         </div>
 
         {/* Management Summary — Vision der Bank 2035 (unten rechts, nur Übersicht) */}

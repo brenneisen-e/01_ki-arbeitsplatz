@@ -3,6 +3,7 @@ import { gsap } from 'gsap'
 import { ArrowRight, Bot, Home, Send, Sparkles } from 'lucide-react'
 import styles from './IntroChatbot.module.css'
 import { ImageSlot } from './ImageSlot'
+import { DeloitteBadge } from './DeloitteBadge'
 import { MASTER_IMAGE } from '../data/chapters'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
@@ -202,12 +203,7 @@ export function IntroChatbot({
     >
       {/* Top bar: Deloitte „Demo" links, Status/Label rechts */}
       <header className={styles.topbar}>
-        <div className={styles.deloitte} aria-label="Deloitte Demo">
-          <span className={styles.dMark} aria-hidden>
-            D<span className={styles.dDot} />
-          </span>
-          <span className={styles.demoWord}>Demo</span>
-        </div>
+        <DeloitteBadge />
         <div className={styles.topRight}>
           <span className={styles.status} data-on={phase !== 'name' || undefined}>
             <span className={styles.statusDot} aria-hidden />

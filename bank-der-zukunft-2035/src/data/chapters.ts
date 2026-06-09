@@ -167,9 +167,9 @@ export const CHAPTERS: Chapter[] = [
     label: 'Kundenperspektive',
     ort: 'Erdgeschoss (Filiale)',
     keyObject: 'Self-Service-Lounge & Schalter',
-    // Ganzes Erdgeschoss: Schalter links, Self-Service-Lounge rechts. Bewusst
-    // etwas weiter herausgezoomt, sodass die ATMs an beiden Rändern im Bild sind.
-    zone: { centerX: 50, centerY: 86, width: 96, height: 26, fit: 'contain', labelX: 50, labelY: 85, hitWidth: 84, hitHeight: 22 },
+    // Filiale links unten im Erdgeschoss (Bank'26-Schalter mit Kundenkontakt).
+    // Bewusst NICHT die ganze Etage/den Fahrstuhl, sondern der Schalterbereich.
+    zone: { centerX: 20, centerY: 85, width: 34, height: 24, fit: 'contain', labelX: 20, labelY: 83, hitWidth: 30, hitHeight: 20 },
     vision:
       'Für unsere Kund:innen wird Banking 2035 **unsichtbar und Teil des Alltags** statt eigener Interaktion: Persönliche KI-Finanzassistenten begleiten kontinuierlich, verwandeln eine Flut von Optionen in **klare, simulierte und begründete Empfehlungen** und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus reaktivem Warten wird **teilautonome Finanzsteuerung mit Vertrauensmandat — die Kund:in entscheidet, aber auf KI-vorbereiteter Grundlage**.',
     hypotheses: [

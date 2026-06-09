@@ -18,7 +18,7 @@
 //
 // RAUM-MAPPING (neues Strukturbild, 4 Etagen über Grund):
 //   3. OG links  → 06 Compliance & Risk (Boardroom / Governance Cockpit)
-//   3. OG rechts → 08 Projektfläche (Projektraum, NEU)
+//   3. OG rechts → 08 Produkte & Innovation (Projektraum, NEU)
 //   2. OG links  → 04 Corporate Services (Corporate / HR)
 //   2. OG rechts → 05 Technologie / IT (Serverraum)
 //   1. OG links  → 02 Markt & Vertrieb (Advisory)
@@ -580,69 +580,74 @@ export const CHAPTERS: Chapter[] = [
     },
   },
 
-  // ── 08 Projektfläche · 3. OG rechts (Projektraum) ─────────────────────────
-  // NEU. Raumgebundenes 8. Kapitel oben rechts (Whiteboard-/Kanban-Wand,
-  // Co-Creation am Stehtisch). Die zwei Etagen-Räume rechts und links oben
-  // bilden so das Dach: links Steuerung (Boardroom), rechts Umsetzung (Projekt).
+  // ── 08 Produkte & Innovation · 3. OG rechts (Projektraum) ─────────────────
+  // NEU. Raumgebundenes 8. Kapitel oben rechts (Whiteboards, Mockups,
+  // Co-Creation am Stehtisch). Drei Achsen, ohne Überlappung mit Kapitel 02:
+  //   H1 Wie individuell ist das Produkt?      → Segment of One
+  //   H2 Wie verhält es sich über die Zeit?    → lebender, adaptiver Service
+  //   H3 Wie entsteht es?                      → kontinuierliche KI-Produktentwicklung
+  // Abgrenzung zu 02-H3: dort hyperpersonalisierte Betreuung/Interaktion,
+  // hier die Produktarchitektur selbst.
   //
-  // TODO(Auftraggeber): Finale Hypothesen (3×) und Demo/Absprung werden noch
-  // geliefert. Bis dahin stehen hier provisorische Inhalte; Bild-Slots
-  // `Kapitel 8_1..3.png` / `Kapitel 8_Demo.png` zeigen bis zum Ablegen der
-  // Dateien automatisch einen beschrifteten Platzhalter.
+  // HINWEIS: Diese Hypothesen sind NEU formuliert (Deck-Duktus), stammen aber
+  // noch NICHT aus dem Deck-PDF — vor Workshop-Einsatz freigeben und als
+  // Folien ins Deck übernehmen, damit die 1:1-Regel sauber bleibt.
+  //
+  // TODO(Auftraggeber): Aktivitäts-/Demo-Bild + Absprung folgen, sobald das
+  // Format feststeht (iframe-Demo / Co-Creation / eigenes Tool).
   {
     id: 'projekt',
     kapitel: '08',
-    label: 'Projektfläche',
+    label: 'Produkte & Innovation',
     ort: '3. OG rechts (Projektraum)',
-    keyObject: 'Whiteboard-/Kanban-Wand',
+    keyObject: 'Whiteboard-Wand mit Produkt-Mockups',
     vision:
-      'Die Projektfläche ist 2035 der Ort, an dem **Strategie zu lauffähiger Lösung wird**: cross-funktionale Journey-Teams arbeiten hier KI-augmentiert an den priorisierten Decision Journeys, von der Hypothese bis zum produktiven Piloten. _Provisorisches Vision-Statement — finaler Text folgt._',
+      '2035 gibt es keinen Produktkatalog mehr: KI komponiert aus modularen Bausteinen **hyperpersonalisierte Lösungen für das Segment of One** — im Moment des Bedarfs. Produkte sind **lebende, adaptive Services**, die sich innerhalb definierter Leitplanken selbst an Lebensereignisse und Marktlage anpassen. Und sie entstehen **kontinuierlich statt in Jahresprojekten**: KI entwirft, simuliert und testet compliant by design — **Time-to-Market sinkt von Jahren auf Tage**.',
     hypotheses: [
       {
-        title: 'Vom Projektportfolio zur kontinuierlichen Lösungslieferung',
+        title: 'Vom Produktkatalog zum Segment of One',
         image: {
           src: './images/Kapitel 8_1.png',
-          alt: 'Status Quo: klassische Projektorganisation mit Lenkungsausschüssen und Statusberichten. 2035: kontinuierlich liefernde, KI-augmentierte Journey-Teams am Whiteboard.',
+          alt: 'Status Quo: Regal mit identischen Standard-Produktmappen, mehrere Kund:innen halten dieselbe Mappe. 2035: jede Kund:in sieht auf dem eigenen Gerät eine sichtbar andere, individuell komponierte Produktlösung.',
         },
         statusQuo:
-          'Vorläufiger Platzhalter-Text. Veränderungen laufen über **abgegrenzte Projekte** mit Lenkungsausschüssen, Statusberichten und langen Vorlaufzeiten.',
+          'Banken bieten **standardisierte Produktkataloge** für breite Kundensegmente an. Individualisierung beschränkt sich auf **wenige Parameter** wie Konditionen oder Laufzeiten.',
         in2035:
-          'Vorläufiger Platzhalter-Text. **Cross-funktionale Journey-Teams** liefern kontinuierlich entlang priorisierter Decision Journeys – von der Hypothese bis zum produktiven Piloten.',
-        leitfrage: 'Provisorische Leitfrage — finaler Text folgt vom Auftraggeber.',
+          'Produkte entstehen **individuell im Moment des Bedarfs**: KI komponiert aus modularen Bausteinen **hyperpersonalisierte Lösungen** für den einzelnen Kunden **(„Segment of One")** – dynamisch angepasst an Lebenssituation, Ziele und Kontext.',
       },
       {
-        title: 'Co-Creation wird zum Standard-Betriebsmodell',
+        title: 'Produkte werden zu lebenden, adaptiven Services',
         image: {
           src: './images/Kapitel 8_2.png',
-          alt: 'Status Quo: Fachbereich und IT arbeiten sequentiell mit Übergaben. 2035: gemeinsame Co-Creation von Business, IT und KI an einer Kanban-Wand.',
+          alt: 'Status Quo: dicker Papier-Vertragsordner wird geschlossen und ins Regal zu identischen Ordnern abgeheftet. 2035: Kundin im Umzug schaut entspannt auf einen Bildschirm, auf dem sich Produktparameter innerhalb markierter Leitplanken von selbst anpassen.',
         },
         statusQuo:
-          'Vorläufiger Platzhalter-Text. Business und IT arbeiten **sequentiell mit Übergaben**; Anforderungen werden weitergereicht statt gemeinsam gestaltet.',
+          'Produkte sind **statisch**: Nach Abschluss bleiben Struktur und Konditionen bis zur Kündigung oder Prolongation unverändert – jede Anpassung erfordert einen **Neuabschluss**.',
         in2035:
-          'Vorläufiger Platzhalter-Text. Business, IT und KI gestalten **gemeinsam in Echtzeit** – Co-Creation am Stehtisch wird zum Standard-Betriebsmodell der Veränderung.',
+          'Produkte **passen sich kontinuierlich an**: Konditionen, Limits und Absicherungen adjustieren sich **innerhalb definierter Leitplanken automatisch** an Lebensereignisse und Marktlage. Das Produkt wird **vom Vertrag zum lebenden Service**.',
       },
       {
-        title: 'KI-augmentierte Teams verkürzen Idee-zu-Wirkung drastisch',
+        title: 'Produktentwicklung wird kontinuierlich: von Jahren zu Tagen',
         image: {
           src: './images/Kapitel 8_3.png',
-          alt: 'Status Quo: lange Wege von der Idee bis zur Umsetzung über viele Gremien. 2035: KI-augmentiertes Team setzt eine Idee im selben Raum in einen lauffähigen Prototyp um.',
+          alt: 'Status Quo: zähe Gremiensitzung über dicken Anforderungsstapeln und Wandplanungstafel. 2035: kleines Produktteam im hellen Projektraum, KI simuliert parallel viele Produktvarianten, ein Same-Day-Mockup liegt auf dem Tisch.',
         },
         statusQuo:
-          'Vorläufiger Platzhalter-Text. Der Weg von der **Idee zur Wirkung** ist lang und führt über viele Gremien und Abstimmungsschleifen.',
+          'Produktentwicklung ist ein **langwieriger interner Prozess** über Gremien, IT-Umsetzung und nachgelagerte Compliance-Prüfung – **Time-to-Market liegt bei Monaten bis Jahren**.',
         in2035:
-          'Vorläufiger Platzhalter-Text. KI-Werkzeuge verdichten Analyse, Prototyping und Test, sodass aus einer Idee **innerhalb von Tagen ein lauffähiger Pilot** wird.',
+          'KI **entwirft, simuliert und testet neue Produkte kontinuierlich** – mit synthetischen Kundendaten und integrierten Compliance-Checks **(„compliant by design")**. **Time-to-Market sinkt auf Tage**; Produktinnovation wird zum kontinuierlichen Prozess.',
       },
     ],
     activity: {
       image: {
         src: './images/Kapitel 8_Demo.png',
-        alt: 'Projektraum mit Whiteboard- und Kanban-Wand; großer, frontal stehender 16:9-Bildschirm für die Demo des Projekt-Cockpits.',
+        alt: 'Projektraum mit Whiteboards und Produkt-Mockups; großer, frontal stehender 16:9-Bildschirm für den Demo-Absprung.',
       },
-      title: 'Projektraum: von der Hypothese zum Piloten',
-      text: 'Provisorischer Platzhalter. **Demo und Absprung folgen vom Auftraggeber.** Hier soll der Projektraum zeigen, wie ein KI-augmentiertes Team eine priorisierte Decision Journey umsetzt.',
+      title: 'Produkte & Innovation: vom Bedarf zum Produkt in Tagen',
+      text: 'Provisorischer Platzhalter. **Demo und Absprung folgen**, sobald das Format feststeht — hier soll der Projektraum zeigen, wie KI ein Produkt für das Segment of One komponiert, simuliert und compliant by design ausliefert.',
       buttonLabel: 'Demo folgt',
       // TODO(Auftraggeber): finalen Handoff einsetzen (iframe-Demo / Tool).
-      handoff: { kind: 'iframe', url: '', title: 'Projektraum-Demo (folgt)' },
+      handoff: { kind: 'iframe', url: '', title: 'Produkte-&-Innovation-Demo (folgt)' },
     },
   },
 ]

@@ -59,14 +59,16 @@ Mapping auf das neue Strukturbild (4 Etagen, je zwei Räume + Glas-Aufzug):
 | 05 Technologie / IT | 2. OG rechts (Serverraum) | Monitoring-Platz | Demo „SDLC" | `IframeStage` (URL offen) |
 | 06 Compliance & Risk | 3. OG links (Boardroom) | Governance-Cockpit | Kredit-Dilemma | `KreditDilemma` |
 | 07 Transformation | Glas-Aufzug (vertikal) | Glas-Spine | Co-Creation | `CoCreationCanvas` (future-interaction) |
-| 08 Projektfläche | 3. OG rechts (Projektraum) | Whiteboard-/Kanban-Wand | _folgt_ | `IframeStage` (URL offen, provisorisch) |
+| 08 Produkte & Innovation | 3. OG rechts (Projektraum) | Whiteboard-Wand mit Mockups | _folgt_ | `IframeStage` (URL offen, provisorisch) |
 
 > Verschiebungen gegenüber dem alten 5-Etagen-Bild: **05 IT** zieht aus dem
 > Keller in den **Serverraum (2. OG rechts)**, **03 Marktfolge** bekommt mit dem
 > **Backoffice-Großraum (1. OG rechts)** einen eigenen Raum, und oben rechts
-> kommt mit **08 Projektfläche (Projektraum)** ein komplett neues Kapitel hinzu.
-> Inhalte (3 Hypothesen + Demo) für Kapitel 08 sind noch provisorisch und werden
-> nachgeliefert.
+> kommt mit **08 Produkte & Innovation (Projektraum)** ein komplett neues
+> Kapitel hinzu. Dessen drei Hypothesen (Segment of One · lebende adaptive
+> Services · kontinuierliche KI-Produktentwicklung) sind neu formuliert und
+> noch nicht aus dem Deck-PDF — vor Workshop-Einsatz freigeben und ins Deck
+> übernehmen. Demo-Absprung und Demo-Bild folgen.
 
 ## Bild-Slots (33 Bilder · `public/images/`)
 
@@ -87,7 +89,7 @@ Kapitel 4_1.png  Kapitel 4_2.png  Kapitel 4_3.png  Kapitel 4_Demo.png   (04 Corp
 Kapitel 5_1.png  Kapitel 5_2.png  Kapitel 5_3.png  Kapitel 5_Demo.png   (05 Technologie / IT)
 Kapitel 6_1.png  Kapitel 6_2.png  Kapitel 6_3.png  Kapitel 6_Demo.png   (06 Compliance & Risk)
 Kapitel 7_1.png  Kapitel 7_2.png  Kapitel 7_3.png  Kapitel 7_Demo.png   (07 Transformation)
-Kapitel 8_1.png  Kapitel 8_2.png  Kapitel 8_3.png  Kapitel 8_Demo.png   (08 Projektfläche · NEU, Bilder folgen)
+Kapitel 8_1.png  Kapitel 8_2.png  Kapitel 8_3.png  Kapitel 8_Demo.png   (08 Produkte & Innovation · NEU, Demo-Bild folgt)
 ```
 
 > `Strukturbild.png` ist 1536×1024 (3:2); die `ZONES`-Koordinaten in

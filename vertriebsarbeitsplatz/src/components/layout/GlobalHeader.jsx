@@ -325,10 +325,16 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
               const ok = window.confirm(t('demoDatenZuruecksetzenConfirm'));
               if (!ok) return;
               try {
+                // Beraterprofil (Name, Foto, Anrede) ist KEIN Demo-Inhalt und
+                // bleibt beim Zurücksetzen erhalten – nur die Demo-Daten (z. B.
+                // der erkannte Hund) werden geleert.
+                const PRESERVE = new Set([
+                  'kia_user_fullname', 'kia_user_photo', 'kia_user_name', 'kia_user_gender',
+                ]);
                 const keys = [];
                 for (let i = 0; i < localStorage.length; i++) {
                   const key = localStorage.key(i);
-                  if (key && (key.startsWith('haustier_') || key.startsWith('kia_'))) keys.push(key);
+                  if (key && (key.startsWith('haustier_') || key.startsWith('kia_')) && !PRESERVE.has(key)) keys.push(key);
                 }
                 keys.forEach((k) => localStorage.removeItem(k));
               } catch {}

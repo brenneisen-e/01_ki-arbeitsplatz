@@ -15,6 +15,8 @@ const DOMAIN_MAP = {
   'VHV': 'vhv.de',
   'Helvetia': 'helvetia.com',
   'Alte Leipziger': 'alte-leipziger.de',
+  'Hallesche': 'hallesche.de',
+  'ALH': 'alte-leipziger.de',
   'Axa': 'axa.de',
   'AXA': 'axa.de',
   'Nürnberger': 'nuernberger.de',

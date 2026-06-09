@@ -99,19 +99,21 @@ function buildKontoauszug(kunde, lang, institut) {
     { n: 9, e: 'Allianz Lebensvers.-AG', z: tt('Risikolebensversicherung', 'Term life insurance'), b: -45, art: 'versicherung',
       vertrag: { institut: 'Allianz', produkt: tt('Risikoleben 150k (bis 2035)', 'Term life 150k (until 2035)'), praemieJahr: 540, eigen: false } },
     { n: 11, e: 'HUK-COBURG', z: tt('Hausratversicherung', 'Home contents insurance'), b: -15, art: 'versicherung',
-      vertrag: { institut: 'HUK-Coburg', produkt: tt('Hausrat (65 m² Standard)', 'Home contents (65 m²)'), praemieJahr: 180, eigen: false } },
+      vertrag: { institut: 'HUK', produkt: tt('Hausrat (65 m² Standard)', 'Home contents (65 m²)'), praemieJahr: 180, eigen: false } },
     { n: 11, e: 'HUK-COBURG', z: tt('Privathaftpflicht Familie', 'Private liability family'), b: -7.92, art: 'versicherung',
-      vertrag: { institut: 'HUK-Coburg', produkt: tt('Privathaftpflicht (10 Mio.)', 'Private liability (10m)'), praemieJahr: 95, eigen: false } },
+      vertrag: { institut: 'HUK', produkt: tt('Privathaftpflicht (10 Mio.)', 'Private liability (10m)'), praemieJahr: 95, eigen: false } },
+    { n: 13, e: 'Hallesche Krankenvers.', z: tt('Zahnzusatzversicherung (ALH)', 'Dental insurance (ALH)'), b: -30, art: 'versicherung',
+      vertrag: { institut: 'Hallesche', produkt: tt('Zahnzusatzversicherung (Familie)', 'Dental insurance (family)'), praemieJahr: 360, eigen: false } },
 
     // ── Tier (Signal → Tierkranken-Bedarf) ──
     { n: 3, e: 'Fressnapf Köln', z: tt('Tierbedarf', 'Pet supplies'), b: -85, art: 'tier' },
     { n: 12, e: 'Hundeschule Rhein', z: tt('Hundetraining Monatskurs', 'Dog training course'), b: -45, art: 'tier' },
     { n: 18, e: 'Tierarztpraxis Dr. Müller', z: tt('Behandlung/Impfung', 'Treatment/vaccination'), b: -120, art: 'tier' },
 
-    // ── Extremsport (Signal → Unfall-Bedarf) ──
-    { n: 14, e: 'DAV Kletterzentrum Köln', z: tt('Bouldern Monatsabo', 'Bouldering membership'), b: -65, art: 'sport' },
-    { n: 22, e: 'Skydive Center Marburg', z: tt('Tandem-/Fallschirmsprung', 'Skydiving jump'), b: -320, art: 'sport' },
-    { n: 28, e: 'Globetrotter Ausrüstung', z: tt('Kletterschuhe/Ausrüstung', 'Climbing gear'), b: -149, art: 'sport' },
+    // ── Extremsport (Signal → Unfall-Bedarf) – Empfänger wie in den Stammdaten ──
+    { n: 14, e: 'DAV Boulderhalle Gießen', z: tt('Bouldern Monatsabo', 'Bouldering membership'), b: -65, art: 'sport' },
+    { n: 22, e: 'Skydive Center Marburg', z: tt('Fallschirmsprung', 'Skydiving jump'), b: -320, art: 'sport' },
+    { n: 28, e: 'Globetrotter', z: tt('Kletterschuhe/Ausrüstung', 'Climbing gear'), b: -149, art: 'sport' },
 
     // Sparen / Anlage
     { n: 2, e: 'Trade Republic', z: tt('ETF-/Aktien-Sparplan', 'ETF/stock savings plan'), b: -200, art: 'sparen' },

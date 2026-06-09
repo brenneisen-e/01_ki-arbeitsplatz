@@ -46,6 +46,7 @@ export const V1 = {
     { typ: 'rlv', produktart: 'Risikolebensversicherung', institut: 'Allianz', details: '150k Deckung, bis 2035', volumen: 540, consent: true },
     { typ: 'hausrat', produktart: 'Hausrat', institut: 'HUK', details: '65 qm Standard-Tarif (FALSCH seit 2021 – tatsächlich 145 qm EFH), keine Elementardeckung', volumen: 180, consent: true },
     { typ: 'haftpflicht', produktart: 'Privathaftpflicht', institut: 'HUK', details: 'Familien-Tarif, 10 Mio. EUR Deckung', volumen: 95, consent: true },
+    { typ: 'krankenzusatz', produktart: 'Zahnzusatzversicherung', institut: 'Hallesche', details: 'Zahn-Premium Familie (ALH Gruppe), 30€/mtl., seit 2022', volumen: 360, consent: true },
   ],
   openFinance: {
     geldmarkt: [
@@ -70,6 +71,7 @@ export const V1 = {
       { produkt: 'Risikolebensversicherung', institut: 'Allianz', details: '150k Deckung, bis 2035', praemie: 540, deckungssumme: '150.000\u20ac' },
       { produkt: 'Hausrat', institut: 'HUK', details: '65 qm versichert (FALSCH seit Umzug 2021 \u2013 145 qm EFH), Standard-Tarif ohne Elementar', praemie: 180, deckungssumme: '650 \u20ac/m\u00b2', leistungen: ['Standard-Deckung'] },
       { produkt: 'Privathaftpflicht', institut: 'HUK', details: 'Familien-Tarif, 10 Mio. \u20ac Deckung', praemie: 95, deckungssumme: '10.000.000 \u20ac', leistungen: ['Familie', 'Schl\u00fcsselverlust bis 1.000 \u20ac'] },
+      { produkt: 'Zahnzusatzversicherung', institut: 'Hallesche', details: 'Zahn-Premium Familie (ALH Gruppe), seit 2022', praemie: 360, leistungen: ['Zahnersatz 90%', 'Prof. Zahnreinigung', 'KFO Kinder'] },
     ],
     finanzierungen: [
       { produkt: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', restschuld: 285000, zinssatz: '2,85% p.a.', rate: '1.450\u20ac/Mon.', laufzeit: 'bis 2045', details: 'Zinsbindung bis 09/2027', absicherung: null },
@@ -84,6 +86,7 @@ export const V1 = {
     { kategorie: 'kredit', betrag: -120, empfaenger: 'Commerzbank' },
     { kategorie: 'versicherung_eigen', betrag: -260, empfaenger: 'ERGO' },
     { kategorie: 'versicherung_fremd', betrag: -45, empfaenger: 'Allianz' },
+    { kategorie: 'versicherung_fremd', betrag: -30, empfaenger: 'Hallesche' },
     { kategorie: 'sparplan', betrag: -200, empfaenger: 'Trade Republic' },
     { kategorie: 'kinder', betrag: -380, empfaenger: 'Kita K\u00f6ln' },
     { kategorie: 'konsum', betrag: -1200, empfaenger: 'Diverse' },

@@ -140,7 +140,8 @@
   left: 26px;
   z-index: 14;
   display: inline-flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
   opacity: 0;
   transform: translateX(-8px);

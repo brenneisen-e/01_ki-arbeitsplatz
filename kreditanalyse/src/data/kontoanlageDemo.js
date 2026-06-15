@@ -195,6 +195,50 @@ const SYNDIZIERT = {
 export const DEMO_VERTRAEGE = [BILATERAL, SYNDIZIERT];
 
 /**
+ * Zuordnung Feld-Key -> exakte Beschriftung in Spalte B des Blatts
+ * "Allgemeine Angaben" der Originalvorlage. Der Generator sucht die Zeile
+ * anhand dieser Beschriftung und trägt den Wert in Spalte D ein. So bleibt
+ * die Zuordnung robust gegen verschobene Zeilennummern.
+ *
+ * Felder ohne Eintrag hier haben keine direkte Zielzelle im Blatt und werden
+ * nur in der UI angezeigt (z. B. Endfälligkeit, Konsortialführer,
+ * Zinsperiode, Provisionen). "kreditbetrag"/"waehrung" werden gesondert in
+ * der Zeile "Kreditbetrag und Währung" behandelt (Spalte D bzw. E).
+ */
+export const TEMPLATE_FIELD_LABELS = {
+  kreditnehmer: 'Kreditnehmer',
+  kundennummer: 'Kundennummer',
+  verwendungszweck: 'Verwendungszweck',
+  geschaeftsart: 'Geschäftsart',
+  kreditart: 'Kreditart',
+  abschlussstelle: 'Geschäftsabschließende Stelle',
+  grundNeuanlage: 'Grund der Neuanlage',
+  zusageAm: 'Zusage extern erteilt am',
+  vertragAm: 'Vertrag abgeschlossen am',
+  sppi: 'SPPI-Kriterium',
+  haltekategorieIfrs9: 'Haltekategorie IFRS 9',
+  segmentnummer: 'Segmentnummer',
+  vergabeart: 'Vergabeart KR',
+  meldepflichtAwv: 'Meldepflicht AWV',
+  helabaAnteil: 'Helaba Anteil in % am Konsortialkredit',
+  artKonsortial: 'Art des Konsortialkredites (AnaCredit)',
+  idKonsortial: 'ID-Konsortialkredit (AnaCredit)',
+  festzins: 'Zuschlag / Festzins in %',
+  referenzzins: 'Referenzzins / Basiszins in %',
+  waehrungKonditionen: 'Währung für diese Konditionen',
+};
+
+// Beschriftung der (mehrzeiligen) Betrag/Währung-Zeile.
+export const TEMPLATE_BETRAG_LABEL = 'Kreditbetrag und Währung';
+
+// Feld-Keys, die tatsächlich in die Vorlage geschrieben werden (für UI-Hinweis).
+export const MAPPED_FIELD_KEYS = new Set([
+  ...Object.keys(TEMPLATE_FIELD_LABELS),
+  'kreditbetrag',
+  'waehrung',
+]);
+
+/**
  * Ordnet einen hochgeladenen Dateinamen einem Demo-Datensatz zu. Für die
  * Demostrecke reicht die Erkennung anhand des Dateinamens; greift keine
  * Heuristik, wird der bilaterale Vertrag als Standard zurückgegeben.

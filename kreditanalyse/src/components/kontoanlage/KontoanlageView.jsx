@@ -17,6 +17,7 @@ import {
 import KontoanlageDropZone from './KontoanlageDropZone';
 import {
   detectVertrag, ALLGEMEINE_ANGABEN_SECTIONS, FIELD_LABELS, KONFIDENZ_META,
+  MAPPED_FIELD_KEYS,
 } from '../../data/kontoanlageDemo';
 import { generateAllgemeineAngabenXlsx } from '../../utils/generateAllgemeineAngabenXlsx';
 
@@ -98,8 +99,9 @@ export default function KontoanlageView() {
           </h2>
           <p className="text-xs text-text-muted font-body">
             Lade einen Kreditvertrag (bilateral oder syndiziert) hoch. Die KI liest die
-            wesentlichen Konditionen aus und befüllt daraus das Blatt „Allgemeine Angaben"
-            der Vorlage „Kreditkontoneuanlage" – als fertige Excel-Datei zum Download.
+            wesentlichen Konditionen aus und befüllt damit das Blatt „Allgemeine Angaben"
+            der Originalvorlage „Template Kreditkontoneuanlage" – zum Download als fertig
+            vorbelegte Excel-Datei.
           </p>
         </div>
       </div>
@@ -121,8 +123,8 @@ export default function KontoanlageView() {
                 <ol className="mt-2 space-y-1 text-xs text-text-secondary font-body list-decimal list-inside">
                   <li>Vertrag hochladen (z. B. den bilateralen oder den syndizierten Beispielvertrag).</li>
                   <li>Die KI erkennt Vertragstyp, Parteien, Beträge, Laufzeiten und Konditionen.</li>
-                  <li>Die Werte werden auf die Felder des Blatts „Allgemeine Angaben" gemappt.</li>
-                  <li>Das ausgefüllte Excel-Blatt steht zum Download bereit.</li>
+                  <li>Die Werte werden in das Blatt „Allgemeine Angaben" der Originalvorlage übernommen.</li>
+                  <li>Die befüllte Vorlage „Kreditkontoneuanlage" steht zum Download bereit.</li>
                 </ol>
               </div>
             </div>
@@ -201,9 +203,9 @@ export default function KontoanlageView() {
                 className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-primary text-white rounded-md hover:bg-primary-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {generating ? (
-                  <><Loader2 size={14} strokeWidth={1.5} className="animate-spin" /> Excel wird erzeugt</>
+                  <><Loader2 size={14} strokeWidth={1.5} className="animate-spin" /> Vorlage wird befüllt</>
                 ) : (
-                  <><Download size={14} strokeWidth={1.5} /> Excel „Allgemeine Angaben" herunterladen</>
+                  <><Download size={14} strokeWidth={1.5} /> Vorlage „Kreditkontoneuanlage" befüllt herunterladen</>
                 )}
               </button>
             </div>
@@ -235,6 +237,15 @@ export default function KontoanlageView() {
                       <div key={key} className="grid grid-cols-1 md:grid-cols-12 gap-1 md:gap-3 px-4 py-3">
                         <div className="md:col-span-3 text-xs font-medium text-text-secondary font-body">
                           {FIELD_LABELS[key] || key}
+                          {MAPPED_FIELD_KEYS.has(key) ? (
+                            <span className="ml-1.5 inline-flex items-center text-[9px] uppercase tracking-wide text-primary/70 font-semibold">
+                              → Vorlage
+                            </span>
+                          ) : (
+                            <span className="ml-1.5 inline-flex items-center text-[9px] uppercase tracking-wide text-text-muted/60 font-semibold">
+                              nur Info
+                            </span>
+                          )}
                         </div>
                         <div className="md:col-span-4 text-sm text-text-primary font-body">
                           {field.wert}
@@ -256,8 +267,11 @@ export default function KontoanlageView() {
           </div>
 
           <p className="text-[11px] text-text-muted font-body">
-            Demo: Mit „Kundenstamm / prüfen" markierte Felder gehen nicht aus dem Vertrag hervor und sind
-            fachlich zu bestätigen, bevor die Anlage in SAP S/4HANA bzw. in der Originalvorlage erfolgt.
+            Der Download befüllt das Blatt „Allgemeine Angaben" der Originalvorlage
+            „Template Kreditkontoneuanlage" (alle weiteren Blätter, Beschriftungen und
+            Listen bleiben erhalten; Ausgabe als .xlsx ohne VBA-Makros). Mit „→ Vorlage"
+            markierte Felder werden eingetragen, „nur Info"-Felder dienen der Übersicht.
+            Mit „Kundenstamm / prüfen" markierte Werte sind fachlich zu bestätigen.
           </p>
         </>
       )}

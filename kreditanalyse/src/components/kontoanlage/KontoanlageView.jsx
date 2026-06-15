@@ -268,10 +268,10 @@ export default function KontoanlageView() {
 
           <p className="text-[11px] text-text-muted font-body">
             Der Download befüllt das Blatt „Allgemeine Angaben" der Originalvorlage
-            „Template Kreditkontoneuanlage" (alle weiteren Blätter, Beschriftungen und
-            Listen bleiben erhalten; Ausgabe als .xlsx ohne VBA-Makros). Mit „→ Vorlage"
-            markierte Felder werden eingetragen, „nur Info"-Felder dienen der Übersicht.
-            Mit „Kundenstamm / prüfen" markierte Werte sind fachlich zu bestätigen.
+            „Template Kreditkontoneuanlage" und gibt sie als makrofähige .xlsm aus –
+            alle weiteren Blätter, Beschriftungen, Listen und VBA-Makros bleiben erhalten.
+            Mit „→ Vorlage" markierte Felder werden eingetragen, „nur Info"-Felder dienen
+            der Übersicht. Mit „Kundenstamm / prüfen" markierte Werte sind fachlich zu bestätigen.
           </p>
         </>
       )}

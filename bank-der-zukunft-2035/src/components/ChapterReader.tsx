@@ -272,8 +272,10 @@ export function ChapterReader({
               Auf schmalen Screens unsichtbar — dort greift die Leiste unten. */}
           {hypothesis?.leitfrage && (
             <aside className={styles.calloutFloat}>
-              {/* Echte Sprechblase: komplette Silhouette (Körper + Tail nach
-                  links auf das 2035-Bild) als ein einziger SVG-Pfad. */}
+              {/* PowerPoint-Form „Sprechblase: abgerundetes Rechteck"
+                  (wedgeRoundRectCallout): abgerundetes Rechteck + gerader,
+                  dreieckiger Zeiger nach links auf das 2035-Bild — als ein
+                  einziger SVG-Pfad, damit die Kontur durchgehend bleibt. */}
               <svg
                 className={styles.calloutBubble}
                 viewBox="0 0 250 162"
@@ -281,7 +283,7 @@ export function ChapterReader({
                 aria-hidden
                 focusable="false"
               >
-                <path d="M34,3 L226,3 Q247,3 247,26 L247,136 Q247,159 226,159 L34,159 Q13,159 13,136 L13,99 C7,96 3,91 2,83 C4,79 9,77 13,69 L13,26 Q13,3 34,3 Z" />
+                <path d="M38,6 H226 Q246,6 246,26 V136 Q246,156 226,156 H38 Q18,156 18,136 V112 L2,96 L18,80 V26 Q18,6 38,6 Z" />
               </svg>
               <div className={styles.calloutInner}>
                 <span className={styles.calloutHead}>

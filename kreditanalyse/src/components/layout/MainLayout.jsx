@@ -16,6 +16,7 @@ import MonitoringView from '../monitoring/MonitoringView';
 import CustomerApplicationView from '../customer-application/CustomerApplicationView';
 import ComplianceView from '../compliance/ComplianceView';
 import PdfUploadView from '../pdf-upload/PdfUploadView';
+import KontoanlageView from '../kontoanlage/KontoanlageView';
 
 const views = {
   dashboard: DashboardView,
@@ -31,6 +32,7 @@ const views = {
   'customer-application': CustomerApplicationView,
   compliance: ComplianceView,
   'pdf-upload': PdfUploadView,
+  kontoanlage: KontoanlageView,
 };
 
 export default function MainLayout() {

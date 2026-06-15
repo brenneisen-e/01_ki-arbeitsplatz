@@ -2,8 +2,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { Sparkles, Telescope, X } from 'lucide-react'
 import styles from './ManagementSummary.module.css'
-import { CHAPTERS } from '../data/chapters'
+import { getChapters } from '../data/chapters'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { useLang, type Lang } from '../i18n/LanguageContext'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ManagementSummary — Overlay über dem Strukturbild (Übersicht). Zeigt pro
@@ -17,10 +18,46 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 const LOGO_TOKEN = 'pk_H7vb5Y2lTsW47U4Xq-w3HA'
 const DELOITTE_LOGO = `https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=240&retina=true`
 
+type SummaryStrings = {
+  aria: string
+  kicker: string
+  title: string
+  close: string
+  leadTitle: string
+  gesamt: string
+  visionTag: string
+  footNote: string
+  footHint: string
+}
+
 // Gesamtzusammenfassung — synthetisiert die acht Bereichs-Visionen zu einem
 // durchgehenden Zielbild der „Bank 2035". `**fett**` markiert die Kernaussagen.
-const GESAMT_SUMMARY =
-  'Bis 2035 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kund:innen **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Produkte entstehen als **lebende, adaptive Services für das Segment of One** — komponiert in Tagen statt Jahren. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.'
+const STR: Record<Lang, SummaryStrings> = {
+  de: {
+    aria: 'Management Summary — Vision der Bank 2035',
+    kicker: 'Banking Horizon 2035',
+    title: 'Management Summary',
+    close: 'Management Summary schließen',
+    leadTitle: 'Gesamtzusammenfassung',
+    gesamt:
+      'Bis 2035 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kund:innen **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Produkte entstehen als **lebende, adaptive Services für das Segment of One** — komponiert in Tagen statt Jahren. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.',
+    visionTag: 'Vision 2035',
+    footNote: 'Vorstands-Workshop · abgeleitet aus 24 Hypothesen (3 je Kapitel)',
+    footHint: 'Esc oder Klick außerhalb schließt',
+  },
+  en: {
+    aria: 'Management summary — vision of the bank in 2035',
+    kicker: 'Banking Horizon 2035',
+    title: 'Management summary',
+    close: 'Close the management summary',
+    leadTitle: 'Overall summary',
+    gesamt:
+      'By 2035 our bank becomes an **AI-native platform bank**: for customers, banking turns **invisible and part of everyday life**, distribution **orchestrates hyper-personalised solutions** instead of products, and operations move **from a cost block to a platform**. Products emerge as **living, adaptive services for the segment of one** — composed in days rather than years. Software **largely develops itself** within clear guardrails, compliance is **built into every decision** — and we get there **decision-first**.',
+    visionTag: 'Vision 2035',
+    footNote: 'Board workshop · derived from 24 hypotheses (3 per chapter)',
+    footHint: 'Esc or a click outside closes',
+  },
+}
 
 // Mini-Markdown: **fett** → <strong>. Sonst Klartext (analog ChapterReader).
 function renderRichText(text: string): React.ReactNode[] {
@@ -43,6 +80,9 @@ export function ManagementSummary({
   const panelRef = useRef<HTMLDivElement>(null)
   const [logoFailed, setLogoFailed] = useState(false)
   const reducedMotion = useReducedMotion()
+  const { lang } = useLang()
+  const t = STR[lang]
+  const chapters = getChapters(lang)
 
   // Esc schließt.
   useEffect(() => {
@@ -77,7 +117,7 @@ export function ManagementSummary({
       className={styles.root}
       role="dialog"
       aria-modal="true"
-      aria-label="Management Summary — Vision der Bank 2035"
+      aria-label={t.aria}
     >
       <div ref={backdropRef} className={styles.backdrop} onClick={onClose} aria-hidden />
 
@@ -101,8 +141,8 @@ export function ManagementSummary({
               )}
             </span>
             <span className={styles.titleBlock}>
-              <span className={styles.kicker}>Banking Horizon 2035</span>
-              <h2 className={styles.title}>Management Summary</h2>
+              <span className={styles.kicker}>{t.kicker}</span>
+              <h2 className={styles.title}>{t.title}</h2>
             </span>
           </div>
 
@@ -110,7 +150,7 @@ export function ManagementSummary({
             type="button"
             className={styles.closeBtn}
             onClick={onClose}
-            aria-label="Management Summary schließen"
+            aria-label={t.close}
           >
             <X size={18} strokeWidth={2} />
           </button>
@@ -121,14 +161,14 @@ export function ManagementSummary({
             <Telescope size={17} strokeWidth={1.9} />
           </span>
           <div className={styles.leadText}>
-            <span className={styles.leadTitle}>Gesamtzusammenfassung</span>
-            <p>{renderRichText(GESAMT_SUMMARY)}</p>
+            <span className={styles.leadTitle}>{t.leadTitle}</span>
+            <p>{renderRichText(t.gesamt)}</p>
           </div>
         </div>
 
         <div className={styles.body}>
           <div className={styles.grid}>
-            {CHAPTERS.map((chapter) => (
+            {chapters.map((chapter) => (
               <article key={chapter.id} className={styles.card}>
                 <div className={styles.cardHead}>
                   <span className={styles.num}>{chapter.kapitel}</span>
@@ -139,7 +179,7 @@ export function ManagementSummary({
                 <p className={styles.visionText}>{renderRichText(chapter.vision)}</p>
                 <span className={styles.visionTag} aria-hidden>
                   <Sparkles size={12} strokeWidth={2.2} />
-                  Vision 2035
+                  {t.visionTag}
                 </span>
               </article>
             ))}
@@ -147,10 +187,8 @@ export function ManagementSummary({
         </div>
 
         <footer className={styles.footer}>
-          <span className={styles.footNote}>
-            Vorstands-Workshop · abgeleitet aus 24 Hypothesen (3 je Kapitel)
-          </span>
-          <span className={styles.footHint}>Esc oder Klick außerhalb schließt</span>
+          <span className={styles.footNote}>{t.footNote}</span>
+          <span className={styles.footHint}>{t.footHint}</span>
         </footer>
       </div>
     </div>

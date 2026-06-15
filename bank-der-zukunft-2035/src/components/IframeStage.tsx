@@ -3,6 +3,38 @@ import { gsap } from 'gsap'
 import { ExternalLink, MonitorPlay, X } from 'lucide-react'
 import styles from './IframeStage.module.css'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { useLang, type Lang } from '../i18n/LanguageContext'
+
+type StageStrings = {
+  openNewTab: string
+  close: string
+  placeholderText: React.ReactNode
+}
+
+const STR: Record<Lang, StageStrings> = {
+  de: {
+    openNewTab: 'Demo in neuem Tab öffnen',
+    close: 'Demo schließen',
+    placeholderText: (
+      <>
+        Diese Demo ist noch nicht verdrahtet. Tragen Sie die URL im Handoff der
+        Aktivität in <code>src/data/chapters.ts</code> ein — der Bildschirm zeigt sie
+        dann hier in Vollbild.
+      </>
+    ),
+  },
+  en: {
+    openNewTab: 'Open the demo in a new tab',
+    close: 'Close the demo',
+    placeholderText: (
+      <>
+        This demo is not wired up yet. Add the URL in the activity hand-off in{' '}
+        <code>src/data/chapters.ts</code> — the screen will then show it here in full
+        screen.
+      </>
+    ),
+  },
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // IframeStage — der Demo-Absprung (Kap. 01 Liquid, 02 Vertriebscockpit,
@@ -30,6 +62,8 @@ export function IframeStage({ url, title, onClose }: IframeStageProps): React.Re
   const viewportRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const reducedMotion = useReducedMotion()
+  const { lang } = useLang()
+  const t = STR[lang]
 
   const hasUrl = url.trim() !== ''
 
@@ -102,7 +136,7 @@ export function IframeStage({ url, title, onClose }: IframeStageProps): React.Re
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Demo in neuem Tab öffnen"
+                aria-label={t.openNewTab}
               >
                 <ExternalLink size={15} strokeWidth={2} />
               </a>
@@ -111,7 +145,7 @@ export function IframeStage({ url, title, onClose }: IframeStageProps): React.Re
               type="button"
               className={styles.closeBtn}
               onClick={onClose}
-              aria-label="Demo schließen"
+              aria-label={t.close}
             >
               <X size={16} strokeWidth={2} />
             </button>
@@ -136,11 +170,7 @@ export function IframeStage({ url, title, onClose }: IframeStageProps): React.Re
               <MonitorPlay size={30} strokeWidth={1.5} />
             </span>
             <span className={styles.phTitle}>{title}</span>
-            <p className={styles.phText}>
-              Diese Demo ist noch nicht verdrahtet. Tragen Sie die URL im Handoff der
-              Aktivität in <code>src/data/chapters.ts</code> ein — der Bildschirm zeigt sie
-              dann hier in Vollbild.
-            </p>
+            <p className={styles.phText}>{t.placeholderText}</p>
           </div>
         )}
       </div>

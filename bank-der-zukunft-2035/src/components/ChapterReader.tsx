@@ -13,7 +13,76 @@ import {
 } from 'lucide-react'
 import styles from './ChapterReader.module.css'
 import { ImageSlot } from './ImageSlot'
+import { useLang, type Lang } from '../i18n/LanguageContext'
 import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
+
+type ReaderStrings = {
+  back: string
+  chapterPrefix: string
+  hypothesisOf: (n: number) => string
+  activityKicker: string
+  hypothesisSlot: (n: number) => string
+  activitySlot: string
+  statusQuo: string
+  future: string
+  leitfrage: string
+  today: string
+  prevStep: string
+  nextStep: string
+  steps: string
+  activity: string
+  hypothesisAria: (n: number) => string
+  meta: Record<Handoff['kind'], string>
+}
+
+const STR: Record<Lang, ReaderStrings> = {
+  de: {
+    back: 'Übersicht',
+    chapterPrefix: 'Kapitel',
+    hypothesisOf: (n) => `Hypothese ${n} von 3`,
+    activityKicker: 'Aktivität & Absprung',
+    hypothesisSlot: (n) => `Hypothese ${n}`,
+    activitySlot: 'Aktivität',
+    statusQuo: 'Status Quo',
+    future: '2035',
+    leitfrage: 'Leitfrage',
+    today: 'Heute · Status Quo',
+    prevStep: 'Vorheriger Schritt',
+    nextStep: 'Nächster Schritt',
+    steps: 'Kapitel-Schritte',
+    activity: 'Aktivität',
+    hypothesisAria: (n) => `Hypothese ${n}`,
+    meta: {
+      iframe: 'Live-Demo',
+      'strategy-lab': 'Strategy Lab · Diskussion',
+      cocreation: 'Co-Creation',
+      'kredit-dilemma': 'Interaktives Szenario',
+    },
+  },
+  en: {
+    back: 'Overview',
+    chapterPrefix: 'Chapter',
+    hypothesisOf: (n) => `Hypothesis ${n} of 3`,
+    activityKicker: 'Activity & hand-off',
+    hypothesisSlot: (n) => `Hypothesis ${n}`,
+    activitySlot: 'Activity',
+    statusQuo: 'Status quo',
+    future: '2035',
+    leitfrage: 'Guiding question',
+    today: 'Today · status quo',
+    prevStep: 'Previous step',
+    nextStep: 'Next step',
+    steps: 'Chapter steps',
+    activity: 'Activity',
+    hypothesisAria: (n) => `Hypothesis ${n}`,
+    meta: {
+      iframe: 'Live demo',
+      'strategy-lab': 'Strategy Lab · discussion',
+      cocreation: 'Co-creation',
+      'kredit-dilemma': 'Interactive scenario',
+    },
+  },
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ChapterReader — die Kapitel-Sequenz nach dem Kameraflug:
@@ -45,16 +114,16 @@ function renderRichText(text: string): React.ReactNode[] {
   })
 }
 
-function handoffMeta(handoff: Handoff): { label: string; icon: React.ReactElement } {
-  switch (handoff.kind) {
+function handoffIcon(kind: Handoff['kind']): React.ReactElement {
+  switch (kind) {
     case 'iframe':
-      return { label: 'Live-Demo', icon: <Play size={17} strokeWidth={2} aria-hidden /> }
+      return <Play size={17} strokeWidth={2} aria-hidden />
     case 'strategy-lab':
-      return { label: 'Strategy Lab · Diskussion', icon: <LayoutGrid size={17} strokeWidth={2} aria-hidden /> }
+      return <LayoutGrid size={17} strokeWidth={2} aria-hidden />
     case 'cocreation':
-      return { label: 'Co-Creation', icon: <Users size={17} strokeWidth={2} aria-hidden /> }
+      return <Users size={17} strokeWidth={2} aria-hidden />
     case 'kredit-dilemma':
-      return { label: 'Interaktives Szenario', icon: <Phone size={17} strokeWidth={2} aria-hidden /> }
+      return <Phone size={17} strokeWidth={2} aria-hidden />
   }
 }
 
@@ -118,6 +187,8 @@ export function ChapterReader({
   onBack,
   onHandoff,
 }: ChapterReaderProps): React.ReactElement {
+  const { lang } = useLang()
+  const t = STR[lang]
   const goPrev = useCallback(
     () => onStepChange(Math.max(0, step - 1)),
     [step, onStepChange],
@@ -144,21 +215,23 @@ export function ChapterReader({
 
   const image = hypothesis ? hypothesis.image : activity.image
   const title = hypothesis ? hypothesis.title : activity.title
+  const chapterLabel = `${t.chapterPrefix} ${chapter.kapitel}`
   const kicker = hypothesis
-    ? `Kapitel ${chapter.kapitel} · Hypothese ${step + 1} von 3`
-    : `Kapitel ${chapter.kapitel} · Aktivität & Absprung`
+    ? `${chapterLabel} · ${t.hypothesisOf(step + 1)}`
+    : `${chapterLabel} · ${t.activityKicker}`
   const slotLabel = hypothesis
-    ? `Kapitel ${chapter.kapitel} · Hypothese ${step + 1}`
-    : `Kapitel ${chapter.kapitel} · Aktivität`
+    ? `${chapterLabel} · ${t.hypothesisSlot(step + 1)}`
+    : `${chapterLabel} · ${t.activitySlot}`
 
-  const meta = handoffMeta(activity.handoff)
+  const metaLabel = t.meta[activity.handoff.kind]
+  const metaIcon = handoffIcon(activity.handoff.kind)
 
   return (
     <div className={styles.root}>
       <header className={styles.topbar}>
         <button type="button" className={styles.back} onClick={onBack}>
           <ArrowLeft size={16} strokeWidth={1.8} aria-hidden />
-          <span>Übersicht</span>
+          <span>{t.back}</span>
         </button>
 
         <div className={styles.chapterChip} aria-hidden>
@@ -187,8 +260,8 @@ export function ChapterReader({
             {hypothesis && (
               <div className={styles.split} aria-hidden>
                 <span className={styles.splitLine} />
-                <span className={styles.splitLeft}>Status Quo</span>
-                <span className={styles.splitRight}>2035</span>
+                <span className={styles.splitLeft}>{t.statusQuo}</span>
+                <span className={styles.splitRight}>{t.future}</span>
               </div>
             )}
             {isActivity && activity.screenOverlay && (
@@ -213,7 +286,7 @@ export function ChapterReader({
               <div className={styles.calloutInner}>
                 <span className={styles.calloutHead}>
                   <Lightbulb size={14} strokeWidth={2} aria-hidden />
-                  Leitfrage
+                  {t.leitfrage}
                 </span>
                 <p className={styles.calloutText}>{hypothesis.leitfrage}</p>
               </div>
@@ -227,7 +300,7 @@ export function ChapterReader({
               <article className={styles.compareCard} data-quo>
                 <span className={styles.compareHead}>
                   <Clock size={14} strokeWidth={2.2} aria-hidden />
-                  Heute · Status Quo
+                  {t.today}
                 </span>
                 <p className={styles.compareText}>
                   {renderRichText(hypothesis.statusQuo)}
@@ -236,7 +309,7 @@ export function ChapterReader({
               <article className={styles.compareCard} data-future>
                 <span className={styles.compareHead}>
                   <Sparkles size={14} strokeWidth={2.2} aria-hidden />
-                  2035
+                  {t.future}
                 </span>
                 <p className={styles.compareText}>
                   {renderRichText(hypothesis.in2035)}
@@ -253,8 +326,8 @@ export function ChapterReader({
         ) : (
           <div className={styles.activityBox}>
             <span className={styles.compareTag} data-accent>
-              {meta.icon}
-              {meta.label}
+              {metaIcon}
+              {metaLabel}
             </span>
             <p className={styles.copy}>{renderRichText(activity.text)}</p>
             <div className={styles.ctaRow}>
@@ -263,7 +336,7 @@ export function ChapterReader({
                 className={styles.cta}
                 onClick={() => onHandoff(activity.handoff)}
               >
-                {meta.icon}
+                {metaIcon}
                 <span>{activity.buttonLabel}</span>
               </button>
             </div>
@@ -277,12 +350,12 @@ export function ChapterReader({
           className={styles.pagerBtn}
           onClick={goPrev}
           disabled={step === 0}
-          aria-label="Vorheriger Schritt"
+          aria-label={t.prevStep}
         >
           <ChevronLeft size={18} strokeWidth={2} />
         </button>
 
-        <div className={styles.dots} role="tablist" aria-label="Kapitel-Schritte">
+        <div className={styles.dots} role="tablist" aria-label={t.steps}>
           {Array.from({ length: STEP_COUNT }).map((_, i) => (
             <button
               key={i}
@@ -293,7 +366,7 @@ export function ChapterReader({
               data-active={i === step || undefined}
               data-activity={i === STEP_COUNT - 1 || undefined}
               onClick={() => onStepChange(i)}
-              aria-label={i === STEP_COUNT - 1 ? 'Aktivität' : `Hypothese ${i + 1}`}
+              aria-label={i === STEP_COUNT - 1 ? t.activity : t.hypothesisAria(i + 1)}
             />
           ))}
         </div>
@@ -303,7 +376,7 @@ export function ChapterReader({
           className={styles.pagerBtn}
           onClick={goNext}
           disabled={isActivity}
-          aria-label="Nächster Schritt"
+          aria-label={t.nextStep}
         >
           <ChevronRight size={18} strokeWidth={2} />
         </button>

@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { ImageOff } from 'lucide-react'
 import styles from './ImageSlot.module.css'
+import { useLang } from '../i18n/LanguageContext'
+
+const PLACEHOLDER_HINT = {
+  de: 'Bild-Slot frei · Datei unter public/ ablegen',
+  en: 'Image slot empty · place the file under public/',
+} as const
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ImageSlot — rendert ein Bild und degradiert sauber, wenn die Datei (noch)
@@ -32,6 +38,7 @@ export function ImageSlot({
   caption,
 }: ImageSlotProps): React.ReactElement {
   const [errored, setErrored] = useState(false)
+  const { lang } = useLang()
 
   // Beim src-Wechsel den Fehlerzustand zurücksetzen, damit ein neu gesetzter
   // (vorhandener) Pfad wieder versucht wird.
@@ -65,7 +72,7 @@ export function ImageSlot({
           {label && <span className={styles.phLabel}>{label}</span>}
           {caption && <span className={styles.phCaption}>{caption}</span>}
           <code className={styles.phFile}>{filename}</code>
-          <span className={styles.phHint}>Bild-Slot frei · Datei unter public/ ablegen</span>
+          <span className={styles.phHint}>{PLACEHOLDER_HINT[lang]}</span>
         </div>
       )}
     </div>

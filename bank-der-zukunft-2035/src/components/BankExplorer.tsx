@@ -17,16 +17,59 @@ import { CoCreationCanvas } from './CoCreationCanvas'
 import { KreditDilemma } from './KreditDilemma'
 import { ManagementSummary } from './ManagementSummary'
 import { DeloitteBadge } from './DeloitteBadge'
+import { LanguageSwitch } from './LanguageSwitch'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { useLang, type Lang } from '../i18n/LanguageContext'
 import {
-  CHAPTERS,
+  CHAPTER_IDS,
   MASTER_ASPECT,
-  MASTER_IMAGE,
+  getChapters,
   getChapter,
+  getMasterImage,
   type Chapter,
   type ChapterId,
   type Handoff,
 } from '../data/chapters'
+
+type ExplorerStrings = {
+  backToChat: string
+  backToChatAria: string
+  topKicker: string
+  topTitle: string
+  summary: string
+  summaryAria: string
+  masterLabel: string
+  masterCaption: string
+  chapter: string
+  zoneAria: (label: string, kapitel: string) => string
+}
+
+const STR: Record<Lang, ExplorerStrings> = {
+  de: {
+    backToChat: 'Zurück zum Chat',
+    backToChatAria: 'Zurück zum Chatbot',
+    topKicker: 'Banking Horizon 2035',
+    topTitle: 'Interaktive Demo',
+    summary: 'Management Summary',
+    summaryAria: 'Management Summary öffnen — Vision der Bank 2035',
+    masterLabel: 'Master · Strukturbild',
+    masterCaption: 'Bank’26 — Querschnitt',
+    chapter: 'Kapitel',
+    zoneAria: (label, kapitel) => `${label} — Kapitel ${kapitel} öffnen`,
+  },
+  en: {
+    backToChat: 'Back to chat',
+    backToChatAria: 'Back to the chatbot',
+    topKicker: 'Banking Horizon 2035',
+    topTitle: 'Interactive demo',
+    summary: 'Management summary',
+    summaryAria: 'Open the management summary — vision of the bank in 2035',
+    masterLabel: 'Master · Cross-section',
+    masterCaption: 'Bank’26 — cross-section',
+    chapter: 'Chapter',
+    zoneAria: (label, kapitel) => `${label} — open chapter ${kapitel}`,
+  },
+}
 
 // Persistenz: aktueller Navigationsstand (offenes Kapitel + Schritt) wird in der
 // Browser-Sitzung gehalten, damit ein Refresh an genau dieser Stelle bleibt
@@ -41,7 +84,7 @@ function loadNav(): SavedNav {
     if (!raw) return { chapter: null, step: 0 }
     const parsed = JSON.parse(raw) as Partial<SavedNav>
     const chapter =
-      typeof parsed.chapter === 'string' && CHAPTERS.some((c) => c.id === parsed.chapter)
+      typeof parsed.chapter === 'string' && CHAPTER_IDS.includes(parsed.chapter as ChapterId)
         ? (parsed.chapter as ChapterId)
         : null
     const step =
@@ -116,7 +159,11 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
   const [summaryOpen, setSummaryOpen] = useState(false)
 
   const reducedMotion = useReducedMotion()
-  const activeChapter = useMemo(() => getChapter(activeId), [activeId])
+  const { lang } = useLang()
+  const t = STR[lang]
+  const chapters = useMemo(() => getChapters(lang), [lang])
+  const masterImage = useMemo(() => getMasterImage(lang), [lang])
+  const activeChapter = useMemo(() => getChapter(activeId, lang), [activeId, lang])
   const isOverview = activeChapter === null
 
   const animateTo = useCallback(
@@ -260,16 +307,16 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
           style={{ ['--ar' as string]: String(MASTER_ASPECT) }}
         >
           <ImageSlot
-            src={MASTER_IMAGE.src}
-            alt={MASTER_IMAGE.alt}
+            src={masterImage.src}
+            alt={masterImage.alt}
             fit="cover"
-            label="Master · Strukturbild"
-            caption="Bank'26 — Querschnitt"
+            label={t.masterLabel}
+            caption={t.masterCaption}
           />
 
           {isOverview && (
             <div className={styles.zones}>
-              {CHAPTERS.map((chapter) => {
+              {chapters.map((chapter) => {
                 const { zone } = chapter
                 // Trefferfläche (Hover/Klick) am Label-/Schlüsselobjekt-Punkt
                 // zentrieren und auf den jeweiligen Raum begrenzen (hitWidth/
@@ -307,7 +354,7 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
                     onFocus={() => setHoverId(chapter.id)}
                     onBlur={() => setHoverId((h) => (h === chapter.id ? null : h))}
                     onClick={() => handleZoneClick(chapter)}
-                    aria-label={`${chapter.label} — Kapitel ${chapter.kapitel} öffnen`}
+                    aria-label={t.zoneAria(chapter.label, chapter.kapitel)}
                   >
                     <span
                       className={styles.hotspot}
@@ -320,7 +367,7 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
                       className={styles.zoneLabel}
                       style={{ left: `${spotLeft}%`, top: `${spotTop}%` }}
                     >
-                      <span className={styles.zoneKicker}>Kapitel {chapter.kapitel}</span>
+                      <span className={styles.zoneKicker}>{t.chapter} {chapter.kapitel}</span>
                       <span className={styles.zoneTitle}>{chapter.label}</span>
                     </span>
                   </button>
@@ -330,18 +377,19 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
           )}
         </div>
 
-        {/* Oben links (nur Übersicht): Zurück zum Chatbot + Deloitte-„Demo" */}
+        {/* Oben links (nur Übersicht): Sprache + Zurück zum Chatbot + Deloitte-„Demo" */}
         <div className={styles.topLeft} data-visible={isOverview || undefined}>
+          <LanguageSwitch />
           {onExitToIntro && (
             <button
               type="button"
               className={styles.introBtn}
               tabIndex={isOverview ? 0 : -1}
               onClick={handleExitToIntro}
-              aria-label="Zurück zum Chatbot"
+              aria-label={t.backToChatAria}
             >
               <ArrowLeft size={16} strokeWidth={2} aria-hidden />
-              <span>Zurück zum Chat</span>
+              <span>{t.backToChat}</span>
             </button>
           )}
           <DeloitteBadge />
@@ -349,9 +397,9 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
 
         {/* Titel-Box, kommt oben mittig herein (nur Übersicht) */}
         <div className={styles.topbar} data-visible={isOverview || undefined}>
-          <span className={styles.topbarKicker}>Banking Horizon 2035</span>
+          <span className={styles.topbarKicker}>{t.topKicker}</span>
           <span className={styles.topbarSep} aria-hidden />
-          <span className={styles.topbarTitle}>Interaktive Demo</span>
+          <span className={styles.topbarTitle}>{t.topTitle}</span>
         </div>
 
         {/* Management Summary — Vision der Bank 2035 (unten rechts, nur Übersicht) */}
@@ -361,10 +409,10 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
           data-visible={isOverview || undefined}
           tabIndex={isOverview ? 0 : -1}
           onClick={() => setSummaryOpen(true)}
-          aria-label="Management Summary öffnen — Vision der Bank 2035"
+          aria-label={t.summaryAria}
         >
           <ScrollText size={17} strokeWidth={1.9} aria-hidden />
-          <span>Management Summary</span>
+          <span>{t.summary}</span>
         </button>
 
         {/* Kapitel-Reader (Hypothesen → Aktivität) — erst nach dem Kameraflug */}

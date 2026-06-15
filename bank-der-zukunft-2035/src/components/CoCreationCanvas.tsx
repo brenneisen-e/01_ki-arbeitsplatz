@@ -8,12 +8,16 @@
  *   Abschnitt A: Control-Shift-Toggles (Mensch/Hybrid/AI)
  *   Abschnitt B: 2×2-Prioritätsmatrix mit positionierten Chips
  *   Abschnitt C: Auto-generierte Zusammenfassung
+ *
+ * Zweisprachig (DE/EN): interne Werte (Stage, ControlMode, Dimension-/Area-IDs)
+ * bleiben stabile Identifier; nur die Anzeige-Labels werden übersetzt.
  */
 
 import { useEffect, useRef, useState, useCallback, KeyboardEvent } from 'react'
 import { X, RotateCcw } from 'lucide-react'
 import { gsap } from 'gsap'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { useLang, type Lang } from '../i18n/LanguageContext'
 import styles from './CoCreationCanvas.module.css'
 
 // ─── Typen ────────────────────────────────────────────────────────────────────
@@ -35,30 +39,10 @@ type AreaQuadrant = {
   quadrant: Quadrant
 }
 
-// ─── Konstanten ───────────────────────────────────────────────────────────────
+// ─── Konstanten (stabile Identifier) ────────────────────────────────────────────
 
-const DIMENSIONS = [
-  {
-    id: 'skill',
-    title: 'Skill-Aufbau',
-    prompt: 'Von isolierter Weiterbildung zu kontinuierlichem Upskilling/Reskilling.',
-  },
-  {
-    id: 'org',
-    title: 'Organisationslogik',
-    prompt: 'Von funktionalen Silos zu skills-getriebenen, fluiden Teams.',
-  },
-  {
-    id: 'workforce',
-    title: 'Workforce-Steuerung',
-    prompt: 'Von administrativer HR zu datenbasierter, vorausschauender Steuerung.',
-  },
-  {
-    id: 'role',
-    title: 'Rolle Corporate Services',
-    prompt: 'Von Verwaltung zu strategischem Enabler / Wettbewerbsvorteil.',
-  },
-] as const
+const DIMENSION_IDS = ['skill', 'org', 'workforce', 'role'] as const
+type DimensionId = (typeof DIMENSION_IDS)[number]
 
 const AREAS = [
   'Kreditvergabe',
@@ -70,26 +54,178 @@ const AREAS = [
 
 type AreaId = (typeof AREAS)[number]
 
-const STAGE_LABELS: Record<Stage, string> = {
-  heute: 'Heute',
-  uebergang: 'Übergang',
-  zielbild: 'Zielbild 2035',
-}
-
-const CONTROL_LABELS: Record<ControlMode, string> = {
-  mensch: 'Mensch',
-  hybrid: 'Hybrid',
-  ai: 'AI',
-}
-
 const QUADRANT_CYCLE: Quadrant[] = ['high-high', 'high-low', 'low-high', 'low-low']
+
+// ─── Übersetzungen ──────────────────────────────────────────────────────────────
+
+type CanvasStrings = {
+  stageLabels: Record<Stage, string>
+  controlLabels: Record<ControlMode, string>
+  dimensions: Record<DimensionId, { title: string; prompt: string }>
+  areas: Record<AreaId, string>
+  kicker: { organisation: string; 'future-interaction': string }
+  title: { organisation: string; 'future-interaction': string }
+  intro: { organisation: string; 'future-interaction': string }
+  reset: string
+  resetAria: string
+  close: string
+  closeTitle: string
+  notePlaceholder: string
+  noteInputAria: string
+  noteAddAria: string
+  noteRemoveAria: (note: string) => string
+  dimStageAria: (title: string) => string
+  sectionA: string
+  controlAria: (area: string) => string
+  sectionB: string
+  matrixHint: string
+  matrixAria: string
+  yLabel: string
+  xLabel: string
+  quadrantAria: Record<Quadrant, string>
+  quadrantLabel: Record<Quadrant, React.ReactNode>
+  chipAria: (area: string) => string
+  sectionC: string
+  summary: (parts: { ai: number; mensch: number; hybrid: number; pilot: string[] }) => string
+}
+
+const STR: Record<Lang, CanvasStrings> = {
+  de: {
+    stageLabels: { heute: 'Heute', uebergang: 'Übergang', zielbild: 'Zielbild 2035' },
+    controlLabels: { mensch: 'Mensch', hybrid: 'Hybrid', ai: 'AI' },
+    dimensions: {
+      skill: { title: 'Skill-Aufbau', prompt: 'Von isolierter Weiterbildung zu kontinuierlichem Upskilling/Reskilling.' },
+      org: { title: 'Organisationslogik', prompt: 'Von funktionalen Silos zu skills-getriebenen, fluiden Teams.' },
+      workforce: { title: 'Workforce-Steuerung', prompt: 'Von administrativer HR zu datenbasierter, vorausschauender Steuerung.' },
+      role: { title: 'Rolle Corporate Services', prompt: 'Von Verwaltung zu strategischem Enabler / Wettbewerbsvorteil.' },
+    },
+    areas: {
+      Kreditvergabe: 'Kreditvergabe',
+      Pricing: 'Pricing',
+      Portfoliosteuerung: 'Portfoliosteuerung',
+      Kundeninteraktion: 'Kundeninteraktion',
+      'Compliance-Freigaben': 'Compliance-Freigaben',
+    },
+    kicker: { organisation: 'Kapitel 04 · Corporate Services', 'future-interaction': 'Kapitel 07 · Transformation' },
+    title: {
+      organisation: 'Co-Creation: Organisation unter Transformationsdruck',
+      'future-interaction': 'Co-Creation: Future Interaction Model',
+    },
+    intro: {
+      organisation: 'Zielbild für 2035 entlang vier Dimensionen.',
+      'future-interaction': 'Zielbild → Kontrolle → Priorisierung → Pilot.',
+    },
+    reset: 'Zurücksetzen',
+    resetAria: 'Alle Eingaben zurücksetzen',
+    close: 'Canvas schließen',
+    closeTitle: 'Schließen (Escape)',
+    notePlaceholder: 'Notiz eingeben, Enter zum Bestätigen…',
+    noteInputAria: 'Notiz eingeben',
+    noteAddAria: 'Notiz hinzufügen',
+    noteRemoveAria: (note) => `Notiz entfernen: ${note}`,
+    dimStageAria: (title) => `Transformationsstufe für ${title}`,
+    sectionA: 'A · Control-Shift: Wer entscheidet künftig?',
+    controlAria: (area) => `Entscheidungsträger für ${area}`,
+    sectionB: 'B · Priorisierung: Was zuerst?',
+    matrixHint: 'Klick auf einen Bereich-Chip wechselt den Quadranten.',
+    matrixAria: '2x2 Prioritätsmatrix: X-Achse Machbarkeit, Y-Achse Impact',
+    yLabel: 'Impact',
+    xLabel: 'Machbarkeit',
+    quadrantAria: {
+      'low-high': 'Hoher Impact, geringe Machbarkeit',
+      'high-high': 'Hoher Impact, hohe Machbarkeit – Pilot zuerst',
+      'low-low': 'Geringer Impact, geringe Machbarkeit',
+      'high-low': 'Geringer Impact, hohe Machbarkeit',
+    },
+    quadrantLabel: {
+      'low-high': (<>Hoher Impact<br />Geringe Machbarkeit</>),
+      'high-high': 'Pilot zuerst',
+      'low-low': (<>Niedriger Impact<br />Geringe Machbarkeit</>),
+      'high-low': (<>Geringer Impact<br />Hohe Machbarkeit</>),
+    },
+    chipAria: (area) => `${area}: Quadrant wechseln`,
+    sectionC: 'C · Zusammenfassung',
+    summary: ({ ai, mensch, hybrid, pilot }) => {
+      const controlParts: string[] = []
+      if (ai > 0) controlParts.push(`${ai} Bereich${ai > 1 ? 'e' : ''} KI-geführt`)
+      if (mensch > 0) controlParts.push(`${mensch} Mensch-geführt`)
+      if (hybrid > 0) controlParts.push(`${hybrid} hybrid`)
+      const pilotStr = pilot.length === 0 ? 'kein Bereich im Pilot-Quadrant' : `Pilot zuerst: ${pilot.join(', ')}`
+      return `Steuerungsmodell: ${controlParts.join(', ')}. ${pilotStr}.`
+    },
+  },
+  en: {
+    stageLabels: { heute: 'Today', uebergang: 'Transition', zielbild: 'Target 2035' },
+    controlLabels: { mensch: 'Human', hybrid: 'Hybrid', ai: 'AI' },
+    dimensions: {
+      skill: { title: 'Skill building', prompt: 'From isolated training to continuous upskilling/reskilling.' },
+      org: { title: 'Organisational logic', prompt: 'From functional silos to skills-driven, fluid teams.' },
+      workforce: { title: 'Workforce management', prompt: 'From administrative HR to data-driven, forward-looking steering.' },
+      role: { title: 'Role of Corporate Services', prompt: 'From administration to strategic enabler / competitive advantage.' },
+    },
+    areas: {
+      Kreditvergabe: 'Lending',
+      Pricing: 'Pricing',
+      Portfoliosteuerung: 'Portfolio management',
+      Kundeninteraktion: 'Customer interaction',
+      'Compliance-Freigaben': 'Compliance approvals',
+    },
+    kicker: { organisation: 'Chapter 04 · Corporate Services', 'future-interaction': 'Chapter 07 · Transformation' },
+    title: {
+      organisation: 'Co-creation: organisation under transformation pressure',
+      'future-interaction': 'Co-creation: future interaction model',
+    },
+    intro: {
+      organisation: 'A 2035 target picture along four dimensions.',
+      'future-interaction': 'Target picture → control → prioritisation → pilot.',
+    },
+    reset: 'Reset',
+    resetAria: 'Reset all inputs',
+    close: 'Close the canvas',
+    closeTitle: 'Close (Escape)',
+    notePlaceholder: 'Type a note, Enter to confirm…',
+    noteInputAria: 'Type a note',
+    noteAddAria: 'Add note',
+    noteRemoveAria: (note) => `Remove note: ${note}`,
+    dimStageAria: (title) => `Transformation stage for ${title}`,
+    sectionA: 'A · Control shift: who decides in future?',
+    controlAria: (area) => `Decision maker for ${area}`,
+    sectionB: 'B · Prioritisation: what first?',
+    matrixHint: 'Click an area chip to switch quadrant.',
+    matrixAria: '2x2 prioritisation matrix: x-axis feasibility, y-axis impact',
+    yLabel: 'Impact',
+    xLabel: 'Feasibility',
+    quadrantAria: {
+      'low-high': 'High impact, low feasibility',
+      'high-high': 'High impact, high feasibility – pilot first',
+      'low-low': 'Low impact, low feasibility',
+      'high-low': 'Low impact, high feasibility',
+    },
+    quadrantLabel: {
+      'low-high': (<>High impact<br />Low feasibility</>),
+      'high-high': 'Pilot first',
+      'low-low': (<>Low impact<br />Low feasibility</>),
+      'high-low': (<>Low impact<br />High feasibility</>),
+    },
+    chipAria: (area) => `${area}: switch quadrant`,
+    sectionC: 'C · Summary',
+    summary: ({ ai, mensch, hybrid, pilot }) => {
+      const controlParts: string[] = []
+      if (ai > 0) controlParts.push(`${ai} area${ai > 1 ? 's' : ''} AI-led`)
+      if (mensch > 0) controlParts.push(`${mensch} human-led`)
+      if (hybrid > 0) controlParts.push(`${hybrid} hybrid`)
+      const pilotStr = pilot.length === 0 ? 'no area in the pilot quadrant' : `Pilot first: ${pilot.join(', ')}`
+      return `Steering model: ${controlParts.join(', ')}. ${pilotStr}.`
+    },
+  },
+}
 
 // ─── Hilfsfunktionen ──────────────────────────────────────────────────────────
 
-function buildDefaultDimensions(): Record<string, DimensionState> {
-  const result: Record<string, DimensionState> = {}
-  for (const d of DIMENSIONS) {
-    result[d.id] = { stage: 'heute', notes: [] }
+function buildDefaultDimensions(): Record<DimensionId, DimensionState> {
+  const result = {} as Record<DimensionId, DimensionState>
+  for (const d of DIMENSION_IDS) {
+    result[d] = { stage: 'heute', notes: [] }
   }
   return result
 }
@@ -150,11 +286,17 @@ function NoteInput({
   onAdd,
   onRemove,
   placeholder,
+  inputAria,
+  addAria,
+  removeAria,
 }: {
   notes: string[]
   onAdd: (text: string) => void
   onRemove: (index: number) => void
   placeholder: string
+  inputAria: string
+  addAria: string
+  removeAria: (note: string) => string
 }): React.ReactElement {
   const [draft, setDraft] = useState('')
 
@@ -184,14 +326,14 @@ function NoteInput({
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={handleKey}
           placeholder={placeholder}
-          aria-label="Notiz eingeben"
+          aria-label={inputAria}
           maxLength={80}
         />
         <button
           type="button"
           className={styles.noteAddBtn}
           onClick={commit}
-          aria-label="Notiz hinzufügen"
+          aria-label={addAria}
           disabled={draft.trim().length === 0}
         >
           +
@@ -206,7 +348,7 @@ function NoteInput({
                 type="button"
                 className={styles.chipRemove}
                 onClick={() => onRemove(i)}
-                aria-label={`Notiz entfernen: ${note}`}
+                aria-label={removeAria(note)}
               >
                 <X size={11} strokeWidth={2.5} aria-hidden />
               </button>
@@ -223,16 +365,20 @@ function DimensionCard({
   title,
   prompt,
   state,
+  stageLabels,
   onStageChange,
   onNoteAdd,
   onNoteRemove,
+  t,
 }: {
   title: string
   prompt: string
   state: DimensionState
+  stageLabels: Record<Stage, string>
   onStageChange: (s: Stage) => void
   onNoteAdd: (text: string) => void
   onNoteRemove: (index: number) => void
+  t: CanvasStrings
 }): React.ReactElement {
   const STAGES: readonly Stage[] = ['heute', 'uebergang', 'zielbild']
 
@@ -242,16 +388,19 @@ function DimensionCard({
       <p className={styles.dimCardPrompt}>{prompt}</p>
       <SegmentedToggle
         options={STAGES}
-        labels={STAGE_LABELS}
+        labels={stageLabels}
         value={state.stage}
         onChange={onStageChange}
-        ariaLabel={`Transformationsstufe für ${title}`}
+        ariaLabel={t.dimStageAria(title)}
       />
       <NoteInput
         notes={state.notes}
         onAdd={onNoteAdd}
         onRemove={onNoteRemove}
-        placeholder="Notiz eingeben, Enter zum Bestätigen…"
+        placeholder={t.notePlaceholder}
+        inputAria={t.noteInputAria}
+        addAria={t.noteAddAria}
+        removeAria={t.noteRemoveAria}
       />
     </article>
   )
@@ -267,11 +416,13 @@ export function CoCreationCanvas({
   onClose: () => void
 }): React.ReactElement {
   const reducedMotion = useReducedMotion()
+  const { lang } = useLang()
+  const t = STR[lang]
   const overlayRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
   // Organisations-State
-  const [dimensions, setDimensions] = useState<Record<string, DimensionState>>(
+  const [dimensions, setDimensions] = useState<Record<DimensionId, DimensionState>>(
     buildDefaultDimensions,
   )
 
@@ -307,21 +458,21 @@ export function CoCreationCanvas({
   }, [onClose])
 
   // ── Mutations für Organisations-Variant ──
-  const setDimStage = useCallback((id: string, stage: Stage) => {
+  const setDimStage = useCallback((id: DimensionId, stage: Stage) => {
     setDimensions((prev) => ({
       ...prev,
       [id]: { ...prev[id], stage },
     }))
   }, [])
 
-  const addNote = useCallback((id: string, text: string) => {
+  const addNote = useCallback((id: DimensionId, text: string) => {
     setDimensions((prev) => ({
       ...prev,
       [id]: { ...prev[id], notes: [...prev[id].notes, text] },
     }))
   }, [])
 
-  const removeNote = useCallback((id: string, index: number) => {
+  const removeNote = useCallback((id: DimensionId, index: number) => {
     setDimensions((prev) => ({
       ...prev,
       [id]: { ...prev[id], notes: prev[id].notes.filter((_, i) => i !== index) },
@@ -351,45 +502,44 @@ export function CoCreationCanvas({
   // ── Zusammenfassungstext für Section C ──
   const aiCount = AREAS.filter((a) => controls[a].mode === 'ai').length
   const menschCount = AREAS.filter((a) => controls[a].mode === 'mensch').length
+  const hybridCount = AREAS.length - aiCount - menschCount
   const pilotAreas = AREAS.filter((a) => quadrants[a].quadrant === 'high-high')
 
-  const summaryText = (() => {
-    const controlParts: string[] = []
-    if (aiCount > 0) controlParts.push(`${aiCount} Bereich${aiCount > 1 ? 'e' : ''} KI-geführt`)
-    if (menschCount > 0) controlParts.push(`${menschCount} Mensch-geführt`)
-    const hybridCount = AREAS.length - aiCount - menschCount
-    if (hybridCount > 0) controlParts.push(`${hybridCount} hybrid`)
-    const controlStr = controlParts.join(', ')
-
-    const pilotStr =
-      pilotAreas.length === 0
-        ? 'kein Bereich im Pilot-Quadrant'
-        : `Pilot zuerst: ${pilotAreas.join(', ')}`
-
-    return `Steuerungsmodell: ${controlStr}. ${pilotStr}.`
-  })()
+  const summaryText = t.summary({
+    ai: aiCount,
+    mensch: menschCount,
+    hybrid: hybridCount,
+    pilot: pilotAreas.map((a) => t.areas[a]),
+  })
 
   // ── Variant-spezifische Header-Texte ──
-  const kicker =
-    variant === 'organisation'
-      ? 'Kapitel 04 · Corporate Services'
-      : 'Kapitel 07 · Transformation'
-
-  const title =
-    variant === 'organisation'
-      ? 'Co-Creation: Organisation unter Transformationsdruck'
-      : 'Co-Creation: Future Interaction Model'
-
-  const intro =
-    variant === 'organisation'
-      ? 'Zielbild für 2035 entlang vier Dimensionen.'
-      : 'Zielbild → Kontrolle → Priorisierung → Pilot.'
+  const kicker = t.kicker[variant]
+  const title = t.title[variant]
+  const intro = t.intro[variant]
 
   const CONTROL_MODES: readonly ControlMode[] = ['mensch', 'hybrid', 'ai']
 
   // Chips für Quadranten-Darstellung vorbereiten
   const quadrantChipsByQuadrant = (q: Quadrant): AreaId[] =>
     AREAS.filter((a) => quadrants[a].quadrant === q)
+
+  const renderQuadrant = (q: Quadrant): React.ReactElement => (
+    <div className={styles.matrixQuadrant} data-quadrant={q} aria-label={t.quadrantAria[q]}>
+      <span className={styles.quadrantLabel}>{t.quadrantLabel[q]}</span>
+      {quadrantChipsByQuadrant(q).map((a) => (
+        <button
+          key={a}
+          type="button"
+          className={styles.matrixChip}
+          data-pilot={q === 'high-high' || undefined}
+          onClick={() => cycleQuadrant(a)}
+          aria-label={t.chipAria(t.areas[a])}
+        >
+          {t.areas[a]}
+        </button>
+      ))}
+    </div>
+  )
 
   return (
     <div ref={overlayRef} className={styles.overlay} role="dialog" aria-modal="true" aria-label={title}>
@@ -406,18 +556,18 @@ export function CoCreationCanvas({
               type="button"
               className={styles.resetBtn}
               onClick={resetAll}
-              aria-label="Alle Eingaben zurücksetzen"
-              title="Zurücksetzen"
+              aria-label={t.resetAria}
+              title={t.reset}
             >
               <RotateCcw size={14} strokeWidth={2} aria-hidden />
-              Zurücksetzen
+              {t.reset}
             </button>
             <button
               type="button"
               className={styles.closeBtn}
               onClick={onClose}
-              aria-label="Canvas schließen"
-              title="Schließen (Escape)"
+              aria-label={t.close}
+              title={t.closeTitle}
             >
               <X size={18} strokeWidth={2} aria-hidden />
             </button>
@@ -428,15 +578,17 @@ export function CoCreationCanvas({
         {variant === 'organisation' && (
           <div className={styles.body}>
             <div className={styles.dimGrid}>
-              {DIMENSIONS.map((dim) => (
+              {DIMENSION_IDS.map((id) => (
                 <DimensionCard
-                  key={dim.id}
-                  title={dim.title}
-                  prompt={dim.prompt}
-                  state={dimensions[dim.id]}
-                  onStageChange={(s) => setDimStage(dim.id, s)}
-                  onNoteAdd={(text) => addNote(dim.id, text)}
-                  onNoteRemove={(i) => removeNote(dim.id, i)}
+                  key={id}
+                  title={t.dimensions[id].title}
+                  prompt={t.dimensions[id].prompt}
+                  state={dimensions[id]}
+                  stageLabels={t.stageLabels}
+                  onStageChange={(s) => setDimStage(id, s)}
+                  onNoteAdd={(text) => addNote(id, text)}
+                  onNoteRemove={(i) => removeNote(id, i)}
+                  t={t}
                 />
               ))}
             </div>
@@ -449,18 +601,18 @@ export function CoCreationCanvas({
             {/* Section A: Control-Shift */}
             <section className={styles.section} aria-labelledby="ctrl-heading">
               <h3 id="ctrl-heading" className={styles.sectionHeading}>
-                A · Control-Shift: Wer entscheidet künftig?
+                {t.sectionA}
               </h3>
               <div className={styles.controlTable}>
                 {AREAS.map((area) => (
                   <div key={area} className={styles.controlRow}>
-                    <span className={styles.controlLabel}>{area}</span>
+                    <span className={styles.controlLabel}>{t.areas[area]}</span>
                     <SegmentedToggle
                       options={CONTROL_MODES}
-                      labels={CONTROL_LABELS}
+                      labels={t.controlLabels}
                       value={controls[area].mode}
                       onChange={(m) => setControl(area, m)}
-                      ariaLabel={`Entscheidungsträger für ${area}`}
+                      ariaLabel={t.controlAria(t.areas[area])}
                     />
                   </div>
                 ))}
@@ -470,105 +622,25 @@ export function CoCreationCanvas({
             {/* Section B: Priorisierungs-Matrix */}
             <section className={styles.section} aria-labelledby="matrix-heading">
               <h3 id="matrix-heading" className={styles.sectionHeading}>
-                B · Priorisierung: Was zuerst?
+                {t.sectionB}
               </h3>
-              <p className={styles.matrixHint}>
-                Klick auf einen Bereich-Chip wechselt den Quadranten.
-              </p>
-              <div className={styles.matrix} role="img" aria-label="2x2 Prioritätsmatrix: X-Achse Machbarkeit, Y-Achse Impact">
+              <p className={styles.matrixHint}>{t.matrixHint}</p>
+              <div className={styles.matrix} role="img" aria-label={t.matrixAria}>
                 {/* Achsen-Labels */}
-                <div className={styles.matrixYLabel}>Impact</div>
-                <div className={styles.matrixXLabel}>Machbarkeit</div>
+                <div className={styles.matrixYLabel}>{t.yLabel}</div>
+                <div className={styles.matrixXLabel}>{t.xLabel}</div>
 
-                {/* Hoch-Impact / Niedrig-Machbarkeit */}
-                <div
-                  className={styles.matrixQuadrant}
-                  data-quadrant="low-high"
-                  aria-label="Hoher Impact, geringe Machbarkeit"
-                >
-                  <span className={styles.quadrantLabel}>Hoher Impact<br />Geringe Machbarkeit</span>
-                  {quadrantChipsByQuadrant('low-high').map((a) => (
-                    <button
-                      key={a}
-                      type="button"
-                      className={styles.matrixChip}
-                      onClick={() => cycleQuadrant(a)}
-                      aria-label={`${a}: Quadrant wechseln`}
-                    >
-                      {a}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Hoch-Impact / Hoch-Machbarkeit — Pilot-Quadrant */}
-                <div
-                  className={styles.matrixQuadrant}
-                  data-quadrant="high-high"
-                  aria-label="Hoher Impact, hohe Machbarkeit – Pilot zuerst"
-                >
-                  <span className={styles.quadrantLabel}>
-                    Pilot zuerst
-                  </span>
-                  {quadrantChipsByQuadrant('high-high').map((a) => (
-                    <button
-                      key={a}
-                      type="button"
-                      className={styles.matrixChip}
-                      data-pilot
-                      onClick={() => cycleQuadrant(a)}
-                      aria-label={`${a}: Quadrant wechseln`}
-                    >
-                      {a}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Niedrig-Impact / Niedrig-Machbarkeit */}
-                <div
-                  className={styles.matrixQuadrant}
-                  data-quadrant="low-low"
-                  aria-label="Geringer Impact, geringe Machbarkeit"
-                >
-                  <span className={styles.quadrantLabel}>Niedriger Impact<br />Geringe Machbarkeit</span>
-                  {quadrantChipsByQuadrant('low-low').map((a) => (
-                    <button
-                      key={a}
-                      type="button"
-                      className={styles.matrixChip}
-                      onClick={() => cycleQuadrant(a)}
-                      aria-label={`${a}: Quadrant wechseln`}
-                    >
-                      {a}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Niedrig-Impact / Hoch-Machbarkeit */}
-                <div
-                  className={styles.matrixQuadrant}
-                  data-quadrant="high-low"
-                  aria-label="Geringer Impact, hohe Machbarkeit"
-                >
-                  <span className={styles.quadrantLabel}>Geringer Impact<br />Hohe Machbarkeit</span>
-                  {quadrantChipsByQuadrant('high-low').map((a) => (
-                    <button
-                      key={a}
-                      type="button"
-                      className={styles.matrixChip}
-                      onClick={() => cycleQuadrant(a)}
-                      aria-label={`${a}: Quadrant wechseln`}
-                    >
-                      {a}
-                    </button>
-                  ))}
-                </div>
+                {renderQuadrant('low-high')}
+                {renderQuadrant('high-high')}
+                {renderQuadrant('low-low')}
+                {renderQuadrant('high-low')}
               </div>
             </section>
 
             {/* Section C: Zusammenfassung */}
             <section className={styles.section} aria-labelledby="summary-heading">
               <h3 id="summary-heading" className={styles.sectionHeading}>
-                C · Zusammenfassung
+                {t.sectionC}
               </h3>
               <p className={styles.summaryText}>{summaryText}</p>
             </section>

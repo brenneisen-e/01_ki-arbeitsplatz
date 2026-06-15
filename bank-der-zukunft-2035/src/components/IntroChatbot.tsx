@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ArrowRight, Bot, Home, Send, Sparkles } from 'lucide-react'
 import styles from './IntroChatbot.module.css'
 import { ImageSlot } from './ImageSlot'
 import { DeloitteBadge } from './DeloitteBadge'
-import { MASTER_IMAGE } from '../data/chapters'
+import { LanguageSwitch } from './LanguageSwitch'
+import { getMasterImage } from '../data/chapters'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { useLang, type Lang } from '../i18n/LanguageContext'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // IntroChatbot — der „AI Banking Assistant"-Auftakt.
@@ -19,44 +21,147 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 //   eine kurze Assistenten-Antwort, die zum Workshop zurückführt.
 //
 // Deterministisch (scripted), privacy-first: Bild + Deloitte-Logo liegen lokal.
+// Zweisprachig (DE/EN) über die Sprachumschaltung oben rechts.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DEFAULT_NAME = 'Eike'
 
-const REASONING = [
-  'Analysiere Geschäftsmodell',
-  'Kundenschnittstelle',
-  'Betriebsmodell',
-  'Governance & Risiko',
-  'Komponiere Strukturbild',
-]
-
 type Prompt = { id: string; label: string; primary?: boolean; reply?: string }
 
-const PROMPTS: Prompt[] = [
-  { id: 'bank2035', label: 'Bank der Zukunft 2035', primary: true },
-  {
-    id: 'aufgaben',
-    label: 'Meine offenen Aufgaben heute',
-    reply:
-      'Drei Themen liegen heute an — das größte ist strategisch: Wie sieht deine Bank 2035 aus? Genau da würde ich anfangen.',
-  },
-  {
-    id: 'markt',
-    label: 'Marktlage & Zinsen kompakt',
-    reply:
-      'Die Märkte sind heute ruhig. Die spannendere Bewegung ist der Sprung ins KI-Zeitalter — den zeige ich dir gern.',
-  },
-  {
-    id: 'portfolio',
-    label: 'Portfolio-Überblick',
-    reply:
-      'Dein Portfolio ist stabil. Die größere Frage ist, wie die Bank dahinter 2035 arbeitet. Soll ich dir das Zielbild zeigen?',
-  },
-]
+type IntroStrings = {
+  reasoning: string[]
+  prompts: Prompt[]
+  genericReply: string
+  welcomeModalTitle: string
+  assistantRole: string
+  nameLabel: string
+  namePlaceholder: string
+  nameGo: string
+  tileLight: string
+  tileBold: string
+  welcome: (name: string) => string
+  welcomeSub: string
+  chatPlaceholder: string
+  send: string
+  suggestions: string
+  statusReady: string
+  statusThinking: string
+  statusReply: string
+  suiteLabel: string
+  answerLead: (name: string) => string
+  masterLabel: string
+  masterCaption: string
+  enter: string
+}
 
-const GENERIC_REPLY =
-  'Gern — fang am besten mit dem großen Bild an: Wähle „Bank der Zukunft 2035", dann baue ich dir das Strukturbild auf.'
+const STR: Record<Lang, IntroStrings> = {
+  de: {
+    reasoning: [
+      'Analysiere Geschäftsmodell',
+      'Kundenschnittstelle',
+      'Betriebsmodell',
+      'Governance & Risiko',
+      'Komponiere Strukturbild',
+    ],
+    prompts: [
+      { id: 'bank2035', label: 'Bank der Zukunft 2035', primary: true },
+      {
+        id: 'aufgaben',
+        label: 'Meine offenen Aufgaben heute',
+        reply:
+          'Drei Themen liegen heute an — das größte ist strategisch: Wie sieht deine Bank 2035 aus? Genau da würde ich anfangen.',
+      },
+      {
+        id: 'markt',
+        label: 'Marktlage & Zinsen kompakt',
+        reply:
+          'Die Märkte sind heute ruhig. Die spannendere Bewegung ist der Sprung ins KI-Zeitalter — den zeige ich dir gern.',
+      },
+      {
+        id: 'portfolio',
+        label: 'Portfolio-Überblick',
+        reply:
+          'Dein Portfolio ist stabil. Die größere Frage ist, wie die Bank dahinter 2035 arbeitet. Soll ich dir das Zielbild zeigen?',
+      },
+    ],
+    genericReply:
+      'Gern — fang am besten mit dem großen Bild an: Wähle „Bank der Zukunft 2035", dann baue ich dir das Strukturbild auf.',
+    welcomeModalTitle: 'Willkommen!',
+    assistantRole: 'AI Banking Assistant',
+    nameLabel: 'Wie darf ich dich nennen?',
+    namePlaceholder: 'Dein Vorname',
+    nameGo: 'Los geht’s',
+    tileLight: 'BANK DER ',
+    tileBold: 'ZUKUNFT',
+    welcome: (name) => (name ? `Willkommen zurück, ${name}` : 'Willkommen zurück'),
+    welcomeSub: 'Was kann ich heute für dich tun?',
+    chatPlaceholder: 'Frag mich etwas zur Bank der Zukunft…',
+    send: 'Senden',
+    suggestions: 'Vorschläge',
+    statusReady: 'Bereit',
+    statusThinking: 'Denkt nach',
+    statusReply: 'Antwort bereit',
+    suiteLabel: 'Banking Horizon 2035',
+    answerLead: (name) =>
+      `${name ? `${name}, hier ist deine ` : 'Hier ist deine '}Bank im Zustand 2026 — als begehbares Strukturbild. Jede Etage zeigt den Sprung von heute auf 2035.`,
+    masterLabel: 'Master · Strukturbild',
+    masterCaption: 'Bank’26 — Querschnitt',
+    enter: 'Workshop starten — Bank als Haus erkunden',
+  },
+  en: {
+    reasoning: [
+      'Analysing business model',
+      'Customer interface',
+      'Operating model',
+      'Governance & risk',
+      'Composing the cross-section',
+    ],
+    prompts: [
+      { id: 'bank2035', label: 'Bank of the Future 2035', primary: true },
+      {
+        id: 'aufgaben',
+        label: 'My open tasks today',
+        reply:
+          'Three things are on today’s plate — the biggest one is strategic: what does your bank look like in 2035? That’s exactly where I’d start.',
+      },
+      {
+        id: 'markt',
+        label: 'Markets & rates in brief',
+        reply:
+          'Markets are calm today. The more exciting movement is the leap into the AI era — happy to show you that.',
+      },
+      {
+        id: 'portfolio',
+        label: 'Portfolio overview',
+        reply:
+          'Your portfolio is stable. The bigger question is how the bank behind it works in 2035. Shall I show you the target picture?',
+      },
+    ],
+    genericReply:
+      'Happy to — best to start with the big picture: choose “Bank of the Future 2035” and I’ll build up the cross-section for you.',
+    welcomeModalTitle: 'Welcome!',
+    assistantRole: 'AI Banking Assistant',
+    nameLabel: 'What should I call you?',
+    namePlaceholder: 'Your first name',
+    nameGo: 'Let’s go',
+    tileLight: 'BANK OF THE ',
+    tileBold: 'FUTURE',
+    welcome: (name) => (name ? `Welcome back, ${name}` : 'Welcome back'),
+    welcomeSub: 'What can I do for you today?',
+    chatPlaceholder: 'Ask me anything about the bank of the future…',
+    send: 'Send',
+    suggestions: 'Suggestions',
+    statusReady: 'Ready',
+    statusThinking: 'Thinking',
+    statusReply: 'Answer ready',
+    suiteLabel: 'Banking Horizon 2035',
+    answerLead: (name) =>
+      `${name ? `${name}, here is your ` : 'Here is your '}bank in its 2026 state — as a walkable cross-section. Each floor shows the leap from today to 2035.`,
+    masterLabel: 'Master · Cross-section',
+    masterCaption: 'Bank’26 — cross-section',
+    enter: 'Start the workshop — explore the bank as a house',
+  },
+}
 
 const LINE_INTERVAL = 720
 const REVEAL_PAUSE = 600
@@ -69,6 +174,10 @@ export function IntroChatbot({
 }: {
   onEnter: () => void
 }): React.ReactElement {
+  const { lang } = useLang()
+  const t = STR[lang]
+  const masterImage = useMemo(() => getMasterImage(lang), [lang])
+
   const [phase, setPhase] = useState<Phase>('name')
   const [nameInput, setNameInput] = useState(DEFAULT_NAME)
   const [name, setName] = useState('')
@@ -83,6 +192,8 @@ export function IntroChatbot({
   const revealRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
   const reducedMotion = useReducedMotion()
+
+  const reasoning = t.reasoning
 
   const pushMsg = useCallback((role: Msg['role'], text: string) => {
     idRef.current += 1
@@ -127,33 +238,33 @@ export function IntroChatbot({
   const submitChat = useCallback(() => {
     const q = chatInput.trim()
     if (phase !== 'chat' || replying || !q) return
-    cannedReply(GENERIC_REPLY)
-  }, [chatInput, phase, replying, cannedReply])
+    cannedReply(t.genericReply)
+  }, [chatInput, phase, replying, cannedReply, t.genericReply])
 
   // Reasoning-Sequenz (nur „Bank 2035"-Pfad), dann Reveal.
   useEffect(() => {
     if (phase !== 'thinking') return
     if (reducedMotion) {
-      setVisibleLines(REASONING.length)
-      const t = window.setTimeout(() => setPhase('revealed'), 500)
-      return () => window.clearTimeout(t)
+      setVisibleLines(reasoning.length)
+      const t2 = window.setTimeout(() => setPhase('revealed'), 500)
+      return () => window.clearTimeout(t2)
     }
     setVisibleLines(0)
     let i = 0
     const iv = window.setInterval(() => {
       i += 1
       setVisibleLines(i)
-      if (i >= REASONING.length) window.clearInterval(iv)
+      if (i >= reasoning.length) window.clearInterval(iv)
     }, LINE_INTERVAL)
-    const t = window.setTimeout(
+    const t2 = window.setTimeout(
       () => setPhase('revealed'),
-      REASONING.length * LINE_INTERVAL + REVEAL_PAUSE,
+      reasoning.length * LINE_INTERVAL + REVEAL_PAUSE,
     )
     return () => {
       window.clearInterval(iv)
-      window.clearTimeout(t)
+      window.clearTimeout(t2)
     }
-  }, [phase, reducedMotion])
+  }, [phase, reducedMotion, reasoning.length])
 
   // Reveal: Strukturbild „baut" sich auf, CTA blendet ein.
   useEffect(() => {
@@ -190,7 +301,7 @@ export function IntroChatbot({
   }, [messages, replying, phase, visibleLines, reducedMotion])
 
   const statusLabel =
-    phase === 'thinking' ? 'Denkt nach' : phase === 'revealed' ? 'Antwort bereit' : 'Bereit'
+    phase === 'thinking' ? t.statusThinking : phase === 'revealed' ? t.statusReply : t.statusReady
   const showSuggestions = phase === 'chat'
 
   return (
@@ -201,15 +312,16 @@ export function IntroChatbot({
           "linear-gradient(180deg, rgba(15,23,42,0.55) 0%, rgba(12,17,32,0.82) 100%), url('./landing-bg.jpeg')",
       }}
     >
-      {/* Top bar: Deloitte „Demo" links, Status/Label rechts */}
+      {/* Top bar: Deloitte „Demo" links, Sprache + Status/Label rechts */}
       <header className={styles.topbar}>
         <DeloitteBadge />
         <div className={styles.topRight}>
+          <LanguageSwitch />
           <span className={styles.status} data-on={phase !== 'name' || undefined}>
             <span className={styles.statusDot} aria-hidden />
             {statusLabel}
           </span>
-          <span className={styles.suiteLabel}>Banking Horizon 2035</span>
+          <span className={styles.suiteLabel}>{t.suiteLabel}</span>
         </div>
       </header>
 
@@ -227,22 +339,22 @@ export function IntroChatbot({
                 <Bot size={22} strokeWidth={1.8} />
               </span>
               <div>
-                <h2 className={styles.nameTitle}>Willkommen!</h2>
-                <p className={styles.nameKicker}>AI Banking Assistant</p>
+                <h2 className={styles.nameTitle}>{t.welcomeModalTitle}</h2>
+                <p className={styles.nameKicker}>{t.assistantRole}</p>
               </div>
             </div>
-            <label className={styles.nameLabel} htmlFor="bdz-name">Wie darf ich dich nennen?</label>
+            <label className={styles.nameLabel} htmlFor="bdz-name">{t.nameLabel}</label>
             <input
               id="bdz-name"
               ref={nameRef}
               className={styles.nameField}
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
-              placeholder="Dein Vorname"
+              placeholder={t.namePlaceholder}
               maxLength={40}
             />
             <button type="submit" className={styles.nameGo}>
-              Los geht's
+              {t.nameGo}
               <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
             </button>
           </form>
@@ -251,15 +363,13 @@ export function IntroChatbot({
             <div className={styles.logoTile}>
               <span className={styles.tileMark} aria-hidden>BdZ</span>
               <span className={styles.tileName}>
-                <span className={styles.tileLight}>BANK DER </span>
-                <span className={styles.tileBold}>ZUKUNFT</span>
+                <span className={styles.tileLight}>{t.tileLight}</span>
+                <span className={styles.tileBold}>{t.tileBold}</span>
               </span>
             </div>
 
-            <h1 className={styles.welcome}>
-              {name ? `Willkommen zurück, ${name}` : 'Willkommen zurück'}
-            </h1>
-            <p className={styles.welcomeSub}>Was kann ich heute für dich tun?</p>
+            <h1 className={styles.welcome}>{t.welcome(name)}</h1>
+            <p className={styles.welcomeSub}>{t.welcomeSub}</p>
 
             <div className={styles.chatWrap}>
               <div className={styles.inputRow}>
@@ -270,14 +380,14 @@ export function IntroChatbot({
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') submitChat()
                   }}
-                  placeholder="Frag mich etwas zur Bank der Zukunft…"
+                  placeholder={t.chatPlaceholder}
                   disabled={phase !== 'chat'}
                 />
                 <button
                   type="button"
                   className={styles.sendBtn}
                   onClick={submitChat}
-                  aria-label="Senden"
+                  aria-label={t.send}
                   disabled={phase !== 'chat'}
                 >
                   <Send size={18} strokeWidth={1.9} aria-hidden />
@@ -285,8 +395,8 @@ export function IntroChatbot({
               </div>
 
               {showSuggestions && (
-                <div className={styles.suggestions} role="group" aria-label="Vorschläge">
-                  {PROMPTS.map((p) => (
+                <div className={styles.suggestions} role="group" aria-label={t.suggestions}>
+                  {t.prompts.map((p) => (
                     <button
                       key={p.id}
                       type="button"
@@ -340,7 +450,7 @@ export function IntroChatbot({
                           <span />
                         </div>
                         <ul className={styles.reasoning}>
-                          {REASONING.map((line, i) => (
+                          {reasoning.map((line, i) => (
                             <li
                               key={line}
                               className={styles.reasoningLine}
@@ -362,25 +472,21 @@ export function IntroChatbot({
                         <Sparkles size={15} strokeWidth={1.9} />
                       </span>
                       <div className={styles.answer}>
-                        <p className={styles.answerLead}>
-                          {name ? `${name}, hier ist deine ` : 'Hier ist deine '}
-                          Bank im Zustand 2026 — als begehbares Strukturbild. Jede Etage zeigt den
-                          Sprung von heute auf 2035.
-                        </p>
+                        <p className={styles.answerLead}>{t.answerLead(name)}</p>
                         <div ref={revealRef} className={styles.reveal}>
                           <ImageSlot
-                            src={MASTER_IMAGE.src}
-                            alt={MASTER_IMAGE.alt}
+                            src={masterImage.src}
+                            alt={masterImage.alt}
                             fit="cover"
-                            label="Master · Strukturbild"
-                            caption="Bank'26 — Querschnitt"
+                            label={t.masterLabel}
+                            caption={t.masterCaption}
                           />
                           <span className={styles.revealSweep} aria-hidden />
                         </div>
                         <div ref={ctaRef} className={styles.ctaRow}>
                           <button type="button" className={styles.enterBtn} onClick={onEnter}>
                             <Home size={15} strokeWidth={2.4} aria-hidden />
-                            Workshop starten — Bank als Haus erkunden
+                            {t.enter}
                             <ArrowRight size={15} strokeWidth={2.4} aria-hidden />
                           </button>
                         </div>

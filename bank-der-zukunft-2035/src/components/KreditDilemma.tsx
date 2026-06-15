@@ -7,6 +7,9 @@
  * Balken verschiebt. Am Ende erscheint eine kurze Bewertung und drei
  * Reflexionsfragen (Wer hat freigegeben? / Wer haftet? / Wie wird kontrolliert?).
  *
+ * Zweisprachig (DE/EN): die Delta-Logik der Optionen ist sprachunabhängig
+ * (STATION_DELTAS), nur die Texte werden übersetzt.
+ *
  * Hinweis für spätere Integration: Echte Videoclips können über
  * `./ch06-clip-<n>.mp4` eingebunden werden — dazu das ClipPlaceholder-Element
  * durch ein <video>-Tag ersetzen.
@@ -16,6 +19,7 @@ import { gsap } from 'gsap'
 import { Phone, Play, ShieldCheck, Gauge, Smile, X, RotateCcw, ArrowRight } from 'lucide-react'
 import styles from './KreditDilemma.module.css'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { useLang, type Lang } from '../i18n/LanguageContext'
 
 // ─── Typen ────────────────────────────────────────────────────────────────────
 
@@ -37,46 +41,231 @@ type Station = {
 
 const INITIAL_BARS: Bars = { reg: 2, speed: 2, sat: 2 }
 
-const STATIONS: Station[] = [
-  {
-    caller: 'Der Firmenkundenbetreuer',
-    transcript:
-      'Der Kunde ist empört über die automatische Ablehnung. Er fordert eine sofortige Klärung und droht, den Kreditantrag zur Konkurrenz zu verlagern.',
-    options: [
-      { label: 'Sofort manuell freigeben', deltas: { reg: -1, speed: 1, sat: 1 } },
-      { label: 'Ablehnung der KI bestätigen', deltas: { reg: 1, speed: 1, sat: -2 } },
-      { label: 'Fall zur Einzelfallprüfung eskalieren', deltas: { reg: 1, speed: -1, sat: 0 } },
-    ],
-  },
-  {
-    caller: 'Die Risikovorständin',
-    transcript:
-      'Sie fragt nach der Haftung, falls der Override zur Schadenersatzklage führt. Ohne klare Dokumentation ist niemandem geholfen.',
-    options: [
-      { label: 'Vier-Augen-Override dokumentieren', deltas: { reg: 1, speed: -1, sat: 1 } },
-      { label: 'Ohne Dokumentation freigeben', deltas: { reg: -2, speed: 1, sat: 1 } },
-      { label: 'An Kreditkomitee verweisen', deltas: { reg: 1, speed: -1, sat: -1 } },
-    ],
-  },
-  {
-    caller: 'Die Aufsicht / Compliance',
-    transcript:
-      'Die Aufsicht verlangt Nachvollziehbarkeit der KI-Entscheidung. Ohne erklärbare Grundlage drohen aufsichtsrechtliche Maßnahmen.',
-    options: [
-      { label: 'Modell-Begründung offenlegen', deltas: { reg: 1, speed: 0, sat: 1 } },
-      { label: 'Entscheidung als Blackbox belassen', deltas: { reg: -2, speed: 0, sat: 0 } },
-    ],
-  },
-  {
-    caller: 'Der Kunde selbst',
-    transcript:
-      'Der Kunde droht offen mit Bankwechsel. Er erwartet entweder eine sofortige Lösung oder eine nachvollziehbare Begründung mit Handlungsalternative.',
-    options: [
-      { label: 'Konditionen-Kompromiss anbieten', deltas: { reg: 0, speed: 0, sat: 2 } },
-      { label: 'Hart bei der Entscheidung bleiben', deltas: { reg: 1, speed: 1, sat: -2 } },
-    ],
-  },
+// Delta-Logik je Station/Option (sprachunabhängig). Indexgleich zu den
+// übersetzten Options-Labels in STR[lang].stations[i].options.
+const STATION_DELTAS: Record<BarKey, number>[][] = [
+  [
+    { reg: -1, speed: 1, sat: 1 },
+    { reg: 1, speed: 1, sat: -2 },
+    { reg: 1, speed: -1, sat: 0 },
+  ],
+  [
+    { reg: 1, speed: -1, sat: 1 },
+    { reg: -2, speed: 1, sat: 1 },
+    { reg: 1, speed: -1, sat: -1 },
+  ],
+  [
+    { reg: 1, speed: 0, sat: 1 },
+    { reg: -2, speed: 0, sat: 0 },
+  ],
+  [
+    { reg: 0, speed: 0, sat: 2 },
+    { reg: 1, speed: 1, sat: -2 },
+  ],
 ]
+
+type VerdictKey =
+  | 'balanced'
+  | 'compliantExpensive'
+  | 'satisfactionOverCompliance'
+  | 'critical'
+  | 'fastButGaps'
+  | 'efficientGood'
+  | 'ambivalent'
+
+type DilemmaStrings = {
+  overlayAria: string
+  kicker: string
+  title: string
+  close: string
+  barsAria: string
+  barReg: string
+  barSpeed: string
+  barSat: string
+  briefingKicker: string
+  scenario1: React.ReactNode
+  scenario2: string
+  start: string
+  stationProgress: (i: number, total: number) => string
+  stationLabel: (i: number, total: number) => string
+  clipCaption: string
+  clipAria: (caller: string) => string
+  optionsAria: string
+  deltaReg: string
+  deltaSpeed: string
+  deltaSat: string
+  resultKicker: string
+  reflectionAria: string
+  reflections: { question: string; body: string }[]
+  restart: string
+  stations: { caller: string; transcript: string; options: string[] }[]
+  verdicts: Record<VerdictKey, string>
+}
+
+const STR: Record<Lang, DilemmaStrings> = {
+  de: {
+    overlayAria: 'Kredit-Dilemma Szenario',
+    kicker: 'Kapitel 06 · Compliance & Risk',
+    title: 'Kredit-Dilemma',
+    close: 'Szenario schließen',
+    barsAria: 'Status-Indikatoren',
+    barReg: 'Regulatorische Konformität',
+    barSpeed: 'Prozessgeschwindigkeit',
+    barSat: 'Kundenzufriedenheit',
+    briefingKicker: 'Szenario-Briefing',
+    scenario1: (
+      <>
+        Ein Großkunde beantragt einen Kredit über <strong>100 Mio. €</strong>. Die KI
+        lehnt den Antrag autonom ab — ohne Rücksprache, ohne erklärbare Begründung. Der
+        Firmenkundenbetreuer greift zum Telefon. Sie entscheiden, wie die Bank reagiert.
+      </>
+    ),
+    scenario2:
+      'Jede Entscheidung beeinflusst die drei Indikatoren oben. Am Ende stellen sich die entscheidenden Governance-Fragen: Wer hat freigegeben? Wer haftet? Wie wird kontrolliert?',
+    start: 'Szenario starten',
+    stationProgress: (i, total) => `Station ${i} von ${total}`,
+    stationLabel: (i, total) => `Station ${i} / ${total}`,
+    clipCaption: 'Clip-Platzhalter',
+    clipAria: (caller) => `Clip-Platzhalter: ${caller}`,
+    optionsAria: 'Entscheidungsoptionen',
+    deltaReg: 'Konf.',
+    deltaSpeed: 'Speed',
+    deltaSat: 'Zufr.',
+    resultKicker: 'Ergebnis',
+    reflectionAria: 'Reflexionsfragen',
+    reflections: [
+      {
+        question: 'Wer hat freigegeben?',
+        body: 'Liegt die Freigabeentscheidung beim Modell, beim Betreuer oder beim Komitee? Governance muss diese Frage eindeutig beantworten.',
+      },
+      {
+        question: 'Wer haftet?',
+        body: 'Bei einem Override der KI-Empfehlung muss die Verantwortlichkeit dokumentiert und juristisch belastbar sein.',
+      },
+      {
+        question: 'Wie wird kontrolliert?',
+        body: 'Aufsichtliche Nachvollziehbarkeit erfordert erklärbare Modelle, lückenlose Logs und regelmäßige Modell-Audits.',
+      },
+    ],
+    restart: 'Szenario neu starten',
+    stations: [
+      {
+        caller: 'Der Firmenkundenbetreuer',
+        transcript:
+          'Der Kunde ist empört über die automatische Ablehnung. Er fordert eine sofortige Klärung und droht, den Kreditantrag zur Konkurrenz zu verlagern.',
+        options: ['Sofort manuell freigeben', 'Ablehnung der KI bestätigen', 'Fall zur Einzelfallprüfung eskalieren'],
+      },
+      {
+        caller: 'Die Risikovorständin',
+        transcript:
+          'Sie fragt nach der Haftung, falls der Override zur Schadenersatzklage führt. Ohne klare Dokumentation ist niemandem geholfen.',
+        options: ['Vier-Augen-Override dokumentieren', 'Ohne Dokumentation freigeben', 'An Kreditkomitee verweisen'],
+      },
+      {
+        caller: 'Die Aufsicht / Compliance',
+        transcript:
+          'Die Aufsicht verlangt Nachvollziehbarkeit der KI-Entscheidung. Ohne erklärbare Grundlage drohen aufsichtsrechtliche Maßnahmen.',
+        options: ['Modell-Begründung offenlegen', 'Entscheidung als Blackbox belassen'],
+      },
+      {
+        caller: 'Der Kunde selbst',
+        transcript:
+          'Der Kunde droht offen mit Bankwechsel. Er erwartet entweder eine sofortige Lösung oder eine nachvollziehbare Begründung mit Handlungsalternative.',
+        options: ['Konditionen-Kompromiss anbieten', 'Hart bei der Entscheidung bleiben'],
+      },
+    ],
+    verdicts: {
+      balanced: 'Regelkonform und kundenorientiert — ein ausgewogenes Ergebnis.',
+      compliantExpensive: 'Regelkonform, aber teuer erkauft — die Kundenbeziehung leidet.',
+      satisfactionOverCompliance: 'Kundenzufriedenheit gewonnen, jedoch auf Kosten der Compliance.',
+      critical: 'Kritische Lage: Compliance-Risiko und Kundenverlust gleichzeitig.',
+      fastButGaps: 'Schnelle Entscheidung, aber regulatorische Lücken gefährden die Bank.',
+      efficientGood: 'Effizienter Prozess mit guter Kundenbindung — Governance bleibt prüfenswert.',
+      ambivalent: 'Ambivalentes Ergebnis — Nachsteuerung in der Governance empfohlen.',
+    },
+  },
+  en: {
+    overlayAria: 'Credit dilemma scenario',
+    kicker: 'Chapter 06 · Compliance & Risk',
+    title: 'Credit Dilemma',
+    close: 'Close the scenario',
+    barsAria: 'Status indicators',
+    barReg: 'Regulatory compliance',
+    barSpeed: 'Process speed',
+    barSat: 'Customer satisfaction',
+    briefingKicker: 'Scenario briefing',
+    scenario1: (
+      <>
+        A major client applies for a loan of <strong>€100m</strong>. The AI rejects the
+        application autonomously — without consultation, without an explainable rationale.
+        The corporate client manager picks up the phone. You decide how the bank responds.
+      </>
+    ),
+    scenario2:
+      'Every decision influences the three indicators above. In the end, the decisive governance questions arise: who approved it? Who is liable? How is it controlled?',
+    start: 'Start the scenario',
+    stationProgress: (i, total) => `Station ${i} of ${total}`,
+    stationLabel: (i, total) => `Station ${i} / ${total}`,
+    clipCaption: 'Clip placeholder',
+    clipAria: (caller) => `Clip placeholder: ${caller}`,
+    optionsAria: 'Decision options',
+    deltaReg: 'Comp.',
+    deltaSpeed: 'Speed',
+    deltaSat: 'Sat.',
+    resultKicker: 'Result',
+    reflectionAria: 'Reflection questions',
+    reflections: [
+      {
+        question: 'Who approved it?',
+        body: 'Does the approval decision lie with the model, the manager or the committee? Governance must answer this question unambiguously.',
+      },
+      {
+        question: 'Who is liable?',
+        body: 'When overriding the AI recommendation, responsibility must be documented and legally robust.',
+      },
+      {
+        question: 'How is it controlled?',
+        body: 'Supervisory traceability requires explainable models, complete logs and regular model audits.',
+      },
+    ],
+    restart: 'Restart the scenario',
+    stations: [
+      {
+        caller: 'The corporate client manager',
+        transcript:
+          'The customer is outraged by the automatic rejection. He demands immediate clarification and threatens to take the loan application to a competitor.',
+        options: ['Approve manually right away', 'Confirm the AI rejection', 'Escalate to a case-by-case review'],
+      },
+      {
+        caller: 'The chief risk officer',
+        transcript:
+          'She asks about liability should the override lead to a damages claim. Without clear documentation, no one is helped.',
+        options: ['Document a four-eyes override', 'Approve without documentation', 'Refer to the credit committee'],
+      },
+      {
+        caller: 'The regulator / compliance',
+        transcript:
+          'The regulator demands traceability of the AI decision. Without an explainable basis, supervisory measures loom.',
+        options: ['Disclose the model rationale', 'Leave the decision as a black box'],
+      },
+      {
+        caller: 'The customer themselves',
+        transcript:
+          'The customer openly threatens to switch banks. He expects either an immediate solution or a comprehensible rationale with an alternative course of action.',
+        options: ['Offer a compromise on terms', 'Hold firm on the decision'],
+      },
+    ],
+    verdicts: {
+      balanced: 'Compliant and customer-oriented — a balanced outcome.',
+      compliantExpensive: 'Compliant, but dearly bought — the customer relationship suffers.',
+      satisfactionOverCompliance: 'Customer satisfaction won, but at the cost of compliance.',
+      critical: 'Critical situation: compliance risk and customer loss at the same time.',
+      fastButGaps: 'Fast decision, but regulatory gaps put the bank at risk.',
+      efficientGood: 'Efficient process with good customer retention — governance still worth reviewing.',
+      ambivalent: 'Ambivalent outcome — governance adjustment recommended.',
+    },
+  },
+}
 
 // ─── Hilfsfunktionen ──────────────────────────────────────────────────────────
 
@@ -93,16 +282,25 @@ function applyDeltas(bars: Bars, deltas: Record<BarKey, number>): Bars {
   }
 }
 
-/** Leitet aus den Endwerten einen kurzen deutschen Bewertungstext ab. */
-function getVerdict(bars: Bars): string {
+/** Leitet aus den Endwerten den passenden Bewertungs-Schlüssel ab. */
+function getVerdictKey(bars: Bars): VerdictKey {
   const { reg, speed, sat } = bars
-  if (reg >= 3 && sat >= 3) return 'Regelkonform und kundenorientiert — ein ausgewogenes Ergebnis.'
-  if (reg >= 3 && sat <= 1) return 'Regelkonform, aber teuer erkauft — die Kundenbeziehung leidet.'
-  if (reg <= 1 && sat >= 3) return 'Kundenzufriedenheit gewonnen, jedoch auf Kosten der Compliance.'
-  if (reg <= 1 && sat <= 1) return 'Kritische Lage: Compliance-Risiko und Kundenverlust gleichzeitig.'
-  if (speed >= 3 && reg <= 2) return 'Schnelle Entscheidung, aber regulatorische Lücken gefährden die Bank.'
-  if (speed >= 3 && sat >= 3) return 'Effizienter Prozess mit guter Kundenbindung — Governance bleibt prüfenswert.'
-  return 'Ambivalentes Ergebnis — Nachsteuerung in der Governance empfohlen.'
+  if (reg >= 3 && sat >= 3) return 'balanced'
+  if (reg >= 3 && sat <= 1) return 'compliantExpensive'
+  if (reg <= 1 && sat >= 3) return 'satisfactionOverCompliance'
+  if (reg <= 1 && sat <= 1) return 'critical'
+  if (speed >= 3 && reg <= 2) return 'fastButGaps'
+  if (speed >= 3 && sat >= 3) return 'efficientGood'
+  return 'ambivalent'
+}
+
+/** Baut die übersetzten Stationen mit der sprachunabhängigen Delta-Logik zusammen. */
+function buildStations(t: DilemmaStrings): Station[] {
+  return t.stations.map((s, si) => ({
+    caller: s.caller,
+    transcript: s.transcript,
+    options: s.options.map((label, oi) => ({ label, deltas: STATION_DELTAS[si][oi] })),
+  }))
 }
 
 // ─── Phasen-Typen ─────────────────────────────────────────────────────────────
@@ -142,15 +340,15 @@ function StatusBar({
 }
 
 /** Clip-Platzhalter (16:9). Kann später durch <video src="./ch06-clip-<n>.mp4"> ersetzt werden. */
-function ClipPlaceholder({ caller }: { caller: string }): React.ReactElement {
+function ClipPlaceholder({ caller, t }: { caller: string; t: DilemmaStrings }): React.ReactElement {
   return (
-    <div className={styles.clip} aria-label={`Clip-Platzhalter: ${caller}`}>
+    <div className={styles.clip} aria-label={t.clipAria(caller)}>
       <div className={styles.clipInner}>
         <div className={styles.clipIconGroup}>
           <Phone size={22} strokeWidth={1.6} aria-hidden />
           <Play size={22} strokeWidth={1.6} aria-hidden />
         </div>
-        <span className={styles.clipCaption}>Clip-Platzhalter &middot; {caller}</span>
+        <span className={styles.clipCaption}>{t.clipCaption} &middot; {caller}</span>
       </div>
     </div>
   )
@@ -160,6 +358,9 @@ function ClipPlaceholder({ caller }: { caller: string }): React.ReactElement {
 
 export function KreditDilemma({ onClose }: { onClose: () => void }): React.ReactElement {
   const reduced = useReducedMotion()
+  const { lang } = useLang()
+  const t = STR[lang]
+  const stations = buildStations(t)
 
   const [bars, setBars] = useState<Bars>(INITIAL_BARS)
   const [phase, setPhase] = useState<Phase>({ kind: 'briefing' })
@@ -210,7 +411,7 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
     setBars(newBars)
     if (phase.kind === 'station') {
       const nextIndex = phase.index + 1
-      if (nextIndex < STATIONS.length) {
+      if (nextIndex < stations.length) {
         setPhase({ kind: 'station', index: nextIndex })
       } else {
         setPhase({ kind: 'resolution' })
@@ -228,7 +429,7 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
   }
 
   const currentStation: Station | null =
-    phase.kind === 'station' ? (STATIONS[phase.index] ?? null) : null
+    phase.kind === 'station' ? (stations[phase.index] ?? null) : null
 
   return (
     <div
@@ -236,30 +437,30 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
       className={styles.overlay}
       role="dialog"
       aria-modal="true"
-      aria-label="Kredit-Dilemma Szenario"
+      aria-label={t.overlayAria}
     >
       <div ref={cardRef} className={styles.card}>
         {/* ─── Header ───────────────────────────────────────────────── */}
         <header className={styles.header}>
           <div className={styles.headerText}>
-            <span className={styles.kicker}>Kapitel 06 &middot; Compliance &amp; Risk</span>
-            <h2 className={styles.title}>Kredit-Dilemma</h2>
+            <span className={styles.kicker}>{t.kicker}</span>
+            <h2 className={styles.title}>{t.title}</h2>
           </div>
           <button
             type="button"
             className={styles.closeBtn}
             onClick={onClose}
-            aria-label="Szenario schließen"
+            aria-label={t.close}
           >
             <X size={18} strokeWidth={2} aria-hidden />
           </button>
         </header>
 
         {/* ─── Status-Balken (immer sichtbar) ───────────────────────── */}
-        <div className={styles.barsPanel} aria-label="Status-Indikatoren">
-          <StatusBar label="Regulatorische Konformität" value={bars.reg} colorVar="--ok" />
-          <StatusBar label="Prozessgeschwindigkeit" value={bars.speed} colorVar="--warn" />
-          <StatusBar label="Kundenzufriedenheit" value={bars.sat} colorVar="--info" />
+        <div className={styles.barsPanel} aria-label={t.barsAria}>
+          <StatusBar label={t.barReg} value={bars.reg} colorVar="--ok" />
+          <StatusBar label={t.barSpeed} value={bars.speed} colorVar="--warn" />
+          <StatusBar label={t.barSat} value={bars.sat} colorVar="--info" />
         </div>
 
         {/* ─── Inhalt je Phase ──────────────────────────────────────── */}
@@ -269,27 +470,19 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
               <div className={styles.scenarioBox}>
                 <div className={styles.scenarioIconRow}>
                   <ShieldCheck size={20} strokeWidth={1.8} aria-hidden />
-                  <span className={styles.scenarioKicker}>Szenario-Briefing</span>
+                  <span className={styles.scenarioKicker}>{t.briefingKicker}</span>
                 </div>
-                <p className={styles.scenarioText}>
-                  Ein Großkunde beantragt einen Kredit über <strong>100 Mio. €</strong>. Die KI
-                  lehnt den Antrag autonom ab — ohne Rücksprache, ohne erklärbare Begründung. Der
-                  Firmenkundenbetreuer greift zum Telefon. Sie entscheiden, wie die Bank reagiert.
-                </p>
-                <p className={styles.scenarioText}>
-                  Jede Entscheidung beeinflusst die drei Indikatoren oben. Am Ende stellen sich die
-                  entscheidenden Governance-Fragen: Wer hat freigegeben? Wer haftet? Wie wird
-                  kontrolliert?
-                </p>
+                <p className={styles.scenarioText}>{t.scenario1}</p>
+                <p className={styles.scenarioText}>{t.scenario2}</p>
               </div>
               <button
                 type="button"
                 className={styles.primaryBtn}
                 onClick={handleStart}
-                aria-label="Szenario starten"
+                aria-label={t.start}
               >
                 <Gauge size={16} strokeWidth={2} aria-hidden />
-                Szenario starten
+                {t.start}
                 <ArrowRight size={16} strokeWidth={2} aria-hidden />
               </button>
             </div>
@@ -298,8 +491,8 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
           {phase.kind === 'station' && currentStation !== null && (
             <div className={styles.station}>
               {/* Fortschrittsanzeige */}
-              <div className={styles.progress} aria-label={`Station ${phase.index + 1} von ${STATIONS.length}`}>
-                {STATIONS.map((_, i) => (
+              <div className={styles.progress} aria-label={t.stationProgress(phase.index + 1, stations.length)}>
+                {stations.map((_, i) => (
                   <span
                     key={i}
                     className={styles.progressDot}
@@ -308,11 +501,11 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
                     aria-hidden
                   />
                 ))}
-                <span className={styles.progressLabel}>Station {phase.index + 1} / {STATIONS.length}</span>
+                <span className={styles.progressLabel}>{t.stationLabel(phase.index + 1, stations.length)}</span>
               </div>
 
               {/* Clip-Platzhalter */}
-              <ClipPlaceholder caller={currentStation.caller} />
+              <ClipPlaceholder caller={currentStation.caller} t={t} />
 
               {/* Transkript */}
               <div className={styles.transcriptBox}>
@@ -321,7 +514,7 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
               </div>
 
               {/* Optionen */}
-              <div className={styles.options} role="group" aria-label="Entscheidungsoptionen">
+              <div className={styles.options} role="group" aria-label={t.optionsAria}>
                 {currentStation.options.map((opt) => (
                   <button
                     key={opt.label}
@@ -332,9 +525,9 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
                   >
                     <span className={styles.optionLabel}>{opt.label}</span>
                     <span className={styles.optionDeltas}>
-                      <DeltaBadge label="Konf." delta={opt.deltas.reg} />
-                      <DeltaBadge label="Speed" delta={opt.deltas.speed} />
-                      <DeltaBadge label="Zufr." delta={opt.deltas.sat} />
+                      <DeltaBadge label={t.deltaReg} delta={opt.deltas.reg} />
+                      <DeltaBadge label={t.deltaSpeed} delta={opt.deltas.speed} />
+                      <DeltaBadge label={t.deltaSat} delta={opt.deltas.sat} />
                     </span>
                   </button>
                 ))}
@@ -347,35 +540,26 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
               <div className={styles.verdictBox}>
                 <div className={styles.verdictIconRow}>
                   <Smile size={20} strokeWidth={1.8} aria-hidden />
-                  <span className={styles.verdictKicker}>Ergebnis</span>
+                  <span className={styles.verdictKicker}>{t.resultKicker}</span>
                 </div>
-                <p className={styles.verdictText}>{getVerdict(bars)}</p>
+                <p className={styles.verdictText}>{t.verdicts[getVerdictKey(bars)]}</p>
               </div>
 
               {/* Reflexionsfragen */}
-              <div className={styles.reflectionGrid} aria-label="Reflexionsfragen">
-                <ReflectionCard
-                  question="Wer hat freigegeben?"
-                  body="Liegt die Freigabeentscheidung beim Modell, beim Betreuer oder beim Komitee? Governance muss diese Frage eindeutig beantworten."
-                />
-                <ReflectionCard
-                  question="Wer haftet?"
-                  body="Bei einem Override der KI-Empfehlung muss die Verantwortlichkeit dokumentiert und juristisch belastbar sein."
-                />
-                <ReflectionCard
-                  question="Wie wird kontrolliert?"
-                  body="Aufsichtliche Nachvollziehbarkeit erfordert erklärbare Modelle, lückenlose Logs und regelmäßige Modell-Audits."
-                />
+              <div className={styles.reflectionGrid} aria-label={t.reflectionAria}>
+                {t.reflections.map((r) => (
+                  <ReflectionCard key={r.question} question={r.question} body={r.body} />
+                ))}
               </div>
 
               <button
                 type="button"
                 className={styles.restartBtn}
                 onClick={handleRestart}
-                aria-label="Szenario neu starten"
+                aria-label={t.restart}
               >
                 <RotateCcw size={15} strokeWidth={2} aria-hidden />
-                Szenario neu starten
+                {t.restart}
               </button>
             </div>
           )}

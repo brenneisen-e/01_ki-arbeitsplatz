@@ -103,6 +103,12 @@ export default function LandingPage() {
     try {
       const saved = JSON.parse(localStorage.getItem('kia_last_mode'));
       if (saved?.variant) return saved.variant;
+      // Beim allerersten Aufruf (noch kein gespeicherter Modus) standardmäßig
+      // Versicherung + Zukunftsversicherung vorauswählen.
+      if (!saved?.modeId) {
+        return MODE_CONFIGS.versicherung.institutVarianten
+          .find(v => v.institut === 'Zukunftsversicherung') || null;
+      }
     } catch {}
     return null;
   });

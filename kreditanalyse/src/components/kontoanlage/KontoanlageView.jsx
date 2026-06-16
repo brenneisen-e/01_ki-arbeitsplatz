@@ -15,6 +15,7 @@ import {
   CheckCircle2, FileText, Sparkles,
 } from 'lucide-react';
 import KontoanlageDropZone from './KontoanlageDropZone';
+import BeispielvertragDownload from './BeispielvertragDownload';
 import {
   detectVertrag, ALLGEMEINE_ANGABEN_SECTIONS, FIELD_LABELS, KONFIDENZ_META,
   MAPPED_FIELD_KEYS,
@@ -110,6 +111,8 @@ export default function KontoanlageView() {
       {status === 'idle' && (
         <>
           <KontoanlageDropZone onFileSelected={handleFile} />
+
+          <BeispielvertragDownload />
 
           <div className="bg-surface-card border border-border rounded-lg p-5">
             <div className="flex items-start gap-3">

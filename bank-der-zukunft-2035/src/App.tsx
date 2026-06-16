@@ -3,6 +3,7 @@ import styles from './App.module.css'
 import { IntroChatbot } from './components/IntroChatbot'
 import { BankExplorer } from './components/BankExplorer'
 import { getAllImageSrcs } from './data/chapters'
+import { parseHash } from './deeplink'
 
 // Persistenz-Key: merkt sich für die Dauer der Browser-Sitzung, dass der Nutzer
 // das Intro bereits durchlaufen hat — ein Refresh springt dann NICHT zurück auf
@@ -14,12 +15,24 @@ const ENTERED_KEY = 'bz2035:entered'
 // Haus.
 function App(): React.ReactElement {
   const [entered, setEntered] = useState(() => {
+    // Deep-Link auf ein Kapitel / die Übersicht überspringt das Intro.
+    if (parseHash().view !== 'intro') return true
     try {
       return sessionStorage.getItem(ENTERED_KEY) === '1'
     } catch {
       return false
     }
   })
+
+  // Externe Hash-Änderung (Deep-Link in dieselbe Tab eingefügt / Vor-Zurück):
+  // sitzt der Nutzer noch im Intro, direkt ins begehbare Haus wechseln.
+  useEffect(() => {
+    const onHash = () => {
+      if (parseHash().view !== 'intro') setEntered(true)
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
 
   const handleEnter = useCallback(() => {
     try {
@@ -38,6 +51,12 @@ function App(): React.ReactElement {
       sessionStorage.removeItem(ENTERED_KEY)
     } catch {
       // siehe oben — ohne sessionStorage einfach nur der State-Wechsel.
+    }
+    // Deep-Link-Hash entfernen, damit ein Refresh wieder im Intro startet.
+    try {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+    } catch {
+      // history nicht verfügbar — der State-Wechsel allein genügt.
     }
     setEntered(false)
   }, [])

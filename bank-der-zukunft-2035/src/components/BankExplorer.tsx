@@ -20,6 +20,7 @@ import { DeloitteBadge } from './DeloitteBadge'
 import { LanguageSwitch } from './LanguageSwitch'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useLang, type Lang } from '../i18n/LanguageContext'
+import { parseHash, formatHash } from '../deeplink'
 import {
   CHAPTER_IDS,
   MASTER_ASPECT,
@@ -79,6 +80,10 @@ const NAV_KEY = 'bz2035:nav'
 type SavedNav = { chapter: ChapterId | null; step: number }
 
 function loadNav(): SavedNav {
+  // Deep-Link im URL-Hash hat Vorrang vor der Sitzungs-Persistenz.
+  const link = parseHash()
+  if (link.view === 'chapter') return { chapter: link.chapter, step: link.step }
+  if (link.view === 'overview') return { chapter: null, step: 0 }
   try {
     const raw = sessionStorage.getItem(NAV_KEY)
     if (!raw) return { chapter: null, step: 0 }
@@ -261,19 +266,27 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
     }
   }, [animateTo])
 
-  const handleZoneClick = useCallback(
-    (chapter: Chapter) => {
+  // Zentrale Kapitel-Navigation (Zonen-Klick UND Deep-Link/Hash-Wechsel).
+  const goToChapter = useCallback(
+    (id: ChapterId, nextStep: number, opts: { instant?: boolean } = {}) => {
+      const chapter = chapters.find((c) => c.id === id)
+      if (!chapter) return
       setHoverId(null)
-      setActiveId(chapter.id)
-      setStep(0)
+      setActiveId(id)
+      setStep(nextStep)
       setReaderShown(false)
-      animateTo(chapter)
+      animateTo(chapter, opts)
       if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
       // Reader nach ~60 % des Flugs einblenden (instant bei reduced motion).
-      const delay = reducedMotion ? 0 : ZOOM_DURATION * 600
+      const delay = reducedMotion || opts.instant ? 0 : ZOOM_DURATION * 600
       flyTimeoutRef.current = window.setTimeout(() => setReaderShown(true), delay)
     },
-    [animateTo, reducedMotion],
+    [animateTo, reducedMotion, chapters],
+  )
+
+  const handleZoneClick = useCallback(
+    (chapter: Chapter) => goToChapter(chapter.id, 0),
+    [goToChapter],
   )
 
   const handleBack = useCallback(() => {
@@ -297,6 +310,39 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
     }
     onExitToIntro?.()
   }, [onExitToIntro])
+
+  // URL-Hash an den aktuellen Navigationsstand angleichen (teilbarer Deep-Link).
+  // replaceState statt location.hash: erzeugt keinen History-Eintrag pro Schritt
+  // und löst kein hashchange aus (kein Rück-Trigger des Listeners unten).
+  useEffect(() => {
+    const desired = activeId
+      ? formatHash({ view: 'chapter', chapter: activeId, step })
+      : formatHash({ view: 'overview' })
+    if (window.location.hash !== desired) {
+      window.history.replaceState(
+        null,
+        '',
+        desired || window.location.pathname + window.location.search,
+      )
+    }
+  }, [activeId, step])
+
+  // Externe Hash-Änderungen (Deep-Link eingefügt, URL editiert, Vor-/Zurück):
+  // die Navigation entsprechend nachziehen.
+  useEffect(() => {
+    const onHash = () => {
+      const link = parseHash()
+      if (link.view === 'chapter') {
+        if (link.chapter !== activeId || link.step !== step) {
+          goToChapter(link.chapter, link.step)
+        }
+      } else if (activeId !== null) {
+        handleBack()
+      }
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [activeId, step, goToChapter, handleBack])
 
   return (
     <div className={styles.root} ref={rootRef}>

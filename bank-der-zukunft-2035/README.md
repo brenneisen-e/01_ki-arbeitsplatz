@@ -70,6 +70,45 @@ Mapping auf das neue Strukturbild (4 Etagen, je zwei Räume + Glas-Aufzug):
 > noch nicht aus dem Deck-PDF — vor Workshop-Einsatz freigeben und ins Deck
 > übernehmen. Demo-Absprung und Demo-Bild folgen.
 
+## Deep-Links (direkt ins Kapitel)
+
+Jede Etage / jedes Kapitel lässt sich direkt per URL aufrufen — Hash-Routing,
+funktioniert ohne Server-Konfiguration unter dem Auslieferungs-Pfad
+(`…/bank-der-zukunft-2035/dist/`). Ein Deep-Link überspringt das Intro und
+fliegt direkt in das Kapitel; der aktuelle Stand wird laufend in die Adresszeile
+geschrieben (teilbar).
+
+| URL-Hash | Ziel |
+|---|---|
+| `#/uebersicht` | Strukturbild-Übersicht |
+| `#/<kapitel>` | Kapitel öffnen (Hypothese 1) |
+| `#/<kapitel>/<n>` | Schritt `n`: `1`–`3` = Hypothesen, `4` = Aktivität/Demo |
+
+`<kapitel>` ist die **Kapitel-ID** oder die **Nummer** (`02` bzw. `2`):
+
+| ID | Nr. | Kapitel |
+|---|---|---|
+| `kunde` | 01 | Kundenperspektive |
+| `vertrieb` | 02 | Markt & Vertrieb |
+| `marktfolge` | 03 | Marktfolge |
+| `corporate` | 04 | Corporate Services |
+| `it` | 05 | Technologie / IT |
+| `compliance` | 06 | Compliance & Risk |
+| `transformation` | 07 | Transformation |
+| `projekt` | 08 | Produkte & Innovation |
+
+Beispiele:
+
+```
+…/dist/#/vertrieb        → Markt & Vertrieb, erste Hypothese
+…/dist/#/vertrieb/3      → Markt & Vertrieb, dritte Hypothese
+…/dist/#/02/4            → Markt & Vertrieb, Aktivität/Demo
+…/dist/#/uebersicht      → Übersicht (Strukturbild)
+```
+
+Implementierung: `src/deeplink.ts` (Parser/Formatter), verdrahtet in `App.tsx`
+(Intro überspringen) und `BankExplorer.tsx` (Hash ⇄ Navigationsstand).
+
 ## Bild-Slots (33 Bilder · `public/images/`)
 
 Die Workshop-Bilder liegen als **PNG** unter **`public/images/`** und sind in

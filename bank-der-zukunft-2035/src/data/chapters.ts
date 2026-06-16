@@ -1021,6 +1021,11 @@ function localizeChapter(c: RawChapter, lang: Lang): Chapter {
 /** Sprachunabhängige Liste der Kapitel-IDs (z. B. zur Navigations-Validierung). */
 export const CHAPTER_IDS: ChapterId[] = RAW_CHAPTERS.map((c) => c.id)
 
+/** Map Kapitel-Nummer (z. B. '02') → ChapterId (z. B. 'vertrieb') für Deep-Links. */
+export const CHAPTER_NUMBERS: Record<string, ChapterId> = Object.fromEntries(
+  RAW_CHAPTERS.map((c) => [c.kapitel, c.id]),
+)
+
 /** Alle Kapitel in der aktiven Sprache. */
 export function getChapters(lang: Lang): Chapter[] {
   return RAW_CHAPTERS.map((c) => localizeChapter(c, lang))

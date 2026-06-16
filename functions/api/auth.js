@@ -1,11 +1,15 @@
 // Cloudflare Pages Function: POST /api/auth
-// Validiert ein vom Client gesendetes Passwort gegen ein Env-Secret.
+// Validiert ein vom Client gesendetes Passwort gegen ein Env-Secret und setzt
+// bei Erfolg ein HttpOnly-Cookie, das die serverseitige Zugriffssperre
+// (functions/_middleware.js) auf jeder Route auswertet.
+//
 // Der Scope bestimmt, welches Secret herangezogen wird:
 //
 //   scope: 'app'      -> env.ACCESS_PASSWORD    (Root-Landing / Plattform)
 //   scope: 'workshop' -> env.WORKSHOP_PASSWORD  (Bank der Zukunft Workshop)
 //
-// Ist kein Scope gesetzt oder unbekannt, wird 'app' verwendet.
+// Ist kein Scope gesetzt oder unbekannt, wird 'app' verwendet. Die
+// plattformweite Sperre in _middleware.js prüft den 'app'-Scope.
 //
 // Beide Secrets in Cloudflare hinterlegen:
 //   Workers & Pages -> kiarbeitsplatz -> Settings -> Variables and Secrets
@@ -14,19 +18,16 @@
 //      Name: WORKSHOP_PASSWORD
 //
 // Response:
-//   200 { ok: true, scope }  -> Passwort korrekt
+//   200 { ok: true, scope }  -> Passwort korrekt (+ Set-Cookie)
 //   401 { ok: false, scope } -> Passwort falsch
 //   500 { error }            -> Secret fuer diesen Scope nicht hinterlegt
 
-function constantTimeEquals(a, b) {
-  if (typeof a !== 'string' || typeof b !== 'string') return false;
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) {
-    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return diff === 0;
-}
+import {
+  cookieNameForScope,
+  deriveToken,
+  constantTimeEquals,
+  buildAuthCookie,
+} from '../_lib/authToken.js';
 
 const SCOPES = {
   app: { secretName: 'ACCESS_PASSWORD' },
@@ -68,7 +69,15 @@ export async function onRequestPost({ request, env }) {
     return new Response(JSON.stringify({ ok: false, scope }), { status: 401, headers });
   }
 
-  return new Response(JSON.stringify({ ok: true, scope }), { status: 200, headers });
+  // Erfolg: deterministisches Token ableiten und als HttpOnly-Cookie setzen,
+  // damit die Middleware nachfolgende Requests serverseitig durchlassen kann.
+  const token = await deriveToken(expected);
+  const cookie = buildAuthCookie(cookieNameForScope(scope), token);
+
+  return new Response(JSON.stringify({ ok: true, scope }), {
+    status: 200,
+    headers: { ...headers, 'Set-Cookie': cookie },
+  });
 }
 
 export async function onRequestGet() {

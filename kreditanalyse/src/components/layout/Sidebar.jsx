@@ -2,7 +2,7 @@ import { useApp } from '../../context/AppContext';
 import {
   LayoutDashboard, FileText, Shield, FileSearch, BarChart3,
   Lock, Gavel, Activity, ChevronLeft, ChevronRight, Building2,
-  FileSignature, ClipboardList, Send, ShieldCheck, FilePlus2,
+  FileSignature, ClipboardList, Send, ShieldCheck, FilePlus2, FileSpreadsheet,
 } from 'lucide-react';
 
 const navItems = [
@@ -21,6 +21,7 @@ const navItems = [
   // abgesetzt.
   { divider: true },
   { id: 'pdf-upload', label: 'Konsortialkredit-PDF', icon: FilePlus2, emphasis: true },
+  { id: 'kontoanlage', label: 'Vertrag → Kreditkonto', icon: FileSpreadsheet, emphasis: true },
   { id: 'compliance', label: 'Compliance-Sicht', icon: ShieldCheck, emphasis: true },
 ];
 

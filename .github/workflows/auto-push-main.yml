@@ -5,13 +5,18 @@ on:
     branches-ignore:
       - main
 
+# Verhindert, dass zwei gleichzeitige Laeufe denselben main-Merge rennen.
+concurrency:
+  group: auto-push-main
+  cancel-in-progress: false
+
 jobs:
   push-to-main:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout pushed branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -22,6 +27,20 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Push current commit to main
+      # Den gepushten Branch in main MERGEN statt main per Force-Push zu
+      # ueberschreiben. So verdraengen parallele Branches sich nicht mehr
+      # gegenseitig; bei echten Konflikten schlaegt der Lauf hoerbar fehl,
+      # statt Arbeit stillschweigend zu verlieren.
+      - name: Merge pushed branch into main
         run: |
-          git push --quiet --force origin HEAD:refs/heads/main
+          set -euo pipefail
+          git fetch origin main:main
+          git checkout main
+          # Bereits enthalten? Dann ist nichts zu tun.
+          if git merge-base --is-ancestor "$GITHUB_SHA" HEAD; then
+            echo "main enthaelt ${GITHUB_SHA} bereits - nichts zu tun."
+            exit 0
+          fi
+          git merge --no-ff "$GITHUB_SHA" \
+            -m "Auto-merge ${GITHUB_REF_NAME} into main (${GITHUB_SHA})"
+          git push origin main

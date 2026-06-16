@@ -1,9 +1,14 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './App.module.css'
 import { IntroChatbot } from './components/IntroChatbot'
 import { BankExplorer } from './components/BankExplorer'
-import { getAllImageSrcs } from './data/chapters'
+import { DEFAULT_API } from './data/chapters'
+import { EDEKA_API } from './data/edekabank'
 import { parseHash } from './deeplink'
+
+// Wählbare Instanzen derselben Engine: die Standard-Bank „Bank'26" und die
+// zweite Instanz „Edekabank" (über einen eigenen Button im Landing-Chatbot).
+type ExperienceId = 'bank2026' | 'edeka'
 
 // Persistenz-Key: merkt sich für die Dauer der Browser-Sitzung, dass der Nutzer
 // das Intro bereits durchlaufen hat — ein Refresh springt dann NICHT zurück auf
@@ -24,6 +29,11 @@ function App(): React.ReactElement {
     }
   })
 
+  // Aktive Instanz (Standard-Bank oder Edekabank). Wird im Landing-Chatbot
+  // gewählt; ein Deep-Link betrifft immer die Standard-Instanz.
+  const [experienceId, setExperienceId] = useState<ExperienceId>('bank2026')
+  const api = useMemo(() => (experienceId === 'edeka' ? EDEKA_API : DEFAULT_API), [experienceId])
+
   // Externe Hash-Änderung (Deep-Link in dieselbe Tab eingefügt / Vor-Zurück):
   // sitzt der Nutzer noch im Intro, direkt ins begehbare Haus wechseln.
   useEffect(() => {
@@ -41,6 +51,13 @@ function App(): React.ReactElement {
       // sessionStorage nicht verfügbar (z. B. privater Modus) — dann eben ohne
       // Persistenz; der normale Flow funktioniert trotzdem.
     }
+    setExperienceId('bank2026')
+    setEntered(true)
+  }, [])
+
+  // Edekabank-Instanz direkt aus dem Landing-Chatbot betreten (eigener Button).
+  const handleEnterEdeka = useCallback(() => {
+    setExperienceId('edeka')
     setEntered(true)
   }, [])
 
@@ -58,6 +75,7 @@ function App(): React.ReactElement {
     } catch {
       // history nicht verfügbar — der State-Wechsel allein genügt.
     }
+    setExperienceId('bank2026')
     setEntered(false)
   }, [])
 
@@ -65,7 +83,7 @@ function App(): React.ReactElement {
   // im Hintergrund vorladen, damit beim Öffnen eines Kapitels keine
   // Ladeverzögerung entsteht.
   useEffect(() => {
-    const imgs = getAllImageSrcs().map((src) => {
+    const imgs = api.getAllImageSrcs().map((src) => {
       const img = new Image()
       img.src = src
       return img
@@ -73,14 +91,14 @@ function App(): React.ReactElement {
     return () => {
       for (const img of imgs) img.src = ''
     }
-  }, [])
+  }, [api])
 
   return (
     <div className={styles.app}>
       {entered ? (
-        <BankExplorer onExitToIntro={handleExitToIntro} />
+        <BankExplorer api={api} onExitToIntro={handleExitToIntro} />
       ) : (
-        <IntroChatbot onEnter={handleEnter} />
+        <IntroChatbot onEnter={handleEnter} onEnterEdeka={handleEnterEdeka} />
       )}
     </div>
   )

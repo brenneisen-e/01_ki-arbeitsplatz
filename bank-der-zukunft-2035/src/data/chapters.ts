@@ -165,7 +165,7 @@ export type Chapter = {
 // ─── Roh-Typen (zweisprachig). Werden über `localize*` in die obigen flachen
 //     Typen aufgelöst. ───────────────────────────────────────────────────────
 
-type RawImageRef = { src: string; alt: L }
+export type RawImageRef = { src: string; alt: L }
 type RawHypothesis = {
   title: L
   image: RawImageRef
@@ -194,7 +194,7 @@ type RawActivity = {
   handoff: RawHandoff
   screenOverlay?: RawScreenOverlay
 }
-type RawChapter = {
+export type RawChapter = {
   id: ChapterId
   kapitel: string
   label: L
@@ -1056,3 +1056,73 @@ export function getAllImageSrcs(): string[] {
   }
   return srcs
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MEHRERE INSTANZEN ÜBER DIESELBE ENGINE
+//
+// Die BankExplorer-Engine (Strukturbild, Kameraflug, Kapitel-Reader, Absprünge)
+// ist generisch. Damit neben der Standard-Instanz „Bank'26" weitere Instanzen
+// (z. B. Edekabank) ohne Code-Duplikat entstehen, bündelt eine `Experience`
+// ihre Rohdaten (Master-Bild + Kapitel + Bild-Seitenverhältnis); `makeExperienceApi`
+// liefert daraus exakt die Accessor-Funktionen, die die Engine konsumiert.
+//
+// Die historischen Top-Level-Exports oben (getChapters/getChapter/… auf
+// RAW_CHAPTERS) bleiben unverändert erhalten — die Standard-Instanz verhält
+// sich damit 1:1 wie bisher.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type Experience = {
+  /** Stabiler Schlüssel der Instanz (z. B. 'bank2026', 'edeka'). */
+  id: string
+  /** Pixel-Seitenverhältnis des Master-Bildes (Breite / Höhe). */
+  masterAspect: number
+  rawMaster: RawImageRef
+  rawChapters: RawChapter[]
+}
+
+/** Die von der Engine konsumierten Accessor-Funktionen einer Instanz. */
+export type ExperienceApi = {
+  CHAPTER_IDS: ChapterId[]
+  CHAPTER_NUMBERS: Record<string, ChapterId>
+  MASTER_ASPECT: number
+  getChapters: (lang: Lang) => Chapter[]
+  getChapter: (id: ChapterId | null, lang: Lang) => Chapter | null
+  getMasterImage: (lang: Lang) => ImageRef
+  getAllImageSrcs: () => string[]
+}
+
+export function makeExperienceApi(exp: Experience): ExperienceApi {
+  const CHAPTER_NUMBERS: Record<string, ChapterId> = Object.fromEntries(
+    exp.rawChapters.map((c) => [c.kapitel, c.id]),
+  )
+  return {
+    CHAPTER_IDS: exp.rawChapters.map((c) => c.id),
+    CHAPTER_NUMBERS,
+    MASTER_ASPECT: exp.masterAspect,
+    getChapters: (lang) => exp.rawChapters.map((c) => localizeChapter(c, lang)),
+    getChapter: (id, lang) => {
+      if (!id) return null
+      const raw = exp.rawChapters.find((c) => c.id === id)
+      return raw ? localizeChapter(raw, lang) : null
+    },
+    getMasterImage: (lang) => localizeImage(exp.rawMaster, lang),
+    getAllImageSrcs: () => {
+      const srcs = [exp.rawMaster.src]
+      for (const c of exp.rawChapters) {
+        for (const h of c.hypotheses) srcs.push(h.image.src)
+        srcs.push(c.activity.image.src)
+      }
+      return srcs
+    },
+  }
+}
+
+/** Standard-Instanz „Bank'26" — gebündelt für die generische Engine. */
+export const DEFAULT_EXPERIENCE: Experience = {
+  id: 'bank2026',
+  masterAspect: MASTER_ASPECT,
+  rawMaster: RAW_MASTER_IMAGE,
+  rawChapters: RAW_CHAPTERS,
+}
+
+export const DEFAULT_API: ExperienceApi = makeExperienceApi(DEFAULT_EXPERIENCE)

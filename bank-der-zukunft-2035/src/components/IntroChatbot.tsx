@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { ArrowRight, Bot, Home, Send, Sparkles } from 'lucide-react'
+import { ArrowRight, Bot, Home, Send, Sparkles, Store } from 'lucide-react'
 import styles from './IntroChatbot.module.css'
 import { ImageSlot } from './ImageSlot'
 import { DeloitteBadge } from './DeloitteBadge'
@@ -52,6 +52,9 @@ type IntroStrings = {
   masterLabel: string
   masterCaption: string
   enter: string
+  edekaLabel: string
+  edekaSub: string
+  edekaAria: string
 }
 
 const STR: Record<Lang, IntroStrings> = {
@@ -107,6 +110,9 @@ const STR: Record<Lang, IntroStrings> = {
     masterLabel: 'Master · Strukturbild',
     masterCaption: 'Bank’26 — Querschnitt',
     enter: 'Workshop starten — Bank als Haus erkunden',
+    edekaLabel: 'Edeka-Bank',
+    edekaSub: 'Zweite Instanz · begehbares Strukturbild',
+    edekaAria: 'Edekabank-Strukturbild öffnen',
   },
   en: {
     reasoning: [
@@ -160,6 +166,9 @@ const STR: Record<Lang, IntroStrings> = {
     masterLabel: 'Master · Cross-section',
     masterCaption: 'Bank’26 — cross-section',
     enter: 'Start the workshop — explore the bank as a house',
+    edekaLabel: 'Edeka Bank',
+    edekaSub: 'Second instance · walkable cross-section',
+    edekaAria: 'Open the Edekabank cross-section',
   },
 }
 
@@ -171,8 +180,11 @@ type Phase = 'name' | 'chat' | 'thinking' | 'revealed'
 
 export function IntroChatbot({
   onEnter,
+  onEnterEdeka,
 }: {
   onEnter: () => void
+  /** Direkter Einstieg in die zweite Instanz „Edekabank" (eigener Button). */
+  onEnterEdeka: () => void
 }): React.ReactElement {
   const { lang } = useLang()
   const t = STR[lang]
@@ -395,21 +407,40 @@ export function IntroChatbot({
               </div>
 
               {showSuggestions && (
-                <div className={styles.suggestions} role="group" aria-label={t.suggestions}>
-                  {t.prompts.map((p) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      className={styles.suggestion}
-                      data-primary={p.primary || undefined}
-                      onClick={() => clickPrompt(p)}
-                    >
-                      {p.primary && <Sparkles size={14} strokeWidth={2} aria-hidden />}
-                      {p.label}
-                      {p.primary && <ArrowRight size={14} strokeWidth={2} aria-hidden />}
-                    </button>
-                  ))}
-                </div>
+                <>
+                  <div className={styles.suggestions} role="group" aria-label={t.suggestions}>
+                    {t.prompts.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        className={styles.suggestion}
+                        data-primary={p.primary || undefined}
+                        onClick={() => clickPrompt(p)}
+                      >
+                        {p.primary && <Sparkles size={14} strokeWidth={2} aria-hidden />}
+                        {p.label}
+                        {p.primary && <ArrowRight size={14} strokeWidth={2} aria-hidden />}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Zweite Instanz: direkter Absprung in das Edekabank-Strukturbild. */}
+                  <button
+                    type="button"
+                    className={styles.edekaBtn}
+                    onClick={onEnterEdeka}
+                    aria-label={t.edekaAria}
+                  >
+                    <span className={styles.edekaIcon} aria-hidden>
+                      <Store size={18} strokeWidth={2} />
+                    </span>
+                    <span className={styles.edekaText}>
+                      <span className={styles.edekaLabel}>{t.edekaLabel}</span>
+                      <span className={styles.edekaSub}>{t.edekaSub}</span>
+                    </span>
+                    <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
+                  </button>
+                </>
               )}
 
               {(messages.length > 0 || replying || phase !== 'chat') && (

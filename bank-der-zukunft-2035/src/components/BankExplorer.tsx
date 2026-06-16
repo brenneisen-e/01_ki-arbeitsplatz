@@ -23,12 +23,10 @@ import { useLang, type Lang } from '../i18n/LanguageContext'
 import { parseHash, formatHash } from '../deeplink'
 import {
   CHAPTER_IDS,
-  MASTER_ASPECT,
-  getChapters,
-  getChapter,
-  getMasterImage,
+  DEFAULT_API,
   type Chapter,
   type ChapterId,
+  type ExperienceApi,
   type Handoff,
 } from '../data/chapters'
 
@@ -142,9 +140,14 @@ function computeGeom(
 type BankExplorerProps = {
   /** Zurück zur Chatbot-Landing (nur aus der Übersicht erreichbar). */
   onExitToIntro?: () => void
+  /**
+   * Daten-Instanz (Master-Bild + Kapitel) für diese Engine. Default ist die
+   * Standard-Instanz „Bank'26"; die Edekabank-Instanz übergibt ihre eigene API.
+   */
+  api?: ExperienceApi
 }
 
-export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactElement {
+export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerProps): React.ReactElement {
   const rootRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const cameraRef = useRef<HTMLDivElement>(null)
@@ -166,9 +169,9 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
   const reducedMotion = useReducedMotion()
   const { lang } = useLang()
   const t = STR[lang]
-  const chapters = useMemo(() => getChapters(lang), [lang])
-  const masterImage = useMemo(() => getMasterImage(lang), [lang])
-  const activeChapter = useMemo(() => getChapter(activeId, lang), [activeId, lang])
+  const chapters = useMemo(() => api.getChapters(lang), [api, lang])
+  const masterImage = useMemo(() => api.getMasterImage(lang), [api, lang])
+  const activeChapter = useMemo(() => api.getChapter(activeId, lang), [api, activeId, lang])
   const isOverview = activeChapter === null
 
   const animateTo = useCallback(
@@ -350,7 +353,7 @@ export function BankExplorer({ onExitToIntro }: BankExplorerProps): React.ReactE
         <div
           className={styles.camera}
           ref={cameraRef}
-          style={{ ['--ar' as string]: String(MASTER_ASPECT) }}
+          style={{ ['--ar' as string]: String(api.MASTER_ASPECT) }}
         >
           <ImageSlot
             src={masterImage.src}

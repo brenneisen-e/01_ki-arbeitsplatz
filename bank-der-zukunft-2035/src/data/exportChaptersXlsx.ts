@@ -24,6 +24,7 @@ const ACCENT = 'FF046A38' // EDEKA-/Deloitte-Grün
 const ACCENT_DARK = 'FF02502A'
 const WHITE = 'FFFFFFFF'
 const MUTED = 'FF6B7280'
+const NOTE_FILL = 'FFFFF7E0' // helles Gelb für leere Notiz-/Diskussionsfelder
 const IMG_W = 560
 const IMG_H = 315 // 16:9
 const IMG_ROWS = 17 // reservierte Zeilen unter der Überschrift für das Bild
@@ -117,6 +118,11 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       hypothesis: 'Hypothese',
       activity: 'Aktivität & Absprung',
       comment: 'Kommentar',
+      colBild: 'Bildanpassung (Notiz)',
+      bildLabel: 'Bildanpassung',
+      bildHint: 'Falls das Bild angepasst werden soll — hier notieren:',
+      demoHeading: 'Mögliche Demos (Diskussion)',
+      demoHint: 'Welche Demos / Live-Tools könnten dieses Kapitel ergänzen? — hier festhalten:',
       missing: (f: string) => `[Bild fehlt: ${f}]`,
       heading: 'Banking Horizon 2035 — Hypothesen',
     },
@@ -134,6 +140,11 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       hypothesis: 'Hypothesis',
       activity: 'Activity & hand-off',
       comment: 'Comment',
+      colBild: 'Image change (note)',
+      bildLabel: 'Image change',
+      bildHint: 'If the image should be adjusted — note it here:',
+      demoHeading: 'Possible demos (discussion)',
+      demoHint: 'Which demos / live tools could complement this chapter? — capture here:',
       missing: (f: string) => `[image missing: ${f}]`,
       heading: 'Banking Horizon 2035 — hypotheses',
     },
@@ -145,19 +156,28 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
     { width: 22 },
     { width: 6 },
     { width: 34 },
-    { width: 52 },
-    { width: 52 },
-    { width: 40 },
+    { width: 50 },
+    { width: 50 },
+    { width: 38 },
+    { width: 36 },
   ]
-  setCell(sum, 'A1:F1', LBL.heading, { size: 15, bold: true })
+  setCell(sum, 'A1:G1', LBL.heading, { size: 15, bold: true })
   sum.getRow(1).height = 22
-  const headers = [LBL.colKapitel, LBL.colNr, LBL.colTitel, LBL.colQuo, LBL.colFuture, LBL.colLeitfrage]
+  const headers = [
+    LBL.colKapitel,
+    LBL.colNr,
+    LBL.colTitel,
+    LBL.colQuo,
+    LBL.colFuture,
+    LBL.colLeitfrage,
+    LBL.colBild,
+  ]
   headers.forEach((h, i) => {
     const col = String.fromCharCode(65 + i)
-    setCell(sum, `${col}2`, h, { size: 11, bold: true, color: WHITE, fill: ACCENT, valign: 'middle' })
+    setCell(sum, `${col}2`, h, { size: 11, bold: true, color: WHITE, fill: ACCENT, valign: 'middle', wrap: true })
   })
-  sum.getRow(2).height = 20
-  sum.autoFilter = 'A2:F2'
+  sum.getRow(2).height = 28
+  sum.autoFilter = 'A2:G2'
 
   let sr = 3
   for (const ch of chapters) {
@@ -170,6 +190,8 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       setCell(sum, `D${sr}`, eff(ch.id, step, 'statusQuo', h.statusQuo), { size: 11, wrap: true })
       setCell(sum, `E${sr}`, eff(ch.id, step, 'in2035', h.in2035), { size: 11, wrap: true })
       setCell(sum, `F${sr}`, eff(ch.id, step, 'leitfrage', h.leitfrage ?? ''), { size: 11, wrap: true, italic: true })
+      // Leere Notiz-Spalte für gewünschte Bildanpassungen.
+      setCell(sum, `G${sr}`, '', { size: 11, wrap: true, fill: NOTE_FILL })
       sum.getRow(sr).height = 96
       sr++
     }
@@ -235,6 +257,12 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
         r++
       }
 
+      // Leeres Notizfeld für gewünschte Bildanpassungen je Bild.
+      setCell(ws, `A${r}`, LBL.bildLabel, { size: 10, bold: true, valign: 'top' })
+      setCell(ws, `B${r}:I${r}`, '', { size: 11, wrap: true, fill: NOTE_FILL, valign: 'top' })
+      ws.getRow(r).height = 34
+      r++
+
       for (const [label, text, italic] of b.rows) {
         if (label) setCell(ws, `A${r}`, label, { size: 10, bold: true, color: label === LBL.future ? ACCENT : undefined, valign: 'top' })
         setCell(ws, `B${r}:I${r}`, text, { size: 11, wrap: true, italic, valign: 'top' })
@@ -243,6 +271,17 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       }
       r++ // Abstand
     }
+
+    // ── Diskussions-Zelle je Kapitel: mögliche Demos ─────────────────────────
+    setCell(ws, `A${r}:I${r}`, LBL.demoHeading, { size: 13, bold: true, color: WHITE, fill: ACCENT_DARK, valign: 'middle' })
+    ws.getRow(r).height = 22
+    r++
+    setCell(ws, `A${r}:I${r}`, LBL.demoHint, { size: 10, italic: true, color: MUTED, wrap: true })
+    ws.getRow(r).height = 22
+    r++
+    setCell(ws, `A${r}:I${r}`, '', { fill: NOTE_FILL })
+    ws.getRow(r).height = 130
+    r++
   }
 
   const buffer = await wb.xlsx.writeBuffer()

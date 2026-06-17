@@ -26,6 +26,16 @@ import { useLang, type Lang } from '../i18n/LanguageContext'
 
 const DEFAULT_NAME = 'Eike'
 
+// Name in der Browser-Sitzung merken, damit er nicht jedes Mal neu abgefragt wird.
+const NAME_KEY = 'bz2035:name'
+function readStoredName(): string {
+  try {
+    return localStorage.getItem(NAME_KEY)?.trim() ?? ''
+  } catch {
+    return ''
+  }
+}
+
 type Prompt = { id: string; label: string; primary?: boolean; reply?: string }
 
 type IntroStrings = {
@@ -190,9 +200,11 @@ export function IntroChatbot({
   const t = STR[lang]
   const masterImage = useMemo(() => getMasterImage(lang), [lang])
 
-  const [phase, setPhase] = useState<Phase>('name')
-  const [nameInput, setNameInput] = useState(DEFAULT_NAME)
-  const [name, setName] = useState('')
+  // Gespeicherter Name überspringt die Abfrage und startet direkt im Chat.
+  const [storedName] = useState(readStoredName)
+  const [phase, setPhase] = useState<Phase>(storedName ? 'chat' : 'name')
+  const [nameInput, setNameInput] = useState(storedName || DEFAULT_NAME)
+  const [name, setName] = useState(storedName)
   const [chatInput, setChatInput] = useState('')
   const [messages, setMessages] = useState<Msg[]>([])
   const [replying, setReplying] = useState(false)
@@ -218,7 +230,13 @@ export function IntroChatbot({
 
   const submitName = useCallback(() => {
     if (phase !== 'name') return
-    setName(nameInput.trim())
+    const trimmed = nameInput.trim()
+    setName(trimmed)
+    try {
+      localStorage.setItem(NAME_KEY, trimmed)
+    } catch {
+      // ohne localStorage einfach nur für diese Sitzung
+    }
     setPhase('chat')
   }, [phase, nameInput])
 

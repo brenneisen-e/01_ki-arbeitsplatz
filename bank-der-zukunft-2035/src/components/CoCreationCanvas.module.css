@@ -357,6 +357,122 @@
   color: var(--bad);
 }
 
+/* ─── Kanban: Notizen je Zeitraum (farbcodierte Spalten) ───────────────────── */
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.kanbanCol {
+  --k-color: #94a3b8;
+  --k-tint: rgba(148, 163, 184, 0.12);
+  --k-border: rgba(148, 163, 184, 0.4);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 8px;
+  border-radius: var(--r-sm, 8px);
+  background: var(--k-tint);
+  border: 1px solid var(--border-soft);
+  border-top: 2px solid var(--k-color);
+}
+
+.kanbanCol[data-stage='uebergang'] {
+  --k-color: #f5b43c;
+  --k-tint: rgba(245, 180, 60, 0.1);
+  --k-border: rgba(245, 180, 60, 0.45);
+}
+
+.kanbanCol[data-stage='zielbild'] {
+  --k-color: #2dd4a7;
+  --k-tint: rgba(45, 212, 167, 0.1);
+  --k-border: rgba(45, 212, 167, 0.45);
+}
+
+.kanbanCol[data-active] {
+  background: color-mix(in srgb, var(--k-color) 16%, transparent);
+  box-shadow: 0 0 0 1px var(--k-border);
+}
+
+.kanbanHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--k-color);
+}
+
+.kanbanDot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--k-color);
+}
+
+.kanbanHeadLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kanbanCount {
+  margin-left: auto;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--k-tint);
+  border: 1px solid var(--k-border);
+  color: var(--k-color);
+  font-size: 10px;
+}
+
+.kanbanList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+
+.kanbanChip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: var(--r-xs);
+  background: var(--surface-2);
+  border: 1px solid var(--k-border);
+  border-left: 3px solid var(--k-color);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.kanbanChip .chipText {
+  flex: 1;
+}
+
+.kanbanEmpty {
+  padding: 6px 2px;
+  color: var(--ink-3);
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .kanban {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ─── Sektionen (Future-Interaction) ────────────────────────────────────────── */
 
 .section {

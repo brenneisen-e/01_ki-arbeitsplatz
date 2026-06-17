@@ -27,9 +27,13 @@ type ControlMode = 'mensch' | 'hybrid' | 'ai'
 type Quadrant = 'low-low' | 'high-low' | 'low-high' | 'high-high'
 
 type DimensionState = {
+  /** Aktuell gewählte Spalte — neue Notizen landen hier. */
   stage: Stage
-  notes: string[]
+  /** Notizen je Zeitraum (Kanban-Spalten). */
+  notes: Record<Stage, string[]>
 }
+
+const STAGES: readonly Stage[] = ['heute', 'uebergang', 'zielbild']
 
 type ControlState = {
   mode: ControlMode
@@ -225,7 +229,7 @@ const STR: Record<Lang, CanvasStrings> = {
 function buildDefaultDimensions(): Record<DimensionId, DimensionState> {
   const result = {} as Record<DimensionId, DimensionState>
   for (const d of DIMENSION_IDS) {
-    result[d] = { stage: 'heute', notes: [] }
+    result[d] = { stage: 'heute', notes: { heute: [], uebergang: [], zielbild: [] } }
   }
   return result
 }
@@ -280,23 +284,17 @@ function SegmentedToggle<T extends string>({
   )
 }
 
-/** Sticky-Note-Eingabe + Chip-Liste für eine Dimensions-Karte. */
+/** Notiz-Eingabe (Enter/Plus). Die Notiz landet in der aktiven Kanban-Spalte. */
 function NoteInput({
-  notes,
   onAdd,
-  onRemove,
   placeholder,
   inputAria,
   addAria,
-  removeAria,
 }: {
-  notes: string[]
   onAdd: (text: string) => void
-  onRemove: (index: number) => void
   placeholder: string
   inputAria: string
   addAria: string
-  removeAria: (note: string) => string
 }): React.ReactElement {
   const [draft, setDraft] = useState('')
 
@@ -318,44 +316,75 @@ function NoteInput({
   )
 
   return (
-    <div className={styles.noteArea}>
-      <div className={styles.noteRow}>
-        <input
-          className={styles.noteInput}
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={handleKey}
-          placeholder={placeholder}
-          aria-label={inputAria}
-          maxLength={80}
-        />
-        <button
-          type="button"
-          className={styles.noteAddBtn}
-          onClick={commit}
-          aria-label={addAria}
-          disabled={draft.trim().length === 0}
+    <div className={styles.noteRow}>
+      <input
+        className={styles.noteInput}
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={handleKey}
+        placeholder={placeholder}
+        aria-label={inputAria}
+        maxLength={80}
+      />
+      <button
+        type="button"
+        className={styles.noteAddBtn}
+        onClick={commit}
+        aria-label={addAria}
+        disabled={draft.trim().length === 0}
+      >
+        +
+      </button>
+    </div>
+  )
+}
+
+/** Kanban-Brett: je Zeitraum eine farbcodierte Spalte mit Notiz-Chips. */
+function KanbanBoard({
+  notes,
+  stageLabels,
+  activeStage,
+  onRemove,
+  removeAria,
+}: {
+  notes: Record<Stage, string[]>
+  stageLabels: Record<Stage, string>
+  activeStage: Stage
+  onRemove: (stage: Stage, index: number) => void
+  removeAria: (note: string) => string
+}): React.ReactElement {
+  return (
+    <div className={styles.kanban}>
+      {STAGES.map((s) => (
+        <div
+          key={s}
+          className={styles.kanbanCol}
+          data-stage={s}
+          data-active={s === activeStage || undefined}
         >
-          +
-        </button>
-      </div>
-      {notes.length > 0 && (
-        <ul className={styles.chips} role="list">
-          {notes.map((note, i) => (
-            <li key={i} className={styles.chip}>
-              <span className={styles.chipText}>{note}</span>
-              <button
-                type="button"
-                className={styles.chipRemove}
-                onClick={() => onRemove(i)}
-                aria-label={removeAria(note)}
-              >
-                <X size={11} strokeWidth={2.5} aria-hidden />
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+          <div className={styles.kanbanHead}>
+            <span className={styles.kanbanDot} aria-hidden />
+            <span className={styles.kanbanHeadLabel}>{stageLabels[s]}</span>
+            <span className={styles.kanbanCount}>{notes[s].length}</span>
+          </div>
+          <ul className={styles.kanbanList} role="list">
+            {notes[s].map((note, i) => (
+              <li key={i} className={styles.kanbanChip}>
+                <span className={styles.chipText}>{note}</span>
+                <button
+                  type="button"
+                  className={styles.chipRemove}
+                  onClick={() => onRemove(s, i)}
+                  aria-label={removeAria(note)}
+                >
+                  <X size={11} strokeWidth={2.5} aria-hidden />
+                </button>
+              </li>
+            ))}
+            {notes[s].length === 0 && <li className={styles.kanbanEmpty} aria-hidden>—</li>}
+          </ul>
+        </div>
+      ))}
     </div>
   )
 }
@@ -377,11 +406,9 @@ function DimensionCard({
   stageLabels: Record<Stage, string>
   onStageChange: (s: Stage) => void
   onNoteAdd: (text: string) => void
-  onNoteRemove: (index: number) => void
+  onNoteRemove: (stage: Stage, index: number) => void
   t: CanvasStrings
 }): React.ReactElement {
-  const STAGES: readonly Stage[] = ['heute', 'uebergang', 'zielbild']
-
   return (
     <article className={styles.dimCard}>
       <h3 className={styles.dimCardTitle}>{title}</h3>
@@ -394,12 +421,16 @@ function DimensionCard({
         ariaLabel={t.dimStageAria(title)}
       />
       <NoteInput
-        notes={state.notes}
         onAdd={onNoteAdd}
-        onRemove={onNoteRemove}
         placeholder={t.notePlaceholder}
         inputAria={t.noteInputAria}
         addAria={t.noteAddAria}
+      />
+      <KanbanBoard
+        notes={state.notes}
+        stageLabels={stageLabels}
+        activeStage={state.stage}
+        onRemove={onNoteRemove}
         removeAria={t.noteRemoveAria}
       />
     </article>
@@ -466,17 +497,21 @@ export function CoCreationCanvas({
   }, [])
 
   const addNote = useCallback((id: DimensionId, text: string) => {
-    setDimensions((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], notes: [...prev[id].notes, text] },
-    }))
+    setDimensions((prev) => {
+      const dim = prev[id]
+      const s = dim.stage
+      return { ...prev, [id]: { ...dim, notes: { ...dim.notes, [s]: [...dim.notes[s], text] } } }
+    })
   }, [])
 
-  const removeNote = useCallback((id: DimensionId, index: number) => {
-    setDimensions((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], notes: prev[id].notes.filter((_, i) => i !== index) },
-    }))
+  const removeNote = useCallback((id: DimensionId, stage: Stage, index: number) => {
+    setDimensions((prev) => {
+      const dim = prev[id]
+      return {
+        ...prev,
+        [id]: { ...dim, notes: { ...dim.notes, [stage]: dim.notes[stage].filter((_, i) => i !== index) } },
+      }
+    })
   }, [])
 
   // ── Mutations für Future-Interaction-Variant ──
@@ -587,7 +622,7 @@ export function CoCreationCanvas({
                   stageLabels={t.stageLabels}
                   onStageChange={(s) => setDimStage(id, s)}
                   onNoteAdd={(text) => addNote(id, text)}
-                  onNoteRemove={(i) => removeNote(id, i)}
+                  onNoteRemove={(stage, i) => removeNote(id, stage, i)}
                   t={t}
                 />
               ))}

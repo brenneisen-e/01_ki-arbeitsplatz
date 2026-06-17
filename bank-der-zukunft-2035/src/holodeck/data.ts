@@ -65,9 +65,9 @@ export const STEUERUNG = {
   these:
     'Die KI-native Bank ist kein Technologie-Upgrade, sondern ein **anderes Betriebsmodell** — von der Brücke aus steuern zwei Menschen das Gesamtsystem, die KI exekutiert.',
   maximalbild:
-    'Im Extrem ließe sich die Bank von hier aus **fast vollständig steuern** — ein Cockpit, das Märkte, Liquidität, Zahlungsströme und Risiko in Echtzeit zusammenführt und über Leitplanken statt Einzelfälle regelt.',
+    'Im Maximum liefe die Bank von hier aus nahezu **auf Autopilot** — ein Cockpit, das Märkte, Liquidität, Zahlungsströme und Risiko in Echtzeit zusammenführt und über Regeln statt Einzelfälle lenkt.',
   aber:
-    'Genau das ist nicht das Zielbild. Für die Kernbereiche bleiben **Leads** verantwortlich — die fünf Stationen rundherum —, weil Vertrauen, Ausnahmen und Verantwortung Menschen brauchen, nicht nur Steuerung.',
+    'Bewusst **nicht das Zielbild**. Die Kernbereiche bleiben in der Verantwortung von **Leads** — die fünf Stationen rundherum —, weil Vertrauen, Ausnahmen und Verantwortung Menschen brauchen, nicht nur Steuerung.',
   hinweis: 'Über die Stationen im Bild in die fünf Kernbereiche eintauchen.',
 }
 

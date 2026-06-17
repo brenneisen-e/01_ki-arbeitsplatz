@@ -56,15 +56,20 @@ const FIELD_ICONS: Record<string, LucideIcon> = {
 
 type Mode = 'overview' | 'flying-in' | 'deepdive' | 'flying-out'
 
-// **fett** → <strong>; sonst Klartext.
+// <strong>…</strong> bzw. **…** → <strong>; sonst Klartext.
 function rich(text: string): React.ReactNode[] {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((p, i) =>
-    p.startsWith('**') && p.endsWith('**') ? (
-      <strong key={i}>{p.slice(2, -2)}</strong>
-    ) : (
-      <span key={i}>{p}</span>
-    ),
-  )
+  return text
+    .split(/(<strong>.*?<\/strong>|\*\*[^*]+\*\*)/g)
+    .filter((p) => p !== '')
+    .map((p, i) => {
+      if (p.startsWith('<strong>') && p.endsWith('</strong>')) {
+        return <strong key={i}>{p.slice(8, -9)}</strong>
+      }
+      if (p.startsWith('**') && p.endsWith('**')) {
+        return <strong key={i}>{p.slice(2, -2)}</strong>
+      }
+      return <span key={i}>{p}</span>
+    })
 }
 
 type Props = {

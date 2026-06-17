@@ -92,19 +92,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Steuert Akquise und Bindung im Händlergeschäft; verlagert den eigenen Einsatz von Volumen auf die wenigen wertentscheidenden Interaktionen.',
+        text: 'Verantwortet Akquise und Bindung im Händlergeschäft. Der eigene Einsatz verlagert sich von der Bearbeitung der <strong>Breite</strong> auf die wenigen <strong>wertentscheidenden Interaktionen</strong> — dort, wo eine Beziehung kippt oder ein Abschluss zustande kommt.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: 'Relationship- und Verhandlungskompetenz; kritische Bewertung KI-generierter Handlungsempfehlungen; Eskalations- und Abschlusssicherheit in Hochwert-Situationen.',
+        text: '<strong>Relationship- und Verhandlungskompetenz</strong> als Kern; dazu die Fähigkeit, KI-Empfehlungen <strong>kritisch zu bewerten</strong> statt blind zu folgen, und <strong>Abschluss- und Eskalationssicherheit</strong> in Hochwert-Situationen.',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: 'KI antizipiert Bedarfe (Liquidität, Saison, Expansion) und steuert Ansprache, Angebot und Timing autonom; menschlicher Eingriff nur an definierten Vertrauens-Touchpoints.',
+        text: 'Die KI <strong>antizipiert Bedarfe</strong> (Liquidität, Saison, Expansion), bevor der Händler anfragt, und steuert <strong>Ansprache, Angebot und Timing autonom</strong>. Der Mensch greift nur noch an definierten <strong>Vertrauens-Touchpoints</strong> ein.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute reaktiv, manuell, mit später Signalerkennung. Implikation: Vertriebskapazität verschiebt sich von Breite zu Tiefe — weniger Köpfe, höhere Anforderung pro Kopf.',
+        text: 'Heute ist der Vertrieb <strong>reaktiv und manuell</strong>, Signale werden spät erkannt. Implikation: Die Kapazität verschiebt sich <strong>von Breite zu Tiefe</strong> — <strong>weniger Köpfe</strong>, aber deutlich höhere Anforderung pro Kopf.',
       },
     ],
   },
@@ -120,19 +120,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Verantwortet Passung und Marge des Lösungsangebots; gestaltet den Baukasten und die Leitplanken, nicht das Einzelprodukt.',
+        text: 'Verantwortet <strong>Passung und Marge</strong> des Lösungsangebots. Gestaltet den <strong>Baukasten und die Leitplanken</strong>, nach denen kombiniert wird — nicht mehr das einzelne Produkt.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: 'Modulares Produktdenken; Ökonomie des Händlergeschäfts; Definition von Guardrails und Freigabelogik für KI-Konfiguration.',
+        text: '<strong>Modulares Produktdenken</strong> statt Katalogpflege; ein belastbares Gespür für die <strong>Ökonomie des Händlergeschäfts</strong>; und die Fähigkeit, <strong>Guardrails und Freigabelogik</strong> für die KI-Konfiguration sauber zu definieren.',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: 'KI konfiguriert je Cluster in Echtzeit die optimale Lösung aus Modulen und re-optimiert kontinuierlich; Time-to-Solution von Monaten auf Minuten.',
+        text: 'Die KI <strong>konfiguriert je Cluster in Echtzeit</strong> die optimale Lösung aus den Modulen und <strong>re-optimiert laufend</strong>. Die <strong>Time-to-Solution</strong> sinkt von Monaten auf <strong>Minuten</strong>.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute lange Entwicklungszyklen und Standardprodukte mit Streuverlust. Implikation: Der statische Produktkatalog — und die Funktion, die ihn pflegt — verliert seine Existenzberechtigung.',
+        text: 'Heute lange <strong>Entwicklungszyklen</strong> und Standardprodukte mit <strong>Streuverlust</strong>. Implikation: Der <strong>statische Produktkatalog</strong> — und die Funktion, die ihn pflegt — verliert seine Existenzberechtigung.',
       },
     ],
   },
@@ -148,19 +148,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Sichert Durchlauf und Qualität in Kredit, KYC und Abwicklung; steuert das Ausnahme-Regime statt des Normalbetriebs.',
+        text: 'Sichert <strong>Durchlauf und Qualität</strong> in Kredit, KYC und Abwicklung. Steuert künftig das <strong>Ausnahme-Regime</strong> statt des Normalbetriebs — also genau das, was die Maschine bewusst nicht allein entscheidet.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: 'Prozess- und Kontrollkompetenz; Entscheidungsstärke im Ausnahmefall; Sensorik dafür, welche Fälle bewusst dem Menschen vorbehalten bleiben.',
+        text: '<strong>Prozess- und Kontrollkompetenz</strong>; <strong>Entscheidungsstärke im Ausnahmefall</strong>; und die <strong>Sensorik</strong> dafür, welche Fälle dem Menschen vorbehalten bleiben müssen.',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: 'Straight-Through-Processing für das Gros der Fälle; der Mensch bearbeitet nur Exceptions. Steuerungsgröße ist die Qualität der Ausnahmeerkennung, nicht das Bearbeitungsvolumen.',
+        text: '<strong>Straight-Through-Processing</strong> für das Gros der Fälle; der Mensch bearbeitet nur noch <strong>Exceptions</strong>. Steuerungsgröße ist die <strong>Qualität der Ausnahmeerkennung</strong>, nicht das Bearbeitungsvolumen.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute personalintensive Einzelfallbearbeitung. Implikation: Bei STP-Quoten jenseits 90 % ist nicht Effizienz die Frage, sondern der Kapazitäts- und Rollenumbau im Backoffice.',
+        text: 'Heute <strong>personalintensive Einzelfallbearbeitung</strong>. Implikation: Bei <strong>STP-Quoten jenseits 90 %</strong> ist nicht Effizienz die Frage, sondern der <strong>Kapazitäts- und Rollenumbau</strong> im Backoffice.',
       },
     ],
   },
@@ -176,19 +176,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Verantwortet Früherkennung und Resilienz; verlagert die Funktion von Reporting zu aktiver Vorsteuerung.',
+        text: 'Verantwortet <strong>Früherkennung und Resilienz</strong>. Die Funktion verlagert sich von <strong>Reporting</strong> hin zu aktiver <strong>Vorsteuerung</strong> — gegensteuern, bevor etwas eskaliert.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: 'Szenario- und Frühindikatorenkompetenz; präventive statt reaktiver Steuerungslogik; Entscheidungsfähigkeit unter Unsicherheit.',
+        text: '<strong>Szenario- und Frühindikatorenkompetenz</strong>; eine <strong>präventive statt reaktive</strong> Steuerungslogik; und die <strong>Entscheidungsfähigkeit unter Unsicherheit</strong>.',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: 'Echtzeit-Signalauswertung, kontinuierliche Szenariosimulation (z. B. Kaufkraft −10 %) und automatisierte Maßnahmenempfehlung vor Eskalation.',
+        text: '<strong>Echtzeit-Signalauswertung</strong> und kontinuierliche <strong>Szenariosimulation</strong> (z. B. Kaufkraft −10 %) münden in automatisierte <strong>Maßnahmenempfehlungen vor Eskalation</strong>.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute periodisches, rückblickendes Reporting. Implikation: Verschiebung von Schadensverwaltung zu Schadensvermeidung — mit entsprechend anderem Funktions- und Kompetenzprofil.',
+        text: 'Heute <strong>periodisches, rückblickendes Reporting</strong> — meist zu spät zum Gegensteuern. Implikation: Verschiebung von <strong>Schadensverwaltung</strong> zu <strong>Schadensvermeidung</strong>, mit entsprechend anderem Kompetenzprofil.',
       },
     ],
   },
@@ -204,19 +204,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Verantwortet das Daten- und KI-Betriebssystem als Enabler aller Automatisierung; sichert Vertrauenswürdigkeit der Modelle.',
+        text: 'Verantwortet das <strong>Daten- und KI-Betriebssystem</strong> als Enabler aller Automatisierung. Kernaufgabe ist, die <strong>Vertrauenswürdigkeit der Modelle</strong> sicherzustellen, denen die ganze Bank vertraut.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: 'Daten- und Plattformarchitektur; Modell-Governance und -Sicherheit; Übersetzung zwischen Technik, Fachbereich und Aufsicht.',
+        text: '<strong>Daten- und Plattformarchitektur</strong>; <strong>Modell-Governance und -Sicherheit</strong>; und die Fähigkeit zur <strong>Übersetzung zwischen Technik, Fachbereich und Aufsicht</strong>.',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: 'Integriertes Datenfundament (Händler-, Bank-, Externdaten) speist alle Use Cases; Modelle laufend überwacht, abgesichert und governt.',
+        text: 'Ein <strong>integriertes Datenfundament</strong> (Händler-, Bank-, Externdaten) speist <strong>alle Use Cases</strong>; die Modelle sind <strong>laufend überwacht, abgesichert und governt</strong>.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute Datensilos und isolierte Pilotierung. Implikation: Der kritische Investitionshebel ist nicht das Modell, sondern das Datenfundament — typischerweise unterinvestiert und aufgeschoben.',
+        text: 'Heute <strong>Datensilos</strong> und isolierte Pilotierung. Implikation: Der kritische <strong>Investitionshebel</strong> ist nicht das Modell, sondern das <strong>Datenfundament</strong> — typischerweise unterinvestiert und aufgeschoben.',
       },
     ],
   },

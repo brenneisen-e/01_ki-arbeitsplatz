@@ -282,10 +282,9 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
       </div>
 
       <div className={styles.layout}>
-        {/* ── Bühne (links, 40 %) ── */}
+        {/* ── Bühne (links, 60 %) ── */}
         <div className={styles.stage}>
-          <div className={styles.stageInner}>
-            <div className={styles.anchorWrap} ref={anchorRef}>
+          <div className={styles.anchorWrap} ref={anchorRef}>
               {anchorError ? (
                 <div className={styles.placeholder}>
                   <ImageOff size={28} strokeWidth={1.5} aria-hidden />
@@ -350,15 +349,15 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
               </div>
             )}
 
-            {/* Debug-Zonen-Editor (über der Bild-Box, damit % zum Bild passen) */}
+            {/* Debug-Zonen-Editor (über der Bühne) */}
             {debug && (
               <DebugZoneEditor zones={zones} onChange={setZones} onClose={() => setDebug(false)} />
             )}
-          </div>
         </div>
 
-        {/* ── Textspalte (rechts, 60 %) ── */}
+        {/* ── Textspalte (rechts, 40 %) ── */}
         <aside className={styles.side}>
+          <div className={styles.sideInner}>
           {showDeepPanel && area ? (
             <>
               <div className={styles.deepHead}>
@@ -432,6 +431,7 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
               </div>
             </div>
           )}
+          </div>
         </aside>
       </div>
     </div>

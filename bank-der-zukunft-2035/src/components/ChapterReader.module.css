@@ -275,7 +275,7 @@
      16:9-Höhe in den verbleibenden Platz passt (Reserve ≈ 510px für Titel,
      Karten, Topbar, Pager, Abstände). Bild UND Karten teilen sich diese Breite
      und bleiben dadurch exakt untereinander ausgerichtet. */
-  --media-w: clamp(480px, calc((100vh - 510px) * 16 / 9), min(1080px, 95vw));
+  --media-w: clamp(560px, calc((100vh - 430px) * 16 / 9), min(1360px, 94vw));
   flex: 1;
   min-height: 0;
   overflow: hidden;

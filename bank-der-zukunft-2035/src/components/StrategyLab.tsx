@@ -35,7 +35,6 @@ const CAPABILITY_IDS = [
   'Kreditabwicklung',
   'KYC / AML',
   'Zahlungsverkehr',
-  'Regulatorisches Reporting',
   'Dokumentenmanagement',
   'Sicherheitenverwaltung',
 ] as const
@@ -110,7 +109,6 @@ const STR: Record<Lang, LabStrings> = {
       Kreditabwicklung: 'Kreditabwicklung',
       'KYC / AML': 'KYC / AML',
       Zahlungsverkehr: 'Zahlungsverkehr',
-      'Regulatorisches Reporting': 'Regulatorisches Reporting',
       Dokumentenmanagement: 'Dokumentenmanagement',
       Sicherheitenverwaltung: 'Sicherheitenverwaltung',
     },
@@ -163,7 +161,6 @@ const STR: Record<Lang, LabStrings> = {
       Kreditabwicklung: 'Credit processing',
       'KYC / AML': 'KYC / AML',
       Zahlungsverkehr: 'Payments',
-      'Regulatorisches Reporting': 'Regulatory reporting',
       Dokumentenmanagement: 'Document management',
       Sicherheitenverwaltung: 'Collateral management',
     },

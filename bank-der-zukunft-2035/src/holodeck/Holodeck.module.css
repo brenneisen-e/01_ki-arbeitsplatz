@@ -373,50 +373,60 @@
 
 /* ── Rechte Spalte: Deep-Dive ── */
 .deepHead {
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 
 .deepScreen {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--accent);
 }
 
 .deepPersona {
-  margin-top: 4px;
-  font-size: 22px;
+  margin-top: 5px;
+  font-size: 32px;
   font-weight: 800;
+  line-height: 1.1;
 }
 
 .deepRole {
-  font-size: 13.5px;
+  margin-top: 3px;
+  font-size: 17px;
   color: var(--muted);
 }
 
 .fieldList {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 22px;
 }
 
 .field {
-  padding-left: 13px;
-  border-left: 2px solid rgba(0, 140, 230, 0.45);
+  padding-left: 16px;
+  border-left: 3px solid var(--accent);
 }
 
 .fieldLabel {
-  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 3px;
+  margin-bottom: 7px;
+}
+
+.fieldLabel svg {
+  flex: none;
+  color: var(--accent);
 }
 
 .fieldText {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 18.5px;
+  line-height: 1.55;
 }
 
 .navRow {

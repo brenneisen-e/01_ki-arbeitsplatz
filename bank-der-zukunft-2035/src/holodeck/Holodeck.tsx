@@ -1,6 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { ArrowLeft, ChevronLeft, ChevronRight, Compass, ImageOff, Plus } from 'lucide-react'
+import {
+  ArrowLeft,
+  Bot,
+  ChevronLeft,
+  ChevronRight,
+  Compass,
+  GraduationCap,
+  ImageOff,
+  Info,
+  Plus,
+  Target,
+  TrendingUp,
+  type LucideIcon,
+} from 'lucide-react'
 import styles from './Holodeck.module.css'
 import { DebugZoneEditor } from './DebugZoneEditor'
 import { useReducedMotion } from '../hooks/useReducedMotion'
@@ -27,6 +40,14 @@ import {
 
 const ZOOM_SCALE = 2.4
 const ZOOM_DURATION = 0.8
+
+// Icon je Deep-Dive-Feld (nach dem Feld-Label aus data.ts).
+const FIELD_ICONS: Record<string, LucideIcon> = {
+  Mandat: Target,
+  Skills: GraduationCap,
+  'Zielbild Automatisierung': Bot,
+  'Delta zu heute': TrendingUp,
+}
 
 type Mode = 'overview' | 'flying-in' | 'deepdive' | 'flying-out' | 'outro'
 
@@ -291,12 +312,18 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
                 </div>
               </div>
               <div className={styles.fieldList}>
-                {area.fields.map((f) => (
-                  <div className={styles.field} key={f.label}>
-                    <div className={styles.fieldLabel}>{f.label}</div>
-                    <div className={styles.fieldText}>{f.text}</div>
-                  </div>
-                ))}
+                {area.fields.map((f) => {
+                  const Icon = FIELD_ICONS[f.label] ?? Info
+                  return (
+                    <div className={styles.field} key={f.label}>
+                      <div className={styles.fieldLabel}>
+                        <Icon size={19} strokeWidth={2} aria-hidden />
+                        {f.label}
+                      </div>
+                      <div className={styles.fieldText}>{f.text}</div>
+                    </div>
+                  )
+                })}
               </div>
               <div className={styles.navRow}>
                 <button type="button" className={styles.navBtn} onClick={goOverview}>

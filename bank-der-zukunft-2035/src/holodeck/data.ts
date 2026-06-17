@@ -37,10 +37,7 @@ export interface Area {
   fields: AreaField[]
 }
 
-export type View =
-  | { kind: 'overview' }
-  | { kind: 'deepdive'; areaId: AreaId }
-  | { kind: 'outro' }
+export type View = { kind: 'overview' } | { kind: 'deepdive'; areaId: AreaId }
 
 // ── Ankerbild der Brücke ─────────────────────────────────────────────────────
 export const ANKER = {
@@ -61,22 +58,17 @@ export const ZONES: Record<AreaId, Zone> = {
   betrieb: { x: 50, y: 42, r: 6 }, // hinten Mitte
 }
 
-// ── Einstieg „Die Brücke" (Overview-Text rechts) ─────────────────────────────
-export const BRIDGE = {
+// ── Übersicht „Die Brücke — Steuerung" (rechte Spalte, einziger Inhalt) ───────
+export const STEUERUNG = {
+  eyebrow: 'KOMMANDOBRÜCKE — STEUERUNG',
   title: 'EDEKABANK Holodeck 2031',
   these:
-    'Die KI-native Bank ist kein Technologie-Upgrade der bestehenden Bank, sondern ein anderes Betriebsmodell — Menschen steuern, KI exekutiert.',
-  leitfrage:
-    'Nicht „Welche KI?", sondern „Sind wir bereit, Aufbau-, Rollen- und Steuerungslogik entsprechend umzubauen?"',
-}
-
-// ── Abschluss „Die Führungsfrage" (Outro) ────────────────────────────────────
-export const OUTRO = {
-  title: 'Die Führungsfrage',
-  strukturthese:
-    'Weniger Rollen, Schnittstellen und Abstimmungsschleifen; dafür Konzentration von Steuerung und Verantwortung auf wenige Punkte — Führung über Leitplanken und Ausnahmen statt Einzelfallkontrolle.',
-  entscheidung:
-    'Operating-Model-Redesign vs. KI als Aufsatz auf den Status quo. Letzteres erhöht die Kostenbasis, ohne den Strukturvorteil zu heben — teure alte Bank statt neue.',
+    'Die KI-native Bank ist kein Technologie-Upgrade, sondern ein **anderes Betriebsmodell** — von der Brücke aus steuern zwei Menschen das Gesamtsystem, die KI exekutiert.',
+  maximalbild:
+    'Im Extrem ließe sich die Bank von hier aus **fast vollständig steuern** — ein Cockpit, das Märkte, Liquidität, Zahlungsströme und Risiko in Echtzeit zusammenführt und über Leitplanken statt Einzelfälle regelt.',
+  aber:
+    'Genau das ist nicht das Zielbild. Für die Kernbereiche bleiben **Leads** verantwortlich — die fünf Stationen rundherum —, weil Vertrauen, Ausnahmen und Verantwortung Menschen brauchen, nicht nur Steuerung.',
+  hinweis: 'Über die Stationen im Bild in die fünf Kernbereiche eintauchen.',
 }
 
 const FIELD_LABELS = {
@@ -240,4 +232,30 @@ export function getArea(id: AreaId): Area {
   const area = AREAS.find((a) => a.id === id)
   if (!area) throw new Error(`Unbekannte Holodeck-Area: ${id}`)
   return area
+}
+
+// ── Deep-Links — Hash-Routing: #/holodeck (Übersicht) · #/holodeck/<area> ─────
+function holodeckParts(hash: string): string[] {
+  return hash
+    .replace(/^#/, '')
+    .replace(/^\/+|\/+$/g, '')
+    .split('/')
+}
+
+/** True, wenn der Hash auf das Holodeck zeigt (Übersicht oder ein Bereich). */
+export function isHolodeckHash(hash: string = window.location.hash): boolean {
+  return holodeckParts(hash)[0]?.toLowerCase() === 'holodeck'
+}
+
+/** Bereichs-ID aus dem Hash (oder null = Übersicht / kein Holodeck-Hash). */
+export function holodeckAreaFromHash(hash: string = window.location.hash): AreaId | null {
+  const parts = holodeckParts(hash)
+  if (parts[0]?.toLowerCase() !== 'holodeck') return null
+  const a = parts[1]?.toLowerCase()
+  return a && (AREA_ORDER as readonly string[]).includes(a) ? (a as AreaId) : null
+}
+
+/** Baut den Hash für die Übersicht (null) bzw. einen Bereich. */
+export function formatHolodeckHash(area: AreaId | null): string {
+  return area ? `#/holodeck/${area}` : '#/holodeck'
 }

@@ -110,7 +110,7 @@ const STR: Record<Lang, CanvasStrings> = {
       Kundeninteraktion: 'Kundeninteraktion',
       'Compliance-Freigaben': 'Compliance-Freigaben',
     },
-    kicker: { organisation: 'Kapitel 04 · Corporate Services', 'future-interaction': 'Kapitel 07 · Transformation' },
+    kicker: { organisation: 'Kapitel 04 · Konzernentwicklung (HR / Corporate Services)', 'future-interaction': 'Kapitel 07 · Transformation' },
     title: {
       organisation: 'Co-Creation: Organisation unter Transformationsdruck',
       'future-interaction': 'Co-Creation: Future Interaction Model',
@@ -174,7 +174,7 @@ const STR: Record<Lang, CanvasStrings> = {
       Kundeninteraktion: 'Customer interaction',
       'Compliance-Freigaben': 'Compliance approvals',
     },
-    kicker: { organisation: 'Chapter 04 · Corporate Services', 'future-interaction': 'Chapter 07 · Transformation' },
+    kicker: { organisation: 'Chapter 04 · Group Development (HR / Corporate Services)', 'future-interaction': 'Chapter 07 · Transformation' },
     title: {
       organisation: 'Co-creation: organisation under transformation pressure',
       'future-interaction': 'Co-creation: future interaction model',

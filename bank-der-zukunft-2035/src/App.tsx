@@ -4,7 +4,7 @@ import { IntroChatbot } from './components/IntroChatbot'
 import { BankExplorer } from './components/BankExplorer'
 import { Holodeck } from './holodeck/Holodeck'
 import { getAllImageSrcs } from './data/chapters'
-import { HOLODECK_IMAGE_SRCS } from './holodeck/data'
+import { HOLODECK_IMAGE_SRCS, isHolodeckHash } from './holodeck/data'
 import { parseHash } from './deeplink'
 
 // Über den Landing-Chatbot wählbare Tools: das Standard-Strukturbild „Bank'26"
@@ -21,8 +21,8 @@ const ENTERED_KEY = 'bz2035:entered'
 // Haus.
 function App(): React.ReactElement {
   const [entered, setEntered] = useState(() => {
-    // Deep-Link auf ein Kapitel / die Übersicht überspringt das Intro.
-    if (parseHash().view !== 'intro') return true
+    // Deep-Link auf Holodeck oder ein Kapitel / die Übersicht überspringt das Intro.
+    if (isHolodeckHash() || parseHash().view !== 'intro') return true
     try {
       return sessionStorage.getItem(ENTERED_KEY) === '1'
     } catch {
@@ -30,15 +30,21 @@ function App(): React.ReactElement {
     }
   })
 
-  // Aktives Tool. Wird im Landing-Chatbot gewählt; ein Deep-Link betrifft immer
-  // das Standard-Strukturbild.
-  const [tool, setTool] = useState<Tool>('bank')
+  // Aktives Tool. Wird im Landing-Chatbot gewählt; ein #/holodeck-Deep-Link
+  // öffnet direkt das Holodeck, andere Deep-Links das Standard-Strukturbild.
+  const [tool, setTool] = useState<Tool>(() => (isHolodeckHash() ? 'holodeck' : 'bank'))
 
   // Externe Hash-Änderung (Deep-Link in dieselbe Tab eingefügt / Vor-Zurück):
-  // sitzt der Nutzer noch im Intro, direkt ins begehbare Haus wechseln.
+  // sitzt der Nutzer noch im Intro, direkt ins passende Tool wechseln.
   useEffect(() => {
     const onHash = () => {
-      if (parseHash().view !== 'intro') setEntered(true)
+      if (isHolodeckHash()) {
+        setTool('holodeck')
+        setEntered(true)
+      } else if (parseHash().view !== 'intro') {
+        setTool('bank')
+        setEntered(true)
+      }
     }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)

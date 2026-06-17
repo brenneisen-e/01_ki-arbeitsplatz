@@ -84,31 +84,27 @@
 
 .stage {
   position: relative;
-  flex: 0 0 40%;
+  flex: 0 0 60%;
   min-width: 0;
   background: #040c15;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  container-type: size;
-}
-
-/* 16:9-Box, mittig „contain" in die schmale Bühne eingepasst. Anker + Deep-Dive
-   liegen exakt darin, sodass die Hotspot-%-Koordinaten auf das Bild passen. */
-.stageInner {
-  position: relative;
-  width: min(100cqw, calc(100cqh * 16 / 9));
-  aspect-ratio: 16 / 9;
 }
 
 .side {
   flex: 1;
   min-width: 0;
-  padding: 38px clamp(28px, 3.4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  padding: 40px clamp(30px, 3.2vw, 60px);
   overflow-y: auto;
   background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
   border-left: 1px solid var(--line);
+}
+
+/* Inhalt füllt die Höhe und wird vertikal zentriert (scrollt, wenn zu hoch). */
+.sideInner {
+  margin: auto 0;
+  width: 100%;
 }
 
 /* ── Bühne: Anker (zoomt) + Deep-Dive-Layer ── */
@@ -439,8 +435,8 @@
 }
 
 .deepPersona {
-  margin-top: 5px;
-  font-size: 32px;
+  margin-top: 6px;
+  font-size: 33px;
   font-weight: 800;
   line-height: 1.1;
 }
@@ -454,7 +450,7 @@
 .fieldList {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 30px;
 }
 
 .field {
@@ -480,8 +476,8 @@
 }
 
 .fieldText {
-  font-size: 17px;
-  line-height: 1.55;
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 .navRow {

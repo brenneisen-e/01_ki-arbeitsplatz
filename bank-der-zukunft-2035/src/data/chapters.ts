@@ -500,8 +500,8 @@ const RAW_CHAPTERS: RawChapter[] = [
     id: 'corporate',
     kapitel: '04',
     label: {
-      de: 'Konzernentwicklung (HR / Corporate Services)',
-      en: 'Group Development (HR / Corporate Services)',
+      de: 'Organisationsentwicklung (HR & Corporate Services)',
+      en: 'Organisational Development (HR & Corporate Services)',
     },
     ort: { de: '2. OG links (Corporate / HR)', en: '2nd floor left (Corporate / HR)' },
     keyObject: '„ORGANISATION"-Screen',

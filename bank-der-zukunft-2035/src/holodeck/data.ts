@@ -51,11 +51,14 @@ export const ANKER = {
 // ── Zonen-Startwerte (Spec §7) — am echten Ankerbild über den Debug-Editor
 //    (Taste „D" / ?debug) final justieren. ────────────────────────────────────
 export const ZONES: Record<AreaId, Zone> = {
-  vertrieb: { x: 22, y: 60, r: 12 }, // vorne links
-  it: { x: 78, y: 60, r: 12 }, // vorne rechts
-  produkt: { x: 31, y: 44, r: 10 }, // hinten links
-  risiko: { x: 69, y: 44, r: 10 }, // hinten rechts
-  betrieb: { x: 50, y: 39, r: 10 }, // hinten Mitte
+  // Auf das gelieferte Ankerbild ausgemessen: die fünf Stationen (sitzende
+  // Operator:innen im Bogen), nicht die beiden Vorstände vorne. Bei Bedarf über
+  // den Debug-Editor (Taste „D") final justieren.
+  vertrieb: { x: 8, y: 60, r: 8 }, // vorne links (Flanke)
+  it: { x: 92, y: 60, r: 8 }, // vorne rechts (Flanke)
+  produkt: { x: 14, y: 48, r: 7 }, // hinten links
+  risiko: { x: 85, y: 48, r: 7 }, // hinten rechts
+  betrieb: { x: 50, y: 42, r: 6 }, // hinten Mitte
 }
 
 // ── Einstieg „Die Brücke" (Overview-Text rechts) ─────────────────────────────

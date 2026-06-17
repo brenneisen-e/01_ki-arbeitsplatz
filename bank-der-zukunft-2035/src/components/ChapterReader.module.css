@@ -92,6 +92,183 @@
   white-space: nowrap;
 }
 
+/* ── Bearbeitungs-Modus ── */
+.editToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out);
+}
+
+.editToggle:hover {
+  border-color: var(--accent);
+}
+
+.editToggle[data-on] {
+  background: var(--accent);
+  border-color: var(--accent-bright);
+  color: #fff;
+}
+
+.editBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: var(--media-w);
+  margin: 0 auto 16px;
+  padding: 9px 15px;
+  border-radius: var(--r-md);
+  background: var(--accent-tint);
+  border: 1px solid var(--accent);
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+.editBannerText {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  color: var(--accent-bright);
+  letter-spacing: 0.04em;
+}
+
+.editSpacer {
+  flex: 1;
+}
+
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color var(--t-med) var(--ease-out);
+}
+
+.resetBtn:hover {
+  border-color: var(--accent);
+}
+
+.editInput {
+  width: 100%;
+  font: inherit;
+  line-height: 1.5;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 9px 11px;
+  resize: vertical;
+  field-sizing: content;
+  min-height: 2.6em;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 2px var(--accent-tint);
+}
+
+.titleInput {
+  display: block;
+  width: 100%;
+  max-width: var(--media-w);
+  margin: 0 auto 18px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(24px, 2.6vw, 36px);
+  line-height: 1.16;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 8px 12px;
+  resize: none;
+  field-sizing: content;
+  min-height: 1.4em;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 2px var(--accent-tint);
+}
+
+.editLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+}
+
+.boldHint {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+
+.editLeitfrage {
+  max-width: var(--media-w);
+  margin: 14px auto 0;
+  text-align: left;
+}
+
+/* Bild-Kommentar (Anzeige als Notiz über dem Bild) */
+.commentNote {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  z-index: 6;
+  max-width: 60%;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(11, 12, 15, 0.86);
+  border: 1px solid var(--accent);
+  box-shadow: var(--shadow-2);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+  backdrop-filter: blur(6px);
+  text-align: left;
+}
+
+.commentNoteIcon {
+  color: var(--accent-bright);
+  flex: none;
+  margin-top: 1px;
+}
+
+.commentEditor {
+  max-width: var(--media-w);
+  margin: 12px auto 0;
+  text-align: left;
+}
+
 /* ── Content: zentrierte Spalte, scrollt bei Bedarf ── */
 .content {
   /* Alles passt OHNE Scrollen: die Bildbreite wird so begrenzt, dass die

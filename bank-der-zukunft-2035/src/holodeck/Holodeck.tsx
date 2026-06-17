@@ -7,13 +7,13 @@ import {
   ChevronRight,
   Gauge,
   GraduationCap,
+  Hand,
   ImageOff,
   Info,
   MousePointerClick,
   Plus,
   Target,
   TrendingUp,
-  Users,
   type LucideIcon,
 } from 'lucide-react'
 import styles from './Holodeck.module.css'
@@ -418,14 +418,14 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
 
               <div className={styles.block}>
                 <div className={styles.blockLabel}>
-                  <Gauge size={16} strokeWidth={2} aria-hidden /> Maximalbild
+                  <Gauge size={16} strokeWidth={2} aria-hidden /> Autopilot 2031
                 </div>
                 <p className={styles.blockText}>{rich(STEUERUNG.maximalbild)}</p>
               </div>
 
               <div className={styles.block}>
                 <div className={styles.blockLabel}>
-                  <Users size={16} strokeWidth={2} aria-hidden /> Aber
+                  <Hand size={16} strokeWidth={2} aria-hidden /> Hand am Steuer
                 </div>
                 <p className={styles.blockText}>{rich(STEUERUNG.aber)}</p>
               </div>

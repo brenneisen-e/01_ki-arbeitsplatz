@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from './App.module.css'
 import { IntroChatbot } from './components/IntroChatbot'
 import { BankExplorer } from './components/BankExplorer'
-import { DEFAULT_API } from './data/chapters'
-import { EDEKA_API } from './data/edekabank'
+import { Holodeck } from './holodeck/Holodeck'
+import { getAllImageSrcs } from './data/chapters'
+import { HOLODECK_IMAGE_SRCS } from './holodeck/data'
 import { parseHash } from './deeplink'
 
-// Wählbare Instanzen derselben Engine: die Standard-Bank „Bank'26" und die
-// zweite Instanz „Edekabank" (über einen eigenen Button im Landing-Chatbot).
-type ExperienceId = 'bank2026' | 'edeka'
+// Über den Landing-Chatbot wählbare Tools: das Standard-Strukturbild „Bank'26"
+// (BankExplorer) und das eigenständige „EDEKABANK Holodeck 2031" (eigener Button).
+type Tool = 'bank' | 'holodeck'
 
 // Persistenz-Key: merkt sich für die Dauer der Browser-Sitzung, dass der Nutzer
 // das Intro bereits durchlaufen hat — ein Refresh springt dann NICHT zurück auf
@@ -29,10 +30,9 @@ function App(): React.ReactElement {
     }
   })
 
-  // Aktive Instanz (Standard-Bank oder Edekabank). Wird im Landing-Chatbot
-  // gewählt; ein Deep-Link betrifft immer die Standard-Instanz.
-  const [experienceId, setExperienceId] = useState<ExperienceId>('bank2026')
-  const api = useMemo(() => (experienceId === 'edeka' ? EDEKA_API : DEFAULT_API), [experienceId])
+  // Aktives Tool. Wird im Landing-Chatbot gewählt; ein Deep-Link betrifft immer
+  // das Standard-Strukturbild.
+  const [tool, setTool] = useState<Tool>('bank')
 
   // Externe Hash-Änderung (Deep-Link in dieselbe Tab eingefügt / Vor-Zurück):
   // sitzt der Nutzer noch im Intro, direkt ins begehbare Haus wechseln.
@@ -51,18 +51,18 @@ function App(): React.ReactElement {
       // sessionStorage nicht verfügbar (z. B. privater Modus) — dann eben ohne
       // Persistenz; der normale Flow funktioniert trotzdem.
     }
-    setExperienceId('bank2026')
+    setTool('bank')
     setEntered(true)
   }, [])
 
-  // Edekabank-Instanz direkt aus dem Landing-Chatbot betreten (eigener Button).
+  // EDEKABANK Holodeck direkt aus dem Landing-Chatbot betreten (eigener Button).
   const handleEnterEdeka = useCallback(() => {
-    setExperienceId('edeka')
+    setTool('holodeck')
     setEntered(true)
   }, [])
 
-  // Zurück zum Chatbot (aus der Strukturbild-Übersicht): Intro-Persistenz
-  // löschen, damit auch ein Refresh wieder auf dem Chatbot landet.
+  // Zurück zum Chatbot: Intro-Persistenz löschen, damit auch ein Refresh wieder
+  // auf dem Chatbot landet.
   const handleExitToIntro = useCallback(() => {
     try {
       sessionStorage.removeItem(ENTERED_KEY)
@@ -75,15 +75,15 @@ function App(): React.ReactElement {
     } catch {
       // history nicht verfügbar — der State-Wechsel allein genügt.
     }
-    setExperienceId('bank2026')
+    setTool('bank')
     setEntered(false)
   }, [])
 
-  // Alle Strukturbild-/Kapitel-Fotos schon beim App-Start (während des Intros)
-  // im Hintergrund vorladen, damit beim Öffnen eines Kapitels keine
-  // Ladeverzögerung entsteht.
+  // Alle Fotos (Strukturbild + Holodeck) schon beim App-Start im Hintergrund
+  // vorladen, damit beim Öffnen keine Ladeverzögerung entsteht.
   useEffect(() => {
-    const imgs = api.getAllImageSrcs().map((src) => {
+    const srcs = [...getAllImageSrcs(), ...HOLODECK_IMAGE_SRCS]
+    const imgs = srcs.map((src) => {
       const img = new Image()
       img.src = src
       return img
@@ -91,12 +91,16 @@ function App(): React.ReactElement {
     return () => {
       for (const img of imgs) img.src = ''
     }
-  }, [api])
+  }, [])
 
   return (
     <div className={styles.app}>
       {entered ? (
-        <BankExplorer api={api} onExitToIntro={handleExitToIntro} />
+        tool === 'holodeck' ? (
+          <Holodeck onExit={handleExitToIntro} />
+        ) : (
+          <BankExplorer onExitToIntro={handleExitToIntro} />
+        )
       ) : (
         <IntroChatbot onEnter={handleEnter} onEnterEdeka={handleEnterEdeka} />
       )}

@@ -111,8 +111,8 @@ const STR: Record<Lang, IntroStrings> = {
     masterCaption: 'Bank’26 — Querschnitt',
     enter: 'Workshop starten — Bank als Haus erkunden',
     edekaLabel: 'Edeka-Bank',
-    edekaSub: 'Zweite Instanz · begehbares Strukturbild',
-    edekaAria: 'Edekabank-Strukturbild öffnen',
+    edekaSub: 'Holodeck 2031 · Kommandobrücke',
+    edekaAria: 'EDEKABANK Holodeck 2031 öffnen',
   },
   en: {
     reasoning: [
@@ -167,8 +167,8 @@ const STR: Record<Lang, IntroStrings> = {
     masterCaption: 'Bank’26 — cross-section',
     enter: 'Start the workshop — explore the bank as a house',
     edekaLabel: 'Edeka Bank',
-    edekaSub: 'Second instance · walkable cross-section',
-    edekaAria: 'Open the Edekabank cross-section',
+    edekaSub: 'Holodeck 2031 · command bridge',
+    edekaAria: 'Open the EDEKABANK Holodeck 2031',
   },
 }
 

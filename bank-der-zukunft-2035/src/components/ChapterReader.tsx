@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   ArrowLeft,
   ChevronLeft,
@@ -6,8 +6,11 @@ import {
   Clock,
   LayoutGrid,
   Lightbulb,
+  MessageSquare,
+  Pencil,
   Phone,
   Play,
+  RotateCcw,
   Sparkles,
   Users,
 } from 'lucide-react'
@@ -15,6 +18,14 @@ import styles from './ChapterReader.module.css'
 import { ImageSlot } from './ImageSlot'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
+import {
+  commentKey,
+  readEditMode,
+  textKey,
+  useChapterEdits,
+  writeEditMode,
+  type EditField,
+} from '../data/chapterEdits'
 
 type ReaderStrings = {
   back: string
@@ -33,6 +44,16 @@ type ReaderStrings = {
   activity: string
   hypothesisAria: (n: number) => string
   meta: Record<Handoff['kind'], string>
+  edit: string
+  editDone: string
+  editBanner: string
+  editTag: string
+  resetStep: string
+  commentLabel: string
+  commentPlaceholder: string
+  leitfragePlaceholder: string
+  boldHint: string
+  editTitleAria: string
 }
 
 const STR: Record<Lang, ReaderStrings> = {
@@ -58,6 +79,16 @@ const STR: Record<Lang, ReaderStrings> = {
       cocreation: 'Co-Creation',
       'kredit-dilemma': 'Interaktives Szenario',
     },
+    edit: 'Bearbeiten',
+    editDone: 'Fertig',
+    editBanner: 'Änderungen werden nur lokal in diesem Browser gespeichert (localStorage) — die Demo-Daten bleiben unverändert.',
+    editTag: 'Bearbeiten',
+    resetStep: 'Diesen Schritt zurücksetzen',
+    commentLabel: 'Kommentar zum Bild',
+    commentPlaceholder: 'Kommentar zum Bild (nur lokal sichtbar)…',
+    leitfragePlaceholder: 'Leitfrage (optional)…',
+    boldHint: '**Text** für fett',
+    editTitleAria: 'Titel bearbeiten',
   },
   en: {
     back: 'Overview',
@@ -81,6 +112,16 @@ const STR: Record<Lang, ReaderStrings> = {
       cocreation: 'Co-creation',
       'kredit-dilemma': 'Interactive scenario',
     },
+    edit: 'Edit',
+    editDone: 'Done',
+    editBanner: 'Changes are stored only locally in this browser (localStorage) — the demo data stays unchanged.',
+    editTag: 'Editing',
+    resetStep: 'Reset this step',
+    commentLabel: 'Comment on the image',
+    commentPlaceholder: 'Comment on the image (visible locally only)…',
+    leitfragePlaceholder: 'Guiding question (optional)…',
+    boldHint: '**text** for bold',
+    editTitleAria: 'Edit title',
   },
 }
 
@@ -189,6 +230,16 @@ export function ChapterReader({
 }: ChapterReaderProps): React.ReactElement {
   const { lang } = useLang()
   const t = STR[lang]
+  const { edits, setText, setComment, resetStep } = useChapterEdits()
+  const [editMode, setEditMode] = useState(readEditMode)
+
+  const toggleEdit = useCallback(() => {
+    setEditMode((on) => {
+      writeEditMode(!on)
+      return !on
+    })
+  }, [])
+
   const goPrev = useCallback(
     () => onStepChange(Math.max(0, step - 1)),
     [step, onStepChange],
@@ -198,9 +249,12 @@ export function ChapterReader({
     [step, onStepChange],
   )
 
-  // Tastatur: Esc → zurück, Pfeile blättern.
+  // Tastatur: Esc → zurück, Pfeile blättern. Beim Tippen in Eingabefeldern
+  // (Bearbeitungsmodus) NICHT abfangen, damit Cursor/Text normal funktionieren.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement | null)?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return
       if (e.key === 'Escape') onBack()
       else if (e.key === 'ArrowRight') goNext()
       else if (e.key === 'ArrowLeft') goPrev()
@@ -226,6 +280,22 @@ export function ChapterReader({
   const metaLabel = t.meta[activity.handoff.kind]
   const metaIcon = handoffIcon(activity.handoff.kind)
 
+  // Bearbeitungs-Layer: Override (localStorage) über die Basisdaten legen.
+  const tk = (field: EditField) => textKey(chapter.id, step, lang, field)
+  const eff = (field: EditField, base: string) => edits.texts[tk(field)] ?? base
+  const onEdit = (field: EditField) => (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+    setText(tk(field), e.target.value)
+
+  const titleField: EditField = hypothesis ? 'title' : 'activityTitle'
+  const effTitle = eff(titleField, title)
+  const effStatusQuo = hypothesis ? eff('statusQuo', hypothesis.statusQuo) : ''
+  const effIn2035 = hypothesis ? eff('in2035', hypothesis.in2035) : ''
+  const effLeitfrage = hypothesis ? eff('leitfrage', hypothesis.leitfrage ?? '') : ''
+  const effActivityText = hypothesis ? '' : eff('activityText', activity.text)
+
+  const cKey = commentKey(chapter.id, step)
+  const comment = edits.comments[cKey] ?? ''
+
   return (
     <div className={styles.root}>
       <header className={styles.topbar}>
@@ -243,10 +313,48 @@ export function ChapterReader({
         </div>
 
         <span className={styles.kicker}>{kicker}</span>
+
+        <button
+          type="button"
+          className={styles.editToggle}
+          data-on={editMode || undefined}
+          onClick={toggleEdit}
+          aria-pressed={editMode}
+        >
+          <Pencil size={14} strokeWidth={2} aria-hidden />
+          {editMode ? t.editDone : t.edit}
+        </button>
       </header>
 
       <div className={styles.content} key={`content-${step}`}>
-        <h1 className={styles.title}>{title}</h1>
+        {editMode && (
+          <div className={styles.editBanner}>
+            <span className={styles.editBannerText}>
+              <Pencil size={13} strokeWidth={2} aria-hidden /> {t.editTag}
+            </span>
+            <span>{t.editBanner}</span>
+            <span className={styles.editSpacer} />
+            <button
+              type="button"
+              className={styles.resetBtn}
+              onClick={() => resetStep(chapter.id, step, lang)}
+            >
+              <RotateCcw size={13} strokeWidth={2} aria-hidden /> {t.resetStep}
+            </button>
+          </div>
+        )}
+
+        {editMode ? (
+          <textarea
+            className={styles.titleInput}
+            value={effTitle}
+            onChange={onEdit(titleField)}
+            rows={1}
+            aria-label={t.editTitleAria}
+          />
+        ) : (
+          <h1 className={styles.title}>{effTitle}</h1>
+        )}
 
         <div className={styles.media}>
           <div className={styles.imageInner}>
@@ -255,7 +363,7 @@ export function ChapterReader({
               alt={image.alt}
               fit="cover"
               label={slotLabel}
-              caption={title}
+              caption={effTitle}
             />
             {hypothesis && (
               <div className={styles.split} aria-hidden>
@@ -267,10 +375,21 @@ export function ChapterReader({
             {isActivity && activity.screenOverlay && (
               <ScreenIframe overlay={activity.screenOverlay} />
             )}
+            {!editMode && comment && (
+              <div className={styles.commentNote}>
+                <MessageSquare
+                  size={15}
+                  strokeWidth={2}
+                  className={styles.commentNoteIcon}
+                  aria-hidden
+                />
+                <span>{comment}</span>
+              </div>
+            )}
           </div>
           {/* Leitfrage als Sprechblase rechts neben dem 2035-Bild (breite Screens).
               Auf schmalen Screens unsichtbar — dort greift die Leiste unten. */}
-          {hypothesis?.leitfrage && (
+          {!editMode && effLeitfrage && (
             <aside className={styles.calloutFloat}>
               {/* PowerPoint-Form „Sprechblase: abgerundetes Rechteck"
                   (wedgeRoundRectCallout): abgerundetes Rechteck + gerader,
@@ -290,11 +409,26 @@ export function ChapterReader({
                   <Lightbulb size={14} strokeWidth={2} aria-hidden />
                   {t.leitfrage}
                 </span>
-                <p className={styles.calloutText}>{hypothesis.leitfrage}</p>
+                <p className={styles.calloutText}>{effLeitfrage}</p>
               </div>
             </aside>
           )}
         </div>
+
+        {editMode && (
+          <div className={styles.commentEditor}>
+            <span className={styles.editLabel}>
+              <MessageSquare size={13} strokeWidth={2} aria-hidden /> {t.commentLabel}
+            </span>
+            <textarea
+              className={styles.editInput}
+              value={comment}
+              onChange={(e) => setComment(cKey, e.target.value)}
+              placeholder={t.commentPlaceholder}
+              rows={2}
+            />
+          </div>
+        )}
 
         {hypothesis ? (
           <>
@@ -304,25 +438,60 @@ export function ChapterReader({
                   <Clock size={14} strokeWidth={2.2} aria-hidden />
                   {t.today}
                 </span>
-                <p className={styles.compareText}>
-                  {renderRichText(hypothesis.statusQuo)}
-                </p>
+                {editMode ? (
+                  <>
+                    <textarea
+                      className={styles.editInput}
+                      value={effStatusQuo}
+                      onChange={onEdit('statusQuo')}
+                      rows={3}
+                    />
+                    <div className={styles.boldHint}>{t.boldHint}</div>
+                  </>
+                ) : (
+                  <p className={styles.compareText}>{renderRichText(effStatusQuo)}</p>
+                )}
               </article>
               <article className={styles.compareCard} data-future>
                 <span className={styles.compareHead}>
                   <Sparkles size={14} strokeWidth={2.2} aria-hidden />
                   {t.future}
                 </span>
-                <p className={styles.compareText}>
-                  {renderRichText(hypothesis.in2035)}
-                </p>
+                {editMode ? (
+                  <>
+                    <textarea
+                      className={styles.editInput}
+                      value={effIn2035}
+                      onChange={onEdit('in2035')}
+                      rows={3}
+                    />
+                    <div className={styles.boldHint}>{t.boldHint}</div>
+                  </>
+                ) : (
+                  <p className={styles.compareText}>{renderRichText(effIn2035)}</p>
+                )}
               </article>
             </div>
-            {hypothesis.leitfrage && (
-              <p className={styles.leitfrage}>
-                <Lightbulb size={16} strokeWidth={2} aria-hidden />
-                <span>{hypothesis.leitfrage}</span>
-              </p>
+            {editMode ? (
+              <div className={styles.editLeitfrage}>
+                <span className={styles.editLabel}>
+                  <Lightbulb size={13} strokeWidth={2} aria-hidden /> {t.leitfrage}
+                </span>
+                <textarea
+                  className={styles.editInput}
+                  value={effLeitfrage}
+                  onChange={onEdit('leitfrage')}
+                  placeholder={t.leitfragePlaceholder}
+                  rows={2}
+                />
+              </div>
+            ) : (
+              effLeitfrage && (
+                <p className={styles.leitfrage}>
+                  <Lightbulb size={16} strokeWidth={2} aria-hidden />
+                  <span>{effLeitfrage}</span>
+                </p>
+              )
             )}
           </>
         ) : (
@@ -331,7 +500,19 @@ export function ChapterReader({
               {metaIcon}
               {metaLabel}
             </span>
-            <p className={styles.copy}>{renderRichText(activity.text)}</p>
+            {editMode ? (
+              <>
+                <textarea
+                  className={styles.editInput}
+                  value={effActivityText}
+                  onChange={onEdit('activityText')}
+                  rows={3}
+                />
+                <div className={styles.boldHint}>{t.boldHint}</div>
+              </>
+            ) : (
+              <p className={styles.copy}>{renderRichText(effActivityText)}</p>
+            )}
             <div className={styles.ctaRow}>
               <button
                 type="button"

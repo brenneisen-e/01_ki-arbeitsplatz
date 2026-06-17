@@ -4,8 +4,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  FileSpreadsheet,
   LayoutGrid,
   Lightbulb,
+  Loader2,
   MessageSquare,
   Pencil,
   Phone,
@@ -26,6 +28,7 @@ import {
   writeEditMode,
   type EditField,
 } from '../data/chapterEdits'
+import { exportChaptersXlsx } from '../data/exportChaptersXlsx'
 
 type ReaderStrings = {
   back: string
@@ -54,6 +57,8 @@ type ReaderStrings = {
   leitfragePlaceholder: string
   boldHint: string
   editTitleAria: string
+  excel: string
+  exporting: string
 }
 
 const STR: Record<Lang, ReaderStrings> = {
@@ -89,6 +94,8 @@ const STR: Record<Lang, ReaderStrings> = {
     leitfragePlaceholder: 'Leitfrage (optional)…',
     boldHint: '**Text** für fett',
     editTitleAria: 'Titel bearbeiten',
+    excel: 'Excel',
+    exporting: 'Erzeuge…',
   },
   en: {
     back: 'Overview',
@@ -122,6 +129,8 @@ const STR: Record<Lang, ReaderStrings> = {
     leitfragePlaceholder: 'Guiding question (optional)…',
     boldHint: '**text** for bold',
     editTitleAria: 'Edit title',
+    excel: 'Excel',
+    exporting: 'Exporting…',
   },
 }
 
@@ -240,6 +249,18 @@ export function ChapterReader({
     })
   }, [])
 
+  const [exporting, setExporting] = useState(false)
+  const onExport = useCallback(async () => {
+    setExporting(true)
+    try {
+      await exportChaptersXlsx(lang, edits)
+    } catch (err) {
+      console.error('Excel-Export fehlgeschlagen', err)
+    } finally {
+      setExporting(false)
+    }
+  }, [lang, edits])
+
   const goPrev = useCallback(
     () => onStepChange(Math.max(0, step - 1)),
     [step, onStepChange],
@@ -313,6 +334,20 @@ export function ChapterReader({
         </div>
 
         <span className={styles.kicker}>{kicker}</span>
+
+        <button
+          type="button"
+          className={styles.editToggle}
+          onClick={onExport}
+          disabled={exporting}
+        >
+          {exporting ? (
+            <Loader2 size={14} strokeWidth={2} className={styles.spin} aria-hidden />
+          ) : (
+            <FileSpreadsheet size={14} strokeWidth={2} aria-hidden />
+          )}
+          {exporting ? t.exporting : t.excel}
+        </button>
 
         <button
           type="button"

@@ -2,11 +2,13 @@
  * CoCreationCanvas — Vollbild-Overlay für interaktive Co-Creation-Sessions.
  *
  * Variante 'organisation'  → Kapitel 04 · Corporate Services
- *   Vier Dimensions-Karten mit 3-Stufen-Toggle + Sticky-Note-Chips.
+ *   Vier Dimensions-Karten mit Kanban-Brettern. Notizen werden je Spalte über
+ *   ein Plus-Symbol (Modal) angelegt und per Drag-and-Drop zwischen den Spalten
+ *   (Heute / Übergang / Zielbild) verschoben.
  *
  * Variante 'future-interaction' → Kapitel 07 · Transformation
- *   Abschnitt A: Control-Shift-Toggles (Mensch/Hybrid/AI)
- *   Abschnitt B: 2×2-Prioritätsmatrix mit positionierten Chips
+ *   Abschnitt A: Control-Shift-Slider (Mensch ↔ Hybrid ↔ AI)
+ *   Abschnitt B: 2×2-Prioritätsmatrix; Bereiche per Drag-and-Drop platziert
  *   Abschnitt C: Auto-generierte Zusammenfassung
  *
  * Zweisprachig (DE/EN): interne Werte (Stage, ControlMode, Dimension-/Area-IDs)
@@ -14,7 +16,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback, KeyboardEvent } from 'react'
-import { X, RotateCcw } from 'lucide-react'
+import { X, RotateCcw, Plus, GripVertical } from 'lucide-react'
 import { gsap } from 'gsap'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useLang, type Lang } from '../i18n/LanguageContext'
@@ -29,8 +31,6 @@ type Quadrant = 'low-low' | 'high-low' | 'low-high' | 'high-high'
 type Placement = Quadrant | 'pool'
 
 type DimensionState = {
-  /** Aktuell gewählte Spalte — neue Notizen landen hier. */
-  stage: Stage
   /** Notizen je Zeitraum (Kanban-Spalten). */
   notes: Record<Stage, string[]>
 }
@@ -60,8 +60,12 @@ const AREAS = [
 
 type AreaId = (typeof AREAS)[number]
 
-/** Klick-Reihenfolge: Pool (außerhalb) → Quadranten → zurück in den Pool. */
+const CONTROL_MODES: readonly ControlMode[] = ['mensch', 'hybrid', 'ai']
+
+/** Klick-Reihenfolge (Fallback zum Drag-and-Drop): Pool → Quadranten → zurück. */
 const PLACEMENT_CYCLE: Placement[] = ['pool', 'high-high', 'high-low', 'low-high', 'low-low']
+
+const isAreaId = (s: string): s is AreaId => (AREAS as readonly string[]).includes(s)
 
 // ─── Übersetzungen ──────────────────────────────────────────────────────────────
 
@@ -77,11 +81,14 @@ type CanvasStrings = {
   resetAria: string
   close: string
   closeTitle: string
+  kanbanHint: string
   notePlaceholder: string
   noteInputAria: string
-  noteAddAria: string
   noteRemoveAria: (note: string) => string
-  dimStageAria: (title: string) => string
+  noteAddToAria: (stage: string) => string
+  noteModalTitle: string
+  noteAddConfirm: string
+  noteCancel: string
   sectionA: string
   controlAria: (area: string) => string
   sectionB: string
@@ -129,15 +136,18 @@ const STR: Record<Lang, CanvasStrings> = {
     resetAria: 'Alle Eingaben zurücksetzen',
     close: 'Canvas schließen',
     closeTitle: 'Schließen (Escape)',
-    notePlaceholder: 'Notiz eingeben, Enter zum Bestätigen…',
+    kanbanHint: 'Über das Plus-Symbol Notizen anlegen und per Drag-and-Drop zwischen den Spalten verschieben.',
+    notePlaceholder: 'Begriff oder Stichwort eingeben…',
     noteInputAria: 'Notiz eingeben',
-    noteAddAria: 'Notiz hinzufügen',
     noteRemoveAria: (note) => `Notiz entfernen: ${note}`,
-    dimStageAria: (title) => `Transformationsstufe für ${title}`,
+    noteAddToAria: (stage) => `Notiz hinzufügen zu ${stage}`,
+    noteModalTitle: 'Neue Notiz',
+    noteAddConfirm: 'Hinzufügen',
+    noteCancel: 'Abbrechen',
     sectionA: 'A · Control-Shift: Wer entscheidet künftig?',
     controlAria: (area) => `Entscheidungsträger für ${area}`,
     sectionB: 'B · Priorisierung: Was zuerst?',
-    matrixHint: 'Bereich-Chip anklicken, um ihn im Graphen zu platzieren — weitere Klicks wechseln den Quadranten.',
+    matrixHint: 'Bereiche per Drag-and-Drop in die Quadranten ziehen — oder anklicken, um durchzuschalten.',
     matrixAria: '2x2 Prioritätsmatrix: X-Achse Machbarkeit, Y-Achse Impact',
     yLabel: 'Impact',
     xLabel: 'Machbarkeit',
@@ -196,15 +206,18 @@ const STR: Record<Lang, CanvasStrings> = {
     resetAria: 'Reset all inputs',
     close: 'Close the canvas',
     closeTitle: 'Close (Escape)',
-    notePlaceholder: 'Type a note, Enter to confirm…',
+    kanbanHint: 'Use the plus icon to add notes and drag-and-drop them between columns.',
+    notePlaceholder: 'Enter a term or keyword…',
     noteInputAria: 'Type a note',
-    noteAddAria: 'Add note',
     noteRemoveAria: (note) => `Remove note: ${note}`,
-    dimStageAria: (title) => `Transformation stage for ${title}`,
+    noteAddToAria: (stage) => `Add note to ${stage}`,
+    noteModalTitle: 'New note',
+    noteAddConfirm: 'Add',
+    noteCancel: 'Cancel',
     sectionA: 'A · Control shift: who decides in future?',
     controlAria: (area) => `Decision maker for ${area}`,
     sectionB: 'B · Prioritisation: what first?',
-    matrixHint: 'Click an area chip to place it on the graph — further clicks cycle the quadrant.',
+    matrixHint: 'Drag areas into the quadrants — or click to cycle through them.',
     matrixAria: '2x2 prioritisation matrix: x-axis feasibility, y-axis impact',
     yLabel: 'Impact',
     xLabel: 'Feasibility',
@@ -241,7 +254,7 @@ const STR: Record<Lang, CanvasStrings> = {
 function buildDefaultDimensions(): Record<DimensionId, DimensionState> {
   const result = {} as Record<DimensionId, DimensionState>
   for (const d of DIMENSION_IDS) {
-    result[d] = { stage: 'heute', notes: { heute: [], uebergang: [], zielbild: [] } }
+    result[d] = { notes: { heute: [], uebergang: [], zielbild: [] } }
   }
   return result
 }
@@ -265,8 +278,8 @@ function buildDefaultPlacements(): Record<AreaId, AreaPlacement> {
 
 // ─── Sub-Komponenten ──────────────────────────────────────────────────────────
 
-/** Dreistufiger Segmented-Toggle. */
-function SegmentedToggle<T extends string>({
+/** Dreistufiger Slider: zieh- und klickbare Skala (z. B. Mensch ↔ Hybrid ↔ AI). */
+function ControlSlider<T extends string>({
   options,
   labels,
   value,
@@ -279,44 +292,72 @@ function SegmentedToggle<T extends string>({
   onChange: (v: T) => void
   ariaLabel: string
 }): React.ReactElement {
+  const idx = Math.max(0, options.indexOf(value))
+  const max = options.length - 1
+  const pct = max === 0 ? 0 : (idx / max) * 100
+
   return (
-    <div className={styles.toggle} role="group" aria-label={ariaLabel}>
-      {options.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          className={styles.toggleBtn}
-          data-active={value === opt || undefined}
-          onClick={() => onChange(opt)}
-          aria-pressed={value === opt}
-        >
-          {labels[opt]}
-        </button>
-      ))}
+    <div className={styles.slider}>
+      <input
+        type="range"
+        className={styles.sliderInput}
+        min={0}
+        max={max}
+        step={1}
+        value={idx}
+        onChange={(e) => onChange(options[Number(e.currentTarget.value)])}
+        aria-label={ariaLabel}
+        aria-valuetext={labels[value]}
+        style={{ '--slider-pct': `${pct}%` } as React.CSSProperties}
+      />
+      <div className={styles.sliderLabels}>
+        {options.map((opt) => (
+          <button
+            key={opt}
+            type="button"
+            className={styles.sliderLabel}
+            data-active={opt === value || undefined}
+            onClick={() => onChange(opt)}
+            tabIndex={-1}
+          >
+            {labels[opt]}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
 
-/** Notiz-Eingabe (Enter/Plus). Die Notiz landet in der aktiven Kanban-Spalte. */
-function NoteInput({
-  onAdd,
+/** Modal zum Anlegen einer neuen Notiz für eine bestimmte Kanban-Spalte. */
+function NoteModal({
+  title,
   placeholder,
   inputAria,
-  addAria,
+  confirmLabel,
+  cancelLabel,
+  onConfirm,
+  onCancel,
 }: {
-  onAdd: (text: string) => void
+  title: string
   placeholder: string
   inputAria: string
-  addAria: string
+  confirmLabel: string
+  cancelLabel: string
+  onConfirm: (text: string) => void
+  onCancel: () => void
 }): React.ReactElement {
-  const [draft, setDraft] = useState('')
+  const [text, setText] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   const commit = useCallback(() => {
-    const trimmed = draft.trim()
+    const trimmed = text.trim()
     if (trimmed.length === 0) return
-    onAdd(trimmed)
-    setDraft('')
-  }, [draft, onAdd])
+    onConfirm(trimmed)
+  }, [text, onConfirm])
 
   const handleKey = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -329,43 +370,67 @@ function NoteInput({
   )
 
   return (
-    <div className={styles.noteRow}>
-      <input
-        className={styles.noteInput}
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onKeyDown={handleKey}
-        placeholder={placeholder}
-        aria-label={inputAria}
-        maxLength={80}
-      />
-      <button
-        type="button"
-        className={styles.noteAddBtn}
-        onClick={commit}
-        aria-label={addAria}
-        disabled={draft.trim().length === 0}
-      >
-        +
-      </button>
+    <div
+      className={styles.modalOverlay}
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+      onClick={onCancel}
+    >
+      <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+        <h3 className={styles.modalTitle}>{title}</h3>
+        <input
+          ref={inputRef}
+          className={styles.modalInput}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder={placeholder}
+          aria-label={inputAria}
+          maxLength={80}
+        />
+        <div className={styles.modalActions}>
+          <button type="button" className={styles.modalCancel} onClick={onCancel}>
+            {cancelLabel}
+          </button>
+          <button
+            type="button"
+            className={styles.modalConfirm}
+            onClick={commit}
+            disabled={text.trim().length === 0}
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
 
-/** Kanban-Brett: je Zeitraum eine farbcodierte Spalte mit Notiz-Chips. */
+/**
+ * Kanban-Brett: je Zeitraum eine farbcodierte Spalte. Notizen werden über das
+ * Plus-Symbol angelegt (Modal) und per Drag-and-Drop zwischen den Spalten verschoben.
+ */
 function KanbanBoard({
   notes,
   stageLabels,
-  activeStage,
   onRemove,
+  onAddRequest,
+  onMoveNote,
   removeAria,
+  addToAria,
 }: {
   notes: Record<Stage, string[]>
   stageLabels: Record<Stage, string>
-  activeStage: Stage
   onRemove: (stage: Stage, index: number) => void
+  onAddRequest: (stage: Stage) => void
+  onMoveNote: (from: Stage, index: number, to: Stage) => void
   removeAria: (note: string) => string
+  addToAria: (stage: string) => string
 }): React.ReactElement {
+  const [drag, setDrag] = useState<{ stage: Stage; index: number } | null>(null)
+  const [overStage, setOverStage] = useState<Stage | null>(null)
+
   return (
     <div className={styles.kanban}>
       {STAGES.map((s) => (
@@ -373,16 +438,54 @@ function KanbanBoard({
           key={s}
           className={styles.kanbanCol}
           data-stage={s}
-          data-active={s === activeStage || undefined}
+          data-dragover={(overStage === s && drag !== null) || undefined}
+          onDragOver={(e) => {
+            if (drag === null) return
+            e.preventDefault()
+            e.dataTransfer.dropEffect = 'move'
+            if (overStage !== s) setOverStage(s)
+          }}
+          onDrop={(e) => {
+            e.preventDefault()
+            if (drag !== null && drag.stage !== s) onMoveNote(drag.stage, drag.index, s)
+            setDrag(null)
+            setOverStage(null)
+          }}
         >
           <div className={styles.kanbanHead}>
             <span className={styles.kanbanDot} aria-hidden />
             <span className={styles.kanbanHeadLabel}>{stageLabels[s]}</span>
             <span className={styles.kanbanCount}>{notes[s].length}</span>
+            <button
+              type="button"
+              className={styles.kanbanAdd}
+              onClick={() => onAddRequest(s)}
+              aria-label={addToAria(stageLabels[s])}
+              title={addToAria(stageLabels[s])}
+            >
+              <Plus size={13} strokeWidth={2.5} aria-hidden />
+            </button>
           </div>
           <ul className={styles.kanbanList} role="list">
             {notes[s].map((note, i) => (
-              <li key={i} className={styles.kanbanChip}>
+              <li
+                key={i}
+                className={styles.kanbanChip}
+                draggable
+                data-dragging={(drag?.stage === s && drag?.index === i) || undefined}
+                onDragStart={(e) => {
+                  e.dataTransfer.effectAllowed = 'move'
+                  e.dataTransfer.setData('text/plain', note)
+                  setDrag({ stage: s, index: i })
+                }}
+                onDragEnd={() => {
+                  setDrag(null)
+                  setOverStage(null)
+                }}
+              >
+                <span className={styles.kanbanGrip} aria-hidden>
+                  <GripVertical size={13} strokeWidth={2} />
+                </span>
                 <span className={styles.chipText}>{note}</span>
                 <button
                   type="button"
@@ -394,7 +497,9 @@ function KanbanBoard({
                 </button>
               </li>
             ))}
-            {notes[s].length === 0 && <li className={styles.kanbanEmpty} aria-hidden>—</li>}
+            {notes[s].length === 0 && (
+              <li className={styles.kanbanEmpty} aria-hidden>—</li>
+            )}
           </ul>
         </div>
       ))}
@@ -408,43 +513,32 @@ function DimensionCard({
   prompt,
   state,
   stageLabels,
-  onStageChange,
-  onNoteAdd,
   onNoteRemove,
+  onAddRequest,
+  onMoveNote,
   t,
 }: {
   title: string
   prompt: string
   state: DimensionState
   stageLabels: Record<Stage, string>
-  onStageChange: (s: Stage) => void
-  onNoteAdd: (text: string) => void
   onNoteRemove: (stage: Stage, index: number) => void
+  onAddRequest: (stage: Stage) => void
+  onMoveNote: (from: Stage, index: number, to: Stage) => void
   t: CanvasStrings
 }): React.ReactElement {
   return (
     <article className={styles.dimCard}>
       <h3 className={styles.dimCardTitle}>{title}</h3>
       <p className={styles.dimCardPrompt}>{prompt}</p>
-      <SegmentedToggle
-        options={STAGES}
-        labels={stageLabels}
-        value={state.stage}
-        onChange={onStageChange}
-        ariaLabel={t.dimStageAria(title)}
-      />
-      <NoteInput
-        onAdd={onNoteAdd}
-        placeholder={t.notePlaceholder}
-        inputAria={t.noteInputAria}
-        addAria={t.noteAddAria}
-      />
       <KanbanBoard
         notes={state.notes}
         stageLabels={stageLabels}
-        activeStage={state.stage}
         onRemove={onNoteRemove}
+        onAddRequest={onAddRequest}
+        onMoveNote={onMoveNote}
         removeAria={t.noteRemoveAria}
+        addToAria={t.noteAddToAria}
       />
     </article>
   )
@@ -469,10 +563,14 @@ export function CoCreationCanvas({
   const [dimensions, setDimensions] = useState<Record<DimensionId, DimensionState>>(
     buildDefaultDimensions,
   )
+  // Offenes Notiz-Modal (Ziel-Dimension + Spalte)
+  const [addTarget, setAddTarget] = useState<{ dim: DimensionId; stage: Stage } | null>(null)
 
   // Future-Interaction-State
   const [controls, setControls] = useState<Record<AreaId, ControlState>>(buildDefaultControls)
   const [placements, setPlacements] = useState<Record<AreaId, AreaPlacement>>(buildDefaultPlacements)
+  const [draggingArea, setDraggingArea] = useState<AreaId | null>(null)
+  const [dragOverZone, setDragOverZone] = useState<Placement | null>(null)
 
   // ── GSAP-Einblend-Animation ──
   useEffect(() => {
@@ -492,28 +590,25 @@ export function CoCreationCanvas({
     return () => { tl.kill() }
   }, [reducedMotion])
 
-  // ── Escape-Taste schließt das Overlay ──
+  // ── Escape-Taste: erst Modal schließen, sonst das Overlay ──
   useEffect(() => {
     const handler = (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key !== 'Escape') return
+      if (addTarget !== null) {
+        setAddTarget(null)
+        return
+      }
+      onClose()
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [onClose])
+  }, [onClose, addTarget])
 
   // ── Mutations für Organisations-Variant ──
-  const setDimStage = useCallback((id: DimensionId, stage: Stage) => {
-    setDimensions((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], stage },
-    }))
-  }, [])
-
-  const addNote = useCallback((id: DimensionId, text: string) => {
+  const addNote = useCallback((id: DimensionId, stage: Stage, text: string) => {
     setDimensions((prev) => {
       const dim = prev[id]
-      const s = dim.stage
-      return { ...prev, [id]: { ...dim, notes: { ...dim.notes, [s]: [...dim.notes[s], text] } } }
+      return { ...prev, [id]: { ...dim, notes: { ...dim.notes, [stage]: [...dim.notes[stage], text] } } }
     })
   }, [])
 
@@ -527,9 +622,33 @@ export function CoCreationCanvas({
     })
   }, [])
 
+  const moveNote = useCallback((id: DimensionId, from: Stage, index: number, to: Stage) => {
+    if (from === to) return
+    setDimensions((prev) => {
+      const dim = prev[id]
+      const note = dim.notes[from][index]
+      if (note === undefined) return prev
+      return {
+        ...prev,
+        [id]: {
+          ...dim,
+          notes: {
+            ...dim.notes,
+            [from]: dim.notes[from].filter((_, i) => i !== index),
+            [to]: [...dim.notes[to], note],
+          },
+        },
+      }
+    })
+  }, [])
+
   // ── Mutations für Future-Interaction-Variant ──
   const setControl = useCallback((area: AreaId, mode: ControlMode) => {
     setControls((prev) => ({ ...prev, [area]: { mode } }))
+  }, [])
+
+  const setPlacement = useCallback((area: AreaId, placement: Placement) => {
+    setPlacements((prev) => (prev[area].placement === placement ? prev : { ...prev, [area]: { placement } }))
   }, [])
 
   const cyclePlacement = useCallback((area: AreaId) => {
@@ -545,6 +664,7 @@ export function CoCreationCanvas({
     setDimensions(buildDefaultDimensions())
     setControls(buildDefaultControls())
     setPlacements(buildDefaultPlacements())
+    setAddTarget(null)
   }, [])
 
   // ── Zusammenfassungstext für Section C ──
@@ -565,13 +685,29 @@ export function CoCreationCanvas({
   const title = t.title[variant]
   const intro = t.intro[variant]
 
-  const CONTROL_MODES: readonly ControlMode[] = ['mensch', 'hybrid', 'ai']
-
   // Chips je Platzierung vorbereiten (Quadranten + Pool außerhalb des Graphen)
   const chipsInQuadrant = (q: Quadrant): AreaId[] =>
     AREAS.filter((a) => placements[a].placement === q)
 
   const poolAreas: AreaId[] = AREAS.filter((a) => placements[a].placement === 'pool')
+
+  // Drop-Zonen (Quadranten + Pool) als Drag-and-Drop-Ziele
+  const dropZoneProps = (target: Placement) => ({
+    onDragOver: (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      e.dataTransfer.dropEffect = 'move'
+      if (dragOverZone !== target) setDragOverZone(target)
+    },
+    onDrop: (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      const dropped = e.dataTransfer.getData('text/plain')
+      const area = isAreaId(dropped) ? dropped : draggingArea
+      if (area) setPlacement(area, target)
+      setDraggingArea(null)
+      setDragOverZone(null)
+    },
+    'data-dragover': dragOverZone === target || undefined,
+  })
 
   const renderChip = (a: AreaId, isPilot: boolean): React.ReactElement => (
     <button
@@ -579,6 +715,17 @@ export function CoCreationCanvas({
       type="button"
       className={styles.matrixChip}
       data-pilot={isPilot || undefined}
+      data-dragging={draggingArea === a || undefined}
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.effectAllowed = 'move'
+        e.dataTransfer.setData('text/plain', a)
+        setDraggingArea(a)
+      }}
+      onDragEnd={() => {
+        setDraggingArea(null)
+        setDragOverZone(null)
+      }}
       onClick={() => cyclePlacement(a)}
       aria-label={t.chipAria(t.areas[a])}
     >
@@ -587,7 +734,12 @@ export function CoCreationCanvas({
   )
 
   const renderQuadrant = (q: Quadrant): React.ReactElement => (
-    <div className={styles.matrixQuadrant} data-quadrant={q} aria-label={t.quadrantAria[q]}>
+    <div
+      className={styles.matrixQuadrant}
+      data-quadrant={q}
+      aria-label={t.quadrantAria[q]}
+      {...dropZoneProps(q)}
+    >
       <div className={styles.quadrantHead}>
         <span className={styles.quadrantLabel}>{t.quadrantLabel[q]}</span>
         {q === 'high-high' && <span className={styles.pilotTag}>{t.pilotTag}</span>}
@@ -632,6 +784,7 @@ export function CoCreationCanvas({
         {/* Body — Organisations-Variant */}
         {variant === 'organisation' && (
           <div className={styles.body}>
+            <p className={styles.kanbanHint}>{t.kanbanHint}</p>
             <div className={styles.dimGrid}>
               {DIMENSION_IDS.map((id) => (
                 <DimensionCard
@@ -640,9 +793,9 @@ export function CoCreationCanvas({
                   prompt={t.dimensions[id].prompt}
                   state={dimensions[id]}
                   stageLabels={t.stageLabels}
-                  onStageChange={(s) => setDimStage(id, s)}
-                  onNoteAdd={(text) => addNote(id, text)}
                   onNoteRemove={(stage, i) => removeNote(id, stage, i)}
+                  onAddRequest={(stage) => setAddTarget({ dim: id, stage })}
+                  onMoveNote={(from, i, to) => moveNote(id, from, i, to)}
                   t={t}
                 />
               ))}
@@ -662,7 +815,7 @@ export function CoCreationCanvas({
                 {AREAS.map((area) => (
                   <div key={area} className={styles.controlRow}>
                     <span className={styles.controlLabel}>{t.areas[area]}</span>
-                    <SegmentedToggle
+                    <ControlSlider
                       options={CONTROL_MODES}
                       labels={t.controlLabels}
                       value={controls[area].mode}
@@ -680,7 +833,7 @@ export function CoCreationCanvas({
                 {t.sectionB}
               </h3>
               <p className={styles.matrixHint}>{t.matrixHint}</p>
-              <div className={styles.matrixPool}>
+              <div className={styles.matrixPool} {...dropZoneProps('pool')}>
                 <div className={styles.matrixPoolHead}>
                   <span className={styles.matrixPoolLabel}>{t.poolLabel}</span>
                   <span className={styles.matrixPoolCount}>{poolAreas.length}</span>
@@ -715,6 +868,22 @@ export function CoCreationCanvas({
           </div>
         )}
       </div>
+
+      {/* Notiz-Modal (Organisations-Variant) */}
+      {addTarget && (
+        <NoteModal
+          title={`${t.noteModalTitle} · ${t.dimensions[addTarget.dim].title} · ${t.stageLabels[addTarget.stage]}`}
+          placeholder={t.notePlaceholder}
+          inputAria={t.noteInputAria}
+          confirmLabel={t.noteAddConfirm}
+          cancelLabel={t.noteCancel}
+          onConfirm={(text) => {
+            addNote(addTarget.dim, addTarget.stage, text)
+            setAddTarget(null)
+          }}
+          onCancel={() => setAddTarget(null)}
+        />
+      )}
     </div>
   )
 }

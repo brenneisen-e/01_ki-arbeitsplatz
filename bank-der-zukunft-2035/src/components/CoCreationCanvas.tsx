@@ -3,8 +3,8 @@
  *
  * Variante 'organisation'  → Kapitel 04 · Corporate Services
  *   Vier Dimensions-Karten mit Kanban-Brettern. Notizen werden je Spalte über
- *   ein Plus-Symbol (Modal) angelegt und per Drag-and-Drop zwischen den Spalten
- *   (Heute / Übergang / Zielbild) verschoben.
+ *   ein Plus-Symbol direkt in der Spalte angelegt (Inline-Eingabe) und per
+ *   Drag-and-Drop zwischen den Spalten (Heute / Übergang / Zielbild) verschoben.
  *
  * Variante 'future-interaction' → Kapitel 07 · Transformation
  *   Abschnitt A: Control-Shift-Slider (Mensch ↔ Hybrid ↔ AI)
@@ -15,7 +15,7 @@
  * bleiben stabile Identifier; nur die Anzeige-Labels werden übersetzt.
  */
 
-import { useEffect, useRef, useState, useCallback, KeyboardEvent } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { X, RotateCcw, Plus, GripVertical } from 'lucide-react'
 import { gsap } from 'gsap'
 import { useReducedMotion } from '../hooks/useReducedMotion'
@@ -86,9 +86,7 @@ type CanvasStrings = {
   noteInputAria: string
   noteRemoveAria: (note: string) => string
   noteAddToAria: (stage: string) => string
-  noteModalTitle: string
   noteAddConfirm: string
-  noteCancel: string
   sectionA: string
   controlAria: (area: string) => string
   sectionB: string
@@ -136,14 +134,12 @@ const STR: Record<Lang, CanvasStrings> = {
     resetAria: 'Alle Eingaben zurücksetzen',
     close: 'Canvas schließen',
     closeTitle: 'Schließen (Escape)',
-    kanbanHint: 'Über das Plus-Symbol Notizen anlegen und per Drag-and-Drop zwischen den Spalten verschieben.',
-    notePlaceholder: 'Begriff oder Stichwort eingeben…',
+    kanbanHint: 'Über das Plus-Symbol Notizen direkt in der Spalte anlegen und per Drag-and-Drop zwischen den Spalten verschieben.',
+    notePlaceholder: 'Begriff eingeben, Enter…',
     noteInputAria: 'Notiz eingeben',
     noteRemoveAria: (note) => `Notiz entfernen: ${note}`,
     noteAddToAria: (stage) => `Notiz hinzufügen zu ${stage}`,
-    noteModalTitle: 'Neue Notiz',
     noteAddConfirm: 'Hinzufügen',
-    noteCancel: 'Abbrechen',
     sectionA: 'A · Control-Shift: Wer entscheidet künftig?',
     controlAria: (area) => `Entscheidungsträger für ${area}`,
     sectionB: 'B · Priorisierung: Was zuerst?',
@@ -206,14 +202,12 @@ const STR: Record<Lang, CanvasStrings> = {
     resetAria: 'Reset all inputs',
     close: 'Close the canvas',
     closeTitle: 'Close (Escape)',
-    kanbanHint: 'Use the plus icon to add notes and drag-and-drop them between columns.',
-    notePlaceholder: 'Enter a term or keyword…',
+    kanbanHint: 'Use the plus icon to add notes directly in a column and drag-and-drop them between columns.',
+    notePlaceholder: 'Type a term, Enter…',
     noteInputAria: 'Type a note',
     noteRemoveAria: (note) => `Remove note: ${note}`,
     noteAddToAria: (stage) => `Add note to ${stage}`,
-    noteModalTitle: 'New note',
     noteAddConfirm: 'Add',
-    noteCancel: 'Cancel',
     sectionA: 'A · Control shift: who decides in future?',
     controlAria: (area) => `Decision maker for ${area}`,
     sectionB: 'B · Prioritisation: what first?',
@@ -328,108 +322,51 @@ function ControlSlider<T extends string>({
   )
 }
 
-/** Modal zum Anlegen einer neuen Notiz für eine bestimmte Kanban-Spalte. */
-function NoteModal({
-  title,
-  placeholder,
-  inputAria,
-  confirmLabel,
-  cancelLabel,
-  onConfirm,
-  onCancel,
-}: {
-  title: string
-  placeholder: string
-  inputAria: string
-  confirmLabel: string
-  cancelLabel: string
-  onConfirm: (text: string) => void
-  onCancel: () => void
-}): React.ReactElement {
-  const [text, setText] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
-
-  const commit = useCallback(() => {
-    const trimmed = text.trim()
-    if (trimmed.length === 0) return
-    onConfirm(trimmed)
-  }, [text, onConfirm])
-
-  const handleKey = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        e.preventDefault()
-        commit()
-      }
-    },
-    [commit],
-  )
-
-  return (
-    <div
-      className={styles.modalOverlay}
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-      onClick={onCancel}
-    >
-      <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
-        <h3 className={styles.modalTitle}>{title}</h3>
-        <input
-          ref={inputRef}
-          className={styles.modalInput}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKey}
-          placeholder={placeholder}
-          aria-label={inputAria}
-          maxLength={80}
-        />
-        <div className={styles.modalActions}>
-          <button type="button" className={styles.modalCancel} onClick={onCancel}>
-            {cancelLabel}
-          </button>
-          <button
-            type="button"
-            className={styles.modalConfirm}
-            onClick={commit}
-            disabled={text.trim().length === 0}
-          >
-            {confirmLabel}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 /**
  * Kanban-Brett: je Zeitraum eine farbcodierte Spalte. Notizen werden über das
- * Plus-Symbol angelegt (Modal) und per Drag-and-Drop zwischen den Spalten verschoben.
+ * Plus-Symbol direkt in der Spalte angelegt (Inline-Eingabe) und per
+ * Drag-and-Drop zwischen den Spalten verschoben.
  */
 function KanbanBoard({
   notes,
   stageLabels,
+  onAdd,
   onRemove,
-  onAddRequest,
   onMoveNote,
+  notePlaceholder,
+  inputAria,
   removeAria,
   addToAria,
+  addConfirm,
 }: {
   notes: Record<Stage, string[]>
   stageLabels: Record<Stage, string>
+  onAdd: (stage: Stage, text: string) => void
   onRemove: (stage: Stage, index: number) => void
-  onAddRequest: (stage: Stage) => void
   onMoveNote: (from: Stage, index: number, to: Stage) => void
+  notePlaceholder: string
+  inputAria: string
   removeAria: (note: string) => string
   addToAria: (stage: string) => string
+  addConfirm: string
 }): React.ReactElement {
   const [drag, setDrag] = useState<{ stage: Stage; index: number } | null>(null)
   const [overStage, setOverStage] = useState<Stage | null>(null)
+  // Spalte mit offener Inline-Eingabe + aktueller Entwurf
+  const [adding, setAdding] = useState<Stage | null>(null)
+  const [draft, setDraft] = useState('')
+
+  const toggleAdd = (s: Stage) => {
+    setDraft('')
+    setAdding((cur) => (cur === s ? null : s))
+  }
+
+  const commitAdd = (s: Stage) => {
+    const text = draft.trim()
+    if (text.length === 0) return
+    onAdd(s, text)
+    setDraft('') // Eingabe bleibt offen für die nächste Notiz
+  }
 
   return (
     <div className={styles.kanban}>
@@ -459,8 +396,10 @@ function KanbanBoard({
             <button
               type="button"
               className={styles.kanbanAdd}
-              onClick={() => onAddRequest(s)}
+              data-active={adding === s || undefined}
+              onClick={() => toggleAdd(s)}
               aria-label={addToAria(stageLabels[s])}
+              aria-expanded={adding === s}
               title={addToAria(stageLabels[s])}
             >
               <Plus size={13} strokeWidth={2.5} aria-hidden />
@@ -497,10 +436,44 @@ function KanbanBoard({
                 </button>
               </li>
             ))}
-            {notes[s].length === 0 && (
+            {notes[s].length === 0 && adding !== s && (
               <li className={styles.kanbanEmpty} aria-hidden>—</li>
             )}
           </ul>
+          {adding === s && (
+            <div className={styles.kanbanComposer}>
+              <input
+                className={styles.kanbanComposerInput}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    commitAdd(s)
+                  } else if (e.key === 'Escape') {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    setAdding(null)
+                    setDraft('')
+                  }
+                }}
+                placeholder={notePlaceholder}
+                aria-label={inputAria}
+                maxLength={80}
+                autoFocus
+              />
+              <button
+                type="button"
+                className={styles.kanbanComposerAdd}
+                onClick={() => commitAdd(s)}
+                aria-label={addConfirm}
+                title={addConfirm}
+                disabled={draft.trim().length === 0}
+              >
+                <Plus size={14} strokeWidth={2.5} aria-hidden />
+              </button>
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -513,8 +486,8 @@ function DimensionCard({
   prompt,
   state,
   stageLabels,
+  onAdd,
   onNoteRemove,
-  onAddRequest,
   onMoveNote,
   t,
 }: {
@@ -522,8 +495,8 @@ function DimensionCard({
   prompt: string
   state: DimensionState
   stageLabels: Record<Stage, string>
+  onAdd: (stage: Stage, text: string) => void
   onNoteRemove: (stage: Stage, index: number) => void
-  onAddRequest: (stage: Stage) => void
   onMoveNote: (from: Stage, index: number, to: Stage) => void
   t: CanvasStrings
 }): React.ReactElement {
@@ -534,11 +507,14 @@ function DimensionCard({
       <KanbanBoard
         notes={state.notes}
         stageLabels={stageLabels}
+        onAdd={onAdd}
         onRemove={onNoteRemove}
-        onAddRequest={onAddRequest}
         onMoveNote={onMoveNote}
+        notePlaceholder={t.notePlaceholder}
+        inputAria={t.noteInputAria}
         removeAria={t.noteRemoveAria}
         addToAria={t.noteAddToAria}
+        addConfirm={t.noteAddConfirm}
       />
     </article>
   )
@@ -563,8 +539,6 @@ export function CoCreationCanvas({
   const [dimensions, setDimensions] = useState<Record<DimensionId, DimensionState>>(
     buildDefaultDimensions,
   )
-  // Offenes Notiz-Modal (Ziel-Dimension + Spalte)
-  const [addTarget, setAddTarget] = useState<{ dim: DimensionId; stage: Stage } | null>(null)
 
   // Future-Interaction-State
   const [controls, setControls] = useState<Record<AreaId, ControlState>>(buildDefaultControls)
@@ -590,19 +564,14 @@ export function CoCreationCanvas({
     return () => { tl.kill() }
   }, [reducedMotion])
 
-  // ── Escape-Taste: erst Modal schließen, sonst das Overlay ──
+  // ── Escape-Taste schließt das Overlay ──
   useEffect(() => {
     const handler = (e: globalThis.KeyboardEvent) => {
-      if (e.key !== 'Escape') return
-      if (addTarget !== null) {
-        setAddTarget(null)
-        return
-      }
-      onClose()
+      if (e.key === 'Escape') onClose()
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [onClose, addTarget])
+  }, [onClose])
 
   // ── Mutations für Organisations-Variant ──
   const addNote = useCallback((id: DimensionId, stage: Stage, text: string) => {
@@ -664,7 +633,6 @@ export function CoCreationCanvas({
     setDimensions(buildDefaultDimensions())
     setControls(buildDefaultControls())
     setPlacements(buildDefaultPlacements())
-    setAddTarget(null)
   }, [])
 
   // ── Zusammenfassungstext für Section C ──
@@ -793,8 +761,8 @@ export function CoCreationCanvas({
                   prompt={t.dimensions[id].prompt}
                   state={dimensions[id]}
                   stageLabels={t.stageLabels}
+                  onAdd={(stage, text) => addNote(id, stage, text)}
                   onNoteRemove={(stage, i) => removeNote(id, stage, i)}
-                  onAddRequest={(stage) => setAddTarget({ dim: id, stage })}
                   onMoveNote={(from, i, to) => moveNote(id, from, i, to)}
                   t={t}
                 />
@@ -868,22 +836,6 @@ export function CoCreationCanvas({
           </div>
         )}
       </div>
-
-      {/* Notiz-Modal (Organisations-Variant) */}
-      {addTarget && (
-        <NoteModal
-          title={`${t.noteModalTitle} · ${t.dimensions[addTarget.dim].title} · ${t.stageLabels[addTarget.stage]}`}
-          placeholder={t.notePlaceholder}
-          inputAria={t.noteInputAria}
-          confirmLabel={t.noteAddConfirm}
-          cancelLabel={t.noteCancel}
-          onConfirm={(text) => {
-            addNote(addTarget.dim, addTarget.stage, text)
-            setAddTarget(null)
-          }}
-          onCancel={() => setAddTarget(null)}
-        />
-      )}
     </div>
   )
 }

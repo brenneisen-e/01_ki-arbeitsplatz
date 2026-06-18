@@ -25,6 +25,8 @@ import styles from './CoCreationCanvas.module.css'
 type Stage = 'heute' | 'uebergang' | 'zielbild'
 type ControlMode = 'mensch' | 'hybrid' | 'ai'
 type Quadrant = 'low-low' | 'high-low' | 'low-high' | 'high-high'
+/** Platzierung eines Bereichs: in einem Quadranten oder im Pool (außerhalb des Graphen). */
+type Placement = Quadrant | 'pool'
 
 type DimensionState = {
   /** Aktuell gewählte Spalte — neue Notizen landen hier. */
@@ -39,8 +41,8 @@ type ControlState = {
   mode: ControlMode
 }
 
-type AreaQuadrant = {
-  quadrant: Quadrant
+type AreaPlacement = {
+  placement: Placement
 }
 
 // ─── Konstanten (stabile Identifier) ────────────────────────────────────────────
@@ -58,7 +60,8 @@ const AREAS = [
 
 type AreaId = (typeof AREAS)[number]
 
-const QUADRANT_CYCLE: Quadrant[] = ['high-high', 'high-low', 'low-high', 'low-low']
+/** Klick-Reihenfolge: Pool (außerhalb) → Quadranten → zurück in den Pool. */
+const PLACEMENT_CYCLE: Placement[] = ['pool', 'high-high', 'high-low', 'low-high', 'low-low']
 
 // ─── Übersetzungen ──────────────────────────────────────────────────────────────
 
@@ -88,6 +91,9 @@ type CanvasStrings = {
   xLabel: string
   quadrantAria: Record<Quadrant, string>
   quadrantLabel: Record<Quadrant, React.ReactNode>
+  pilotTag: string
+  poolLabel: string
+  poolEmpty: string
   chipAria: (area: string) => string
   sectionC: string
   summary: (parts: { ai: number; mensch: number; hybrid: number; pilot: string[] }) => string
@@ -131,7 +137,7 @@ const STR: Record<Lang, CanvasStrings> = {
     sectionA: 'A · Control-Shift: Wer entscheidet künftig?',
     controlAria: (area) => `Entscheidungsträger für ${area}`,
     sectionB: 'B · Priorisierung: Was zuerst?',
-    matrixHint: 'Klick auf einen Bereich-Chip wechselt den Quadranten.',
+    matrixHint: 'Bereich-Chip anklicken, um ihn im Graphen zu platzieren — weitere Klicks wechseln den Quadranten.',
     matrixAria: '2x2 Prioritätsmatrix: X-Achse Machbarkeit, Y-Achse Impact',
     yLabel: 'Impact',
     xLabel: 'Machbarkeit',
@@ -143,10 +149,13 @@ const STR: Record<Lang, CanvasStrings> = {
     },
     quadrantLabel: {
       'low-high': (<>Hoher Impact<br />Geringe Machbarkeit</>),
-      'high-high': 'Pilot zuerst',
+      'high-high': (<>Hoher Impact<br />Hohe Machbarkeit</>),
       'low-low': (<>Niedriger Impact<br />Geringe Machbarkeit</>),
       'high-low': (<>Geringer Impact<br />Hohe Machbarkeit</>),
     },
+    pilotTag: 'Pilot zuerst',
+    poolLabel: 'Bereiche',
+    poolEmpty: 'Alle Bereiche platziert',
     chipAria: (area) => `${area}: Quadrant wechseln`,
     sectionC: 'C · Zusammenfassung',
     summary: ({ ai, mensch, hybrid, pilot }) => {
@@ -195,7 +204,7 @@ const STR: Record<Lang, CanvasStrings> = {
     sectionA: 'A · Control shift: who decides in future?',
     controlAria: (area) => `Decision maker for ${area}`,
     sectionB: 'B · Prioritisation: what first?',
-    matrixHint: 'Click an area chip to switch quadrant.',
+    matrixHint: 'Click an area chip to place it on the graph — further clicks cycle the quadrant.',
     matrixAria: '2x2 prioritisation matrix: x-axis feasibility, y-axis impact',
     yLabel: 'Impact',
     xLabel: 'Feasibility',
@@ -207,10 +216,13 @@ const STR: Record<Lang, CanvasStrings> = {
     },
     quadrantLabel: {
       'low-high': (<>High impact<br />Low feasibility</>),
-      'high-high': 'Pilot first',
+      'high-high': (<>High impact<br />High feasibility</>),
       'low-low': (<>Low impact<br />Low feasibility</>),
       'high-low': (<>Low impact<br />High feasibility</>),
     },
+    pilotTag: 'Pilot first',
+    poolLabel: 'Areas',
+    poolEmpty: 'All areas placed',
     chipAria: (area) => `${area}: switch quadrant`,
     sectionC: 'C · Summary',
     summary: ({ ai, mensch, hybrid, pilot }) => {
@@ -242,10 +254,11 @@ function buildDefaultControls(): Record<AreaId, ControlState> {
   return result
 }
 
-function buildDefaultQuadrants(): Record<AreaId, AreaQuadrant> {
-  const result = {} as Record<AreaId, AreaQuadrant>
+function buildDefaultPlacements(): Record<AreaId, AreaPlacement> {
+  const result = {} as Record<AreaId, AreaPlacement>
   for (const a of AREAS) {
-    result[a] = { quadrant: 'high-high' }
+    // Start: alle Bereiche liegen im Pool außerhalb des Graphen und werden aktiv platziert.
+    result[a] = { placement: 'pool' }
   }
   return result
 }
@@ -459,7 +472,7 @@ export function CoCreationCanvas({
 
   // Future-Interaction-State
   const [controls, setControls] = useState<Record<AreaId, ControlState>>(buildDefaultControls)
-  const [quadrants, setQuadrants] = useState<Record<AreaId, AreaQuadrant>>(buildDefaultQuadrants)
+  const [placements, setPlacements] = useState<Record<AreaId, AreaPlacement>>(buildDefaultPlacements)
 
   // ── GSAP-Einblend-Animation ──
   useEffect(() => {
@@ -519,26 +532,26 @@ export function CoCreationCanvas({
     setControls((prev) => ({ ...prev, [area]: { mode } }))
   }, [])
 
-  const cycleQuadrant = useCallback((area: AreaId) => {
-    setQuadrants((prev) => {
-      const current = prev[area].quadrant
-      const idx = QUADRANT_CYCLE.indexOf(current)
-      const next = QUADRANT_CYCLE[(idx + 1) % QUADRANT_CYCLE.length]
-      return { ...prev, [area]: { quadrant: next } }
+  const cyclePlacement = useCallback((area: AreaId) => {
+    setPlacements((prev) => {
+      const current = prev[area].placement
+      const idx = PLACEMENT_CYCLE.indexOf(current)
+      const next = PLACEMENT_CYCLE[(idx + 1) % PLACEMENT_CYCLE.length]
+      return { ...prev, [area]: { placement: next } }
     })
   }, [])
 
   const resetAll = useCallback(() => {
     setDimensions(buildDefaultDimensions())
     setControls(buildDefaultControls())
-    setQuadrants(buildDefaultQuadrants())
+    setPlacements(buildDefaultPlacements())
   }, [])
 
   // ── Zusammenfassungstext für Section C ──
   const aiCount = AREAS.filter((a) => controls[a].mode === 'ai').length
   const menschCount = AREAS.filter((a) => controls[a].mode === 'mensch').length
   const hybridCount = AREAS.length - aiCount - menschCount
-  const pilotAreas = AREAS.filter((a) => quadrants[a].quadrant === 'high-high')
+  const pilotAreas = AREAS.filter((a) => placements[a].placement === 'high-high')
 
   const summaryText = t.summary({
     ai: aiCount,
@@ -554,25 +567,32 @@ export function CoCreationCanvas({
 
   const CONTROL_MODES: readonly ControlMode[] = ['mensch', 'hybrid', 'ai']
 
-  // Chips für Quadranten-Darstellung vorbereiten
-  const quadrantChipsByQuadrant = (q: Quadrant): AreaId[] =>
-    AREAS.filter((a) => quadrants[a].quadrant === q)
+  // Chips je Platzierung vorbereiten (Quadranten + Pool außerhalb des Graphen)
+  const chipsInQuadrant = (q: Quadrant): AreaId[] =>
+    AREAS.filter((a) => placements[a].placement === q)
+
+  const poolAreas: AreaId[] = AREAS.filter((a) => placements[a].placement === 'pool')
+
+  const renderChip = (a: AreaId, isPilot: boolean): React.ReactElement => (
+    <button
+      key={a}
+      type="button"
+      className={styles.matrixChip}
+      data-pilot={isPilot || undefined}
+      onClick={() => cyclePlacement(a)}
+      aria-label={t.chipAria(t.areas[a])}
+    >
+      {t.areas[a]}
+    </button>
+  )
 
   const renderQuadrant = (q: Quadrant): React.ReactElement => (
     <div className={styles.matrixQuadrant} data-quadrant={q} aria-label={t.quadrantAria[q]}>
-      <span className={styles.quadrantLabel}>{t.quadrantLabel[q]}</span>
-      {quadrantChipsByQuadrant(q).map((a) => (
-        <button
-          key={a}
-          type="button"
-          className={styles.matrixChip}
-          data-pilot={q === 'high-high' || undefined}
-          onClick={() => cycleQuadrant(a)}
-          aria-label={t.chipAria(t.areas[a])}
-        >
-          {t.areas[a]}
-        </button>
-      ))}
+      <div className={styles.quadrantHead}>
+        <span className={styles.quadrantLabel}>{t.quadrantLabel[q]}</span>
+        {q === 'high-high' && <span className={styles.pilotTag}>{t.pilotTag}</span>}
+      </div>
+      {chipsInQuadrant(q).map((a) => renderChip(a, q === 'high-high'))}
     </div>
   )
 
@@ -660,6 +680,19 @@ export function CoCreationCanvas({
                 {t.sectionB}
               </h3>
               <p className={styles.matrixHint}>{t.matrixHint}</p>
+              <div className={styles.matrixPool}>
+                <div className={styles.matrixPoolHead}>
+                  <span className={styles.matrixPoolLabel}>{t.poolLabel}</span>
+                  <span className={styles.matrixPoolCount}>{poolAreas.length}</span>
+                </div>
+                {poolAreas.length > 0 ? (
+                  <div className={styles.matrixPoolChips}>
+                    {poolAreas.map((a) => renderChip(a, false))}
+                  </div>
+                ) : (
+                  <span className={styles.matrixPoolEmpty}>{t.poolEmpty}</span>
+                )}
+              </div>
               <div className={styles.matrix} role="img" aria-label={t.matrixAria}>
                 {/* Achsen-Labels */}
                 <div className={styles.matrixYLabel}>{t.yLabel}</div>

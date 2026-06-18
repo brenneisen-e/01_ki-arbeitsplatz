@@ -38,7 +38,8 @@ type DimensionState = {
 const STAGES: readonly Stage[] = ['heute', 'uebergang', 'zielbild']
 
 type ControlState = {
-  mode: ControlMode
+  /** Position auf der Mensch↔AI-Skala (0 = Mensch, 50 = Hybrid, 100 = AI). */
+  value: number
 }
 
 type AreaPlacement = {
@@ -256,9 +257,16 @@ function buildDefaultDimensions(): Record<DimensionId, DimensionState> {
 function buildDefaultControls(): Record<AreaId, ControlState> {
   const result = {} as Record<AreaId, ControlState>
   for (const a of AREAS) {
-    result[a] = { mode: 'hybrid' }
+    result[a] = { value: 50 } // Standard: Hybrid (Mitte der Skala)
   }
   return result
+}
+
+/** Bucket für die Zusammenfassung: ordnet einen Skalenwert grob Mensch/Hybrid/AI zu. */
+function controlCategory(v: number): ControlMode {
+  if (v < 40) return 'mensch'
+  if (v > 60) return 'ai'
+  return 'hybrid'
 }
 
 function buildDefaultPlacements(): Record<AreaId, AreaPlacement> {
@@ -272,23 +280,31 @@ function buildDefaultPlacements(): Record<AreaId, AreaPlacement> {
 
 // ─── Sub-Komponenten ──────────────────────────────────────────────────────────
 
-/** Dreistufiger Slider: zieh- und klickbare Skala (z. B. Mensch ↔ Hybrid ↔ AI). */
-function ControlSlider<T extends string>({
-  options,
-  labels,
+/** Kontinuierlicher Slider mit Anker-Labels — erlaubt auch Grauzonen zwischen den Ankern. */
+function ControlSlider({
   value,
+  anchors,
   onChange,
   ariaLabel,
 }: {
-  options: readonly T[]
-  labels: Record<T, string>
-  value: T
-  onChange: (v: T) => void
+  value: number
+  anchors: { value: number; label: string }[]
+  onChange: (v: number) => void
   ariaLabel: string
 }): React.ReactElement {
-  const idx = Math.max(0, options.indexOf(value))
-  const max = options.length - 1
-  const pct = max === 0 ? 0 : (idx / max) * 100
+  // Beschreibt die aktuelle Position für Screenreader (Anker oder Grauzone dazwischen).
+  const valueText = (): string => {
+    const sorted = [...anchors].sort((a, b) => a.value - b.value)
+    for (const a of sorted) {
+      if (Math.abs(value - a.value) <= 5) return a.label
+    }
+    for (let i = 0; i < sorted.length - 1; i += 1) {
+      if (value > sorted[i].value && value < sorted[i + 1].value) {
+        return `${sorted[i].label} – ${sorted[i + 1].label}`
+      }
+    }
+    return String(value)
+  }
 
   return (
     <div className={styles.slider}>
@@ -296,25 +312,24 @@ function ControlSlider<T extends string>({
         type="range"
         className={styles.sliderInput}
         min={0}
-        max={max}
+        max={100}
         step={1}
-        value={idx}
-        onChange={(e) => onChange(options[Number(e.currentTarget.value)])}
+        value={value}
+        onChange={(e) => onChange(Number(e.currentTarget.value))}
         aria-label={ariaLabel}
-        aria-valuetext={labels[value]}
-        style={{ '--slider-pct': `${pct}%` } as React.CSSProperties}
+        aria-valuetext={valueText()}
       />
       <div className={styles.sliderLabels}>
-        {options.map((opt) => (
+        {anchors.map((a) => (
           <button
-            key={opt}
+            key={a.value}
             type="button"
             className={styles.sliderLabel}
-            data-active={opt === value || undefined}
-            onClick={() => onChange(opt)}
+            data-active={Math.abs(value - a.value) <= 5 || undefined}
+            onClick={() => onChange(a.value)}
             tabIndex={-1}
           >
-            {labels[opt]}
+            {a.label}
           </button>
         ))}
       </div>
@@ -612,8 +627,8 @@ export function CoCreationCanvas({
   }, [])
 
   // ── Mutations für Future-Interaction-Variant ──
-  const setControl = useCallback((area: AreaId, mode: ControlMode) => {
-    setControls((prev) => ({ ...prev, [area]: { mode } }))
+  const setControl = useCallback((area: AreaId, value: number) => {
+    setControls((prev) => ({ ...prev, [area]: { value } }))
   }, [])
 
   const setPlacement = useCallback((area: AreaId, placement: Placement) => {
@@ -636,8 +651,8 @@ export function CoCreationCanvas({
   }, [])
 
   // ── Zusammenfassungstext für Section C ──
-  const aiCount = AREAS.filter((a) => controls[a].mode === 'ai').length
-  const menschCount = AREAS.filter((a) => controls[a].mode === 'mensch').length
+  const aiCount = AREAS.filter((a) => controlCategory(controls[a].value) === 'ai').length
+  const menschCount = AREAS.filter((a) => controlCategory(controls[a].value) === 'mensch').length
   const hybridCount = AREAS.length - aiCount - menschCount
   const pilotAreas = AREAS.filter((a) => placements[a].placement === 'high-high')
 
@@ -684,6 +699,7 @@ export function CoCreationCanvas({
       className={styles.matrixChip}
       data-pilot={isPilot || undefined}
       data-dragging={draggingArea === a || undefined}
+      style={{ '--ctrl-mix': `${controls[a].value}%` } as React.CSSProperties}
       draggable
       onDragStart={(e) => {
         e.dataTransfer.effectAllowed = 'move'
@@ -784,10 +800,9 @@ export function CoCreationCanvas({
                   <div key={area} className={styles.controlRow}>
                     <span className={styles.controlLabel}>{t.areas[area]}</span>
                     <ControlSlider
-                      options={CONTROL_MODES}
-                      labels={t.controlLabels}
-                      value={controls[area].mode}
-                      onChange={(m) => setControl(area, m)}
+                      value={controls[area].value}
+                      anchors={CONTROL_MODES.map((m, i) => ({ value: i * 50, label: t.controlLabels[m] }))}
+                      onChange={(v) => setControl(area, v)}
                       ariaLabel={t.controlAria(t.areas[area])}
                     />
                   </div>

@@ -24,6 +24,9 @@
 .content {
   width: 100%;
   max-width: 1520px;
+  /* Mensch↔AI-Skala: Grau (Mensch) → Dunkelgrün (AI) — geteilt von Slider und Bereich-Chips */
+  --ctrl-mensch: #565f6b;
+  --ctrl-ai: var(--accent);
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -235,27 +238,21 @@
 .sliderInput::-webkit-slider-runnable-track {
   height: 8px;
   border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--accent-bright) 0%,
-    var(--accent-bright) var(--slider-pct, 0%),
-    var(--surface-3) var(--slider-pct, 0%),
-    var(--surface-3) 100%
-  );
+  background: linear-gradient(to right, var(--ctrl-mensch) 0%, var(--ctrl-ai) 100%);
   box-shadow: inset 0 0 0 1px var(--border-soft);
 }
 
 .sliderInput::-moz-range-track {
   height: 8px;
   border-radius: 999px;
-  background: var(--surface-3);
+  background: linear-gradient(to right, var(--ctrl-mensch) 0%, var(--ctrl-ai) 100%);
   box-shadow: inset 0 0 0 1px var(--border-soft);
 }
 
 .sliderInput::-moz-range-progress {
   height: 8px;
   border-radius: 999px;
-  background: var(--accent-bright);
+  background: transparent;
 }
 
 .sliderInput::-webkit-slider-thumb {
@@ -266,8 +263,8 @@
   height: 22px;
   border-radius: 50%;
   background: #fff;
-  border: 3px solid var(--accent-bright);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(10, 16, 13, 0.55);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   cursor: grab;
 }
 
@@ -280,8 +277,8 @@
   height: 22px;
   border-radius: 50%;
   background: #fff;
-  border: 3px solid var(--accent-bright);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(10, 16, 13, 0.55);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   cursor: grab;
 }
 
@@ -844,21 +841,20 @@
   border: 1px solid rgba(4, 106, 56, 0.4);
 }
 
-/* Matrix-Chips (ziehbar + klickbar) */
+/* Matrix-Chips (ziehbar + klickbar) — Einfärbung nach Mensch↔AI-Wert (Grau → Dunkelgrün) */
 .matrixChip {
   display: inline-flex;
   align-items: center;
   padding: 5px 11px;
   border-radius: 999px;
-  border: 1px solid var(--border-soft);
-  background: var(--surface-2);
-  color: var(--ink);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: color-mix(in srgb, var(--ctrl-ai) var(--ctrl-mix, 50%), var(--ctrl-mensch));
+  color: #fff;
   font-size: 12.5px;
   font-weight: 500;
   cursor: grab;
   align-self: flex-start;
   transition:
-    background var(--t-fast) var(--ease-out),
     border-color var(--t-fast) var(--ease-out),
     opacity var(--t-fast) var(--ease-out),
     transform var(--t-fast) var(--ease-out);
@@ -873,8 +869,7 @@
 }
 
 .matrixChip:hover {
-  background: var(--surface-3);
-  border-color: var(--border-strong);
+  border-color: rgba(255, 255, 255, 0.45);
   transform: translateY(-1px);
 }
 
@@ -883,17 +878,11 @@
   outline-offset: 2px;
 }
 
-/* Pilot-Chips im high-high-Quadrant */
+/* Pilot-Chips im high-high-Quadrant: dezenter heller Ring, Einfärbung bleibt erhalten */
 .matrixChip[data-pilot] {
-  background: var(--accent-tint);
-  border-color: rgba(4, 106, 56, 0.5);
-  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 0 1px rgba(134, 188, 37, 0.55);
   font-weight: 600;
-}
-
-.matrixChip[data-pilot]:hover {
-  background: var(--accent);
-  border-color: var(--accent);
 }
 
 /* Aktive Drop-Zone beim Drag-and-Drop */

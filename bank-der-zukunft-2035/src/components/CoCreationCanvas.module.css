@@ -23,7 +23,7 @@
 
 .content {
   width: 100%;
-  max-width: 1180px;
+  max-width: 1520px;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -157,6 +157,12 @@
 
 /* ─── Dimensions-Grid (Organisations-Variant) ────────────────────────────────── */
 
+.kanbanHint {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: -8px 0 4px 0;
+}
+
 .dimGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -202,44 +208,128 @@
   line-height: 1.5;
 }
 
-/* ─── Segmented Toggle ───────────────────────────────────────────────────────── */
+/* ─── Control-Slider (Section A: Mensch ↔ Hybrid ↔ AI) ───────────────────────── */
 
-.toggle {
-  display: inline-flex;
-  align-items: center;
-  background: var(--surface-1);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--r-sm);
-  padding: 3px;
-  gap: 2px;
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
   width: 100%;
+  padding-top: 2px;
 }
 
-.toggleBtn {
-  flex: 1;
-  padding: 6px 10px;
-  border-radius: calc(var(--r-sm) - 2px);
+.sliderInput {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  background: transparent;
+  cursor: grab;
+  margin: 0;
+}
+
+.sliderInput:active {
+  cursor: grabbing;
+}
+
+.sliderInput::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--accent-bright) 0%,
+    var(--accent-bright) var(--slider-pct, 0%),
+    var(--surface-3) var(--slider-pct, 0%),
+    var(--surface-3) 100%
+  );
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+}
+
+.sliderInput::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+}
+
+.sliderInput::-moz-range-progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent-bright);
+}
+
+.sliderInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -7px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--accent-bright);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  cursor: grab;
+}
+
+.sliderInput:active::-webkit-slider-thumb {
+  cursor: grabbing;
+}
+
+.sliderInput::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--accent-bright);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  cursor: grab;
+}
+
+.sliderInput:focus-visible {
+  outline: none;
+}
+
+.sliderInput:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px var(--accent-glow), 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.sliderInput:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px var(--accent-glow), 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.sliderLabels {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.sliderLabel {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
   font-size: 12.5px;
   font-weight: 500;
   color: var(--ink-3);
   cursor: pointer;
-  transition:
-    background var(--t-fast) var(--ease-out),
-    color var(--t-fast) var(--ease-out);
-  white-space: nowrap;
-  text-align: center;
+  transition: color var(--t-fast) var(--ease-out);
 }
 
-.toggleBtn:hover {
-  background: var(--surface-2);
+.sliderLabel:first-child {
+  text-align: left;
+}
+
+.sliderLabel:last-child {
+  text-align: right;
+}
+
+.sliderLabel:hover {
   color: var(--ink-2);
 }
 
-.toggleBtn[data-active] {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 2px 8px var(--accent-glow);
+.sliderLabel[data-active] {
+  color: var(--accent-bright);
+  font-weight: 700;
 }
 
 /* ─── Notiz-Eingabe + Chips ──────────────────────────────────────────────────── */
@@ -391,9 +481,9 @@
   --k-border: rgba(45, 212, 167, 0.45);
 }
 
-.kanbanCol[data-active] {
-  background: color-mix(in srgb, var(--k-color) 16%, transparent);
-  box-shadow: 0 0 0 1px var(--k-border);
+.kanbanCol[data-dragover] {
+  background: color-mix(in srgb, var(--k-color) 20%, transparent);
+  box-shadow: 0 0 0 2px var(--k-color);
 }
 
 .kanbanHead {
@@ -433,6 +523,31 @@
   font-size: 10px;
 }
 
+/* Plus-Symbol je Spalte → öffnet das Notiz-Modal */
+.kanbanAdd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--k-border);
+  background: var(--k-tint);
+  color: var(--k-color);
+  cursor: pointer;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
+}
+
+.kanbanAdd:hover,
+.kanbanAdd:focus-visible {
+  background: var(--k-color);
+  color: #0b1411;
+  outline: none;
+}
+
 .kanbanList {
   list-style: none;
   display: flex;
@@ -440,6 +555,8 @@
   gap: 6px;
   padding: 0;
   margin: 0;
+  min-height: 52px;
+  flex: 1;
 }
 
 .kanbanChip {
@@ -454,6 +571,22 @@
   color: var(--ink);
   font-size: 12px;
   font-weight: 500;
+  cursor: grab;
+}
+
+.kanbanChip:active {
+  cursor: grabbing;
+}
+
+.kanbanChip[data-dragging] {
+  opacity: 0.4;
+}
+
+.kanbanGrip {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--ink-3);
 }
 
 .kanbanChip .chipText {
@@ -706,7 +839,7 @@
   border: 1px solid rgba(4, 106, 56, 0.4);
 }
 
-/* Matrix-Chips (klickbar) */
+/* Matrix-Chips (ziehbar + klickbar) */
 .matrixChip {
   display: inline-flex;
   align-items: center;
@@ -717,12 +850,21 @@
   color: var(--ink);
   font-size: 12.5px;
   font-weight: 500;
-  cursor: pointer;
+  cursor: grab;
   align-self: flex-start;
   transition:
     background var(--t-fast) var(--ease-out),
     border-color var(--t-fast) var(--ease-out),
+    opacity var(--t-fast) var(--ease-out),
     transform var(--t-fast) var(--ease-out);
+}
+
+.matrixChip:active {
+  cursor: grabbing;
+}
+
+.matrixChip[data-dragging] {
+  opacity: 0.4;
 }
 
 .matrixChip:hover {
@@ -747,6 +889,18 @@
 .matrixChip[data-pilot]:hover {
   background: var(--accent);
   border-color: var(--accent);
+}
+
+/* Aktive Drop-Zone beim Drag-and-Drop */
+.matrixQuadrant[data-dragover] {
+  border-color: var(--accent-bright);
+  box-shadow: inset 0 0 0 1px var(--accent-bright), 0 0 16px rgba(4, 106, 56, 0.3);
+}
+
+.matrixPool[data-dragover] {
+  border-style: solid;
+  border-color: var(--accent-bright);
+  box-shadow: inset 0 0 0 1px var(--accent-bright);
 }
 
 /* ─── Zusammenfassung (Section C) ────────────────────────────────────────────── */
@@ -807,4 +961,112 @@
   .matrix > .matrixQuadrant:nth-child(6) {
     grid-column: 1;
   }
+}
+
+/* ─── Notiz-Modal (Organisations-Variant) ────────────────────────────────────── */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(2, 10, 7, 0.62);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.modalCard {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-2);
+}
+
+.modalTitle {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
+  margin: 0;
+}
+
+.modalInput {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    background var(--t-fast) var(--ease-out);
+}
+
+.modalInput::placeholder {
+  color: var(--ink-3);
+}
+
+.modalInput:focus {
+  border-color: var(--accent);
+  background: var(--surface-3);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modalCancel,
+.modalConfirm {
+  padding: 9px 18px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
+}
+
+.modalCancel {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+  color: var(--ink-2);
+}
+
+.modalCancel:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+
+.modalConfirm {
+  border: 1px solid var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+  color: #fff;
+}
+
+.modalConfirm:hover:not(:disabled) {
+  box-shadow: 0 2px 10px var(--accent-glow);
+}
+
+.modalConfirm:disabled {
+  opacity: 0.4;
+  cursor: default;
 }

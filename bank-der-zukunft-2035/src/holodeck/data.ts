@@ -104,7 +104,7 @@ export const AREAS: Area[] = [
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute ist der Vertrieb <strong>reaktiv und manuell</strong>, Signale werden spät erkannt. Implikation: Die Kapazität verschiebt sich <strong>von Breite zu Tiefe</strong> — <strong>weniger Köpfe</strong>, aber deutlich höhere Anforderung pro Kopf.',
+        text: 'Heute ist der Vertrieb <strong>reaktiv und manuell</strong>, Signale werden spät erkannt. Implikation: Die Kapazität verschiebt sich <strong>von Breite zu Tiefe</strong> — <strong>weniger Köpfe</strong>, aber deutlich höhere Anforderung pro Kopf. Hinzu kommt die <strong>Akzeptanz</strong>, autonome Vertriebsentscheidungen in der Breite durch die KI treffen zu lassen.',
       },
     ],
   },
@@ -124,7 +124,7 @@ export const AREAS: Area[] = [
       },
       {
         label: FIELD_LABELS.skills,
-        text: '<strong>Modulares Produktdenken</strong> statt Katalogpflege; ein belastbares Gespür für die <strong>Ökonomie des Händlergeschäfts</strong>; und die Fähigkeit, <strong>Guardrails und Freigabelogik</strong> für die KI-Konfiguration sauber zu definieren.',
+        text: '<strong>Modulares Produktdenken</strong> statt Katalogpflege; ein belastbares Gespür für die <strong>Ökonomie des Händlergeschäfts</strong>; und die Fähigkeit, <strong>Leitplanken und Freigabelogik</strong> für die KI-Konfiguration sauber zu definieren.',
       },
       {
         label: FIELD_LABELS.zielbild,
@@ -156,7 +156,7 @@ export const AREAS: Area[] = [
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: '<strong>Straight-Through-Processing</strong> für das Gros der Fälle; der Mensch bearbeitet nur noch <strong>Exceptions</strong>. Steuerungsgröße ist die <strong>Qualität der Ausnahmeerkennung</strong>, nicht das Bearbeitungsvolumen.',
+        text: '<strong>Straight-Through-Processing</strong> für das Gros der Fälle; der Mensch bearbeitet nur noch <strong>Ausnahmen</strong>. Steuerungsgröße ist die <strong>Qualität der Ausnahmeerkennung</strong>, nicht das Bearbeitungsvolumen.',
       },
       {
         label: FIELD_LABELS.delta,

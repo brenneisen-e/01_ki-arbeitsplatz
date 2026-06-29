@@ -25,7 +25,7 @@
   width: 100%;
   height: 100%;
   min-height: 420px;
-  padding: 30px 74px;
+  padding: 24px 70px;
 }
 
 /* Richtungs-Labels an den Achsenenden */
@@ -37,7 +37,7 @@
   gap: 4px;
   padding: 0 4px;
   background: #040c15;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.16em;
   color: var(--muted);
@@ -80,8 +80,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  column-gap: clamp(46px, 5vw, 82px);
-  row-gap: clamp(44px, 5vh, 66px);
+  column-gap: clamp(40px, 4vw, 68px);
+  row-gap: clamp(32px, 4vh, 50px);
 }
 
 /* Achsenkreuz in den Zwischenräumen */
@@ -115,9 +115,9 @@
   z-index: 2;
   padding: 2px 7px;
   background: #040c15;
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
   white-space: nowrap;
@@ -150,9 +150,9 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 11px;
   min-width: 0;
-  padding: 16px 18px 18px;
+  padding: 16px 22px 18px;
   text-align: left;
   border-radius: 14px;
   border: 1px solid var(--line);
@@ -195,7 +195,7 @@
 }
 
 .tileTitle {
-  font-size: clamp(15px, 1.25vw, 18px);
+  font-size: clamp(17px, 1.45vw, 22px);
   font-weight: 800;
   line-height: 1.15;
   color: var(--sz);
@@ -203,11 +203,11 @@
 
 .tileSentiment {
   flex: none;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--sz) 55%, transparent);
   background: color-mix(in srgb, var(--sz) 14%, transparent);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   color: var(--sz);
   white-space: nowrap;
@@ -217,14 +217,14 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .tileList li {
   position: relative;
-  padding-left: 15px;
-  font-size: clamp(11.5px, 0.95vw, 13px);
-  line-height: 1.35;
+  padding-left: 18px;
+  font-size: clamp(13.5px, 1.05vw, 16px);
+  line-height: 1.4;
   color: var(--text);
 }
 
@@ -232,9 +232,9 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 0.5em;
-  width: 6px;
-  height: 6px;
+  top: 0.55em;
+  width: 7px;
+  height: 7px;
   border-radius: 2px;
   background: var(--sz);
 }
@@ -371,7 +371,7 @@
 }
 
 .narrativ {
-  font-size: 16px;
+  font-size: 17.5px;
   line-height: 1.55;
   color: var(--text);
 }
@@ -387,7 +387,7 @@
 .detailList li {
   position: relative;
   padding-left: 18px;
-  font-size: 14.5px;
+  font-size: 15.5px;
   line-height: 1.5;
   color: var(--muted);
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight,
   ChevronDown,
@@ -28,9 +28,20 @@ type Props = {
 export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
   const [active, setActive] = useState<SzenarioId | null>(null)
   const aktiv = active ? getSzenario(active) : null
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  // Bei jedem Szenariowechsel die Detailspalte an den Anfang scrollen, damit
+  // immer der Titel oben sichtbar ist (nicht mitten im Text einsteigen).
+  useEffect(() => {
+    panelRef.current?.scrollTo({ top: 0 })
+  }, [active])
 
   return (
-    <div className={styles.root}>
+    // Aktives Szenario bleibt sichtbar, solange die Maus irgendwo in der
+    // Komponente ist — so kann rechts gelesen/gescrollt werden, ohne dass das
+    // Detail beim Verlassen der Kachel verschwindet. Erst beim Verlassen der
+    // gesamten Fläche zurück zur Intro-Ansicht.
+    <div className={styles.root} onMouseLeave={() => setActive(null)}>
       {/* ── Matrix (links) ── */}
       <div className={styles.matrixCol}>
         <div className={styles.matrixFrame}>
@@ -73,9 +84,7 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
                   data-dimmed={dimmed || undefined}
                   style={{ '--sz': s.color } as React.CSSProperties}
                   onMouseEnter={() => setActive(s.id)}
-                  onMouseLeave={() => setActive(null)}
                   onFocus={() => setActive(s.id)}
-                  onBlur={() => setActive(null)}
                   aria-label={`${s.title} — Sentiment ${s.sentiment} %`}
                 >
                   <span className={styles.tileHead}>
@@ -96,7 +105,7 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
 
       {/* ── Detailpanel (rechts) ── */}
       <aside className={styles.panel}>
-        <div className={styles.panelScroll}>
+        <div className={styles.panelScroll} ref={panelRef} data-active={aktiv ? '' : undefined}>
           {aktiv ? (
             <div className={styles.detail} style={{ '--sz': aktiv.color } as React.CSSProperties}>
               <div className={styles.detailHead}>

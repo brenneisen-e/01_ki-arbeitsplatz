@@ -259,6 +259,12 @@
   justify-content: center;
 }
 
+/* Aktives Szenario oben ausrichten, damit der Titel immer sichtbar ist und
+   man von oben nach unten lesen/scrollen kann (Intro bleibt zentriert). */
+.panelScroll[data-active] {
+  justify-content: flex-start;
+}
+
 /* Intro (kein Szenario aktiv) */
 .eyebrow {
   font-size: 12px;

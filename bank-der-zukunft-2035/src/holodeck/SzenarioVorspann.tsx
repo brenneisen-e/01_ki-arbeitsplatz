@@ -165,7 +165,6 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
                       <span className={styles.tileLockIcon}>
                         <Plus size={26} strokeWidth={2.4} aria-hidden />
                       </span>
-                      <span className={styles.tileLockLabel}>Freischalten</span>
                     </span>
                   )}
                 </button>

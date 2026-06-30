@@ -301,14 +301,6 @@
   box-shadow: 0 0 26px -6px var(--sz);
 }
 
-.tileLockLabel {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
 .tileHead {
   display: flex;
   align-items: baseline;

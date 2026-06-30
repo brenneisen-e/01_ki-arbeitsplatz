@@ -5,7 +5,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Lightbulb,
   MousePointerClick,
+  Network,
+  TrendingUp,
+  Users,
 } from 'lucide-react'
 import styles from './SzenarioVorspann.module.css'
 import { ACHSEN, SZENARIEN, VORSPANN, getSzenario, type SzenarioId } from './szenarien'
@@ -20,6 +24,25 @@ import { ACHSEN, SZENARIEN, VORSPANN, getSzenario, type SzenarioId } from './sze
 // Folien zu einem Screen; führt per CTA in das Holodeck.
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Fett-Auszeichnung in den Detail-Texten: **…** → <strong>; sonst Klartext.
+function rich(text: string): React.ReactNode[] {
+  return text
+    .split(/(\*\*[^*]+\*\*)/g)
+    .filter((p) => p !== '')
+    .map((p, i) =>
+      p.startsWith('**') && p.endsWith('**') ? (
+        <strong key={i}>{p.slice(2, -2)}</strong>
+      ) : (
+        <span key={i}>{p}</span>
+      ),
+    )
+}
+
+// Pro Detailpunkt ein einfarbiges Icon (in der Szenariofarbe). Die vier Punkte
+// folgen in allen Szenarien demselben Bogen: Verbraucher:innen → Markt &
+// Wettbewerb → IT & Ökosystem → KI & Beratung.
+const DETAIL_ICONS = [Users, TrendingUp, Network, Lightbulb] as const
+
 type Props = {
   /** Weiter in die Kommandobrücke (Vorspann verlassen). */
   onEnter: () => void
@@ -29,6 +52,21 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
   const [active, setActive] = useState<SzenarioId | null>(null)
   const aktiv = active ? getSzenario(active) : null
   const panelRef = useRef<HTMLDivElement>(null)
+
+  // Eingangs-Choreografie: erst baut sich die Matrix mit Achsenkreuz und
+  // Achsenbeschriftung auf (gut lesbar), danach erscheinen die Quadranten-
+  // Inhalte. Solange der Aufbau läuft, bleibt die Matrix nicht interaktiv,
+  // damit der Build nicht durch frühes Hovern unterbrochen wird.
+  const [built, setBuilt] = useState(false)
+  useEffect(() => {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      setBuilt(true)
+      return
+    }
+    const t = setTimeout(() => setBuilt(true), 1850)
+    return () => clearTimeout(t)
+  }, [])
 
   // Bei jedem Szenariowechsel die Detailspalte an den Anfang scrollen, damit
   // immer der Titel oben sichtbar ist (nicht mitten im Text einsteigen).
@@ -41,7 +79,11 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
     // Komponente ist — so kann rechts gelesen/gescrollt werden, ohne dass das
     // Detail beim Verlassen der Kachel verschwindet. Erst beim Verlassen der
     // gesamten Fläche zurück zur Intro-Ansicht.
-    <div className={styles.root} onMouseLeave={() => setActive(null)}>
+    <div
+      className={styles.root}
+      data-built={built || undefined}
+      onMouseLeave={() => setActive(null)}
+    >
       {/* ── Matrix (links) ── */}
       <div className={styles.matrixCol}>
         <div className={styles.matrixFrame}>
@@ -73,7 +115,7 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
               {ACHSEN.yTitel}
             </span>
 
-            {SZENARIEN.map((s) => {
+            {SZENARIEN.map((s, i) => {
               const dimmed = active !== null && active !== s.id
               return (
                 <button
@@ -82,7 +124,7 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
                   className={styles.tile}
                   data-active={active === s.id || undefined}
                   data-dimmed={dimmed || undefined}
-                  style={{ '--sz': s.color } as React.CSSProperties}
+                  style={{ '--sz': s.color, '--i': i } as React.CSSProperties}
                   onMouseEnter={() => setActive(s.id)}
                   onFocus={() => setActive(s.id)}
                   aria-label={`${s.title} — Sentiment ${s.sentiment} %`}
@@ -118,9 +160,15 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
               </div>
               <p className={styles.narrativ}>{aktiv.narrativ}</p>
               <ul className={styles.detailList}>
-                {aktiv.details.map((d) => (
-                  <li key={d}>{d}</li>
-                ))}
+                {aktiv.details.map((d, i) => {
+                  const Icon = DETAIL_ICONS[i] ?? DETAIL_ICONS[DETAIL_ICONS.length - 1]
+                  return (
+                    <li key={d}>
+                      <Icon className={styles.detailIcon} size={20} strokeWidth={2} aria-hidden />
+                      <span className={styles.detailText}>{rich(d)}</span>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           ) : (

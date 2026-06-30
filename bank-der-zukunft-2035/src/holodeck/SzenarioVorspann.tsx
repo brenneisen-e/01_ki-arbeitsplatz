@@ -53,6 +53,21 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
   const aktiv = active ? getSzenario(active) : null
   const panelRef = useRef<HTMLDivElement>(null)
 
+  // Eingangs-Choreografie: erst baut sich die Matrix mit Achsenkreuz und
+  // Achsenbeschriftung auf (gut lesbar), danach erscheinen die Quadranten-
+  // Inhalte. Solange der Aufbau läuft, bleibt die Matrix nicht interaktiv,
+  // damit der Build nicht durch frühes Hovern unterbrochen wird.
+  const [built, setBuilt] = useState(false)
+  useEffect(() => {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      setBuilt(true)
+      return
+    }
+    const t = setTimeout(() => setBuilt(true), 1850)
+    return () => clearTimeout(t)
+  }, [])
+
   // Bei jedem Szenariowechsel die Detailspalte an den Anfang scrollen, damit
   // immer der Titel oben sichtbar ist (nicht mitten im Text einsteigen).
   useEffect(() => {
@@ -64,7 +79,11 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
     // Komponente ist — so kann rechts gelesen/gescrollt werden, ohne dass das
     // Detail beim Verlassen der Kachel verschwindet. Erst beim Verlassen der
     // gesamten Fläche zurück zur Intro-Ansicht.
-    <div className={styles.root} onMouseLeave={() => setActive(null)}>
+    <div
+      className={styles.root}
+      data-built={built || undefined}
+      onMouseLeave={() => setActive(null)}
+    >
       {/* ── Matrix (links) ── */}
       <div className={styles.matrixCol}>
         <div className={styles.matrixFrame}>
@@ -96,7 +115,7 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
               {ACHSEN.yTitel}
             </span>
 
-            {SZENARIEN.map((s) => {
+            {SZENARIEN.map((s, i) => {
               const dimmed = active !== null && active !== s.id
               return (
                 <button
@@ -105,7 +124,7 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
                   className={styles.tile}
                   data-active={active === s.id || undefined}
                   data-dimmed={dimmed || undefined}
-                  style={{ '--sz': s.color } as React.CSSProperties}
+                  style={{ '--sz': s.color, '--i': i } as React.CSSProperties}
                   onMouseEnter={() => setActive(s.id)}
                   onFocus={() => setActive(s.id)}
                   aria-label={`${s.title} — Sentiment ${s.sentiment} %`}

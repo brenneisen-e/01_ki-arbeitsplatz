@@ -5,7 +5,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Lightbulb,
   MousePointerClick,
+  Network,
+  TrendingUp,
+  Users,
 } from 'lucide-react'
 import styles from './SzenarioVorspann.module.css'
 import { ACHSEN, SZENARIEN, VORSPANN, getSzenario, type SzenarioId } from './szenarien'
@@ -19,6 +23,25 @@ import { ACHSEN, SZENARIEN, VORSPANN, getSzenario, type SzenarioId } from './sze
 // Narrativ + Workshop-Sentiment des Szenarios ein. Verdichtet drei Workshop-
 // Folien zu einem Screen; führt per CTA in das Holodeck.
 // ─────────────────────────────────────────────────────────────────────────────
+
+// Fett-Auszeichnung in den Detail-Texten: **…** → <strong>; sonst Klartext.
+function rich(text: string): React.ReactNode[] {
+  return text
+    .split(/(\*\*[^*]+\*\*)/g)
+    .filter((p) => p !== '')
+    .map((p, i) =>
+      p.startsWith('**') && p.endsWith('**') ? (
+        <strong key={i}>{p.slice(2, -2)}</strong>
+      ) : (
+        <span key={i}>{p}</span>
+      ),
+    )
+}
+
+// Pro Detailpunkt ein einfarbiges Icon (in der Szenariofarbe). Die vier Punkte
+// folgen in allen Szenarien demselben Bogen: Verbraucher:innen → Markt &
+// Wettbewerb → IT & Ökosystem → KI & Beratung.
+const DETAIL_ICONS = [Users, TrendingUp, Network, Lightbulb] as const
 
 type Props = {
   /** Weiter in die Kommandobrücke (Vorspann verlassen). */
@@ -118,9 +141,15 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
               </div>
               <p className={styles.narrativ}>{aktiv.narrativ}</p>
               <ul className={styles.detailList}>
-                {aktiv.details.map((d) => (
-                  <li key={d}>{d}</li>
-                ))}
+                {aktiv.details.map((d, i) => {
+                  const Icon = DETAIL_ICONS[i] ?? DETAIL_ICONS[DETAIL_ICONS.length - 1]
+                  return (
+                    <li key={d}>
+                      <Icon className={styles.detailIcon} size={20} strokeWidth={2} aria-hidden />
+                      <span className={styles.detailText}>{rich(d)}</span>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           ) : (

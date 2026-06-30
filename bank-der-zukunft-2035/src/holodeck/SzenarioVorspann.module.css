@@ -384,29 +384,30 @@
 
 .detailList {
   list-style: none;
-  margin-top: 16px;
+  margin-top: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
 }
 
 .detailList li {
-  position: relative;
-  padding-left: 18px;
-  font-size: 15.5px;
-  line-height: 1.5;
-  color: var(--muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  font-size: clamp(16.5px, 1.25vw, 19px);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--text) 84%, transparent);
 }
 
-.detailList li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 7px;
-  height: 7px;
-  border-radius: 2px;
-  background: var(--sz);
+.detailIcon {
+  flex: none;
+  margin-top: 0.18em;
+  color: var(--sz);
+}
+
+.detailText strong {
+  color: var(--text);
+  font-weight: 700;
 }
 
 /* Footer (immer sichtbar): Legende + CTA */

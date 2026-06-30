@@ -3,8 +3,8 @@
 //
 // Begehbare Kommandobrücke: ein Ankerbild der runden Brücke; fünf anklickbare
 // Stationen führen per Kameraflug in einen Deep-Dive (Bild links, Text rechts).
-// Quelle der Wahrheit für Texte/Struktur: edekabank/holodeck-2031-build-spec.md.
-// Tool-Texte sind 1:1 aus der Spec (§8) übernommen.
+// Struktur-Referenz: edekabank/holodeck-2031-build-spec.md (§8).
+// Tool-Texte: EDEKA-spezifische, überarbeitete Fassung (Review Reuss).
 //
 // Eigenständiges, additives Tool — unabhängig vom Banking-2035-Strukturbild.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -63,12 +63,13 @@ export const STEUERUNG = {
   eyebrow: 'KOMMANDOBRÜCKE — STEUERUNG',
   title: 'EDEKABANK Holodeck 2031',
   these:
-    'Die KI-native Bank ist kein Technologie-Upgrade, sondern ein **anderes Betriebsmodell** — von der Brücke aus steuern zwei Menschen das Gesamtsystem, die KI exekutiert.',
+    'Die KI-native **EDEKABANK** ist kein Technologie-Upgrade, sondern ein **neues Betriebsmodell** für den Finanzkreislauf des EDEKA-Kaufmanns. Maik und Heiko steuern nicht mehr primär Bereiche, Projekte und Eskalationslisten — sondern **Autonomiegrade, Leitplanken und Ausnahmeentscheidungen**.',
   maximalbild:
-    'Im Maximum liefe die Bank von hier aus nahezu **auf Autopilot** — ein Cockpit, das Märkte, Liquidität, Zahlungsströme und Risiko in Echtzeit zusammenführt und über Regeln statt Einzelfälle lenkt.',
+    'Im Maximum läuft der Standardbetrieb **weitgehend autonom**: Händlerimpulse, Liquiditätsveränderungen, Payment-Ströme, Investitionssignale, Kreditvorbereitung, Risikoindikatoren und Serviceprozesse werden in Echtzeit erkannt, bewertet und verarbeitet.',
   aber:
-    'Bewusst **nicht das Zielbild**. Die Kernbereiche bleiben in der Verantwortung von **Leads** — die fünf Stationen rundherum —, weil Vertrauen, Ausnahmen und Verantwortung Menschen brauchen, nicht nur Steuerung.',
-  hinweis: 'Über die Stationen im Bild in die fünf Kernbereiche eintauchen.',
+    '**Autonomie ersetzt nicht Verantwortung.** Die fünf Leads sind die **menschlichen Kontrollpunkte** des Systems: Sie sichern Vertrauen im Händlerkontakt, ökonomische Leitplanken im Lösungsbaukasten, Qualität in der Abwicklung, Resilienz in der Steuerung und Verlässlichkeit im Daten- und KI-Betrieb.',
+  hinweis:
+    'Wir tauchen jetzt in die fünf Steuerungsräume ein — nicht als klassische Abteilungen, sondern als neue Verantwortungsräume einer Bank, die für Märkte, Menschen und Morgen arbeitet.',
 }
 
 const FIELD_LABELS = {
@@ -92,19 +93,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Verantwortet Akquise und Bindung im Händlergeschäft. Der eigene Einsatz verlagert sich von der Bearbeitung der <strong>Breite</strong> auf die wenigen <strong>wertentscheidenden Interaktionen</strong> — dort, wo eine Beziehung kippt oder ein Abschluss zustande kommt.',
+        text: 'Verantwortet die <strong>wertentscheidenden Beziehungen</strong> zu EDEKA-Kaufleuten. Nicht mehr die <strong>Breite der Kontaktstrecke</strong> steht im Mittelpunkt, sondern die Momente, in denen Vertrauen, Finanzierung, Expansion, Liquidität, Nachfolge oder eine kritische Unternehmerentscheidung zusammenkommen.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: '<strong>Relationship- und Verhandlungskompetenz</strong> als Kern; dazu die Fähigkeit, KI-Empfehlungen <strong>kritisch zu bewerten</strong> statt blind zu folgen, und <strong>Abschluss- und Eskalationssicherheit</strong> in Hochwert-Situationen.',
+        text: 'Tiefes Verständnis des selbstständigen Lebensmitteleinzelhandels, der Marktökonomie und der Unternehmerlogik der Kaufleute. Dazu <strong>Beziehungs- und Verhandlungskompetenz</strong>, Abschlussstärke in hochwertigen Situationen und die Fähigkeit, <strong>KI-Signale kritisch einzuordnen</strong>: Ist das nur ein Datenmuster oder ein echter geschäftlicher Anlass?',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: 'Die KI <strong>antizipiert Bedarfe</strong> (Liquidität, Saison, Expansion), bevor der Händler anfragt, und steuert <strong>Ansprache, Angebot und Timing autonom</strong>. Der Mensch greift nur noch an definierten <strong>Vertrauens-Touchpoints</strong> ein.',
+        text: 'Die KI erkennt Liquiditätsbedarf, Investitionssignale, Saisonspitzen, Margendruck, Expansionschancen und Payment-Auffälligkeiten, <strong>bevor der Kaufmann aktiv wird</strong>. Ansprache, Timing, Vorqualifizierung und Angebotsvorbereitung <strong>laufen autonom</strong>; der Mensch übernimmt definierte Vertrauens-, Abschluss- und Eskalationsmomente.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute ist der Vertrieb <strong>reaktiv und manuell</strong>, Signale werden spät erkannt. Implikation: Die Kapazität verschiebt sich <strong>von Breite zu Tiefe</strong> — <strong>weniger Köpfe</strong>, aber deutlich höhere Anforderung pro Kopf. Hinzu kommt die <strong>Akzeptanz</strong>, autonome Vertriebsentscheidungen in der Breite durch die KI treffen zu lassen.',
+        text: 'Heute entstehen viele Vertriebsanlässe aus Beziehung, Erfahrung, manueller Analyse oder reaktiver Nachfrage. 2031 wird die Breite durch KI skaliert. Die menschliche Rolle wird <strong>kleiner in der Menge, aber größer in der Wirkung</strong>: <strong>weniger Kontaktverwaltung, mehr Unternehmerdialog</strong>.',
       },
     ],
   },
@@ -120,19 +121,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Verantwortet <strong>Passung und Marge</strong> des Lösungsangebots. Gestaltet den <strong>Baukasten und die Leitplanken</strong>, nach denen kombiniert wird — nicht mehr das einzelne Produkt.',
+        text: 'Verantwortet die <strong>ökonomische Qualität des Lösungsbaukastens</strong> für Kaufleute: Module, Pricing-Logik, Risikoleitplanken, Margenziele, Sicherheitenlogik und Kombinationsregeln. Er gestaltet nicht mehr das einzelne Standardprodukt, sondern <strong>die Regeln, nach denen die KI individuelle Händlerlösungen baut</strong>.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: '<strong>Modulares Produktdenken</strong> statt Katalogpflege; ein belastbares Gespür für die <strong>Ökonomie des Händlergeschäfts</strong>; und die Fähigkeit, <strong>Leitplanken und Freigabelogik</strong> für die KI-Konfiguration sauber zu definieren.',
+        text: '<strong>Modulares Produkt- und Pricingdenken</strong>, tiefes Verständnis von Händlerökonomie, Kreditrisiko, Payment, Liquidität, Absicherung, Working Capital und Nachhaltigkeitsinvestitionen. Entscheidend ist die Fähigkeit, <strong>fachliche Leitplanken</strong> so zu definieren, dass die KI innerhalb klarer Risiko-, Margen- und Aufsichtsgrenzen konfigurieren kann.',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: 'Die KI <strong>konfiguriert je Cluster in Echtzeit</strong> die optimale Lösung aus den Modulen und <strong>re-optimiert laufend</strong>. Die <strong>Time-to-Solution</strong> sinkt von Monaten auf <strong>Minuten</strong>.',
+        text: 'Die KI kombiniert in Echtzeit Finanzierung, Liquidität, Payment, Absicherung, Working Capital und ergänzende Services zu einer <strong>passgenauen Kaufmannslösung</strong>. Marge, Risiko, Kapitalbindung, Sicherheiten, Förderfähigkeit, Zahlungsstromdaten und Kundenbedarf werden <strong>laufend gegeneinander optimiert</strong>.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute lange <strong>Entwicklungszyklen</strong> und Standardprodukte mit <strong>Streuverlust</strong>. Implikation: Der <strong>statische Produktkatalog</strong> — und die Funktion, die ihn pflegt — verliert seine Existenzberechtigung.',
+        text: 'Heute dominieren Produktkataloge, Angebotslogiken und Entwicklungszyklen. 2031 verschiebt sich Produktarbeit <strong>von Katalogpflege zu Lösungsarchitektur</strong>. Der <strong>statische Produktkatalog verliert an Bedeutung</strong>; entscheidend werden Module, Daten, Leitplanken und die Fähigkeit, den nächsten wirtschaftlich richtigen Schritt für den Kaufmann zu konfigurieren.',
       },
     ],
   },
@@ -148,19 +149,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Sichert <strong>Durchlauf und Qualität</strong> in Kredit, KYC und Abwicklung. Steuert künftig das <strong>Ausnahme-Regime</strong> statt des Normalbetriebs — also genau das, was die Maschine bewusst nicht allein entscheidet.',
+        text: 'Verantwortet die <strong>verlässliche autonome Abwicklung</strong> in Kredit, KYC, Vertragsstrecke, Dokumentenprüfung, Auszahlung, Zahlungsverkehrsklärung und Serviceprozesse. Steuert künftig nicht mehr den Normalbetrieb, sondern das <strong>Ausnahme-Regime</strong> — also genau die Fälle, die die Maschine bewusst nicht allein entscheiden darf.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: '<strong>Prozess- und Kontrollkompetenz</strong>; <strong>Entscheidungsstärke im Ausnahmefall</strong>; und die <strong>Sensorik</strong> dafür, welche Fälle dem Menschen vorbehalten bleiben müssen.',
+        text: '<strong>Prozess-, Kontroll- und Regulatorikkompetenz</strong>; Entscheidungsstärke im Ausnahmefall; Verständnis für Kreditstrecken, Geldwäscheprävention, Datenqualität und Kundenerlebnis. Entscheidend ist die <strong>Sensorik</strong> dafür, welche Fälle automatisiert durchlaufen dürfen und welche zwingend menschliche Prüfung brauchen.',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: '<strong>Straight-Through-Processing</strong> für das Gros der Fälle; der Mensch bearbeitet nur noch <strong>Ausnahmen</strong>. Steuerungsgröße ist die <strong>Qualität der Ausnahmeerkennung</strong>, nicht das Bearbeitungsvolumen.',
+        text: 'Standardfälle laufen <strong>weitgehend durchgängig automatisiert</strong>. Die KI prüft Unterlagen, plausibilisiert Daten, erkennt fehlende Informationen, bereitet Entscheidungen vor und stößt nächste Prozessschritte an. Der Mensch bearbeitet <strong>nur noch Ausnahmen</strong>, Grenzfälle, unplausible Datenlagen und risikorelevante Abweichungen.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute <strong>personalintensive Einzelfallbearbeitung</strong>. Implikation: Bei <strong>STP-Quoten jenseits 90 %</strong> ist nicht Effizienz die Frage, sondern der <strong>Kapazitäts- und Rollenumbau</strong> im Backoffice.',
+        text: 'Heute erzeugen Regulierung, Medienbrüche, Unterlagenlogik und Systemgrenzen erhebliche manuelle Bearbeitung. 2031 ist nicht mehr das Bearbeitungsvolumen die zentrale Steuerungsgröße, sondern die <strong>Qualität der Ausnahmeerkennung</strong>. Der Betrieb wird <strong>vom Abwicklungsapparat zum Kontroll- und Ausnahmezentrum</strong>.',
       },
     ],
   },
@@ -204,19 +205,19 @@ export const AREAS: Area[] = [
     fields: [
       {
         label: FIELD_LABELS.mandat,
-        text: 'Verantwortet das <strong>Daten- und KI-Betriebssystem</strong> als Enabler aller Automatisierung. Kernaufgabe ist, die <strong>Vertrauenswürdigkeit der Modelle</strong> sicherzustellen, denen die ganze Bank vertraut.',
+        text: 'Verantwortet das <strong>Daten- und KI-Betriebssystem der EDEKABANK</strong>: die sichere Verbindung von Händlerdaten, Bankdaten, Payment-Daten, Portal-Daten, Verbundsignalen und externen Informationen. Kernaufgabe ist, die <strong>Vertrauenswürdigkeit der Modelle</strong> sicherzustellen, denen die Bank operative Entscheidungen anvertraut.',
       },
       {
         label: FIELD_LABELS.skills,
-        text: '<strong>Daten- und Plattformarchitektur</strong>; <strong>Modell-Governance und -Sicherheit</strong>; und die Fähigkeit zur <strong>Übersetzung zwischen Technik, Fachbereich und Aufsicht</strong>.',
+        text: '<strong>Daten- und Plattformarchitektur</strong>, Schnittstellensteuerung, Modell-Governance, Informationssicherheit, Datenschutz, Cyber-Resilienz und Übersetzung zwischen Fachbereich, IT, Verbundpartnern und Aufsicht. Entscheidend ist nicht nur Technologieverständnis, sondern die Fähigkeit, <strong>Datenhoheit, Skalierung und Auditierbarkeit</strong> zusammenzubringen.',
       },
       {
         label: FIELD_LABELS.zielbild,
-        text: 'Ein <strong>integriertes Datenfundament</strong> (Händler-, Bank-, Externdaten) speist <strong>alle Use Cases</strong>; die Modelle sind <strong>laufend überwacht, abgesichert und governt</strong>.',
+        text: 'Ein <strong>integriertes Datenfundament</strong> speist Händler-Radar, Lösungsbaukasten, autonome Abwicklung und Risikofrühwarnung. Modelle werden laufend überwacht, Drift wird erkannt, Entscheidungen sind nachvollziehbar, Agentenrechte sind begrenzt, und <strong>jeder autonome Prozess hinterlässt eine prüfbare Datenspur</strong>.',
       },
       {
         label: FIELD_LABELS.delta,
-        text: 'Heute <strong>Datensilos</strong> und isolierte Pilotierung. Implikation: Der kritische <strong>Investitionshebel</strong> ist nicht das Modell, sondern das <strong>Datenfundament</strong> — typischerweise unterinvestiert und aufgeschoben.',
+        text: 'Heute entstehen digitale Services, Portalstrecken, Payment-Infrastruktur und Prozessautomatisierung Schritt für Schritt. 2031 entscheidet die produktive Daten- und KI-Plattform darüber, <strong>ob die EDEKABANK wirklich skaliert</strong>. Der kritische Engpass ist nicht das einzelne Modell, sondern das <strong>vertrauenswürdige Datenfundament</strong>.',
       },
     ],
   },

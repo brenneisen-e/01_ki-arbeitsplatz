@@ -74,10 +74,10 @@ export const SZENARIEN: Szenario[] = [
     narrativ:
       'In dieser Welt birgt die Nutzung von unbegrenzt verfügbaren Verbraucher:innendaten in Kombination mit einer klaren Strategie der Regulatoren und Zentralbanken für die verfügbaren und zugelassenen Zahlungsmittel großes Potential für etablierte Finanzdienstleister im Lebensmitteleinzelhandel.',
     details: [
-      'Verbraucher:innen sind bereit, für ein verbessertes Einkaufserlebnis ihre Daten preiszugeben. Sie stimmen z. B. Loyalitätsprogrammen zu und bevorzugen digitale IDs für reibungslose Zahlungs- und Einkaufsprozesse.',
-      'Kleinere, spezialisierte Akteure, die sich im Ökosystem positionieren wollen, überwinden Markteintrittsbarrieren. Dies verstärkt den Konkurrenzkampf und treibt etablierte Firmen in Richtung zweckgetriebener, projektbasierter Zusammenarbeit.',
-      'Spürbar wird der verstärkte Wettbewerb auch bei IT-Lösungen, die trotz Datenüberfluss meist isoliert und ohne Schnittstellen zur Außenwelt konzipiert sind. Der Innovationsfokus etablierter Akteure liegt auf neuen Geschäftsmodellen und der Erweiterung des Dienstleistungsportfolios in Richtung Beyond Banking.',
-      'Getrieben wird dies auch durch den Einsatz von KI und ML. Eine klare Positionierung — als Bediener wie als persönlicher Designer neuer Technologien — ist für die Finanzberatung wichtig, um schnelle und nachhaltige Finanzentscheidungen zu ermöglichen.',
+      'Verbraucher:innen sind bereit, für ein **verbessertes Einkaufserlebnis** ihre **Daten preiszugeben**. Sie stimmen z. B. Loyalitätsprogrammen zu und bevorzugen **digitale IDs** für reibungslose Zahlungs- und Einkaufsprozesse.',
+      '**Kleinere, spezialisierte Akteure**, die sich im Ökosystem positionieren wollen, überwinden **Markteintrittsbarrieren**. Dies verstärkt den **Konkurrenzkampf** und treibt etablierte Firmen in Richtung zweckgetriebener, projektbasierter Zusammenarbeit.',
+      'Spürbar wird der verstärkte Wettbewerb auch bei **IT-Lösungen**, die trotz Datenüberfluss meist **isoliert und ohne Schnittstellen** zur Außenwelt konzipiert sind. Der Innovationsfokus etablierter Akteure liegt auf **neuen Geschäftsmodellen** und der Erweiterung des Dienstleistungsportfolios in Richtung **Beyond Banking**.',
+      'Getrieben wird dies auch durch den Einsatz von **KI und ML**. Eine klare Positionierung — als **Bediener** wie als **persönlicher Designer** neuer Technologien — ist für die Finanzberatung wichtig, um **schnelle und nachhaltige Finanzentscheidungen** zu ermöglichen.',
     ],
   },
   {
@@ -95,10 +95,10 @@ export const SZENARIEN: Szenario[] = [
     narrativ:
       'In dieser Welt lässt ein Zusammenspiel von Technologie, Verbraucher:innenverhalten und Regulatorik ein extremes Maß an Individualisierung zu. Gesetzgebung erlaubt neue Technologien und Automatisierung im Banking. Dies vereinfacht die Nutzung von Kund:innendaten und erlaubt ein breites Spektrum an Transaktionsmöglichkeiten.',
     details: [
-      'Der Drang von Verbraucher:innen nach immer mehr Convenience im Einzelhandel übersteigt ihren Wunsch nach Anonymität — ihre Daten stellen sie einer vertrauenswürdigen Instanz zur Verfügung.',
-      'Die Vielzahl an Zahlungsmöglichkeiten und technischen Anforderungen fördert Markteintrittsbarrieren. Etablierte Finanzdienstleister stehen vor Herausforderungen, da sich hier attraktive Chancen für Big Tech bieten.',
-      'Finanzdienstleister müssen kollaborieren und den Vorteil des Vertrauensverhältnisses zum Einzelhandel nutzen, um zu Vermittlern und Vernetzern der Angebotsflut zu werden. Dafür müssen sie über das traditionelle Bankgeschäft hinausblicken — Innovationen müssen leicht verständliche Geschäftsmodelle fördern.',
-      'Big Data ermöglicht weitläufigen Einsatz von ML-basierten Tools, die hoch-individualisierte Empfehlungen (z. B. zu Finanzierungsoptionen) produzieren. Genau deswegen bleibt das menschliche Vertrauensverhältnis wichtig: Einzelhändler:innen wollen die Entscheidungen der Algorithmen erklärt bekommen.',
+      'Der Drang von Verbraucher:innen nach immer mehr **Convenience** im Einzelhandel übersteigt ihren **Wunsch nach Anonymität** — ihre Daten stellen sie einer **vertrauenswürdigen Instanz** zur Verfügung.',
+      'Die Vielzahl an **Zahlungsmöglichkeiten** und technischen Anforderungen fördert **Markteintrittsbarrieren**. Etablierte Finanzdienstleister stehen vor Herausforderungen, da sich hier attraktive **Chancen für Big Tech** bieten.',
+      'Finanzdienstleister müssen **kollaborieren** und den Vorteil des **Vertrauensverhältnisses zum Einzelhandel** nutzen, um zu **Vermittlern und Vernetzern** der Angebotsflut zu werden. Dafür müssen sie über das traditionelle Bankgeschäft hinausblicken — Innovationen müssen **leicht verständliche Geschäftsmodelle** fördern.',
+      '**Big Data** ermöglicht weitläufigen Einsatz von **ML-basierten Tools**, die **hoch-individualisierte Empfehlungen** (z. B. zu Finanzierungsoptionen) produzieren. Genau deswegen bleibt das **menschliche Vertrauensverhältnis** wichtig: Einzelhändler:innen wollen die Entscheidungen der Algorithmen **erklärt** bekommen.',
     ],
   },
   {
@@ -116,10 +116,10 @@ export const SZENARIEN: Szenario[] = [
     narrativ:
       'In dieser Welt gibt es — eingeschränkt durch Gesetzgebung und gesellschaftliche Ablehnung — wenige dominante Zahlungsarten. Es ist daher eine große Herausforderung, Verbraucher:innendaten zu sammeln, zu aggregieren und zu nutzen, um Einkaufserlebnis und Finanzdienstleistungen zu individualisieren.',
     details: [
-      'Bargeld bleibt eine bevorzugte Zahlungsart, wegen des allgemeinen Verlangens nach Anonymität bei der Bezahlung von Dienstleistungen und Produkten im Einzelhandel.',
-      'Ungleicher Zugang zu Verbraucher:innendaten führt zu Datenmonopolen, die erhebliche Markteintrittsbarrieren darstellen und die Marktdynamik rivalisierend beeinflussen. Die Akteure handeln eher individualistisch und betreiben Partnerschaften ausschließlich mit externen Stakeholdern wie Big Tech.',
-      'Signifikante Datenströme entwickeln sich nur innerhalb solcher Silos, die vorwiegend Operationen automatisieren und die Prozesseffizienz verbessern wollen.',
-      'Finanzdienstleister fokussieren sich auf ihr Kerngeschäft und dessen Optimierung. Bestehenden Kund:innen bieten sie eine breite Produktpalette, die neben klassischer Finanzierung vermehrt in die Bereiche Versicherungen und X-as-a-Service geht. Zentral ist ihre Rolle als Beratungspartner für komplizierte Finanzvorhaben.',
+      '**Bargeld** bleibt eine bevorzugte Zahlungsart, wegen des allgemeinen **Verlangens nach Anonymität** bei der Bezahlung von Dienstleistungen und Produkten im Einzelhandel.',
+      'Ungleicher Zugang zu Verbraucher:innendaten führt zu **Datenmonopolen**, die erhebliche **Markteintrittsbarrieren** darstellen und die Marktdynamik rivalisierend beeinflussen. Die Akteure handeln eher **individualistisch** und betreiben Partnerschaften ausschließlich mit externen Stakeholdern wie Big Tech.',
+      'Signifikante **Datenströme** entwickeln sich nur innerhalb solcher **Silos**, die vorwiegend **Operationen automatisieren** und die **Prozesseffizienz** verbessern wollen.',
+      'Finanzdienstleister fokussieren sich auf ihr **Kerngeschäft** und dessen Optimierung. Bestehenden Kund:innen bieten sie eine **breite Produktpalette**, die neben klassischer Finanzierung vermehrt in die Bereiche **Versicherungen und X-as-a-Service** geht. Zentral ist ihre Rolle als **Beratungspartner** für komplizierte Finanzvorhaben.',
     ],
   },
   {
@@ -137,10 +137,10 @@ export const SZENARIEN: Szenario[] = [
     narrativ:
       'In dieser Welt setzt Regulatorik klare Grenzen für das Finanzdienstleistungsgeschäft. Dies bevorteilt etablierte Finanzdienstleister, die Erfahrung mit Compliance und dem Spielraum für ihre Kund:innen haben. Ein Teil dieser Richtlinien ist das Resultat des Verbraucher:innenstrebens nach Anonymität im Einzelhandel.',
     details: [
-      'Verbraucher:innen wollen auch ohne Preisgabe von Daten bequem und reibungslos einkaufen und nehmen dafür Einschränkungen im Einkaufserlebnis in Kauf. Jede:r verlangt andere, anonymer scheinende Zahlungsmöglichkeiten — Einzelhändler:innen müssen eine Vielfalt an Anforderungen erfüllen, ohne sie individualisieren zu können.',
-      'Dies erfordert eine starke Vernetzung und damit den kostspieligen Bau vieler Schnittstellen, jedoch ohne Synergiepotentiale. Neue Akteure können in den Markt einsteigen; wer die limitierten Daten aggregieren und sinnvoll nutzen kann, hat einen Vorteil.',
-      'Innovation wird vor allem zur Optimierung betrieben. Da sie nicht alle Zahlungsmöglichkeiten effizient und kostengünstig abdecken können, fokussieren sich Finanzdienstleister auf das traditionelle Bankgeschäft.',
-      'Der persönliche Finanzberatungsbedarf im Lebensmitteleinzelhandel ist hoch. Einzelhändler:innen suchen Ansprechpartner:innen, die den Überblick über das Umfeld behalten und auf sie zugeschnittene Empfehlungen und Angebote kreieren.',
+      'Verbraucher:innen wollen auch **ohne Preisgabe von Daten** bequem und reibungslos einkaufen und nehmen dafür **Einschränkungen im Einkaufserlebnis** in Kauf. Jede:r verlangt andere, anonymer scheinende Zahlungsmöglichkeiten — Einzelhändler:innen müssen eine **Vielfalt an Anforderungen** erfüllen, ohne sie individualisieren zu können.',
+      'Dies erfordert eine **starke Vernetzung** und damit den **kostspieligen Bau vieler Schnittstellen**, jedoch ohne Synergiepotentiale. Neue Akteure können in den Markt einsteigen; wer die **limitierten Daten aggregieren** und sinnvoll nutzen kann, hat einen **Vorteil**.',
+      'Innovation wird vor allem zur **Optimierung** betrieben. Da sie nicht alle Zahlungsmöglichkeiten effizient und kostengünstig abdecken können, fokussieren sich Finanzdienstleister auf das **traditionelle Bankgeschäft**.',
+      'Der persönliche **Finanzberatungsbedarf** im Lebensmitteleinzelhandel ist hoch. Einzelhändler:innen suchen **Ansprechpartner:innen**, die den **Überblick** über das Umfeld behalten und auf sie zugeschnittene **Empfehlungen und Angebote** kreieren.',
     ],
   },
 ]

@@ -8,6 +8,7 @@ import {
   Lightbulb,
   MousePointerClick,
   Network,
+  Plus,
   TrendingUp,
   Users,
 } from 'lucide-react'
@@ -17,11 +18,13 @@ import { ACHSEN, SZENARIEN, VORSPANN, getSzenario, type SzenarioId } from './sze
 // ─────────────────────────────────────────────────────────────────────────────
 // SzenarioVorspann — interaktiver Auftakt vor der Kommandobrücke.
 //
-// Eine 2×2-Szenario-Matrix (links) mit Achsenkreuz, vier Quadranten-Kacheln
-// (Titel + Kernthemen + Sentiment-Badge) und einem Detailpanel (rechts). Beim
-// Mouseover über eine Kachel hebt sich der Quadrant hervor und das Panel blendet
-// Narrativ + Workshop-Sentiment des Szenarios ein. Verdichtet drei Workshop-
-// Folien zu einem Screen; führt per CTA in das Holodeck.
+// Eine 2×2-Szenario-Matrix (links) mit Achsenkreuz, vier Quadranten-Kacheln und
+// einem Detailpanel (rechts). Zu Beginn ist die Matrix leer: jeder Quadrant
+// zeigt nur ein Plus, die Achsenbeschriftung ist groß und gut lesbar. Per Klick
+// auf das Plus wird ein Quadrant erstmals freigeschaltet (Kernthemen + Detail
+// rechts). Danach genügt Hovern, um einen bereits freigeschalteten Quadranten
+// wieder anzuzeigen. Verdichtet drei Workshop-Folien zu einem Screen; führt per
+// CTA in das Holodeck.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Fett-Auszeichnung in den Detail-Texten: **…** → <strong>; sonst Klartext.
@@ -50,7 +53,11 @@ type Props = {
 
 export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
   const [active, setActive] = useState<SzenarioId | null>(null)
+  const [unlocked, setUnlocked] = useState<Set<SzenarioId>>(() => new Set())
   const aktiv = active ? getSzenario(active) : null
+  // Solange noch kein Quadrant freigeschaltet ist, steht die Achsenbeschriftung
+  // im Vordergrund (größere Schrift).
+  const nochLeer = unlocked.size === 0
   const panelRef = useRef<HTMLDivElement>(null)
 
   // Eingangs-Choreografie: erst baut sich die Matrix mit Achsenkreuz und
@@ -74,15 +81,21 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
     panelRef.current?.scrollTo({ top: 0 })
   }, [active])
 
+  // Klick = erstmaliges Sichtbarmachen eines Quadranten. Ist er einmal frei,
+  // genügt Hovern, um ihn wieder ins Detailpanel zu holen.
+  const freischalten = (id: SzenarioId) => {
+    setUnlocked((prev) => (prev.has(id) ? prev : new Set(prev).add(id)))
+    setActive(id)
+  }
+  const vorschau = (id: SzenarioId) => {
+    if (unlocked.has(id)) setActive(id)
+  }
+
   return (
-    // Aktives Szenario bleibt sichtbar, solange die Maus irgendwo in der
-    // Komponente ist — so kann rechts gelesen/gescrollt werden, ohne dass das
-    // Detail beim Verlassen der Kachel verschwindet. Erst beim Verlassen der
-    // gesamten Fläche zurück zur Intro-Ansicht.
     <div
       className={styles.root}
       data-built={built || undefined}
-      onMouseLeave={() => setActive(null)}
+      data-empty={nochLeer || undefined}
     >
       {/* ── Matrix (links) ── */}
       <div className={styles.matrixCol}>
@@ -116,28 +129,45 @@ export function SzenarioVorspann({ onEnter }: Props): React.ReactElement {
             </span>
 
             {SZENARIEN.map((s, i) => {
-              const dimmed = active !== null && active !== s.id
+              const offen = unlocked.has(s.id)
               return (
                 <button
                   type="button"
                   key={s.id}
                   className={styles.tile}
                   data-active={active === s.id || undefined}
-                  data-dimmed={dimmed || undefined}
+                  data-unlocked={offen || undefined}
                   style={{ '--sz': s.color, '--i': i } as React.CSSProperties}
-                  onMouseEnter={() => setActive(s.id)}
-                  onFocus={() => setActive(s.id)}
-                  aria-label={`${s.title} — Sentiment ${s.sentiment} %`}
+                  onClick={() => freischalten(s.id)}
+                  onMouseEnter={() => vorschau(s.id)}
+                  onFocus={() => vorschau(s.id)}
+                  aria-pressed={active === s.id}
+                  aria-label={
+                    offen
+                      ? `${s.title} — Sentiment ${s.sentiment} %`
+                      : `Quadrant ${i + 1} von 4 freischalten`
+                  }
                 >
-                  <span className={styles.tileHead}>
-                    <span className={styles.tileTitle}>{s.title}</span>
-                    <span className={styles.tileSentiment}>{s.sentiment} %</span>
-                  </span>
-                  <ul className={styles.tileList}>
-                    {s.kernthemen.map((k) => (
-                      <li key={k}>{k}</li>
-                    ))}
-                  </ul>
+                  {offen ? (
+                    <>
+                      <span className={styles.tileHead}>
+                        <span className={styles.tileTitle}>{s.title}</span>
+                        <span className={styles.tileSentiment}>{s.sentiment} %</span>
+                      </span>
+                      <ul className={styles.tileList}>
+                        {s.kernthemen.map((k) => (
+                          <li key={k}>{k}</li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <span className={styles.tileLock}>
+                      <span className={styles.tileLockIcon}>
+                        <Plus size={26} strokeWidth={2.4} aria-hidden />
+                      </span>
+                      <span className={styles.tileLockLabel}>Freischalten</span>
+                    </span>
+                  )}
                 </button>
               )
             })}

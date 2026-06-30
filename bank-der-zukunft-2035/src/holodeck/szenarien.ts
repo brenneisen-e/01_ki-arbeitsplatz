@@ -48,8 +48,8 @@ export const ACHSEN = {
 export const VORSPANN = {
   eyebrow: 'SZENARIEN-MODELL · BESTÄTIGT IN WORKSHOP 1 & 2',
   title: 'Vier Visionen der Zukunft',
-  lead: 'Aus der Kombination der kritischen Unsicherheiten ergeben sich vier mögliche Visionen der Zukunft — jede mit eigenen Kernthemen. Fahren Sie mit der Maus über ein Szenario, um Narrativ und Workshop-Sentiment einzublenden.',
-  hint: 'Mit der Maus über ein Szenario fahren',
+  lead: 'Aus der Kombination der kritischen Unsicherheiten ergeben sich vier mögliche Visionen der Zukunft — jede mit eigenen Kernthemen. Klicken Sie das Plus in einem Quadranten, um das Szenario freizuschalten; danach genügt Hovern, um zwischen den freigeschalteten Szenarien zu wechseln.',
+  hint: 'Plus im Quadranten anklicken zum Freischalten',
   cta: 'Weiter zur Kommandobrücke',
   sentimentLabel: 'Positives Sentiment im Workshop',
   sentimentNote:

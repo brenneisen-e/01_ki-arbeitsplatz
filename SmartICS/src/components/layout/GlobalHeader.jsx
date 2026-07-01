@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Home, ChevronDown, ShieldCheck, FileText, Sparkles, Bot, BookOpen, Download, FileBarChart, FileSpreadsheet } from 'lucide-react';
+import { Home, ChevronDown, ShieldCheck, FileText, Sparkles, Bot, BookOpen, Download, FileBarChart, FileSpreadsheet, Wand2, Users, Check } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useInstitut } from '../../hooks/useInstitut';
 import { useSmartIcs } from '../../hooks/useSmartIcs';
+import { useBiks } from '../../hooks/useBiks';
+import { TEAM, getTeamMember } from '../../data/biksAgent';
 import { getInstitutLogoUrl } from '../../data/institutConfig';
 import { DEMO_PROZESSE } from '../../data/risikoKatalog';
 import { generateArbeitsanweisungPdf, generateRichtliniePdf, generateProzessbeschreibungPdf } from '../../utils/demoPdfGenerator';
@@ -230,14 +232,46 @@ function DemoDocsDropdown({ onClose }) {
   );
 }
 
+function UserSwitcher({ onClose }) {
+  const { currentUser, setCurrentUser } = useBiks();
+  const ref = useRef(null);
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+  return (
+    <div ref={ref} className="dropdown-menu" style={{ minWidth: 280, right: 0, left: 'auto' }}>
+      <div className="dropdown-title">Angemeldet als (Kollaboration)</div>
+      {TEAM.filter(m => m.id !== 'agent').map(m => (
+        <button
+          key={m.id}
+          className={clsx('dropdown-item', m.id === currentUser && 'active')}
+          onClick={() => { setCurrentUser(m.id); onClose(); }}
+        >
+          <span className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-semibold shrink-0" style={{ background: m.color }}>{m.initialen}</span>
+          <span className="flex-1 min-w-0">
+            <span className="block text-[13px] font-semibold leading-tight">{m.name}</span>
+            <span className="block text-[11px] text-slate-500 leading-snug">{m.rolle}</span>
+          </span>
+          {m.id === currentUser && <Check size={14} className="text-emerald-600 shrink-0" />}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function GlobalHeader({ activeView, onViewChange }) {
   const { institut } = useInstitut();
   const { setAiPanelOpen, aiPanelOpen } = useSmartIcs();
+  const { currentUser } = useBiks();
   const [instOpen, setInstOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
+  const me = getTeamMember(currentUser);
 
   const modes = [
-    { id: 'workflow', label: 'Smart-ICS Workflow', icon: ShieldCheck },
+    { id: 'workflow', label: 'b-IKS Agent', icon: Wand2 },
     { id: 'rkm',      label: 'Risiko-Kontroll-Matrix', icon: FileBarChart },
     { id: 'methodik', label: 'Methodik & Regelkreis',  icon: BookOpen },
   ];
@@ -314,6 +348,20 @@ export default function GlobalHeader({ activeView, onViewChange }) {
               <ChevronDown size={12} className={clsx('text-white/60 transition-transform', docsOpen && 'rotate-180')} />
             </button>
             {docsOpen && <DemoDocsDropdown onClose={() => setDocsOpen(false)} />}
+          </div>
+
+          <div className="relative">
+            <button
+              onClick={() => setUserOpen(v => !v)}
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors border border-white/20"
+              title="Angemeldeten Nutzer für die Kollaboration wechseln"
+            >
+              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0" style={{ background: me.color, color: 'white' }}>{me.initialen}</span>
+              <span className="text-white text-xs font-semibold hidden md:inline">{me.name}</span>
+              <Users size={12} className="text-white/60" />
+              <ChevronDown size={12} className={clsx('text-white/60 transition-transform', userOpen && 'rotate-180')} />
+            </button>
+            {userOpen && <UserSwitcher onClose={() => setUserOpen(false)} />}
           </div>
 
           <button

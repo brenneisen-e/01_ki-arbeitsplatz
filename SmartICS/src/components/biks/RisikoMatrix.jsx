@@ -14,7 +14,7 @@ const yFor = (rank) => M.top + (1 - frac(rank)) * PH;
 function cellColor(sRank, eRank) {
   const score = sRank * eRank;
   if (score >= 6) return '#DC2626';
-  if (score >= 3.5) return '#D97706';
+  if (score >= 3) return '#D97706';
   return '#059669';
 }
 

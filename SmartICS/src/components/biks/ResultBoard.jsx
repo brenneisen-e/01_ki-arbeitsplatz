@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   FileText, RefreshCw, ShieldCheck, Sparkles, X, ListChecks, KeyRound,
   AlertTriangle, FileSpreadsheet, Download, SlidersHorizontal,
@@ -13,7 +14,7 @@ import { StatusIcon } from './StatusControls';
 import { exportBiksCsv, exportBiksPdf } from '../../utils/exportBiks';
 
 function QuelleModal({ analyse, onClose }) {
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/40" onClick={onClose} />
       <div className="relative card-base w-full max-w-2xl max-h-[85vh] overflow-y-auto scrollbar-thin bg-white">
@@ -61,7 +62,8 @@ function QuelleModal({ analyse, onClose }) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

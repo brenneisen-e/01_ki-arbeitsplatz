@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   ArrowLeft,
+  BookOpen,
   ChevronLeft,
   ChevronRight,
   Clock,
@@ -14,6 +15,7 @@ import {
   Play,
   RotateCcw,
   Sparkles,
+  TrendingUp,
   Users,
 } from 'lucide-react'
 import styles from './ChapterReader.module.css'
@@ -33,7 +35,7 @@ import { exportChaptersXlsx } from '../data/exportChaptersXlsx'
 type ReaderStrings = {
   back: string
   chapterPrefix: string
-  hypothesisOf: (n: number) => string
+  hypothesisOf: (n: number, total: number) => string
   activityKicker: string
   hypothesisSlot: (n: number) => string
   activitySlot: string
@@ -65,12 +67,12 @@ const STR: Record<Lang, ReaderStrings> = {
   de: {
     back: 'Übersicht',
     chapterPrefix: 'Kapitel',
-    hypothesisOf: (n) => `Hypothese ${n} von 3`,
+    hypothesisOf: (n, total) => `Hypothese ${n} von ${total}`,
     activityKicker: 'Aktivität & Absprung',
     hypothesisSlot: (n) => `Hypothese ${n}`,
     activitySlot: 'Aktivität',
     statusQuo: 'Status Quo',
-    future: '2035',
+    future: '2030',
     leitfrage: 'Leitfrage',
     today: 'Heute · Status Quo',
     prevStep: 'Vorheriger Schritt',
@@ -100,12 +102,12 @@ const STR: Record<Lang, ReaderStrings> = {
   en: {
     back: 'Overview',
     chapterPrefix: 'Chapter',
-    hypothesisOf: (n) => `Hypothesis ${n} of 3`,
+    hypothesisOf: (n, total) => `Hypothesis ${n} of ${total}`,
     activityKicker: 'Activity & hand-off',
     hypothesisSlot: (n) => `Hypothesis ${n}`,
     activitySlot: 'Activity',
     statusQuo: 'Status quo',
-    future: '2035',
+    future: '2030',
     leitfrage: 'Guiding question',
     today: 'Today · status quo',
     prevStep: 'Previous step',
@@ -137,14 +139,16 @@ const STR: Record<Lang, ReaderStrings> = {
 // ─────────────────────────────────────────────────────────────────────────────
 // ChapterReader — die Kapitel-Sequenz nach dem Kameraflug:
 //   Hypothese 1 → 2 → 3 → Aktivität/Demo.
-// Layout: Vergleichsbild oben (Status Quo | 2035), darunter die beiden
-// Hypothesen-Texte je unter ihrer Bildhälfte (links Status Quo, rechts 2035).
+// Layout: Vergleichsbild oben (Status Quo | 2030), darunter die beiden
+// Hypothesen-Texte je unter ihrer Bildhälfte (links Status Quo, rechts 2030).
 // Akzent #046A38, Absprung-Button auf dem Aktivitäts-Schritt.
 // `step` wird von außen (BankExplorer) gesteuert, damit ein Refresh die Stelle
 // wiederherstellen kann.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const STEP_COUNT = 4 // 3 Hypothesen + 1 Aktivität
+// Schritte je Kapitel = Anzahl Hypothesen + 1 Aktivität. Die Hypothesenzahl kann
+// je Kapitel variieren (Zusatz-Hypothesen), daher wird sie im Reader aus dem
+// Kapitel abgeleitet (stepCount) statt als globale Konstante gehalten.
 
 type ChapterReaderProps = {
   chapter: Chapter
@@ -242,6 +246,9 @@ export function ChapterReader({
   const { edits, setText, setComment, resetStep } = useChapterEdits()
   const [editMode, setEditMode] = useState(readEditMode)
 
+  // Schrittzahl aus dem Kapitel: N Hypothesen + 1 Aktivität.
+  const stepCount = chapter.hypotheses.length + 1
+
   const toggleEdit = useCallback(() => {
     setEditMode((on) => {
       writeEditMode(!on)
@@ -266,8 +273,8 @@ export function ChapterReader({
     [step, onStepChange],
   )
   const goNext = useCallback(
-    () => onStepChange(Math.min(STEP_COUNT - 1, step + 1)),
-    [step, onStepChange],
+    () => onStepChange(Math.min(stepCount - 1, step + 1)),
+    [step, onStepChange, stepCount],
   )
 
   // Tastatur: Esc → zurück, Pfeile blättern. Beim Tippen in Eingabefeldern
@@ -284,7 +291,7 @@ export function ChapterReader({
     return () => window.removeEventListener('keydown', onKey)
   }, [onBack, goNext, goPrev])
 
-  const isActivity = step === STEP_COUNT - 1
+  const isActivity = step === stepCount - 1
   const hypothesis = isActivity ? null : chapter.hypotheses[step]
   const activity = chapter.activity
 
@@ -292,7 +299,7 @@ export function ChapterReader({
   const title = hypothesis ? hypothesis.title : activity.title
   const chapterLabel = `${t.chapterPrefix} ${chapter.kapitel}`
   const kicker = hypothesis
-    ? `${chapterLabel} · ${t.hypothesisOf(step + 1)}`
+    ? `${chapterLabel} · ${t.hypothesisOf(step + 1, chapter.hypotheses.length)}`
     : `${chapterLabel} · ${t.activityKicker}`
   const slotLabel = hypothesis
     ? `${chapterLabel} · ${t.hypothesisSlot(step + 1)}`
@@ -310,7 +317,7 @@ export function ChapterReader({
   const titleField: EditField = hypothesis ? 'title' : 'activityTitle'
   const effTitle = eff(titleField, title)
   const effStatusQuo = hypothesis ? eff('statusQuo', hypothesis.statusQuo) : ''
-  const effIn2035 = hypothesis ? eff('in2035', hypothesis.in2035) : ''
+  const effIn2030 = hypothesis ? eff('in2030', hypothesis.in2030) : ''
   const effLeitfrage = hypothesis ? eff('leitfrage', hypothesis.leitfrage ?? '') : ''
   const effActivityText = hypothesis ? '' : eff('activityText', activity.text)
 
@@ -391,6 +398,31 @@ export function ChapterReader({
           <h1 className={styles.title}>{effTitle}</h1>
         )}
 
+        {/* Management Summary & exemplarischer Business Case — je Kapitel,
+            aufklappbar direkt im Kapitel. Quelle: chapter.vision + chapter.businessCase. */}
+        <details className={styles.summaryPanel}>
+          <summary className={styles.summaryToggle}>
+            <BookOpen size={15} strokeWidth={2} aria-hidden />
+            {lang === 'de' ? 'Management Summary & Business Case' : 'Management summary & business case'}
+          </summary>
+          <div className={styles.summaryBody}>
+            <div className={styles.summaryBlock}>
+              <span className={styles.summaryBlockLabel}>
+                <Sparkles size={13} strokeWidth={2.2} aria-hidden />
+                {lang === 'de' ? 'Management Summary' : 'Management summary'}
+              </span>
+              <p className={styles.summaryText}>{renderRichText(chapter.vision)}</p>
+            </div>
+            <div className={styles.summaryBlock}>
+              <span className={styles.summaryBlockLabel}>
+                <TrendingUp size={13} strokeWidth={2.2} aria-hidden />
+                {lang === 'de' ? 'Business Case (exemplarisch)' : 'Business case (illustrative)'}
+              </span>
+              <p className={styles.summaryText}>{renderRichText(chapter.businessCase)}</p>
+            </div>
+          </div>
+        </details>
+
         <div className={styles.media}>
           <div className={styles.imageInner}>
             <ImageSlot
@@ -422,13 +454,13 @@ export function ChapterReader({
               </div>
             )}
           </div>
-          {/* Leitfrage als Sprechblase rechts neben dem 2035-Bild (breite Screens).
+          {/* Leitfrage als Sprechblase rechts neben dem 2030-Bild (breite Screens).
               Auf schmalen Screens unsichtbar — dort greift die Leiste unten. */}
           {!editMode && effLeitfrage && (
             <aside className={styles.calloutFloat}>
               {/* PowerPoint-Form „Sprechblase: abgerundetes Rechteck"
                   (wedgeRoundRectCallout): abgerundetes Rechteck + gerader,
-                  dreieckiger Zeiger nach links auf das 2035-Bild — als ein
+                  dreieckiger Zeiger nach links auf das 2030-Bild — als ein
                   einziger SVG-Pfad, damit die Kontur durchgehend bleibt. */}
               <svg
                 className={styles.calloutBubble}
@@ -496,14 +528,14 @@ export function ChapterReader({
                   <>
                     <textarea
                       className={styles.editInput}
-                      value={effIn2035}
-                      onChange={onEdit('in2035')}
+                      value={effIn2030}
+                      onChange={onEdit('in2030')}
                       rows={3}
                     />
                     <div className={styles.boldHint}>{t.boldHint}</div>
                   </>
                 ) : (
-                  <p className={styles.compareText}>{renderRichText(effIn2035)}</p>
+                  <p className={styles.compareText}>{renderRichText(effIn2030)}</p>
                 )}
               </article>
             </div>
@@ -574,7 +606,7 @@ export function ChapterReader({
         </button>
 
         <div className={styles.dots} role="tablist" aria-label={t.steps}>
-          {Array.from({ length: STEP_COUNT }).map((_, i) => (
+          {Array.from({ length: stepCount }).map((_, i) => (
             <button
               key={i}
               type="button"
@@ -582,9 +614,9 @@ export function ChapterReader({
               aria-selected={i === step}
               className={styles.dot}
               data-active={i === step || undefined}
-              data-activity={i === STEP_COUNT - 1 || undefined}
+              data-activity={i === stepCount - 1 || undefined}
               onClick={() => onStepChange(i)}
-              aria-label={i === STEP_COUNT - 1 ? t.activity : t.hypothesisAria(i + 1)}
+              aria-label={i === stepCount - 1 ? t.activity : t.hypothesisAria(i + 1)}
             />
           ))}
         </div>

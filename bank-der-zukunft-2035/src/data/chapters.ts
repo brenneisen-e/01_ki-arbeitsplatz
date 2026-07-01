@@ -1,15 +1,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CHAPTERS — die zentrale, editierbare Datenquelle für „Banking Horizon 2035".
+// CHAPTERS — die zentrale, editierbare Datenquelle für „Banking Horizon 2030".
 //
 // 8 Kapitel = 8 Zonen im Strukturbild. 7 raumgebundene Kapitel + der Aufzug
 // (Glas-Spine) als vertikale Zone für die Transformation. Jedes Kapitel besteht
 // aus
-//   · 3 Hypothesen mit je einer Status-Quo- und einer In-2035-Aussage
+//   · 3 Hypothesen mit je einer Status-Quo- und einer In-2030-Aussage
 //     (Vergleichsbild + zwei Text-Blöcke im Panel rechts)
 //   · 1 Aktivitäts-/Demo-Bild mit Absprung (iframe-Demo, Strategy Lab,
 //     Co-Creation oder Kredit-Dilemma-Tool).
 //
-// Hypothesen-Texte sind 1:1 aus dem Deck „Banking Horizon 2035 — Deep Dive".
+// Hypothesen-Texte sind 1:1 aus dem Deck „Banking Horizon 2030 — Deep Dive".
 //
 // ZWEISPRACHIGKEIT: Alle nutzersichtbaren Texte sind als `L = { de, en }`
 // hinterlegt. `getChapters(lang)` / `getChapter(id, lang)` / `getMasterImage(lang)`
@@ -91,8 +91,8 @@ export type Hypothesis = {
   image: ImageRef
   /** Status-Quo-Block (1:1 aus dem Deck). */
   statusQuo: string
-  /** In-2035-Block (1:1 aus dem Deck). */
-  in2035: string
+  /** In-2030-Block (1:1 aus dem Deck). */
+  in2030: string
   /** Optionale Leitfrage aus dem Deck. */
   leitfrage?: string
 }
@@ -154,11 +154,18 @@ export type Chapter = {
   zone: Zone
   /**
    * Aus den drei Hypothesen abgeleitetes Vision Statement für diesen Bereich
-   * der „Bank 2035" — wird in der Management Summary (Overlay über dem
+   * der „Bank 2030" — wird in der Management Summary (Overlay über dem
    * Strukturbild) gerendert. `**fett**` markiert das besonders Wichtige.
    */
   vision: string
-  hypotheses: [Hypothesis, Hypothesis, Hypothesis]
+  /**
+   * Exemplarischer Business Case: grobe, illustrative Financial-Impact-Schätzung
+   * der Änderungen dieses Kapitels (mittelgroße Bank, Annahmen genannt). Wird im
+   * Kapitel als Management-Summary-Block gerendert. `**fett**` markiert Kernzahlen.
+   */
+  businessCase: string
+  /** Ein bis mehrere Hypothesen (i. d. R. drei; Kapitel mit Zusatz-Hypothesen mehr). */
+  hypotheses: Hypothesis[]
   activity: Activity
 }
 
@@ -170,7 +177,7 @@ type RawHypothesis = {
   title: L
   image: RawImageRef
   statusQuo: L
-  in2035: L
+  in2030: L
   leitfrage?: L
 }
 type RawScreenOverlay = {
@@ -202,7 +209,8 @@ export type RawChapter = {
   keyObject: string
   zone: Zone
   vision: L
-  hypotheses: [RawHypothesis, RawHypothesis, RawHypothesis]
+  businessCase: L
+  hypotheses: RawHypothesis[]
   activity: RawActivity
 }
 
@@ -223,8 +231,12 @@ const RAW_CHAPTERS: RawChapter[] = [
     // Bewusst NICHT die ganze Etage/den Fahrstuhl, sondern der Schalterbereich.
     zone: { centerX: 20, centerY: 85, width: 34, height: 24, fit: 'contain', labelX: 20, labelY: 83, hitWidth: 30, hitHeight: 20 },
     vision: {
-      de: 'Für unsere Kund:innen wird Banking 2035 **unsichtbar und Teil des Alltags** statt eigener Interaktion: Persönliche KI-Finanzassistenten begleiten kontinuierlich, verwandeln eine Flut von Optionen in **klare, simulierte und begründete Empfehlungen** und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus reaktivem Warten wird **teilautonome Finanzsteuerung mit Vertrauensmandat — die Kund:in entscheidet, aber auf KI-vorbereiteter Grundlage**.',
-      en: 'For our customers, banking in 2035 becomes **invisible and part of everyday life** rather than a separate interaction: personal AI financial assistants accompany them continuously, turn a flood of options into **clear, simulated and reasoned recommendations** and act proactively within agreed guardrails. Reactive waiting gives way to **semi-autonomous financial management with a trust mandate — the customer decides, but on an AI-prepared basis**.',
+      de: 'Für unsere Kund:innen wird Banking 2030 **unsichtbar und Teil des Alltags** statt eigener Interaktion: Persönliche KI-Finanzassistenten begleiten kontinuierlich, verwandeln eine Flut von Optionen in **klare, simulierte und begründete Empfehlungen** und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus reaktivem Warten wird **teilautonome Finanzsteuerung mit Vertrauensmandat — die Kund:in entscheidet, aber auf KI-vorbereiteter Grundlage**.',
+      en: 'For our customers, banking in 2030 becomes **invisible and part of everyday life** rather than a separate interaction: personal AI financial assistants accompany them continuously, turn a flood of options into **clear, simulated and reasoned recommendations** and act proactively within agreed guardrails. Reactive waiting gives way to **semi-autonomous financial management with a trust mandate — the customer decides, but on an AI-prepared basis**.',
+    },
+    businessCase: {
+      de: 'Exemplarisch (mittelgroße Bank, illustrativ): Proaktive KI-Finanzassistenten heben die Cross-Selling-Quote um **10–15 %** und senken die Abwanderung um **15–20 %**. Bei rund 250.000 Kund:innen entspricht das etwa **8–12 Mio € Mehrertrag p.a.**; zugleich sinken die Servicekosten je Kontakt um **30–40 %**.',
+      en: 'Illustrative example (mid-sized bank): Proactive AI financial assistants lift the cross-selling rate by **10–15 %** and cut churn by **15–20 %**. For around 250,000 customers that is roughly **€8–12m additional revenue p.a.**; at the same time, service cost per contact drops by **30–40 %**.',
     },
     hypotheses: [
       {
@@ -232,15 +244,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 1_1.png',
           alt: {
-            de: 'Status Quo: Kundin tippt aktiv in einer Banking-App. 2035: persönlicher KI-Finanzassistent arbeitet unaufgefordert im Hintergrund auf Smartwatch und Smartphone.',
-            en: 'Status quo: a customer actively taps in a banking app. 2035: a personal AI financial assistant works unprompted in the background on smartwatch and smartphone.',
+            de: 'Status Quo: Kundin tippt aktiv in einer Banking-App. 2030: persönlicher KI-Finanzassistent arbeitet unaufgefordert im Hintergrund auf Smartwatch und Smartphone.',
+            en: 'Status quo: a customer actively taps in a banking app. 2030: a personal AI financial assistant works unprompted in the background on smartwatch and smartphone.',
           },
         },
         statusQuo: {
           de: 'Kund:innen „machen Banking" aktiv über App, Filiale oder Online-Banking – Interaktion ist **kanalzentriert und reaktiv**.',
           en: 'Customers actively “do banking” via app, branch or online banking – interaction is **channel-centric and reactive**.',
         },
-        in2035: {
+        in2030: {
           de: 'Banking erfolgt über **persönliche KI-Finanzassistenten / Agents**, die kontinuierlich begleiten, kontextualisieren und proaktiv relevante Impulse geben – Banking wird **Teil des Alltags** statt eigener Interaktion.',
           en: 'Banking happens through **personal AI financial assistants / agents** that continuously accompany, contextualise and proactively provide relevant nudges – banking becomes **part of everyday life** rather than a separate interaction.',
         },
@@ -254,15 +266,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 1_2.png',
           alt: {
-            de: 'Status Quo: Kunde ratlos vor vielen Produktoptionen. 2035: KI-Assistent präsentiert eine klare Empfehlung mit Simulation und Begründung.',
-            en: 'Status quo: a customer is at a loss in front of many product options. 2035: an AI assistant presents one clear recommendation with simulation and rationale.',
+            de: 'Status Quo: Kunde ratlos vor vielen Produktoptionen. 2030: KI-Assistent präsentiert eine klare Empfehlung mit Simulation und Begründung.',
+            en: 'Status quo: a customer is at a loss in front of many product options. 2030: an AI assistant presents one clear recommendation with simulation and rationale.',
           },
         },
         statusQuo: {
           de: 'Kund:innen erhalten Produktangebote und **müssen selbst entscheiden** – wenig echte Entscheidungsunterstützung.',
           en: 'Customers receive product offers and **have to decide for themselves** – with little genuine decision support.',
         },
-        in2035: {
+        in2030: {
           de: 'KI liefert **kontinuierliche Entscheidungsintelligenz**: Klare Empfehlungen statt Optionen, Simulationen & Szenarien, Erklärung & Begründung → Kunde entscheidet, aber auf Basis einer **„AI-prepared decision"**.',
           en: 'AI delivers **continuous decision intelligence**: clear recommendations instead of options, simulations & scenarios, explanation & rationale → the customer decides, but on the basis of an **“AI-prepared decision”**.',
         },
@@ -272,15 +284,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 1_3.png',
           alt: {
-            de: 'Status Quo: Kunde kontaktiert die Bank und wartet auf Reaktion. 2035: autonomer KI-Agent erkennt ein Ereignis früh und handelt, der Kunde gibt frei.',
-            en: 'Status quo: a customer contacts the bank and waits for a response. 2035: an autonomous AI agent detects an event early and acts, with the customer giving approval.',
+            de: 'Status Quo: Kunde kontaktiert die Bank und wartet auf Reaktion. 2030: autonomer KI-Agent erkennt ein Ereignis früh und handelt, der Kunde gibt frei.',
+            en: 'Status quo: a customer contacts the bank and waits for a response. 2030: an autonomous AI agent detects an event early and acts, with the customer giving approval.',
           },
         },
         statusQuo: {
           de: 'Interaktion erfolgt überwiegend auf **Kund:inneninitiative** – Bank **reagiert** auf Anfragen oder Ereignisse.',
           en: 'Interaction happens mostly on **the customer’s initiative** – the bank **reacts** to requests or events.',
         },
-        in2035: {
+        in2030: {
           de: 'Autonome KI-Agenten **erkennen Ereignisse frühzeitig** und handeln innerhalb definierter Leitplanken: Erkennen Muster / Risiken, initiieren Maßnahmen, agieren **teilautonom („trusted autonomy")** mit Freigabelogik.',
           en: 'Autonomous AI agents **detect events early** and act within defined guardrails: they recognise patterns / risks, initiate measures and operate **semi-autonomously (“trusted autonomy”)** with approval logic.',
         },
@@ -313,8 +325,12 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: '„VERTRIEBS-COCKPIT"-Screen',
     zone: { centerX: 26, centerY: 60, width: 38, height: 22, labelX: 30, labelY: 60, hitWidth: 32, hitHeight: 18 },
     vision: {
-      de: '2035 verkaufen wir keine Produkte mehr, sondern **orchestrieren Lösungen entlang der Ziele unserer Kund:innen**. KI kombiniert Finanz-, Service- und Ökosystemleistungen in Echtzeit; unsere Berater:innen werden zu **KI-augmentierten Sparringspartnern**, die bei komplexen Entscheidungen den Unterschied machen, während Standardvorgänge autonom laufen. Die Kundenbeziehung wird **permanent, kanalübergreifend und hyperpersonalisiert**.',
-      en: 'By 2035 we no longer sell products but **orchestrate solutions around our customers’ goals**. AI combines financial, service and ecosystem capabilities in real time; our advisors become **AI-augmented sparring partners** who make the difference on complex decisions, while standard transactions run autonomously. The customer relationship becomes **permanent, cross-channel and hyper-personalised**.',
+      de: '2030 verkaufen wir keine Produkte mehr, sondern **orchestrieren Lösungen entlang der Ziele unserer Kund:innen**. KI kombiniert Finanz-, Service- und Ökosystemleistungen in Echtzeit; unsere Berater:innen werden zu **KI-augmentierten Sparringspartnern**, die bei komplexen Entscheidungen den Unterschied machen, während Standardvorgänge autonom laufen. Die Kundenbeziehung wird **permanent, kanalübergreifend und hyperpersonalisiert**.',
+      en: 'By 2030 we no longer sell products but **orchestrate solutions around our customers’ goals**. AI combines financial, service and ecosystem capabilities in real time; our advisors become **AI-augmented sparring partners** who make the difference on complex decisions, while standard transactions run autonomously. The customer relationship becomes **permanent, cross-channel and hyper-personalised**.',
+    },
+    businessCase: {
+      de: 'Exemplarisch (illustrativ): KI-augmentierte Beratung steigert die Beraterproduktivität um **25–30 %** und den Ertrag je Kund:in um **10–15 %**. Bei 400 Berater:innen ergibt das rund **15–20 Mio € p.a.** — bei zugleich höherer Abschlussqualität durch Lösungsorchestrierung.',
+      en: 'Illustrative example: AI-augmented advisory raises advisor productivity by **25–30 %** and revenue per customer by **10–15 %**. Across 400 advisors that is roughly **€15–20m p.a.** — with higher deal quality from solution orchestration.',
     },
     hypotheses: [
       {
@@ -322,17 +338,17 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 2_1.png',
           alt: {
-            de: 'Status Quo: produktzentriertes Verkaufsgespräch mit Broschüren. 2035: Berater und Kunde gestalten gemeinsam eine maßgeschneiderte Lösung mit holografischem KI-Display.',
-            en: 'Status quo: a product-centric sales conversation with brochures. 2035: advisor and customer jointly design a tailored solution with a holographic AI display.',
+            de: 'Status Quo: produktzentriertes Verkaufsgespräch mit Broschüren. 2030: Berater und Kunde gestalten gemeinsam eine maßgeschneiderte Lösung mit holografischem KI-Display.',
+            en: 'Status quo: a product-centric sales conversation with brochures. 2030: advisor and customer jointly design a tailored solution with a holographic AI display.',
           },
         },
         statusQuo: {
           de: 'Bankvertrieb ist **produkt- und kanalzentriert** organisiert. Kundenbetreuung folgt standardisierten Modellen; Daten und Kanäle sind **fragmentiert**.',
           en: 'Bank distribution is organised in a **product- and channel-centric** way. Client service follows standardised models; data and channels are **fragmented**.',
         },
-        in2035: {
-          de: 'Die Bank agiert als **kontext-basierter Lösungsorchestrator**: KI kombiniert Finanz-, Service- und Ökosystemleistungen dynamisch zu individuellen Lösungen. **Der Kunde definiert das Ziel** – nicht mehr das Produktportfolio.',
-          en: 'The bank acts as a **context-based solution orchestrator**: AI dynamically combines financial, service and ecosystem capabilities into individual solutions. **The customer defines the goal** – no longer the product portfolio.',
+        in2030: {
+          de: 'Die Bank agiert als **kontext-basierter Lösungsorchestrator**: KI kombiniert Finanz-, Service- und Ökosystemleistungen dynamisch zu individuellen Lösungen. **Der Kunde definiert Ziel und Ausgangssituation** – nicht mehr das Produktportfolio.',
+          en: 'The bank acts as a **context-based solution orchestrator**: AI dynamically combines financial, service and ecosystem capabilities into individual solutions. **The customer defines both the goal and the starting point** – no longer the product portfolio.',
         },
         leitfrage: {
           de: 'Was passiert mit Ihrem Vertrieb, wenn das stimmt?',
@@ -344,17 +360,17 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 2_2.png',
           alt: {
-            de: 'Status Quo: standardisiertes Beratungsgespräch nach Skript, KI nur kleines Tool. 2035: Berater als KI-augmentierter Sparringspartner mit reichem KI-Kontext-Display.',
-            en: 'Status quo: a scripted, standardised advisory conversation with AI as a minor tool. 2035: the advisor as an AI-augmented sparring partner with a rich AI context display.',
+            de: 'Status Quo: standardisiertes Beratungsgespräch nach Skript, KI nur kleines Tool. 2030: Berater als KI-augmentierter Sparringspartner mit reichem KI-Kontext-Display.',
+            en: 'Status quo: a scripted, standardised advisory conversation with AI as a minor tool. 2030: the advisor as an AI-augmented sparring partner with a rich AI context display.',
           },
         },
         statusQuo: {
           de: 'Beratung ist **stark standardisiert** und auf Produkte sowie Effizienz ausgerichtet. KI wird primär als **Produktivitätswerkzeug** eingesetzt.',
           en: 'Advisory is **highly standardised** and geared towards products and efficiency. AI is used primarily as a **productivity tool**.',
         },
-        in2035: {
-          de: 'Kundenberater agieren als **KI-augmentierte Sparringspartner** mit Branchen- und Kontextverständnis. Standardtransaktionen laufen autonom; menschliche Beratung **gewinnt bei komplexen Themen an Bedeutung**.',
-          en: 'Client advisors act as **AI-augmented sparring partners** with industry and context understanding. Standard transactions run autonomously; human advice **gains importance on complex topics**.',
+        in2030: {
+          de: 'Kundenberater agieren als **KI-augmentierte Sparringspartner** mit Branchen- und Kontextverständnis. Standardtransaktionen laufen autonom; **menschliche Beratung gewinnt bei komplexen Themen an Bedeutung**.',
+          en: 'Client advisors act as **AI-augmented sparring partners** with industry and context understanding. Standard transactions run autonomously; **human advice gains importance on complex topics**.',
         },
       },
       {
@@ -362,15 +378,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 2_3.png',
           alt: {
-            de: 'Status Quo: punktueller, reaktiver Kundenkontakt an fragmentiertem CRM. 2035: Agentensystem begleitet kanalübergreifend in Echtzeit auf mehreren Geräten.',
-            en: 'Status quo: sporadic, reactive customer contact on a fragmented CRM. 2035: an agent system accompanies across channels in real time on multiple devices.',
+            de: 'Status Quo: punktueller, reaktiver Kundenkontakt an fragmentiertem CRM. 2030: Agentensystem begleitet kanalübergreifend in Echtzeit auf mehreren Geräten.',
+            en: 'Status quo: sporadic, reactive customer contact on a fragmented CRM. 2030: an agent system accompanies across channels in real time on multiple devices.',
           },
         },
         statusQuo: {
           de: 'Kundeninteraktion erfolgt überwiegend **punktuell und reaktiv**. CRM- und Prozesslandschaften sind **fragmentiert** und wenig individualisiert.',
           en: 'Customer interaction is mostly **sporadic and reactive**. CRM and process landscapes are **fragmented** and barely individualised.',
         },
-        in2035: {
+        in2030: {
           de: 'KI-basierte Agentensysteme begleiten Kunden **kontinuierlich und kanalübergreifend in Echtzeit**. **Hyperpersonalisierte Betreuung** und Produkte werden zum Standard.',
           en: 'AI-based agent systems accompany customers **continuously and across channels in real time**. **Hyper-personalised service** and products become the standard.',
         },
@@ -418,8 +434,12 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: '„WORKFLOW AUTOMATION"-Screen',
     zone: { centerX: 74, centerY: 60, width: 40, height: 22, labelX: 72, labelY: 60, hitWidth: 32, hitHeight: 18 },
     vision: {
-      de: 'Unsere Marktfolge entwickelt sich 2035 **vom internen Kostenblock zur wertschöpfenden Plattform**. Standardvorfälle laufen als **vollautonome Dunkelverarbeitung Ende-zu-Ende**, Menschen lösen nur noch komplexe Sonderfälle. Wir entscheiden bewusst, **was intern bleibt und was ein orchestriertes Ökosystem übernimmt — und bieten unsere besten Services als skalierbares Banking-as-a-Service für Dritte an**.',
-      en: 'By 2035 our operations evolve **from an internal cost block into a value-creating platform**. Standard cases run as **fully autonomous straight-through processing end-to-end**, while people only resolve complex exceptions. We deliberately decide **what stays in-house and what an orchestrated ecosystem takes over — and offer our best services as scalable banking-as-a-service to third parties**.',
+      de: 'Unsere Marktfolge entwickelt sich 2030 **vom internen Kostenblock zur wertschöpfenden Plattform**. Standardvorfälle laufen als **vollautonome Dunkelverarbeitung Ende-zu-Ende**, Menschen lösen nur noch komplexe Sonderfälle. Wir entscheiden bewusst, **was intern bleibt und was ein orchestriertes Ökosystem übernimmt — und bieten unsere besten Services als skalierbares Banking-as-a-Service für Dritte an**.',
+      en: 'By 2030 our operations evolve **from an internal cost block into a value-creating platform**. Standard cases run as **fully autonomous straight-through processing end-to-end**, while people only resolve complex exceptions. We deliberately decide **what stays in-house and what an orchestrated ecosystem takes over — and offer our best services as scalable banking-as-a-service to third parties**.',
+    },
+    businessCase: {
+      de: 'Exemplarisch (illustrativ): Dunkelverarbeitung senkt die Stückkosten der Marktfolge um **40–60 %**. Bei rund 2 Mio Vorgängen p.a. sind das etwa **10–14 Mio € Einsparung p.a.**; Banking-as-a-Service für Dritte eröffnet zusätzlich neue Erlösquellen.',
+      en: 'Illustrative example: Straight-through processing cuts operations unit costs by **40–60 %**. At around 2 million cases p.a. that is roughly **€10–14m savings p.a.**; banking-as-a-service for third parties opens additional revenue streams.',
     },
     hypotheses: [
       {
@@ -427,15 +447,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 3_1.png',
           alt: {
-            de: 'Status Quo: Back-Office bearbeitet manuell Papierakten an Legacy-Bildschirmen. 2035: vollautonome Dunkelverarbeitung, Mensch nur bei einem komplexen Sonderfall.',
-            en: 'Status quo: the back office manually processes paper files at legacy screens. 2035: fully autonomous straight-through processing, with a human only for a complex exception.',
+            de: 'Status Quo: Back-Office bearbeitet manuell Papierakten an Legacy-Bildschirmen. 2030: vollautonome Dunkelverarbeitung, Mensch nur bei einem komplexen Sonderfall.',
+            en: 'Status quo: the back office manually processes paper files at legacy screens. 2030: fully autonomous straight-through processing, with a human only for a complex exception.',
           },
         },
         statusQuo: {
           de: 'Marktfolge ist geprägt von **fragmentierten Prozessen, Legacy-Systemen** und hohen **manuellen Bearbeitungsanteilen**.',
           en: 'Operations are characterised by **fragmented processes, legacy systems** and high **manual processing shares**.',
         },
-        in2035: {
+        in2030: {
           de: 'Standardisierte Geschäftsvorfälle laufen **vollständig autonom**. KI steuert Kredit-, KYC- und Abwicklungsprozesse **Ende-zu-Ende**; Menschen bearbeiten nur (komplexe) Sonderfälle.',
           en: 'Standardised transactions run **fully autonomously**. AI manages credit, KYC and settlement processes **end-to-end**; people only handle (complex) exceptions.',
         },
@@ -445,15 +465,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 3_2.png',
           alt: {
-            de: 'Status Quo: geschlossenes Back-Office, alles intern. 2035: modulare externe Utility-Plattformen übernehmen Standardbetrieb, die Bank orchestriert ein Ökosystem.',
-            en: 'Status quo: a closed back office, everything in-house. 2035: modular external utility platforms take over standard operations while the bank orchestrates an ecosystem.',
+            de: 'Status Quo: geschlossenes Back-Office, alles intern. 2030: modulare externe Utility-Plattformen übernehmen Standardbetrieb, die Bank orchestriert ein Ökosystem.',
+            en: 'Status quo: a closed back office, everything in-house. 2030: modular external utility platforms take over standard operations while the bank orchestrates an ecosystem.',
           },
         },
         statusQuo: {
           de: 'Betriebs- und Marktfolgeleistungen werden überwiegend **intern erbracht**; Kooperationen und Auslagerungen **bleiben begrenzt**.',
           en: 'Operating and back-office services are largely **provided in-house**; cooperations and outsourcing **remain limited**.',
         },
-        in2035: {
+        in2030: {
           de: 'Externe Plattformen und **KI-gestützte Utility-Modelle** übernehmen große Teile standardisierter Betriebsleistungen. Banken **orchestrieren modulare Service-Ökosysteme**.',
           en: 'External platforms and **AI-supported utility models** take over large parts of standardised operations. Banks **orchestrate modular service ecosystems**.',
         },
@@ -463,17 +483,37 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 3_3.png',
           alt: {
-            de: 'Status Quo: Operations als interne Kostenstelle. 2035: skalierbare Banking-as-a-Service-Plattform, die standardisierte Services für Dritte anbietet.',
-            en: 'Status quo: operations as an internal cost centre. 2035: a scalable banking-as-a-service platform offering standardised services to third parties.',
+            de: 'Status Quo: Operations als interne Kostenstelle. 2030: skalierbare Banking-as-a-Service-Plattform, die standardisierte Services für Dritte anbietet.',
+            en: 'Status quo: operations as an internal cost centre. 2030: a scalable banking-as-a-service platform offering standardised services to third parties.',
           },
         },
         statusQuo: {
           de: 'Betriebs- und Abwicklungseinheiten gelten primär als **interne Kosten- und Kontrollfunktion**.',
           en: 'Operating and settlement units are seen primarily as an **internal cost and control function**.',
         },
-        in2035: {
+        in2030: {
           de: 'Große Banken entwickeln Marktfolge- und Serviceplattformen zu **eigenständigen Geschäftsmodellen** und bieten **standardisierte Banking-Services für Dritte** an.',
           en: 'Large banks develop operations and service platforms into **standalone business models** and offer **standardised banking services to third parties**.',
+        },
+      },
+      {
+        // NEU aus Workshop-Feedback (gelbes Kommentarfeld): Regulatorik/Compliance
+        // wird aufgebrochen, weil sie im Lifecycle berücksichtigt wird.
+        title: { de: 'Regulatorik & Compliance wandern in den Lifecycle', en: 'Regulation & compliance move into the lifecycle' },
+        image: {
+          src: './images/Kapitel 3_4.png',
+          alt: {
+            de: 'Status Quo: nachgelagerte Compliance-Prüfung als separater Kontrollschritt nach dem Prozess. 2030: Regulatorik ist als „compliant by design" direkt in den automatisierten Prozess-Lifecycle eingebaut.',
+            en: 'Status quo: downstream compliance check as a separate control step after the process. 2030: regulation is built directly into the automated process lifecycle as “compliant by design”.',
+          },
+        },
+        statusQuo: {
+          de: 'Regulatorik und Compliance sind der Marktfolge **nachgelagert** – als **separate Prüf- und Kontrollschritte**, die Durchlaufzeiten verlängern.',
+          en: 'Regulation and compliance sit **downstream** of operations – as **separate check and control steps** that extend throughput times.',
+        },
+        in2030: {
+          de: 'Regulatorische und Compliance-Anforderungen sind **direkt in den Prozess-Lifecycle eingebaut** („compliant by design"). Die klassische, aufgesetzte Compliance-Schicht **bricht auf** – Prüfungen laufen automatisch im Prozess mit.',
+          en: 'Regulatory and compliance requirements are **built directly into the process lifecycle** (“compliant by design”). The classic, bolted-on compliance layer **breaks open** – checks run automatically within the process.',
         },
       },
     ],
@@ -507,8 +547,12 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: '„ORGANISATION"-Screen',
     zone: { centerX: 26, centerY: 37, width: 38, height: 22, labelX: 30, labelY: 38, hitWidth: 32, hitHeight: 18 },
     vision: {
-      de: 'Corporate Services sind 2035 der **Enabler des Wandels**. Lernen ist kein Event mehr, sondern **kontinuierlicher, KI-gestützter Skill-Aufbau** für neue Profile wie den AI-Translator. Unsere Organisation wird **nicht mehr von starren Strukturen, sondern von Skills, Rollen und Teams in Echtzeit gesteuert** — und datenbasierte, vorausschauende Workforce-Steuerung wird zum Wettbewerbsvorteil.',
-      en: 'In 2035, Corporate Services are the **enabler of change**. Learning is no longer an event but **continuous, AI-supported skill building** for new profiles such as the AI translator. Our organisation is **no longer steered by rigid structures but by skills, roles and teams in real time** — and data-driven, forward-looking workforce management becomes a competitive advantage.',
+      de: 'Corporate Services sind 2030 der **Enabler des Wandels**. Lernen ist kein Event mehr, sondern **kontinuierlicher, KI-gestützter Skill-Aufbau** für neue Profile wie den AI-Translator. Unsere Organisation wird **nicht mehr von starren Strukturen, sondern von Skills, Rollen und Teams in Echtzeit gesteuert** — und datenbasierte, vorausschauende Workforce-Steuerung wird zum Wettbewerbsvorteil.',
+      en: 'In 2030, Corporate Services are the **enabler of change**. Learning is no longer an event but **continuous, AI-supported skill building** for new profiles such as the AI translator. Our organisation is **no longer steered by rigid structures but by skills, roles and teams in real time** — and data-driven, forward-looking workforce management becomes a competitive advantage.',
+    },
+    businessCase: {
+      de: 'Exemplarisch (illustrativ): Reskilling statt Neueinstellung spart je 100 umgeschulten Stellen rund **3–5 Mio € p.a.** (Recruiting, Fluktuation, Anlernzeit). Immersives, KI-personalisiertes Lernen verkürzt die Time-to-Competency um **30–50 %**.',
+      en: 'Illustrative example: Reskilling instead of hiring saves roughly **€3–5m p.a. per 100 reskilled roles** (recruiting, attrition, ramp-up). Immersive, AI-personalised learning shortens time-to-competency by **30–50 %**.',
     },
     hypotheses: [
       {
@@ -516,15 +560,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 4_1.png',
           alt: {
-            de: 'Status Quo: isoliertes Classroom-Training. 2035: kontinuierlicher, personalisierter Skill-Aufbau mit adaptivem KI-Lernbegleiter.',
-            en: 'Status quo: isolated classroom training. 2035: continuous, personalised skill building with an adaptive AI learning companion.',
+            de: 'Status Quo: isoliertes Classroom-Training. 2030: kontinuierlicher, personalisierter Skill-Aufbau mit adaptivem KI-Lernbegleiter.',
+            en: 'Status quo: isolated classroom training. 2030: continuous, personalised skill building with an adaptive AI learning companion.',
           },
         },
         statusQuo: {
           de: 'Weiterbildungsinitiativen sind oft **nicht entlang zukünftiger Kompetenzbedarfe** (z. B. Daten- oder KI-Kompetenzen) ausgerichtet, sondern finden **isoliert und reaktiv** statt.',
           en: 'Upskilling initiatives are often **not aligned with future skill needs** (e.g. data or AI skills) but happen **in isolation and reactively**.',
         },
-        in2035: {
+        in2030: {
           de: 'HR als **„Enabler" des Wandels**: Fokus liegt auf **Upskilling / Reskilling** für neue Jobprofile („AI-Translator") und der Etablierung einer agilen Lernkultur.',
           en: 'HR as the **“enabler” of change**: the focus is on **upskilling / reskilling** for new job profiles (“AI translator”) and on establishing an agile learning culture.',
         },
@@ -534,15 +578,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 4_2.png',
           alt: {
-            de: 'Status Quo: starres funktionales Organigramm mit Silos. 2035: skills-getriebene, flexible Organisation, KI orchestriert Rollen und Teams als fluides Netzwerk.',
-            en: 'Status quo: a rigid functional org chart with silos. 2035: a skills-driven, flexible organisation in which AI orchestrates roles and teams as a fluid network.',
+            de: 'Status Quo: starres funktionales Organigramm mit Silos. 2030: skills-getriebene, flexible Organisation, KI orchestriert Rollen und Teams als fluides Netzwerk.',
+            en: 'Status quo: a rigid functional org chart with silos. 2030: a skills-driven, flexible organisation in which AI orchestrates roles and teams as a fluid network.',
           },
         },
         statusQuo: {
           de: 'Organisationen sind **funktional und silo-orientiert** aufgebaut; Rollen und Zusammenarbeit folgen **stabilen Hierarchien und festen Stellenprofilen**.',
           en: 'Organisations are built **functionally and along silos**; roles and collaboration follow **stable hierarchies and fixed job profiles**.',
         },
-        in2035: {
+        in2030: {
           de: 'Organisation wird **flexibel gesteuert** – AI orchestriert **Skills, Rollen und Teams in Echtzeit**.',
           en: 'The organisation is **steered flexibly** – AI orchestrates **skills, roles and teams in real time**.',
         },
@@ -552,8 +596,8 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 4_3.png',
           alt: {
-            de: 'Status Quo: administrative, reaktive HR-Verwaltung. 2035: datenbasierte, vorausschauende Workforce-Steuerung auf einem Predictive-Analytics-Dashboard.',
-            en: 'Status quo: administrative, reactive HR administration. 2035: data-driven, forward-looking workforce management on a predictive analytics dashboard.',
+            de: 'Status Quo: administrative, reaktive HR-Verwaltung. 2030: datenbasierte, vorausschauende Workforce-Steuerung auf einem Predictive-Analytics-Dashboard.',
+            en: 'Status quo: administrative, reactive HR administration. 2030: data-driven, forward-looking workforce management on a predictive analytics dashboard.',
           },
         },
         // Hinweis: Status-Quo im Deck fehlerhaft (Copy-Paste-Bug). Platzhalter
@@ -562,9 +606,49 @@ const RAW_CHAPTERS: RawChapter[] = [
           de: 'Workforce-Planung erfolgt überwiegend **administrativ und reaktiv**; die Steuerung von Skills und Transformation ist **wenig datenbasiert** und kaum vorausschauend.',
           en: 'Workforce planning is mostly **administrative and reactive**; steering of skills and transformation is **barely data-driven** and hardly forward-looking.',
         },
-        in2035: {
+        in2030: {
           de: 'Corporate Services steuern Workforce und Transformation **datenbasiert und vorausschauend**.',
           en: 'Corporate Services steer workforce and transformation **in a data-driven and forward-looking way**.',
+        },
+      },
+      {
+        // NEU aus Workshop-Feedback: Wie passiert Weiterbildung? (VR-Training,
+        // KI leitet aus der Skill-Veränderung ein Trainingsprogramm ab.)
+        title: { de: 'Lernen wird immersiv und KI-personalisiert', en: 'Learning becomes immersive and AI-personalised' },
+        image: {
+          src: './images/Kapitel 4_4.png',
+          alt: {
+            de: 'Status Quo: klassisches Classroom-/E-Learning ohne Bezug zur individuellen Skill-Lücke. 2030: Mitarbeitende trainieren mit VR-Brille, während die KI aus der Skill-Veränderung automatisch ein passgenaues Trainingsprogramm ableitet.',
+            en: 'Status quo: classic classroom/e-learning with no link to the individual skill gap. 2030: employees train with VR glasses while the AI automatically derives a tailored training programme from their skill changes.',
+          },
+        },
+        statusQuo: {
+          de: 'Weiterbildung findet in **klassischen Formaten** (Präsenz, E-Learning) statt und ist **selten auf die individuelle Skill-Lücke** zugeschnitten.',
+          en: 'Upskilling happens in **classic formats** (classroom, e-learning) and is **rarely tailored to the individual skill gap**.',
+        },
+        in2030: {
+          de: 'Training wird **immersiv** durchgeführt (z. B. per VR/AR); **KI leitet aus der individuellen Skill-Veränderung automatisch ein passgenaues Trainingsprogramm ab** – kontinuierlich und im Arbeitsfluss.',
+          en: 'Training becomes **immersive** (e.g. via VR/AR); **AI automatically derives a tailored training programme from each person’s skill changes** – continuously and in the flow of work.',
+        },
+      },
+      {
+        // NEU aus Workshop-Feedback: Demografischer Wandel — auch 50+ müssen
+        // grundlegend neue Skills lernen.
+        title: { de: 'Demografischer Wandel erzwingt lebenslanges Reskilling', en: 'Demographic change forces lifelong reskilling' },
+        image: {
+          src: './images/Kapitel 4_5.png',
+          alt: {
+            de: 'Status Quo: Qualifizierung konzentriert sich auf junge Mitarbeitende. 2030: gemischte, auch ältere Belegschaft lernt selbstverständlich grundlegend neue Fähigkeiten mit KI-Lernbegleitung.',
+            en: 'Status quo: qualification focuses on younger employees. 2030: a mixed, also older workforce naturally learns fundamentally new skills with AI learning support.',
+          },
+        },
+        statusQuo: {
+          de: 'Qualifizierung ist überwiegend auf **frühe Karrierephasen** ausgerichtet; ältere Belegschaften werden bei grundlegend neuen Kompetenzen **selten systematisch mitgenommen**.',
+          en: 'Qualification is mostly geared towards **early career stages**; older parts of the workforce are **rarely systematically included** in fundamentally new competencies.',
+        },
+        in2030: {
+          de: 'Die alternde Belegschaft lernt **kontinuierlich neue Skills** – auch mit 50+ müssen dieselben Menschen **grundlegend neue Fähigkeiten** aufbauen. **Lebenslanges Reskilling** wird zum Normalfall und zur strategischen Notwendigkeit.',
+          en: 'The ageing workforce **continuously learns new skills** – even at 50+, the same people must build **fundamentally new capabilities**. **Lifelong reskilling** becomes the norm and a strategic necessity.',
         },
       },
     ],
@@ -578,8 +662,8 @@ const RAW_CHAPTERS: RawChapter[] = [
       },
       title: { de: 'Co-Creation: Organisation unter Transformationsdruck', en: 'Co-creation: organisation under transformation pressure' },
       text: {
-        de: 'Co-Creation: **Organisation unter Transformationsdruck**. Zielbild für 2035 entlang **vier Dimensionen** — Skill-Aufbau, Organisationslogik, Workforce-Steuerung, Rolle Corporate Services.',
-        en: 'Co-creation: **organisation under transformation pressure**. A 2035 target picture along **four dimensions** — skill building, organisational logic, workforce management, role of Corporate Services.',
+        de: 'Co-Creation: **Organisation unter Transformationsdruck**. Zielbild für 2030 entlang **vier Dimensionen** — Skill-Aufbau, Organisationslogik, Workforce-Steuerung, Rolle Corporate Services.',
+        en: 'Co-creation: **organisation under transformation pressure**. A 2030 target picture along **four dimensions** — skill building, organisational logic, workforce management, role of Corporate Services.',
       },
       buttonLabel: { de: 'Zur Co-Creation', en: 'Go to co-creation' },
       handoff: { kind: 'cocreation', variant: 'organisation' },
@@ -595,8 +679,12 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: 'Monitoring-Arbeitsplatz am Server-Rack',
     zone: { centerX: 74, centerY: 37, width: 40, height: 22, labelX: 72, labelY: 38, hitWidth: 32, hitHeight: 18 },
     vision: {
-      de: '2035 **entwickelt, testet und deployt sich unsere Software weitgehend selbst**. KI entscheidet autonom innerhalb der von uns gesetzten **Governance und Leitplanken**, während die IT zur **modularen, API-basierten Plattform** wird. Fachbereiche steuern diese Systeme zunehmend direkt — die **Gatekeeper-Rolle der klassischen IT verschwindet**, und unser Vorsprung entsteht aus der Geschwindigkeit, mit der wir Anforderungen in Lösungen verwandeln.',
-      en: 'By 2035 **our software largely develops, tests and deploys itself**. AI decides autonomously within the **governance and guardrails** we set, while IT becomes a **modular, API-based platform**. Business units increasingly steer these systems directly — the **gatekeeper role of classic IT disappears**, and our edge comes from the speed at which we turn requirements into solutions.',
+      de: '2030 **entwickelt, testet und deployt sich unsere Software weitgehend selbst**. KI entscheidet autonom innerhalb der von uns gesetzten **Governance und Leitplanken**, während die IT zur **modularen, API-basierten Plattform** wird. Fachbereiche steuern diese Systeme zunehmend direkt — die **Gatekeeper-Rolle der klassischen IT verschwindet**, und unser Vorsprung entsteht aus der Geschwindigkeit, mit der wir Anforderungen in Lösungen verwandeln.',
+      en: 'By 2030 **our software largely develops, tests and deploys itself**. AI decides autonomously within the **governance and guardrails** we set, while IT becomes a **modular, API-based platform**. Business units increasingly steer these systems directly — the **gatekeeper role of classic IT disappears**, and our edge comes from the speed at which we turn requirements into solutions.',
+    },
+    businessCase: {
+      de: 'Exemplarisch (illustrativ): Selbstoptimierende AI-Delivery senkt Entwicklungs- und Betriebskosten um **20–35 %**. Bei einem IT-Budget von 80 Mio € entspricht das rund **16–28 Mio € p.a.** — zusätzlich verkürzt sich die Time-to-Market drastisch.',
+      en: 'Illustrative example: Self-optimising AI delivery cuts development and run costs by **20–35 %**. On an €80m IT budget that is roughly **€16–28m p.a.** — plus a drastic reduction in time-to-market.',
     },
     hypotheses: [
       {
@@ -604,17 +692,17 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 5_1.png',
           alt: {
-            de: 'Status Quo: Entwickler schreiben und testen Software manuell. 2035: selbstoptimierende AI-Delivery, Software baut/testet/deployt sich selbst, Mensch überwacht nur.',
-            en: 'Status quo: developers write and test software manually. 2035: self-optimising AI delivery — software builds/tests/deploys itself while a human only supervises.',
+            de: 'Status Quo: Entwickler schreiben und testen Software manuell. 2030: selbstoptimierende AI-Delivery, Software baut/testet/deployt sich selbst, Mensch überwacht nur.',
+            en: 'Status quo: developers write and test software manually. 2030: self-optimising AI delivery — software builds/tests/deploys itself while a human only supervises.',
           },
         },
         statusQuo: {
           de: 'Software wird in **linearen, deterministischen Entwicklungszyklen** **durch Menschen** erstellt, getestet und ausgerollt.',
           en: 'Software is created, tested and rolled out **by people** in **linear, deterministic development cycles**.',
         },
-        in2035: {
-          de: 'Software **entwickelt, testet und deployt sich kontinuierlich selbst** durch **AI-getriebene Systeme**.',
-          en: 'Software **continuously develops, tests and deploys itself** through **AI-driven systems**.',
+        in2030: {
+          de: 'Software **entwickelt, testet und deployt sich kontinuierlich selbst** durch **AI-getriebene Systeme**. Die verbleibenden Teams **coden nicht mehr, sondern überwachen und steuern die KI** – ein grundlegender Rollenwandel.',
+          en: 'Software **continuously develops, tests and deploys itself** through **AI-driven systems**. The remaining teams **no longer code but monitor and govern the AI** – a fundamental shift in roles.',
         },
       },
       {
@@ -622,17 +710,17 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 5_2.png',
           alt: {
-            de: 'Status Quo: regelbasierte IT mit manuellen Freigaben und Monolith. 2035: AI entscheidet autonom in Leitplanken, IT als modulare, API-basierte Plattform.',
-            en: 'Status quo: rule-based IT with manual approvals and a monolith. 2035: AI decides autonomously within guardrails, IT as a modular, API-based platform.',
+            de: 'Status Quo: regelbasierte IT mit manuellen Freigaben und Monolith. 2030: AI entscheidet autonom in Leitplanken, IT als modulare, API-basierte Plattform.',
+            en: 'Status quo: rule-based IT with manual approvals and a monolith. 2030: AI decides autonomously within guardrails, IT as a modular, API-based platform.',
           },
         },
         statusQuo: {
           de: 'IT steuert Systeme über **Regeln, Prozesse und manuelle Freigaben** mit klarer Kontrolle über Ergebnisse. Banken betreiben gewachsene, **monolithische IT-Landschaften** mit hoher Komplexität und geringer Anpassungsfähigkeit.',
           en: 'IT steers systems via **rules, processes and manual approvals** with clear control over outcomes. Banks run grown, **monolithic IT landscapes** with high complexity and low adaptability.',
         },
-        in2035: {
-          de: 'AI-Systeme **treffen eigenständig Entscheidungen**, während die Bank primär **Governance, Leitplanken und Kontrolle** definiert. IT besteht aus **modularen, API-basierten Plattformen**, die flexibel orchestriert und dynamisch kombiniert werden.',
-          en: 'AI systems **make decisions independently**, while the bank primarily defines **governance, guardrails and control**. IT consists of **modular, API-based platforms** that are flexibly orchestrated and dynamically combined.',
+        in2030: {
+          de: 'AI-Systeme **treffen eigenständig Entscheidungen**, während die Bank primär **Governance, Leitplanken und Kontrolle** definiert. Die IT wird zur **datengetriebenen Plattform, die sich in einem kontinuierlichen Loop selbst verbessert** – der entscheidende Vorteil ist die **Geschwindigkeit**, mit der aus Daten in Echtzeit neue Lösungen werden.',
+          en: 'AI systems **make decisions independently**, while the bank primarily defines **governance, guardrails and control**. IT becomes a **data-driven platform that continuously improves itself in a feedback loop** – the decisive advantage is the **speed** at which data turns into new solutions in real time.',
         },
       },
       {
@@ -640,17 +728,17 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 5_3.png',
           alt: {
-            de: 'Status Quo: IT als separate Gatekeeper-Funktion, Fachbereich übergibt Anforderungen. 2035: Fachbereiche steuern AI-Systeme direkt selbst, Gatekeeping entfällt.',
-            en: 'Status quo: IT as a separate gatekeeper function, with the business handing over requirements. 2035: business units steer AI systems directly themselves, and gatekeeping disappears.',
+            de: 'Status Quo: IT als separate Gatekeeper-Funktion, Fachbereich übergibt Anforderungen. 2030: Fachbereiche steuern AI-Systeme direkt selbst, Gatekeeping entfällt.',
+            en: 'Status quo: IT as a separate gatekeeper function, with the business handing over requirements. 2030: business units steer AI systems directly themselves, and gatekeeping disappears.',
           },
         },
         statusQuo: {
           de: 'IT ist eine **eigenständige Funktion**, die Anforderungen aus dem Business umsetzt und Systeme betreibt. Wettbewerb entsteht durch **proprietäre Systeme und funktionale Differenzierung**.',
           en: 'IT is a **standalone function** that implements business requirements and runs systems. Competition arises from **proprietary systems and functional differentiation**.',
         },
-        in2035: {
-          de: 'Fachbereiche **interagieren direkt mit AI-Systemen**, während IT als eigenständige Funktion **weitgehend verschwindet**. Wettbewerb entsteht durch die **Geschwindigkeit**, mit der AI-Systeme neue Anforderungen umsetzen und optimieren.',
-          en: 'Business units **interact directly with AI systems**, while IT as a standalone function **largely disappears**. Competition arises from the **speed** at which AI systems implement and optimise new requirements.',
+        in2030: {
+          de: 'Fachbereich und IT verschmelzen zu **integrierten, vertikalen Delivery-Teams** – der Fachbereich ist **Teil des Teams**, nicht mehr Auftraggeber. IT als separater Gatekeeper **verschwindet**; der Vorsprung entsteht aus der **Geschwindigkeit**, mit der diese Teams Anforderungen in Lösungen verwandeln.',
+          en: 'Business and IT merge into **integrated, vertical delivery teams** – the business is **part of the team**, no longer a client handing over requirements. IT as a separate gatekeeper **disappears**; the edge comes from the **speed** at which these teams turn requirements into solutions.',
         },
       },
     ],
@@ -681,8 +769,12 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: '„GOVERNANCE COCKPIT"-Screen',
     zone: { centerX: 26, centerY: 15, width: 38, height: 23, labelX: 30, labelY: 15, hitWidth: 32, hitHeight: 19 },
     vision: {
-      de: 'Compliance ist 2035 **kein nachgelagerter Bremsklotz mehr, sondern in jede Entscheidung eingebaut**. Regulatorik ist direkt in Systeme und Entscheidungslogiken integriert; aus dem Three-Lines-of-Defense-Modell wird **kontinuierliche, technisch integrierte Echtzeit-Kontrolle mit dem CAIO im Zentrum**. Cyber- und Operational Risk werden **untrennbarer Teil des Betriebsmodells — Sicherheit heißt permanente Resilienzsteuerung statt nachträglicher Schutzwall**.',
-      en: 'By 2035 compliance is **no longer a downstream brake but built into every decision**. Regulation is integrated directly into systems and decision logic; the three-lines-of-defence model becomes **continuous, technically integrated real-time control with the CAIO at the centre**. Cyber and operational risk become **an inseparable part of the operating model — security means permanent resilience management rather than a retrofitted protective wall**.',
+      de: 'Compliance ist 2030 **kein nachgelagerter Bremsklotz mehr, sondern in jede Entscheidung eingebaut**. Regulatorik ist direkt in Systeme und Entscheidungslogiken integriert; aus dem Three-Lines-of-Defense-Modell wird **kontinuierliche, technisch integrierte Echtzeit-Kontrolle mit dem CAIO im Zentrum**. Cyber- und Operational Risk werden **untrennbarer Teil des Betriebsmodells — Sicherheit heißt permanente Resilienzsteuerung statt nachträglicher Schutzwall**.',
+      en: 'By 2030 compliance is **no longer a downstream brake but built into every decision**. Regulation is integrated directly into systems and decision logic; the three-lines-of-defence model becomes **continuous, technically integrated real-time control with the CAIO at the centre**. Cyber and operational risk become **an inseparable part of the operating model — security means permanent resilience management rather than a retrofitted protective wall**.',
+    },
+    businessCase: {
+      de: 'Exemplarisch (illustrativ): Eingebettete Echtzeit-Compliance senkt die Kontrollkosten um **20–30 %** und vermeidet regulatorische Strafen und Verluste in **zweistelliger Millionenhöhe**. Robuste Cyber-Resilienz reduziert die erwartete Schadenshöhe erheblich.',
+      en: 'Illustrative example: Embedded real-time compliance cuts control costs by **20–30 %** and avoids regulatory penalties and losses in the **tens of millions of euros**. Robust cyber resilience materially reduces expected loss.',
     },
     hypotheses: [
       {
@@ -690,35 +782,35 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 6_1.png',
           alt: {
-            de: 'Status Quo: ex-post-Compliance, nachträgliche Prüfung von Dokumenten und Stichproben. 2035: Echtzeit-Compliance direkt in den Systemen, Regeln im Live-Entscheidungs-Dashboard.',
-            en: 'Status quo: ex-post compliance with after-the-fact review of documents and samples. 2035: real-time compliance directly in the systems, with rules in a live decision dashboard.',
+            de: 'Status Quo: ex-post-Compliance, nachträgliche Prüfung von Dokumenten und Stichproben. 2030: Echtzeit-Compliance direkt in den Systemen, Regeln im Live-Entscheidungs-Dashboard.',
+            en: 'Status quo: ex-post compliance with after-the-fact review of documents and samples. 2030: real-time compliance directly in the systems, with rules in a live decision dashboard.',
           },
         },
         statusQuo: {
-          de: 'Risiko- und Compliance-Funktionen greifen überwiegend **nachgelagert** ein und erzeugen zusätzliche Prozessschritte, die die **Geschwindigkeit von Innovation reduzieren**.',
-          en: 'Risk and compliance functions mostly intervene **downstream** and create additional process steps that **reduce the speed of innovation**.',
+          de: 'Risiko- und Compliance-Funktionen greifen überwiegend **nachgelagert** ein und erzeugen zusätzliche Prozessschritte, die die **Geschwindigkeit von Innovation reduzieren** – bei **hoher Kostenintensität** und niedriger regulatorischer Geschwindigkeit.',
+          en: 'Risk and compliance functions mostly intervene **downstream** and create additional process steps that **reduce the speed of innovation** – at **high cost intensity** and low regulatory speed.',
         },
-        in2035: {
-          de: 'Regulatorische Anforderungen sind **direkt in Systeme und Entscheidungslogiken eingebettet**.',
-          en: 'Regulatory requirements are **embedded directly into systems and decision logic**.',
+        in2030: {
+          de: 'Regulatorische Anforderungen sind **direkt in Systeme und Entscheidungslogiken eingebettet** – Kontrolle wird dadurch **schneller und effizienter**.',
+          en: 'Regulatory requirements are **embedded directly into systems and decision logic** – making control **faster and more efficient**.',
         },
       },
       {
-        title: { de: 'Three-Lines-of-Defense-Modell verliert seine heutige Form', en: 'The three-lines-of-defence model loses its current form' },
+        title: { de: 'Three-Lines-of-Defense-Modell verändert sich grundlegend', en: 'The three-lines-of-defence model changes fundamentally' },
         image: {
           src: './images/Kapitel 6_2.png',
           alt: {
-            de: 'Status Quo: drei getrennte Verteidigungslinien mit Stichproben. 2035: integrierte, kontinuierliche Kontrolle in einem KI-überwachten Governance-Cockpit mit CAIO im Zentrum.',
-            en: 'Status quo: three separate lines of defence with sample checks. 2035: integrated, continuous control in an AI-monitored governance cockpit with the CAIO at the centre.',
+            de: 'Status Quo: drei getrennte Verteidigungslinien mit Stichproben. 2030: integrierte, kontinuierliche Kontrolle in einem KI-überwachten Governance-Cockpit mit CAIO im Zentrum.',
+            en: 'Status quo: three separate lines of defence with sample checks. 2030: integrated, continuous control in an AI-monitored governance cockpit with the CAIO at the centre.',
           },
         },
         statusQuo: {
           de: 'Risikomanagement, Compliance und operative Einheiten sind organisatorisch **klar getrennt**; Kontrolle erfolgt überwiegend über definierte Verantwortlichkeiten, **Stichproben und nachgelagerte Reviews**.',
           en: 'Risk management, compliance and operating units are organisationally **clearly separated**; control happens mostly via defined responsibilities, **sample checks and downstream reviews**.',
         },
-        in2035: {
-          de: 'AI-gestützte Entscheidungen und autonome Prozesse erzwingen **neue Governance-Modelle**: Kontrolle wird zunehmend **technisch integriert und kontinuierlich überwacht**. **CAIO im Mittelpunkt**.',
-          en: 'AI-supported decisions and autonomous processes force **new governance models**: control becomes increasingly **technically integrated and continuously monitored**. **The CAIO takes centre stage**.',
+        in2030: {
+          de: 'AI-gestützte Entscheidungen und autonome Prozesse erzwingen **neue Governance-Modelle**: Kontrolle wird zunehmend **technisch integriert und kontinuierlich überwacht**. **CAIO im Mittelpunkt**; **AI-Kompetenz wird zur Schlüsselfähigkeit** in allen Kontrollfunktionen.',
+          en: 'AI-supported decisions and autonomous processes force **new governance models**: control becomes increasingly **technically integrated and continuously monitored**. **The CAIO takes centre stage**; **AI skills become a key capability** across all control functions.',
         },
       },
       {
@@ -726,17 +818,37 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 6_3.png',
           alt: {
-            de: 'Status Quo: Cyber- und Operational Risk als separate, perimeterorientierte Schutzfunktion. 2035: in das Betriebsmodell integriert, kontinuierliche Resilienzsteuerung im Live-Dashboard.',
-            en: 'Status quo: cyber and operational risk as a separate, perimeter-oriented protective function. 2035: integrated into the operating model with continuous resilience management in a live dashboard.',
+            de: 'Status Quo: Cyber- und Operational Risk als separate, perimeterorientierte Schutzfunktion. 2030: in das Betriebsmodell integriert, kontinuierliche Resilienzsteuerung im Live-Dashboard.',
+            en: 'Status quo: cyber and operational risk as a separate, perimeter-oriented protective function. 2030: integrated into the operating model with continuous resilience management in a live dashboard.',
           },
         },
         statusQuo: {
-          de: 'Cybersecurity und Operational Risk werden weitgehend als **unterstützende Kontroll- und Schutzfunktion** organisiert. Sicherheitsmechanismen sind häufig **nachgelagert und perimeterorientiert**.',
-          en: 'Cybersecurity and operational risk are largely organised as a **supporting control and protection function**. Security mechanisms are often **downstream and perimeter-oriented**.',
+          de: 'Cybersecurity und Operational Risk werden weitgehend als **unterstützende Kontroll- und Schutzfunktion** organisiert. Sicherheitsmechanismen sind häufig **nachgelagert und perimeterorientiert** – während sich die **Bedrohungslage stetig verschärft** (Cyberangriffe nehmen zu).',
+          en: 'Cybersecurity and operational risk are largely organised as a **supporting control and protection function**. Security mechanisms are often **downstream and perimeter-oriented** – while the **threat landscape keeps worsening** (cyberattacks are increasing).',
         },
-        in2035: {
-          de: 'Mit AI-first-Architekturen, Echtzeitintegration und offenen Plattformmodellen werden Cyber- und Operational Risks **integraler Bestandteil des Betriebsmodells**. Sicherheit verschiebt sich von Schutzmechanismen zu **kontinuierlicher Resilienzsteuerung**.',
-          en: 'With AI-first architectures, real-time integration and open platform models, cyber and operational risks become an **integral part of the operating model**. Security shifts from protective mechanisms to **continuous resilience management**.',
+        in2030: {
+          de: 'Mit AI-first-Architekturen, Echtzeitintegration und offenen Plattformmodellen werden Cyber- und Operational Risks **integraler Bestandteil des Betriebsmodells** – Cybersecurity wird **überlebenswichtig** und verlangt **robuste Cyber- und Operational-Risk-Fähigkeiten**. Sicherheit verschiebt sich von Schutzmechanismen zu **kontinuierlicher Resilienzsteuerung**.',
+          en: 'With AI-first architectures, real-time integration and open platform models, cyber and operational risks become an **integral part of the operating model** – cybersecurity becomes **survival-critical** and demands **robust cyber and operational risk capabilities**. Security shifts from protective mechanisms to **continuous resilience management**.',
+        },
+      },
+      {
+        // NEU aus Workshop-Feedback: Compliance/Innenrevision muss sich neu
+        // aufstellen; Explainability der KI-Outputs wird zum Kern.
+        title: { de: 'Compliance & Innenrevision stellen sich neu auf', en: 'Compliance & internal audit reposition themselves' },
+        image: {
+          src: './images/Kapitel 6_4.png',
+          alt: {
+            de: 'Status Quo: Innenrevision prüft nachgelagert und stichprobenartig mit Aktenordnern. 2030: Compliance/Revision als Enabler mit einem Explainability-Cockpit, das transparent macht, wie und warum die KI einen Output erzeugt hat.',
+            en: 'Status quo: internal audit reviews downstream and by sampling with paper files. 2030: compliance/audit as an enabler with an explainability cockpit that shows transparently how and why the AI produced an output.',
+          },
+        },
+        statusQuo: {
+          de: 'Compliance und Innenrevision prüfen überwiegend **nachgelagert** und stichprobenartig; für KI-getriebene Entscheidungen fehlen **Methoden, Skills und Prüftiefe**.',
+          en: 'Compliance and internal audit mostly review **downstream** and by sampling; for AI-driven decisions they lack **methods, skills and audit depth**.',
+        },
+        in2030: {
+          de: 'Compliance und Innenrevision **stellen sich grundlegend neu auf**, damit die KI-Transformation gelingt: Sie werden zum **Enabler** und sichern die **transparente Nachvollziehbarkeit, wie und warum die KI einen Output erzeugt hat** (Explainability).',
+          en: 'Compliance and internal audit **fundamentally reposition themselves** so that the AI transformation succeeds: they become an **enabler** and ensure **transparent traceability of how and why the AI produced an output** (explainability).',
         },
       },
     ],
@@ -748,10 +860,10 @@ const RAW_CHAPTERS: RawChapter[] = [
           en: 'A tense decision moment: a customer on the phone after an autonomous AI credit decision, with three horizontal status bars in the background.',
         },
       },
-      title: { de: 'Kredit-Dilemma: 100 Mio € — die KI lehnt autonom ab', en: 'Credit dilemma: €100m — the AI rejects autonomously' },
+      title: { de: 'Kredit-Dilemma: 50.000 € — die KI lehnt autonom ab', en: 'Credit dilemma: €50,000 — the AI rejects autonomously' },
       text: {
-        de: 'Dilemma: Ein Großkunde beantragt einen Kredit über 100 Mio €, **die KI lehnt autonom ab**. Entscheiden Sie entlang des Telefongesprächs — drei Balken (Regulatorik, Geschwindigkeit, Zufriedenheit) reagieren. **Wer hat freigegeben? Wer haftet?** Wie wird kontrolliert?',
-        en: 'Dilemma: a major client applies for a €100m loan, **the AI rejects it autonomously**. Decide along the phone call — three bars (regulation, speed, satisfaction) react. **Who approved it? Who is liable?** How is it controlled?',
+        de: 'Dilemma: Ein Geschäftskunde beantragt einen Kredit über **50.000 €**, **die KI lehnt autonom ab**. Die Autonomiegrenzen sind **gestuft** (5.000 · 50.000 · 500.000 · 5 Mio · 50 Mio €) – je nach **Risikoklasse des Kunden** und den KI-Hintergrundinformationen. Entscheiden Sie entlang des Telefongesprächs — drei Balken (Regulatorik, Geschwindigkeit, Zufriedenheit) reagieren. **Wer hat freigegeben? Wer haftet?** Wie wird kontrolliert?',
+        en: 'Dilemma: a business customer applies for a **€50,000** loan, **the AI rejects it autonomously**. The autonomy thresholds are **tiered** (€5,000 · 50,000 · 500,000 · 5m · 50m) – depending on the **customer’s risk class** and the AI’s background information. Decide along the phone call — three bars (regulation, speed, satisfaction) react. **Who approved it? Who is liable?** How is it controlled?',
       },
       buttonLabel: { de: 'Szenario starten', en: 'Start the scenario' },
       handoff: { kind: 'kredit-dilemma' },
@@ -767,8 +879,12 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: 'die Glas-Spine durch alle Etagen',
     zone: { centerX: 50, centerY: 50, width: 16, height: 92, fit: 'contain', labelX: 50, labelY: 50, hitWidth: 13, hitHeight: 86 },
     vision: {
-      de: 'Wir wandeln uns bis 2035 **zur AI-nativen Plattform-Bank** — aufgebaut aus Daten, Ökosystem und **integrierter Governance statt nachgelagerter Kontrolle**. Unser Operating Model folgt der Entscheidungslogik: **Journey-Teams mit End-to-End-Ownership, Human-in-the-loop und AI-Governance**. Wir transformieren **decision-first** — zuerst die wenigen kritischen Decision Journeys und eine **skalierbare Decision Spine**, dann der systematische Roll-out von KI und Technologie.',
-      en: 'By 2035 we transform **into an AI-native platform bank** — built from data, ecosystem and **integrated governance instead of downstream control**. Our operating model follows decision logic: **journey teams with end-to-end ownership, human-in-the-loop and AI governance**. We transform **decision-first** — starting with the few critical decision journeys and a **scalable decision spine**, then the systematic roll-out of AI and technology.',
+      de: 'Wir wandeln uns bis 2030 **zur AI-nativen Plattform-Bank** — aufgebaut aus Daten, Ökosystem und **integrierter Governance statt nachgelagerter Kontrolle**. Unser Operating Model folgt der Entscheidungslogik: **Journey-Teams mit End-to-End-Ownership, Human-in-the-loop und AI-Governance**. Wir transformieren **decision-first** — zuerst die wenigen kritischen Decision Journeys und eine **skalierbare Decision Spine**, dann der systematische Roll-out von KI und Technologie.',
+      en: 'By 2030 we transform **into an AI-native platform bank** — built from data, ecosystem and **integrated governance instead of downstream control**. Our operating model follows decision logic: **journey teams with end-to-end ownership, human-in-the-loop and AI governance**. We transform **decision-first** — starting with the few critical decision journeys and a **scalable decision spine**, then the systematic roll-out of AI and technology.',
+    },
+    businessCase: {
+      de: 'Exemplarisch (illustrativ): Der Sprung von 2–4 auf **100+ Deployments p.a.** und decision-first-Priorisierung heben den Transformations-ROI um das **2–3-Fache** und verkürzen die Amortisation kritischer Decision Journeys auf **unter 12 Monate**.',
+      en: 'Illustrative example: Moving from 2–4 to **100+ deployments p.a.** and decision-first prioritisation lift transformation ROI by **2–3×** and shorten payback of critical decision journeys to **under 12 months**.',
     },
     hypotheses: [
       {
@@ -776,33 +892,33 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 7_1.png',
           alt: {
-            de: 'Status Quo: intern fokussierte Transformation an fragmentierten IT-/Prozessprojekten. 2035: AI-getriebene Ökosystem-Plattform aus Daten, Partnern und eingebauter Compliance.',
-            en: 'Status quo: internally focused transformation on fragmented IT/process projects. 2035: an AI-driven ecosystem platform of data, partners and built-in compliance.',
+            de: 'Status Quo: intern fokussierte Transformation an fragmentierten IT-/Prozessprojekten. 2030: AI-getriebene Ökosystem-Plattform aus Daten, Partnern und eingebauter Compliance.',
+            en: 'Status quo: internally focused transformation on fragmented IT/process projects. 2030: an AI-driven ecosystem platform of data, partners and built-in compliance.',
           },
         },
         statusQuo: {
           de: 'Transformation **fokussiert intern** (IT, Prozesse, Compliance) – Ökosysteme, Datenbasis und Partnerintegration **bleiben fragmentiert**.',
           en: 'Transformation is **internally focused** (IT, processes, compliance) – ecosystems, data foundation and partner integration **remain fragmented**.',
         },
-        in2035: {
-          de: 'Aufbau einer **AI-getriebenen Plattform** aus Daten, Ökosystem und Governance, in der **Compliance integraler Bestandteil** ist – nicht nachgelagerte Kontrollfunktion.',
-          en: 'Building an **AI-driven platform** of data, ecosystem and governance in which **compliance is an integral part** – not a downstream control function.',
+        in2030: {
+          de: 'Aufbau einer **AI-getriebenen Plattform** aus Daten, Ökosystem und Governance, in der **Compliance integraler Bestandteil** ist – nicht nachgelagerte Kontrollfunktion. **AI wird zum Fixstern**, an dem Daten, Ökosystem und Governance ausgerichtet werden; die **Plattform ist Geschäfts- und Betriebsmodell zugleich** – mit klarem Fokus auch auf **HR und Change**.',
+          en: 'Building an **AI-driven platform** of data, ecosystem and governance in which **compliance is an integral part** – not a downstream control function. **AI becomes the guiding star** around which data, ecosystem and governance are aligned; the **platform is business and operating model in one** – with a clear focus on **HR and change** as well.',
         },
       },
       {
-        title: { de: 'AI-natives Entscheidungs-Operating-Model', en: 'AI-native decision operating model' },
+        title: { de: 'AI-native Transformation zum Entscheidungs-Operating-Model', en: 'AI-native transformation to a decision operating model' },
         image: {
           src: './images/Kapitel 7_2.png',
           alt: {
-            de: 'Status Quo: produkt- und silogetriebene Organisation, Transformation in starren Strukturen gefangen. 2035: AI-natives Operating Model, Journey-Teams mit E2E-Ownership und Human-in-the-loop.',
-            en: 'Status quo: a product- and silo-driven organisation with transformation trapped in rigid structures. 2035: an AI-native operating model with journey teams holding E2E ownership and human-in-the-loop.',
+            de: 'Status Quo: produkt- und silogetriebene Organisation, Transformation in starren Strukturen gefangen. 2030: AI-natives Operating Model, Journey-Teams mit E2E-Ownership und Human-in-the-loop.',
+            en: 'Status quo: a product- and silo-driven organisation with transformation trapped in rigid structures. 2030: an AI-native operating model with journey teams holding E2E ownership and human-in-the-loop.',
           },
         },
         statusQuo: {
           de: 'Organisation, Governance und Prozesse sind **produkt- und silogetrieben**; Transformation **bleibt in bestehenden Strukturen gefangen**.',
           en: 'Organisation, governance and processes are **product- and silo-driven**; transformation **remains trapped in existing structures**.',
         },
-        in2035: {
+        in2030: {
           de: 'Transformation erfolgt durch den Aufbau eines **AI-nativen Operating Models** entlang der Entscheidungslogik. **End-to-End Ownership, Journey-Teams** sowie **Human-in-the-loop und AI-Governance** sind fester Bestandteil.',
           en: 'Transformation happens by building an **AI-native operating model** along decision logic. **End-to-end ownership, journey teams** as well as **human-in-the-loop and AI governance** are an integral part.',
         },
@@ -812,17 +928,57 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 7_3.png',
           alt: {
-            de: 'Status Quo: technologiegetriebene Transformation in vielen isolierten Use Cases ohne Priorität. 2035: decision-first mit klarer Roadmap und skalierbarer Decision Spine vor dem AI-Rollout.',
-            en: 'Status quo: technology-driven transformation across many isolated use cases without priority. 2035: decision-first with a clear roadmap and a scalable decision spine ahead of the AI rollout.',
+            de: 'Status Quo: technologiegetriebene Transformation in vielen isolierten Use Cases ohne Priorität. 2030: decision-first mit klarer Roadmap und skalierbarer Decision Spine vor dem AI-Rollout.',
+            en: 'Status quo: technology-driven transformation across many isolated use cases without priority. 2030: decision-first with a clear roadmap and a scalable decision spine ahead of the AI rollout.',
           },
         },
         statusQuo: {
-          de: 'Transformation startet primär **technologie-(AI)-getrieben** und verteilt sich auf **isolierte Use Cases ohne klare Priorisierung**.',
-          en: 'Transformation starts primarily **technology-(AI)-driven** and spreads across **isolated use cases without clear prioritisation**.',
+          de: 'Transformation startet primär **technologie-(AI)-getrieben** und verteilt sich auf **isolierte Use Cases ohne klare Priorisierung**. Die IT bleibt im **Reparaturmodus** – Altsysteme werden gefixt und Produkte auf dem bestehenden Geschäfts- und Betriebsmodell erweitert; nur **2–4 Deployments pro Jahr**.',
+          en: 'Transformation starts primarily **technology-(AI)-driven** and spreads across **isolated use cases without clear prioritisation**. IT stays in **repair mode** – legacy systems get patched and products are extended on the existing business and operating model; only **2–4 deployments per year**.',
         },
-        in2035: {
-          de: 'Transformation erfolgt nach einem **Decision-first-Ansatz** mit klarer Sequenzierung. Im Fokus stehen zunächst **wenige kritische Decision Journeys** und der Aufbau einer **skalierbaren Decision Spine**, bevor AI und Technologie systematisch ausgerollt werden.',
-          en: 'Transformation follows a **decision-first approach** with clear sequencing. The initial focus is on **a few critical decision journeys** and on building a **scalable decision spine** before AI and technology are rolled out systematically.',
+        in2030: {
+          de: 'Transformation erfolgt nach einem **Decision-first-Ansatz** mit klarer Sequenzierung. Im Fokus stehen zunächst **wenige kritische Decision Journeys** und der Aufbau einer **skalierbaren Decision Spine**, bevor AI und Technologie systematisch ausgerollt werden. Der Weg von der **Idee zur Ausführung verkürzt sich drastisch** – Compliance, Risk und Governance sind eingebaut; **100+ Deployments pro Jahr** werden möglich.',
+          en: 'Transformation follows a **decision-first approach** with clear sequencing. The initial focus is on **a few critical decision journeys** and on building a **scalable decision spine** before AI and technology are rolled out systematically. The path from **idea to execution shortens dramatically** – with compliance, risk and governance built in; **100+ deployments per year** become possible.',
+        },
+      },
+      {
+        // NEU aus Workshop-Feedback: Change muss im Target Operating Model
+        // verankert und tatsächlich durchgeführt werden.
+        title: { de: 'Change ist im Target Operating Model verankert', en: 'Change is anchored in the target operating model' },
+        image: {
+          src: './images/Kapitel 7_4.png',
+          alt: {
+            de: 'Status Quo: neue Prozesse und Systeme werden geliefert, doch der Verhaltens- und Kulturwandel verpufft. 2030: Change ist fest im Target Operating Model verankert – Governance, Rollen und Anreize stellen die Umsetzung sicher.',
+            en: 'Status quo: new processes and systems are delivered, but behavioural and cultural change fizzles out. 2030: change is firmly anchored in the target operating model – governance, roles and incentives ensure it is delivered.',
+          },
+        },
+        statusQuo: {
+          de: 'Transformationsprojekte liefern neue Prozesse und Systeme, doch der **Change** – Verhaltens- und Kulturwandel – wird oft **nicht konsequent umgesetzt** und verpufft.',
+          en: 'Transformation projects deliver new processes and systems, but **change** – behavioural and cultural change – is often **not consistently implemented** and fizzles out.',
+        },
+        in2030: {
+          de: '**Change ist fest im Target Operating Model verankert**: Governance, Rollen und Anreize stellen sicher, dass Veränderung nicht nur beschlossen, sondern **tatsächlich durchgeführt und nachhaltig verankert** wird.',
+          en: '**Change is firmly anchored in the target operating model**: governance, roles and incentives ensure that change is not merely decided but **actually delivered and sustainably embedded**.',
+        },
+      },
+      {
+        // NEU aus Workshop-Feedback: Beratungsangebot/Projektmethodik — wie werden
+        // Projekte künftig durchgeführt, wie sieht der Transformationspfad aus.
+        title: { de: 'Neue Projektmethodik & klarer Transformationspfad', en: 'New project methodology & a clear transformation path' },
+        image: {
+          src: './images/Kapitel 7_5.png',
+          alt: {
+            de: 'Status Quo: klassische Projektmethodik (Wasserfall/Stage-Gate) ohne durchgängigen Transformationspfad. 2030: AI-native Projektmethodik mit wiederverwendbaren Artefakten und einem klaren Transformationspfad von Reifegrad über nächste Schritte zum Zielbild.',
+            en: 'Status quo: classic project methodology (waterfall/stage-gate) without a continuous transformation path. 2030: an AI-native project methodology with reusable artefacts and a clear transformation path from maturity through next steps to the target picture.',
+          },
+        },
+        statusQuo: {
+          de: 'Transformationsprojekte folgen **klassischen Methoden** (Wasserfall/Stage-Gate); ein durchgängiger, **artefaktgestützter Transformationspfad** fehlt.',
+          en: 'Transformation projects follow **classic methods** (waterfall/stage-gate); a continuous, **artefact-based transformation path** is missing.',
+        },
+        in2030: {
+          de: 'Projekte werden nach einer **AI-nativen Projektmethodik** durchgeführt – mit wiederverwendbaren **Artefakten** und einem klaren **Transformationspfad** von der Reifegrad-Bestimmung über die nächsten Schritte bis zum Zielbild.',
+          en: 'Projects are run with an **AI-native project methodology** – with reusable **artefacts** and a clear **transformation path** from maturity assessment through the next steps to the target picture.',
         },
       },
     ],
@@ -867,8 +1023,12 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: 'Whiteboard-Wand mit Produkt-Mockups',
     zone: { centerX: 74, centerY: 15, width: 40, height: 23, labelX: 72, labelY: 15, hitWidth: 32, hitHeight: 19 },
     vision: {
-      de: '2035 gibt es keinen Produktkatalog mehr: KI komponiert aus modularen Bausteinen **hyperpersonalisierte Lösungen für das Segment of One** — im Moment des Bedarfs. Produkte sind **lebende, adaptive Services**, die sich innerhalb definierter Leitplanken selbst an Lebensereignisse und Marktlage anpassen. Und sie entstehen **kontinuierlich statt in Jahresprojekten**: KI entwirft, simuliert und testet compliant by design — **Time-to-Market sinkt von Jahren auf Tage**.',
-      en: 'In 2035 there is no longer a product catalogue: from modular building blocks, AI composes **hyper-personalised solutions for the segment of one** — at the moment of need. Products are **living, adaptive services** that adjust themselves to life events and market conditions within defined guardrails. And they emerge **continuously rather than in annual projects**: AI designs, simulates and tests compliant by design — **time-to-market drops from years to days**.',
+      de: '2030 gibt es keinen Produktkatalog mehr: KI komponiert aus modularen Bausteinen **hyperpersonalisierte Lösungen für das Segment of One** — im Moment des Bedarfs. Produkte sind **lebende, adaptive Services**, die sich innerhalb definierter Leitplanken selbst an Lebensereignisse und Marktlage anpassen. Und sie entstehen **kontinuierlich statt in Jahresprojekten**: KI entwirft, simuliert und testet compliant by design — **Time-to-Market sinkt von Jahren auf Tage**.',
+      en: 'In 2030 there is no longer a product catalogue: from modular building blocks, AI composes **hyper-personalised solutions for the segment of one** — at the moment of need. Products are **living, adaptive services** that adjust themselves to life events and market conditions within defined guardrails. And they emerge **continuously rather than in annual projects**: AI designs, simulates and tests compliant by design — **time-to-market drops from years to days**.',
+    },
+    businessCase: {
+      de: 'Exemplarisch (illustrativ): Time-to-Market von Monaten/Jahren auf **Tage** und Segment-of-One-Produkte steigern die Abschlussquote um **15–25 %**. Das entspricht rund **10–15 Mio € inkrementellem Ertrag p.a.** bei deutlich niedrigeren Entwicklungskosten je Produkt.',
+      en: 'Illustrative example: Cutting time-to-market from months/years to **days** and segment-of-one products raise the conversion rate by **15–25 %**. That is roughly **€10–15m incremental revenue p.a.** at much lower development cost per product.',
     },
     hypotheses: [
       {
@@ -876,15 +1036,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 8_1.png',
           alt: {
-            de: 'Status Quo: Regal mit identischen Standard-Produktmappen, mehrere Kund:innen halten dieselbe Mappe. 2035: jede Kund:in sieht auf dem eigenen Gerät eine sichtbar andere, individuell komponierte Produktlösung.',
-            en: 'Status quo: a shelf of identical standard product folders, several customers holding the same folder. 2035: each customer sees a visibly different, individually composed product solution on their own device.',
+            de: 'Status Quo: Regal mit identischen Standard-Produktmappen, mehrere Kund:innen halten dieselbe Mappe. 2030: jede Kund:in sieht auf dem eigenen Gerät eine sichtbar andere, individuell komponierte Produktlösung.',
+            en: 'Status quo: a shelf of identical standard product folders, several customers holding the same folder. 2030: each customer sees a visibly different, individually composed product solution on their own device.',
           },
         },
         statusQuo: {
           de: 'Banken bieten **standardisierte Produktkataloge** für breite Kundensegmente an. Individualisierung beschränkt sich auf **wenige Parameter** wie Konditionen oder Laufzeiten.',
           en: 'Banks offer **standardised product catalogues** for broad customer segments. Individualisation is limited to **a few parameters** such as terms or maturities.',
         },
-        in2035: {
+        in2030: {
           de: 'Produkte entstehen **individuell im Moment des Bedarfs**: KI komponiert aus modularen Bausteinen **hyperpersonalisierte Lösungen** für den einzelnen Kunden **(„Segment of One")** – dynamisch angepasst an Lebenssituation, Ziele und Kontext.',
           en: 'Products emerge **individually at the moment of need**: from modular building blocks, AI composes **hyper-personalised solutions** for the individual customer **(“segment of one”)** – dynamically adapted to life situation, goals and context.',
         },
@@ -894,15 +1054,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 8_2.png',
           alt: {
-            de: 'Status Quo: dicker Papier-Vertragsordner wird geschlossen und ins Regal zu identischen Ordnern abgeheftet. 2035: Kundin im Umzug schaut entspannt auf einen Bildschirm, auf dem sich Produktparameter innerhalb markierter Leitplanken von selbst anpassen.',
-            en: 'Status quo: a thick paper contract folder is closed and filed on a shelf next to identical folders. 2035: a customer in the middle of a move looks relaxed at a screen on which product parameters adjust themselves within marked guardrails.',
+            de: 'Status Quo: dicker Papier-Vertragsordner wird geschlossen und ins Regal zu identischen Ordnern abgeheftet. 2030: Kundin im Umzug schaut entspannt auf einen Bildschirm, auf dem sich Produktparameter innerhalb markierter Leitplanken von selbst anpassen.',
+            en: 'Status quo: a thick paper contract folder is closed and filed on a shelf next to identical folders. 2030: a customer in the middle of a move looks relaxed at a screen on which product parameters adjust themselves within marked guardrails.',
           },
         },
         statusQuo: {
           de: 'Produkte sind **statisch**: Nach Abschluss bleiben Struktur und Konditionen bis zur Kündigung oder Prolongation unverändert – jede Anpassung erfordert einen **Neuabschluss**.',
           en: 'Products are **static**: after closing, structure and terms remain unchanged until cancellation or renewal – every adjustment requires a **new contract**.',
         },
-        in2035: {
+        in2030: {
           de: 'Produkte **passen sich kontinuierlich an**: Konditionen, Limits und Absicherungen adjustieren sich **innerhalb definierter Leitplanken automatisch** an Lebensereignisse und Marktlage. Das Produkt wird **vom Vertrag zum lebenden Service**.',
           en: 'Products **adapt continuously**: terms, limits and hedges adjust **automatically within defined guardrails** to life events and market conditions. The product turns **from a contract into a living service**.',
         },
@@ -912,15 +1072,15 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 8_3.png',
           alt: {
-            de: 'Status Quo: zähe Gremiensitzung über dicken Anforderungsstapeln und Wandplanungstafel. 2035: kleines Produktteam im hellen Projektraum, KI simuliert parallel viele Produktvarianten, ein Same-Day-Mockup liegt auf dem Tisch.',
-            en: 'Status quo: a sluggish committee meeting over thick stacks of requirements and a wall planning board. 2035: a small product team in a bright project room, AI simulating many product variants in parallel, with a same-day mockup on the table.',
+            de: 'Status Quo: zähe Gremiensitzung über dicken Anforderungsstapeln und Wandplanungstafel. 2030: kleines Produktteam im hellen Projektraum, KI simuliert parallel viele Produktvarianten, ein Same-Day-Mockup liegt auf dem Tisch.',
+            en: 'Status quo: a sluggish committee meeting over thick stacks of requirements and a wall planning board. 2030: a small product team in a bright project room, AI simulating many product variants in parallel, with a same-day mockup on the table.',
           },
         },
         statusQuo: {
           de: 'Produktentwicklung ist ein **langwieriger interner Prozess** über Gremien, IT-Umsetzung und nachgelagerte Compliance-Prüfung – **Time-to-Market liegt bei Monaten bis Jahren**.',
           en: 'Product development is a **lengthy internal process** across committees, IT implementation and downstream compliance review – **time-to-market is months to years**.',
         },
-        in2035: {
+        in2030: {
           de: 'KI **entwirft, simuliert und testet neue Produkte kontinuierlich** – mit synthetischen Kundendaten und integrierten Compliance-Checks **(„compliant by design")**. **Time-to-Market sinkt auf Tage**; Produktinnovation wird zum kontinuierlichen Prozess.',
           en: 'AI **continuously designs, simulates and tests new products** – with synthetic customer data and integrated compliance checks **(“compliant by design”)**. **Time-to-market drops to days**; product innovation becomes a continuous process.',
         },
@@ -987,7 +1147,7 @@ function localizeHypothesis(h: RawHypothesis, lang: Lang): Hypothesis {
     title: pick(h.title, lang),
     image: localizeImage(h.image, lang),
     statusQuo: pick(h.statusQuo, lang),
-    in2035: pick(h.in2035, lang),
+    in2030: pick(h.in2030, lang),
     ...(h.leitfrage ? { leitfrage: pick(h.leitfrage, lang) } : {}),
   }
 }
@@ -1012,11 +1172,8 @@ function localizeChapter(c: RawChapter, lang: Lang): Chapter {
     keyObject: c.keyObject,
     zone: c.zone,
     vision: pick(c.vision, lang),
-    hypotheses: [
-      localizeHypothesis(c.hypotheses[0], lang),
-      localizeHypothesis(c.hypotheses[1], lang),
-      localizeHypothesis(c.hypotheses[2], lang),
-    ],
+    businessCase: pick(c.businessCase, lang),
+    hypotheses: c.hypotheses.map((h) => localizeHypothesis(h, lang)),
     activity: localizeActivity(c.activity, lang),
   }
 }
@@ -1028,6 +1185,16 @@ export const CHAPTER_IDS: ChapterId[] = RAW_CHAPTERS.map((c) => c.id)
 export const CHAPTER_NUMBERS: Record<string, ChapterId> = Object.fromEntries(
   RAW_CHAPTERS.map((c) => [c.kapitel, c.id]),
 )
+
+/**
+ * Anzahl der Schritte eines Kapitels (Hypothesen + 1 Aktivität). Kapitel können
+ * unterschiedlich viele Hypothesen haben — Deep-Links und Navigation klemmen den
+ * Schritt darüber. Fallback 4 (3 Hypothesen + Aktivität) für unbekannte IDs.
+ */
+export function stepCountForChapter(id: ChapterId): number {
+  const raw = RAW_CHAPTERS.find((c) => c.id === id)
+  return (raw ? raw.hypotheses.length : 3) + 1
+}
 
 /** Alle Kapitel in der aktiven Sprache. */
 export function getChapters(lang: Lang): Chapter[] {

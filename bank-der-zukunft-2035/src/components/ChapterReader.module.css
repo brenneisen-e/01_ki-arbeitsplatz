@@ -359,7 +359,7 @@
   display: block;
 }
 
-/* Status-Quo / 2035 Split-Markierung auf dem Bild */
+/* Status-Quo / 2030 Split-Markierung auf dem Bild */
 .split {
   position: absolute;
   inset: 0;
@@ -492,7 +492,7 @@
   color: var(--accent-bright);
 }
 
-/* Leitfrage-Sprechblase rechts neben dem 2035-Bild — nur auf breiten Screens
+/* Leitfrage-Sprechblase rechts neben dem 2030-Bild — nur auf breiten Screens
    (siehe @media unten). Standardmäßig ausgeblendet; dann greift .leitfrage. */
 .calloutFloat {
   display: none;
@@ -693,7 +693,7 @@
   }
 }
 
-/* Breite Screens: Leitfrage als Sprechblase rechts neben das 2035-Bild legen
+/* Breite Screens: Leitfrage als Sprechblase rechts neben das 2030-Bild legen
    und die Leiste unten ausblenden. */
 @media (min-width: 1800px) {
   .calloutFloat {
@@ -715,3 +715,64 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* ── Management Summary & Business Case (aufklappbar je Kapitel) ─────────────── */
+.summaryPanel {
+  margin: 0 auto 14px;
+  max-width: 1100px;
+  width: 100%;
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  background: var(--accent-tint);
+  padding: 4px 16px;
+}
+.summaryToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+  padding: 8px 2px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent-bright);
+  user-select: none;
+}
+.summaryToggle::-webkit-details-marker { display: none; }
+.summaryToggle::after {
+  content: '';
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--accent-bright);
+  border-bottom: 2px solid var(--accent-bright);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.summaryPanel[open] .summaryToggle::after { transform: rotate(-135deg); }
+.summaryBody {
+  display: grid;
+  gap: 14px;
+  padding: 4px 2px 12px;
+}
+@media (min-width: 860px) {
+  .summaryBody { grid-template-columns: 1fr 1fr; }
+}
+.summaryBlockLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent-bright);
+  margin-bottom: 6px;
+}
+.summaryText {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.summaryText strong { color: var(--ink); font-weight: 700; }

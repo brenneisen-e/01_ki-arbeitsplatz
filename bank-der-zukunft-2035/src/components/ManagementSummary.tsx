@@ -14,7 +14,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ManagementSummary — die Vision der „Bank 2035" als hochwertiges, blätterbares
+// ManagementSummary — die Vision der „Bank 2030" als hochwertiges, blätterbares
 // Magazin. Papierseiten mit echtem 3D-Page-Flip auf dunklem, weichgezeichnetem
 // Hintergrund (das Strukturbild dahinter). Seitenfolge:
 //   1. Cover (Strukturbild als Hero)
@@ -53,50 +53,50 @@ type SummaryStrings = {
 }
 
 // Gesamtzusammenfassung — synthetisiert die acht Bereichs-Visionen zu einem
-// durchgehenden Zielbild der „Bank 2035". `**fett**` markiert die Kernaussagen.
+// durchgehenden Zielbild der „Bank 2030". `**fett**` markiert die Kernaussagen.
 const STR: Record<Lang, SummaryStrings> = {
   de: {
-    aria: 'Management Summary — Vision der Bank 2035 als Magazin',
-    kicker: 'Banking Horizon 2035',
+    aria: 'Management Summary — Vision der Bank 2030 als Magazin',
+    kicker: 'Banking Horizon 2030',
     title: 'Management Summary',
     close: 'Management Summary schließen',
-    coverSubtitle: 'Die Vision der Bank 2035 — zum Durchblättern',
+    coverSubtitle: 'Die Vision der Bank 2030 — zum Durchblättern',
     leadTitle: 'Gesamtzusammenfassung',
     gesamt:
-      'Bis 2035 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kund:innen **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Produkte entstehen als **lebende, adaptive Services für das Segment of One** — komponiert in Tagen statt Jahren. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.',
+      'Bis 2030 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kund:innen **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Produkte entstehen als **lebende, adaptive Services für das Segment of One** — komponiert in Tagen statt Jahren. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.',
     tocTitle: 'In dieser Ausgabe',
     hypothesesLabel: 'Kernhypothesen',
     todayLabel: 'Heute',
-    futureLabel: '2035',
-    visionTag: 'Vision 2035',
+    futureLabel: '2030',
+    visionTag: 'Vision 2030',
     ortLabel: 'Verortung',
     closingTitle: 'Vom Zielbild zur Umsetzung',
     closingText:
       'Diese acht Visionen ergeben **ein zusammenhängendes Zielbild** — keine Sammlung von Einzelinitiativen. Der Weg dorthin ist **decision-first**: Wir starten bei den Entscheidungen, die den größten Wert heben, und bauen Daten, Plattform und Governance konsequent darum herum.',
-    footNote: 'Vorstands-Workshop · abgeleitet aus 24 Hypothesen (3 je Kapitel)',
+    footNote: 'Vorstands-Workshop · abgeleitet aus den Hypothesen aller Kapitel',
     pageLabel: 'Seite',
     prev: 'Vorherige Seite',
     next: 'Nächste Seite',
   },
   en: {
-    aria: 'Management summary — vision of the bank in 2035 as a magazine',
-    kicker: 'Banking Horizon 2035',
+    aria: 'Management summary — vision of the bank in 2030 as a magazine',
+    kicker: 'Banking Horizon 2030',
     title: 'Management Summary',
     close: 'Close the management summary',
-    coverSubtitle: 'The vision of the bank in 2035 — to leaf through',
+    coverSubtitle: 'The vision of the bank in 2030 — to leaf through',
     leadTitle: 'Overall summary',
     gesamt:
-      'By 2035 our bank becomes an **AI-native platform bank**: for customers, banking turns **invisible and part of everyday life**, distribution **orchestrates hyper-personalised solutions** instead of products, and operations move **from a cost block to a platform**. Products emerge as **living, adaptive services for the segment of one** — composed in days rather than years. Software **largely develops itself** within clear guardrails, compliance is **built into every decision** — and we get there **decision-first**.',
+      'By 2030 our bank becomes an **AI-native platform bank**: for customers, banking turns **invisible and part of everyday life**, distribution **orchestrates hyper-personalised solutions** instead of products, and operations move **from a cost block to a platform**. Products emerge as **living, adaptive services for the segment of one** — composed in days rather than years. Software **largely develops itself** within clear guardrails, compliance is **built into every decision** — and we get there **decision-first**.',
     tocTitle: 'In this issue',
     hypothesesLabel: 'Core hypotheses',
     todayLabel: 'Today',
-    futureLabel: '2035',
-    visionTag: 'Vision 2035',
+    futureLabel: '2030',
+    visionTag: 'Vision 2030',
     ortLabel: 'Location',
     closingTitle: 'From target picture to delivery',
     closingText:
       'These eight visions form **one coherent target picture** — not a collection of isolated initiatives. The path there is **decision-first**: we start with the decisions that unlock the most value and build data, platform and governance consistently around them.',
-    footNote: 'Board workshop · derived from 24 hypotheses (3 per chapter)',
+    footNote: 'Board workshop · derived from the hypotheses across all chapters',
     pageLabel: 'Page',
     prev: 'Previous page',
     next: 'Next page',
@@ -384,7 +384,7 @@ export function ManagementSummary({
                     <span className={styles.hypoTitle}>{h.title}</span>
                     <span className={styles.hypoFuture}>
                       <span className={styles.hypoTag}>{t.futureLabel}</span>
-                      {renderRichText(h.in2035)}
+                      {renderRichText(h.in2030)}
                     </span>
                   </li>
                 ))}

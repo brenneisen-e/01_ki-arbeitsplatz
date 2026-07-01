@@ -2,8 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LanguageContext — sprachweite Umschaltung (Deutsch / Englisch) für das
-// gesamte Workshop-Tool „Banking Horizon 2035". Die Wahl wird in localStorage
-// (`bz2035:lang`) gehalten, sodass ein Refresh die Sprache beibehält. Der Look
+// gesamte Workshop-Tool „Banking Horizon 2030". Die Wahl wird in localStorage
+// (`bz2030:lang`) gehalten, sodass ein Refresh die Sprache beibehält. Der Look
 // der Umschaltung (Länderflaggen) ist von der Vertriebsarbeitsplatz-Landing
 // übernommen.
 //
@@ -14,7 +14,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 export type Lang = 'de' | 'en'
 
-const LANG_KEY = 'bz2035:lang'
+const LANG_KEY = 'bz2030:lang'
 
 /** Ein in beide Sprachen übersetzter String. */
 export type L = { de: string; en: string }
@@ -63,12 +63,12 @@ export function LanguageProvider({
     document.documentElement.lang = lang
     document.title =
       lang === 'en'
-        ? 'Banking Horizon 2035 — walkable cross-section'
-        : 'Banking Horizon 2035 — begehbares Strukturbild'
+        ? 'Banking Horizon 2030 — walkable cross-section'
+        : 'Banking Horizon 2030 — begehbares Strukturbild'
     const desc =
       lang === 'en'
-        ? 'Banking Horizon 2035 — an interactive cross-section of the bank for the board workshop: 8 zones, hypothesis comparisons and demo hand-offs.'
-        : 'Banking Horizon 2035 — interaktives Strukturbild der Bank für den Vorstands-Workshop: 8 Zonen, Hypothesen-Vergleiche und Demo-Absprünge.'
+        ? 'Banking Horizon 2030 — an interactive cross-section of the bank for the board workshop: 8 zones, hypothesis comparisons and demo hand-offs.'
+        : 'Banking Horizon 2030 — interaktives Strukturbild der Bank für den Vorstands-Workshop: 8 Zonen, Hypothesen-Vergleiche und Demo-Absprünge.'
     const meta = document.querySelector('meta[name="description"]')
     if (meta) meta.setAttribute('content', desc)
   }, [lang])

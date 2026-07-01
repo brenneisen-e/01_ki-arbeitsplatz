@@ -8,7 +8,7 @@
 //   #/                      → Intro/Chatbot (kein Deep-Link)
 //   #/uebersicht            → Strukturbild-Übersicht
 //   #/<kapitel>             → Kapitel öffnen (Hypothese 1)
-//   #/<kapitel>/<n>         → Kapitel bei Schritt n (1–3 Hypothese, 4 Aktivität)
+//   #/<kapitel>/<n>         → Kapitel bei Schritt n (1..N Hypothesen, N+1 Aktivität)
 //
 // <kapitel> ist die Kapitel-ID (z. B. 'vertrieb') ODER die Nummer ('02' / '2').
 // Beispiele:
@@ -17,12 +17,12 @@
 //   …/dist/#/02/4           (Aktivität von Kapitel 02)
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { CHAPTER_IDS, CHAPTER_NUMBERS, type ChapterId } from './data/chapters'
-
-// 3 Hypothesen (Schritt 0–2) + Aktivität (Schritt 3) — vgl. STEP_COUNT in
-// ChapterReader. Hier als Konstante gehalten, um einen Modul-Zyklus mit der
-// Komponente zu vermeiden.
-const MAX_STEP = 3
+import {
+  CHAPTER_IDS,
+  CHAPTER_NUMBERS,
+  stepCountForChapter,
+  type ChapterId,
+} from './data/chapters'
 
 export type DeepLink =
   | { view: 'intro' }
@@ -59,7 +59,10 @@ export function parseHash(hash: string = window.location.hash): DeepLink {
   let step = 0
   if (parts[1]) {
     const n = Number.parseInt(parts[1], 10)
-    if (Number.isFinite(n)) step = Math.min(Math.max(0, n - 1), MAX_STEP)
+    // Letzter Schritt = Aktivität (Index = Hypothesenzahl); Kapitel können
+    // unterschiedlich viele Hypothesen haben, daher pro Kapitel klemmen.
+    const maxStep = stepCountForChapter(chapter) - 1
+    if (Number.isFinite(n)) step = Math.min(Math.max(0, n - 1), maxStep)
   }
   return { view: 'chapter', chapter, step }
 }

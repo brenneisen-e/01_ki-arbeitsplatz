@@ -4,7 +4,7 @@
 // Erzeugt eine .xlsx mit:
 //   · einem Übersichts-Blatt: strukturierte Tabelle ALLER Hypothesen + Texte,
 //   · je Kapitel einem eigenen Blatt mit den Vergleichsbildern und den drei
-//     Hypothesen (Status Quo / 2035 / Leitfrage) sowie der Aktivität.
+//     Hypothesen (Status Quo / 2030 / Leitfrage) sowie der Aktivität.
 //
 // Lokale Bearbeitungen (chapterEdits, localStorage) werden über die Basisdaten
 // gelegt, sodass die exportierte Datei den aktuellen Stand im Tool widerspiegelt.
@@ -96,7 +96,7 @@ function sheetName(kapitel: string, label: string): string {
 export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<void> {
   const ExcelJS = await import('exceljs')
   const wb: Workbook = new ExcelJS.Workbook()
-  wb.creator = 'Banking Horizon 2035'
+  wb.creator = 'Banking Horizon 2030'
   wb.created = new Date()
 
   const chapters = getChapters(lang)
@@ -110,10 +110,10 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       colNr: 'Nr.',
       colTitel: 'Hypothese (Titel)',
       colQuo: 'Status Quo (Heute)',
-      colFuture: '2035',
+      colFuture: '2030',
       colLeitfrage: 'Leitfrage',
       today: 'Heute · Status Quo',
-      future: '2035',
+      future: '2030',
       leitfrage: 'Leitfrage',
       hypothesis: 'Hypothese',
       activity: 'Aktivität & Absprung',
@@ -124,7 +124,7 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       demoHeading: 'Mögliche Demos (Diskussion)',
       demoHint: 'Welche Demos / Live-Tools könnten dieses Kapitel ergänzen? — hier festhalten:',
       missing: (f: string) => `[Bild fehlt: ${f}]`,
-      heading: 'Banking Horizon 2035 — Hypothesen',
+      heading: 'Banking Horizon 2030 — Hypothesen',
     },
     en: {
       overview: 'Overview',
@@ -132,10 +132,10 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       colNr: 'No.',
       colTitel: 'Hypothesis (title)',
       colQuo: 'Status quo (today)',
-      colFuture: '2035',
+      colFuture: '2030',
       colLeitfrage: 'Guiding question',
       today: 'Today · status quo',
-      future: '2035',
+      future: '2030',
       leitfrage: 'Guiding question',
       hypothesis: 'Hypothesis',
       activity: 'Activity & hand-off',
@@ -146,7 +146,7 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       demoHeading: 'Possible demos (discussion)',
       demoHint: 'Which demos / live tools could complement this chapter? — capture here:',
       missing: (f: string) => `[image missing: ${f}]`,
-      heading: 'Banking Horizon 2035 — hypotheses',
+      heading: 'Banking Horizon 2030 — hypotheses',
     },
   }[lang]
 
@@ -181,14 +181,14 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
 
   let sr = 3
   for (const ch of chapters) {
-    for (let step = 0; step < 3; step++) {
+    for (let step = 0; step < ch.hypotheses.length; step++) {
       const h = ch.hypotheses[step]
       if (!h) continue
       setCell(sum, `A${sr}`, `${ch.kapitel} · ${ch.label}`, { size: 11, wrap: true })
       setCell(sum, `B${sr}`, String(step + 1), { size: 11, align: 'center' })
       setCell(sum, `C${sr}`, eff(ch.id, step, 'title', h.title), { size: 11, bold: true, wrap: true })
       setCell(sum, `D${sr}`, eff(ch.id, step, 'statusQuo', h.statusQuo), { size: 11, wrap: true })
-      setCell(sum, `E${sr}`, eff(ch.id, step, 'in2035', h.in2035), { size: 11, wrap: true })
+      setCell(sum, `E${sr}`, eff(ch.id, step, 'in2030', h.in2030), { size: 11, wrap: true })
       setCell(sum, `F${sr}`, eff(ch.id, step, 'leitfrage', h.leitfrage ?? ''), { size: 11, wrap: true, italic: true })
       // Leere Notiz-Spalte für gewünschte Bildanpassungen.
       setCell(sum, `G${sr}`, '', { size: 11, wrap: true, fill: NOTE_FILL })
@@ -211,7 +211,7 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
     r += 2
 
     const blocks: Array<{ heading: string; src: string; alt: string; comment: string; fill: string; rows: Array<[string, string, boolean]> }> = []
-    for (let step = 0; step < 3; step++) {
+    for (let step = 0; step < ch.hypotheses.length; step++) {
       const h = ch.hypotheses[step]
       if (!h) continue
       blocks.push({
@@ -222,18 +222,19 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
         fill: ACCENT,
         rows: [
           [LBL.today, eff(ch.id, step, 'statusQuo', h.statusQuo), false],
-          [LBL.future, eff(ch.id, step, 'in2035', h.in2035), false],
+          [LBL.future, eff(ch.id, step, 'in2030', h.in2030), false],
           [LBL.leitfrage, eff(ch.id, step, 'leitfrage', h.leitfrage ?? ''), true],
         ],
       })
     }
+    const activityStep = ch.hypotheses.length
     blocks.push({
-      heading: `${LBL.activity}: ${eff(ch.id, 3, 'activityTitle', ch.activity.title)}`,
+      heading: `${LBL.activity}: ${eff(ch.id, activityStep, 'activityTitle', ch.activity.title)}`,
       src: ch.activity.image.src,
       alt: ch.activity.image.alt,
-      comment: edits.comments[commentKey(ch.id, 3)] ?? '',
+      comment: edits.comments[commentKey(ch.id, activityStep)] ?? '',
       fill: ACCENT_DARK,
-      rows: [['', eff(ch.id, 3, 'activityText', ch.activity.text), false]],
+      rows: [['', eff(ch.id, activityStep, 'activityText', ch.activity.text), false]],
     })
 
     for (const b of blocks) {
@@ -291,7 +292,7 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `Banking-Horizon-2035_Hypothesen_${lang.toUpperCase()}.xlsx`
+  a.download = `Banking-Horizon-2030_Hypothesen_${lang.toUpperCase()}.xlsx`
   document.body.appendChild(a)
   a.click()
   a.remove()

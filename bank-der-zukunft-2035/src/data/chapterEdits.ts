@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // chapterEdits — lokaler Bearbeitungs-Layer für den ChapterReader.
 //
-// Erlaubt es, die Hypothesen-Texte (Titel, Status Quo, 2035, Leitfrage) sowie
+// Erlaubt es, die Hypothesen-Texte (Titel, Status Quo, 2030, Leitfrage) sowie
 // optionale Bild-Kommentare im Workshop anzupassen. Die Änderungen werden NUR
 // lokal im Browser (localStorage) gehalten — die Demo-Daten im Repo bleiben
 // unverändert. Beim Rendern werden vorhandene Overrides über die Basisdaten
@@ -15,13 +15,13 @@
 import { useCallback, useState } from 'react'
 import type { Lang } from '../i18n/LanguageContext'
 
-const STORAGE_KEY = 'bz2035:edits'
-const MODE_KEY = 'bz2035:editmode'
+const STORAGE_KEY = 'bz2030:edits'
+const MODE_KEY = 'bz2030:editmode'
 
 export type EditField =
   | 'title'
   | 'statusQuo'
-  | 'in2035'
+  | 'in2030'
   | 'leitfrage'
   | 'activityTitle'
   | 'activityText'
@@ -117,7 +117,7 @@ export function useChapterEdits(): ChapterEditsApi {
       const fields: EditField[] = [
         'title',
         'statusQuo',
-        'in2035',
+        'in2030',
         'leitfrage',
         'activityTitle',
         'activityText',

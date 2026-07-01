@@ -107,7 +107,7 @@ type CanvasStrings = {
 
 const STR: Record<Lang, CanvasStrings> = {
   de: {
-    stageLabels: { heute: 'Heute', uebergang: 'Übergang', zielbild: 'Zielbild 2035' },
+    stageLabels: { heute: 'Heute', uebergang: 'Übergang', zielbild: 'Zielbild 2030' },
     controlLabels: { mensch: 'Mensch', hybrid: 'Hybrid', ai: 'AI' },
     dimensions: {
       skill: { title: 'Skill-Aufbau', prompt: 'Von isolierter Weiterbildung zu kontinuierlichem Upskilling/Reskilling.' },
@@ -128,7 +128,7 @@ const STR: Record<Lang, CanvasStrings> = {
       'future-interaction': 'Co-Creation: Future Interaction Model',
     },
     intro: {
-      organisation: 'Zielbild für 2035 entlang vier Dimensionen.',
+      organisation: 'Zielbild für 2030 entlang vier Dimensionen.',
       'future-interaction': 'Zielbild → Kontrolle → Priorisierung → Pilot.',
     },
     reset: 'Zurücksetzen',
@@ -175,7 +175,7 @@ const STR: Record<Lang, CanvasStrings> = {
     },
   },
   en: {
-    stageLabels: { heute: 'Today', uebergang: 'Transition', zielbild: 'Target 2035' },
+    stageLabels: { heute: 'Today', uebergang: 'Transition', zielbild: 'Target 2030' },
     controlLabels: { mensch: 'Human', hybrid: 'Hybrid', ai: 'AI' },
     dimensions: {
       skill: { title: 'Skill building', prompt: 'From isolated training to continuous upskilling/reskilling.' },
@@ -196,7 +196,7 @@ const STR: Record<Lang, CanvasStrings> = {
       'future-interaction': 'Co-creation: future interaction model',
     },
     intro: {
-      organisation: 'A 2035 target picture along four dimensions.',
+      organisation: 'A 2030 target picture along four dimensions.',
       'future-interaction': 'Target picture → control → prioritisation → pilot.',
     },
     reset: 'Reset',

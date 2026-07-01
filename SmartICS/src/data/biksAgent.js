@@ -54,9 +54,10 @@ export function bewertePrioritaet(schadenId, eintrittId) {
   const s = STUFE_MAP[schadenId]?.rank || 2;
   const e = STUFE_MAP[eintrittId]?.rank || 2;
   const score = s * e;
-  if (score >= 6) return { tier: 'high', label: 'Hoch', color: '#DC2626' };
-  if (score >= 3) return { tier: 'mid', label: 'Mittel', color: '#D97706' };
-  return { tier: 'low', label: 'Gering', color: '#059669' };
+  // color = gut lesbare Text-/Badge-Farbe · fill = kräftige Ampelfarbe (Flächen)
+  if (score >= 6) return { tier: 'high', label: 'Hoch', color: '#DC2626', fill: '#DC2626' };
+  if (score >= 3) return { tier: 'mid', label: 'Mittel', color: '#D97706', fill: '#EAB308' };
+  return { tier: 'low', label: 'Gering', color: '#059669', fill: '#16A34A' };
 }
 
 // ===== Kontroll-Vokabular ===================================================

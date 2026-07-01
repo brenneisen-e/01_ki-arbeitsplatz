@@ -13,11 +13,11 @@ const yFor = (rank) => M.top + (1 - frac(rank)) * PH;
 function cellColor(sRank, eRank) {
   const score = sRank * eRank;
   if (score >= 6) return '#DC2626';
-  if (score >= 3) return '#D97706';
-  return '#059669';
+  if (score >= 3) return '#EAB308';
+  return '#16A34A';
 }
 
-export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover }) {
+export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover, hoverTier = null }) {
   const hovered = hoverId;
   const setHovered = onHover || (() => {});
 
@@ -98,42 +98,46 @@ export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover 
 
         {/* Bubbles */}
         {points.map(({ r, x, y }) => {
-          const isHover = hovered === r.id;
           const tier = bewertePrioritaet(r.schaden, r.eintritt);
-          const rad = isHover ? 24 : 17;
+          const isHover = hovered === r.id;
+          const tierMatch = hoverTier && tier.tier === hoverTier;
+          const active = isHover || tierMatch;
+          const dim = (hoverTier && !tierMatch) || (hovered && !isHover && !tierMatch);
+          const rad = active ? 24 : 17;
+          const numColor = tier.tier === 'mid' ? '#713F12' : 'white';
           return (
             <g
               key={r.id}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', opacity: dim ? 0.32 : 1, transition: 'opacity 0.15s ease' }}
               onMouseEnter={() => setHovered(r.id)}
               onMouseLeave={() => setHovered(null)}
               onClick={() => onOpen(r.id)}
             >
-              {isHover && <circle cx={x} cy={y} r={rad + 9} fill={tier.color} opacity={0.2} className="matrix-pulse" />}
+              {active && <circle cx={x} cy={y} r={rad + 9} fill={tier.fill} opacity={0.22} className="matrix-pulse" />}
               <circle
                 cx={x} cy={y} r={rad}
-                fill={tier.color}
+                fill={tier.fill}
                 stroke="white"
-                strokeWidth={isHover ? 4 : 2.5}
-                style={{ filter: isHover ? 'drop-shadow(0 4px 8px rgba(15,23,42,0.4))' : 'drop-shadow(0 2px 3px rgba(15,23,42,0.25))', transition: 'r 0.12s ease' }}
+                strokeWidth={active ? 4 : 2.5}
+                style={{ filter: active ? 'drop-shadow(0 4px 8px rgba(15,23,42,0.4))' : 'drop-shadow(0 2px 3px rgba(15,23,42,0.25))', transition: 'r 0.12s ease' }}
               />
-              <text x={x} y={y + (isHover ? 6 : 5)} textAnchor="middle" fontSize={isHover ? 18 : 14} fontWeight="700" fill="white" style={{ pointerEvents: 'none' }}>{r.nummer}</text>
+              <text x={x} y={y + (active ? 6.5 : 5)} textAnchor="middle" fontSize={active ? 19 : 14} fontWeight="700" fill={numColor} style={{ pointerEvents: 'none' }}>{r.nummer}</text>
             </g>
           );
         })}
 
         {/* Tooltip */}
         {tip && (() => {
-          const tw = 256, th = 92;
+          const tw = 320, th = 118;
           let tx = Math.max(6, Math.min(tip.x - tw / 2, W - tw - 6));
-          let ty = tip.y - th - 18;
-          if (ty < 4) ty = tip.y + 28;
+          let ty = tip.y - th - 20;
+          if (ty < 4) ty = tip.y + 30;
           return (
-            <foreignObject x={tx} y={ty} width={tw} height={th} style={{ pointerEvents: 'none' }}>
-              <div style={{ background: '#0F172A', color: 'white', borderRadius: 10, padding: '8px 11px', boxShadow: '0 8px 22px rgba(15,23,42,0.35)' }}>
-                <div style={{ fontSize: 10.5, opacity: 0.7, marginBottom: 2 }}>Risiko {tip.r.nummer} · {tip.r.risikoart}</div>
-                <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.25 }}>{tip.r.titel}</div>
-                <div style={{ fontSize: 10.5, marginTop: 4, opacity: 0.85 }}>
+            <foreignObject x={tx} y={ty} width={tw} height={th} style={{ pointerEvents: 'none', overflow: 'visible' }}>
+              <div style={{ background: '#0F172A', color: 'white', borderRadius: 12, padding: '11px 14px', boxShadow: '0 10px 26px rgba(15,23,42,0.4)' }}>
+                <div style={{ fontSize: 12.5, opacity: 0.72, marginBottom: 3 }}>Risiko {tip.r.nummer} · {tip.r.risikoart}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, lineHeight: 1.25 }}>{tip.r.titel}</div>
+                <div style={{ fontSize: 12.5, marginTop: 6, opacity: 0.9 }}>
                   Schaden {STUFE_MAP[tip.r.schaden]?.label} · EW {STUFE_MAP[tip.r.eintritt]?.label}
                 </div>
               </div>
@@ -145,9 +149,9 @@ export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover 
 
       {/* Legende */}
       <div className="flex items-center gap-4 mt-2 justify-center flex-wrap">
-        {[['#059669', 'Gering'], ['#D97706', 'Mittel'], ['#DC2626', 'Hoch']].map(([c, l]) => (
+        {[['#16A34A', 'Gering'], ['#EAB308', 'Mittel'], ['#DC2626', 'Hoch']].map(([c, l]) => (
           <span key={l} className="inline-flex items-center gap-1.5 text-[11px] text-slate-500">
-            <span className="w-3 h-3 rounded" style={{ background: `color-mix(in srgb, ${c} 20%, white)`, border: `1px solid ${c}` }} /> Priorität {l}
+            <span className="w-3 h-3 rounded" style={{ background: `color-mix(in srgb, ${c} 22%, white)`, border: `1px solid ${c}` }} /> Priorität {l}
           </span>
         ))}
       </div>

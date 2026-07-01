@@ -85,7 +85,7 @@ function StatDonut({ counts, total }) {
   );
 }
 
-function ClusterChart({ risiken }) {
+function ClusterChart({ risiken, activeRisikoart, onHoverRisikoart, onToggleRisikoart }) {
   const data = useMemo(() => {
     const map = new Map();
     risiken.forEach(r => {
@@ -96,21 +96,44 @@ function ClusterChart({ risiken }) {
   }, [risiken]);
   if (!data.length) return null;
   const max = Math.max(...data.map(d => d.value), 1);
+  const dim = (label) => activeRisikoart && activeRisikoart !== 'alle' && activeRisikoart !== label;
   return (
     <div className="card-base p-5">
-      <div className="text-sm font-semibold mb-1">Risiken nach Risikoart</div>
-      <div className="text-xs text-slate-500 mb-3">Benennung gemäß gewählter Risiko-Vorgabe</div>
-      <div className="space-y-2.5">
-        {data.map(d => (
-          <div key={d.label} className="flex items-center gap-3">
-            <span className="text-[12px] text-slate-600 w-36 shrink-0 truncate" title={d.label}>{d.label}</span>
-            <div className="flex-1 h-4 rounded bg-slate-100 overflow-hidden">
-              <div className="h-full rounded" style={{ width: `${(d.value / max) * 100}%`, background: d.color }} />
-            </div>
-            <span className="text-[12px] font-semibold w-5 text-right">{d.value}</span>
-          </div>
-        ))}
+      <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
+        <div className="text-sm font-semibold">Risiken nach Risikoart</div>
+        <div className="text-[11px] text-slate-500">Balken: Hover markiert · Klick filtert</div>
       </div>
+      <div className="text-xs text-slate-500 mb-3">Benennung gemäß gewählter Risiko-Vorgabe</div>
+      <div className="space-y-1.5">
+        {data.map(d => {
+          const active = activeRisikoart === d.label;
+          return (
+            <button
+              key={d.label}
+              type="button"
+              onMouseEnter={() => onHoverRisikoart && onHoverRisikoart(d.label)}
+              onMouseLeave={() => onHoverRisikoart && onHoverRisikoart(null)}
+              onClick={() => onToggleRisikoart && onToggleRisikoart(d.label)}
+              title={`${d.label}: ${d.value} — klicken zum Filtern`}
+              className="w-full flex items-center gap-3 rounded-lg transition-all hover:brightness-[0.98]"
+              style={{ cursor: 'pointer', opacity: dim(d.label) ? 0.4 : 1, background: active ? `color-mix(in srgb, ${d.color} 10%, white)` : 'transparent', border: active ? `1px solid ${d.color}` : '1px solid transparent', padding: '3px 6px' }}
+            >
+              <span className="text-[12px] text-slate-600 w-36 shrink-0 truncate text-left" title={d.label}>{d.label}</span>
+              <div className="flex-1 h-4 rounded bg-slate-100 overflow-hidden">
+                <div className="h-full rounded" style={{ width: `${(d.value / max) * 100}%`, background: d.color, boxShadow: active ? 'inset 0 0 0 2px #0F172A' : 'none' }} />
+              </div>
+              <span className="text-[12px] font-semibold w-5 text-right">{d.value}</span>
+            </button>
+          );
+        })}
+      </div>
+      {activeRisikoart && activeRisikoart !== 'alle' && (
+        <div className="text-center mt-2">
+          <button onClick={() => onToggleRisikoart(activeRisikoart)} className="text-[11.5px] text-slate-500 hover:text-slate-800 underline">
+            Filter „{activeRisikoart}" aufheben
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -164,7 +187,7 @@ function PriorityChart({ tierCount, activeTier, onHoverTier, onToggleTier }) {
   );
 }
 
-function RkmTabelle({ risiken, onOpen, hoverId, onHover }) {
+function RkmTabelle({ risiken, onOpen, hoverId, onHover, hoverRisikoart }) {
   const rows = useMemo(() => buildBiksRows({ risiken }), [risiken]);
   return (
     <div className="card-base">
@@ -198,7 +221,7 @@ function RkmTabelle({ risiken, onOpen, hoverId, onHover }) {
                   onClick={() => onOpen(r.id)}
                   onMouseEnter={() => onHover && onHover(r.id)}
                   onMouseLeave={() => onHover && onHover(null)}
-                  style={{ cursor: 'pointer', background: hoverId === r.id ? 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 6%, white)' : undefined }}
+                  style={{ cursor: 'pointer', background: (hoverId === r.id || (hoverRisikoart && r.risikoart === hoverRisikoart)) ? 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 6%, white)' : undefined }}
                 >
                   <td className="font-mono text-slate-400">{r.nummer}</td>
                   <td>
@@ -242,9 +265,11 @@ export default function ResultBoard() {
   const { institut } = useInstitut();
   const [filter, setFilter] = useState('alle');
   const [prioFilter, setPrioFilter] = useState('alle'); // 'alle' | 'high' | 'mid' | 'low'
+  const [risikoartFilter, setRisikoartFilter] = useState('alle'); // Filter nach Risikoart
   const [showQuelle, setShowQuelle] = useState(false);
   const [hoverId, setHoverId] = useState(null);
   const [hoverTier, setHoverTier] = useState(null); // Hover über Prioritäts-Balken
+  const [hoverRisikoart, setHoverRisikoart] = useState(null); // Hover über Risikoart-Balken
   const [view, setView] = useState('tabelle'); // 'kacheln' | 'tabelle'
 
   const summary = useMemo(() => (analyse ? buildBiksSummary(analyse) : null), [analyse]);
@@ -271,10 +296,16 @@ export default function ResultBoard() {
   const gefiltert = analyse.risiken.filter(r => {
     const okStatus = filter === 'alle' || r.status === filter;
     const okPrio = prioFilter === 'alle' || bewertePrioritaet(r.schaden, r.eintritt).tier === prioFilter;
-    return okStatus && okPrio;
+    const okArt = risikoartFilter === 'alle' || r.risikoart === risikoartFilter;
+    return okStatus && okPrio && okArt;
   });
   const riskTier = (r) => bewertePrioritaet(r.schaden, r.eintritt).tier;
   const togglePrio = (t) => setPrioFilter(prev => (prev === t ? 'alle' : t));
+  const toggleRisikoart = (label) => setRisikoartFilter(prev => {
+    const next = prev === label ? 'alle' : label;
+    if (next !== 'alle') setView('tabelle'); // Ergebnis in der Tabelle zeigen
+    return next;
+  });
 
   return (
     <div className="space-y-5 animate-fade-in-up">
@@ -355,11 +386,11 @@ export default function ResultBoard() {
       </div>
 
       {/* Risikomatrix */}
-      <RisikoMatrix risiken={analyse.risiken} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} hoverTier={hoverTier} />
+      <RisikoMatrix risiken={analyse.risiken} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} hoverTier={hoverTier} hoverRisikoart={hoverRisikoart} />
 
       {/* Charts */}
       <div className="grid md:grid-cols-2 gap-3">
-        <ClusterChart risiken={analyse.risiken} />
+        <ClusterChart risiken={analyse.risiken} activeRisikoart={risikoartFilter} onHoverRisikoart={setHoverRisikoart} onToggleRisikoart={toggleRisikoart} />
         <PriorityChart tierCount={summary.tierCount} activeTier={prioFilter} onHoverTier={setHoverTier} onToggleTier={togglePrio} />
       </div>
 
@@ -408,6 +439,21 @@ export default function ResultBoard() {
           );
         })()}
 
+        {risikoartFilter !== 'alle' && (() => {
+          const rr = analyse.risiken.find(r => r.risikoart === risikoartFilter);
+          const col = CLUSTER_MAP[rr?.cluster]?.color || '#475569';
+          return (
+            <button
+              onClick={() => setRisikoartFilter('alle')}
+              className="inline-flex items-center gap-1.5 rounded-full font-semibold"
+              style={{ background: `color-mix(in srgb, ${col} 14%, white)`, color: col, border: `1px solid ${col}`, padding: '0.2rem 0.6rem', fontSize: 12, cursor: 'pointer' }}
+              title="Risikoart-Filter aufheben"
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: col }} /> {risikoartFilter} <X size={12} />
+            </button>
+          );
+        })()}
+
         {/* Ansicht umschalten: Kacheln / Tabelle */}
         <div className="ml-auto inline-flex items-center gap-2">
           <span className="text-[13px] font-semibold text-slate-500">Ansicht:</span>
@@ -439,13 +485,13 @@ export default function ResultBoard() {
               key={r.id}
               risiko={r}
               onOpen={() => setActiveRisikoId(r.id)}
-              active={hoverId === r.id || (hoverTier && riskTier(r) === hoverTier)}
+              active={hoverId === r.id || (hoverTier && riskTier(r) === hoverTier) || (hoverRisikoart && r.risikoart === hoverRisikoart)}
               onHover={setHoverId}
             />
           ))}
         </div>
       ) : (
-        <RkmTabelle risiken={gefiltert} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} />
+        <RkmTabelle risiken={gefiltert} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} hoverRisikoart={hoverRisikoart} />
       )}
 
       {activeRisikoId && (

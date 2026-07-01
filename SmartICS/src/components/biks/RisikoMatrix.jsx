@@ -18,7 +18,7 @@ function cellColor(sRank, eRank) {
   return '#16A34A';
 }
 
-export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover, hoverTier = null }) {
+export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover, hoverTier = null, hoverRisikoart = null }) {
   const hovered = hoverId;
   const setHovered = onHover || (() => {});
 
@@ -102,8 +102,9 @@ export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover,
           const tier = bewertePrioritaet(r.schaden, r.eintritt);
           const isHover = hovered === r.id;
           const tierMatch = hoverTier && tier.tier === hoverTier;
-          const active = isHover || tierMatch;
-          const dim = (hoverTier && !tierMatch) || (hovered && !isHover && !tierMatch);
+          const artMatch = hoverRisikoart && r.risikoart === hoverRisikoart;
+          const active = isHover || tierMatch || artMatch;
+          const dim = (hovered || hoverTier || hoverRisikoart) && !active;
           const rad = active ? 24 : 17;
           const numColor = tier.tier === 'mid' ? '#713F12' : 'white';
           return (

@@ -137,14 +137,14 @@ export const RISIKO_FRAMEWORKS = [
   {
     id: 'op-risk-standard',
     name: 'Operationelle Risiken – Risikofunktionslandkarte',
-    beschreibung: 'Standard-Cluster (IT/Cyber, Prozess, Personal, Extern, Recht/Compliance, Datenqualität, Betrug, Modell) inkl. Wesentlichkeitskriterien.',
+    beschreibung: 'Feingliedrige 8-Cluster-Benennung: u. a. Betrugsrisiko, IT- und Cyberrisiko, Datenqualitäts- und Prozessrisiko. Die Risiken werden nach dieser Landkarte benannt.',
     quelle: 'b-IKS Framework: Operationelle Risiken',
     default: true,
   },
   {
     id: 'marisk-nfr',
     name: 'MaRisk NFR-Taxonomie',
-    beschreibung: 'Non-Financial-Risk-Taxonomie nach MaRisk AT 4.3 mit sechs Risikokategorien.',
+    beschreibung: 'Gröbere 6-Kategorien-Benennung nach MaRisk AT 4.3: u. a. Operationelles Risiko, Compliance- & Rechtsrisiko, Finanzkriminalität & Betrug. Dieselben Risiken werden dieser Taxonomie zugeordnet.',
     quelle: 'Methodenhandbuch Risiko- & Kontroll-Taxonomie',
     default: false,
   },
@@ -200,6 +200,7 @@ const AUSZAHLUNG = {
       nummer: 1,
       titel: 'Unautorisierte oder manipulierte Auszahlung',
       risikoart: 'Betrugsrisiko',
+      risikoartMarisk: 'Finanzkriminalität & Betrug',
       cluster: 'betrug',
       risikospezifikation:
         'Im Auszahlungsprozess kann durch Identitätsmissbrauch, Kompetenzüberschreitung, interne Manipulation oder Umgehung der Freigabekette eine Auszahlung an einen unberechtigten Empfänger oder in falscher Höhe veranlasst werden.',
@@ -231,6 +232,7 @@ const AUSZAHLUNG = {
       nummer: 2,
       titel: 'Auszahlung trotz nicht erfüllter Auszahlungsvoraussetzungen',
       risikoart: 'Rechts- und Compliance-Risiko',
+      risikoartMarisk: 'Compliance- & Rechtsrisiko',
       cluster: 'recht-compliance',
       risikospezifikation:
         'Eine Auszahlung wird freigegeben, obwohl Vertragsunterlagen nicht wirksam unterzeichnet sind, Sicherheiten nicht bestellt oder werthaltig sind, Auflagen nicht erfüllt wurden oder Auszahlungslimits überschritten sind.',
@@ -262,6 +264,7 @@ const AUSZAHLUNG = {
       nummer: 3,
       titel: 'Falsche Empfänger-, Betrags- oder Zahlungsdaten',
       risikoart: 'Datenqualitäts- und Prozessrisiko',
+      risikoartMarisk: 'Operationelles Risiko',
       cluster: 'datenqualitaet',
       risikospezifikation:
         'Durch fehlerhafte Erfassung oder Übernahme von IBAN, Empfängername, Betrag, Währung, Valuta oder Vertragsreferenz kann die Auszahlung an den falschen Empfänger, in falscher Höhe oder mit falscher Wertstellung erfolgen.',
@@ -293,6 +296,7 @@ const AUSZAHLUNG = {
       nummer: 4,
       titel: 'Unterlassene oder fehlerhafte Sanktions-, Embargo- oder AML-Prüfung',
       risikoart: 'Rechts- und Compliance-Risiko',
+      risikoartMarisk: 'Compliance- & Rechtsrisiko',
       cluster: 'recht-compliance',
       risikospezifikation:
         'Eine Auszahlung wird an einen sanktionierten, embargobehafteten oder anderweitig auffälligen Empfänger veranlasst, weil die erforderliche Screening-Prüfung nicht erfolgt, nicht vollständig ist oder ein Treffer nicht ordnungsgemäß bearbeitet wurde.',
@@ -324,6 +328,7 @@ const AUSZAHLUNG = {
       nummer: 5,
       titel: 'System- oder Schnittstellenfehler mit Doppel- oder Fehlverarbeitung',
       risikoart: 'IT- und Cyberrisiko',
+      risikoartMarisk: 'Operationelles Risiko',
       cluster: 'it-cyber',
       risikospezifikation:
         'Fehler in der Übermittlung vom führenden System an das Zahlungsverkehrssystem, Schnittstellenstörungen, Dubletten oder fehlerhafte Systemverarbeitung können dazu führen, dass Zahlungen doppelt, unvollständig oder gar nicht ausgeführt werden.',
@@ -393,8 +398,12 @@ function makeStatusEvent(status, autorId, tsOffsetMin, nowTs, note) {
 export function buildAnalyse(prozess, input = {}, opts = {}) {
   const nowTs = opts.nowTs || Date.now();
   const seed = opts.seedKollaboration !== false;
+  // Das gewählte Framework bestimmt die Benennung der Risikoart (siehe Prompt:
+  // „benenne die Risiken entsprechend dieser"). Die Risiken selbst bleiben gleich.
+  const useMarisk = input.frameworkId === 'marisk-nfr';
 
   const risiken = prozess.risiken.map((r, idx) => {
+    const risikoart = useMarisk && r.risikoartMarisk ? r.risikoartMarisk : r.risikoart;
     // Etwas gestreute Demo-Kollaboration, damit Status/Kommentare sichtbar sind.
     let status = DEFAULT_STATUS;
     let statusHistorie = [makeStatusEvent('neu', 'agent', 30, nowTs, 'Vom b-IKS Agent vorgeschlagen')];
@@ -428,6 +437,7 @@ export function buildAnalyse(prozess, input = {}, opts = {}) {
 
     return {
       ...r,
+      risikoart,
       status,
       statusHistorie,
       comments,

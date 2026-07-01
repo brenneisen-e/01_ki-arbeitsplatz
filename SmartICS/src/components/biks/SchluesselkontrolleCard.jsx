@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   KeyRound, ChevronDown, Pencil, Check, Trash2, MessageSquare, Sparkles,
 } from 'lucide-react';
@@ -44,14 +44,26 @@ function EditField({ label, value, onChange, rows = 2 }) {
 }
 
 export default function SchluesselkontrolleCard({ risikoId, kontrolle, defaultOpen = false }) {
-  const { setKontrolleStatus, updateKontrolle, removeKontrolle, addKontrolleComment } = useBiks();
+  const { setKontrolleStatus, updateKontrolle, commitKontrolleVersion, removeKontrolle, addKontrolleComment } = useBiks();
   const [open, setOpen] = useState(defaultOpen);
   const [editing, setEditing] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const beforeEditRef = useRef(null);
 
   const k = kontrolle;
   const art = KONTROLL_ART.find(a => a.id === k.art);
   const set = (patch) => updateKontrolle(risikoId, k.id, patch);
+
+  const toggleEdit = () => {
+    if (editing) {
+      commitKontrolleVersion(risikoId, k.id, beforeEditRef.current);
+      beforeEditRef.current = null;
+      setEditing(false);
+    } else {
+      beforeEditRef.current = { name: k.name, ziel: k.ziel, art: k.art, typ: k.typ, turnus: k.turnus, was: k.was, wie: k.wie, wer: k.wer, abweichung: k.abweichung, umgang: k.umgang, dokumentation: k.dokumentation, anwendung: k.anwendung };
+      setEditing(true);
+    }
+  };
 
   return (
     <div className="rounded-xl border transition-colors" style={{ borderColor: open ? 'color-mix(in srgb, #16A34A 40%, #E2E8F0)' : '#E2E8F0', background: 'white' }}>
@@ -100,7 +112,7 @@ export default function SchluesselkontrolleCard({ risikoId, kontrolle, defaultOp
           {/* Aktionsleiste */}
           <div className="flex items-center gap-2 -mt-1">
             <button
-              onClick={() => setEditing(v => !v)}
+              onClick={toggleEdit}
               className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] font-medium border transition-colors"
               style={editing
                 ? { background: 'var(--mode-primary, #0F4D2A)', color: 'white', borderColor: 'transparent' }

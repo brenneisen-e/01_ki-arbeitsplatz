@@ -1,42 +1,102 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, Pencil, Check, Plus, KeyRound, AlertOctagon, History, ChevronRight,
+  Minus, PencilLine, Bot,
 } from 'lucide-react';
 import { useBiks } from '../../hooks/useBiks';
-import { CLUSTER_MAP, STUFEN, STATUS_MAP, getTeamMember, emptyKontrolle } from '../../data/biksAgent';
-import { StatusMenu, StatusIcon } from './StatusControls';
+import { CLUSTER_MAP, STUFEN, getTeamMember, emptyKontrolle } from '../../data/biksAgent';
+import { StatusMenu } from './StatusControls';
 import { PrioTier, HeatmapMini } from './RiskBits';
 import SchluesselkontrolleCard from './SchluesselkontrolleCard';
 import CommentThread from './CommentThread';
-import { formatRelativeDe } from '../../utils/datetime';
+import { formatDateTimeDe } from '../../utils/datetime';
 
-function Verlauf({ historie }) {
-  if (!historie?.length) return null;
+function ChangeRow({ c }) {
+  const map = {
+    added: { color: '#059669', bg: '#ECFDF5', Icon: Plus },
+    removed: { color: '#DC2626', bg: '#FEF2F2', Icon: Minus },
+    changed: { color: '#D97706', bg: '#FFFBEB', Icon: PencilLine },
+  };
+  const s = map[c.type] || map.changed;
+  const Icon = s.Icon;
   return (
-    <ul className="space-y-1.5">
-      {[...historie].reverse().map((h, i) => {
-        const m = getTeamMember(h.autorId);
-        const s = STATUS_MAP[h.status];
-        return (
-          <li key={i} className="flex items-center gap-2 text-[12px]">
-            <StatusIcon statusId={h.status} />
-            <span className="font-semibold" style={{ color: s?.color }}>{s?.label}</span>
-            <span className="text-slate-400">·</span>
-            <span className="text-slate-500">{m.name}</span>
-            {h.note ? <span className="text-slate-400 truncate">— {h.note}</span> : null}
-            <span className="text-slate-300 ml-auto shrink-0">{formatRelativeDe(h.at)}</span>
-          </li>
-        );
-      })}
-    </ul>
+    <div className="flex items-start gap-2 rounded-lg p-2.5" style={{ background: s.bg }}>
+      <span className="w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5" style={{ background: 'white' }}>
+        <Icon size={13} style={{ color: s.color }} />
+      </span>
+      <div className="min-w-0 text-[12.5px] flex-1">
+        <span className="font-semibold" style={{ color: s.color }}>{c.feld}</span>
+        {c.type === 'changed' ? (
+          <div className="text-slate-600 mt-0.5 break-words">
+            <span className="line-through text-slate-400">{c.alt || '—'}</span>
+            <span className="mx-1.5 text-slate-400">→</span>
+            <span className="text-slate-800 font-medium">{c.neu || '—'}</span>
+          </div>
+        ) : (
+          <div className="text-slate-700 mt-0.5 break-words">{c.type === 'removed' ? c.alt : c.neu}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function VersionSlider({ versionen }) {
+  const [idx, setIdx] = useState(Math.max(0, versionen.length - 1));
+  const nRef = useRef(versionen.length);
+  // Wenn neue Versionen dazukommen, automatisch zur neuesten springen.
+  useEffect(() => {
+    if (versionen.length !== nRef.current) { setIdx(versionen.length - 1); nRef.current = versionen.length; }
+  }, [versionen.length]);
+
+  if (!versionen.length) return <div className="text-[13px] text-slate-400">Keine Versionen vorhanden.</div>;
+  const safeIdx = Math.min(idx, versionen.length - 1);
+  const v = versionen[safeIdx];
+  const m = getTeamMember(v.autorId);
+  const isAgent = m.id === 'agent';
+
+  return (
+    <div>
+      {/* Schieberegler */}
+      <input
+        type="range"
+        min={0}
+        max={versionen.length - 1}
+        value={safeIdx}
+        onChange={(e) => setIdx(Number(e.target.value))}
+        className="w-full accent-emerald-700 cursor-pointer"
+      />
+      <div className="flex items-center justify-between text-[10.5px] text-slate-400 mt-1 mb-3">
+        <span>Erstversion</span>
+        <span className="font-semibold text-slate-500">Version {safeIdx + 1} / {versionen.length}</span>
+        <span>Aktuell</span>
+      </div>
+
+      {/* Metadaten der gewählten Version */}
+      <div className="flex items-center gap-2.5 mb-3">
+        <span className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[11px] font-semibold shrink-0" style={{ background: m.color }}>
+          {isAgent ? <Bot size={15} /> : m.initialen}
+        </span>
+        <div className="min-w-0">
+          <div className="text-[13px] font-semibold text-slate-800">{v.aktion}</div>
+          <div className="text-[11px] text-slate-500">{m.name} · {formatDateTimeDe(v.at)}</div>
+        </div>
+      </div>
+
+      {/* Änderungen dieser Version */}
+      <div className="space-y-1.5">
+        {(v.changes || []).map((c, i) => <ChangeRow key={i} c={c} />)}
+      </div>
+    </div>
   );
 }
 
 export default function RisikoDetailDrawer({ risikoId, onClose }) {
-  const { analyse, setRisikoStatus, updateRisiko, addKontrolle, addRisikoComment } = useBiks();
+  const { analyse, setRisikoStatus, updateRisiko, commitRisikoVersion, addKontrolle, addRisikoComment } = useBiks();
   const [editing, setEditing] = useState(false);
   const [showVerlauf, setShowVerlauf] = useState(false);
   const [newKontrolleId, setNewKontrolleId] = useState(null);
+  const beforeEditRef = useRef(null);
 
   const risiko = analyse?.risiken.find(r => r.id === risikoId) || null;
 
@@ -51,18 +111,32 @@ export default function RisikoDetailDrawer({ risikoId, onClose }) {
   const c = CLUSTER_MAP[risiko.cluster];
   const set = (patch) => updateRisiko(risiko.id, patch);
 
+  const toggleEdit = () => {
+    if (editing) {
+      commitRisikoVersion(risiko.id, beforeEditRef.current);
+      beforeEditRef.current = null;
+      setEditing(false);
+    } else {
+      beforeEditRef.current = {
+        titel: risiko.titel, risikospezifikation: risiko.risikospezifikation,
+        wesentlichkeit: risiko.wesentlichkeit, schaden: risiko.schaden, eintritt: risiko.eintritt,
+      };
+      setEditing(true);
+    }
+  };
+
   const handleAddKontrolle = () => {
     const id = addKontrolle(risiko.id, { ...emptyKontrolle(Date.now()), name: '', art: 'praeventiv', typ: 'manuell', turnus: 'je-vorgang' });
     setNewKontrolleId(id);
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] animate-fade-in" onClick={onClose} />
 
       {/* Drawer */}
-      <div className="relative w-full max-w-[1040px] bg-slate-50 h-full shadow-2xl flex flex-col drawer-slide-in">
+      <div className="relative w-full max-w-[1040px] bg-slate-50 h-full min-h-0 overflow-hidden shadow-2xl flex flex-col drawer-slide-in">
         {/* Kopf */}
         <div className="shrink-0 text-white" style={{ background: 'var(--mode-gradient, linear-gradient(135deg,#0F4D2A,#1D7B3F))' }}>
           <div className="px-5 pt-4 pb-4">
@@ -96,7 +170,7 @@ export default function RisikoDetailDrawer({ risikoId, onClose }) {
                 <StatusMenu statusId={risiko.status} onChange={(s) => setRisikoStatus(risiko.id, s)} />
               </div>
               <button
-                onClick={() => setEditing(v => !v)}
+                onClick={toggleEdit}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[12px] font-semibold transition-colors"
                 style={{ background: 'rgba(255,255,255,0.16)', color: 'white' }}
               >
@@ -114,11 +188,15 @@ export default function RisikoDetailDrawer({ risikoId, onClose }) {
         </div>
 
         {/* Scrollbereich */}
-        <div className="flex-1 overflow-y-auto scrollbar-thin p-5 space-y-4">
+        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin p-5 space-y-4">
           {showVerlauf && (
             <div className="card-base p-4">
-              <div className="text-[11px] font-bold tracking-wider uppercase text-slate-400 mb-2">Statusverlauf</div>
-              <Verlauf historie={risiko.statusHistorie} />
+              <div className="flex items-center gap-2 mb-3">
+                <History size={15} className="text-slate-400" />
+                <span className="text-[13px] font-semibold">Versionsverlauf</span>
+                <span className="text-[11px] text-slate-400">— durch die Versionen schieben</span>
+              </div>
+              <VersionSlider versionen={risiko.versionen || []} />
             </div>
           )}
 
@@ -225,6 +303,7 @@ export default function RisikoDetailDrawer({ risikoId, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

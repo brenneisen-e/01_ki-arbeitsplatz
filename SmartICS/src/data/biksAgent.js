@@ -49,12 +49,13 @@ export const STUFEN = [
 export const STUFE_MAP = Object.fromEntries(STUFEN.map(s => [s.id, s]));
 
 // Priorität = Schaden × Eintrittswahrscheinlichkeit → Tier
+// Klassische Risikomatrix-Diagonale: hoch×niedrig bzw. niedrig×hoch = mittel.
 export function bewertePrioritaet(schadenId, eintrittId) {
   const s = STUFE_MAP[schadenId]?.rank || 2;
   const e = STUFE_MAP[eintrittId]?.rank || 2;
   const score = s * e;
   if (score >= 6) return { tier: 'high', label: 'Hoch', color: '#DC2626' };
-  if (score >= 3.5) return { tier: 'mid', label: 'Mittel', color: '#D97706' };
+  if (score >= 3) return { tier: 'mid', label: 'Mittel', color: '#D97706' };
   return { tier: 'low', label: 'Gering', color: '#059669' };
 }
 
@@ -380,6 +381,11 @@ function makeStatusEvent(status, autorId, tsOffsetMin, nowTs, note) {
   return { status, autorId, at: nowTs - tsOffsetMin * 60 * 1000, note };
 }
 
+let _vseq = 0;
+function makeVersion(autorId, aktion, changes, tsOffsetMin, nowTs) {
+  return { id: `v-seed-${nowTs}-${_vseq++}`, at: nowTs - tsOffsetMin * 60 * 1000, autorId, aktion, changes };
+}
+
 /**
  * Baut aus einem Prozess der Bibliothek das bearbeitbare Analyse-Objekt.
  * @param {object} prozess  Eintrag aus PROZESS_BIBLIOTHEK
@@ -427,6 +433,21 @@ export function buildAnalyse(prozess, input = {}, opts = {}) {
       custom: false,
     }));
 
+    // Versionshistorie (für den Schieberegler): Erstellung + Demo-Kollaboration.
+    const versionen = [makeVersion('agent', 'Risiko vom b-IKS Agent erstellt', [
+      { type: 'added', feld: 'Risiko identifiziert', neu: r.titel },
+      { type: 'added', feld: 'Schlüsselkontrolle vorgeschlagen', neu: schluesselkontrollen[0]?.name },
+    ], 30, nowTs)];
+    if (seed && idx === 0) {
+      versionen.push(makeVersion('tk', 'Status geändert', [{ type: 'changed', feld: 'Status', alt: 'Neu', neu: 'In Bearbeitung' }], 18, nowTs));
+      versionen.push(makeVersion('tk', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[0]?.text }], 16, nowTs));
+      versionen.push(makeVersion('sm', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[1]?.text }], 9, nowTs));
+    } else if (seed && idx === 3) {
+      versionen.push(makeVersion('jw', 'Status geändert', [{ type: 'changed', feld: 'Status', alt: 'Neu', neu: 'In Abnahme' }], 12, nowTs));
+      versionen.push(makeVersion('jw', 'Kontroll-Status geändert', [{ type: 'changed', feld: 'Kontroll-Status', alt: 'Neu', neu: 'In Abnahme' }], 12, nowTs));
+      versionen.push(makeVersion('jw', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[0]?.text }], 11, nowTs));
+    }
+
     return {
       ...r,
       risikoart,
@@ -434,6 +455,7 @@ export function buildAnalyse(prozess, input = {}, opts = {}) {
       statusHistorie,
       comments,
       schluesselkontrollen,
+      versionen,
     };
   });
 

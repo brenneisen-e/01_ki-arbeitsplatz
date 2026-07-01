@@ -1,11 +1,16 @@
 import { useMemo } from 'react';
-import { Download, FileSpreadsheet, FileText, Key, AlertTriangle, ShieldCheck, CheckCircle2, FileX } from 'lucide-react';
-import { useSmartIcs } from '../../hooks/useSmartIcs';
+import { Download, FileSpreadsheet, Key, AlertTriangle, ShieldCheck, CheckCircle2, FileX, Flame } from 'lucide-react';
+import { useBiks } from '../../hooks/useBiks';
 import { useInstitut } from '../../hooks/useInstitut';
-import { RISIKO_KATEGORIEN } from '../../data/risikoKatalog';
-import { exportRkmCsv, exportRkmPdf, buildRkmRows, buildExportSummary } from '../../utils/exportRkm';
+import {
+  CLUSTER_MAP, KONTROLL_ART, KONTROLL_TYP, KONTROLL_TURNUS,
+  STUFE_MAP, bewertePrioritaet,
+} from '../../data/biksAgent';
+import { buildBiksRows, buildBiksSummary, exportBiksCsv, exportBiksPdf } from '../../utils/exportBiks';
+import { StatusBadge } from '../biks/StatusControls';
+import { formatDateDe } from '../../utils/datetime';
 
-function getKategorie(id) { return RISIKO_KATEGORIEN.find(k => k.id === id); }
+function lbl(list, id) { return list.find(x => x.id === id)?.label || id || ''; }
 
 function StatCard({ label, value, sub, icon: Icon, color }) {
   return (
@@ -22,49 +27,34 @@ function StatCard({ label, value, sub, icon: Icon, color }) {
   );
 }
 
-function VerteilungChart({ session }) {
+function ClusterChart({ analyse }) {
   const data = useMemo(() => {
     const counts = {};
-    Object.values(session.risikoCandidates).flat().filter(r => r.selected).forEach(r => {
-      counts[r.kategorie] = (counts[r.kategorie] || 0) + 1;
-    });
-    return Object.entries(counts).map(([k, v]) => {
-      const kat = getKategorie(k);
-      return { label: kat?.name?.split(' ')[0] || k, value: v, color: kat?.color || '#94A3B8' };
-    });
-  }, [session]);
-
+    analyse.risiken.forEach(r => { counts[r.cluster] = (counts[r.cluster] || 0) + 1; });
+    return Object.entries(counts).map(([id, v]) => ({ label: CLUSTER_MAP[id]?.kurz || id, value: v, color: CLUSTER_MAP[id]?.color || '#94A3B8' }));
+  }, [analyse]);
   if (data.length === 0) return null;
   const max = Math.max(...data.map(d => d.value), 1);
-  const W = 600, H = 200, pad = 40;
-
   return (
     <div className="card-base p-5">
-      <div className="text-sm font-semibold mb-1">Risikoverteilung nach Risikoart</div>
-      <div className="text-xs text-slate-500 mb-3">Anzahl ausgewählter Risiken</div>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H}>
-        {(() => {
-          const bw = (W - pad * 2) / data.length;
-          return data.map((d, i) => {
-            const h = (d.value / max) * (H - pad - 30);
-            const x = pad + i * bw + bw * 0.15;
-            const y = H - 30 - h;
-            return (
-              <g key={d.label}>
-                <rect x={x} y={y} width={bw * 0.7} height={h} fill={d.color} rx={4} opacity={0.85} />
-                <text x={x + bw * 0.35} y={y - 6} textAnchor="middle" fontSize={11} fontWeight={600} fill="#0F172A">{d.value}</text>
-                <text x={x + bw * 0.35} y={H - 12} textAnchor="middle" fontSize={11} fill="#64748B">{d.label}</text>
-              </g>
-            );
-          });
-        })()}
-        <line x1={pad} y1={H - 30} x2={W - pad} y2={H - 30} stroke="#CBD5E1" />
-      </svg>
+      <div className="text-sm font-semibold mb-1">Risiken nach Risikoart</div>
+      <div className="text-xs text-slate-500 mb-3">Verteilung über die Risikofunktionslandkarte</div>
+      <div className="space-y-2.5">
+        {data.map(d => (
+          <div key={d.label} className="flex items-center gap-3">
+            <span className="text-[12px] text-slate-600 w-32 shrink-0 truncate">{d.label}</span>
+            <div className="flex-1 h-4 rounded bg-slate-100 overflow-hidden">
+              <div className="h-full rounded" style={{ width: `${(d.value / max) * 100}%`, background: d.color }} />
+            </div>
+            <span className="text-[12px] font-semibold w-5 text-right">{d.value}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-function TierChart({ summary }) {
+function PriorityChart({ summary }) {
   const total = summary.tierCount.high + summary.tierCount.mid + summary.tierCount.low;
   if (total === 0) return null;
   const segments = [
@@ -74,15 +64,11 @@ function TierChart({ summary }) {
   ];
   return (
     <div className="card-base p-5">
-      <div className="text-sm font-semibold mb-1">Verteilung nach Risiko-Tier</div>
-      <div className="text-xs text-slate-500 mb-3">Heatmap-Klassifizierung</div>
+      <div className="text-sm font-semibold mb-1">Verteilung nach Priorität</div>
+      <div className="text-xs text-slate-500 mb-3">Schaden × Eintrittswahrscheinlichkeit</div>
       <div className="flex items-stretch gap-2 mb-3 h-6 rounded-md overflow-hidden">
         {segments.map(s => (
-          <div
-            key={s.tier}
-            style={{ flex: s.value, background: s.color, minWidth: s.value > 0 ? 12 : 0 }}
-            title={`${s.label}: ${s.value}`}
-          />
+          <div key={s.tier} style={{ flex: s.value, background: s.color, minWidth: s.value > 0 ? 12 : 0 }} title={`${s.label}: ${s.value}`} />
         ))}
       </div>
       <div className="grid grid-cols-3 gap-3 text-center">
@@ -98,68 +84,63 @@ function TierChart({ summary }) {
 }
 
 export default function RkmView({ onStartWorkflow }) {
-  const { session } = useSmartIcs();
+  const { analyse } = useBiks();
   const { institut } = useInstitut();
 
-  if (!session) {
+  if (!analyse) {
     return (
       <div className="card-base p-10 text-center">
         <FileX size={36} className="mx-auto text-slate-300 mb-3" />
-        <div className="text-base font-semibold mb-1">Noch keine RKM erstellt</div>
+        <div className="text-base font-semibold mb-1">Noch keine Analyse vorhanden</div>
         <div className="text-sm text-slate-500 mb-4 max-w-md mx-auto">
-          Starten Sie den Smart-ICS-Workflow, um eine Risiko-Kontroll-Matrix zu erzeugen.
+          Laden Sie im b-IKS Agent eine Arbeitsanweisung hoch, um eine Risiko-Kontroll-Matrix zu erzeugen.
         </div>
         <button
           onClick={onStartWorkflow}
           className="px-4 py-2 rounded-lg text-white text-sm font-semibold inline-flex items-center gap-2"
           style={{ background: 'var(--mode-primary, #0F4D2A)' }}
         >
-          <ShieldCheck size={16} /> Workflow starten
+          <ShieldCheck size={16} /> Zum b-IKS Agent
         </button>
       </div>
     );
   }
 
-  const rows = buildRkmRows(session);
-  const summary = buildExportSummary(session);
+  const rows = buildBiksRows(analyse);
+  const summary = buildBiksSummary(analyse);
+  const coverage = summary.risikoCount ? Math.round((summary.kontrollen ? analyse.risiken.filter(r => r.schluesselkontrollen.length > 0).length : 0) / summary.risikoCount * 100) : 0;
+  const highPrio = summary.tierCount.high;
 
   return (
     <div className="space-y-5">
       <div className="card-base p-5 flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="text-xs text-slate-500">Risiko-Kontroll-Matrix</div>
-          <div className="text-lg font-semibold">{session.name}</div>
+          <div className="text-lg font-semibold">{analyse.prozessName}</div>
           <div className="text-xs text-slate-500 mt-1">
-            {session.beschreibung} · erstellt am {new Date(session.createdAt).toLocaleDateString('de-DE')}
+            {analyse.kategorie} · erstellt am {formatDateDe(analyse.createdAt)}
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => exportRkmCsv(session)}
-            className="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm font-medium inline-flex items-center gap-2"
-          >
+          <button onClick={() => exportBiksCsv(analyse)} className="px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm font-medium inline-flex items-center gap-2">
             <FileSpreadsheet size={16} className="text-emerald-700" /> CSV
           </button>
-          <button
-            onClick={() => exportRkmPdf(session, institut)}
-            className="px-3 py-2 rounded-lg text-white text-sm font-semibold inline-flex items-center gap-2"
-            style={{ background: 'var(--mode-primary, #0F4D2A)' }}
-          >
+          <button onClick={() => exportBiksPdf(analyse, institut)} className="px-3 py-2 rounded-lg text-white text-sm font-semibold inline-flex items-center gap-2" style={{ background: 'var(--mode-primary, #0F4D2A)' }}>
             <Download size={16} /> PDF Export
           </button>
         </div>
       </div>
 
       <div className="grid md:grid-cols-4 gap-3">
-        <StatCard label="Risiken" value={summary.risikoCount} sub="ausgewählt & beschrieben" icon={AlertTriangle} color="#DC2626" />
-        <StatCard label="Schlüsselkontrollen" value={summary.keyControls} sub={`über ${summary.rowCount} Zuordnungen`} icon={Key} color="#1D7B3F" />
-        <StatCard label="Coverage" value={`${summary.risikoCount ? Math.round((summary.keyControls / summary.risikoCount) * 100) : 0} %`} sub="Risiken mit Schlüsselkontrolle" icon={CheckCircle2} color="#0F4D2A" />
-        <StatCard label="Lücken" value={summary.ohneKontrolle} sub="Risiken ohne Kontrolle" icon={FileX} color="#B91C1C" />
+        <StatCard label="Wesentliche Risiken" value={summary.risikoCount} sub="Top-5 priorisiert" icon={AlertTriangle} color="#DC2626" />
+        <StatCard label="Schlüsselkontrollen" value={summary.kontrollen} sub="vorgeschlagen & ergänzt" icon={Key} color="#1D7B3F" />
+        <StatCard label="Coverage" value={`${coverage} %`} sub="Risiken mit Schlüsselkontrolle" icon={CheckCircle2} color="#0F4D2A" />
+        <StatCard label="Hohe Priorität" value={highPrio} sub="Risiken mit Tier Hoch" icon={Flame} color="#B91C1C" />
       </div>
 
       <div className="grid md:grid-cols-2 gap-3">
-        <VerteilungChart session={session} />
-        <TierChart summary={summary} />
+        <ClusterChart analyse={analyse} />
+        <PriorityChart summary={summary} />
       </div>
 
       <div className="card-base">
@@ -171,55 +152,52 @@ export default function RkmView({ onStartWorkflow }) {
           <table className="matrix-table">
             <thead>
               <tr>
-                <th>Aktivität</th>
+                <th style={{ width: 40 }}>Nr.</th>
                 <th>Risikoart</th>
-                <th>Risikobeschreibung</th>
-                <th>EW / Schaden</th>
-                <th>Tier</th>
-                <th>Kontrolle</th>
-                <th>Art / Frequenz</th>
+                <th>Risiko</th>
+                <th>Bewertung</th>
+                <th style={{ width: 110 }}>Risiko-Status</th>
+                <th>Schlüsselkontrolle</th>
+                <th>Ansatz / Turnus</th>
                 <th>Verantwortlich</th>
-                <th style={{ width: 70 }}>Key</th>
+                <th style={{ width: 120 }}>Kontroll-Status</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((r, i) => (
-                <tr key={i}>
-                  <td>{r.aktivitaet}</td>
-                  <td>
-                    <div className="text-[12px] font-semibold">{r.risikoart}</div>
-                    <div className="text-[11px] text-slate-500">{r.risikoUnterart}</div>
-                  </td>
-                  <td className="text-[12px]">{r.risikoBeschreibung}</td>
-                  <td className="text-[12px] whitespace-nowrap">
-                    <div>{r.eintrittsW}</div>
-                    <div className="text-slate-500">{r.schaden}</div>
-                  </td>
-                  <td>
-                    <span className={`chip ${r.tier === 'high' ? 'risk-tier-high' : r.tier === 'mid' ? 'risk-tier-mid' : 'risk-tier-low'}`}>
-                      {r.tier === 'high' ? 'Hoch' : r.tier === 'mid' ? 'Mittel' : 'Gering'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="text-[12px] font-semibold">{r.kontrolle || '—'}</div>
-                    <div className="text-[11px] text-slate-500 line-clamp-2">{r.kontrolleBeschreibung === 'KEINE KONTROLLE' ? '⚠ keine Kontrolle hinterlegt' : r.kontrolleBeschreibung}</div>
-                  </td>
-                  <td className="text-[11px]">
-                    {r.kontrolleArt && <div>{r.kontrolleArt} · {r.kontrolleTyp}</div>}
-                    {r.kontrolleFrequenz && <div className="text-slate-500">{r.kontrolleFrequenz}</div>}
-                  </td>
-                  <td className="text-[12px]">{r.kontrolleWer || '—'}</td>
-                  <td>
-                    {r.isKey ? (
-                      <span className="chip selected"><Key size={11} /> Key</span>
-                    ) : r.kontrolle ? (
-                      <span className="chip">—</span>
-                    ) : (
-                      <span className="chip" style={{ background: '#FEE2E2', color: '#991B1B', borderColor: '#FCA5A5' }}>Lücke</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {rows.map(({ r, k }, i) => {
+                const prio = bewertePrioritaet(r.schaden, r.eintritt);
+                const c = CLUSTER_MAP[r.cluster];
+                return (
+                  <tr key={i}>
+                    <td className="font-mono text-slate-400">{r.nummer}</td>
+                    <td>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: c?.color }} />
+                        <span className="text-[12px] font-semibold">{r.risikoart}</span>
+                      </div>
+                    </td>
+                    <td className="text-[12px] max-w-[240px]">
+                      <div className="font-semibold">{r.titel}</div>
+                      <div className="text-slate-500 line-clamp-2">{r.risikospezifikation}</div>
+                    </td>
+                    <td className="text-[11.5px] whitespace-nowrap">
+                      <div>Schaden: <span className="font-semibold" style={{ color: STUFE_MAP[r.schaden]?.color }}>{STUFE_MAP[r.schaden]?.label}</span></div>
+                      <div>EW: <span className="font-semibold" style={{ color: STUFE_MAP[r.eintritt]?.color }}>{STUFE_MAP[r.eintritt]?.label}</span></div>
+                      <span className="chip mt-1" style={{ background: `color-mix(in srgb, ${prio.color} 12%, white)`, color: prio.color, borderColor: 'transparent' }}>Prio {prio.label}</span>
+                    </td>
+                    <td><StatusBadge statusId={r.status} /></td>
+                    <td className="text-[12px] max-w-[220px]">
+                      <div className="font-semibold">{k ? k.name : '—'}</div>
+                      {k && <div className="text-slate-500 line-clamp-2">{k.ziel}</div>}
+                    </td>
+                    <td className="text-[11.5px]">
+                      {k ? <><div>{lbl(KONTROLL_ART, k.art)} · {lbl(KONTROLL_TYP, k.typ)}</div><div className="text-slate-500">{lbl(KONTROLL_TURNUS, k.turnus)}</div></> : '—'}
+                    </td>
+                    <td className="text-[12px]">{k?.wer || '—'}</td>
+                    <td>{k ? <StatusBadge statusId={k.status} /> : '—'}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

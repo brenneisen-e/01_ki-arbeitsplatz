@@ -776,3 +776,30 @@
   color: var(--ink);
 }
 .summaryText strong { color: var(--ink); font-weight: 700; }
+
+/* ── Leitfrage → Overlay-Chatbot: Auslöser-Buttons ──────────────────────────── */
+.leitfrageChatBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent-bright);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.leitfrageChatBtn:hover { background: rgba(134, 188, 37, 0.2); }
+.leitfrageChatBtn:active { transform: translateY(1px); }
+.leitfrageWrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.leitfrageWrap .leitfrage { margin: 0; }

@@ -62,7 +62,7 @@ export default function RisikoDetailDrawer({ risikoId, onClose }) {
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] animate-fade-in" onClick={onClose} />
 
       {/* Drawer */}
-      <div className="relative w-full max-w-[720px] bg-slate-50 h-full shadow-2xl flex flex-col drawer-slide-in">
+      <div className="relative w-full max-w-[1040px] bg-slate-50 h-full shadow-2xl flex flex-col drawer-slide-in">
         {/* Kopf */}
         <div className="shrink-0 text-white" style={{ background: 'var(--mode-gradient, linear-gradient(135deg,#0F4D2A,#1D7B3F))' }}>
           <div className="px-5 pt-4 pb-4">

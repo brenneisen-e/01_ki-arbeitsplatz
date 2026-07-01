@@ -7,6 +7,7 @@ import { useBiks } from '../../hooks/useBiks';
 import { useInstitut } from '../../hooks/useInstitut';
 import { BIKS_STATUS, STATUS_MAP } from '../../data/biksAgent';
 import RisikoKachel from './RisikoKachel';
+import RisikoMatrix from './RisikoMatrix';
 import RisikoDetailDrawer from './RisikoDetailDrawer';
 import { StatusIcon } from './StatusControls';
 import { exportBiksCsv, exportBiksPdf } from '../../utils/exportBiks';
@@ -177,6 +178,9 @@ export default function ResultBoard() {
           </div>
         </div>
       </div>
+
+      {/* Risikomatrix */}
+      <RisikoMatrix risiken={analyse.risiken} onOpen={(id) => setActiveRisikoId(id)} />
 
       {/* Filter */}
       <div className="flex items-center gap-2 flex-wrap">

@@ -152,13 +152,19 @@ export default function SchluesselkontrolleCard({ risikoId, kontrolle, defaultOp
           )}
 
           {/* Kontrollbeschreibung (W-Fragen) */}
-          <div className="rounded-xl p-3.5 space-y-3" style={{ background: '#F8FAFC', border: '1px solid #EEF2F6' }}>
-            <div className="text-[11px] font-bold tracking-wider uppercase" style={{ color: 'var(--mode-primary, #0F4D2A)' }}>Kontrollbeschreibung</div>
-            {editing
-              ? BESCHREIBUNG_FELDER.map(f => (
+          <div className="rounded-xl p-3.5" style={{ background: '#F8FAFC', border: '1px solid #EEF2F6' }}>
+            <div className="text-[11px] font-bold tracking-wider uppercase mb-3" style={{ color: 'var(--mode-primary, #0F4D2A)' }}>Kontrollbeschreibung</div>
+            {editing ? (
+              <div className="space-y-3">
+                {BESCHREIBUNG_FELDER.map(f => (
                   <EditField key={f.key} label={f.label} value={k[f.key]} onChange={(v) => set({ [f.key]: v })} rows={f.key === 'was' || f.key === 'wie' ? 2 : 1} />
-                ))
-              : BESCHREIBUNG_FELDER.map(f => <ReadField key={f.key} label={f.label} value={k[f.key]} />)}
+                ))}
+              </div>
+            ) : (
+              <div className="grid sm:grid-cols-2 gap-x-5 gap-y-3">
+                {BESCHREIBUNG_FELDER.map(f => <ReadField key={f.key} label={f.label} value={k[f.key]} />)}
+              </div>
+            )}
           </div>
 
           {/* Kommentare */}

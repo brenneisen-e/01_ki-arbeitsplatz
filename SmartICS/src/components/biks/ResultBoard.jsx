@@ -115,31 +115,61 @@ function ClusterChart({ risiken }) {
   );
 }
 
-function PriorityChart({ tierCount }) {
+function PriorityChart({ tierCount, activeTier, onHoverTier, onToggleTier }) {
   const total = tierCount.high + tierCount.mid + tierCount.low;
   if (total === 0) return null;
+  // fill = kräftige Ampelfarbe (Balken), text = gut lesbare Variante (Zahl)
   const segments = [
-    { tier: 'high', label: 'Hoch', value: tierCount.high, color: '#DC2626' },
-    { tier: 'mid', label: 'Mittel', value: tierCount.mid, color: '#D97706' },
-    { tier: 'low', label: 'Gering', value: tierCount.low, color: '#059669' },
+    { tier: 'high', label: 'Hoch', value: tierCount.high, fill: '#DC2626', text: '#DC2626' },
+    { tier: 'mid', label: 'Mittel', value: tierCount.mid, fill: '#EAB308', text: '#CA8A04' },
+    { tier: 'low', label: 'Gering', value: tierCount.low, fill: '#16A34A', text: '#059669' },
   ];
+  const dim = (t) => activeTier && activeTier !== 'alle' && activeTier !== t;
+  const hoverProps = (t) => ({
+    onMouseEnter: () => onHoverTier && onHoverTier(t),
+    onMouseLeave: () => onHoverTier && onHoverTier(null),
+    onClick: () => onToggleTier && onToggleTier(t),
+    style: { cursor: 'pointer' },
+  });
+  const activeSeg = segments.find(s => s.tier === activeTier);
   return (
     <div className="card-base p-5">
-      <div className="text-sm font-semibold mb-1">Verteilung nach Priorität</div>
+      <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
+        <div className="text-sm font-semibold">Verteilung nach Priorität</div>
+        <div className="text-[11px] text-slate-500">Segment: Hover markiert · Klick filtert</div>
+      </div>
       <div className="text-xs text-slate-500 mb-3">Schadenshöhe × Eintrittswahrscheinlichkeit</div>
-      <div className="flex items-stretch gap-2 mb-3 h-6 rounded-md overflow-hidden">
-        {segments.map(s => (
-          <div key={s.tier} style={{ flex: s.value, background: s.color, minWidth: s.value > 0 ? 12 : 0 }} title={`${s.label}: ${s.value}`} />
+      <div className="flex items-stretch gap-2 mb-3 h-7 rounded-md overflow-hidden">
+        {segments.filter(s => s.value > 0).map(s => (
+          <div
+            key={s.tier}
+            {...hoverProps(s.tier)}
+            title={`Priorität ${s.label}: ${s.value} — klicken zum Filtern`}
+            style={{ flex: s.value, background: s.fill, minWidth: 12, cursor: 'pointer', opacity: dim(s.tier) ? 0.3 : 1, boxShadow: activeTier === s.tier ? 'inset 0 0 0 3px #0F172A' : 'none', transition: 'opacity 0.15s ease' }}
+          />
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-3 text-center">
+      <div className="grid grid-cols-3 gap-2 text-center">
         {segments.map(s => (
-          <div key={s.tier}>
-            <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
+          <button
+            key={s.tier}
+            type="button"
+            {...hoverProps(s.tier)}
+            className="rounded-lg py-1.5 transition-colors"
+            style={{ background: activeTier === s.tier ? `color-mix(in srgb, ${s.fill} 16%, white)` : 'transparent', opacity: dim(s.tier) ? 0.45 : 1, border: activeTier === s.tier ? `1px solid ${s.fill}` : '1px solid transparent' }}
+          >
+            <div className="text-2xl font-bold" style={{ color: s.text }}>{s.value}</div>
             <div className="text-[11px] uppercase tracking-wider text-slate-500">{s.label}</div>
-          </div>
+          </button>
         ))}
       </div>
+      {activeSeg && (
+        <div className="text-center mt-2">
+          <button onClick={() => onToggleTier(activeSeg.tier)} className="text-[11.5px] text-slate-500 hover:text-slate-800 underline">
+            Filter „Priorität {activeSeg.label}" aufheben
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -221,8 +251,10 @@ export default function ResultBoard() {
   const { analyse, resetAnalyse, activeRisikoId, setActiveRisikoId } = useBiks();
   const { institut } = useInstitut();
   const [filter, setFilter] = useState('alle');
+  const [prioFilter, setPrioFilter] = useState('alle'); // 'alle' | 'high' | 'mid' | 'low'
   const [showQuelle, setShowQuelle] = useState(false);
   const [hoverId, setHoverId] = useState(null);
+  const [hoverTier, setHoverTier] = useState(null); // Hover über Prioritäts-Balken
   const [view, setView] = useState('kacheln'); // 'kacheln' | 'tabelle'
 
   const summary = useMemo(() => (analyse ? buildBiksSummary(analyse) : null), [analyse]);
@@ -246,7 +278,13 @@ export default function ResultBoard() {
 
   if (!analyse) return null;
 
-  const gefiltert = filter === 'alle' ? analyse.risiken : analyse.risiken.filter(r => r.status === filter);
+  const gefiltert = analyse.risiken.filter(r => {
+    const okStatus = filter === 'alle' || r.status === filter;
+    const okPrio = prioFilter === 'alle' || bewertePrioritaet(r.schaden, r.eintritt).tier === prioFilter;
+    return okStatus && okPrio;
+  });
+  const riskTier = (r) => bewertePrioritaet(r.schaden, r.eintritt).tier;
+  const togglePrio = (t) => setPrioFilter(prev => (prev === t ? 'alle' : t));
 
   return (
     <div className="space-y-5 animate-fade-in-up">
@@ -327,17 +365,17 @@ export default function ResultBoard() {
       </div>
 
       {/* Risikomatrix */}
-      <RisikoMatrix risiken={analyse.risiken} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} />
+      <RisikoMatrix risiken={analyse.risiken} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} hoverTier={hoverTier} />
 
       {/* Charts */}
       <div className="grid md:grid-cols-2 gap-3">
         <ClusterChart risiken={analyse.risiken} />
-        <PriorityChart tierCount={summary.tierCount} />
+        <PriorityChart tierCount={summary.tierCount} activeTier={prioFilter} onHoverTier={setHoverTier} onToggleTier={togglePrio} />
       </div>
 
       {/* Filter */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500 mr-1"><SlidersHorizontal size={13} /> Filter:</span>
+        <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-slate-500 mr-1"><SlidersHorizontal size={14} /> Filter:</span>
         <button
           onClick={() => setFilter('alle')}
           className={`chip ${filter === 'alle' ? 'selected' : ''}`}
@@ -366,18 +404,35 @@ export default function ResultBoard() {
           );
         })}
 
-        {/* Ansicht umschalten: Kacheln / Tabelle */}
-        <div className="ml-auto inline-flex items-center rounded-lg border border-slate-200 p-0.5 bg-white">
-          {[['kacheln', LayoutGrid, 'Kacheln'], ['tabelle', Table2, 'Tabelle']].map(([id, Icon, label]) => (
+        {prioFilter !== 'alle' && (() => {
+          const pt = bewertePrioritaet(prioFilter === 'high' ? 'hoch' : prioFilter === 'low' ? 'niedrig' : 'mittel', prioFilter === 'high' ? 'hoch' : prioFilter === 'low' ? 'niedrig' : 'mittel');
+          return (
             <button
-              key={id}
-              onClick={() => setView(id)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[12px] font-semibold transition-colors"
-              style={view === id ? { background: 'var(--mode-primary, #0F4D2A)', color: 'white' } : { color: '#475569' }}
+              onClick={() => setPrioFilter('alle')}
+              className="inline-flex items-center gap-1.5 rounded-full font-semibold"
+              style={{ background: `color-mix(in srgb, ${pt.fill} 16%, white)`, color: pt.text || pt.color, border: `1px solid ${pt.fill}`, padding: '0.2rem 0.6rem', fontSize: 12, cursor: 'pointer' }}
+              title="Prioritätsfilter aufheben"
             >
-              <Icon size={13} /> {label}
+              Priorität {pt.label} <X size={12} />
             </button>
-          ))}
+          );
+        })()}
+
+        {/* Ansicht umschalten: Kacheln / Tabelle */}
+        <div className="ml-auto inline-flex items-center gap-2">
+          <span className="text-[13px] font-semibold text-slate-500">Ansicht:</span>
+          <div className="inline-flex items-center rounded-lg border border-slate-200 p-0.5 bg-white">
+            {[['kacheln', LayoutGrid, 'Kacheln'], ['tabelle', Table2, 'Tabelle']].map(([id, Icon, label]) => (
+              <button
+                key={id}
+                onClick={() => setView(id)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[13.5px] font-semibold transition-colors"
+                style={view === id ? { background: 'var(--mode-primary, #0F4D2A)', color: 'white' } : { color: '#475569' }}
+              >
+                <Icon size={15} /> {label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -390,7 +445,13 @@ export default function ResultBoard() {
       ) : view === 'kacheln' ? (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
           {gefiltert.map(r => (
-            <RisikoKachel key={r.id} risiko={r} onOpen={() => setActiveRisikoId(r.id)} active={hoverId === r.id} onHover={setHoverId} />
+            <RisikoKachel
+              key={r.id}
+              risiko={r}
+              onOpen={() => setActiveRisikoId(r.id)}
+              active={hoverId === r.id || (hoverTier && riskTier(r) === hoverTier)}
+              onHover={setHoverId}
+            />
           ))}
         </div>
       ) : (

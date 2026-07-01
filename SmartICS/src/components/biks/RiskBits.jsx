@@ -62,8 +62,8 @@ export function HeatmapMini({ schaden, eintritt }) {
   const cellColor = (r, c) => {
     const score = (rank[r]) * (rank[c]);
     if (score >= 6) return '#DC2626';
-    if (score >= 3) return '#D97706';
-    return '#059669';
+    if (score >= 3) return '#EAB308';
+    return '#16A34A';
   };
   // aktive Zelle bestimmen (nächstliegende Stufe)
   const nearest = (val, arr) => arr.reduce((a, b) => (Math.abs(rank[b] - val) < Math.abs(rank[a] - val) ? b : a));

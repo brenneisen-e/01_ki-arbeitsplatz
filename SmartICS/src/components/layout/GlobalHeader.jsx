@@ -272,7 +272,6 @@ export default function GlobalHeader({ activeView, onViewChange }) {
 
   const modes = [
     { id: 'workflow', label: 'b-IKS Agent', icon: Wand2 },
-    { id: 'rkm',      label: 'Risiko-Kontroll-Matrix', icon: FileBarChart },
     { id: 'methodik', label: 'Methodik & Regelkreis',  icon: BookOpen },
   ];
 

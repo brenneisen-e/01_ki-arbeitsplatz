@@ -2,16 +2,21 @@ import { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import {
   FileText, RefreshCw, ShieldCheck, Sparkles, X, ListChecks, KeyRound,
-  AlertTriangle, FileSpreadsheet, Download, SlidersHorizontal,
+  AlertTriangle, FileSpreadsheet, Download, SlidersHorizontal, LayoutGrid, Table2, ArrowUpRight, Flame,
 } from 'lucide-react';
 import { useBiks } from '../../hooks/useBiks';
 import { useInstitut } from '../../hooks/useInstitut';
-import { BIKS_STATUS, STATUS_MAP } from '../../data/biksAgent';
+import {
+  BIKS_STATUS, STATUS_MAP, CLUSTER_MAP, KONTROLL_ART, KONTROLL_TYP, KONTROLL_TURNUS,
+  STUFE_MAP, bewertePrioritaet,
+} from '../../data/biksAgent';
 import RisikoKachel from './RisikoKachel';
 import RisikoMatrix from './RisikoMatrix';
 import RisikoDetailDrawer from './RisikoDetailDrawer';
-import { StatusIcon } from './StatusControls';
-import { exportBiksCsv, exportBiksPdf } from '../../utils/exportBiks';
+import { StatusIcon, StatusBadge } from './StatusControls';
+import { exportBiksCsv, exportBiksPdf, buildBiksRows, buildBiksSummary } from '../../utils/exportBiks';
+
+function lbl(list, id) { return list.find(x => x.id === id)?.label || id || ''; }
 
 function QuelleModal({ analyse, onClose }) {
   return createPortal(
@@ -80,12 +85,147 @@ function StatDonut({ counts, total }) {
   );
 }
 
+function ClusterChart({ risiken }) {
+  const data = useMemo(() => {
+    const map = new Map();
+    risiken.forEach(r => {
+      const e = map.get(r.risikoart) || { label: r.risikoart, value: 0, color: CLUSTER_MAP[r.cluster]?.color || '#94A3B8' };
+      e.value += 1; map.set(r.risikoart, e);
+    });
+    return [...map.values()];
+  }, [risiken]);
+  if (!data.length) return null;
+  const max = Math.max(...data.map(d => d.value), 1);
+  return (
+    <div className="card-base p-5">
+      <div className="text-sm font-semibold mb-1">Risiken nach Risikoart</div>
+      <div className="text-xs text-slate-500 mb-3">Benennung gemäß gewählter Risiko-Vorgabe</div>
+      <div className="space-y-2.5">
+        {data.map(d => (
+          <div key={d.label} className="flex items-center gap-3">
+            <span className="text-[12px] text-slate-600 w-36 shrink-0 truncate" title={d.label}>{d.label}</span>
+            <div className="flex-1 h-4 rounded bg-slate-100 overflow-hidden">
+              <div className="h-full rounded" style={{ width: `${(d.value / max) * 100}%`, background: d.color }} />
+            </div>
+            <span className="text-[12px] font-semibold w-5 text-right">{d.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PriorityChart({ tierCount }) {
+  const total = tierCount.high + tierCount.mid + tierCount.low;
+  if (total === 0) return null;
+  const segments = [
+    { tier: 'high', label: 'Hoch', value: tierCount.high, color: '#DC2626' },
+    { tier: 'mid', label: 'Mittel', value: tierCount.mid, color: '#D97706' },
+    { tier: 'low', label: 'Gering', value: tierCount.low, color: '#059669' },
+  ];
+  return (
+    <div className="card-base p-5">
+      <div className="text-sm font-semibold mb-1">Verteilung nach Priorität</div>
+      <div className="text-xs text-slate-500 mb-3">Schadenshöhe × Eintrittswahrscheinlichkeit</div>
+      <div className="flex items-stretch gap-2 mb-3 h-6 rounded-md overflow-hidden">
+        {segments.map(s => (
+          <div key={s.tier} style={{ flex: s.value, background: s.color, minWidth: s.value > 0 ? 12 : 0 }} title={`${s.label}: ${s.value}`} />
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-3 text-center">
+        {segments.map(s => (
+          <div key={s.tier}>
+            <div className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</div>
+            <div className="text-[11px] uppercase tracking-wider text-slate-500">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RkmTabelle({ risiken, onOpen, hoverId, onHover }) {
+  const rows = useMemo(() => buildBiksRows({ risiken }), [risiken]);
+  return (
+    <div className="card-base">
+      <div className="px-5 py-3 border-b border-slate-200 flex items-center justify-between">
+        <div className="text-sm font-semibold">Risiko-Kontroll-Matrix</div>
+        <div className="text-[11px] text-slate-500">{rows.length} Einträge · Zeile anklicken zum Öffnen</div>
+      </div>
+      <div className="overflow-x-auto scrollbar-thin">
+        <table className="matrix-table">
+          <thead>
+            <tr>
+              <th style={{ width: 36 }}>Nr.</th>
+              <th>Risikoart</th>
+              <th>Risiko</th>
+              <th>Bewertung</th>
+              <th style={{ width: 108 }}>Risiko-Status</th>
+              <th>Schlüsselkontrolle</th>
+              <th>Ansatz / Turnus</th>
+              <th>Verantwortlich</th>
+              <th style={{ width: 116 }}>Kontroll-Status</th>
+              <th style={{ width: 34 }}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ r, k }, i) => {
+              const prio = bewertePrioritaet(r.schaden, r.eintritt);
+              const c = CLUSTER_MAP[r.cluster];
+              return (
+                <tr
+                  key={i}
+                  onClick={() => onOpen(r.id)}
+                  onMouseEnter={() => onHover && onHover(r.id)}
+                  onMouseLeave={() => onHover && onHover(null)}
+                  style={{ cursor: 'pointer', background: hoverId === r.id ? 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 6%, white)' : undefined }}
+                >
+                  <td className="font-mono text-slate-400">{r.nummer}</td>
+                  <td>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: c?.color }} />
+                      <span className="text-[12px] font-semibold">{r.risikoart}</span>
+                    </div>
+                  </td>
+                  <td className="text-[12px] max-w-[230px]">
+                    <div className="font-semibold">{r.titel}</div>
+                    <div className="text-slate-500 line-clamp-2">{r.risikospezifikation}</div>
+                  </td>
+                  <td className="text-[11.5px] whitespace-nowrap">
+                    <div>Schaden: <span className="font-semibold" style={{ color: STUFE_MAP[r.schaden]?.color }}>{STUFE_MAP[r.schaden]?.label}</span></div>
+                    <div>EW: <span className="font-semibold" style={{ color: STUFE_MAP[r.eintritt]?.color }}>{STUFE_MAP[r.eintritt]?.label}</span></div>
+                    <span className="chip mt-1" style={{ background: `color-mix(in srgb, ${prio.color} 12%, white)`, color: prio.color, borderColor: 'transparent' }}>Prio {prio.label}</span>
+                  </td>
+                  <td><StatusBadge statusId={r.status} /></td>
+                  <td className="text-[12px] max-w-[210px]">
+                    <div className="font-semibold">{k ? k.name : '—'}</div>
+                    {k && <div className="text-slate-500 line-clamp-2">{k.ziel}</div>}
+                  </td>
+                  <td className="text-[11.5px]">
+                    {k ? <><div>{lbl(KONTROLL_ART, k.art)} · {lbl(KONTROLL_TYP, k.typ)}</div><div className="text-slate-500">{lbl(KONTROLL_TURNUS, k.turnus)}</div></> : '—'}
+                  </td>
+                  <td className="text-[12px]">{k?.wer || '—'}</td>
+                  <td>{k ? <StatusBadge statusId={k.status} /> : '—'}</td>
+                  <td><ArrowUpRight size={14} className="text-slate-300" /></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export default function ResultBoard() {
   const { analyse, resetAnalyse, activeRisikoId, setActiveRisikoId } = useBiks();
   const { institut } = useInstitut();
   const [filter, setFilter] = useState('alle');
   const [showQuelle, setShowQuelle] = useState(false);
   const [hoverId, setHoverId] = useState(null);
+  const [view, setView] = useState('kacheln'); // 'kacheln' | 'tabelle'
+
+  const summary = useMemo(() => (analyse ? buildBiksSummary(analyse) : null), [analyse]);
 
   const stats = useMemo(() => {
     if (!analyse) return null;
@@ -156,7 +296,7 @@ export default function ResultBoard() {
       </div>
 
       {/* Kennzahlen */}
-      <div className="grid md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
         <div className="card-base p-4 flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#FEF2F2', color: '#DC2626' }}><AlertTriangle size={18} /></div>
           <div><div className="text-xs text-slate-500">Wesentliche Risiken</div><div className="text-2xl font-bold leading-none mt-1">{stats.total}</div><div className="text-[11px] text-slate-500 mt-1">Top-5 priorisiert</div></div>
@@ -164,6 +304,10 @@ export default function ResultBoard() {
         <div className="card-base p-4 flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'color-mix(in srgb, #16A34A 12%, white)', color: '#15803D' }}><KeyRound size={18} /></div>
           <div><div className="text-xs text-slate-500">Schlüsselkontrollen</div><div className="text-2xl font-bold leading-none mt-1">{stats.kontrollen}</div><div className="text-[11px] text-slate-500 mt-1">vorgeschlagen & ergänzt</div></div>
+        </div>
+        <div className="card-base p-4 flex items-start gap-3">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#FEF2F2', color: '#B91C1C' }}><Flame size={18} /></div>
+          <div><div className="text-xs text-slate-500">Hohe Priorität</div><div className="text-2xl font-bold leading-none mt-1">{summary.tierCount.high}</div><div className="text-[11px] text-slate-500 mt-1">Risiken mit Tier Hoch</div></div>
         </div>
         <div className="card-base p-4 flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#ECFDF5', color: '#059669' }}><ListChecks size={18} /></div>
@@ -184,6 +328,12 @@ export default function ResultBoard() {
 
       {/* Risikomatrix */}
       <RisikoMatrix risiken={analyse.risiken} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} />
+
+      {/* Charts */}
+      <div className="grid md:grid-cols-2 gap-3">
+        <ClusterChart risiken={analyse.risiken} />
+        <PriorityChart tierCount={summary.tierCount} />
+      </div>
 
       {/* Filter */}
       <div className="flex items-center gap-2 flex-wrap">
@@ -215,20 +365,36 @@ export default function ResultBoard() {
             </button>
           );
         })}
+
+        {/* Ansicht umschalten: Kacheln / Tabelle */}
+        <div className="ml-auto inline-flex items-center rounded-lg border border-slate-200 p-0.5 bg-white">
+          {[['kacheln', LayoutGrid, 'Kacheln'], ['tabelle', Table2, 'Tabelle']].map(([id, Icon, label]) => (
+            <button
+              key={id}
+              onClick={() => setView(id)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[12px] font-semibold transition-colors"
+              style={view === id ? { background: 'var(--mode-primary, #0F4D2A)', color: 'white' } : { color: '#475569' }}
+            >
+              <Icon size={13} /> {label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Kacheln */}
-      {gefiltert.length > 0 ? (
+      {/* Risikoliste: Kacheln oder Tabelle */}
+      {gefiltert.length === 0 ? (
+        <div className="card-base p-10 text-center text-slate-400">
+          <ListChecks size={32} className="mx-auto mb-2 text-slate-300" />
+          Keine Risiken mit Status „{STATUS_MAP[filter]?.label}".
+        </div>
+      ) : view === 'kacheln' ? (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
           {gefiltert.map(r => (
             <RisikoKachel key={r.id} risiko={r} onOpen={() => setActiveRisikoId(r.id)} active={hoverId === r.id} onHover={setHoverId} />
           ))}
         </div>
       ) : (
-        <div className="card-base p-10 text-center text-slate-400">
-          <ListChecks size={32} className="mx-auto mb-2 text-slate-300" />
-          Keine Risiken mit Status „{STATUS_MAP[filter]?.label}".
-        </div>
+        <RkmTabelle risiken={gefiltert} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} />
       )}
 
       {activeRisikoId && (

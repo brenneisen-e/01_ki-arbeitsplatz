@@ -8,8 +8,8 @@ const PH = H - M.top - M.bottom;
 const RANK = { niedrig: 1, 'niedrig-mittel': 1.5, mittel: 2, 'mittel-hoch': 2.5, hoch: 3 };
 const frac = (rank) => (rank - 0.5) / 3;
 const xFor = (rank) => M.left + frac(rank) * PW;
-// Schaden steigt nach unten: niedrig oben, hoch unten (Papier-Vorlage).
-const yFor = (rank) => M.top + frac(rank) * PH;
+// Schadenshöhe steigt nach oben: hoch oben, niedrig unten (konventionell).
+const yFor = (rank) => M.top + (1 - frac(rank)) * PH;
 
 function cellColor(sRank, eRank) {
   const score = sRank * eRank;
@@ -46,7 +46,7 @@ export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover,
   });
 
   const cols = ['niedrig', 'mittel', 'hoch'];        // X: EW, links → rechts
-  const rowsTop = ['niedrig', 'mittel', 'hoch'];     // Y: Schaden, oben (niedrig) → unten (hoch)
+  const rowsTop = ['hoch', 'mittel', 'niedrig'];     // Y: Schaden, hoch oben → niedrig unten
   const tip = points.find(p => p.r.id === hovered);
 
   return (
@@ -94,7 +94,7 @@ export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover,
           Eintrittswahrscheinlichkeit →
         </text>
         <text x={26} y={M.top + PH / 2} textAnchor="middle" fontSize="12.5" fontWeight="700" fill="#0F172A" transform={`rotate(-90 26 ${M.top + PH / 2})`}>
-          Schadenshöhe
+          Schadenshöhe →
         </text>
 
         {/* Bubbles */}

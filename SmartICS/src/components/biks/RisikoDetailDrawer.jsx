@@ -179,9 +179,15 @@ export default function RisikoDetailDrawer({ risikoId, onClose }) {
               <button
                 onClick={() => setShowVerlauf(v => !v)}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[12px] font-semibold transition-colors"
-                style={{ background: 'rgba(255,255,255,0.16)', color: 'white' }}
+                style={{ background: showVerlauf ? 'white' : 'rgba(255,255,255,0.16)', color: showVerlauf ? 'var(--mode-primary, #0F4D2A)' : 'white' }}
               >
                 <History size={13} /> Verlauf
+                <span
+                  className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10.5px] font-bold"
+                  style={{ background: showVerlauf ? 'var(--mode-primary, #0F4D2A)' : 'white', color: showVerlauf ? 'white' : 'var(--mode-primary, #0F4D2A)' }}
+                >
+                  {risiko.versionen?.length || 0}
+                </span>
               </button>
             </div>
           </div>

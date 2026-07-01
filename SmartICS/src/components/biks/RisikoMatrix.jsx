@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { STUFE_MAP, bewertePrioritaet } from '../../data/biksAgent';
 
 const W = 720, H = 470;
@@ -18,8 +17,9 @@ function cellColor(sRank, eRank) {
   return '#059669';
 }
 
-export default function RisikoMatrix({ risiken, onOpen }) {
-  const [hovered, setHovered] = useState(null);
+export default function RisikoMatrix({ risiken, onOpen, hoverId = null, onHover }) {
+  const hovered = hoverId;
+  const setHovered = onHover || (() => {});
 
   // Positionen berechnen; bei identischer (Schaden × EW)-Zelle leicht auffächern.
   const groups = {};
@@ -56,7 +56,8 @@ export default function RisikoMatrix({ risiken, onOpen }) {
       </div>
       <div className="text-xs text-slate-500 mb-3">Schadenshöhe × Eintrittswahrscheinlichkeit</div>
 
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxHeight: 520 }} className="select-none">
+      <div className="mx-auto" style={{ maxWidth: 560 }}>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" className="select-none">
         {/* Heatmap-Zellen */}
         {rowsTop.map((sr, ri) => cols.map((ec, ci) => {
           const col = cellColor(RANK[sr], RANK[ec]);
@@ -99,7 +100,7 @@ export default function RisikoMatrix({ risiken, onOpen }) {
         {points.map(({ r, x, y }) => {
           const isHover = hovered === r.id;
           const tier = bewertePrioritaet(r.schaden, r.eintritt);
-          const rad = isHover ? 21 : 17;
+          const rad = isHover ? 24 : 17;
           return (
             <g
               key={r.id}
@@ -108,9 +109,15 @@ export default function RisikoMatrix({ risiken, onOpen }) {
               onMouseLeave={() => setHovered(null)}
               onClick={() => onOpen(r.id)}
             >
-              {isHover && <circle cx={x} cy={y} r={rad + 6} fill={tier.color} opacity={0.18} />}
-              <circle cx={x} cy={y} r={rad} fill={tier.color} stroke="white" strokeWidth={2.5} style={{ filter: 'drop-shadow(0 2px 3px rgba(15,23,42,0.25))' }} />
-              <text x={x} y={y + 5} textAnchor="middle" fontSize="14" fontWeight="700" fill="white" style={{ pointerEvents: 'none' }}>{r.nummer}</text>
+              {isHover && <circle cx={x} cy={y} r={rad + 9} fill={tier.color} opacity={0.2} className="matrix-pulse" />}
+              <circle
+                cx={x} cy={y} r={rad}
+                fill={tier.color}
+                stroke="white"
+                strokeWidth={isHover ? 4 : 2.5}
+                style={{ filter: isHover ? 'drop-shadow(0 4px 8px rgba(15,23,42,0.4))' : 'drop-shadow(0 2px 3px rgba(15,23,42,0.25))', transition: 'r 0.12s ease' }}
+              />
+              <text x={x} y={y + (isHover ? 6 : 5)} textAnchor="middle" fontSize={isHover ? 18 : 14} fontWeight="700" fill="white" style={{ pointerEvents: 'none' }}>{r.nummer}</text>
             </g>
           );
         })}
@@ -134,6 +141,7 @@ export default function RisikoMatrix({ risiken, onOpen }) {
           );
         })()}
       </svg>
+      </div>
 
       {/* Legende */}
       <div className="flex items-center gap-4 mt-2 justify-center flex-wrap">

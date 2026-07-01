@@ -3,7 +3,7 @@ import { useBiks } from '../../hooks/useBiks';
 import { StatusMenu } from './StatusControls';
 import { RisikoartBadge, SchadenEintritt, PrioTier, HeatmapMini } from './RiskBits';
 
-export default function RisikoKachel({ risiko, onOpen }) {
+export default function RisikoKachel({ risiko, onOpen, active = false, onHover }) {
   const { setRisikoStatus } = useBiks();
   const kontrollen = risiko.schluesselkontrollen || [];
   const commentCount = (risiko.comments?.length || 0) + kontrollen.reduce((n, k) => n + (k.comments?.length || 0), 0);
@@ -11,8 +11,15 @@ export default function RisikoKachel({ risiko, onOpen }) {
   return (
     <button
       onClick={onOpen}
-      className="card-base text-left p-0 flex flex-col group hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 relative overflow-hidden"
-      style={{ borderColor: '#E2E8F0' }}
+      onMouseEnter={() => onHover && onHover(risiko.id)}
+      onMouseLeave={() => onHover && onHover(null)}
+      className="card-base text-left p-0 flex flex-col group relative overflow-hidden"
+      style={{
+        borderColor: active ? 'var(--mode-primary, #0F4D2A)' : '#E2E8F0',
+        boxShadow: active ? '0 12px 26px rgba(15,23,42,0.16), 0 0 0 2px var(--mode-primary, #0F4D2A)' : undefined,
+        transform: active ? 'translateY(-4px)' : undefined,
+        transition: 'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease',
+      }}
     >
       <div className="p-4 flex flex-col h-full gap-3">
         {/* Kopf */}

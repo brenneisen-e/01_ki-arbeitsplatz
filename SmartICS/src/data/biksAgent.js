@@ -433,19 +433,40 @@ export function buildAnalyse(prozess, input = {}, opts = {}) {
       custom: false,
     }));
 
-    // Versionshistorie (für den Schieberegler): Erstellung + Demo-Kollaboration.
-    const versionen = [makeVersion('agent', 'Risiko vom b-IKS Agent erstellt', [
+    // Versionshistorie (für den Schieberegler). Zwei Risiken erhalten einen
+    // vollständigen Beispiel-Verlauf mit allen Änderungstypen (neu/geändert/gelöscht).
+    const kName = schluesselkontrollen[0]?.name;
+    const createVersion = makeVersion('agent', 'Risiko vom b-IKS Agent erstellt', [
       { type: 'added', feld: 'Risiko identifiziert', neu: r.titel },
-      { type: 'added', feld: 'Schlüsselkontrolle vorgeschlagen', neu: schluesselkontrollen[0]?.name },
-    ], 30, nowTs)];
+      { type: 'added', feld: 'Schlüsselkontrolle vorgeschlagen', neu: kName },
+    ], seed && (idx === 0 || idx === 3) ? 190 : 30, nowTs);
+
+    let versionen;
     if (seed && idx === 0) {
-      versionen.push(makeVersion('tk', 'Status geändert', [{ type: 'changed', feld: 'Status', alt: 'Neu', neu: 'In Bearbeitung' }], 18, nowTs));
-      versionen.push(makeVersion('tk', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[0]?.text }], 16, nowTs));
-      versionen.push(makeVersion('sm', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[1]?.text }], 9, nowTs));
+      versionen = [
+        createVersion,
+        makeVersion('tk', 'Status geändert', [{ type: 'changed', feld: 'Status', alt: 'Neu', neu: 'In Bearbeitung' }], 95, nowTs),
+        makeVersion('tk', 'Risiko bearbeitet', [{ type: 'changed', feld: 'Risikospezifikation', alt: 'Auszahlung an einen unberechtigten Empfänger ist möglich.', neu: r.risikospezifikation }], 82, nowTs),
+        makeVersion('sm', 'Schlüsselkontrolle ergänzt', [{ type: 'added', feld: 'Schlüsselkontrolle', neu: 'Transaktionslimit-Kontrolle für Auszahlungen' }], 64, nowTs),
+        makeVersion('tk', 'Kontrolle bearbeitet — Transaktionslimit-Kontrolle für Auszahlungen', [{ type: 'changed', feld: 'Kontrolle: Turnus', alt: 'Täglich bzw. nach Lauf', neu: 'Je Auszahlungsvorgang' }], 50, nowTs),
+        makeVersion('sm', 'Schlüsselkontrolle entfernt', [{ type: 'removed', feld: 'Schlüsselkontrolle', alt: 'Transaktionslimit-Kontrolle für Auszahlungen (redundant zur Vier-Augen-Freigabe)' }], 38, nowTs),
+        makeVersion('tk', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[0]?.text }], 16, nowTs),
+        makeVersion('sm', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[1]?.text }], 9, nowTs),
+      ];
     } else if (seed && idx === 3) {
-      versionen.push(makeVersion('jw', 'Status geändert', [{ type: 'changed', feld: 'Status', alt: 'Neu', neu: 'In Abnahme' }], 12, nowTs));
-      versionen.push(makeVersion('jw', 'Kontroll-Status geändert', [{ type: 'changed', feld: 'Kontroll-Status', alt: 'Neu', neu: 'In Abnahme' }], 12, nowTs));
-      versionen.push(makeVersion('jw', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[0]?.text }], 11, nowTs));
+      versionen = [
+        createVersion,
+        makeVersion('jw', 'Schlüsselkontrolle ergänzt', [{ type: 'added', feld: 'Schlüsselkontrolle', neu: 'Manuelle Nachkontrolle der Sanktionstreffer' }], 88, nowTs),
+        makeVersion('sm', 'Risiko bearbeitet', [{ type: 'changed', feld: 'Begründung der Wesentlichkeit', alt: 'Regulatorisch relevant; Schaden hoch.', neu: r.wesentlichkeit }], 70, nowTs),
+        makeVersion('jw', `Kontrolle bearbeitet — ${kName}`, [{ type: 'changed', feld: 'Kontrolle: Anwendung', alt: 'Sanktions-/AML-Screeningtool', neu: 'Sanktions-/AML-Screeningtool und Workflow-Anwendung' }], 55, nowTs),
+        makeVersion('sm', 'Schlüsselkontrolle entfernt', [{ type: 'removed', feld: 'Schlüsselkontrolle', alt: 'Manuelle Nachkontrolle der Sanktionstreffer (durch automatisiertes Screening abgedeckt)' }], 42, nowTs),
+        makeVersion('tk', 'Status geändert', [{ type: 'changed', feld: 'Status', alt: 'Neu', neu: 'In Bearbeitung' }], 30, nowTs),
+        makeVersion('jw', `Kontroll-Status geändert — ${kName}`, [{ type: 'changed', feld: 'Kontroll-Status', alt: 'Neu', neu: 'In Abnahme' }], 20, nowTs),
+        makeVersion('jw', 'Status geändert', [{ type: 'changed', feld: 'Status', alt: 'In Bearbeitung', neu: 'In Abnahme' }], 12, nowTs),
+        makeVersion('jw', 'Kommentar hinzugefügt', [{ type: 'added', feld: 'Kommentar', neu: comments[0]?.text }], 11, nowTs),
+      ];
+    } else {
+      versionen = [createVersion];
     }
 
     return {

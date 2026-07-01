@@ -85,6 +85,7 @@ export default function ResultBoard() {
   const { institut } = useInstitut();
   const [filter, setFilter] = useState('alle');
   const [showQuelle, setShowQuelle] = useState(false);
+  const [hoverId, setHoverId] = useState(null);
 
   const stats = useMemo(() => {
     if (!analyse) return null;
@@ -182,7 +183,7 @@ export default function ResultBoard() {
       </div>
 
       {/* Risikomatrix */}
-      <RisikoMatrix risiken={analyse.risiken} onOpen={(id) => setActiveRisikoId(id)} />
+      <RisikoMatrix risiken={analyse.risiken} onOpen={(id) => setActiveRisikoId(id)} hoverId={hoverId} onHover={setHoverId} />
 
       {/* Filter */}
       <div className="flex items-center gap-2 flex-wrap">
@@ -220,7 +221,7 @@ export default function ResultBoard() {
       {gefiltert.length > 0 ? (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
           {gefiltert.map(r => (
-            <RisikoKachel key={r.id} risiko={r} onOpen={() => setActiveRisikoId(r.id)} />
+            <RisikoKachel key={r.id} risiko={r} onOpen={() => setActiveRisikoId(r.id)} active={hoverId === r.id} onHover={setHoverId} />
           ))}
         </div>
       ) : (

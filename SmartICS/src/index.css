@@ -351,6 +351,13 @@ input, select, textarea, button {
   animation: processing-shimmer-move 2.2s ease-in-out infinite;
 }
 
+/* ===== b-IKS Agent — Risikomatrix Hover-Puls ===== */
+@keyframes matrix-pulse {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.38; }
+}
+.matrix-pulse { animation: matrix-pulse 1.2s ease-in-out infinite; }
+
 /* ===== b-IKS Agent — Detail-Drawer ===== */
 @keyframes drawer-slide-in {
   from { transform: translateX(24px); opacity: 0.4; }

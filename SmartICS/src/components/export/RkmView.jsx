@@ -29,16 +29,22 @@ function StatCard({ label, value, sub, icon: Icon, color }) {
 
 function ClusterChart({ analyse }) {
   const data = useMemo(() => {
-    const counts = {};
-    analyse.risiken.forEach(r => { counts[r.cluster] = (counts[r.cluster] || 0) + 1; });
-    return Object.entries(counts).map(([id, v]) => ({ label: CLUSTER_MAP[id]?.kurz || id, value: v, color: CLUSTER_MAP[id]?.color || '#94A3B8' }));
+    // Gruppierung nach der (framework-abhängigen) Risikoart-Benennung,
+    // eingefärbt über den zugrunde liegenden Cluster.
+    const map = new Map();
+    analyse.risiken.forEach(r => {
+      const entry = map.get(r.risikoart) || { label: r.risikoart, value: 0, color: CLUSTER_MAP[r.cluster]?.color || '#94A3B8' };
+      entry.value += 1;
+      map.set(r.risikoart, entry);
+    });
+    return [...map.values()];
   }, [analyse]);
   if (data.length === 0) return null;
   const max = Math.max(...data.map(d => d.value), 1);
   return (
     <div className="card-base p-5">
       <div className="text-sm font-semibold mb-1">Risiken nach Risikoart</div>
-      <div className="text-xs text-slate-500 mb-3">Verteilung über die Risikofunktionslandkarte</div>
+      <div className="text-xs text-slate-500 mb-3">Benennung gemäß gewählter Risiko-Vorgabe</div>
       <div className="space-y-2.5">
         {data.map(d => (
           <div key={d.label} className="flex items-center gap-3">

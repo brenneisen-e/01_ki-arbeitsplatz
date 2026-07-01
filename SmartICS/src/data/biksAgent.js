@@ -132,23 +132,14 @@ export const AGENT_STEPS = [
   },
 ];
 
-// ===== Risiko-Frameworks / Vorgaben (Auswahl im Formular) ===================
-export const RISIKO_FRAMEWORKS = [
-  {
-    id: 'op-risk-standard',
-    name: 'Operationelle Risiken – Risikofunktionslandkarte',
-    beschreibung: 'Feingliedrige 8-Cluster-Benennung: u. a. Betrugsrisiko, IT- und Cyberrisiko, Datenqualitäts- und Prozessrisiko. Die Risiken werden nach dieser Landkarte benannt.',
-    quelle: 'b-IKS Framework: Operationelle Risiken',
-    default: true,
-  },
-  {
-    id: 'marisk-nfr',
-    name: 'MaRisk NFR-Taxonomie',
-    beschreibung: 'Gröbere 6-Kategorien-Benennung nach MaRisk AT 4.3: u. a. Operationelles Risiko, Compliance- & Rechtsrisiko, Finanzkriminalität & Betrug. Dieselben Risiken werden dieser Taxonomie zugeordnet.',
-    quelle: 'Methodenhandbuch Risiko- & Kontroll-Taxonomie',
-    default: false,
-  },
-];
+// ===== Risiko-Vorgaben (optional hochladbares Dokument) =====================
+// Gemäß Prompt: die hochgeladene Risikofunktionslandkarte / Wesentlichkeits-
+// kriterien bestimmen die Benennung der Risiken. Ohne Vorgabe greift der Agent
+// auf die operationellen Risikoarten der Knowledge Base zurück.
+export const BEISPIEL_VORGABEN = {
+  name: 'Operationelle_Risiken_Framework.docx',
+  typ: 'Risikofunktionslandkarte',
+};
 
 // Wesentlichkeitskriterien (Kurzfassung aus dem Framework-Dokument)
 export const WESENTLICHKEIT_KRITERIEN = [
@@ -174,7 +165,7 @@ const AUSZAHLUNG = {
   kurzbeschreibung:
     'Standardisierter Auszahlungsprozess für Kredit-, Treasury- und sonstige bankfachliche Geschäftsvorfälle — von der Erfassung über die Vier-Augen-Freigabe bis zur Nachbearbeitung.',
   ergebnis_intro:
-    'Nach Analyse des Auszahlungsprozesses sind die beschriebenen Basis-Kontrollen fachlich grundsätzlich passend. Für ein prüfungsfestes b-IKS wurden die fünf wesentlichen Risiken priorisiert und nur die notwendigen Schlüsselkontrollen ergänzt bzw. geschärft, ohne Redundanzen zu erzeugen.',
+    'Nach Analyse des Auszahlungsprozesses sind die beschriebenen Basis-Kontrollen fachlich grundsätzlich passend. Für ein prüfungsfestes b-IKS habe ich die fünf wesentlichen Risiken priorisiert und nur die notwendigen Schlüsselkontrollen ergänzt bzw. geschärft, ohne Redundanzen zu erzeugen.',
 
   // Prozessschritte (Kapitel 4 der Arbeitsanweisung) — für Flow & Quellansicht
   prozessschritte: [
@@ -392,18 +383,19 @@ function makeStatusEvent(status, autorId, tsOffsetMin, nowTs, note) {
 /**
  * Baut aus einem Prozess der Bibliothek das bearbeitbare Analyse-Objekt.
  * @param {object} prozess  Eintrag aus PROZESS_BIBLIOTHEK
- * @param {object} input    { prozessName, weitereInfos, frameworkId, quelldokument }
+ * @param {object} input    { prozessName, weitereInfos, risikoVorgaben, quelldokument }
  * @param {object} opts     { nowTs, seedKollaboration }
  */
 export function buildAnalyse(prozess, input = {}, opts = {}) {
   const nowTs = opts.nowTs || Date.now();
   const seed = opts.seedKollaboration !== false;
-  // Das gewählte Framework bestimmt die Benennung der Risikoart (siehe Prompt:
-  // „benenne die Risiken entsprechend dieser"). Die Risiken selbst bleiben gleich.
-  const useMarisk = input.frameworkId === 'marisk-nfr';
+  // Sind Risiko-Vorgaben (Risikofunktionslandkarte) hinterlegt, benennt der Agent
+  // die Risiken entsprechend dieser (siehe Prompt). Ohne Vorgabe greift er auf die
+  // operationellen Risikoarten der Knowledge Base zurück (Fallback-Benennung).
+  const hatVorgaben = !!input.risikoVorgaben;
 
   const risiken = prozess.risiken.map((r, idx) => {
-    const risikoart = useMarisk && r.risikoartMarisk ? r.risikoartMarisk : r.risikoart;
+    const risikoart = hatVorgaben ? r.risikoart : (r.risikoartMarisk || r.risikoart);
     // Etwas gestreute Demo-Kollaboration, damit Status/Kommentare sichtbar sind.
     let status = DEFAULT_STATUS;
     let statusHistorie = [makeStatusEvent('neu', 'agent', 30, nowTs, 'Vom b-IKS Agent vorgeschlagen')];
@@ -457,7 +449,7 @@ export function buildAnalyse(prozess, input = {}, opts = {}) {
     prozessschritte: prozess.prozessschritte,
     quelltext: prozess.quelltext,
     weitereInfos: input.weitereInfos || '',
-    frameworkId: input.frameworkId || RISIKO_FRAMEWORKS.find(f => f.default)?.id,
+    risikoVorgaben: input.risikoVorgaben || null,
     quelldokument: input.quelldokument || { name: prozess.dateiname, typ: prozess.typ },
     createdAt: new Date(nowTs).toISOString(),
     risiken,

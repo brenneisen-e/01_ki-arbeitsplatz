@@ -42,13 +42,38 @@ function pushVersion(r, autorId, aktion, changes) {
   r.versionen.push({ id: `v-${Date.now()}-${r.versionen.length}`, at: Date.now(), autorId, aktion, changes });
 }
 
+// Stellt sicher, dass jedes Risiko mit der KI-Erstversion beginnt. Migriert auch
+// ältere gespeicherte Stände (ohne bzw. mit unvollständiger Versionshistorie).
+function normalizeAnalyse(analyse) {
+  if (!analyse?.risiken) return analyse;
+  const baseTs = analyse.createdAt ? new Date(analyse.createdAt).getTime() : Date.now();
+  analyse.risiken.forEach(r => {
+    r.versionen = Array.isArray(r.versionen) ? r.versionen : [];
+    const hasCreate = r.versionen[0] && r.versionen[0].autorId === 'agent';
+    if (!hasCreate) {
+      const earliest = r.versionen.length ? Math.min(...r.versionen.map(v => v.at || baseTs)) : baseTs;
+      r.versionen.unshift({
+        id: `v-create-${r.id}`,
+        at: earliest - 60000,
+        autorId: 'agent',
+        aktion: 'Risiko vom b-IKS Agent erstellt',
+        changes: [
+          { type: 'added', feld: 'Risiko identifiziert', neu: r.titel },
+          ...(r.schluesselkontrollen?.[0] ? [{ type: 'added', feld: 'Schlüsselkontrolle vorgeschlagen', neu: r.schluesselkontrollen[0].name }] : []),
+        ],
+      });
+    }
+  });
+  return analyse;
+}
+
 // Persistierten Zustand einmalig synchron laden (vermeidet Save-vor-Load-Race).
 function loadPersisted() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed?.analyse) return { analyse: parsed.analyse, currentUser: parsed.currentUser || CURRENT_USER_DEFAULT };
+      if (parsed?.analyse) return { analyse: normalizeAnalyse(parsed.analyse), currentUser: parsed.currentUser || CURRENT_USER_DEFAULT };
     }
   } catch {}
   return null;
@@ -87,7 +112,7 @@ export function BiksProvider({ children }) {
     const prozess = input?.prozessId
       ? (findProzess(input.prozessId) || matchProzess(input?.quelldokument?.name))
       : matchProzess(input?.quelldokument?.name);
-    const result = buildAnalyse(prozess, input, { nowTs: Date.now() });
+    const result = normalizeAnalyse(buildAnalyse(prozess, input, { nowTs: Date.now() }));
     setAnalyse(result);
     setPendingInput(null);
     setPhase('result');

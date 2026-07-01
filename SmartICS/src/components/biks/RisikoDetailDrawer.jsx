@@ -14,27 +14,30 @@ import { formatDateTimeDe } from '../../utils/datetime';
 
 function ChangeRow({ c }) {
   const map = {
-    added: { color: '#059669', bg: '#ECFDF5', Icon: Plus },
-    removed: { color: '#DC2626', bg: '#FEF2F2', Icon: Minus },
-    changed: { color: '#D97706', bg: '#FFFBEB', Icon: PencilLine },
+    added: { color: '#059669', bg: '#ECFDF5', Icon: Plus, label: 'Neu' },
+    removed: { color: '#DC2626', bg: '#FEF2F2', Icon: Minus, label: 'Entfernt' },
+    changed: { color: '#D97706', bg: '#FFFBEB', Icon: PencilLine, label: 'Geändert' },
   };
   const s = map[c.type] || map.changed;
   const Icon = s.Icon;
   return (
-    <div className="flex items-start gap-2 rounded-lg p-2.5" style={{ background: s.bg }}>
+    <div className="flex items-start gap-2 rounded-lg p-2.5" style={{ background: s.bg, border: `1px solid color-mix(in srgb, ${s.color} 22%, transparent)` }}>
       <span className="w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5" style={{ background: 'white' }}>
         <Icon size={13} style={{ color: s.color }} />
       </span>
       <div className="min-w-0 text-[12.5px] flex-1">
-        <span className="font-semibold" style={{ color: s.color }}>{c.feld}</span>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="inline-flex items-center rounded-full px-1.5 py-[1px] text-[10px] font-bold uppercase tracking-wide" style={{ background: s.color, color: 'white' }}>{s.label}</span>
+          <span className="font-semibold" style={{ color: s.color }}>{c.feld}</span>
+        </div>
         {c.type === 'changed' ? (
-          <div className="text-slate-600 mt-0.5 break-words">
+          <div className="text-slate-600 mt-1 break-words">
             <span className="line-through text-slate-400">{c.alt || '—'}</span>
             <span className="mx-1.5 text-slate-400">→</span>
             <span className="text-slate-800 font-medium">{c.neu || '—'}</span>
           </div>
         ) : (
-          <div className="text-slate-700 mt-0.5 break-words">{c.type === 'removed' ? c.alt : c.neu}</div>
+          <div className="text-slate-700 mt-1 break-words">{c.type === 'removed' ? c.alt : c.neu}</div>
         )}
       </div>
     </div>

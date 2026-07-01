@@ -125,40 +125,30 @@ function PriorityChart({ tierCount, activeTier, onHoverTier, onToggleTier }) {
     { tier: 'low', label: 'Gering', value: tierCount.low, fill: '#16A34A', text: '#059669' },
   ];
   const dim = (t) => activeTier && activeTier !== 'alle' && activeTier !== t;
-  const hoverProps = (t) => ({
-    onMouseEnter: () => onHoverTier && onHoverTier(t),
-    onMouseLeave: () => onHoverTier && onHoverTier(null),
-    onClick: () => onToggleTier && onToggleTier(t),
-    style: { cursor: 'pointer' },
-  });
+  const segs = segments.filter(s => s.value > 0); // 0er-Tiers ausblenden
   const activeSeg = segments.find(s => s.tier === activeTier);
   return (
     <div className="card-base p-5">
       <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
         <div className="text-sm font-semibold">Verteilung nach Priorität</div>
-        <div className="text-[11px] text-slate-500">Segment: Hover markiert · Klick filtert</div>
+        <div className="text-[11px] text-slate-500">Balken: Hover markiert · Klick filtert</div>
       </div>
       <div className="text-xs text-slate-500 mb-3">Schadenshöhe × Eintrittswahrscheinlichkeit</div>
-      <div className="flex items-stretch gap-2 mb-3 h-7 rounded-md overflow-hidden">
-        {segments.filter(s => s.value > 0).map(s => (
-          <div
-            key={s.tier}
-            {...hoverProps(s.tier)}
-            title={`Priorität ${s.label}: ${s.value} — klicken zum Filtern`}
-            style={{ flex: s.value, background: s.fill, minWidth: 12, cursor: 'pointer', opacity: dim(s.tier) ? 0.3 : 1, boxShadow: activeTier === s.tier ? 'inset 0 0 0 3px #0F172A' : 'none', transition: 'opacity 0.15s ease' }}
-          />
-        ))}
-      </div>
-      <div className="grid grid-cols-3 gap-2 text-center">
-        {segments.map(s => (
+      {/* Spalten: Balken proportional, Zahl direkt darunter */}
+      <div className="flex items-end gap-2">
+        {segs.map(s => (
           <button
             key={s.tier}
             type="button"
-            {...hoverProps(s.tier)}
-            className="rounded-lg py-1.5 transition-colors"
-            style={{ background: activeTier === s.tier ? `color-mix(in srgb, ${s.fill} 16%, white)` : 'transparent', opacity: dim(s.tier) ? 0.45 : 1, border: activeTier === s.tier ? `1px solid ${s.fill}` : '1px solid transparent' }}
+            onMouseEnter={() => onHoverTier && onHoverTier(s.tier)}
+            onMouseLeave={() => onHoverTier && onHoverTier(null)}
+            onClick={() => onToggleTier && onToggleTier(s.tier)}
+            title={`Priorität ${s.label}: ${s.value} — klicken zum Filtern`}
+            className="min-w-0 rounded-lg text-center transition-all hover:brightness-95"
+            style={{ flex: s.value, cursor: 'pointer', opacity: dim(s.tier) ? 0.4 : 1, background: activeTier === s.tier ? `color-mix(in srgb, ${s.fill} 12%, white)` : 'transparent', padding: '3px 3px 6px', border: activeTier === s.tier ? `1px solid ${s.fill}` : '1px solid transparent' }}
           >
-            <div className="text-2xl font-bold" style={{ color: s.text }}>{s.value}</div>
+            <div className="h-7 rounded-md w-full" style={{ background: s.fill, boxShadow: activeTier === s.tier ? 'inset 0 0 0 3px #0F172A' : 'none' }} />
+            <div className="text-2xl font-bold mt-2" style={{ color: s.text }}>{s.value}</div>
             <div className="text-[11px] uppercase tracking-wider text-slate-500">{s.label}</div>
           </button>
         ))}
@@ -255,7 +245,7 @@ export default function ResultBoard() {
   const [showQuelle, setShowQuelle] = useState(false);
   const [hoverId, setHoverId] = useState(null);
   const [hoverTier, setHoverTier] = useState(null); // Hover über Prioritäts-Balken
-  const [view, setView] = useState('kacheln'); // 'kacheln' | 'tabelle'
+  const [view, setView] = useState('tabelle'); // 'kacheln' | 'tabelle'
 
   const summary = useMemo(() => (analyse ? buildBiksSummary(analyse) : null), [analyse]);
 
@@ -426,7 +416,7 @@ export default function ResultBoard() {
               <button
                 key={id}
                 onClick={() => setView(id)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[13.5px] font-semibold transition-colors"
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[13.5px] font-semibold transition-colors ${view === id ? '' : 'hover:bg-slate-100'}`}
                 style={view === id ? { background: 'var(--mode-primary, #0F4D2A)', color: 'white' } : { color: '#475569' }}
               >
                 <Icon size={15} /> {label}

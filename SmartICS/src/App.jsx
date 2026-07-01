@@ -4,7 +4,6 @@ import { SmartIcsProvider } from './hooks/useSmartIcs';
 import { BiksProvider } from './hooks/useBiks';
 import GlobalHeader from './components/layout/GlobalHeader';
 import BiksAgentView from './components/biks/BiksAgentView';
-import RkmView from './components/export/RkmView';
 import MethodikView from './components/shared/MethodikView';
 import AIChatPanel from './components/chat/AIChatPanel';
 
@@ -18,9 +17,6 @@ function AppShell() {
         <main className="flex-1 overflow-y-auto scrollbar-thin">
           <div className="px-6 py-6 max-w-[1400px] mx-auto w-full">
             {activeView === 'workflow' && <BiksAgentView />}
-            {activeView === 'rkm' && (
-              <RkmView onStartWorkflow={() => setActiveView('workflow')} />
-            )}
             {activeView === 'methodik' && <MethodikView />}
           </div>
         </main>

@@ -54,7 +54,7 @@ export function PrioTier({ schaden, eintritt, showLabel = true }) {
 
 // Kleine 3×3-Heatmap, markiert die Zelle (Schaden × Eintritt)
 export function HeatmapMini({ schaden, eintritt }) {
-  const rows = ['hoch', 'mittel', 'niedrig'];      // von oben (hoch) nach unten
+  const rows = ['niedrig', 'mittel', 'hoch'];      // Schaden: niedrig oben → hoch unten
   const cols = ['niedrig', 'mittel', 'hoch'];       // von links (niedrig) nach rechts
   const rank = { niedrig: 1, 'niedrig-mittel': 1.5, mittel: 2, 'mittel-hoch': 2.5, hoch: 3 };
   const sRank = rank[schaden] ?? 2;

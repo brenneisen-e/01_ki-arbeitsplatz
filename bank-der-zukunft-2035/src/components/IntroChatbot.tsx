@@ -16,7 +16,7 @@ import { useLang, type Lang } from '../i18n/LanguageContext'
 // mit Dunkel-Overlay, Deloitte-„Demo"-Badge oben links, Glas-UI. Flow:
 //   1. Name abfragen → 2. „Willkommen zurück, {Name} — was kann ich heute für
 //   dich tun?" + Vorschlags-Prompts. Der primäre Prompt „Bank der Zukunft
-//   2035" startet sichtbares Thinking → das Strukturbild baut sich auf →
+//   2030" startet sichtbares Thinking → das Strukturbild baut sich auf →
 //   Einstieg in den Workshop (ins Haus). Übrige Prompts / freie Eingabe geben
 //   eine kurze Assistenten-Antwort, die zum Workshop zurückführt.
 //
@@ -27,7 +27,7 @@ import { useLang, type Lang } from '../i18n/LanguageContext'
 const DEFAULT_NAME = 'Eike'
 
 // Name in der Browser-Sitzung merken, damit er nicht jedes Mal neu abgefragt wird.
-const NAME_KEY = 'bz2035:name'
+const NAME_KEY = 'bz2030:name'
 function readStoredName(): string {
   try {
     return localStorage.getItem(NAME_KEY)?.trim() ?? ''
@@ -77,12 +77,12 @@ const STR: Record<Lang, IntroStrings> = {
       'Komponiere Strukturbild',
     ],
     prompts: [
-      { id: 'bank2035', label: 'Bank der Zukunft 2035', primary: true },
+      { id: 'bank2030', label: 'Bank der Zukunft 2030', primary: true },
       {
         id: 'aufgaben',
         label: 'Meine offenen Aufgaben heute',
         reply:
-          'Drei Themen liegen heute an — das größte ist strategisch: Wie sieht deine Bank 2035 aus? Genau da würde ich anfangen.',
+          'Drei Themen liegen heute an — das größte ist strategisch: Wie sieht deine Bank 2030 aus? Genau da würde ich anfangen.',
       },
       {
         id: 'markt',
@@ -94,11 +94,11 @@ const STR: Record<Lang, IntroStrings> = {
         id: 'portfolio',
         label: 'Portfolio-Überblick',
         reply:
-          'Dein Portfolio ist stabil. Die größere Frage ist, wie die Bank dahinter 2035 arbeitet. Soll ich dir das Zielbild zeigen?',
+          'Dein Portfolio ist stabil. Die größere Frage ist, wie die Bank dahinter 2030 arbeitet. Soll ich dir das Zielbild zeigen?',
       },
     ],
     genericReply:
-      'Gern — fang am besten mit dem großen Bild an: Wähle „Bank der Zukunft 2035", dann baue ich dir das Strukturbild auf.',
+      'Gern — fang am besten mit dem großen Bild an: Wähle „Bank der Zukunft 2030", dann baue ich dir das Strukturbild auf.',
     welcomeModalTitle: 'Willkommen!',
     assistantRole: 'AI Banking Assistant',
     nameLabel: 'Wie darf ich dich nennen?',
@@ -114,9 +114,9 @@ const STR: Record<Lang, IntroStrings> = {
     statusReady: 'Bereit',
     statusThinking: 'Denkt nach',
     statusReply: 'Antwort bereit',
-    suiteLabel: 'Banking Horizon 2035',
+    suiteLabel: 'Banking Horizon 2030',
     answerLead: (name) =>
-      `${name ? `${name}, hier ist deine ` : 'Hier ist deine '}Bank im Zustand 2026 — als begehbares Strukturbild. Jede Etage zeigt den Sprung von heute auf 2035.`,
+      `${name ? `${name}, hier ist deine ` : 'Hier ist deine '}Bank im Zustand 2026 — als begehbares Strukturbild. Jede Etage zeigt den Sprung von heute auf 2030.`,
     masterLabel: 'Master · Strukturbild',
     masterCaption: 'Bank’26 — Querschnitt',
     enter: 'Workshop starten — Bank als Haus erkunden',
@@ -133,12 +133,12 @@ const STR: Record<Lang, IntroStrings> = {
       'Composing the cross-section',
     ],
     prompts: [
-      { id: 'bank2035', label: 'Bank of the Future 2035', primary: true },
+      { id: 'bank2030', label: 'Bank of the Future 2030', primary: true },
       {
         id: 'aufgaben',
         label: 'My open tasks today',
         reply:
-          'Three things are on today’s plate — the biggest one is strategic: what does your bank look like in 2035? That’s exactly where I’d start.',
+          'Three things are on today’s plate — the biggest one is strategic: what does your bank look like in 2030? That’s exactly where I’d start.',
       },
       {
         id: 'markt',
@@ -150,11 +150,11 @@ const STR: Record<Lang, IntroStrings> = {
         id: 'portfolio',
         label: 'Portfolio overview',
         reply:
-          'Your portfolio is stable. The bigger question is how the bank behind it works in 2035. Shall I show you the target picture?',
+          'Your portfolio is stable. The bigger question is how the bank behind it works in 2030. Shall I show you the target picture?',
       },
     ],
     genericReply:
-      'Happy to — best to start with the big picture: choose “Bank of the Future 2035” and I’ll build up the cross-section for you.',
+      'Happy to — best to start with the big picture: choose “Bank of the Future 2030” and I’ll build up the cross-section for you.',
     welcomeModalTitle: 'Welcome!',
     assistantRole: 'AI Banking Assistant',
     nameLabel: 'What should I call you?',
@@ -170,9 +170,9 @@ const STR: Record<Lang, IntroStrings> = {
     statusReady: 'Ready',
     statusThinking: 'Thinking',
     statusReply: 'Answer ready',
-    suiteLabel: 'Banking Horizon 2035',
+    suiteLabel: 'Banking Horizon 2030',
     answerLead: (name) =>
-      `${name ? `${name}, here is your ` : 'Here is your '}bank in its 2026 state — as a walkable cross-section. Each floor shows the leap from today to 2035.`,
+      `${name ? `${name}, here is your ` : 'Here is your '}bank in its 2026 state — as a walkable cross-section. Each floor shows the leap from today to 2030.`,
     masterLabel: 'Master · Cross-section',
     masterCaption: 'Bank’26 — cross-section',
     enter: 'Start the workshop — explore the bank as a house',
@@ -271,7 +271,7 @@ export function IntroChatbot({
     cannedReply(t.genericReply)
   }, [chatInput, phase, replying, cannedReply, t.genericReply])
 
-  // Reasoning-Sequenz (nur „Bank 2035"-Pfad), dann Reveal.
+  // Reasoning-Sequenz (nur „Bank 2030"-Pfad), dann Reveal.
   useEffect(() => {
     if (phase !== 'thinking') return
     if (reducedMotion) {

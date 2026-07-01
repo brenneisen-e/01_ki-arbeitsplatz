@@ -6,7 +6,7 @@
 // Struktur-Referenz: edekabank/holodeck-2031-build-spec.md (§8).
 // Tool-Texte: EDEKA-spezifische, überarbeitete Fassung (Review Reuss).
 //
-// Eigenständiges, additives Tool — unabhängig vom Banking-2035-Strukturbild.
+// Eigenständiges, additives Tool — unabhängig vom Banking-2030-Strukturbild.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type AreaId = 'vertrieb' | 'produkt' | 'betrieb' | 'risiko' | 'it'

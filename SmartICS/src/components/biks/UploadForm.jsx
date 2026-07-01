@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react';
 import {
   UploadCloud, X, Sparkles, ShieldCheck, ChevronRight,
-  FileType2, Wand2, Info,
+  FileType2, Wand2, Info, FileUp,
 } from 'lucide-react';
 import { useBiks } from '../../hooks/useBiks';
 import {
-  PROZESS_BIBLIOTHEK, RISIKO_FRAMEWORKS, matchProzess,
+  PROZESS_BIBLIOTHEK, BEISPIEL_VORGABEN, matchProzess,
 } from '../../data/biksAgent';
 
 const BEISPIEL = PROZESS_BIBLIOTHEK[0];
@@ -20,10 +20,11 @@ function formatSize(bytes) {
 export default function UploadForm() {
   const { startProcessing } = useBiks();
   const fileRef = useRef(null);
+  const vorgabenRef = useRef(null);
   const [dragging, setDragging] = useState(false);
-  const [datei, setDatei] = useState(null);          // { name, size, typ, prozessId }
+  const [datei, setDatei] = useState(null);            // { name, size, typ, prozessId }
   const [prozessName, setProzessName] = useState('');
-  const [frameworkId, setFrameworkId] = useState(RISIKO_FRAMEWORKS.find(f => f.default)?.id);
+  const [vorgabenDatei, setVorgabenDatei] = useState(null); // { name, typ } — Risiko-Vorgaben
   const [weitereInfos, setWeitereInfos] = useState('');
 
   const applyFile = (fileLike, prozessId) => {
@@ -38,12 +39,21 @@ export default function UploadForm() {
     applyFile(list[0]);
   };
 
+  const onVorgaben = (files) => {
+    const f = Array.from(files || [])[0];
+    if (!f) return;
+    setVorgabenDatei({ name: f.name, typ: 'Risikofunktionslandkarte' });
+  };
+
   const loadBeispiel = () => {
     applyFile({ name: BEISPIEL.dateiname, size: 41114 }, BEISPIEL.id);
     setProzessName(BEISPIEL.name);
+    // Das Beispiel bringt die Risikofunktionslandkarte als Vorgabe mit.
+    setVorgabenDatei({ ...BEISPIEL_VORGABEN });
   };
 
   const clearDatei = () => { setDatei(null); if (fileRef.current) fileRef.current.value = ''; };
+  const clearVorgaben = () => { setVorgabenDatei(null); if (vorgabenRef.current) vorgabenRef.current.value = ''; };
 
   const canProcess = !!datei;
 
@@ -53,7 +63,7 @@ export default function UploadForm() {
       prozessId: datei.prozessId,
       prozessName: prozessName || datei.name,
       weitereInfos,
-      frameworkId,
+      risikoVorgaben: vorgabenDatei || null,
       quelldokument: { name: datei.name, typ: datei.typ, size: datei.size },
     });
   };
@@ -85,7 +95,7 @@ export default function UploadForm() {
       <div className="grid lg:grid-cols-[1.4fr_1fr] gap-5">
         {/* Linke Spalte: Upload + Felder */}
         <div className="space-y-4">
-          {/* Dropzone */}
+          {/* Dropzone / geladenes Dokument */}
           {!datei ? (
             <div
               onClick={() => fileRef.current?.click()}
@@ -131,24 +141,26 @@ export default function UploadForm() {
             </div>
           )}
 
-          {/* Beispiel-Shortcut */}
-          <button
-            onClick={loadBeispiel}
-            className="w-full card-base p-3.5 flex items-center gap-3 text-left hover:shadow-md transition-shadow group"
-            style={{ background: 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 4%, white)' }}
-          >
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--mode-gradient, linear-gradient(135deg,#0F4D2A,#1D7B3F))', color: 'white' }}>
-              <Sparkles size={16} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[13.5px] font-semibold flex items-center gap-2">
-                Beispiel-Arbeitsanweisung verwenden
-                <span style={{ background: '#FEF3C7', color: '#92400E', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4, letterSpacing: 0.4, textTransform: 'uppercase' }}>Demo</span>
+          {/* Beispiel-Shortcut — nur solange noch kein Dokument geladen ist */}
+          {!datei && (
+            <button
+              onClick={loadBeispiel}
+              className="w-full card-base p-3.5 flex items-center gap-3 text-left hover:shadow-md transition-shadow group"
+              style={{ background: 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 4%, white)' }}
+            >
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--mode-gradient, linear-gradient(135deg,#0F4D2A,#1D7B3F))', color: 'white' }}>
+                <Sparkles size={16} />
               </div>
-              <div className="text-[11.5px] text-slate-500 truncate">{BEISPIEL.name} — synthetischer Auszahlungsprozess (Bank)</div>
-            </div>
-            <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-          </button>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13.5px] font-semibold flex items-center gap-2">
+                  Beispiel-Arbeitsanweisung verwenden
+                  <span style={{ background: '#FEF3C7', color: '#92400E', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4, letterSpacing: 0.4, textTransform: 'uppercase' }}>Demo</span>
+                </div>
+                <div className="text-[11.5px] text-slate-500 truncate">{BEISPIEL.name} — synthetischer Auszahlungsprozess (Bank)</div>
+              </div>
+              <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          )}
 
           {/* Felder */}
           <div className="card-base p-4 space-y-3.5">
@@ -175,40 +187,38 @@ export default function UploadForm() {
           </div>
         </div>
 
-        {/* Rechte Spalte: Framework-Auswahl + Aktion */}
+        {/* Rechte Spalte: Risiko-Vorgaben + Aktion */}
         <div className="space-y-4">
           <div className="card-base p-4">
-            <div className="text-[12px] font-semibold text-slate-700 mb-2.5">Risiko-Vorgaben (Framework)</div>
-            <div className="space-y-2">
-              {RISIKO_FRAMEWORKS.map(fw => {
-                const active = fw.id === frameworkId;
-                return (
-                  <button
-                    key={fw.id}
-                    onClick={() => setFrameworkId(fw.id)}
-                    className="w-full text-left p-3 rounded-xl border transition-all"
-                    style={{
-                      borderColor: active ? 'var(--mode-primary, #0F4D2A)' : '#E2E8F0',
-                      background: active ? 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 6%, white)' : 'white',
-                      boxShadow: active ? '0 0 0 1px var(--mode-primary, #0F4D2A)' : 'none',
-                    }}
-                  >
-                    <div className="flex items-start gap-2.5">
-                      <span
-                        className="mt-0.5 w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center"
-                        style={{ borderColor: active ? 'var(--mode-primary, #0F4D2A)' : '#CBD5E1' }}
-                      >
-                        {active && <span className="w-2 h-2 rounded-full" style={{ background: 'var(--mode-primary, #0F4D2A)' }} />}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-[13px] font-semibold leading-tight">{fw.name}</span>
-                        <span className="block text-[11.5px] text-slate-500 leading-snug mt-0.5">{fw.beschreibung}</span>
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            <div className="text-[12px] font-semibold text-slate-700 mb-1">Risiko-Vorgaben <span className="text-slate-400 font-normal">(optional)</span></div>
+            <p className="text-[11.5px] text-slate-500 mb-2.5 leading-snug">
+              Risikofunktionslandkarte &amp; Wesentlichkeitskriterien. Ist eine Vorgabe hinterlegt, benennt der
+              Agent die Risiken entsprechend dieser — sonst greift er auf die operationellen Risikoarten der
+              Knowledge Base zurück.
+            </p>
+            {!vorgabenDatei ? (
+              <button
+                onClick={() => vorgabenRef.current?.click()}
+                className="w-full border-2 border-dashed rounded-xl p-3.5 text-center hover:bg-slate-50 transition-colors"
+                style={{ borderColor: '#CBD5E1' }}
+              >
+                <FileUp size={18} className="mx-auto mb-1 text-slate-400" />
+                <div className="text-[12.5px] font-semibold text-slate-700">Vorgaben-Dokument hochladen</div>
+                <div className="text-[11px] text-slate-500">Risikofunktionslandkarte / Wesentlichkeitskriterien</div>
+              </button>
+            ) : (
+              <div className="flex items-center gap-2.5 rounded-lg border border-slate-200 p-2.5">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'color-mix(in srgb, var(--mode-primary, #0F4D2A) 12%, white)', color: 'var(--mode-primary, #0F4D2A)' }}>
+                  <FileType2 size={16} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[12.5px] font-semibold truncate">{vorgabenDatei.name}</div>
+                  <span className="chip" style={{ padding: '0.02rem 0.4rem' }}>{vorgabenDatei.typ}</span>
+                </div>
+                <button onClick={clearVorgaben} className="text-slate-400 hover:text-red-600 p-1" title="Vorgabe entfernen"><X size={16} /></button>
+              </div>
+            )}
+            <input ref={vorgabenRef} type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" className="hidden" onChange={(e) => onVorgaben(e.target.files)} />
           </div>
 
           <div className="card-base p-4">

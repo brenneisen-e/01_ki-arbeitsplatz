@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { useBiks } from '../../hooks/useBiks';
 import { useInstitut } from '../../hooks/useInstitut';
-import { BIKS_STATUS, STATUS_MAP, RISIKO_FRAMEWORKS } from '../../data/biksAgent';
+import { BIKS_STATUS, STATUS_MAP } from '../../data/biksAgent';
 import RisikoKachel from './RisikoKachel';
 import RisikoDetailDrawer from './RisikoDetailDrawer';
 import { StatusIcon } from './StatusControls';
@@ -119,9 +119,13 @@ export default function ResultBoard() {
                 <FileText size={12} /> {analyse.quelldokument?.name}
               </button>
               <span className="chip">{analyse.kategorie}</span>
-              {RISIKO_FRAMEWORKS.find(f => f.id === analyse.frameworkId) && (
-                <span className="chip" title="Verwendetes Risiko-Framework — bestimmt die Benennung der Risikoart">
-                  <SlidersHorizontal size={11} /> {RISIKO_FRAMEWORKS.find(f => f.id === analyse.frameworkId).name}
+              {analyse.risikoVorgaben ? (
+                <span className="chip" title="Verwendete Risiko-Vorgaben — bestimmen die Benennung der Risikoart">
+                  <SlidersHorizontal size={11} /> Vorgaben: {analyse.risikoVorgaben.name}
+                </span>
+              ) : (
+                <span className="chip" title="Ohne Risiko-Vorgaben — operationelle Risikoarten der Knowledge Base">
+                  <SlidersHorizontal size={11} /> Ohne Vorgaben (KB-Fallback)
                 </span>
               )}
               {analyse.regulatorik?.map(r => <span key={r} className="chip"><ShieldCheck size={11} /> {r}</span>)}

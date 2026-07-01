@@ -1,12 +1,10 @@
 import { KeyRound, MessageSquare, ArrowUpRight } from 'lucide-react';
-import { CLUSTER_MAP } from '../../data/biksAgent';
 import { useBiks } from '../../hooks/useBiks';
 import { StatusMenu } from './StatusControls';
 import { RisikoartBadge, SchadenEintritt, PrioTier, HeatmapMini } from './RiskBits';
 
 export default function RisikoKachel({ risiko, onOpen }) {
   const { setRisikoStatus } = useBiks();
-  const c = CLUSTER_MAP[risiko.cluster];
   const kontrollen = risiko.schluesselkontrollen || [];
   const commentCount = (risiko.comments?.length || 0) + kontrollen.reduce((n, k) => n + (k.comments?.length || 0), 0);
 
@@ -16,16 +14,13 @@ export default function RisikoKachel({ risiko, onOpen }) {
       className="card-base text-left p-0 flex flex-col group hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 relative overflow-hidden"
       style={{ borderColor: '#E2E8F0' }}
     >
-      {/* Farbleiste nach Cluster */}
-      <span className="absolute top-0 left-0 h-full w-1" style={{ background: c?.color || '#94A3B8' }} />
-
-      <div className="p-4 pl-5 flex flex-col h-full gap-3">
+      <div className="p-4 flex flex-col h-full gap-3">
         {/* Kopf */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <span
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[13px] font-bold shrink-0"
-              style={{ background: c?.color || '#94A3B8' }}
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-[13px] font-bold shrink-0"
+              style={{ background: '#F1F5F9', color: '#475569' }}
             >
               {risiko.nummer}
             </span>
@@ -59,7 +54,7 @@ export default function RisikoKachel({ risiko, onOpen }) {
         <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-slate-100">
           <div className="flex items-center gap-3 text-[11.5px] text-slate-500">
             <span className="inline-flex items-center gap-1" title="Schlüsselkontrollen">
-              <KeyRound size={13} className="text-emerald-600" /> {kontrollen.length} Schlüsselkontrolle{kontrollen.length === 1 ? '' : 'n'}
+              <KeyRound size={13} className="text-slate-400" /> {kontrollen.length} Schlüsselkontrolle{kontrollen.length === 1 ? '' : 'n'}
             </span>
             {commentCount > 0 && (
               <span className="inline-flex items-center gap-1" title="Kommentare">

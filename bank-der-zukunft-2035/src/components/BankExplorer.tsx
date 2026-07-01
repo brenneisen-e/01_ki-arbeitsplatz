@@ -10,7 +10,7 @@ import { gsap } from 'gsap'
 import { ArrowLeft, ScrollText } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
-import { ChapterReader, STEP_COUNT } from './ChapterReader'
+import { ChapterReader } from './ChapterReader'
 import { IframeStage } from './IframeStage'
 import { StrategyLab } from './StrategyLab'
 import { CoCreationCanvas } from './CoCreationCanvas'
@@ -24,6 +24,7 @@ import { parseHash, formatHash } from '../deeplink'
 import {
   CHAPTER_IDS,
   DEFAULT_API,
+  stepCountForChapter,
   type Chapter,
   type ChapterId,
   type ExperienceApi,
@@ -47,10 +48,10 @@ const STR: Record<Lang, ExplorerStrings> = {
   de: {
     backToChat: 'Zurück zum Chat',
     backToChatAria: 'Zurück zum Chatbot',
-    topKicker: 'Banking Horizon 2035',
+    topKicker: 'Banking Horizon 2030',
     topTitle: 'Interaktive Demo',
     summary: 'Management Summary',
-    summaryAria: 'Management Summary öffnen — Vision der Bank 2035',
+    summaryAria: 'Management Summary öffnen — Vision der Bank 2030',
     masterLabel: 'Master · Strukturbild',
     masterCaption: 'Bank’26 — Querschnitt',
     chapter: 'Kapitel',
@@ -59,10 +60,10 @@ const STR: Record<Lang, ExplorerStrings> = {
   en: {
     backToChat: 'Back to chat',
     backToChatAria: 'Back to the chatbot',
-    topKicker: 'Banking Horizon 2035',
+    topKicker: 'Banking Horizon 2030',
     topTitle: 'Interactive demo',
     summary: 'Management summary',
-    summaryAria: 'Open the management summary — vision of the bank in 2035',
+    summaryAria: 'Open the management summary — vision of the bank in 2030',
     masterLabel: 'Master · Cross-section',
     masterCaption: 'Bank’26 — cross-section',
     chapter: 'Chapter',
@@ -73,7 +74,7 @@ const STR: Record<Lang, ExplorerStrings> = {
 // Persistenz: aktueller Navigationsstand (offenes Kapitel + Schritt) wird in der
 // Browser-Sitzung gehalten, damit ein Refresh an genau dieser Stelle bleibt
 // statt auf die Übersicht/Landing-Page zurückzuspringen.
-const NAV_KEY = 'bz2035:nav'
+const NAV_KEY = 'bz2030:nav'
 
 type SavedNav = { chapter: ChapterId | null; step: number }
 
@@ -90,9 +91,10 @@ function loadNav(): SavedNav {
       typeof parsed.chapter === 'string' && CHAPTER_IDS.includes(parsed.chapter as ChapterId)
         ? (parsed.chapter as ChapterId)
         : null
+    const maxStep = chapter ? stepCountForChapter(chapter) - 1 : 0
     const step =
       typeof parsed.step === 'number'
-        ? Math.min(Math.max(0, Math.floor(parsed.step)), STEP_COUNT - 1)
+        ? Math.min(Math.max(0, Math.floor(parsed.step)), maxStep)
         : 0
     return { chapter, step }
   } catch {
@@ -163,7 +165,7 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   // Reader erst NACH dem Kameraflug zeigen, damit der Zoom sichtbar bleibt —
   // bei einem wiederhergestellten Kapitel jedoch sofort.
   const [readerShown, setReaderShown] = useState(initialNav.chapter !== null)
-  // Management-Summary-Overlay (Vision der Bank 2035) — nur aus der Übersicht.
+  // Management-Summary-Overlay (Vision der Bank 2030) — nur aus der Übersicht.
   const [summaryOpen, setSummaryOpen] = useState(false)
 
   const reducedMotion = useReducedMotion()
@@ -451,7 +453,7 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
           <span className={styles.topbarTitle}>{t.topTitle}</span>
         </div>
 
-        {/* Management Summary — Vision der Bank 2035 (unten rechts, nur Übersicht) */}
+        {/* Management Summary — Vision der Bank 2030 (unten rechts, nur Übersicht) */}
         <button
           type="button"
           className={styles.summaryBtn}
@@ -485,7 +487,7 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
         )}
         {handoff?.kind === 'kredit-dilemma' && <KreditDilemma onClose={handleHandoffClose} />}
 
-        {/* Management-Summary-Overlay (Vision der Bank 2035) */}
+        {/* Management-Summary-Overlay (Vision der Bank 2030) */}
         {summaryOpen && <ManagementSummary onClose={() => setSummaryOpen(false)} />}
       </div>
     </div>

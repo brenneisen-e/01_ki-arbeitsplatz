@@ -1,8 +1,9 @@
 /**
  * KreditDilemma — Kapitel 06 · Compliance & Risk
  *
- * Interaktives Entscheidungs-Szenario: Ein Großkunde beantragt einen Kredit
- * über 100 Mio. €; die KI lehnt autonom ab. Der Nutzer navigiert durch vier
+ * Interaktives Entscheidungs-Szenario: Ein Geschäftskunde beantragt einen Kredit
+ * über 50.000 €; die KI lehnt autonom ab (gestufte Autonomiegrenzen nach
+ * Risikoklasse). Der Nutzer navigiert durch vier
  * Telefon-Stationen und trifft jeweils eine Entscheidung, die drei Status-
  * Balken verschiebt. Am Ende erscheint eine kurze Bewertung und drei
  * Reflexionsfragen (Wer hat freigegeben? / Wer haftet? / Wie wird kontrolliert?).
@@ -115,9 +116,12 @@ const STR: Record<Lang, DilemmaStrings> = {
     briefingKicker: 'Szenario-Briefing',
     scenario1: (
       <>
-        Ein Großkunde beantragt einen Kredit über <strong>100 Mio. €</strong>. Die KI
-        lehnt den Antrag autonom ab — ohne Rücksprache, ohne erklärbare Begründung. Der
-        Firmenkundenbetreuer greift zum Telefon. Sie entscheiden, wie die Bank reagiert.
+        Ein Geschäftskunde beantragt einen Kredit über <strong>50.000 €</strong>. Die KI
+        lehnt den Antrag autonom ab — ohne Rücksprache, ohne erklärbare Begründung. Die
+        autonome Entscheidungsgrenze ist <strong>gestuft</strong> (5.000 · 50.000 · 500.000
+        · 5 Mio · 50 Mio €) und richtet sich nach der <strong>Risikoklasse des Kunden</strong>{' '}
+        und den KI-Hintergrundinformationen. Der Firmenkundenbetreuer greift zum Telefon.
+        Sie entscheiden, wie die Bank reagiert.
       </>
     ),
     scenario2:
@@ -196,9 +200,12 @@ const STR: Record<Lang, DilemmaStrings> = {
     briefingKicker: 'Scenario briefing',
     scenario1: (
       <>
-        A major client applies for a loan of <strong>€100m</strong>. The AI rejects the
+        A business customer applies for a loan of <strong>€50,000</strong>. The AI rejects the
         application autonomously — without consultation, without an explainable rationale.
-        The corporate client manager picks up the phone. You decide how the bank responds.
+        The autonomous decision threshold is <strong>tiered</strong> (€5,000 · 50,000 · 500,000
+        · 5m · 50m) and depends on the <strong>customer’s risk class</strong> and the AI’s
+        background information. The corporate client manager picks up the phone. You decide how
+        the bank responds.
       </>
     ),
     scenario2:

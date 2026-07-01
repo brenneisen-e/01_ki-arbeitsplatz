@@ -14,7 +14,7 @@ type Tool = 'bank' | 'holodeck'
 // Persistenz-Key: merkt sich für die Dauer der Browser-Sitzung, dass der Nutzer
 // das Intro bereits durchlaufen hat — ein Refresh springt dann NICHT zurück auf
 // die Chatbot-Landing-Page. Ein frisch geöffneter Tab zeigt das Intro erneut.
-const ENTERED_KEY = 'bz2035:entered'
+const ENTERED_KEY = 'bz2030:entered'
 
 // Auftakt: „Bank der Zukunft"-Chatbot (Name → Begrüßung → Vorschläge), der
 // primäre Prompt baut das Strukturbild auf (Reveal) → danach das begehbare

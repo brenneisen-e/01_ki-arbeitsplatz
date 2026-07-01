@@ -3,3 +3,6 @@ node_modules
 *.log
 .vite
 package-lock.json
+
+# Zu groß für Cloudflare Pages (>25 MiB) — blockiert das Deployment
+Banking-Horizon-2035_Hypothesen_DE.xlsx

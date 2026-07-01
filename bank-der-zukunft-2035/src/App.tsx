@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import styles from './App.module.css'
 import { IntroChatbot } from './components/IntroChatbot'
+import { SzenarioIntro } from './components/SzenarioIntro'
 import { BankExplorer } from './components/BankExplorer'
 import { Holodeck } from './holodeck/Holodeck'
 import { getAllImageSrcs } from './data/chapters'
@@ -34,6 +35,11 @@ function App(): React.ReactElement {
   // öffnet direkt das Holodeck, andere Deep-Links das Standard-Strukturbild.
   const [tool, setTool] = useState<Tool>(() => (isHolodeckHash() ? 'holodeck' : 'bank'))
 
+  // Szenario-Matrix „bevor das Haus öffnet": erscheint nach dem Intro und vor
+  // dem Strukturbild. Bei Deep-Links (direkt in ein Kapitel / Holodeck) wird sie
+  // übersprungen, damit geteilte Links direkt am Ziel landen.
+  const [sawSzenarien, setSawSzenarien] = useState(() => isHolodeckHash() || parseHash().view !== 'intro')
+
   // Externe Hash-Änderung (Deep-Link in dieselbe Tab eingefügt / Vor-Zurück):
   // sitzt der Nutzer noch im Intro, direkt ins passende Tool wechseln.
   useEffect(() => {
@@ -44,6 +50,7 @@ function App(): React.ReactElement {
       } else if (parseHash().view !== 'intro') {
         setTool('bank')
         setEntered(true)
+        setSawSzenarien(true)
       }
     }
     window.addEventListener('hashchange', onHash)
@@ -83,6 +90,8 @@ function App(): React.ReactElement {
     }
     setTool('bank')
     setEntered(false)
+    // Beim nächsten Betreten wieder mit der Szenario-Matrix starten.
+    setSawSzenarien(false)
   }, [])
 
   // Alle Fotos (Strukturbild + Holodeck) schon beim App-Start im Hintergrund
@@ -104,8 +113,10 @@ function App(): React.ReactElement {
       {entered ? (
         tool === 'holodeck' ? (
           <Holodeck onExit={handleExitToIntro} />
-        ) : (
+        ) : sawSzenarien ? (
           <BankExplorer onExitToIntro={handleExitToIntro} />
+        ) : (
+          <SzenarioIntro onEnter={() => setSawSzenarien(true)} />
         )
       ) : (
         <IntroChatbot onEnter={handleEnter} onEnterEdeka={handleEnterEdeka} />

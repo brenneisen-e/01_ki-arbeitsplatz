@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import styles from './ChapterReader.module.css'
 import { ImageSlot } from './ImageSlot'
+import { LeitfrageChat } from './LeitfrageChat'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
 import {
@@ -249,6 +250,13 @@ export function ChapterReader({
   // Schrittzahl aus dem Kapitel: N Hypothesen + 1 Aktivität.
   const stepCount = chapter.hypotheses.length + 1
 
+  // Overlay-Chatbot zur Leitfrage (statt statischer Sprechblase). Beim Wechsel
+  // von Schritt oder Kapitel schließen, damit die Leitfrage zum Kontext passt.
+  const [chatOpen, setChatOpen] = useState(false)
+  useEffect(() => {
+    setChatOpen(false)
+  }, [step, chapter.id])
+
   const toggleEdit = useCallback(() => {
     setEditMode((on) => {
       writeEditMode(!on)
@@ -477,6 +485,14 @@ export function ChapterReader({
                   {t.leitfrage}
                 </span>
                 <p className={styles.calloutText}>{effLeitfrage}</p>
+                <button
+                  type="button"
+                  className={styles.leitfrageChatBtn}
+                  onClick={() => setChatOpen(true)}
+                >
+                  <MessageSquare size={13} strokeWidth={2} aria-hidden />
+                  {lang === 'de' ? 'Mit KI-Assistent diskutieren' : 'Discuss with AI assistant'}
+                </button>
               </div>
             </aside>
           )}
@@ -554,10 +570,20 @@ export function ChapterReader({
               </div>
             ) : (
               effLeitfrage && (
-                <p className={styles.leitfrage}>
-                  <Lightbulb size={16} strokeWidth={2} aria-hidden />
-                  <span>{effLeitfrage}</span>
-                </p>
+                <div className={styles.leitfrageWrap}>
+                  <p className={styles.leitfrage}>
+                    <Lightbulb size={16} strokeWidth={2} aria-hidden />
+                    <span>{effLeitfrage}</span>
+                  </p>
+                  <button
+                    type="button"
+                    className={styles.leitfrageChatBtn}
+                    onClick={() => setChatOpen(true)}
+                  >
+                    <MessageSquare size={13} strokeWidth={2} aria-hidden />
+                    {lang === 'de' ? 'Diskutieren' : 'Discuss'}
+                  </button>
+                </div>
               )
             )}
           </>
@@ -631,6 +657,16 @@ export function ChapterReader({
           <ChevronRight size={18} strokeWidth={2} />
         </button>
       </footer>
+
+      {chatOpen && hypothesis && effLeitfrage && (
+        <LeitfrageChat
+          chapter={chapter}
+          leitfrage={effLeitfrage}
+          hypoTitle={effTitle}
+          in2030={effIn2030}
+          onClose={() => setChatOpen(false)}
+        />
+      )}
     </div>
   )
 }

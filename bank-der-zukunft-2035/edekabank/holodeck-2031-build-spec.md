@@ -110,18 +110,18 @@ Diese Texte gehören in die rechte Spalte. Verbatim übernehmen.
 - **Mandat:** Steuert Akquise und Bindung im Händlergeschäft; verlagert den eigenen Einsatz von Volumen auf die wenigen wertentscheidenden Interaktionen.
 - **Skills:** Relationship- und Verhandlungskompetenz; kritische Bewertung KI-generierter Handlungsempfehlungen; Eskalations- und Abschlusssicherheit in Hochwert-Situationen.
 - **Zielbild Automatisierung:** KI antizipiert Bedarfe (Liquidität, Saison, Expansion) und steuert Ansprache, Angebot und Timing autonom; menschlicher Eingriff nur an definierten Vertrauens-Touchpoints.
-- **Delta zu heute:** Heute reaktiv, manuell, mit später Signalerkennung. Implikation: Vertriebskapazität verschiebt sich von Breite zu Tiefe — weniger Köpfe, höhere Anforderung pro Kopf.
+- **Delta zu heute:** Heute reaktiv, manuell, mit später Signalerkennung. Implikation: Vertriebskapazität verschiebt sich von Breite zu Tiefe — weniger Köpfe, höhere Anforderung pro Kopf; hinzu kommt die Akzeptanz, autonome Vertriebsentscheidungen in der Breite der KI zu überlassen.
 
 ### Produkt — Jonas Keller, 29 · Solution Designer — `LÖSUNGS-BAUKASTEN`
 - **Mandat:** Verantwortet Passung und Marge des Lösungsangebots; gestaltet den Baukasten und die Leitplanken, nicht das Einzelprodukt.
-- **Skills:** Modulares Produktdenken; Ökonomie des Händlergeschäfts; Definition von Guardrails und Freigabelogik für KI-Konfiguration.
+- **Skills:** Modulares Produktdenken; Ökonomie des Händlergeschäfts; Definition von Leitplanken und Freigabelogik für KI-Konfiguration.
 - **Zielbild Automatisierung:** KI konfiguriert je Cluster in Echtzeit die optimale Lösung aus Modulen und re-optimiert kontinuierlich; Time-to-Solution von Monaten auf Minuten.
 - **Delta zu heute:** Heute lange Entwicklungszyklen und Standardprodukte mit Streuverlust. Implikation: Der statische Produktkatalog — und die Funktion, die ihn pflegt — verliert seine Existenzberechtigung.
 
 ### Betrieb — Aylin Demir, 45 · Operations Steward — `AUTONOME ABWICKLUNG`
 - **Mandat:** Sichert Durchlauf und Qualität in Kredit, KYC und Abwicklung; steuert das Ausnahme-Regime statt des Normalbetriebs.
 - **Skills:** Prozess- und Kontrollkompetenz; Entscheidungsstärke im Ausnahmefall; Sensorik dafür, welche Fälle bewusst dem Menschen vorbehalten bleiben.
-- **Zielbild Automatisierung:** Straight-Through-Processing für das Gros der Fälle; der Mensch bearbeitet nur Exceptions. Steuerungsgröße ist die Qualität der Ausnahmeerkennung, nicht das Bearbeitungsvolumen.
+- **Zielbild Automatisierung:** Straight-Through-Processing für das Gros der Fälle; der Mensch bearbeitet nur Ausnahmen. Steuerungsgröße ist die Qualität der Ausnahmeerkennung, nicht das Bearbeitungsvolumen.
 - **Delta zu heute:** Heute personalintensive Einzelfallbearbeitung. Implikation: Bei STP-Quoten jenseits 90 % ist nicht Effizienz die Frage, sondern der Kapazitäts- und Rollenumbau im Backoffice.
 
 ### Risiko & Steuerung — Robert Hofer, 57 · Risk & Resilience Officer — `FRÜHWARNUNG & SZENARIEN`

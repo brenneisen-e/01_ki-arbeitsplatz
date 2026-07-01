@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import styles from './Holodeck.module.css'
 import { DebugZoneEditor } from './DebugZoneEditor'
+import { SzenarioVorspann } from './SzenarioVorspann'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import {
   ANKER,
@@ -85,6 +86,9 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
 
   // Deep-Link beim Start: direkt in den Bereich springen.
   const [initialArea] = useState<AreaId | null>(() => holodeckAreaFromHash())
+  // Szenarien-Vorspann vor der Brücke — übersprungen, wenn direkt ein Bereich
+  // deep-verlinkt wurde (dann sofort in den Deep-Dive).
+  const [showVorspann, setShowVorspann] = useState(() => !initialArea)
   const [mode, setMode] = useState<Mode>(initialArea ? 'deepdive' : 'overview')
   const [areaId, setAreaId] = useState<AreaId | null>(initialArea)
   const [flying, setFlying] = useState(false)
@@ -177,6 +181,7 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
   const openArea = useCallback(
     (id: AreaId) => {
       if (flying) return
+      setShowVorspann(false)
       setDeepError(false)
       setAreaId(id)
       if (reducedMotion) {
@@ -286,6 +291,9 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
         </span>
       </div>
 
+      {showVorspann ? (
+        <SzenarioVorspann onEnter={() => setShowVorspann(false)} />
+      ) : (
       <div className={styles.layout}>
         {/* ── Bühne (links, 60 %) ── */}
         <div className={styles.stage}>
@@ -418,14 +426,14 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
 
               <div className={styles.block}>
                 <div className={styles.blockLabel}>
-                  <Gauge size={16} strokeWidth={2} aria-hidden /> Autopilot 2031
+                  <Gauge size={16} strokeWidth={2} aria-hidden /> Regulierter Autopilot 2031
                 </div>
                 <p className={styles.blockText}>{rich(STEUERUNG.maximalbild)}</p>
               </div>
 
               <div className={styles.block}>
                 <div className={styles.blockLabel}>
-                  <Hand size={16} strokeWidth={2} aria-hidden /> Hand am Steuer
+                  <Hand size={16} strokeWidth={2} aria-hidden /> Menschliche Verantwortung
                 </div>
                 <p className={styles.blockText}>{rich(STEUERUNG.aber)}</p>
               </div>
@@ -439,6 +447,7 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
           </div>
         </aside>
       </div>
+      )}
     </div>
   )
 }

@@ -5,6 +5,7 @@ import {
   Bot,
   ChevronLeft,
   ChevronRight,
+  Download,
   Gauge,
   GraduationCap,
   Hand,
@@ -286,6 +287,11 @@ export function Holodeck({ onExit }: Props): React.ReactElement {
           EDEKA<span>BANK</span> · Holodeck 2031
         </span>
         <span className={styles.topSpacer} />
+        {/* Standalone-Projekt als ZIP: komplettes Vite-Projekt (Quellcode, Bilder,
+            Deploy-Anleitung) für den Umzug in ein eigenes Repo / eigene Domain. */}
+        <a className={styles.downloadBtn} href="./holodeck-standalone.zip" download>
+          <Download size={14} strokeWidth={2} aria-hidden /> Projekt-ZIP
+        </a>
         <span className={styles.debugHint}>
           <kbd>D</kbd> Zonen justieren
         </span>

@@ -1,0 +1,583 @@
+/* Szenario-Vorspann — interaktive 2×2-Matrix (links) + Detailpanel (rechts).
+   Erbt die Holodeck-Theme-Variablen (--accent, --bg, --line, --text, --muted)
+   vom umschließenden Holodeck-Root. */
+
+.root {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* ── Eingangs-Choreografie: erst Achsen lesbar, dann Inhalte ──
+   Solange der Aufbau läuft, ist die Matrix nicht klickbar/hoverbar, damit der
+   Build nicht durch frühes Hovern unterbrochen wird. */
+.root:not([data-built]) .matrixCol {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1) Achsenkreuz zeichnet sich aus der Mitte auf */
+  .crossH {
+    animation: vsCrossH 0.45s ease 0.1s backwards;
+  }
+  .crossV {
+    animation: vsCrossV 0.45s ease 0.1s backwards;
+  }
+  /* 2) Achsen-Beschriftung blendet ein (gut lesbar, vor den Inhalten) */
+  .dir,
+  .axisTitle {
+    animation: vsLabelIn 0.5s ease 0.5s backwards;
+  }
+  /* 3) erst danach erscheinen die Quadranten-Kacheln, leicht gestaffelt */
+  .tile {
+    animation: vsTileIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(1s + var(--i, 0) * 0.11s);
+  }
+}
+
+@keyframes vsCrossH {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0);
+  }
+}
+
+@keyframes vsCrossV {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scaleY(0);
+  }
+}
+
+@keyframes vsLabelIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vsTileIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+
+/* Inhalt eines gerade freigeschalteten Quadranten sanft einblenden */
+@media (prefers-reduced-motion: no-preference) {
+  .tile[data-unlocked] .tileHead,
+  .tile[data-unlocked] .tileList {
+    animation: vsUnlock 0.3s ease both;
+  }
+}
+
+@keyframes vsUnlock {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+/* ── Linke Spalte: Matrix ── */
+.matrixCol {
+  flex: 0 0 60%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 2.4vw, 34px);
+  background: #040c15;
+  overflow: auto;
+}
+
+.matrixFrame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  padding: 24px 70px;
+}
+
+/* Richtungs-Labels an den Achsenenden */
+.dir {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  background: #040c15;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: font-size 0.35s ease, color 0.35s ease;
+}
+
+.dir svg {
+  color: var(--accent);
+  transition: width 0.35s ease, height 0.35s ease;
+}
+
+/* Solange kein Quadrant freigeschaltet ist, steht die Achsenbeschriftung groß
+   im Vordergrund; beim ersten Freischalten schrumpft sie sanft auf Normalmaß. */
+.root[data-empty] .dir {
+  font-size: 18px;
+  color: var(--text);
+}
+
+.root[data-empty] .dir svg {
+  width: 19px;
+  height: 19px;
+}
+
+.dirTop {
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dirBottom {
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dirLeft {
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dirRight {
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ── Das 2×2-Raster ── */
+.grid {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: clamp(40px, 4vw, 68px);
+  row-gap: clamp(32px, 4vh, 50px);
+}
+
+/* Achsenkreuz in den Zwischenräumen */
+.crossH,
+.crossV {
+  position: absolute;
+  z-index: 0;
+  background: rgba(0, 92, 169, 0.55);
+  pointer-events: none;
+}
+
+.crossH {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.crossV {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+}
+
+/* Achsen-Titel auf den Kreuzbalken (auf dunklem Chip, damit lesbar) */
+.axisTitle {
+  position: absolute;
+  z-index: 2;
+  padding: 2px 7px;
+  background: #040c15;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: font-size 0.35s ease, color 0.35s ease;
+}
+
+.root[data-empty] .axisTitle {
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.axisXLeft {
+  top: 50%;
+  right: 50%;
+  transform: translate(-12px, -50%);
+}
+
+.axisXRight {
+  top: 50%;
+  left: 50%;
+  transform: translate(12px, -50%);
+}
+
+.axisY {
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  letter-spacing: 0.12em;
+}
+
+/* ── Quadranten-Kacheln ── */
+.tile {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  padding: 16px 22px 18px;
+  text-align: left;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease,
+    box-shadow 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+}
+
+/* farbiger Akzentstreifen oben */
+.tile::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--sz);
+  opacity: 0.85;
+}
+
+.tile[data-active] {
+  border-color: var(--sz);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--sz),
+    0 0 34px -6px var(--sz);
+}
+
+/* Gesperrter Quadrant: nur ein Plus zum Freischalten */
+.tileLock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 72px;
+  color: var(--sz);
+}
+
+.tileLockIcon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--sz) 55%, transparent);
+  background: color-mix(in srgb, var(--sz) 12%, transparent);
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.tile:hover .tileLockIcon,
+.tile:focus-visible .tileLockIcon {
+  transform: scale(1.1);
+  background: color-mix(in srgb, var(--sz) 22%, transparent);
+  box-shadow: 0 0 26px -6px var(--sz);
+}
+
+.tileHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tileTitle {
+  font-size: clamp(17px, 1.45vw, 22px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--sz);
+}
+
+.tileSentiment {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--sz) 55%, transparent);
+  background: color-mix(in srgb, var(--sz) 14%, transparent);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--sz);
+  white-space: nowrap;
+}
+
+.tileList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tileList li {
+  position: relative;
+  padding-left: 18px;
+  font-size: clamp(13.5px, 1.05vw, 16px);
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.tileList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--sz);
+}
+
+/* ── Rechte Spalte: Detailpanel ── */
+.panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+}
+
+.panelScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(26px, 3vw, 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Aktives Szenario oben ausrichten, damit der Titel immer sichtbar ist und
+   man von oben nach unten lesen/scrollen kann (Intro bleibt zentriert). */
+.panelScroll[data-active] {
+  justify-content: flex-start;
+}
+
+/* Intro (kein Szenario aktiv) */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
+  margin: 10px 0 16px;
+  font-size: clamp(26px, 2.4vw, 34px);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.lead {
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 11px 15px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(0, 92, 169, 0.12);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.hint svg {
+  color: var(--accent);
+  flex: none;
+}
+
+.note {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Detail (Szenario aktiv) */
+.detail {
+  animation: fadeIn 0.22s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detailHead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.detailDot {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border-radius: 4px;
+  background: var(--sz);
+  box-shadow: 0 0 16px -2px var(--sz);
+}
+
+.detailTitle {
+  font-size: clamp(23px, 2.1vw, 30px);
+  font-weight: 800;
+  line-height: 1.12;
+  color: var(--sz);
+}
+
+.sentimentRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 14px 0 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sentimentBig {
+  font-size: clamp(40px, 4vw, 56px);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--sz);
+}
+
+.sentimentLabel {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.narrativ {
+  font-size: 17.5px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.detailList {
+  list-style: none;
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.detailList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  font-size: clamp(16.5px, 1.25vw, 19px);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--text) 84%, transparent);
+}
+
+.detailIcon {
+  flex: none;
+  margin-top: 0.18em;
+  color: var(--sz);
+}
+
+.detailText strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* Footer (immer sichtbar): Legende + CTA */
+.footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px clamp(26px, 3vw, 48px);
+  border-top: 1px solid var(--line);
+  background: rgba(7, 16, 27, 0.7);
+}
+
+.legende {
+  font-size: 11.5px;
+  color: var(--muted);
+  min-width: 0;
+}
+
+.cta {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.cta:hover {
+  background: var(--accent-dark);
+  transform: translateX(2px);
+}
+
+/* ── Responsiv: Matrix oben, Panel unten ── */
+@media (max-width: 980px) {
+  .root {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .matrixCol {
+    flex: none;
+    height: 70vh;
+  }
+  .panel {
+    border-left: none;
+    border-top: 1px solid var(--line);
+  }
+  .panelScroll {
+    justify-content: flex-start;
+  }
+}

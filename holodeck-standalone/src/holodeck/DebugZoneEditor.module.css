@@ -1,0 +1,123 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.zone {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 200, 255, 0.9);
+  background: rgba(0, 160, 220, 0.18);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #eaffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.zone[data-selected='true'] {
+  border-color: #ffd23f;
+  background: rgba(255, 210, 63, 0.2);
+}
+
+.zone:active {
+  cursor: grabbing;
+}
+
+.hud {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 31;
+  width: min(380px, 46vw);
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(8, 16, 26, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #e8eef6;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  backdrop-filter: blur(8px);
+}
+
+.hudHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.hudTitle {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.hudClose {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #e8eef6;
+  cursor: pointer;
+}
+
+.hudRow {
+  margin: 6px 0;
+  color: #9fb3c8;
+}
+
+.hudRow b {
+  color: #e8eef6;
+}
+
+.radius {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.radius input {
+  flex: 1;
+}
+
+.code {
+  margin: 8px 0 0;
+  padding: 8px;
+  max-height: 168px;
+  overflow: auto;
+  border-radius: 8px;
+  background: #05101c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #bfe6ff;
+  white-space: pre;
+}
+
+.copyBtn {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #005ca9;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.copyBtn:hover {
+  background: #00427a;
+}

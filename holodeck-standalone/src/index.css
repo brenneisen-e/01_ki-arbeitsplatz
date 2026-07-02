@@ -1,0 +1,115 @@
+:root {
+  /* Akzent (Deloitte-Grün) */
+  --accent: #046A38;          /* Deloitte Dark Green */
+  --accent-soft: #E8F3D1;
+  --accent-bright: #86BC25;
+  --accent-deep: #013D20;
+  --accent-glow: rgba(4, 106, 56, 0.45);
+  --accent-tint: rgba(4, 106, 56, 0.16);
+
+  /* Schrift */
+  --font-heading: 'Geist', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body:    'Geist', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    'Geist Mono', 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Inhalte (panel) */
+  --ink: #F4F1EA;
+  --ink-2: #C8C4BA;
+  --ink-3: #8E8A82;
+
+  /* Flächen / Glas (dunkles Premium-Theme) */
+  --bg-deep: #0B0B0C;
+  --bg-1: #121317;
+  --bg-2: #1A1C21;
+  --surface-1: rgba(255, 255, 255, 0.045);
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --surface-3: rgba(255, 255, 255, 0.12);
+  --border-soft: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --glass: rgba(18, 19, 23, 0.74);
+  --glass-strong: rgba(11, 12, 15, 0.88);
+
+  /* Semantische Status-Farben (Tools, Balken, Badges) */
+  --ok: #2FA86B;
+  --warn: #C68A12;
+  --bad: #D1495B;
+  --info: #7EC8FF;
+
+  /* Radien */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+
+  /* Schatten */
+  --shadow-1: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 24px 70px rgba(0, 0, 0, 0.55);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast: 180ms;
+  --t-med: 320ms;
+  --t-slow: 520ms;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: #0B0B0C;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+button:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,27 @@
+An:     Juraschek, Tanja; Stoll, Fabian  (Robotics Competence Center)
+Betreff: BÜ-Prüf-Bot Makler - Detail-Prozess-Sollbild & befüllter FRQ, Start PDD-Entwicklung
+
+Hallo Frau Juraschek, hallo Herr Stoll,
+
+wie wir uns beim letzten Austausch letzte Woche verblieben haben, schicke ich Ihnen das Detail-Prozess-Sollbild für die Makler-Bestandsübertragung sowie den befüllten Prozessfragebogen (FRQ). Anbei:
+
+- der ausgefüllte FRQ (Prozessfragebogen) zur Anmeldung des Prozesses,
+- das Detail-Prozess-Sollbild als PDF und PNG (Phasen 1 bis 6: E-Mail-Eingang, Strukturierung über Celonis, Prüf-Bot mit Einzelprüfung und digitalem Prüfdeckblatt, Kriterien-Matrix hart/weich/optional, Postkorb und Freigabe),
+- eine Word mit der Beschreibung der Phasen und Schritte, der Celonis-Werteliste (extrahierte und interpretierte Werte) sowie der Detailtabelle der Prüfschritte.
+
+Das Prozess-Sollbild ist eine erste fachliche Idee für den Roboter-Aufbau. Zwei Bausteine habe ich bewusst als Idee markiert, weil ich nicht weiß, ob sie technisch so umsetzbar sind. Genau das möchte ich mit Ihnen als Robotics Competence Center klären:
+
+1. Können wir ein Robotics Cockpit (Human-in-the-Loop) bauen, in dem ein Mitarbeiter die geflaggten Fälle - also die Vorgänge mit verletzten weichen Kriterien / Business Exceptions - vor dem Einstellen in den Postkorb bewertet und entscheidet (freigeben oder ablehnen)?
+
+2. Können wir die Roboter-Notiz durch den Bot vorbefüllen und als Entwurf einstellen, sodass der Mensch sie am Ende nur noch bestätigt oder anpasst?
+
+Für die Weiterarbeit würden wir gerne zeitnah in einen wöchentlichen Austausch starten; wie ich es verstanden habe, würde das Competence Center das organisieren. Für die PDD-Entwicklung sollen unsere Kolleginnen und Kollegen eingebunden werden. Für Fragen zum Übergabepunkt über Celonis ist Stefan Schwarz der Ansprechpartner.
+
+Reicht Ihnen dieses Detaillevel - das Sollbild plus der befüllte FRQ - aus, um die PDD-Entwicklung jetzt zu starten? Falls nicht, sagen Sie mir bitte, was Sie noch benötigen, dann liefere ich das gezielt nach.
+
+Zur Kapazität: Für die Umsetzung ist auf Seiten HS ein vierköpfiges Team eingeplant (Anika Wesche, Alexandra Mai, Niels Lütke und Inge Lorusso), im Maklerservice ist Kamil Rypa eingeplant; eine weitere Person dort benennt Herr Koch noch. Den Process Owner für die Lösung benennen wir noch; den Namen reiche ich nach.
+
+Geben Sie mir gern kurz Bescheid, ob wir das in einem Termin gemeinsam durchgehen oder ob Sie es schriftlich bewerten können.
+
+Beste Grüße
+Eike Brenneisen

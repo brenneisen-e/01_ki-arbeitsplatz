@@ -287,17 +287,20 @@ export function ChapterReader({
 
   // Tastatur: Esc → zurück, Pfeile blättern. Beim Tippen in Eingabefeldern
   // (Bearbeitungsmodus) NICHT abfangen, damit Cursor/Text normal funktionieren.
+  // Bei offenem Leitfrage-Chat schließt Esc NUR den Chat (dessen eigener
+  // Listener) — nicht zusätzlich das Kapitel.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement | null)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
-      if (e.key === 'Escape') onBack()
-      else if (e.key === 'ArrowRight') goNext()
+      if (e.key === 'Escape') {
+        if (!chatOpen) onBack()
+      } else if (e.key === 'ArrowRight') goNext()
       else if (e.key === 'ArrowLeft') goPrev()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onBack, goNext, goPrev])
+  }, [onBack, goNext, goPrev, chatOpen])
 
   const isActivity = step === stepCount - 1
   const hypothesis = isActivity ? null : chapter.hypotheses[step]

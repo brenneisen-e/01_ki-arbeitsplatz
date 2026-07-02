@@ -95,10 +95,32 @@ und **Neu**. Alle Texte sind zweisprachig (DE/EN) gepflegt.
 
 ---
 
-## 6. In Arbeit / nächste Schritte (bereitgestellt, aber noch offen)
+## 6. Neu: Szenario-Matrix als Intro („bevor das Haus öffnet")
 
-Diese vom Workshop gewünschten Punkte hängen an einem **neuen Strukturbild** bzw.
-sind größere Interaktions-Bausteine und folgen als nächster Schritt:
+- Vor dem Strukturbild erscheint jetzt eine **interaktive 2×2-Szenario-Matrix**
+  im Stil des `/holodeck`-Vorspanns: Quadranten per Klick auf das Plus
+  freischalten, danach per Hover wechseln; Detailpanel rechts, CTA „Weiter zum
+  Strukturbild".
+- **Achsen:** *Geopolitik & Regulierung* (fragmentiert ↔ offen) ×
+  *KI-Reife & Kundenakzeptanz* (zögerlich ↔ Durchbruch).
+- **Vier Szenarien bis 2030** (DE/EN): Souveräne KI-Inseln · Grenzenlose
+  KI-Ökonomie · Festung Bank · Offen, aber vorsichtig.
+- Deep-Links (z. B. `#/vertrieb`) überspringen die Matrix und landen direkt am
+  Ziel. Inhalte sind als **Platzhalter für den Workshop** markiert — vor Einsatz
+  schärfen.
+
+## 7. Neu: Leitfragen als Overlay-Chatbot
+
+- Die **statische Leitfrage-Sprechblase** ist durch einen **Overlay-Chatbot**
+  (unten rechts, Stil des „KI-Vertriebsassistenten" aus dem
+  Vertriebsarbeitsplatz) ergänzt: Buttons „Diskutieren" / „Mit KI-Assistent
+  diskutieren" öffnen den Dialog, geseedet mit der Leitfrage des Kapitels.
+- Moderations-Impulse mit Kapitel-Kontext (Pro & Contra · Implikationen ·
+  Konkretisierung · Nächster Schritt) plus Freitext mit wechselnden Rückfragen.
+- **Privacy-first:** kein externer KI-Call, keine Speicherung (regelbasierte
+  Moderations-Impulse) — konsistent zur App-Vorgabe „keine externen Dienste".
+
+## 8. In Arbeit / nächste Schritte
 
 1. **Neues Gebäude-Layout** (erfordert neu erzeugtes Master-Bild):
    - Erdgeschoss: **Filiale links**, **Markt & Vertrieb (Beratungsgespräch)
@@ -110,9 +132,3 @@ sind größere Interaktions-Bausteine und folgen als nächster Schritt:
      Governance-Cockpit-Bild).
    > Die passenden Bild-Prompts wurden separat bereitgestellt; nach Bildlieferung
    > werden Zonen-Koordinaten und Kapitel-Zuordnung im Code nachgezogen.
-2. **Szenario-Matrix als Intro** („bevor das Haus öffnet") — 2×2-Matrix mit
-   sinnvollen Achsen (inkl. geopolitischer Komponente) und vier Szenarien, wie
-   sich Banken bis 2030 entwickeln; Darstellung im Stil des `/holodeck`-Vorspanns.
-3. **Dynamische Leitfragen als Overlay-Chatbot** (statt statischer Sprechblase),
-   orientiert am „KI-Vertriebsassistent"-Chatbot (unten rechts) aus dem
-   Vertriebsarbeitsplatz.

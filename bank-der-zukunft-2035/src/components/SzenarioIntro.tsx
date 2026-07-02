@@ -15,8 +15,9 @@ import {
 } from 'lucide-react'
 // Wiederverwendung der Holodeck-2×2-Matrix-Optik (identische Darstellung „wie
 // /holodeck"). Die Theme-Variablen (--accent, --bg, --line, --text, --muted …)
-// werden über den Wrapper unten gesetzt, damit die Optik zum Bank-Theme passt.
+// setzt wrapStyles.wrap auf das Bank-Theme.
 import styles from '../holodeck/SzenarioVorspann.module.css'
+import wrapStyles from './SzenarioIntro.module.css'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -51,6 +52,10 @@ type IntroTexte = {
   note: string
   quadrantLock: (n: number) => string
   achsen: {
+    /** X-Achsen-Titel, zweigeteilt links/rechts vom Achsenkreuz (wie Holodeck). */
+    xTitelLinks: string
+    xTitelRechts: string
+    /** Gesamttitel der X-Achse (Legende unten). */
     xTitel: string
     xLinks: string
     xRechts: string
@@ -75,6 +80,8 @@ function getTexte(lang: Lang): IntroTexte {
       note: 'Placeholder for the workshop — sharpen the scenarios before use.',
       quadrantLock: (n) => `Unlock quadrant ${n} of 4`,
       achsen: {
+        xTitelLinks: 'Geopolitics &',
+        xTitelRechts: 'regulation',
         xTitel: 'Geopolitics & regulation',
         xLinks: 'FRAGMENTED',
         xRechts: 'OPEN',
@@ -93,6 +100,8 @@ function getTexte(lang: Lang): IntroTexte {
     note: 'Platzhalter für den Workshop — Szenarien vor Einsatz schärfen.',
     quadrantLock: (n) => `Quadrant ${n} von 4 freischalten`,
     achsen: {
+      xTitelLinks: 'Geopolitik &',
+      xTitelRechts: 'Regulierung',
       xTitel: 'Geopolitik & Regulierung',
       xLinks: 'FRAGMENTIERT',
       xRechts: 'OFFEN',
@@ -178,18 +187,6 @@ function rich(text: string): React.ReactNode[] {
     )
 }
 
-// Theme-Variablen, damit die Holodeck-Matrix-Optik zum Bank-Theme (Deloitte-Grün,
-// dunkles Premium) passt.
-const THEME_VARS = {
-  '--accent': '#86BC25',
-  '--accent-dark': '#046A38',
-  '--bg': '#0B0B0C',
-  '--bg-soft': '#121317',
-  '--line': 'rgba(255, 255, 255, 0.12)',
-  '--text': '#F4F1EA',
-  '--muted': '#8E8A82',
-} as React.CSSProperties
-
 type Props = {
   /** Weiter ins Strukturbild (Haus betreten). */
   onEnter: () => void
@@ -237,7 +234,7 @@ export function SzenarioIntro({ onEnter }: Props): React.ReactElement {
   }
 
   return (
-    <div style={{ ...THEME_VARS, position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', background: '#0B0B0C', color: '#F4F1EA' }}>
+    <div className={wrapStyles.wrap}>
       <div
         className={styles.root}
         data-built={built || undefined}
@@ -263,10 +260,10 @@ export function SzenarioIntro({ onEnter }: Props): React.ReactElement {
               <span className={styles.crossH} aria-hidden />
               <span className={styles.crossV} aria-hidden />
               <span className={`${styles.axisTitle} ${styles.axisXLeft}`} aria-hidden>
-                {T.achsen.xTitel}
+                {T.achsen.xTitelLinks}
               </span>
               <span className={`${styles.axisTitle} ${styles.axisXRight}`} aria-hidden>
-                {T.achsen.xRechts === 'OPEN' ? 'open finance' : 'Open Finance'}
+                {T.achsen.xTitelRechts}
               </span>
               <span className={`${styles.axisTitle} ${styles.axisY}`} aria-hidden>
                 {T.achsen.yTitel}

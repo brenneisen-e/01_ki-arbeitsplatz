@@ -1,0 +1,21 @@
+/* SzenarioIntro — Wrapper um die wiederverwendete Holodeck-Matrix-Optik.
+   Setzt die vom SzenarioVorspann.module.css erwarteten Theme-Variablen
+   (--accent, --bg, --line, --text, --muted) auf das Bank-Theme
+   (Deloitte-Grün, dunkles Premium) und füllt den Viewport. */
+
+.wrap {
+  --accent: #86bc25;
+  --accent-dark: #046a38;
+  --bg: #0b0b0c;
+  --bg-soft: #121317;
+  --line: rgba(255, 255, 255, 0.12);
+  --text: #f4f1ea;
+  --muted: #8e8a82;
+
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+}

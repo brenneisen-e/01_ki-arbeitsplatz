@@ -1,9 +1,10 @@
-# Banking Horizon 2035 — begehbares Strukturbild
+# Banking Horizon 2030 — begehbares Strukturbild
 
 Interaktives Workshop-Tool für einen Vorstands-Workshop. Ein KI-Chatbot
 „erzeugt" zum Auftakt das Strukturbild der Bank (Zustand 2026); danach ist
 das Bild eine **begehbare Navigations-Karte** mit 8 Zonen. Pro Zone führt der
-Flow durch **drei Hypothesen-Vergleichsbilder** (Status Quo ↔ 2035) und ein
+Flow durch **Hypothesen-Vergleichsbilder** (Status Quo ↔ 2030; i. d. R. drei,
+einzelne Kapitel mehr) und ein
 **Aktivitäts-/Demo-Bild** mit Absprung in eine Live-Demo oder ein interaktives
 Tool.
 
@@ -29,8 +30,8 @@ npm run preview    # bedient dist/ lokal (http://localhost:4173)
 ## Ablauf
 
 ```
-Intro-Reveal     →  Übersicht  →  Kameraflug  →  ChapterReader            →  Handoff
-(Frage→Thinking)    (7 Zonen)     (GSAP zoom)    (Hypothese 1·2·3 → Akt.)     (Demo / Tool)
+Intro-Reveal     →  Szenario-Matrix  →  Übersicht  →  Kameraflug  →  ChapterReader          →  Handoff
+(Frage→Thinking)    (2×2, 4 Szenarien)  (8 Zonen)     (GSAP zoom)    (Hypothesen → Akt.)        (Demo / Tool)
 ```
 
 - **Einstieg**: Der Workshop startet **direkt mit dem Intro-Reveal**
@@ -38,12 +39,18 @@ Intro-Reveal     →  Übersicht  →  Kameraflug  →  ChapterReader           
   das Strukturbild baut sich auf → „als Haus erkunden". Die frühere Q&A-Landing
   (App `BankDerZukunft/`) ist nicht mehr der Einstieg und leitet automatisch
   hierher weiter (`/bank-der-zukunft-2035/dist/`).
+- **Szenario-Matrix** (`SzenarioIntro`): interaktive 2×2-Matrix „bevor das
+  Haus öffnet" (Achsen: Geopolitik & Regulierung × KI-Reife & Kundenakzeptanz,
+  vier Szenarien bis 2030, Stil des `/holodeck`-Vorspanns). Deep-Links
+  überspringen sie.
 - **Übersicht** (`BankExplorer`): Master-Bild füllt den Viewport, 8 Zonen mit
   Hover-Glow, Label und pulsierendem Schlüsselobjekt-Hotspot.
 - **Kameraflug**: Klick auf eine Zone → GSAP-Zoom (`transform: scale` +
   Translation auf das Zonen-Zentrum).
 - **ChapterReader**: Bild links/mittig, Textpanel rechts; per Pager durch die
-  3 Hypothesen und die Aktivität blättern (Pfeile/Dots, Pfeiltasten, Esc).
+  Hypothesen und die Aktivität blättern (Pfeile/Dots, Pfeiltasten, Esc). Je
+  Kapitel aufklappbar: **Management Summary & Business Case**; die Leitfrage
+  lässt sich per **Overlay-Chatbot** („Diskutieren", `LeitfrageChat`) vertiefen.
 - **Handoff** je Kapitel unterschiedlich (siehe Tabelle).
 
 ## Die 8 Kapitel & ihre Absprünge
@@ -82,7 +89,7 @@ geschrieben (teilbar).
 |---|---|
 | `#/uebersicht` | Strukturbild-Übersicht |
 | `#/<kapitel>` | Kapitel öffnen (Hypothese 1) |
-| `#/<kapitel>/<n>` | Schritt `n`: `1`–`3` = Hypothesen, `4` = Aktivität/Demo |
+| `#/<kapitel>/<n>` | Schritt `n`: `1`–`N` = Hypothesen, `N+1` = Aktivität/Demo (N = Hypothesenzahl des Kapitels) |
 
 `<kapitel>` ist die **Kapitel-ID** oder die **Nummer** (`02` bzw. `2`):
 
@@ -109,25 +116,26 @@ Beispiele:
 Implementierung: `src/deeplink.ts` (Parser/Formatter), verdrahtet in `App.tsx`
 (Intro überspringen) und `BankExplorer.tsx` (Hash ⇄ Navigationsstand).
 
-## Bild-Slots (33 Bilder · `public/images/`)
+## Bild-Slots (`public/images/`)
 
 Die Workshop-Bilder liegen als **PNG** unter **`public/images/`** und sind in
 `src/data/chapters.ts` verdrahtet. Fehlt eine Datei, zeigt die App einen
 sauberen Platzhalter mit Dateiname — Datei dort ablegen, fertig.
 
 **Schema:** `Strukturbild.png` (Master · Übersicht + Intro-Reveal), dann pro
-Kapitel `Kapitel N_1.png` / `Kapitel N_2.png` / `Kapitel N_3.png` (3 Hypothesen)
-und `Kapitel N_Demo.png` (Aktivität/Demo). `N` = Kapitelnummer 1–8:
+Kapitel `Kapitel N_1.png` … `Kapitel N_k.png` (eine Datei je Hypothese; i. d. R.
+drei, Kapitel mit Zusatz-Hypothesen mehr) und `Kapitel N_Demo.png`
+(Aktivität/Demo). `N` = Kapitelnummer 1–8:
 
 ```
 Strukturbild.png
 Kapitel 1_1.png  Kapitel 1_2.png  Kapitel 1_3.png  Kapitel 1_Demo.png   (01 Kundenperspektive)
 Kapitel 2_1.png  Kapitel 2_2.png  Kapitel 2_3.png  Kapitel 2_Demo.png   (02 Markt & Vertrieb)
-Kapitel 3_1.png  Kapitel 3_2.png  Kapitel 3_3.png  Kapitel 3_Demo.png   (03 Marktfolge)
-Kapitel 4_1.png  Kapitel 4_2.png  Kapitel 4_3.png  Kapitel 4_Demo.png   (04 Corporate Services)
+Kapitel 3_1.png  Kapitel 3_2.png  Kapitel 3_3.png  Kapitel 3_4.png  Kapitel 3_Demo.png   (03 Marktfolge · H4 NEU)
+Kapitel 4_1.png  Kapitel 4_2.png  Kapitel 4_3.png  Kapitel 4_4.png  Kapitel 4_5.png  Kapitel 4_Demo.png   (04 Corporate Services · H4/H5 NEU)
 Kapitel 5_1.png  Kapitel 5_2.png  Kapitel 5_3.png  Kapitel 5_Demo.png   (05 Technologie / IT)
-Kapitel 6_1.png  Kapitel 6_2.png  Kapitel 6_3.png  Kapitel 6_Demo.png   (06 Compliance & Risk)
-Kapitel 7_1.png  Kapitel 7_2.png  Kapitel 7_3.png  Kapitel 7_Demo.png   (07 Transformation)
+Kapitel 6_1.png  Kapitel 6_2.png  Kapitel 6_3.png  Kapitel 6_4.png  Kapitel 6_Demo.png   (06 Compliance & Risk · H4 NEU)
+Kapitel 7_1.png  Kapitel 7_2.png  Kapitel 7_3.png  Kapitel 7_4.png  Kapitel 7_5.png  Kapitel 7_Demo.png   (07 Transformation · H4/H5 NEU)
 Kapitel 8_1.png  Kapitel 8_2.png  Kapitel 8_3.png  Kapitel 8_Demo.png   (08 Produkte & Innovation · NEU, Demo-Bild folgt)
 ```
 

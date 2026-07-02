@@ -3,3 +3,7 @@ node_modules
 *.log
 .vite
 package-lock.json
+
+# Workshop-Exporte: grosse XLSX sprengen Cloudflares 25-MiB-Limit; Inhalte
+# sind in src/data/chapters.ts + AENDERUNGEN_2030.md eingearbeitet.
+*.xlsx

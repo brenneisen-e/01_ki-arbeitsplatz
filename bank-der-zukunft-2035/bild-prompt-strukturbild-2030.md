@@ -62,6 +62,9 @@ single floor, with at most one person inside; the rest of the shaft is empty
 glass. Do NOT place a person on every floor and do NOT stack multiple people up
 the shaft.
 
+Both outer side walls, left and right, carry large floor-to-ceiling windows on
+every floor, symmetric, letting daylight into the rooms on both sides equally.
+
 Top floor, LEFT: an executive BOARDROOM, occupied — several board members /
 executives seated around a large conference table, facing a wall-mounted
 "governance cockpit" dashboard with donut charts, bars and KPI tiles. Top floor,
@@ -135,6 +138,8 @@ Create a photorealistic orthographic architectural cross-section of a modern ban
 
 A central full-height glass elevator shaft runs as a vertical spine, subtly glowing deep green. It holds exactly one glass elevator car, stopped at a single floor, with at most one person inside — the rest of the shaft is empty glass. Do not put a person on every floor and do not stack several people up the shaft.
 
+Both outer side walls, left and right, have large floor-to-ceiling windows on every floor, symmetric, letting daylight into the rooms on both sides equally.
+
 Each room shows one small, clean, correctly spelled room label as a neat sign on the back wall, in a consistent modern uppercase style, deep green on a light background. Use exactly these labels:
 - Top floor left, label "BOARDROOM": an occupied executive boardroom, several board members seated around a large conference table, facing a wall-mounted governance-cockpit dashboard with abstract donut charts and bars.
 - Top floor right, label "PRODUCT & INNOVATION": a project room with two or three people at whiteboard walls covered in product mockups.
@@ -162,8 +167,9 @@ Style: light stone and warm wood surfaces, glass, professional and restrained; d
 ```
 Photorealistic orthographic cross-section (dollhouse cutaway, front wall removed)
 of a premium 2030 bank, four equal floors plus ground floor, symmetric, daylight,
-central green glass elevator spine with exactly ONE car (one person max, not one
-per floor). Top-left OCCUPIED executive boardroom (executives seated at the
+large floor-to-ceiling windows on BOTH outer side walls (left and right, every
+floor), central green glass elevator spine with exactly ONE car (one person max,
+not one per floor). Top-left OCCUPIED executive boardroom (executives seated at the
 table) with a governance-cockpit dashboard wall; top-right innovation room with
 mockup whiteboards; 2F-left compliance & risk control room (controllers at
 monitor rows); 2F-right IT server room with racks, a side window and a man and a

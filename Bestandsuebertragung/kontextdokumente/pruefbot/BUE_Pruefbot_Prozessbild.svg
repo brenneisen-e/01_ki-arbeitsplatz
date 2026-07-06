@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="8236" height="944" font-family="Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="7840" height="944" font-family="Arial, sans-serif">
 <rect width="100%" height="100%" fill="white"/>
 <defs><marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#333"/></marker><marker id="arrsys" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#5577aa"/></marker></defs>
 <rect x="203.0" y="52" width="496.0" height="868" fill="#fafcfa"/>
@@ -12,43 +12,42 @@
 <rect x="1691.0" y="6" width="3472.0" height="38" fill="#046A38"/>
 <text x="1701.0" y="24" font-size="13.5" font-weight="bold" fill="white">3 · Prüf-Bot · Einzelprüfung + digitales Prüfdeckblatt</text>
 <line x1="1691.0" y1="6" x2="1691.0" y2="920" stroke="#9aa3ab" stroke-width="1" stroke-dasharray="2,3"/>
-<rect x="5163.0" y="52" width="408.0" height="868" fill="#f3f7f4"/>
-<rect x="5163.0" y="6" width="408.0" height="38" fill="#26890D"/>
-<text x="5173.0" y="24" font-size="13.5" font-weight="bold" fill="white">4 · Kriterien-Matrix · Cockpit / HITL (Idee · durch</text>
-<text x="5173.0" y="40" font-size="13.5" font-weight="bold" fill="white">Robotics zu validieren)</text>
+<rect x="5163.0" y="52" width="656.0" height="868" fill="#f3f7f4"/>
+<rect x="5163.0" y="6" width="656.0" height="38" fill="#26890D"/>
+<text x="5173.0" y="24" font-size="13.5" font-weight="bold" fill="white">4 · Kriterien-Matrix · Cockpit / HITL (Idee · durch Robotics zu validieren)</text>
 <line x1="5163.0" y1="6" x2="5163.0" y2="920" stroke="#9aa3ab" stroke-width="1" stroke-dasharray="2,3"/>
-<rect x="5571.0" y="52" width="576.0" height="868" fill="#fafcfa"/>
-<rect x="5571.0" y="6" width="576.0" height="38" fill="#046A38"/>
-<text x="5581.0" y="24" font-size="13.5" font-weight="bold" fill="white">5 · Postkorb · Archivierung + Roboter-Notiz (Entwurf)</text>
-<line x1="5571.0" y1="6" x2="5571.0" y2="920" stroke="#9aa3ab" stroke-width="1" stroke-dasharray="2,3"/>
-<rect x="6147.0" y="52" width="2089.0" height="868" fill="#f3f7f4"/>
-<rect x="6147.0" y="6" width="2089.0" height="38" fill="#26890D"/>
-<text x="6157.0" y="24" font-size="13.5" font-weight="bold" fill="white">6 · Freigabe der Notiz + Ausführung</text>
-<line x1="6147.0" y1="6" x2="6147.0" y2="920" stroke="#9aa3ab" stroke-width="1" stroke-dasharray="2,3"/>
-<rect x="150" y="52" width="8086" height="132" fill="none" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="5819.0" y="52" width="656.0" height="868" fill="#fafcfa"/>
+<rect x="5819.0" y="6" width="656.0" height="38" fill="#046A38"/>
+<text x="5829.0" y="24" font-size="13.5" font-weight="bold" fill="white">5 · Postkorb · EMWS (abgelehnt: Direktablage / positiv: Notiz)</text>
+<line x1="5819.0" y1="6" x2="5819.0" y2="920" stroke="#9aa3ab" stroke-width="1" stroke-dasharray="2,3"/>
+<rect x="6475.0" y="52" width="1365.0" height="868" fill="#f3f7f4"/>
+<rect x="6475.0" y="6" width="1365.0" height="38" fill="#26890D"/>
+<text x="6485.0" y="24" font-size="13.5" font-weight="bold" fill="white">6 · Phase 1: SB-Freigabe / Zielbild: IKS · Übergabe an BÜ-Bot</text>
+<line x1="6475.0" y1="6" x2="6475.0" y2="920" stroke="#9aa3ab" stroke-width="1" stroke-dasharray="2,3"/>
+<rect x="150" y="52" width="7690" height="132" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="52" width="150" height="132" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
 <text x="10" y="74" font-size="13.0" font-weight="bold" fill="#53565A">Eingang &amp;</text>
 <text x="10" y="90" font-size="13.0" font-weight="bold" fill="#53565A">Eingangsmanageme</text>
 <text x="10" y="106" font-size="13.0" font-weight="bold" fill="#53565A">nt · Outlook /</text>
 <text x="10" y="122" font-size="13.0" font-weight="bold" fill="#53565A">EDM-KWAD</text>
-<rect x="150" y="184" width="8086" height="210" fill="none" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="150" y="184" width="7690" height="210" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="184" width="150" height="210" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
 <text x="10" y="206" font-size="13.0" font-weight="bold" fill="#046A38">KI-Strukturierung &amp;</text>
 <text x="10" y="222" font-size="13.0" font-weight="bold" fill="#046A38">Deckblatt · Celonis</text>
-<rect x="150" y="394" width="8086" height="144" fill="none" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="150" y="394" width="7690" height="144" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="394" width="150" height="144" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
 <text x="10" y="416" font-size="13.0" font-weight="bold" fill="#53565A">Sachbearbeitung ·</text>
 <text x="10" y="432" font-size="13.0" font-weight="bold" fill="#53565A">HITL</text>
-<rect x="150" y="538" width="8086" height="132" fill="none" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="150" y="538" width="7690" height="132" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="538" width="150" height="132" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
 <text x="10" y="560" font-size="13.0" font-weight="bold" fill="#046A38">Prüf-Bot</text>
 <text x="10" y="576" font-size="13.0" font-weight="bold" fill="#046A38">(System-Prüfung)</text>
 <text x="10" y="592" font-size="13.0" font-weight="bold" fill="#046A38">· Blue Prism</text>
-<rect x="150" y="670" width="8086" height="118" fill="none" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="150" y="670" width="7690" height="118" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="670" width="150" height="118" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
 <text x="10" y="692" font-size="13.0" font-weight="bold" fill="#26890D">Hostsysteme /</text>
 <text x="10" y="708" font-size="13.0" font-weight="bold" fill="#26890D">Datenquellen</text>
-<rect x="150" y="788" width="8086" height="132" fill="none" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="150" y="788" width="7690" height="132" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="788" width="150" height="132" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
 <text x="10" y="810" font-size="13.0" font-weight="bold" fill="#53565A">Ausführung ·</text>
 <text x="10" y="826" font-size="13.0" font-weight="bold" fill="#53565A">72h-/BÜ-Bot ·</text>
@@ -89,53 +88,42 @@
 <path d="M5203.0,627.0 L5203.0,724.0 L5367.0,724.0 L5367.0,821.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <rect x="5209.0" y="610.0" width="98.415" height="14" fill="white" opacity="0.88"/>
 <text x="5213.0" y="621.0" font-size="11" font-weight="bold" fill="#8a2b1f">hart verletzt</text>
-<path d="M5474.0,854.0 L5926.0,854.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M5367.0,821.0 L5367.0,725.0 L5943.0,725.0 L5943.0,629.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <path d="M5203.0,581.0 L5203.0,552.0 L5367.0,552.0 L5367.0,523.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <rect x="5209.0" y="564.0" width="105.37" height="14" fill="white" opacity="0.88"/>
 <text x="5213.0" y="575.0" font-size="11" font-weight="bold" fill="#9a6a00">weich verletzt</text>
 <path d="M5474.0,466.0 L5508.0,466.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M5531.0,489.0 L5531.0,535.0 L5695.0,535.0 L5695.0,581.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M5531.0,489.0 L5531.0,534.0 L5943.0,534.0 L5943.0,579.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <rect x="5537.0" y="472.0" width="84.50500000000001" height="14" fill="white" opacity="0.88"/>
 <text x="5541.0" y="483.0" font-size="11" font-weight="bold" fill="#53565A">freigegeben</text>
 <path d="M5531.0,489.0 L5531.0,655.0 L5695.0,655.0 L5695.0,821.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <rect x="5537.0" y="472.0" width="70.595" height="14" fill="white" opacity="0.88"/>
 <text x="5541.0" y="483.0" font-size="11" font-weight="bold" fill="#9a6a00">abgelehnt</text>
-<path d="M5802.0,854.0 L5926.0,854.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M5226.0,604.0 L5672.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M5695.0,821.0 L5695.0,725.0 L5943.0,725.0 L5943.0,629.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M5226.0,604.0 L5836.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <rect x="5232.0" y="587.0" width="161.01000000000002" height="14" fill="white" opacity="0.88"/>
 <text x="5236.0" y="598.0" font-size="11" font-weight="bold" fill="#53565A">erfüllt / nur optional</text>
-<path d="M5695.0,581.0 L5695.0,362.0 L5943.0,362.0 L5943.0,143.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M5718.0,604.0 L5836.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M5943.0,143.0 L5943.0,362.0 L6107.0,362.0 L6107.0,581.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <path d="M6050.0,604.0 L6084.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M6107.0,581.0 L6107.0,540.0 L6271.0,540.0 L6271.0,499.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M6271.0,499.0 L6271.0,540.0 L6435.0,540.0 L6435.0,581.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M6435.0,627.0 L6435.0,728.0 L6599.0,728.0 L6599.0,829.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<rect x="6441.0" y="610.0" width="56.685" height="14" fill="white" opacity="0.88"/>
-<text x="6445.0" y="621.0" font-size="11" font-weight="bold" fill="#53565A">Ja (AO)</text>
-<path d="M6435.0,627.0 L6435.0,729.0 L7079.0,729.0 L7079.0,831.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<rect x="6441.0" y="610.0" width="98.415" height="14" fill="white" opacity="0.88"/>
-<text x="6445.0" y="621.0" font-size="11" font-weight="bold" fill="#53565A">Nein (Makler)</text>
-<path d="M6706.0,854.0 L6740.0,854.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M6774.0,854.0 L6892.0,854.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M6915.0,831.0 L6915.0,491.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<rect x="6921.0" y="814.0" width="21.91" height="14" fill="white" opacity="0.88"/>
-<text x="6925.0" y="825.0" font-size="11" font-weight="bold" fill="#53565A">Ja</text>
-<path d="M6938.0,854.0 L7056.0,854.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<rect x="6944.0" y="837.0" width="35.82" height="14" fill="white" opacity="0.88"/>
-<text x="6948.0" y="848.0" font-size="11" font-weight="bold" fill="#53565A">Nein</text>
-<path d="M7022.0,466.0 L7062.0,466.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M7102.0,854.0 L7136.0,854.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M7350.0,854.0 L7384.0,854.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M7491.0,829.0 L7491.0,729.0 L7739.0,729.0 L7739.0,629.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M7846.0,604.0 L7964.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M8010.0,604.0 L8128.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<rect x="8016.0" y="587.0" width="21.91" height="14" fill="white" opacity="0.88"/>
-<text x="8020.0" y="598.0" font-size="11" font-weight="bold" fill="#53565A">Ja</text>
-<path d="M7987.0,581.0 L7987.0,491.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<rect x="7993.0" y="564.0" width="35.82" height="14" fill="white" opacity="0.88"/>
-<text x="7997.0" y="575.0" font-size="11" font-weight="bold" fill="#53565A">Nein</text>
-<path d="M8094.0,466.0 L8128.0,466.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M6107.0,581.0 L6107.0,366.0 L6271.0,366.0 L6271.0,151.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<rect x="6113.0" y="564.0" width="70.595" height="14" fill="white" opacity="0.88"/>
+<text x="6117.0" y="575.0" font-size="11" font-weight="bold" fill="#9a6a00">abgelehnt</text>
+<path d="M6378.0,118.0 L6418.0,118.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M6130.0,604.0 L6164.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<rect x="6136.0" y="587.0" width="56.685" height="14" fill="white" opacity="0.88"/>
+<text x="6140.0" y="598.0" font-size="11" font-weight="bold" fill="#53565A">positiv</text>
+<path d="M6378.0,604.0 L6412.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M6435.0,581.0 L6435.0,540.0 L6599.0,540.0 L6599.0,499.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<rect x="6441.0" y="564.0" width="56.685" height="14" fill="white" opacity="0.88"/>
+<text x="6445.0" y="575.0" font-size="11" font-weight="bold" fill="#53565A">Phase 1</text>
+<path d="M6706.0,466.0 L6740.0,466.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M6847.0,491.0 L6847.0,648.0 L7095.0,648.0 L7095.0,805.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M6458.0,604.0 L6492.0,604.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<rect x="6464.0" y="587.0" width="63.64" height="14" fill="white" opacity="0.88"/>
+<text x="6468.0" y="598.0" font-size="11" font-weight="bold" fill="#53565A">Zielbild</text>
+<path d="M6599.0,637.0 L6599.0,721.0 L7095.0,721.0 L7095.0,805.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M7095.0,805.0 L7095.0,717.0 L7343.0,717.0 L7343.0,629.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M7343.0,629.0 L7343.0,729.0 L7591.0,729.0 L7591.0,829.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M7698.0,854.0 L7732.0,854.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <path d="M2063.0,627.0 L2063.0,680" fill="none" stroke="#5577aa" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrsys)"/>
 <rect x="2034.0" y="680" width="58" height="26" rx="5" fill="#EAF1F7" stroke="#5577aa" stroke-width="1.2"/>
 <text x="2063.0" y="697" font-size="12.0" text-anchor="middle" fill="#274">Scout</text>
@@ -204,11 +192,12 @@
 <text x="1071.0" y="226.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">interpretieren ·</text>
 <text x="1071.0" y="242.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">KI-Deckblatt erstellen</text>
 <text x="1071.0" y="258.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(Prüfschritte 1–5)</text>
-<rect x="1212.0" y="189.0" width="214" height="82" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
-<text x="1319.0" y="210.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Deckblatt &amp;</text>
-<text x="1319.0" y="226.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Übergabe-Datensatz ablegen</text>
-<text x="1319.0" y="242.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">· SharePoint / ERGO</text>
-<text x="1319.0" y="258.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Datapool (offen)</text>
+<rect x="1212.0" y="181.0" width="214" height="98" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
+<text x="1319.0" y="202.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Deckblatt &amp;</text>
+<text x="1319.0" y="218.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Übergabe-Datensatz ablegen</text>
+<text x="1319.0" y="234.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">· Übergabepunkt offen: ERGO</text>
+<text x="1319.0" y="250.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Datapool, SharePoint oder</text>
+<text x="1319.0" y="266.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">anderes</text>
 <path d="M1567.0,207.0 L1590.0,230 L1567.0,253.0 L1544.0,230 z" fill="white" stroke="#1A1A1A" stroke-width="1.6"/>
 <text x="1567.0" y="236" font-size="18" text-anchor="middle" fill="#1A1A1A">×</text>
 <text x="1567.0" y="267.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">BÜ-Wunsch vorhanden?</text>
@@ -293,69 +282,54 @@
 <text x="5695.0" y="842.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Absage nach manueller</text>
 <text x="5695.0" y="858.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Entscheidung · Mail an</text>
 <text x="5695.0" y="874.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Makler (Cockpit / SB)</text>
-<circle cx="5943.0" cy="854.0" r="17.0" fill="white" stroke="#8a1f1f" stroke-width="2.6"/>
-<text x="5943.0" y="884.0" font-size="11" text-anchor="middle" fill="#1A1A1A">Vorgang abgelehnt ·</text>
-<text x="5943.0" y="897.0" font-size="11" text-anchor="middle" fill="#1A1A1A">Makler informiert</text>
-<path d="M5695.0,581.0 L5718.0,604.0 L5695.0,627.0 L5672.0,604.0 z" fill="white" stroke="#1A1A1A" stroke-width="1.6"/>
-<text x="5695.0" y="610.0" font-size="18" text-anchor="middle" fill="#1A1A1A">+</text>
-<text x="5695.0" y="641.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A"></text>
-<rect x="5836.0" y="93.0" width="214" height="50" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
-<text x="5943.0" y="114.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Archivierung der Vorgänge</text>
-<text x="5943.0" y="130.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(inkl. Prüfdeckblatt)</text>
-<rect x="5836.0" y="555.0" width="214" height="98" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
-<text x="5943.0" y="576.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Roboter-Notiz als Entwurf</text>
-<text x="5943.0" y="592.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">vorbefüllen · 2011 (KV) /</text>
-<text x="5943.0" y="608.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">1515 (KOM·LEB) · Idee —</text>
-<text x="5943.0" y="624.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">techn. Machbarkeit durch</text>
-<text x="5943.0" y="640.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Robotics zu prüfen</text>
+<rect x="5836.0" y="579.0" width="214" height="50" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
+<text x="5943.0" y="600.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Postkorbvorgang eröffnen ·</text>
+<text x="5943.0" y="616.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">über EMWS</text>
 <path d="M6107.0,581.0 L6130.0,604.0 L6107.0,627.0 L6084.0,604.0 z" fill="white" stroke="#1A1A1A" stroke-width="1.6"/>
-<text x="6107.0" y="610.0" font-size="18" text-anchor="middle" fill="#1A1A1A">+</text>
-<text x="6107.0" y="641.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A"></text>
-<rect x="6164.0" y="433.0" width="214" height="66" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
-<text x="6271.0" y="454.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Roboter-Notiz bestätigen</text>
-<text x="6271.0" y="470.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">oder ändern · Freigabe</text>
-<text x="6271.0" y="486.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">durch Mensch (HITL)</text>
+<text x="6107.0" y="610.0" font-size="18" text-anchor="middle" fill="#1A1A1A">×</text>
+<text x="6107.0" y="641.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">BÜ-Vorgang: abgelehnt</text>
+<text x="6107.0" y="655.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">oder positiv?</text>
+<rect x="6164.0" y="85.0" width="214" height="66" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
+<text x="6271.0" y="106.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Direktablagekennzeichen</text>
+<text x="6271.0" y="122.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">setzen · Vorgang direkt</text>
+<text x="6271.0" y="138.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">archivieren</text>
+<circle cx="6435.0" cy="118.0" r="17.0" fill="white" stroke="#8a1f1f" stroke-width="2.6"/>
+<text x="6435.0" y="148.0" font-size="11" text-anchor="middle" fill="#1A1A1A">Direkt archiviert</text>
+<text x="6435.0" y="161.0" font-size="11" text-anchor="middle" fill="#1A1A1A">(Absage)</text>
+<rect x="6164.0" y="563.0" width="214" height="82" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
+<text x="6271.0" y="584.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Postkorbvorgang mit ALLEN</text>
+<text x="6271.0" y="600.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Prüfinformationen + Notiz</text>
+<text x="6271.0" y="616.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">eröffnen · Notiz belädt den</text>
+<text x="6271.0" y="632.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">bestehenden BÜ-Bot</text>
 <path d="M6435.0,581.0 L6458.0,604.0 L6435.0,627.0 L6412.0,604.0 z" fill="white" stroke="#1A1A1A" stroke-width="1.6"/>
 <text x="6435.0" y="610.0" font-size="18" text-anchor="middle" fill="#1A1A1A">×</text>
-<text x="6435.0" y="641.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">AO-Bestand?</text>
-<rect x="6492.0" y="829.0" width="214" height="50" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
-<text x="6599.0" y="850.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">72h-Vorabinfo an AO senden</text>
-<text x="6599.0" y="866.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(PVBHH72)</text>
-<circle cx="6757.0" cy="854.0" r="17.0" fill="white" stroke="#046A38" stroke-width="1.6"/>
-<circle cx="6757.0" cy="854.0" r="13.0" fill="none" stroke="#046A38" stroke-width="1.2"/>
-<text x="6757.0" y="884.0" font-size="11" text-anchor="middle" fill="#1A1A1A">72h abwarten</text>
-<path d="M6915.0,831.0 L6938.0,854.0 L6915.0,877.0 L6892.0,854.0 z" fill="white" stroke="#1A1A1A" stroke-width="1.6"/>
-<text x="6915.0" y="860.0" font-size="18" text-anchor="middle" fill="#1A1A1A">×</text>
-<text x="6915.0" y="891.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">Widerruf / Erinnerung im</text>
-<text x="6915.0" y="905.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">Fenster?</text>
-<rect x="6808.0" y="441.0" width="214" height="50" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
-<text x="6915.0" y="462.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Aussteuerung</text>
-<text x="6915.0" y="478.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Sammel-Postkorb</text>
-<circle cx="7079.0" cy="466.0" r="17.0" fill="white" stroke="#8a1f1f" stroke-width="2.6"/>
-<text x="7079.0" y="496.0" font-size="11" text-anchor="middle" fill="#1A1A1A">Ausgesteuert</text>
-<text x="7079.0" y="509.0" font-size="11" text-anchor="middle" fill="#1A1A1A">(Widerruf)</text>
-<path d="M7079.0,831.0 L7102.0,854.0 L7079.0,877.0 L7056.0,854.0 z" fill="white" stroke="#1A1A1A" stroke-width="1.6"/>
-<text x="7079.0" y="860.0" font-size="18" text-anchor="middle" fill="#1A1A1A">×</text>
-<text x="7079.0" y="891.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A"></text>
-<rect x="7136.0" y="821.0" width="214" height="66" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
-<text x="7243.0" y="842.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">BÜ ausführen · BÜ-Bot 1515</text>
-<text x="7243.0" y="858.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(KOM·LEB, je VNR) / BeMaS</text>
-<text x="7243.0" y="874.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">2011 (KV)</text>
-<rect x="7384.0" y="829.0" width="214" height="50" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
-<text x="7491.0" y="850.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Makler informieren (Contex</text>
-<text x="7491.0" y="866.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">/ E-Mail)</text>
-<rect x="7632.0" y="579.0" width="214" height="50" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
-<text x="7739.0" y="600.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">18 · Bot-Ergebnis prüfen</text>
-<text x="7739.0" y="616.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(QS) · Scout</text>
-<path d="M7987.0,581.0 L8010.0,604.0 L7987.0,627.0 L7964.0,604.0 z" fill="white" stroke="#1A1A1A" stroke-width="1.6"/>
-<text x="7987.0" y="610.0" font-size="18" text-anchor="middle" fill="#1A1A1A">×</text>
-<text x="7987.0" y="641.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">BÜ technisch korrekt?</text>
-<circle cx="8145.0" cy="604.0" r="17.0" fill="white" stroke="#8a1f1f" stroke-width="2.6"/>
-<text x="8145.0" y="634.0" font-size="11" text-anchor="middle" fill="#1A1A1A">BÜ ausgeführt ·</text>
-<text x="8145.0" y="647.0" font-size="11" text-anchor="middle" fill="#1A1A1A">Makler informiert</text>
-<rect x="7880.0" y="441.0" width="214" height="50" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
-<text x="7987.0" y="462.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Manuelle Nachbearbeitung</text>
-<text x="7987.0" y="478.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(SB)</text>
-<circle cx="8145.0" cy="466.0" r="17.0" fill="white" stroke="#8a1f1f" stroke-width="2.6"/>
-<text x="8145.0" y="496.0" font-size="11" text-anchor="middle" fill="#1A1A1A">Nachbearbeitung</text>
+<text x="6435.0" y="641.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">Umsetzungsstufe: Phase 1</text>
+<text x="6435.0" y="655.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">(HITL) oder Zielbild</text>
+<text x="6435.0" y="669.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">(IKS)?</text>
+<rect x="6492.0" y="433.0" width="214" height="66" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
+<text x="6599.0" y="454.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Phase 1: Notiz als Entwurf</text>
+<text x="6599.0" y="470.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">für Sachbearbeiter ·</text>
+<text x="6599.0" y="486.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Vorgang wird noch geprüft</text>
+<rect x="6740.0" y="441.0" width="214" height="50" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
+<text x="6847.0" y="462.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Sachbearbeiter prüft &amp; gibt</text>
+<text x="6847.0" y="478.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Notiz frei (HITL)</text>
+<rect x="6492.0" y="571.0" width="214" height="66" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
+<text x="6599.0" y="592.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Zielbild: richtig geprüfte</text>
+<text x="6599.0" y="608.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Vorgänge direkt an den</text>
+<text x="6599.0" y="624.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Roboter · IKS-Prozess</text>
+<rect x="6988.0" y="805.0" width="214" height="98" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
+<text x="7095.0" y="826.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Bestehender BÜ-Bot: BÜ</text>
+<text x="7095.0" y="842.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">ausführen · 1515 (KOM·LEB)</text>
+<text x="7095.0" y="858.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">/ BeMaS 2011 (KV) ·</text>
+<text x="7095.0" y="874.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">72h-Vorabinfo bei</text>
+<text x="7095.0" y="890.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">AO-Bestand</text>
+<rect x="7236.0" y="579.0" width="214" height="50" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
+<text x="7343.0" y="600.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">18 · Bot-Ergebnis prüfen</text>
+<text x="7343.0" y="616.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(QS) · Scout</text>
+<rect x="7484.0" y="829.0" width="214" height="50" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
+<text x="7591.0" y="850.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Makler informieren · Contex</text>
+<text x="7591.0" y="866.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">/ E-Mail</text>
+<circle cx="7749.0" cy="854.0" r="17.0" fill="white" stroke="#8a1f1f" stroke-width="2.6"/>
+<text x="7749.0" y="884.0" font-size="11" text-anchor="middle" fill="#1A1A1A">BÜ ausgeführt ·</text>
+<text x="7749.0" y="897.0" font-size="11" text-anchor="middle" fill="#1A1A1A">Makler informiert</text>
 </svg>

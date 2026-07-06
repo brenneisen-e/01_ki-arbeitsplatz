@@ -12,6 +12,7 @@ Arbeitsstand für die Anmeldung des Blue-Prism-Prüf-Bots beim Robotics Competen
 | `BUE_Pruefbot_Detailtabelle.svg` | Detailtabelle der Prüfschritte 6–16 als Vektor |
 | `1. FRQ-2026_BUE-Pruefbot.docx` | Befüllter Prozessfragebogen (nur Blue-Prism-Prüfteil; Basis: `../1. FRQ-2026.docx`) |
 | `Mail_Robotics_CC_BUE_Pruefbot.txt/.eml` | Mail-Entwurf an das RCC (EML öffnet in Outlook als Entwurf, Anhänge eingebettet) |
+| `BUE_Pruefbot_Zielprozess_Schritt_fuer_Schritt.txt` | Schritt-für-Schritt-Erklärung des Zielprozesses (fachlich + technisch), zum Kopieren in eine Team-Mail |
 | `quellen/` | Python-Quellskripte zum Regenerieren |
 
 ## Kernaussagen des Sollbilds
@@ -19,8 +20,9 @@ Arbeitsstand für die Anmeldung des Blue-Prism-Prüf-Bots beim Robotics Competen
 - Celonis (KI-Deckblatt) deckt Prüfschritte 1–5 ab; der Bot macht nur die System-Prüfungen 6–16. Schritt 9 (VVR) bleibt manuell (HITL).
 - Am Ende erstellt der Bot ein digitales Prüfdeckblatt (Ergebnis aller Prüfungen je Vertrag).
 - Kriterien-Matrix (definiert das Fach): hart verletzt = automatische Absage mit Begründung; weich verletzt = manuelle Prüfung (Idee: Robotics Cockpit — Machbarkeit durch RCC zu prüfen); optional = nur Vollständigkeit.
-- Postkorb: Archivierung parallel zur Roboter-Notiz als Entwurf (Idee — Machbarkeit durch RCC zu prüfen); Freigabe durch Mensch.
-- Offene Punkte: Übergabepunkt (SharePoint-Liste vs. ERGO Datapool, Ansprechpartner Celonis: Stefan Schwarz), Hostsystem-Zugriffsart, Zielsystem der Notiz, Versandweg der harten Absage, Erst-Segment (Pilot). Go-Live-Ziel: Jahresende 2026.
+- Postkorb über EMWS mit zwei Weichen: abgelehnt → Direktablagekennzeichen → direkt archiviert; positiv → Postkorbvorgang mit allen Prüfinformationen + Notiz (belädt den bestehenden BÜ-Bot).
+- Übergabe an den BÜ-Bot in zwei Stufen: Phase 1 (heute) = Notiz als Entwurf für den Sachbearbeiter, Freigabe durch Mensch (HITL); Zielbild = richtig geprüfte Vorgänge direkt an den Roboter über einen IKS-Prozess.
+- Offene Punkte: Übergabepunkt (ERGO Datapool, SharePoint oder anderes — Ansprechpartner Celonis: Stefan Schwarz), Hostsystem-Zugriffsart, Zielsystem der Notiz, Versandweg der harten Absage, Erst-Segment (Pilot). Go-Live-Ziel: Jahresende 2026.
 
 ## Regenerieren
 

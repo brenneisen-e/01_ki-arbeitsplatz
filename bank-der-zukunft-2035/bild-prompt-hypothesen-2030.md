@@ -1,176 +1,170 @@
-# Bild-Prompts — Hypothesen-Vergleichsbilder „Banking Horizon 2030"
+# Bild-Prompts — Hypothesen-Vergleichsbilder „Banking Horizon 2030" (reich, v3)
 
 Prompts zum Erzeugen der **Hypothesen-Bilder** `public/images/Kapitel N_M.png`.
 Jedes ist ein **16:9-Bild, in zwei Hälften geteilt**: **links = Status Quo (2026)**,
-**rechts = 2030**. Die App zeichnet die Trennlinie und die Labels „Status Quo" /
-„2030" selbst als Overlay (bei 50 %) — deshalb **keine Beschriftung ins Bild
-einbrennen**.
+**rechts = 2030**. Die App zeichnet Trennlinie und Labels „Status Quo"/„2030"
+selbst — also **keine Beschriftung ins Bild**.
+
+## Zwei zentrale Regeln (v3)
+
+1. **Hologramme/Glow nur rechts.** Alle glühenden türkis-holografischen AI-Interfaces
+   (#7EC8FF — schwebende Donut-/Linien-Charts, Datenwellen, Häkchen) erscheinen
+   **ausschließlich auf der rechten (2030-)Hälfte**. Die **linke (2026-)Hälfte ist
+   heutig-realistisch** — nur normale Flachbildschirme, **keine Hologramme, keine
+   glühenden Datenwellen, keine schwebenden Panels**.
+2. **Reiche Bildsprache** wie die Bestandsbilder: warmes cinematisches Editorial-
+   Foto, geringe Schärfentiefe, Premium-Materialien (Holz, Stein, Grünpflanzen),
+   grüne Akzente #046A38, ausdrucksstarke wiederkehrende Personen.
+
+**Kunden-Alterung (Feedback):** Bei Kunden-Szenen ist es dieselbe Person, rechts
+dezent **4–5 Jahre älter + andere Kleidung**. Gilt für Kapitel **1, 2 und 7_2**.
+
+**Nummerierung (aktuell):** 07 = Produkte & Innovation (Bilder `Kapitel 7_x`),
+08 = Vorstand & Governance (Bilder `Kapitel 8_x`), 09 = Transformation mit
+Deloitte = **Offerings, keine Bilder**.
+
+**ChatGPT/GPT-Image:** kein Negativ-Feld — alles steht als ein Prompt. Format im
+UI auf Querformat (16:9) stellen.
 
 ---
 
-## Das Kern-Feedback: die 2030-Seite spielt 4–5 Jahre später
+## 01 Kundenperspektive — Kund:innen (Alterung)
 
-> Workshop-Feedback: Auf der **rechten (2030-)Hälfte** sollen wiederkehrende
-> **Kund:innen sichtbar 4–5 Jahre älter** sein und **andere Kleidung** tragen —
-> denn zwischen „Status Quo 2026" und „2030" liegen echte Jahre. Das macht den
-> Zeitsprung im Bild spürbar.
-
-**Verbindliche Regel für jedes Bild mit Personen:**
-
-- **Gleiche, wiedererkennbare Person** links wie rechts (gleiche Identität,
-  Gesichtszüge, Ethnie, Statur) — es ist derselbe Mensch, nur später.
-- **Rechte Hälfte (2030): dieselbe Person 4–5 Jahre älter** — dezent gealtert
-  (etwas reiferes Gesicht, evtl. wenige graue Haare, minimale Alterszeichen),
-  **kein** anderer Mensch, keine Verjüngung.
-- **Andere Kleidung rechts**: aktualisiertes, anderes Outfit als links — nicht
-  dasselbe Kleidungsstück in beiden Hälften.
-- **Umgebung rechts modernisiert**: Technik/Interieur auf 2030-Stand, passend zur
-  jeweiligen Szene.
-- Gilt primär für **Kund:innen**; wiederkehrende Mitarbeitende auf der 2030-Seite
-  dürfen analog dezent altern und andere Kleidung tragen (Konsistenz).
-
----
-
-## Einheitlicher Stil (wie Master-Strukturbild)
-
-- Fotorealistisch, natürliches Tageslicht, ruhig, premium, professionell —
-  Vorstands-Workshop-tauglich, keine verspielte oder cartoonhafte Anmutung.
-- Akzentfarbe Deloitte-Grün **#046A38** (sekundär #86BC25), Screen-/Hologramm-
-  Akzent Cyan **#7EC8FF** nur auf Displays. Monochrome, einfarbige Bildschirm-
-  Grafiken — keine Multicolor-/Gradient-Icons.
-- Format **16:9**, saubere Komposition, **linke 50 % = Status Quo, rechte 50 % =
-  2030**, mittig ein unaufdringlicher Übergang (die harte Trennlinie kommt aus
-  der App).
-- **Keine eingebrannten Texte/Labels**, keine Logos, keine Emojis, keine
-  Wortmarken auf Screens (nur abstrakte, monochrome UI-Andeutungen).
-
----
-
-## Wiederverwendbares Prompt-Template (englisch)
-
+**Kapitel 1_1.png**
 ```
-Photorealistic 16:9 image split into two halves by a subtle vertical seam down
-the center, same scene "before and after". Calm, premium, natural daylight,
-corporate documentary style, boardroom-grade.
-
-LEFT HALF — status quo, year 2026: {LINKS_SZENE}
-
-RIGHT HALF — year 2030: {RECHTS_SZENE}
-
-Continuity rule: it is the SAME recognizable person on both halves (same face,
-same identity), but on the RIGHT half the person is 4-5 years older — subtly
-aged, slightly more mature, and wearing DIFFERENT, updated clothing than on the
-left. The right-side environment and technology are modernized to 2030.
-
-Color accent deep green #046A38 with cyan screen glow #7EC8FF, monochrome
-single-color on-screen graphics. No baked-in text or labels, no logos, no
-watermark, no emojis. Aspect 16:9.
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, soft natural and warm interior light, deep green accents #046A38, premium materials (warm wood, stone, greenery). IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF — floating donut/line charts, data-waves, checkmarks) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day and realistic with ordinary flat screens only — NO holograms, NO glowing data-waves, NO floating panels. LEFT (status quo 2026): a man doing banking at a self-service kiosk in a warm modern bank branch, wood and stone surfaces, an ordinary flat wall monitor, staff and another customer softly blurred behind him. RIGHT (2030): the SAME man, subtly 4–5 years older and in different clothing, relaxed at home on a sofa glancing at his smartwatch while a partner and child have breakfast behind him; a translucent glowing teal holographic finance dashboard (donut and bar charts, checkmarks) floats beside him. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 1_2.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, soft natural and warm interior light, deep green accents #046A38, premium materials. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, ordinary flat screens only, NO holograms/data-waves/floating panels. LEFT (status quo 2026): a woman at a warm home-office desk, stressed and overwhelmed, many printed product brochures and option flyers spread across the desk, a laptop and calculator among them. RIGHT (2030): the SAME woman, subtly 4–5 years older and in different clothing, relaxed on her sofa gently smiling, a translucent floating teal holographic AI panel presenting ONE clear recommendation with a glowing green checkmark, a tablet on the coffee table. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 1_3.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, soft natural and warm interior light, deep green accents #046A38, premium materials. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, ordinary flat screens only, NO holograms/data-waves/floating panels. LEFT (status quo 2026): a man on the phone looking anxious, waiting in a bank waiting area with other people waiting behind him and an ordinary flat wall screen. RIGHT (2030): the SAME man, subtly 4–5 years older and in different clothing, relaxed on his sofa smiling, lightly tapping his phone, a floating teal holographic AI dashboard (donut chart and a glowing green checkmark) beside him. No baked-in text, labels, logos or watermark.
 ```
 
-Negativ-Prompt:
+## 02 Markt & Vertrieb — Kund:innen + Berater (Alterung)
 
+**Kapitel 2_1.png**
 ```
-no baked-in text, no captions, no labels, no logos, no watermark, no emojis,
-no gibberish UI text, a DIFFERENT person on the right (forbidden), a younger
-person on the right (forbidden), identical outfit on both halves (forbidden),
-cartoon, illustration, neon cyberpunk, distorted faces, extra fingers.
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, soft natural and warm interior light, deep green accents #046A38, premium materials. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, ordinary flat screens only, NO holograms/data-waves/floating panels. LEFT (status quo 2026): a female bank advisor with a lanyard badge and a male client at a warm wood table in a premium branch, printed product cards and brochures spread between them, staff softly blurred behind, an ordinary flat wall screen. RIGHT (2030): the SAME advisor and SAME client, subtly 4–5 years older and in different clothing, leaning in together over a large tablet with a glowing teal holographic solution diagram (linked nodes and a donut), warm engaged smiles, co-creating. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 2_2.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, soft natural and warm interior light, deep green accents #046A38, premium materials. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, ordinary flat screens only, NO holograms/data-waves/floating panels. LEFT (status quo 2026): a stiff, scripted advisory meeting in a branch, the advisor reading from a paper checklist, a small ordinary laptop barely used at the side, the client passive. RIGHT (2030): the SAME advisor and client, subtly 4–5 years older and in different clothing, as engaged sparring partners, a rich translucent teal holographic AI-context panel floating between them (client profile, scenarios), the advisor gesturing. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 2_3.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, soft natural and warm interior light, deep green accents #046A38, premium materials. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, ordinary flat screens only, NO holograms/data-waves/floating panels. LEFT (status quo 2026): sporadic reactive customer contact — a client at a cluttered desk facing a clunky legacy CRM on an ordinary screen with disconnected sticky notes. RIGHT (2030): the SAME client, subtly 4–5 years older and in different clothing, accompanied seamlessly across devices by a continuous glowing teal holographic AI agent thread linking phone, laptop and smartwatch in real time. No baked-in text, labels, logos or watermark.
 ```
 
----
+## 03 Marktfolge (Operations) — Mitarbeitende
 
-## Szenen pro Bild (Links = Status Quo 2026 · Rechts = 2030)
+**Kapitel 3_1.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38, greenery. IMPORTANT: glowing teal holographic dashboards (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, ordinary flat screens only, NO holograms/data-waves/floating panels. LEFT (status quo 2026): a back-office clerk buried in towering stacks of paper files at a cluttered legacy desk, an ordinary flat monitor. RIGHT (2030): a calm modern open-plan operations floor, a single worker at a clean dual-monitor desk, a large wall of glowing teal holographic dashboards (line charts, world map, donut) behind, plants — autonomous straight-through processing. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 3_2.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic graphics (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/data-waves/floating panels. LEFT (status quo 2026): a closed, self-contained internal back office with walls of binders, everything done in-house. RIGHT (2030): the bank as an orchestrator — a central operations hub connected by glowing teal holographic lines to modular external utility-platform nodes forming an ecosystem. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 3_3.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic graphics (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): an operations team framed as an internal cost center — grey, inward-facing, utilitarian desks. RIGHT (2030): a sleek banking-as-a-service platform — a modern control room offering standardized service modules as glowing teal holographic service tiles to external third parties. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 3_4.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic graphics (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): a downstream compliance check as a separate, bolted-on control step after the process — a checkpoint desk with stamps and binders at the end of a paper flow. RIGHT (2030): regulation built in "compliant by design" — a clean automated process pipeline with glowing teal holographic compliance checkmarks embedded at every step. No baked-in text, labels, logos or watermark.
+```
 
-Spalte „Alter+" = Kund:innen-Alterung/Kleidungswechsel anwenden (Kern-Feedback).
-Quelle der Szenen: `alt`-Texte in `src/data/chapters.ts`.
+## 04 Corporate Services / HR — Mitarbeitende
 
-### 01 Kundenperspektive (Filiale) — Kund:innen
+**Kapitel 4_1.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38, greenery. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): isolated classroom training — rows of employees in a dull seminar room with one trainer, static and generic. RIGHT (2030): continuous personalized skill-building — an employee at a modern desk with an adaptive glowing teal holographic AI learning-companion panel showing a tailored path. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 4_2.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic graphics (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): a rigid functional org chart with silos — a static printed wall of boxed hierarchy. RIGHT (2030): a skills-driven fluid organization — a glowing teal holographic network of people and roles dynamically orchestrated by AI. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 4_3.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic dashboards (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): administrative, reactive HR — a person at a desk with paper personnel files and forms. RIGHT (2030): data-driven predictive workforce management — an HR lead at a large glowing teal holographic predictive-analytics dashboard (skills, forecasts, gauges). No baked-in text, labels, logos or watermark.
+```
+**Kapitel 4_4.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): classic classroom / e-learning unrelated to the individual — a bored employee watching a generic e-learning video on an ordinary screen. RIGHT (2030): an employee training with a sleek modern VR headset while a glowing teal holographic AI panel derives a tailored training program from their individual skill gap. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 4_5.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): upskilling focused only on the young — a group of exclusively young trainees in a plain room. RIGHT (2030): a mixed-age workforce, notably including confident older employees, learning fundamentally new skills with a glowing teal holographic AI learning companion. No baked-in text, labels, logos or watermark.
+```
 
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 1_1 | ja | Kundin tippt aktiv in einer Banking-App | Dieselbe Kundin, 4–5 J. älter, anderes Outfit; persönlicher KI-Finanzassistent arbeitet unaufgefordert im Hintergrund auf Smartwatch und Smartphone |
-| Kapitel 1_2 | ja | Kunde ratlos vor vielen Produktoptionen | Derselbe Kunde, älter, andere Kleidung; KI-Assistent präsentiert eine klare Empfehlung mit Simulation und Begründung |
-| Kapitel 1_3 | ja | Kunde kontaktiert die Bank und wartet auf Reaktion | Derselbe Kunde, älter, andere Kleidung; autonomer KI-Agent erkennt ein Ereignis früh und handelt, der Kunde gibt frei |
+## 05 Technologie / IT — Entwickler:innen
 
-### 02 Markt & Vertrieb (Advisory) — Kund:innen + Berater
+**Kapitel 5_1.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic pipelines (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, ordinary screens only, no holograms/floating panels. LEFT (status quo 2026): developers hand-writing and testing code at a cluttered dev desk, ordinary code screens, manual and late-night. RIGHT (2030): self-optimizing AI delivery — a clean control room where software builds, tests and deploys itself on glowing teal holographic pipelines while a single engineer calmly monitors. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 5_2.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic graphics (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): rule-based legacy IT — a monolithic server stack with manual approval paperwork and gates. RIGHT (2030): AI deciding autonomously within guardrails — a modular API-based platform visualized as clean glowing teal holographic service blocks. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 5_3.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic dashboards (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): IT as a gatekeeper — a physical handover of requirement papers over a counter/barrier between business staff and IT. RIGHT (2030): business-unit staff steering AI systems directly at their own glowing teal holographic dashboards, the barrier gone. No baked-in text, labels, logos or watermark.
+```
 
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 2_1 | ja | Produktzentriertes Verkaufsgespräch mit Broschüren | Derselbe Kunde (u. Berater) 4–5 J. älter, andere Kleidung; gemeinsam gestaltete maßgeschneiderte Lösung mit holografischem KI-Display |
-| Kapitel 2_2 | ja | Standardisiertes Beratungsgespräch nach Skript, KI nur kleines Tool | Dieselben Personen, älter, andere Kleidung; Berater als KI-augmentierter Sparringspartner mit reichem KI-Kontext-Display |
-| Kapitel 2_3 | ja | Punktueller, reaktiver Kundenkontakt an fragmentiertem CRM | Derselbe Kunde, älter, andere Kleidung; Agentensystem begleitet kanalübergreifend in Echtzeit auf mehreren Geräten |
+## 06 Compliance & Risk — Risikocontroller:innen
 
-### 03 Marktfolge (Backoffice) — überwiegend Mitarbeitende
+**Kapitel 6_1.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic risk dashboards (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): ex-post compliance — an auditor reviewing stacks of documents and sample folders after the fact. RIGHT (2030): real-time compliance — a risk controller at a live glowing teal holographic decision dashboard with rules embedded. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 6_2.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic governance dashboards (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): three separate lines of defense with sampling — three siloed desks/teams checking samples. RIGHT (2030): an integrated, AI-monitored governance cockpit — a curved wall of glowing teal holographic dashboards (world map, risk gauges) with a CAIO figure at the center. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 6_3.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic resilience dashboards (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): cyber and operational risk as a separate perimeter guard — a lone security desk at the building's edge. RIGHT (2030): resilience integrated into the operating model — a live glowing teal holographic resilience dashboard woven through a modern operations floor. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 6_4.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38. IMPORTANT: glowing teal holographic explainability panels (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): internal audit after the fact by sampling — an auditor with binders and a sampling checklist. RIGHT (2030): compliance/audit as an enabler — a glowing teal holographic explainability cockpit showing how and why an AI produced an output, a clear traceable decision path. No baked-in text, labels, logos or watermark.
+```
 
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 3_1 | (Mitarb.) | Back-Office bearbeitet manuell Papierakten an Legacy-Bildschirmen | Vollautonome Dunkelverarbeitung, Mensch nur bei einem komplexen Sonderfall |
-| Kapitel 3_2 | – | Geschlossenes Back-Office, alles intern | Modulare externe Utility-Plattformen übernehmen Standardbetrieb, die Bank orchestriert ein Ökosystem |
-| Kapitel 3_3 | – | Operations als interne Kostenstelle | Skalierbare Banking-as-a-Service-Plattform mit standardisierten Services für Dritte |
-| Kapitel 3_4 | – | Nachgelagerte Compliance-Prüfung als separater Kontrollschritt | Regulatorik „compliant by design" direkt im automatisierten Prozess-Lifecycle |
+## 07 Produkte & Innovation — 7_2 mit Kunden-Alterung
 
-### 04 Corporate Services / Organisationsentwicklung — Mitarbeitende
+**Kapitel 7_1.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium product photography, shallow depth of field, cinematic light, a premium lounge with a warm wood table softly blurred behind. Accents: teal glass, brass and marble, glowing teal connective lines only on the RIGHT half, deep green accents #046A38. LEFT (status quo 2026): ten identical plain grey numbered product cards laid out in a neat grid on the warm wood table — a standardized catalogue, no glow. RIGHT (2030): modular building blocks (teal glass, brass and marble hexagons, pills and tiles) connected by glowing teal lines, a hand assembling one individually composed solution — the segment of one. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 7_2.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, soft natural and warm interior light, deep green accents #046A38, premium materials. IMPORTANT: glowing teal holographic AI interfaces (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): a thick paper contract binder being closed and filed onto a shelf of identical binders — a static product. RIGHT (2030): the SAME customer, subtly 4–5 years older and in different clothing, in the middle of moving house, relaxed at a screen where product parameters adjust themselves within marked glowing teal holographic guardrails — a living, adaptive service. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 7_3.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, deep green accents #046A38, greenery. IMPORTANT: glowing teal holographic simulation panels (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): a sluggish committee meeting over thick requirement stacks and a wall planning board — slow product development. RIGHT (2030): a small product team in a bright modern project room, AI simulating many product variants in parallel on glowing teal holographic panels, a same-day physical mockup on the table. No baked-in text, labels, logos or watermark.
+```
 
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 4_1 | (Mitarb.) | Isoliertes Classroom-Training | Kontinuierlicher, personalisierter Skill-Aufbau mit adaptivem KI-Lernbegleiter |
-| Kapitel 4_2 | – | Starres funktionales Organigramm mit Silos | Skills-getriebene, flexible Organisation, KI orchestriert Rollen/Teams als fluides Netzwerk |
-| Kapitel 4_3 | – | Administrative, reaktive HR-Verwaltung | Datenbasierte, vorausschauende Workforce-Steuerung auf Predictive-Analytics-Dashboard |
-| Kapitel 4_4 | (Mitarb.) | Klassisches Classroom-/E-Learning ohne Bezug zur Skill-Lücke | Mitarbeitende trainieren mit VR-Brille, KI leitet aus der Skill-Veränderung ein passgenaues Programm ab |
-| Kapitel 4_5 | (Mitarb.) | Qualifizierung nur für junge Mitarbeitende | Gemischte, auch ältere Belegschaft lernt grundlegend neue Fähigkeiten mit KI-Lernbegleitung |
+## 08 Vorstand & Governance — Board, keine Alterung
 
-### 05 Technologie / IT (Serverraum) — Entwickler:innen
+**Kapitel 8_1.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, an executive boardroom, warm wood and stone, deep green accents #046A38. IMPORTANT: glowing teal holographic governance dashboards (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): a bank executive board deciding over printed quarterly reports and paper charts around the boardroom table, backward-looking. RIGHT (2030): the same board steering live at a large wall-mounted glowing teal holographic governance cockpit showing real-time capital, risk and liquidity metrics and AI-simulated scenarios. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 8_2.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, an executive boardroom, deep green accents #046A38. IMPORTANT: glowing teal holographic governance panels (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): AI governance scattered and delegated — separate ordinary department screens around the building, nobody at the board table clearly owning it. RIGHT (2030): the board owning AI governance centrally — a board committee with a CAIO figure and a glowing teal holographic wall panel showing AI guardrails, risk appetite and an explainability view of an AI decision. No baked-in text, labels, logos or watermark.
+```
+**Kapitel 8_3.png**
+```
+Photorealistic cinematic 16:9, split into two halves by a subtle central vertical seam (before/after). Warm premium editorial photography, shallow depth of field, cinematic light, an executive boardroom, deep green accents #046A38. IMPORTANT: glowing teal holographic steering dashboards (#7EC8FF) appear ONLY on the RIGHT (2030) half; the LEFT (2026) half is present-day realistic, no holograms/floating panels. LEFT (status quo 2026): strategy planned in a rigid annual cycle — a yearly planning binder and a static wall roadmap in the boardroom. RIGHT (2030): continuous AI-supported steering — the board at a live glowing teal holographic dashboard dynamically allocating capital and resources to a living operating model. No baked-in text, labels, logos or watermark.
+```
 
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 5_1 | – | Entwickler schreiben und testen Software manuell | Selbstoptimierende AI-Delivery: Software baut/testet/deployt sich selbst, Mensch überwacht nur |
-| Kapitel 5_2 | – | Regelbasierte IT mit manuellen Freigaben und Monolith | AI entscheidet autonom in Leitplanken, IT als modulare, API-basierte Plattform |
-| Kapitel 5_3 | – | IT als separate Gatekeeper-Funktion, Fachbereich übergibt Anforderungen | Fachbereiche steuern AI-Systeme direkt selbst, Gatekeeping entfällt |
+## 09 Transformation mit Deloitte
 
-### 06 Compliance & Risk — Risikocontroller:innen
-
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 6_1 | – | Ex-post-Compliance, nachträgliche Prüfung von Dokumenten/Stichproben | Echtzeit-Compliance direkt in den Systemen, Regeln im Live-Entscheidungs-Dashboard |
-| Kapitel 6_2 | – | Drei getrennte Verteidigungslinien mit Stichproben | Integrierte, kontinuierliche Kontrolle im KI-überwachten Governance-Cockpit, CAIO im Zentrum |
-| Kapitel 6_3 | – | Cyber-/Operational Risk als separate, perimeterorientierte Schutzfunktion | In das Betriebsmodell integriert, kontinuierliche Resilienzsteuerung im Live-Dashboard |
-| Kapitel 6_4 | – | Innenrevision prüft nachgelagert und stichprobenartig mit Aktenordnern | Compliance/Revision als Enabler mit Explainability-Cockpit (wie/warum die KI einen Output erzeugt) |
-
-### 07 Transformation (Glas-Aufzug) — Organisation
-
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 7_1 | – | Intern fokussierte Transformation an fragmentierten IT-/Prozessprojekten | AI-getriebene Ökosystem-Plattform aus Daten, Partnern und eingebauter Compliance |
-| Kapitel 7_2 | – | Produkt-/silogetriebene Organisation, in starren Strukturen gefangen | AI-natives Operating Model, Journey-Teams mit E2E-Ownership und Human-in-the-loop |
-| Kapitel 7_3 | – | Technologiegetriebene Transformation in vielen isolierten Use Cases | Decision-first mit klarer Roadmap und skalierbarer Decision Spine vor dem AI-Rollout |
-| Kapitel 7_4 | – | Neue Prozesse/Systeme geliefert, Verhaltens-/Kulturwandel verpufft | Change fest im Target Operating Model verankert — Governance, Rollen, Anreize sichern die Umsetzung |
-| Kapitel 7_5 | – | Klassische Projektmethodik (Wasserfall/Stage-Gate) ohne Transformationspfad | AI-native Projektmethodik mit wiederverwendbaren Artefakten und klarem Pfad Reifegrad → nächste Schritte → Zielbild |
-
-### 08 Produkte & Innovation (Projektraum) — teils Kund:innen
-
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 8_1 | ja | Regal mit identischen Standard-Produktmappen, mehrere Kund:innen halten dieselbe Mappe | Dieselben Kund:innen 4–5 J. älter, andere Kleidung; jede/r sieht auf dem eigenen Gerät eine sichtbar andere, individuell komponierte Produktlösung |
-| Kapitel 8_2 | ja | Dicker Papier-Vertragsordner wird geschlossen und ins Regal zu identischen Ordnern abgeheftet | Dieselbe Kundin, älter, andere Kleidung, im Umzug; entspannt vor Bildschirm, Produktparameter passen sich in Leitplanken selbst an |
-| Kapitel 8_3 | – | Zähe Gremiensitzung über dicken Anforderungsstapeln und Wandplanungstafel | Kleines Produktteam im hellen Projektraum, KI simuliert parallel viele Varianten, Same-Day-Mockup auf dem Tisch |
-
-### 09 Vorstand & Governance (Boardroom) — NEU, keine Kund:innen
-
-Placeholder-Kapitel (siehe `chapters.ts`, id `vorstand`). Bilder `Kapitel 9_1..9_3`
-+ `9_Demo`. Personen sind Vorstände/Board-Mitglieder — **keine** Alterungs-Regel.
-
-| Bild | Alter+ | Links (2026) | Rechts (2030) |
-|---|---|---|---|
-| Kapitel 9_1 | – | Vorstandssitzung, Entscheidung anhand gedruckter Quartalsberichte und Rückspiegel-Kennzahlen | Derselbe Boardroom: Vorstand steuert live an großem Governance-Cockpit mit Echtzeit-Kennzahlen (Kapital/Risiko/Liquidität) und KI-simulierten Szenarien |
-| Kapitel 9_2 | – | KI-Governance verstreut/delegiert — getrennte Fachbereichs-Screens, niemand am Vorstandstisch verantwortlich | Vorstand verantwortet KI-Governance zentral: Board-Ausschuss mit CAIO, Wandpanel mit KI-Leitplanken, Risikoappetit und Explainability-Sicht auf eine KI-Entscheidung |
-| Kapitel 9_3 | – | Strategie im starren Jahreszyklus — Jahresplanungs-Ordner, statische Wand-Roadmap, träge Umverteilung | Kontinuierliche KI-gestützte Strategiesteuerung: Vorstand am Live-Dashboard, dynamische Allokation von Kapital/Ressourcen am lebenden Betriebsmodell |
-| Kapitel 9_Demo | – | — (Absprung-Bild) | Heller Boardroom mit großem, frontal stehendem, **leerem grauen 16:9-Governance-Cockpit-Screen** für das Demo-Overlay |
-
----
-
-## Anwendung
-
-Für jedes Bild `{LINKS_SZENE}` / `{RECHTS_SZENE}` aus der Tabelle ins Template
-einsetzen. Bei „Alter+ = ja" die Kern-Regel (4–5 Jahre älter + andere Kleidung
-auf der 2030-Seite, gleiche Person) unbedingt mitgeben. Fertige PNGs unter
-`public/images/Kapitel N_M.png` ablegen, dann `npm run build` — kein Code-Umbau
-nötig, die Slots sind bereits in `chapters.ts` verdrahtet.
+Keine Vergleichsbilder — dieses Kapitel zeigt die **Deloitte-Offerings** (Umbau
+folgt). Bei Bedarf ein einzelnes Titel-/Hintergrundbild separat.

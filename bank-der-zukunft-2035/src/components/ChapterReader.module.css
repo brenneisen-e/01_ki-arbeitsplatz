@@ -287,13 +287,18 @@
 /* ── Content: zentrierte Spalte, scrollt bei Bedarf ── */
 .content {
   /* Alles passt OHNE Scrollen: die Bildbreite wird so begrenzt, dass die
-     16:9-Höhe in den verbleibenden Platz passt (Reserve ≈ 510px für Titel,
-     Karten, Topbar, Pager, Abstände). Bild UND Karten teilen sich diese Breite
-     und bleiben dadurch exakt untereinander ausgerichtet. */
-  --media-w: clamp(480px, calc((100vh - 500px) * 16 / 9), min(1280px, 92vw));
+     16:9-Höhe in den verbleibenden Platz passt. Reserve ≈ 560px für Titel,
+     Management-Summary-Panel, Karten/Aktivitätsblock, Topbar, Pager und
+     Abstände. Bild UND Karten teilen sich diese Breite und bleiben dadurch
+     exakt untereinander ausgerichtet.
+     Sicherheitsnetz: `overflow-y: auto` zusammen mit `safe center` — passt
+     alles rein, wird zentriert (kein Scrollbalken); wird es doch mal höher
+     (z. B. aufgeklapptes Summary-Panel oder langer Aktivitätstext), rückt der
+     Inhalt an den Anfang und scrollt, statt unten abgeschnitten zu werden. */
+  --media-w: clamp(480px, calc((100vh - 560px) * 16 / 9), min(1280px, 92vw));
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;

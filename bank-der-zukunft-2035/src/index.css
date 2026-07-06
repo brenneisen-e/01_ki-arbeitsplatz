@@ -8,9 +8,9 @@
   --accent-tint: rgba(4, 106, 56, 0.16);
 
   /* Schrift */
-  --font-heading: 'Geist', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-body:    'Geist', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono:    'Geist Mono', 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-heading: 'Aptos', 'Aptos Display', 'Geist', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body:    'Aptos', 'Geist', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    'Aptos Mono', 'Geist Mono', 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
   /* Inhalte (panel) */
   --ink: #F4F1EA;

@@ -10,8 +10,9 @@
 //   1. Text-to-3D  (Preview)   → grobe Geometrie
 //   2. Text-to-3D  (Refine)    → texturiertes Modell (PBR)
 //   3. Auto-Rigging            → humanoides Skelett wird eingesetzt
-//   4. Animation               → Idle-/Gestik-Clip auf dem Rig
-//   5. Download GLB            → public/models/consultant.glb
+//   4. Animationen             → Idle-, Wink- und Sprech-Clip auf dem Rig
+//   5. Merge + Download        → ein GLB mit drei benannten Clips
+//                                → public/models/consultant.glb
 //
 // Voraussetzung:  Umgebungsvariable MESHY_API_KEY (https://www.meshy.ai/api)
 //
@@ -22,7 +23,9 @@
 // Flags:
 //   --prompt "<text>"   eigener Prompt (sonst DEFAULT_PROMPT)
 //   --style realistic   Kunststil (realistic | sculpture)  [Default: realistic]
-//   --action idle       gewünschte Animation               [Default: idle]
+//   --actions <spec>    Clips als "name=action_id,…"; IDs siehe
+//                       https://docs.meshy.ai/en/api/animation-library
+//                       [Default: idle=0,wave=28,talk=313]
 //   --skip-rig          nur bis zum texturierten Modell (keine Rig/Anim)
 //   --out <pfad>        Zielpfad                            [Default: public/models/consultant.glb]
 //
@@ -33,6 +36,7 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { NodeIO } from '@gltf-transform/core'
 
 const API = 'https://api.meshy.ai'
 const EP = {
@@ -40,6 +44,18 @@ const EP = {
   rigging: `${API}/openapi/v1/rigging`,
   animation: `${API}/openapi/v1/animations`,
 }
+
+// Clip-Name → action_id aus der Meshy-Animation-Library. Die Namen müssen zu
+// den Kandidatenlisten in src/consultant/consultantConfig.ts (CONSULTANT_CLIPS)
+// passen, damit Consultant3D.tsx die Clips zuordnen kann.
+//   0   = "Idle"                  (DailyActions / Idle)
+//   28  = "Big_Wave_Hello"        (DailyActions / Interacting)
+//   313 = "Talk_with_Hands_Open"  (DailyActions / Interacting)
+const DEFAULT_ACTIONS = [
+  { clip: 'idle', actionId: 0 },
+  { clip: 'wave', actionId: 28 },
+  { clip: 'talk', actionId: 313 },
+]
 
 const DEFAULT_PROMPT =
   'A friendly, stylised male management consultant standing figure, full body, ' +
@@ -52,13 +68,22 @@ const ROOT = resolve(__dirname, '..')
 
 // ── CLI-Argumente ────────────────────────────────────────────────────────────
 function parseArgs(argv) {
-  const args = { style: 'realistic', action: 'idle', skipRig: false, out: 'public/models/consultant.glb', prompt: DEFAULT_PROMPT }
+  const args = { style: 'realistic', actions: DEFAULT_ACTIONS, skipRig: false, out: 'public/models/consultant.glb', prompt: DEFAULT_PROMPT }
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--skip-rig') args.skipRig = true
     else if (a === '--prompt') args.prompt = argv[++i]
     else if (a === '--style') args.style = argv[++i]
-    else if (a === '--action') args.action = argv[++i]
+    else if (a === '--actions') {
+      args.actions = argv[++i].split(',').map((pair) => {
+        const [clip, id] = pair.split('=')
+        if (!clip || !/^\d+$/.test(id ?? '')) {
+          console.error(`Ungültige --actions-Angabe: "${pair}" (erwartet name=action_id)`)
+          process.exit(1)
+        }
+        return { clip: clip.trim(), actionId: Number(id) }
+      })
+    }
     else if (a === '--out') args.out = argv[++i]
     else console.warn(`Unbekanntes Argument ignoriert: ${a}`)
   }
@@ -94,15 +119,11 @@ async function poll(baseUrl, id, phase) {
     const progress = task.progress ?? 0
     const line = `[${phase}] ${status} ${progress}%`
     if (line !== last) {
-      process.stdout.write(`\r${line.padEnd(48)}`)
+      console.log(line)
       last = line
     }
-    if (status === 'SUCCEEDED') {
-      process.stdout.write('\n')
-      return task
-    }
+    if (status === 'SUCCEEDED') return task
     if (status === 'FAILED' || status === 'CANCELED') {
-      process.stdout.write('\n')
       throw new Error(`[${phase}] fehlgeschlagen: ${JSON.stringify(task.task_error ?? task)}`)
     }
     await sleep(5000)
@@ -110,14 +131,94 @@ async function poll(baseUrl, id, phase) {
 }
 
 function glbUrlOf(task) {
-  return task.model_urls?.glb ?? task.model_url ?? task.result?.model_urls?.glb ?? null
+  return (
+    task.model_urls?.glb ??
+    task.model_url ??
+    task.result?.model_urls?.glb ??
+    task.result?.animation_glb_url ??
+    task.result?.rigged_character_glb_url ??
+    null
+  )
+}
+
+async function download(url) {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`GET ${url} → ${res.status}`)
+  return Buffer.from(await res.arrayBuffer())
+}
+
+// ── GLB-Merge ────────────────────────────────────────────────────────────────
+// Meshy liefert pro Animations-Task ein eigenes GLB (gleiches Modell + Rig,
+// genau ein Clip). Für den Consultant brauchen wir EIN GLB mit allen Clips:
+// das erste GLB dient als Basis, aus den übrigen werden die Animationen
+// kopiert und über die Knochen-Namen (Fallback: Node-Index) auf das
+// Basis-Skelett umgebogen.
+async function mergeAnimations(parts) {
+  const io = new NodeIO()
+  const [first, ...rest] = parts
+  const base = await io.readBinary(new Uint8Array(first.bin))
+  const root = base.getRoot()
+
+  const baseAnims = root.listAnimations()
+  if (baseAnims.length === 1) baseAnims[0].setName(first.clip)
+  else baseAnims.forEach((a, i) => a.setName(i === 0 ? first.clip : `${first.clip}_${i}`))
+
+  const buffer = root.listBuffers()[0] ?? base.createBuffer()
+  const baseNodes = root.listNodes()
+  const byName = new Map()
+  for (const n of baseNodes) {
+    if (n.getName() && !byName.has(n.getName())) byName.set(n.getName(), n)
+  }
+
+  for (const { clip, bin } of rest) {
+    const doc = await io.readBinary(new Uint8Array(bin))
+    const docNodes = doc.getRoot().listNodes()
+    for (const anim of doc.getRoot().listAnimations()) {
+      const merged = base.createAnimation(clip)
+      for (const channel of anim.listChannels()) {
+        const srcSampler = channel.getSampler()
+        const srcNode = channel.getTargetNode()
+        if (!srcSampler?.getInput() || !srcSampler.getOutput() || !srcNode) continue
+        const destNode = byName.get(srcNode.getName()) ?? baseNodes[docNodes.indexOf(srcNode)]
+        if (!destNode) {
+          console.warn(`  Hinweis: Kein Ziel-Knochen für "${srcNode.getName()}" (${clip}) — Kanal übersprungen.`)
+          continue
+        }
+        const input = base
+          .createAccessor()
+          .setType(srcSampler.getInput().getType())
+          .setArray(srcSampler.getInput().getArray())
+          .setBuffer(buffer)
+        const output = base
+          .createAccessor()
+          .setType(srcSampler.getOutput().getType())
+          .setArray(srcSampler.getOutput().getArray())
+          .setBuffer(buffer)
+        const sampler = base
+          .createAnimationSampler()
+          .setInput(input)
+          .setOutput(output)
+          .setInterpolation(srcSampler.getInterpolation())
+        const mergedChannel = base
+          .createAnimationChannel()
+          .setTargetNode(destNode)
+          .setTargetPath(channel.getTargetPath())
+          .setSampler(sampler)
+        merged.addSampler(sampler).addChannel(mergedChannel)
+      }
+    }
+  }
+
+  const clips = base.getRoot().listAnimations().map((a) => a.getName()).join(', ')
+  console.log(`  Zusammengeführte Clips: ${clips}`)
+  return Buffer.from(await io.writeBinary(base))
 }
 
 async function main() {
   const args = parseArgs(process.argv)
   console.log('Meshy-Consultant-Pipeline')
   console.log(`  Stil:   ${args.style}`)
-  console.log(`  Aktion: ${args.action}`)
+  console.log(`  Clips:  ${args.actions.map((a) => `${a.clip}=${a.actionId}`).join(', ')}`)
   console.log(`  Ziel:   ${args.out}`)
   console.log(`  Prompt: ${args.prompt}\n`)
 
@@ -139,35 +240,44 @@ async function main() {
     preview_task_id: previewId,
     enable_pbr: true,
   })
-  let finalTask = await poll(EP.textTo3d, refineId, 'Refine')
-  let sourceTaskId = refineId
+  const refineTask = await poll(EP.textTo3d, refineId, 'Refine')
 
+  let bin
   if (!args.skipRig) {
     // 3) Auto-Rigging
     console.log('3/5  Auto-Rigging (humanoides Skelett) …')
     const rigId = await postJson(EP.rigging, {
-      input_task_id: sourceTaskId,
+      input_task_id: refineId,
       height_meters: 1.8,
     })
     await poll(EP.rigging, rigId, 'Rigging')
-    sourceTaskId = rigId
 
-    // 4) Animation
-    console.log('4/5  Animation …')
-    const animId = await postJson(EP.animation, {
-      rig_task_id: rigId,
-      action: args.action,
-    })
-    finalTask = await poll(EP.animation, animId, 'Animation')
+    // 4) Animationen (parallel, alle auf demselben Rig)
+    console.log(`4/5  Animationen (${args.actions.map((a) => a.clip).join(', ')}) …`)
+    const parts = await Promise.all(
+      args.actions.map(async ({ clip, actionId }) => {
+        const animId = await postJson(EP.animation, {
+          rig_task_id: rigId,
+          action_id: actionId,
+        })
+        const task = await poll(EP.animation, animId, `Anim ${clip}`)
+        const url = glbUrlOf(task)
+        if (!url) throw new Error(`Keine GLB-URL im Animations-Ergebnis (${clip}): ${JSON.stringify(task).slice(0, 400)}`)
+        return { clip, bin: await download(url) }
+      }),
+    )
+
+    // 5) Merge + Download
+    console.log('5/5  Clips zusammenführen und GLB schreiben …')
+    bin = parts.length > 1 ? await mergeAnimations(parts) : parts[0].bin
   } else {
     console.log('3-4/5  (übersprungen: --skip-rig)')
+    console.log('5/5  Download GLB …')
+    const glb = glbUrlOf(refineTask)
+    if (!glb) throw new Error(`Keine GLB-URL im Ergebnis gefunden: ${JSON.stringify(refineTask).slice(0, 400)}`)
+    bin = await download(glb)
   }
 
-  // 5) Download
-  console.log('5/5  Download GLB …')
-  const glb = glbUrlOf(finalTask)
-  if (!glb) throw new Error(`Keine GLB-URL im Ergebnis gefunden: ${JSON.stringify(finalTask).slice(0, 400)}`)
-  const bin = Buffer.from(await (await fetch(glb)).arrayBuffer())
   const outPath = resolve(ROOT, args.out)
   await mkdir(dirname(outPath), { recursive: true })
   await writeFile(outPath, bin)

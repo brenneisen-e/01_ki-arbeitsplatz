@@ -1,24 +1,18 @@
-import { Component, Suspense, lazy, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Lightbulb, MessageCircle, X } from 'lucide-react'
 import styles from './ConsultantAvatar.module.css'
-import { CONSULTANT_MODEL_URL } from './consultantConfig'
 import { useReducedMotion } from '../hooks/useReducedMotion'
-
-// three.js/react-three-fiber nur bei vorhandenem Modell nachladen (Code-Split).
-const ConsultantCanvas = lazy(() =>
-  import('./ConsultantCanvas').then((m) => ({ default: m.ConsultantCanvas })),
-)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ConsultantAvatar — der "Karl-Klammer"-Leitfragen-Consultant unten rechts.
 //
 // Poppt auf, sobald der aktuelle Schritt eine Leitfrage hat, und zeigt sie in
-// einer Sprechblase. Rendert den geriggten 3D-Avatar (Meshy-GLB), sofern das
-// Modell vorliegt — andernfalls eine hochwertige 2D-SVG-Silhouette. So bleibt
-// die App auch ohne generiertes Modell voll funktionsfähig.
+// einer Sprechblase. Der Avatar ist ein einfarbiger, ikonischer Berater-Mascot
+// (SVG) — bei jeder Größe scharf lesbar, dezent animiert (Idle-Schweben,
+// „spricht"-Sprechwellen). Bewusst kein 3D/Foto: eine realistische Figur ist im
+// ~100-px-Chip nicht erkennbar, ein Icon liest sich sofort. Passt zu den
+// Design-Regeln: eine Farbe, keine Emojis, keine Verläufe im Icon selbst.
 // ─────────────────────────────────────────────────────────────────────────────
-
-type ModelState = 'checking' | 'present' | 'absent'
 
 type ConsultantAvatarProps = {
   /** Aktuelle Leitfrage; leer/undefined blendet den Consultant aus. */
@@ -41,40 +35,8 @@ export function ConsultantAvatar({
   closeLabel,
 }: ConsultantAvatarProps): React.ReactElement | null {
   const reducedMotion = useReducedMotion()
-  const [modelState, setModelState] = useState<ModelState>('checking')
   const [open, setOpen] = useState(false)
   const enterTimer = useRef<number | null>(null)
-
-  // Modell-Verfügbarkeit einmalig prüfen, damit useGLTF nicht auf eine fehlende
-  // Datei läuft. GET mit Range statt HEAD: manche Proxies/Extensions filtern
-  // HEAD-Requests, und SPA-Hosts (Cloudflare Pages, vite preview) liefern für
-  // fehlende Dateien den index.html-Fallback mit HTTP 200 — Content-Type-
-  // Heuristiken sind dort unzuverlässig. Einzig verlässlicher Nachweis sind
-  // die GLB-Magic-Bytes "glTF" am Dateianfang.
-  useEffect(() => {
-    let alive = true
-    fetch(CONSULTANT_MODEL_URL, { headers: { Range: 'bytes=0-3' } })
-      .then(async (r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`)
-        const head = await (await r.blob()).slice(0, 4).arrayBuffer()
-        const magic = String.fromCharCode(...new Uint8Array(head))
-        const present = magic === 'glTF'
-        if (!present) {
-          console.info(
-            `Consultant-3D: ${CONSULTANT_MODEL_URL} liefert kein GLB ` +
-              `(Antwort beginnt mit ${JSON.stringify(magic)}) — 2D-Fallback aktiv.`,
-          )
-        }
-        if (alive) setModelState(present ? 'present' : 'absent')
-      })
-      .catch((err) => {
-        console.info(`Consultant-3D: Modell-Check für ${CONSULTANT_MODEL_URL} fehlgeschlagen — 2D-Fallback aktiv.`, err)
-        if (alive) setModelState('absent')
-      })
-    return () => {
-      alive = false
-    }
-  }, [])
 
   // Bei neuer Leitfrage: Sprechblase automatisch öffnen (nach kurzer Auftauch-
   // verzögerung). Ohne Leitfrage: geschlossen.
@@ -90,19 +52,6 @@ export function ConsultantAvatar({
       if (enterTimer.current) window.clearTimeout(enterTimer.current)
     }
   }, [leitfrage, hasLeitfrage, reducedMotion])
-
-  const avatarVisual = useMemo(() => {
-    if (modelState === 'present') {
-      return (
-        <Avatar3DBoundary fallback={<Consultant2D reducedMotion={reducedMotion} />}>
-          <Suspense fallback={<Consultant2D reducedMotion={reducedMotion} />}>
-            <ConsultantCanvas speaking={open} reducedMotion={reducedMotion} />
-          </Suspense>
-        </Avatar3DBoundary>
-      )
-    }
-    return <Consultant2D reducedMotion={reducedMotion} />
-  }, [modelState, open, reducedMotion])
 
   if (!hasLeitfrage) return null
 
@@ -138,7 +87,9 @@ export function ConsultantAvatar({
         aria-expanded={open}
         data-motion={reducedMotion ? undefined : 'on'}
       >
-        <span className={styles.avatarStage}>{avatarVisual}</span>
+        <span className={styles.avatarStage}>
+          <ConsultantMascot speaking={open} reducedMotion={reducedMotion} />
+        </span>
         {!open && (
           <span className={styles.avatarPing} aria-hidden>
             <MessageCircle size={14} strokeWidth={2.4} />
@@ -149,51 +100,67 @@ export function ConsultantAvatar({
   )
 }
 
-// Fängt jeden Fehler beim Laden/Parsen des 3D-Modells (z. B. fehlerhaftes GLB
-// oder ein als GLB missverstandener HTML-Fallback) ab und zeigt statt eines
-// Absturzes die 2D-Silhouette. So kann der Consultant die App nie blockieren.
-class Avatar3DBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { failed: boolean }> {
-  state = { failed: false }
-  static getDerivedStateFromError(): { failed: boolean } {
-    return { failed: true }
-  }
-  componentDidCatch(error: unknown): void {
-    console.warn('Consultant-3D konnte nicht geladen werden, nutze 2D-Fallback.', error)
-  }
-  render(): ReactNode {
-    return this.state.failed ? this.props.fallback : this.props.children
-  }
-}
-
-// Hochwertige einfarbige 2D-Silhouette (Berater-Büste) als Fallback und als
-// Suspense-Platzhalter während das GLB lädt. Keine Emojis, nur eine Farbe.
-function Consultant2D({ reducedMotion }: { reducedMotion: boolean }): React.ReactElement {
+// Einfarbiger Berater-Mascot als SVG. Die Figur ist genau EINE Farbe
+// (var(--accent)); Augen, Lächeln und Hemdkragen sind Aussparungen (Maske), durch
+// die der helle Kreis-Hintergrund der .avatarStage scheint — kein zweiter
+// Farbwert. Beim Sprechen erscheinen dezente Schallwellen neben dem Kopf.
+function ConsultantMascot({
+  speaking,
+  reducedMotion,
+}: {
+  speaking: boolean
+  reducedMotion: boolean
+}): React.ReactElement {
   return (
-    <span className={styles.svg2d} data-motion={reducedMotion ? undefined : 'on'} aria-hidden>
-      <svg viewBox="0 0 96 96" width="100%" height="100%">
+    <span
+      className={styles.mascot}
+      data-motion={reducedMotion ? undefined : 'on'}
+      data-speaking={speaking || undefined}
+      aria-hidden
+    >
+      <svg viewBox="0 0 100 100" width="100%" height="100%">
         <defs>
-          <clipPath id="consultant-circle">
-            <circle cx="48" cy="48" r="46" />
-          </clipPath>
+          <mask id="consultant-mascot-cut">
+            <rect width="100" height="100" fill="#fff" />
+            {/* Augen */}
+            <circle cx="43.5" cy="40" r="2.5" fill="#000" />
+            <circle cx="56.5" cy="40" r="2.5" fill="#000" />
+            {/* Lächeln */}
+            <path
+              d="M43.5 47 Q50 52 56.5 47"
+              stroke="#000"
+              strokeWidth="2.4"
+              fill="none"
+              strokeLinecap="round"
+            />
+            {/* Hemdkragen (V-Aussparung) */}
+            <path d="M50 61 L41.5 68 Q50 72.5 58.5 68 Z" fill="#000" />
+          </mask>
         </defs>
-        <g clipPath="url(#consultant-circle)">
-          <rect x="0" y="0" width="96" height="96" fill="var(--accent)" />
+
+        <g fill="var(--accent)" mask="url(#consultant-mascot-cut)">
+          {/* Kopf + Kurzhaar als eine glatte Silhouette */}
+          <path d="M31.5 39 C31.5 22 39 14 50 14 C61 14 68.5 22 68.5 39 C68.5 49 60.5 57 50 57 C39.5 57 31.5 49 31.5 39 Z" />
+          {/* Hals */}
+          <rect x="43" y="50" width="14" height="12" rx="4.5" />
           {/* Schultern / Sakko */}
-          <path
-            d="M14 96 C16 74 30 64 48 64 C66 64 80 74 82 96 Z"
-            fill="rgba(255,255,255,0.16)"
-          />
-          {/* Kragen / Revers */}
-          <path d="M40 66 L48 82 L56 66 L48 72 Z" fill="rgba(255,255,255,0.9)" />
-          {/* Kopf */}
-          <circle cx="48" cy="40" r="17" fill="rgba(255,255,255,0.92)" />
-          {/* Haaransatz */}
-          <path
-            d="M31 38 C31 26 41 22 48 22 C55 22 65 26 65 38 C60 31 54 29 48 29 C42 29 36 31 31 38 Z"
-            fill="rgba(4,106,56,0.85)"
-          />
+          <path d="M15 96 C15 73 32 63 50 63 C68 63 85 73 85 96 Z" />
         </g>
-        <circle cx="48" cy="48" r="45" fill="none" stroke="var(--accent-bright)" strokeWidth="2" />
+
+        {/* Krawatte (grün, in der Kragen-Aussparung) */}
+        <path d="M50 62 L45.5 69 L50 86 L54.5 69 Z" fill="var(--accent)" />
+
+        {/* Sprechwellen — nur im „spricht"-Zustand sichtbar */}
+        <g
+          className={styles.mascotWaves}
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        >
+          <path d="M75 33 Q79 40 75 47" />
+          <path d="M81 29 Q88 40 81 51" />
+        </g>
       </svg>
     </span>
   )

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   ArrowLeft,
+  ArrowRight,
   BookOpen,
   ChevronLeft,
   ChevronRight,
@@ -173,6 +174,59 @@ const KPIS: {
   { label: { de: 'Betriebskosten', en: 'Operating costs' }, value: '− X %', trend: 'down' },
   { label: { de: 'Marge', en: 'Margin' }, value: '+ X pp', trend: 'up' },
 ]
+
+// Management Summary je Kapitel als McKinsey-Style-Bulletpoints für den Vorstand
+// (so-what-first, prägnant). Werden mit SVG-Icon-Marker gerendert. **fett** hebt
+// die Kernaussage hervor.
+const SUMMARY_BULLETS: Record<string, { de: string; en: string }[]> = {
+  kunde: [
+    { de: '**Banking wird unsichtbar**: KI-Assistenten begleiten im Alltag, statt dass Kund:innen aktiv „Banking machen".', en: '**Banking becomes invisible**: AI assistants accompany daily life instead of customers actively “doing banking”.' },
+    { de: '**Von Optionen zu Entscheidungen**: klare, simulierte und begründete Empfehlungen statt Produktlisten.', en: '**From options to decisions**: clear, simulated and reasoned recommendations instead of product lists.' },
+    { de: '**Von reaktiv zu proaktiv**: teilautonome Finanzsteuerung mit Vertrauensmandat — Kund:in entscheidet auf KI-vorbereiteter Basis.', en: '**From reactive to proactive**: semi-autonomous financial management with a trust mandate — the customer decides on an AI-prepared basis.' },
+  ],
+  vertrieb: [
+    { de: '**Vom Produktverkauf zum Lösungsorchestrator**: Berater:innen gestalten mit KI maßgeschneiderte Lösungen.', en: '**From product sales to solution orchestrator**: advisers co-design tailored solutions with AI.' },
+    { de: '**Berater:innen werden KI-augmentierte Strategiepartner** — der Mensch bei komplexen, emotionalen Themen.', en: '**Advisers become AI-augmented strategic partners** — humans on complex, emotional topics.' },
+    { de: '**Kundenschnittstelle wird permanent und hyperpersonalisiert** — kanalübergreifend, in Echtzeit.', en: '**The customer interface becomes permanent and hyper-personalised** — cross-channel, in real time.' },
+  ],
+  marktfolge: [
+    { de: '**Marktfolge wird autonome Dunkelverarbeitung** — der Mensch nur noch bei echten Sonderfällen.', en: '**Operations become autonomous straight-through processing** — humans only on genuine exceptions.' },
+    { de: '**Interne Wertschöpfung bricht auf**: modulare Utility-Plattformen, die Bank als Orchestrator.', en: '**The internal value chain breaks open**: modular utility platforms, the bank as orchestrator.' },
+    { de: '**Von der Kostenstelle zur Serviceplattform** (Banking-as-a-Service); Compliance „by design" im Lifecycle.', en: '**From cost centre to service platform** (banking-as-a-service); compliance “by design” in the lifecycle.' },
+  ],
+  corporate: [
+    { de: '**Von Training zu kontinuierlichem, KI-personalisiertem Skill-Aufbau** (inkl. immersivem VR-Lernen).', en: '**From training to continuous, AI-personalised skill-building** (incl. immersive VR learning).' },
+    { de: '**Organisation wird durch Skills gesteuert, nicht durch Strukturen** — fluide Teams.', en: '**The organisation is steered by skills, not structures** — fluid teams.' },
+    { de: '**Workforce-Steuerung wird vorausschauend und datenbasiert**; Demografie erzwingt lebenslanges Reskilling.', en: '**Workforce management becomes predictive and data-driven**; demographics force lifelong reskilling.' },
+  ],
+  it: [
+    { de: '**Selbstoptimierende AI-Delivery ersetzt klassische Entwicklung** — Teams steuern statt zu coden.', en: '**Self-optimising AI delivery replaces classic development** — teams steer instead of coding.' },
+    { de: '**IT wird zur datengetriebenen, sich selbst verbessernden Plattform** (Geschwindigkeit, Loop).', en: '**IT becomes a data-driven, self-improving platform** (speed, loop).' },
+    { de: '**Vom Gatekeeper zum Enabler**: vertikale, integrierte Delivery-Teams; KI entscheidet in Leitplanken.', en: '**From gatekeeper to enabler**: vertical, integrated delivery teams; AI decides within guardrails.' },
+  ],
+  compliance: [
+    { de: '**Von Ex-post-Prüfung zu Echtzeit-Compliance** direkt in den Systemen.', en: '**From ex-post review to real-time compliance** embedded in the systems.' },
+    { de: '**Integrierte, kontinuierliche Kontrolle** im KI-überwachten Governance-Cockpit (CAIO).', en: '**Integrated, continuous control** in an AI-monitored governance cockpit (CAIO).' },
+    { de: '**Cyber- und Operational-Risk-Resilienz wird überlebenswichtig** und ins Betriebsmodell integriert.', en: '**Cyber and operational-risk resilience becomes vital** and integrated into the operating model.' },
+    { de: '**Compliance & Revision werden Enabler** der KI-Transformation (Explainability).', en: '**Compliance & audit become enablers** of the AI transformation (explainability).' },
+  ],
+  transformation: [
+    { de: '**AI als Fixstern**: die Plattform wird Geschäfts- und Betriebsmodell; Fokus auf HR/Change.', en: '**AI as the guiding star**: the platform becomes the business and operating model; focus on HR/change.' },
+    { de: '**AI-natives Target Operating Model** mit E2E-Journey-Teams und Human-in-the-loop.', en: '**AI-native target operating model** with end-to-end journey teams and human-in-the-loop.' },
+    { de: '**Decision-first statt Use-Case-Zoo**: klare Roadmap und Decision Spine vor dem Rollout.', en: '**Decision-first instead of a use-case zoo**: a clear roadmap and decision spine before rollout.' },
+    { de: '**Change im Target Operating Model verankert**; neue Projektmethodik von Reifegrad zu Zielbild.', en: '**Change anchored in the target operating model**; new project methodology from maturity to target picture.' },
+  ],
+  projekt: [
+    { de: '**Vom Produktkatalog zum Segment of One**: KI komponiert hyperpersonalisierte Lösungen im Moment des Bedarfs.', en: '**From product catalogue to segment of one**: AI composes hyper-personalised solutions at the moment of need.' },
+    { de: '**Produkte werden lebende, adaptive Services** — Selbstanpassung innerhalb von Leitplanken.', en: '**Products become living, adaptive services** — self-adjusting within guardrails.' },
+    { de: '**Produktentwicklung wird kontinuierlich** — Time-to-Market von Jahren auf Tage.', en: '**Product development becomes continuous** — time-to-market from years to days.' },
+  ],
+  vorstand: [
+    { de: '**Vom Quartalsbericht zur Echtzeit-Steuerung** am Governance-Cockpit.', en: '**From quarterly report to real-time steering** at the governance cockpit.' },
+    { de: '**AI-Governance wird Chefsache**: Leitplanken, Risikoappetit, Ethik, CAIO, Explainability.', en: '**AI governance becomes a board responsibility**: guardrails, risk appetite, ethics, CAIO, explainability.' },
+    { de: '**Von der Jahresstrategie zur kontinuierlichen, adaptiven Steuerung** (dynamische Allokation).', en: '**From annual strategy to continuous, adaptive steering** (dynamic allocation).' },
+  ],
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ChapterReader — die Kapitel-Sequenz nach dem Kameraflug:
@@ -453,21 +507,26 @@ export function ChapterReader({
           /* Letzte Kachel: Management Summary + Business Case + KPI-Framework
              (gleiches Framework für alle Kapitel; KPI-Werte sind Platzhalter). */
           <div className={styles.summaryStep}>
-            <div className={styles.summaryBody}>
-              <div className={styles.summaryBlock}>
-                <span className={styles.summaryBlockLabel}>
-                  <Sparkles size={13} strokeWidth={2.2} aria-hidden />
-                  {t.mgmtSummaryLabel}
-                </span>
-                <p className={styles.summaryText}>{renderRichText(chapter.vision)}</p>
-              </div>
-              <div className={styles.summaryBlock}>
-                <span className={styles.summaryBlockLabel}>
-                  <TrendingUp size={13} strokeWidth={2.2} aria-hidden />
-                  {t.businessCaseLabel}
-                </span>
-                <p className={styles.summaryText}>{renderRichText(chapter.businessCase)}</p>
-              </div>
+            <div className={styles.summaryBlock}>
+              <span className={styles.summaryBlockLabel}>
+                <Sparkles size={13} strokeWidth={2.2} aria-hidden />
+                {t.mgmtSummaryLabel}
+              </span>
+              <ul className={styles.summaryBullets}>
+                {(SUMMARY_BULLETS[chapter.id] ?? [{ de: chapter.vision, en: chapter.vision }]).map(
+                  (b, i) => (
+                    <li className={styles.summaryBullet} key={i}>
+                      <ArrowRight
+                        className={styles.summaryBulletIcon}
+                        size={19}
+                        strokeWidth={2.4}
+                        aria-hidden
+                      />
+                      <span className={styles.summaryBulletText}>{renderRichText(b[lang])}</span>
+                    </li>
+                  ),
+                )}
+              </ul>
             </div>
 
             <div className={styles.kpiSection}>

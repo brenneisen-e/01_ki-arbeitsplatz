@@ -17,21 +17,25 @@
   --ink-3: #797d82;
   --bg-1: #eef0ec;
   --bg-2: #e5e8e2;
-  --surface-1: rgba(0, 0, 0, 0.035);
-  --surface-2: rgba(0, 0, 0, 0.06);
-  --surface-3: rgba(0, 0, 0, 0.09);
+  /* Karten/Flächen als feste helle Flächen (weiß-basiert), damit Text auch über
+     dem durchscheinenden Haus lesbar bleibt. */
+  --surface-1: rgba(255, 255, 255, 0.72);
+  --surface-2: rgba(255, 255, 255, 0.82);
+  --surface-3: rgba(255, 255, 255, 0.9);
   --border-soft: rgba(0, 0, 0, 0.12);
   --border-strong: rgba(0, 0, 0, 0.2);
-  --glass: rgba(255, 255, 255, 0.74);
-  --glass-strong: rgba(255, 255, 255, 0.9);
-  --shadow-1: 0 8px 30px rgba(0, 0, 0, 0.1);
-  --shadow-2: 0 24px 70px rgba(0, 0, 0, 0.16);
+  --glass: rgba(255, 255, 255, 0.82);
+  --glass-strong: rgba(255, 255, 255, 0.92);
+  --shadow-1: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --shadow-2: 0 24px 70px rgba(0, 0, 0, 0.18);
   color: var(--ink);
   display: flex;
   flex-direction: column;
-  background: rgba(246, 247, 244, 0.97);
-  backdrop-filter: blur(8px) saturate(120%);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  /* Mattiertes Glas: halbtransparenter heller Schleier + starker Blur, sodass
+     das gezoomte Haus dahinter als weiche, helle Fläche durchscheint. */
+  background: rgba(245, 247, 243, 0.58);
+  backdrop-filter: blur(20px) saturate(118%);
+  -webkit-backdrop-filter: blur(20px) saturate(118%);
   animation: fadeIn 0.5s var(--ease-out) both;
 }
 
@@ -321,7 +325,7 @@
      alles rein, wird zentriert (kein Scrollbalken); wird es doch mal höher
      (z. B. aufgeklapptes Summary-Panel oder langer Aktivitätstext), rückt der
      Inhalt an den Anfang und scrollt, statt unten abgeschnitten zu werden. */
-  --media-w: clamp(480px, calc((100vh - 560px) * 16 / 9), min(1280px, 92vw));
+  --media-w: clamp(560px, calc((100vh - 380px) * 16 / 9), min(1560px, 95vw));
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -448,22 +452,40 @@
 }
 
 .compareCard {
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   padding: clamp(18px, 1.7vw, 26px) clamp(20px, 1.9vw, 30px);
   border: 1px solid var(--border-soft);
   background: var(--surface-1);
+  backdrop-filter: blur(7px) saturate(115%);
+  -webkit-backdrop-filter: blur(7px) saturate(115%);
+  box-shadow: var(--shadow-1);
+  transition:
+    transform var(--t-med) var(--ease-out),
+    box-shadow var(--t-med) var(--ease-out),
+    border-color var(--t-med) var(--ease-out);
+}
+
+.compareCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2);
+  border-color: var(--border-strong);
 }
 
 .compareCard[data-quo] {
   border-top: 3px solid var(--ink-3);
-  filter: saturate(0.9);
 }
 
 .compareCard[data-future] {
   border: 1px solid var(--accent);
   border-top: 3px solid var(--accent-bright);
   background: var(--accent-tint);
-  box-shadow: 0 12px 34px rgba(4, 106, 56, 0.18);
+  box-shadow: 0 14px 36px rgba(4, 106, 56, 0.16);
+}
+
+.compareCard[data-future]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(4, 106, 56, 0.26);
+  border-color: var(--accent-bright);
 }
 
 .compareHead {
@@ -802,8 +824,8 @@
 }
 .summaryText {
   margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.5;
+  font-size: clamp(16px, 1.35vw, 21px);
+  line-height: 1.65;
   color: var(--ink);
 }
 .summaryText strong { color: var(--ink); font-weight: 700; }
@@ -838,10 +860,41 @@
 /* ── Management-Summary-Kachel (letzter Schritt, nach der Live-Demo) ─────────── */
 .summaryStep {
   width: 100%;
-  max-width: var(--media-w);
+  max-width: min(1360px, 94vw);
   display: flex;
   flex-direction: column;
   gap: clamp(18px, 2vw, 28px);
+}
+
+/* McKinsey-Style Bulletpoints (Vorstands-Sicht) mit SVG-Icon-Marker. */
+.summaryBullets {
+  list-style: none;
+  display: grid;
+  gap: clamp(12px, 1.2vw, 18px);
+}
+
+.summaryBullet {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 12px;
+}
+
+.summaryBulletIcon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent);
+}
+
+.summaryBulletText {
+  font-size: clamp(16px, 1.3vw, 21px);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.summaryBulletText strong {
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .kpiSection {
@@ -855,11 +908,11 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 12.5px;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent-bright);
+  color: var(--accent);
 }
 
 .kpiRow {
@@ -868,15 +921,48 @@
   gap: clamp(12px, 1.4vw, 20px);
 }
 
+.summaryBlock {
+  padding: clamp(16px, 1.6vw, 24px);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+  backdrop-filter: blur(7px) saturate(115%);
+  -webkit-backdrop-filter: blur(7px) saturate(115%);
+  box-shadow: var(--shadow-1);
+  transition:
+    transform var(--t-med) var(--ease-out),
+    box-shadow var(--t-med) var(--ease-out),
+    border-color var(--t-med) var(--ease-out);
+}
+
+.summaryBlock:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2);
+  border-color: var(--border-strong);
+}
+
 .kpiCard {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: clamp(16px, 1.6vw, 24px);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   border: 1px solid var(--border-soft);
   border-top: 3px solid var(--accent);
   background: var(--surface-1);
+  backdrop-filter: blur(7px) saturate(115%);
+  -webkit-backdrop-filter: blur(7px) saturate(115%);
+  box-shadow: var(--shadow-1);
+  transition:
+    transform var(--t-med) var(--ease-out),
+    box-shadow var(--t-med) var(--ease-out),
+    border-color var(--t-med) var(--ease-out);
+}
+
+.kpiCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 44px rgba(4, 106, 56, 0.2);
+  border-color: var(--accent);
 }
 
 .kpiLabel {
@@ -895,7 +981,7 @@
   white-space: nowrap;
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: clamp(24px, 2vw, 32px);
+  font-size: clamp(28px, 2.3vw, 40px);
   line-height: 1.05;
   color: var(--accent);
 }

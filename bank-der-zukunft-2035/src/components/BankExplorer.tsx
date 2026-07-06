@@ -11,6 +11,7 @@ import { ArrowLeft, ScrollText } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
 import { ChapterReader } from './ChapterReader'
+import { EinstiegsBuehne } from './EinstiegsBuehne'
 import { IframeStage } from './IframeStage'
 import { StrategyLab } from './StrategyLab'
 import { CoCreationCanvas } from './CoCreationCanvas'
@@ -30,6 +31,7 @@ import {
   type ExperienceApi,
   type Handoff,
 } from '../data/chapters'
+import { hasEinstieg } from '../data/einstieg'
 
 type ExplorerStrings = {
   backToChat: string
@@ -167,6 +169,9 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   const [readerShown, setReaderShown] = useState(initialNav.chapter !== null)
   // Management-Summary-Overlay (Vision der Bank 2030) — nur aus der Übersicht.
   const [summaryOpen, setSummaryOpen] = useState(false)
+  // Einstiegsbühne (Raum groß + Heute/Morgen) beim frischen Öffnen eines Raum-
+  // Kapitels, bevor der Reader mit den Hypothesen übernimmt.
+  const [einstiegOpen, setEinstiegOpen] = useState(false)
 
   const reducedMotion = useReducedMotion()
   const { lang } = useLang()
@@ -280,11 +285,18 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
       setActiveId(id)
       setStep(nextStep)
       setReaderShown(false)
+      setEinstiegOpen(false)
       animateTo(chapter, opts)
       if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
       // Reader nach ~60 % des Flugs einblenden (instant bei reduced motion).
       const delay = reducedMotion || opts.instant ? 0 : ZOOM_DURATION * 600
-      flyTimeoutRef.current = window.setTimeout(() => setReaderShown(true), delay)
+      // Frisches Öffnen eines Raum-Kapitels (Schritt 0): zuerst die Einstiegs-
+      // bühne (Raum groß + Heute/Morgen), danach per CTA in den Reader.
+      const wantEinstieg = nextStep === 0 && hasEinstieg(id)
+      flyTimeoutRef.current = window.setTimeout(() => {
+        setReaderShown(true)
+        if (wantEinstieg) setEinstiegOpen(true)
+      }, delay)
     },
     [animateTo, reducedMotion, chapters],
   )
@@ -298,6 +310,7 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
     if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
     setHandoff(null)
     setReaderShown(false)
+    setEinstiegOpen(false)
     setActiveId(null)
     animateTo(null, { instant: true })
   }, [animateTo])
@@ -474,6 +487,15 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             onStepChange={setStep}
             onBack={handleBack}
             onHandoff={handleHandoff}
+          />
+        )}
+
+        {/* Einstiegsbühne: nach dem Reinzoomen zuerst der Raum groß + Heute/
+            Morgen; der CTA schließt sie und gibt den Reader frei. */}
+        {activeChapter && einstiegOpen && (
+          <EinstiegsBuehne
+            chapter={activeChapter}
+            onWeiter={() => setEinstiegOpen(false)}
           />
         )}
 

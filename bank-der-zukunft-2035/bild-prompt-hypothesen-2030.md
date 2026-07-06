@@ -153,6 +153,18 @@ Quelle der Szenen: `alt`-Texte in `src/data/chapters.ts`.
 | Kapitel 8_2 | ja | Dicker Papier-Vertragsordner wird geschlossen und ins Regal zu identischen Ordnern abgeheftet | Dieselbe Kundin, älter, andere Kleidung, im Umzug; entspannt vor Bildschirm, Produktparameter passen sich in Leitplanken selbst an |
 | Kapitel 8_3 | – | Zähe Gremiensitzung über dicken Anforderungsstapeln und Wandplanungstafel | Kleines Produktteam im hellen Projektraum, KI simuliert parallel viele Varianten, Same-Day-Mockup auf dem Tisch |
 
+### 09 Vorstand & Governance (Boardroom) — NEU, keine Kund:innen
+
+Placeholder-Kapitel (siehe `chapters.ts`, id `vorstand`). Bilder `Kapitel 9_1..9_3`
++ `9_Demo`. Personen sind Vorstände/Board-Mitglieder — **keine** Alterungs-Regel.
+
+| Bild | Alter+ | Links (2026) | Rechts (2030) |
+|---|---|---|---|
+| Kapitel 9_1 | – | Vorstandssitzung, Entscheidung anhand gedruckter Quartalsberichte und Rückspiegel-Kennzahlen | Derselbe Boardroom: Vorstand steuert live an großem Governance-Cockpit mit Echtzeit-Kennzahlen (Kapital/Risiko/Liquidität) und KI-simulierten Szenarien |
+| Kapitel 9_2 | – | KI-Governance verstreut/delegiert — getrennte Fachbereichs-Screens, niemand am Vorstandstisch verantwortlich | Vorstand verantwortet KI-Governance zentral: Board-Ausschuss mit CAIO, Wandpanel mit KI-Leitplanken, Risikoappetit und Explainability-Sicht auf eine KI-Entscheidung |
+| Kapitel 9_3 | – | Strategie im starren Jahreszyklus — Jahresplanungs-Ordner, statische Wand-Roadmap, träge Umverteilung | Kontinuierliche KI-gestützte Strategiesteuerung: Vorstand am Live-Dashboard, dynamische Allokation von Kapital/Ressourcen am lebenden Betriebsmodell |
+| Kapitel 9_Demo | – | — (Absprung-Bild) | Heller Boardroom mit großem, frontal stehendem, **leerem grauen 16:9-Governance-Cockpit-Screen** für das Demo-Overlay |
+
 ---
 
 ## Anwendung

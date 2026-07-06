@@ -70,15 +70,17 @@
   }
 }
 
-/* ── Berater-Mascot (einfarbiges SVG) ──────────────────────────────────────── */
-.mascot {
+/* ── Berater-Avatar (gerendertes Bild im runden Chip) ──────────────────────── */
+.avatarImg {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
   transform-origin: 50% 92%;
 }
 
-.mascot[data-motion='on'] {
+.avatarImg[data-motion='on'] {
   animation: bob 4.5s ease-in-out infinite;
 }
 
@@ -89,34 +91,6 @@
   }
   50% {
     transform: translateY(-2px) rotate(-1.2deg);
-  }
-}
-
-/* Sprechwellen: standardmäßig unsichtbar, im „spricht"-Zustand eingeblendet und
-   dezent pulsierend. Bei reduzierter Bewegung nur statisch sichtbar. */
-.mascotWaves {
-  opacity: 0;
-  transform-origin: 74px 40px;
-  transition: opacity 220ms ease;
-}
-
-.mascot[data-speaking] .mascotWaves {
-  opacity: 0.9;
-}
-
-.mascot[data-motion='on'][data-speaking] .mascotWaves {
-  animation: speakWaves 1.4s ease-in-out infinite;
-}
-
-@keyframes speakWaves {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(0.9);
-  }
-  50% {
-    opacity: 0.95;
-    transform: scale(1.06);
   }
 }
 
@@ -245,8 +219,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .avatarBtn,
-  .mascot,
-  .mascotWaves,
+  .avatarImg,
   .avatarPing,
   .bubble {
     animation: none !important;

@@ -18,6 +18,19 @@ import {
 // werden über den Wrapper unten gesetzt, damit die Optik zum Bank-Theme passt.
 import styles from '../holodeck/SzenarioVorspann.module.css'
 import { useLang, type Lang } from '../i18n/LanguageContext'
+import imgInseln from '../holodeck/szenario-img/inseln.png'
+import imgGrenzenlos from '../holodeck/szenario-img/grenzenlos.png'
+import imgFestung from '../holodeck/szenario-img/festung.png'
+import imgVorsichtig from '../holodeck/szenario-img/vorsichtig.png'
+
+// Szenario-Illustration je Quadrant (KI×Geopolitik). Dient als dezentes
+// Kachel-Hintergrundbild und als Hero im Detailpanel.
+const SZENARIO_IMG: Record<string, string> = {
+  inseln: imgInseln,
+  grenzenlos: imgGrenzenlos,
+  festung: imgFestung,
+  vorsichtig: imgVorsichtig,
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SzenarioIntro — Auftakt „bevor das Haus öffnet".
@@ -291,6 +304,11 @@ export function SzenarioIntro({ onEnter }: Props): React.ReactElement {
                   >
                     {offen ? (
                       <>
+                        <span
+                          className={styles.tileBg}
+                          style={{ backgroundImage: `url(${SZENARIO_IMG[s.id]})` }}
+                          aria-hidden
+                        />
                         <span className={styles.tileHead}>
                           <span className={styles.tileTitle}>{s.title}</span>
                         </span>
@@ -319,6 +337,11 @@ export function SzenarioIntro({ onEnter }: Props): React.ReactElement {
           <div className={styles.panelScroll} ref={panelRef} data-active={aktiv ? '' : undefined}>
             {aktiv ? (
               <div className={styles.detail} style={{ '--sz': aktiv.color } as React.CSSProperties}>
+                <div
+                  className={styles.detailHero}
+                  style={{ backgroundImage: `url(${SZENARIO_IMG[aktiv.id]})` }}
+                  aria-hidden
+                />
                 <div className={styles.detailHead}>
                   <span className={styles.detailDot} aria-hidden />
                   <h2 className={styles.detailTitle}>{aktiv.title}</h2>

@@ -31,7 +31,7 @@ Ein **gläserner Aufzug als vertikale Spine** verbindet mittig alle Etagen.
 | Etage | Links | Rechts |
 |---|---|---|
 | **3. OG (oben)** | **Boardroom / Vorstand** — heller Tageslicht-Boardroom, großer Konferenztisch, an der Wand ein „Governance Cockpit" (Dashboard-Wand mit Kennzahlen, Donut-Charts, Balken) | **Produkte & Innovation** — Projektraum, Whiteboard-Wände mit Produkt-Mockups, Design-Sprint-Atmosphäre |
-| **2. OG** | **Compliance & Risk** — Risikocontroller an mehreren Monitoren (Risk-Monitoring-Desk, Trading-Desk-Anmutung), **kein** Boardroom | **Technologie / IT** — Serverraum mit Server-Rack-Reihen und **seitlichem Fenster**; **Mann und Frau stehen vor den Servern und unterhalten sich**, dazu normale Screens (kein Hologramm) |
+| **2. OG** | **Compliance & Risk** — Risikocontroller an mehreren Monitoren (Risk-Monitoring-Desk, Trading-Desk-Anmutung), **kein** Boardroom | **Technology & AI** (Label `TECHNOLOGY & AI`) — Tech-/AI-Hub: große Wand-Visualisierung eines **LLM/neuronalen Netzes** + **MLOps-Dashboard**, Engineers an Plätzen, dezente Server-Racks im Hintergrund, **Fenster**; Mann und Frau auf **normalem Berufsabstand** im Gespräch am Screen (kein Hologramm) |
 | **1. OG** | **Corporate Services / Organisationsentwicklung / HR** — heller, offener HR-/Lernbereich, **natürlich und locker verteilte** Personen (Einzelplätze + kleine Gruppe + Lern-Paar), nicht gedrängt | **Marktfolge** — Backoffice-Großraum, Reihen mit Workflow-Screens, ruhige Sachbearbeitung; Label **„OPERATIONS"** (nicht nur Kredit — Marktfolge deckt viele Prozesse ab) |
 | **Erdgeschoss** | **Filiale / Kundenperspektive** — Self-Service-Lounge und Schalter, einladend, hell | **Markt & Vertrieb** — Beratungsgespräch, Berater und Kunde am Tisch, Advisory-Cockpit-Screen |
 | **Aufzug (Mitte, vertikal)** | \multicolumn — **Transformation**: gläserner Panorama-Aufzug als leuchtende Spine durch alle Etagen | |
@@ -70,11 +70,13 @@ walls covered in product mockups, design-sprint feel.
 
 Second floor, LEFT: a COMPLIANCE & RISK control room — risk controllers seated
 at rows of monitors, risk-monitoring desks, a trading-desk look (not a
-boardroom). Second floor, RIGHT: an IT SERVER ROOM with rows of dark server
-racks and a side window letting in daylight; a man and a woman stand in front of
-the racks talking to each other; ordinary flat screens and only small green
-indicator lights on the racks — NO floating hologram, no cyan light wave
-hovering in mid-air.
+boardroom). Second floor, RIGHT: a TECHNOLOGY & AI hub — a couple of engineers
+at workstations, a large wall display with an abstract neural-network / large-
+language-model visualization next to an AI-operations (MLOps) dashboard, a modest
+row of server racks along the back and a side window with daylight; a man and a
+woman stand a comfortable professional distance apart (clearly separated, not
+close), discussing and gesturing at a wall screen — all visuals on flat screens,
+NO free-floating hologram in mid-air.
 
 First floor, LEFT: a CORPORATE SERVICES / HR bright open HR-and-learning space
 where a few colleagues work naturally and comfortably spaced — some at individual
@@ -93,7 +95,7 @@ silhouettes for context.
 Each room carries one short, correctly spelled room label as a neat sign on its
 back wall, consistent modern uppercase, deep green on light: top-left "BOARDROOM",
 top-right "PRODUCT & INNOVATION", second-left "COMPLIANCE & RISK", second-right
-"IT SERVER ROOM", first-left "CORPORATE SERVICES / HR", first-right "OPERATIONS",
+"TECHNOLOGY & AI", first-left "CORPORATE SERVICES / HR", first-right "OPERATIONS",
 ground-left "BRANCH", ground-right "ADVISORY". Spell each label exactly as given;
 these eight are the only text in the image.
 
@@ -137,7 +139,7 @@ Each room shows one small, clean, correctly spelled room label as a neat sign on
 - Top floor left, label "BOARDROOM": an occupied executive boardroom, several board members seated around a large conference table, facing a wall-mounted governance-cockpit dashboard with abstract donut charts and bars.
 - Top floor right, label "PRODUCT & INNOVATION": a project room with two or three people at whiteboard walls covered in product mockups.
 - Second floor left, label "COMPLIANCE & RISK": a control room with risk controllers seated at rows of monitors, a calm trading-desk look.
-- Second floor right, label "IT SERVER ROOM": rows of dark server racks with a window on the side letting in daylight; a man and a woman stand in front of the racks talking to each other; ordinary flat screens and small green rack lights, no floating hologram and no glowing wave hovering in the air.
+- Second floor right, label "TECHNOLOGY & AI": a technology and AI hub — a couple of engineers at workstations, a large wall display showing an abstract neural-network / large-language-model visualization next to an AI-operations (MLOps) monitoring dashboard, a modest row of server racks along the back, and a window letting in daylight. A man and a woman stand a comfortable professional distance apart, clearly separated (not close together), discussing and gesturing towards a wall screen; all visuals stay on flat screens, no free-floating hologram in the air.
 - First floor left, label "CORPORATE SERVICES / HR": a bright open HR and learning space where a few colleagues work naturally and comfortably spaced — some at individual desks, two or three around one small meeting table, one pair at a learning screen; relaxed and orderly, not cramped or awkwardly crowded.
 - First floor right, label "OPERATIONS": a calm back-office operations floor with rows of workflow screens, orderly, handling various banking processes (not only loans).
 - Ground floor left, label "BRANCH": a welcoming retail branch with a self-service lounge and a staffed teller counter.
@@ -165,13 +167,14 @@ per floor). Top-left OCCUPIED executive boardroom (executives seated at the
 table) with a governance-cockpit dashboard wall; top-right innovation room with
 mockup whiteboards; 2F-left compliance & risk control room (controllers at
 monitor rows); 2F-right IT server room with racks, a side window and a man and a
-woman standing in front of the servers talking (NO floating hologram); 1F-left
-corporate/HR learning space (people naturally, comfortably spaced); 1F-right
-back-office operations floor (various processes, not only loans); ground-left
-retail branch with self-service lounge; ground-right advisory meeting. One short
-correctly-spelled room label per room on the back wall (BOARDROOM, PRODUCT &
-INNOVATION, COMPLIANCE & RISK, IT SERVER ROOM, CORPORATE SERVICES / HR,
-OPERATIONS, BRANCH, ADVISORY). Light stone and wood, glass, Deloitte-green
+woman standing a professional distance apart discussing at a wall screen with an
+LLM/neural-network visualization and an MLOps dashboard, plus a modest rack row
+and a window (NO floating hologram); 1F-left corporate/HR learning space (people
+naturally, comfortably spaced); 1F-right back-office operations floor (various
+processes, not only loans); ground-left retail branch with self-service lounge;
+ground-right advisory meeting. One short correctly-spelled room label per room on
+the back wall (BOARDROOM, PRODUCT & INNOVATION, COMPLIANCE & RISK, TECHNOLOGY &
+AI, CORPORATE SERVICES / HR, OPERATIONS, BRANCH, ADVISORY). Light stone and wood, glass, Deloitte-green
 accent #046A38, cyan glow only on flat screens, monochrome icons, calm and
 high-end. Aspect 3:2, 1536x1024.
 ```

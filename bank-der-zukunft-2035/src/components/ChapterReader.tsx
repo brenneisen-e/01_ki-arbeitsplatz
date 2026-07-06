@@ -23,6 +23,7 @@ import {
 import styles from './ChapterReader.module.css'
 import { ImageSlot } from './ImageSlot'
 import { LeitfrageChat } from './LeitfrageChat'
+import { ConsultantAvatar } from '../consultant/ConsultantAvatar'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
 import {
@@ -72,6 +73,8 @@ type ReaderStrings = {
   kpiHeading: string
   kpiHint: string
   kpiFootnote: string
+  consultantOpen: string
+  consultantClose: string
 }
 
 const STR: Record<Lang, ReaderStrings> = {
@@ -117,6 +120,8 @@ const STR: Record<Lang, ReaderStrings> = {
     kpiHeading: 'Erwartete Wirkung bei Erfüllung der Hypothesen',
     kpiHint: 'bei Erfüllung der Hypothesen',
     kpiFootnote: 'Illustrative Platzhalter — konkrete Zielwerte je Kapitel folgen.',
+    consultantOpen: 'Leitfrage anzeigen',
+    consultantClose: 'Leitfrage ausblenden',
   },
   en: {
     back: 'Overview',
@@ -160,6 +165,8 @@ const STR: Record<Lang, ReaderStrings> = {
     kpiHeading: 'Expected impact once the hypotheses are met',
     kpiHint: 'once the hypotheses are met',
     kpiFootnote: 'Illustrative placeholders — concrete targets per chapter to follow.',
+    consultantOpen: 'Show guiding question',
+    consultantClose: 'Hide guiding question',
   },
 }
 
@@ -780,6 +787,20 @@ export function ChapterReader({
           hypoTitle={effTitle}
           in2030={effIn2030}
           onClose={() => setChatOpen(false)}
+        />
+      )}
+
+      {/* "Karl-Klammer"-Consultant unten rechts: stellt die Leitfrage des
+          aktuellen Schritts. Blendet sich bei Schritten ohne Leitfrage
+          (Aktivität, Management Summary) automatisch aus. Im Bearbeitungsmodus
+          ausgeblendet, damit er die Editier-Felder nicht überlagert. */}
+      {!editMode && (
+        <ConsultantAvatar
+          leitfrage={hypothesis ? effLeitfrage : ''}
+          label={t.leitfrage}
+          context={kicker}
+          openLabel={t.consultantOpen}
+          closeLabel={t.consultantClose}
         />
       )}
     </div>

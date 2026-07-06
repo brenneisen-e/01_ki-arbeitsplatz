@@ -186,7 +186,7 @@ PHASEN=[
   ["KI-Deckblatt deckt die Prüfschritte 1–5 ab (BÜ-Wunsch, MV formal & inhaltlich, Pool/Untervollmacht, Unterschriften)",
    "Übergabe-Datensatz = alle extrahierten + alle interpretierten Werte (vollständige Liste siehe Tabelle unten)",
    "Kein BÜ-Wunsch: Umrouting ans Eingangsmanagement, keine automatisierte Prüfung",
-   "Ablage des Datensatzes in SharePoint-Liste oder ERGO Datapool (Eingangskanal noch offen)"]),
+   "Ablage am Übergabepunkt: ERGO Datapool, SharePoint oder ein anderer Kanal (noch offen)"]),
  ("3 · Prüf-Bot · Einzelprüfung je Vorgang und digitales Prüfdeckblatt",
   "Der Prüf-Bot prüft jeden BÜ-Vorgang einzeln und durchläuft je Mail alle System-Prüfungen 6–16 (Schritt 9/VVR erfolgt "
   "manuell am Ende, da Robots im Vermittlerregister nicht zulässig sind). Bei Wunsch „gesamte Kundenverbindung“ werden "
@@ -206,23 +206,24 @@ PHASEN=[
    "Mitarbeiter entscheidet je Vorgang: freigeben (weiter in den Postkorb) oder ablehnen (Absage an Makler)",
    "Entscheidung erfolgt VOR dem Postkorb",
    "Robotics Cockpit als Werkzeug-Idee — technische Machbarkeit durch das Robotics Competence Center zu prüfen"]),
- ("5 · Postkorb · Archivierung und Roboter-Notiz als Entwurf",
-  "In den Postkorb gelangt ein Vorgang, wenn er alle Kriterien erfüllt, wenn nur optionale Kriterien verletzt sind oder "
-  "wenn er über das Cockpit freigegeben wurde. Im Postkorb laufen zwei Schritte parallel: die Archivierung der Vorgänge "
-  "(inkl. Prüfdeckblatt) und das Einstellen einer vom Roboter vorbefüllten Roboter-Notiz als Entwurf. Ob sich eine "
-  "Roboter-Notiz technisch als Entwurf einstellen lässt, ist eine Idee, die das Robotics Competence Center noch bewerten "
-  "und validieren muss.",
-  ["Eingangsbedingung: alles erfüllt ODER nur optionale Kriterien verletzt ODER per Cockpit freigegeben",
-   "(1) Archivierung der Vorgänge inkl. Prüfdeckblatt als Nachweis der durchlaufenen Prüfungen",
-   "(2) Roboter-Notiz wird vom Roboter vorbefüllt und als Entwurf eingestellt — Idee, technische Machbarkeit durch das Robotics Competence Center zu prüfen",
-   "Notiz-Schlüssel: 2011 (KV) / 1515 (KOM·LEB)"]),
- ("6 · Freigabe oder Änderung der Roboter-Notiz",
-  "Im Zielbild wird die heutige Roboter-Notiz vollständig vom Roboter vorbefüllt, sodass der Mitarbeiter sie nur noch "
-  "bestätigen oder bei Bedarf anpassen muss. Die fachliche Letztverantwortung bleibt beim Menschen, während die Erstellung "
-  "weitgehend automatisiert ist. Anschließend läuft die bestehende Ausführung.",
-  ["Mensch prüft die vorbefüllte Roboter-Notiz und gibt sie frei; bei Abweichungen wird sie vor der Freigabe geändert",
-   "Ziel: Aufwand reduziert auf Bestätigen statt manuelles Erstellen der Notiz",
-   "Danach: Ausführung der BÜ (72h-Routing bei AO-Bestand, BÜ-Bot 1515 / BeMaS 2011), Maklerinformation und QS"]),
+ ("5 · Postkorb über EMWS · Direktablage (Absage) oder Notiz (positiv)",
+  "Nach der Kriterien-Matrix bzw. dem optionalen Cockpit wird der Postkorbvorgang über das EMWS eröffnet. Anschließend "
+  "verzweigt der Prozess nach dem BÜ-Ergebnis in zwei Wege: abgelehnte Vorgänge (Absage bereits an den Makler versandt) "
+  "erhalten ein Direktablagekennzeichen und werden direkt archiviert; positive Vorgänge werden als Postkorbvorgang mit "
+  "allen Prüfinformationen und einer Notiz eröffnet. Diese Notiz dient der Beladung des bestehenden BÜ-Bots.",
+  ["Postkorbvorgang wird über das EMWS eröffnet (für abgelehnte wie positive Vorgänge)",
+   "Abgelehnt: Direktablagekennzeichen setzen und den Vorgang direkt archivieren (keine weitere Bearbeitung)",
+   "Positiv: Postkorbvorgang mit allen Prüfinformationen und Notiz eröffnen; die Notiz belädt den bestehenden BÜ-Bot",
+   "Positiv umfasst: alle Kriterien erfüllt, nur optionale verletzt oder per Cockpit freigegeben"]),
+ ("6 · Phase 1 (SB-Freigabe) bzw. Zielbild (IKS) · Übergabe an den BÜ-Bot",
+  "Für die Übergabe an den bestehenden BÜ-Bot gibt es zwei Umsetzungsstufen. In Phase 1 wird die Notiz als Entwurf für "
+  "den Sachbearbeiter eingestellt, damit der Vorgang noch einmal geprüft werden kann; der Sachbearbeiter gibt die Notiz "
+  "frei (Human-in-the-Loop). Im Zielbild werden richtig geprüfte Vorgänge über einen IKS-Prozess direkt an den Roboter "
+  "gegeben. In beiden Fällen führt anschließend der bestehende BÜ-Bot die Übertragung aus.",
+  ["Phase 1 (heute): Notiz als Entwurf für den Sachbearbeiter; Prüfung und Freigabe durch den Menschen (HITL)",
+   "Zielbild: richtig geprüfte Vorgänge werden über einen IKS-Prozess direkt an den Roboter übergeben (ohne manuelle Freigabe)",
+   "Ausführung durch den bestehenden BÜ-Bot: 1515 (KOM·LEB) / BeMaS 2011 (KV), inkl. 72h-Vorabinfo bei AO-Bestand",
+   "Abschluss: Bot-Ergebnis-QS (Schritt 18) und Maklerinformation über Contex"]),
 ]
 for nr,(titel) in enumerate(PHASEN):
     title,text,bullets=PHASEN[nr]

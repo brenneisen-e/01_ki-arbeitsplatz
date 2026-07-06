@@ -37,6 +37,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { NodeIO } from '@gltf-transform/core'
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions'
 
 const API = 'https://api.meshy.ai'
 const EP = {
@@ -154,7 +155,9 @@ async function download(url) {
 // kopiert und über die Knochen-Namen (Fallback: Node-Index) auf das
 // Basis-Skelett umgebogen.
 async function mergeAnimations(parts) {
-  const io = new NodeIO()
+  // Extensions registrieren, sonst werden optionale Material-Extensions der
+  // Meshy-GLBs (KHR_materials_specular, KHR_materials_ior) beim Merge verworfen.
+  const io = new NodeIO().registerExtensions(ALL_EXTENSIONS)
   const [first, ...rest] = parts
   const base = await io.readBinary(new Uint8Array(first.bin))
   const root = base.getRoot()

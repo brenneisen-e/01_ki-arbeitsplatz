@@ -875,7 +875,7 @@ const RAW_CHAPTERS: RawChapter[] = [
   // ── 07 Transformation · Glas-Aufzug (Spine) ───────────────────────────────
   {
     id: 'transformation',
-    kapitel: '07',
+    kapitel: '09',
     label: { de: 'Transformation mit Deloitte', en: 'Transformation with Deloitte' },
     ort: { de: 'Glas-Aufzug (vertikal, alle Etagen)', en: 'Glass elevator (vertical, all floors)' },
     keyObject: 'die Glas-Spine durch alle Etagen',
@@ -1019,7 +1019,7 @@ const RAW_CHAPTERS: RawChapter[] = [
   // Format feststeht (iframe-Demo / Co-Creation / eigenes Tool).
   {
     id: 'projekt',
-    kapitel: '08',
+    kapitel: '07',
     label: { de: 'Produkte & Innovation', en: 'Products & Innovation' },
     ort: { de: '3. OG rechts (Projektraum)', en: '3rd floor right (project room)' },
     keyObject: 'Whiteboard-Wand mit Produkt-Mockups',
@@ -1113,7 +1113,7 @@ const RAW_CHAPTERS: RawChapter[] = [
   // einen sauberen Platzhalter. Bild-Prompts: bild-prompt-hypothesen-2030.md.
   {
     id: 'vorstand',
-    kapitel: '09',
+    kapitel: '08',
     label: { de: 'Vorstand & Governance', en: 'Executive Board & Governance' },
     ort: { de: '3. OG links (Boardroom)', en: '3rd floor left (boardroom)' },
     keyObject: 'Governance-Cockpit an der Wand',

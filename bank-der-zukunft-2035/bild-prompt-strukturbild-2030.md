@@ -32,7 +32,7 @@ Ein **gläserner Aufzug als vertikale Spine** verbindet mittig alle Etagen.
 |---|---|---|
 | **3. OG (oben)** | **Boardroom / Vorstand** — heller Tageslicht-Boardroom, großer Konferenztisch, an der Wand ein „Governance Cockpit" (Dashboard-Wand mit Kennzahlen, Donut-Charts, Balken) | **Produkte & Innovation** — Projektraum, Whiteboard-Wände mit Produkt-Mockups, Design-Sprint-Atmosphäre |
 | **2. OG** | **Compliance & Risk** — Risikocontroller an mehreren Monitoren (Risk-Monitoring-Desk, Trading-Desk-Anmutung), **kein** Boardroom | **Technologie / IT** — Serverraum mit Server-Rack-Reihen und **seitlichem Fenster**; **Mann und Frau stehen vor den Servern und unterhalten sich**, dazu normale Screens (kein Hologramm) |
-| **1. OG** | **Corporate Services / Organisationsentwicklung / HR** — offener Team-/Lernbereich, Menschen an Tischen, immersives Training angedeutet | **Marktfolge** — Backoffice-Großraum, Reihen mit Workflow-Screens, ruhige Sachbearbeitung |
+| **1. OG** | **Corporate Services / Organisationsentwicklung / HR** — heller, offener HR-/Lernbereich, **natürlich und locker verteilte** Personen (Einzelplätze + kleine Gruppe + Lern-Paar), nicht gedrängt | **Marktfolge** — Backoffice-Großraum, Reihen mit Workflow-Screens, ruhige Sachbearbeitung; Label **„OPERATIONS"** (nicht nur Kredit — Marktfolge deckt viele Prozesse ab) |
 | **Erdgeschoss** | **Filiale / Kundenperspektive** — Self-Service-Lounge und Schalter, einladend, hell | **Markt & Vertrieb** — Beratungsgespräch, Berater und Kunde am Tisch, Advisory-Cockpit-Screen |
 | **Aufzug (Mitte, vertikal)** | \multicolumn — **Transformation**: gläserner Panorama-Aufzug als leuchtende Spine durch alle Etagen | |
 
@@ -76,10 +76,12 @@ the racks talking to each other; ordinary flat screens and only small green
 indicator lights on the racks — NO floating hologram, no cyan light wave
 hovering in mid-air.
 
-First floor, LEFT: a CORPORATE SERVICES / HR open team-and-learning space, people
-at tables, a hint of immersive training. First floor, RIGHT: a back-office
-open-plan floor (loan operations) with rows of workflow screens, quiet and
-orderly.
+First floor, LEFT: a CORPORATE SERVICES / HR bright open HR-and-learning space
+where a few colleagues work naturally and comfortably spaced — some at individual
+desks, two or three around one small meeting table, one pair at a learning screen
+— relaxed and orderly, not cramped or awkwardly crowded. First floor, RIGHT: a
+calm back-office OPERATIONS floor with rows of workflow screens, orderly,
+handling various banking processes (not only loans).
 
 Ground floor, LEFT: a welcoming retail BRANCH with a self-service lounge and a
 teller counter with staff and customers. Ground floor, RIGHT: a sales ADVISORY
@@ -91,9 +93,9 @@ silhouettes for context.
 Each room carries one short, correctly spelled room label as a neat sign on its
 back wall, consistent modern uppercase, deep green on light: top-left "BOARDROOM",
 top-right "PRODUCT & INNOVATION", second-left "COMPLIANCE & RISK", second-right
-"IT SERVER ROOM", first-left "CORPORATE SERVICES / HR", first-right "LOAN
-OPERATIONS", ground-left "BRANCH", ground-right "ADVISORY". Spell each label
-exactly as given; these eight are the only text in the image.
+"IT SERVER ROOM", first-left "CORPORATE SERVICES / HR", first-right "OPERATIONS",
+ground-left "BRANCH", ground-right "ADVISORY". Spell each label exactly as given;
+these eight are the only text in the image.
 
 Material and color: light stone and warm wood surfaces, glass, professional and
 restrained. Accent color deep Deloitte green (#046A38) with a secondary brighter
@@ -136,8 +138,8 @@ Each room shows one small, clean, correctly spelled room label as a neat sign on
 - Top floor right, label "PRODUCT & INNOVATION": a project room with two or three people at whiteboard walls covered in product mockups.
 - Second floor left, label "COMPLIANCE & RISK": a control room with risk controllers seated at rows of monitors, a calm trading-desk look.
 - Second floor right, label "IT SERVER ROOM": rows of dark server racks with a window on the side letting in daylight; a man and a woman stand in front of the racks talking to each other; ordinary flat screens and small green rack lights, no floating hologram and no glowing wave hovering in the air.
-- First floor left, label "CORPORATE SERVICES / HR": an open team-and-learning space with people at tables.
-- First floor right, label "LOAN OPERATIONS": a back-office floor with rows of workflow screens, quiet and orderly.
+- First floor left, label "CORPORATE SERVICES / HR": a bright open HR and learning space where a few colleagues work naturally and comfortably spaced — some at individual desks, two or three around one small meeting table, one pair at a learning screen; relaxed and orderly, not cramped or awkwardly crowded.
+- First floor right, label "OPERATIONS": a calm back-office operations floor with rows of workflow screens, orderly, handling various banking processes (not only loans).
 - Ground floor left, label "BRANCH": a welcoming retail branch with a self-service lounge and a staffed teller counter.
 - Ground floor right, label "ADVISORY": an adviser and a client at a table with a screen.
 Outside, to the left, right and below: a subtle plaza with a few customer silhouettes for context.
@@ -164,13 +166,14 @@ table) with a governance-cockpit dashboard wall; top-right innovation room with
 mockup whiteboards; 2F-left compliance & risk control room (controllers at
 monitor rows); 2F-right IT server room with racks, a side window and a man and a
 woman standing in front of the servers talking (NO floating hologram); 1F-left
-corporate/HR learning space; 1F-right back-office
-workflow floor; ground-left retail branch with self-service lounge; ground-right
-advisory meeting. One short correctly-spelled room label per room on the back
-wall (BOARDROOM, PRODUCT & INNOVATION, COMPLIANCE & RISK, IT SERVER ROOM,
-CORPORATE SERVICES / HR, LOAN OPERATIONS, BRANCH, ADVISORY). Light stone and
-wood, glass, Deloitte-green accent #046A38, cyan glow only on flat screens,
-monochrome icons, calm and high-end. Aspect 3:2, 1536x1024.
+corporate/HR learning space (people naturally, comfortably spaced); 1F-right
+back-office operations floor (various processes, not only loans); ground-left
+retail branch with self-service lounge; ground-right advisory meeting. One short
+correctly-spelled room label per room on the back wall (BOARDROOM, PRODUCT &
+INNOVATION, COMPLIANCE & RISK, IT SERVER ROOM, CORPORATE SERVICES / HR,
+OPERATIONS, BRANCH, ADVISORY). Light stone and wood, glass, Deloitte-green
+accent #046A38, cyan glow only on flat screens, monochrome icons, calm and
+high-end. Aspect 3:2, 1536x1024.
 ```
 
 ---

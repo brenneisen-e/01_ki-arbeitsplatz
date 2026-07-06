@@ -12,28 +12,27 @@
   /* Helles Reader-Theme (Variante A): Design-Tokens lokal auf hell überschreiben,
      damit alle Karten/Texte/Ränder im Reader automatisch hell werden — passend
      zum hellen Strukturbild, ohne jede Regel einzeln umzubauen. */
-  --ink: #1c1e22;
-  --ink-2: #4a4d52;
-  --ink-3: #797d82;
-  --bg-1: #eef0ec;
-  --bg-2: #e5e8e2;
-  /* Karten/Flächen als feste helle Flächen (weiß-basiert), damit Text auch über
-     dem durchscheinenden Haus lesbar bleibt. */
-  --surface-1: rgba(255, 255, 255, 0.72);
-  --surface-2: rgba(255, 255, 255, 0.82);
-  --surface-3: rgba(255, 255, 255, 0.9);
-  --border-soft: rgba(0, 0, 0, 0.12);
-  --border-strong: rgba(0, 0, 0, 0.2);
-  --glass: rgba(255, 255, 255, 0.82);
-  --glass-strong: rgba(255, 255, 255, 0.92);
-  --shadow-1: 0 8px 30px rgba(0, 0, 0, 0.12);
-  --shadow-2: 0 24px 70px rgba(0, 0, 0, 0.18);
+  /* Magazin-/Papier-Palette (wie die Landing-Page): Creme-Flächen, dunkler
+     Print-Text, dünne Linien, KEINE Schatten. */
+  --ink: #1b1c1a;
+  --ink-2: #4c4e47;
+  --ink-3: #8a8c82;
+  --bg-1: #f7f4ec;
+  --bg-2: #efe9db;
+  --surface-1: #f7f4ec;
+  --surface-2: #efe9db;
+  --surface-3: #e6dfcd;
+  --border-soft: rgba(27, 28, 26, 0.14);
+  --border-strong: rgba(27, 28, 26, 0.24);
+  --glass: rgba(247, 244, 236, 0.88);
+  --glass-strong: rgba(247, 244, 236, 0.96);
+  --shadow-1: none;
+  --shadow-2: none;
   color: var(--ink);
   display: flex;
   flex-direction: column;
-  /* Mattiertes Glas: halbtransparenter heller Schleier + starker Blur, sodass
-     das gezoomte Haus dahinter als weiche, helle Fläche durchscheint. */
-  background: rgba(245, 247, 243, 0.58);
+  /* Mattiertes Glas in Creme: das gezoomte Haus scheint weich durch. */
+  background: rgba(245, 242, 234, 0.62);
   backdrop-filter: blur(20px) saturate(118%);
   -webkit-backdrop-filter: blur(20px) saturate(118%);
   animation: fadeIn 0.5s var(--ease-out) both;
@@ -461,15 +460,13 @@
   -webkit-backdrop-filter: blur(7px) saturate(115%);
   box-shadow: var(--shadow-1);
   transition:
-    transform var(--t-med) var(--ease-out),
-    box-shadow var(--t-med) var(--ease-out),
+    background var(--t-med) var(--ease-out),
     border-color var(--t-med) var(--ease-out);
 }
 
 .compareCard:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-2);
-  border-color: var(--border-strong);
+  background: var(--surface-2);
+  border-color: var(--accent);
 }
 
 .compareCard[data-quo] {
@@ -480,12 +477,10 @@
   border: 1px solid var(--accent);
   border-top: 3px solid var(--accent-bright);
   background: var(--accent-tint);
-  box-shadow: 0 14px 36px rgba(4, 106, 56, 0.16);
 }
 
 .compareCard[data-future]:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 48px rgba(4, 106, 56, 0.26);
+  background: rgba(4, 106, 56, 0.2);
   border-color: var(--accent-bright);
 }
 
@@ -510,8 +505,8 @@
 }
 
 .compareText {
-  font-size: clamp(14px, 1vw, 16.5px);
-  line-height: 1.5;
+  font-size: clamp(16px, 1.35vw, 21px);
+  line-height: 1.55;
   color: var(--ink-2);
 }
 
@@ -888,8 +883,8 @@
 }
 
 .summaryBulletText {
-  font-size: clamp(16px, 1.3vw, 21px);
-  line-height: 1.5;
+  font-size: clamp(17px, 1.4vw, 23px);
+  line-height: 1.55;
   color: var(--ink);
 }
 
@@ -931,15 +926,13 @@
   -webkit-backdrop-filter: blur(7px) saturate(115%);
   box-shadow: var(--shadow-1);
   transition:
-    transform var(--t-med) var(--ease-out),
-    box-shadow var(--t-med) var(--ease-out),
+    background var(--t-med) var(--ease-out),
     border-color var(--t-med) var(--ease-out);
 }
 
 .summaryBlock:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-2);
-  border-color: var(--border-strong);
+  background: var(--surface-2);
+  border-color: var(--accent);
 }
 
 .kpiCard {
@@ -955,14 +948,12 @@
   -webkit-backdrop-filter: blur(7px) saturate(115%);
   box-shadow: var(--shadow-1);
   transition:
-    transform var(--t-med) var(--ease-out),
-    box-shadow var(--t-med) var(--ease-out),
+    background var(--t-med) var(--ease-out),
     border-color var(--t-med) var(--ease-out);
 }
 
 .kpiCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 44px rgba(4, 106, 56, 0.2);
+  background: var(--accent-tint);
   border-color: var(--accent);
 }
 

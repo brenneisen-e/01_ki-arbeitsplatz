@@ -180,51 +180,51 @@ const KPIS: {
 // die Kernaussage hervor.
 const SUMMARY_BULLETS: Record<string, { de: string; en: string }[]> = {
   kunde: [
-    { de: '**Banking wird unsichtbar**: KI-Assistenten begleiten im Alltag, statt dass Kund:innen aktiv „Banking machen".', en: '**Banking becomes invisible**: AI assistants accompany daily life instead of customers actively “doing banking”.' },
-    { de: '**Von Optionen zu Entscheidungen**: klare, simulierte und begründete Empfehlungen statt Produktlisten.', en: '**From options to decisions**: clear, simulated and reasoned recommendations instead of product lists.' },
-    { de: '**Von reaktiv zu proaktiv**: teilautonome Finanzsteuerung mit Vertrauensmandat — Kund:in entscheidet auf KI-vorbereiteter Basis.', en: '**From reactive to proactive**: semi-autonomous financial management with a trust mandate — the customer decides on an AI-prepared basis.' },
+    { de: '**Banking wird unsichtbar**: KI-Assistenten begleiten Kund:innen kontinuierlich im Alltag; die aktive, kanalzentrierte Interaktion tritt in den Hintergrund.', en: '**Banking becomes invisible**: AI assistants accompany customers continuously in daily life; active, channel-centric interaction recedes into the background.' },
+    { de: '**Von der Auswahl zur Entscheidung**: KI überführt eine Vielzahl an Optionen in klare, simulierte und begründete Empfehlungen.', en: '**From selection to decision**: AI turns a multitude of options into clear, simulated and reasoned recommendations.' },
+    { de: '**Von reaktiv zu proaktiv**: teilautonome Finanzsteuerung mit Vertrauensmandat — die Kund:in entscheidet auf KI-vorbereiteter Grundlage.', en: '**From reactive to proactive**: semi-autonomous financial management with a trust mandate — the customer decides on an AI-prepared basis.' },
   ],
   vertrieb: [
-    { de: '**Vom Produktverkauf zum Lösungsorchestrator**: Berater:innen gestalten mit KI maßgeschneiderte Lösungen.', en: '**From product sales to solution orchestrator**: advisers co-design tailored solutions with AI.' },
-    { de: '**Berater:innen werden KI-augmentierte Strategiepartner** — der Mensch bei komplexen, emotionalen Themen.', en: '**Advisers become AI-augmented strategic partners** — humans on complex, emotional topics.' },
-    { de: '**Kundenschnittstelle wird permanent und hyperpersonalisiert** — kanalübergreifend, in Echtzeit.', en: '**The customer interface becomes permanent and hyper-personalised** — cross-channel, in real time.' },
+    { de: '**Vom Produktvertrieb zur Lösungsorchestrierung**: Berater:innen entwickeln mit KI maßgeschneiderte Lösungen.', en: '**From product sales to solution orchestration**: advisers develop tailored solutions with AI.' },
+    { de: '**Beratung wird KI-augmentiert**: der Mensch fokussiert komplexe und emotionale Entscheidungen.', en: '**Advisory becomes AI-augmented**: people focus on complex and emotional decisions.' },
+    { de: '**Die Kundenschnittstelle wird dauerhaft und hyperpersonalisiert** — kanalübergreifend und in Echtzeit.', en: '**The customer interface becomes permanent and hyper-personalised** — cross-channel and in real time.' },
   ],
   marktfolge: [
-    { de: '**Marktfolge wird autonome Dunkelverarbeitung** — der Mensch nur noch bei echten Sonderfällen.', en: '**Operations become autonomous straight-through processing** — humans only on genuine exceptions.' },
-    { de: '**Interne Wertschöpfung bricht auf**: modulare Utility-Plattformen, die Bank als Orchestrator.', en: '**The internal value chain breaks open**: modular utility platforms, the bank as orchestrator.' },
-    { de: '**Von der Kostenstelle zur Serviceplattform** (Banking-as-a-Service); Compliance „by design" im Lifecycle.', en: '**From cost centre to service platform** (banking-as-a-service); compliance “by design” in the lifecycle.' },
+    { de: '**Marktfolge wird zur autonomen Dunkelverarbeitung**; menschliches Eingreifen beschränkt sich auf begründete Ausnahmefälle.', en: '**Operations become autonomous straight-through processing**; human intervention is limited to justified exceptions.' },
+    { de: '**Die interne Wertschöpfung öffnet sich**: modulare Utility-Plattformen, die Bank agiert als Orchestrator.', en: '**The internal value chain opens up**: modular utility platforms, with the bank acting as orchestrator.' },
+    { de: '**Von der Kostenstelle zur skalierbaren Serviceplattform** (Banking-as-a-Service); Compliance ist „by design" im Prozess-Lifecycle verankert.', en: '**From cost centre to a scalable service platform** (banking-as-a-service); compliance is embedded “by design” in the process lifecycle.' },
   ],
   corporate: [
-    { de: '**Von Training zu kontinuierlichem, KI-personalisiertem Skill-Aufbau** (inkl. immersivem VR-Lernen).', en: '**From training to continuous, AI-personalised skill-building** (incl. immersive VR learning).' },
-    { de: '**Organisation wird durch Skills gesteuert, nicht durch Strukturen** — fluide Teams.', en: '**The organisation is steered by skills, not structures** — fluid teams.' },
-    { de: '**Workforce-Steuerung wird vorausschauend und datenbasiert**; Demografie erzwingt lebenslanges Reskilling.', en: '**Workforce management becomes predictive and data-driven**; demographics force lifelong reskilling.' },
+    { de: '**Von punktuellem Training zu kontinuierlichem, KI-personalisiertem Kompetenzaufbau** (inklusive immersiver Lernformate).', en: '**From point-in-time training to continuous, AI-personalised capability building** (including immersive formats).' },
+    { de: '**Die Organisation wird über Kompetenzen gesteuert statt über Strukturen** — flexible, fließende Teams.', en: '**The organisation is steered by capabilities rather than structures** — flexible, fluid teams.' },
+    { de: '**Personalsteuerung wird vorausschauend und datenbasiert**; der demografische Wandel erfordert lebenslanges Reskilling.', en: '**Workforce management becomes predictive and data-driven**; demographic change requires lifelong reskilling.' },
   ],
   it: [
-    { de: '**Selbstoptimierende AI-Delivery ersetzt klassische Entwicklung** — Teams steuern statt zu coden.', en: '**Self-optimising AI delivery replaces classic development** — teams steer instead of coding.' },
-    { de: '**IT wird zur datengetriebenen, sich selbst verbessernden Plattform** (Geschwindigkeit, Loop).', en: '**IT becomes a data-driven, self-improving platform** (speed, loop).' },
-    { de: '**Vom Gatekeeper zum Enabler**: vertikale, integrierte Delivery-Teams; KI entscheidet in Leitplanken.', en: '**From gatekeeper to enabler**: vertical, integrated delivery teams; AI decides within guardrails.' },
+    { de: '**Selbstoptimierende AI-Delivery löst die klassische Softwareentwicklung ab**; Teams steuern und überwachen, statt zu programmieren.', en: '**Self-optimising AI delivery replaces classic software development**; teams steer and oversee rather than program.' },
+    { de: '**Die IT wird zur datengetriebenen, sich kontinuierlich verbessernden Plattform.**', en: '**IT becomes a data-driven, continuously self-improving platform.**' },
+    { de: '**Von der Gatekeeper- zur Enabler-Rolle**: integrierte, vertikale Delivery-Teams; KI entscheidet innerhalb definierter Leitplanken.', en: '**From gatekeeper to enabler**: integrated, vertical delivery teams; AI decides within defined guardrails.' },
   ],
   compliance: [
-    { de: '**Von Ex-post-Prüfung zu Echtzeit-Compliance** direkt in den Systemen.', en: '**From ex-post review to real-time compliance** embedded in the systems.' },
-    { de: '**Integrierte, kontinuierliche Kontrolle** im KI-überwachten Governance-Cockpit (CAIO).', en: '**Integrated, continuous control** in an AI-monitored governance cockpit (CAIO).' },
-    { de: '**Cyber- und Operational-Risk-Resilienz wird überlebenswichtig** und ins Betriebsmodell integriert.', en: '**Cyber and operational-risk resilience becomes vital** and integrated into the operating model.' },
-    { de: '**Compliance & Revision werden Enabler** der KI-Transformation (Explainability).', en: '**Compliance & audit become enablers** of the AI transformation (explainability).' },
+    { de: '**Von der nachgelagerten Prüfung zur Echtzeit-Compliance** direkt in den Systemen.', en: '**From ex-post review to real-time compliance** embedded directly in the systems.' },
+    { de: '**Integrierte, kontinuierliche Kontrolle** in einem KI-überwachten Governance-Cockpit.', en: '**Integrated, continuous control** in an AI-monitored governance cockpit.' },
+    { de: '**Cyber- und Operational-Risk-Resilienz wird geschäftskritisch** und ist fest im Betriebsmodell verankert.', en: '**Cyber and operational-risk resilience becomes business-critical** and is firmly anchored in the operating model.' },
+    { de: '**Compliance und Innenrevision werden zu Enablern** der KI-Transformation (Explainability).', en: '**Compliance and internal audit become enablers** of the AI transformation (explainability).' },
   ],
   transformation: [
-    { de: '**AI als Fixstern**: die Plattform wird Geschäfts- und Betriebsmodell; Fokus auf HR/Change.', en: '**AI as the guiding star**: the platform becomes the business and operating model; focus on HR/change.' },
-    { de: '**AI-natives Target Operating Model** mit E2E-Journey-Teams und Human-in-the-loop.', en: '**AI-native target operating model** with end-to-end journey teams and human-in-the-loop.' },
-    { de: '**Decision-first statt Use-Case-Zoo**: klare Roadmap und Decision Spine vor dem Rollout.', en: '**Decision-first instead of a use-case zoo**: a clear roadmap and decision spine before rollout.' },
-    { de: '**Change im Target Operating Model verankert**; neue Projektmethodik von Reifegrad zu Zielbild.', en: '**Change anchored in the target operating model**; new project methodology from maturity to target picture.' },
+    { de: '**KI als strategischer Fixstern**: die Plattform wird zum Geschäfts- und Betriebsmodell; Fokus auf Kultur und Befähigung.', en: '**AI as a strategic guiding star**: the platform becomes the business and operating model; focus on culture and enablement.' },
+    { de: '**Ein KI-natives Target Operating Model** mit durchgängigen Journey-Teams und Human-in-the-loop.', en: '**An AI-native target operating model** with end-to-end journey teams and human-in-the-loop.' },
+    { de: '**Decision-first statt einer Vielzahl isolierter Use Cases**: klare Roadmap und skalierbare Decision Spine vor dem Rollout.', en: '**Decision-first rather than a multitude of isolated use cases**: a clear roadmap and scalable decision spine before rollout.' },
+    { de: '**Wandel ist im Target Operating Model verankert**; eine strukturierte Projektmethodik führt vom Reifegrad zum Zielbild.', en: '**Change is anchored in the target operating model**; a structured project methodology leads from maturity to the target picture.' },
   ],
   projekt: [
-    { de: '**Vom Produktkatalog zum Segment of One**: KI komponiert hyperpersonalisierte Lösungen im Moment des Bedarfs.', en: '**From product catalogue to segment of one**: AI composes hyper-personalised solutions at the moment of need.' },
-    { de: '**Produkte werden lebende, adaptive Services** — Selbstanpassung innerhalb von Leitplanken.', en: '**Products become living, adaptive services** — self-adjusting within guardrails.' },
-    { de: '**Produktentwicklung wird kontinuierlich** — Time-to-Market von Jahren auf Tage.', en: '**Product development becomes continuous** — time-to-market from years to days.' },
+    { de: '**Vom Produktkatalog zum „Segment of One"**: KI komponiert hyperpersonalisierte Lösungen im Moment des Bedarfs.', en: '**From product catalogue to a “segment of one”**: AI composes hyper-personalised solutions at the moment of need.' },
+    { de: '**Produkte werden zu lebenden, adaptiven Services** — Selbstanpassung innerhalb definierter Leitplanken.', en: '**Products become living, adaptive services** — self-adjusting within defined guardrails.' },
+    { de: '**Produktentwicklung wird kontinuierlich**; die Time-to-Market sinkt von Jahren auf Tage.', en: '**Product development becomes continuous**; time-to-market drops from years to days.' },
   ],
   vorstand: [
-    { de: '**Vom Quartalsbericht zur Echtzeit-Steuerung** am Governance-Cockpit.', en: '**From quarterly report to real-time steering** at the governance cockpit.' },
-    { de: '**AI-Governance wird Chefsache**: Leitplanken, Risikoappetit, Ethik, CAIO, Explainability.', en: '**AI governance becomes a board responsibility**: guardrails, risk appetite, ethics, CAIO, explainability.' },
-    { de: '**Von der Jahresstrategie zur kontinuierlichen, adaptiven Steuerung** (dynamische Allokation).', en: '**From annual strategy to continuous, adaptive steering** (dynamic allocation).' },
+    { de: '**Von der periodischen Berichterstattung zur Echtzeit-Steuerung** über ein Governance-Cockpit.', en: '**From periodic reporting to real-time steering** via a governance cockpit.' },
+    { de: '**AI-Governance wird zur Vorstandsverantwortung**: Leitplanken, Risikoappetit, Ethik und Explainability.', en: '**AI governance becomes a board responsibility**: guardrails, risk appetite, ethics and explainability.' },
+    { de: '**Von der Jahresstrategie zur kontinuierlichen, adaptiven Steuerung** mit dynamischer Kapital- und Ressourcenallokation.', en: '**From annual strategy to continuous, adaptive steering** with dynamic allocation of capital and resources.' },
   ],
 }
 
@@ -609,14 +609,6 @@ export function ChapterReader({
                   {t.leitfrage}
                 </span>
                 <p className={styles.calloutText}>{effLeitfrage}</p>
-                <button
-                  type="button"
-                  className={styles.leitfrageChatBtn}
-                  onClick={() => setChatOpen(true)}
-                >
-                  <MessageSquare size={13} strokeWidth={2} aria-hidden />
-                  {lang === 'de' ? 'Mit KI-Assistent diskutieren' : 'Discuss with AI assistant'}
-                </button>
               </div>
             </aside>
           )}
@@ -694,20 +686,10 @@ export function ChapterReader({
               </div>
             ) : (
               effLeitfrage && (
-                <div className={styles.leitfrageWrap}>
-                  <p className={styles.leitfrage}>
-                    <Lightbulb size={16} strokeWidth={2} aria-hidden />
-                    <span>{effLeitfrage}</span>
-                  </p>
-                  <button
-                    type="button"
-                    className={styles.leitfrageChatBtn}
-                    onClick={() => setChatOpen(true)}
-                  >
-                    <MessageSquare size={13} strokeWidth={2} aria-hidden />
-                    {lang === 'de' ? 'Diskutieren' : 'Discuss'}
-                  </button>
-                </div>
+                <p className={styles.leitfrage}>
+                  <Lightbulb size={16} strokeWidth={2} aria-hidden />
+                  <span>{effLeitfrage}</span>
+                </p>
               )
             )}
           </>

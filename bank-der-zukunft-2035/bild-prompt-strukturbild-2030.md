@@ -111,6 +111,35 @@ no multi-color gradient icons, not isometric, not a floor plan seen from above.
 
 ---
 
+## Ein-Prompt-Variante für ChatGPT / GPT-Image (kein Negativ-Feld)
+
+ChatGPT (GPT-Image / DALL·E) hat **kein separates Negativ-Feld** — alles muss in
+**einen** Prompt. Die Ausschlüsse stehen daher als normale Sätze im Fließtext.
+Bildformat zusätzlich im ChatGPT-UI auf Querformat (3:2 / Landscape) stellen.
+
+```
+Create a photorealistic orthographic architectural cross-section of a modern bank building in 2030 — a clean dollhouse cutaway with the front facade removed so you look straight into every room. Four stacked floors of equal height plus a ground floor, perfectly symmetric, the building centered and filling the frame, soft natural daylight, calm, premium and boardroom-grade (not toy-like). Wide landscape format, aspect ratio 3:2 (1536×1024).
+
+A central full-height glass elevator shaft runs as a vertical spine, subtly glowing deep green. It holds exactly one glass elevator car, stopped at a single floor, with at most one person inside — the rest of the shaft is just empty glass. Do not put a person on every floor and do not stack several people up the shaft.
+
+Rooms, from top to bottom:
+- Top floor left: an occupied executive boardroom — several board members seated around a large conference table, facing a wall-mounted "governance cockpit" dashboard with abstract donut charts and bars. Top floor right: a product & innovation project room with two or three people at whiteboard walls covered in product mockups.
+- Second floor left: a compliance & risk control room — risk controllers seated at rows of monitors, a calm trading-desk look, not a boardroom. Second floor right: an IT server room with rows of dark server racks and one technician at a monitoring desk with ordinary flat screens and small green rack lights — there is no floating hologram and no glowing wave hovering in the air.
+- First floor left: a corporate services / HR open team-and-learning space with people at tables. First floor right: a back-office loan-operations floor with rows of workflow screens, quiet and orderly.
+- Ground floor left: a welcoming retail branch with a self-service lounge and a staffed teller counter. Ground floor right: a sales advisory meeting — an adviser and a client at a table with a screen.
+- Outside, to the left, right and below: a subtle plaza with a few customer silhouettes for context.
+
+Style: light stone and warm wood surfaces, glass, professional and restrained; deep green accent #046A38 with a brighter secondary green #86BC25, and a cool cyan #7EC8FF used only as a subtle glow on the flat screens, never as a free-floating hologram; monochrome single-color icons only. Even, clean daylight, high detail, crisp edges, architectural-rendering quality. Keep the image clean with no readable text or signage on the walls, no logos and no watermark.
+```
+
+> Für die **Hypothesen-Bilder** in `bild-prompt-hypothesen-2030.md` gilt dasselbe:
+> die Prompts dort sind bereits eigenständige Ein-Prompt-Texte; für ChatGPT den
+> separaten Negativ-Block weglassen und stattdessen den Satz „Keep both halves
+> clean with no text or labels; it is the same person on the right, just 4–5
+> years older in different clothes" ans Ende hängen.
+
+---
+
 ## Kompakt-Variante (für schnelle Iterationen)
 
 ```

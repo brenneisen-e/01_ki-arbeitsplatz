@@ -1,9 +1,35 @@
 .root {
-  position: absolute;
+  /* Vollbild-Overlay: fixed statt absolute, damit der Reader garantiert den
+     ganzen Viewport füllt (die .stage ist ein zentrierender Flex-Container und
+     reichte nicht immer bis zum unteren Rand → beim dunklen Theme unsichtbar,
+     beim hellen als schwarzer Streifen sichtbar). */
+  position: fixed;
   inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  z-index: 20;
+  /* Helles Reader-Theme (Variante A): Design-Tokens lokal auf hell überschreiben,
+     damit alle Karten/Texte/Ränder im Reader automatisch hell werden — passend
+     zum hellen Strukturbild, ohne jede Regel einzeln umzubauen. */
+  --ink: #1c1e22;
+  --ink-2: #4a4d52;
+  --ink-3: #797d82;
+  --bg-1: #eef0ec;
+  --bg-2: #e5e8e2;
+  --surface-1: rgba(0, 0, 0, 0.035);
+  --surface-2: rgba(0, 0, 0, 0.06);
+  --surface-3: rgba(0, 0, 0, 0.09);
+  --border-soft: rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.2);
+  --glass: rgba(255, 255, 255, 0.74);
+  --glass-strong: rgba(255, 255, 255, 0.9);
+  --shadow-1: 0 8px 30px rgba(0, 0, 0, 0.1);
+  --shadow-2: 0 24px 70px rgba(0, 0, 0, 0.16);
+  color: var(--ink);
   display: flex;
   flex-direction: column;
-  background: rgba(11, 12, 15, 0.92);
+  background: rgba(246, 247, 244, 0.97);
   backdrop-filter: blur(8px) saturate(120%);
   -webkit-backdrop-filter: blur(8px) saturate(120%);
   animation: fadeIn 0.5s var(--ease-out) both;
@@ -184,7 +210,7 @@
   font: inherit;
   line-height: 1.5;
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 9px 11px;
@@ -210,7 +236,7 @@
   font-size: clamp(24px, 2.6vw, 36px);
   line-height: 1.16;
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   padding: 8px 12px;

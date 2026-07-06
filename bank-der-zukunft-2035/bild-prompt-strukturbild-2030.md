@@ -20,7 +20,7 @@ Intro-Reveal. Bildmodell: Firefly / GPT-Image / Midjourney o. ä.
 |---|---|
 | Datei | `public/images/Strukturbild.png` |
 | Seitenverhältnis | **3:2 (1536 × 1024 px)** — die `ZONES`-Koordinaten in `src/data/chapters.ts` sind darauf kalibriert |
-| Format | PNG, keine Transparenz, keine eingebrannten Beschriftungen (Labels rendert die App als Overlay) |
+| Format | PNG, keine Transparenz. **Raum-Labels erwünscht** (je Raum ein kurzes, korrekt geschriebenes Schild an der Rückwand) — im Workshop besser lesbar; die App-Overlay-Labels stören nicht |
 | Stil | Fotorealistischer orthografischer Architektur-Querschnitt („Dollhouse-Cutaway"), Tageslicht, ruhig, premium — Vorstands-Workshop-tauglich, kein verspieltes Spielzeug |
 
 ## Raum-Layout (Legende — 4 Etagen × 2 Räume + Glas-Aufzug)
@@ -87,10 +87,17 @@ meeting — an adviser and a client at a table with an advisory cockpit screen.
 Outside, left and right and below: a subtle plaza with a few customer
 silhouettes for context.
 
+Each room carries one short, correctly spelled room label as a neat sign on its
+back wall, consistent modern uppercase, deep green on light: top-left "BOARDROOM",
+top-right "PRODUCT & INNOVATION", second-left "COMPLIANCE & RISK", second-right
+"IT SERVER ROOM", first-left "CORPORATE SERVICES / HR", first-right "LOAN
+OPERATIONS", ground-left "BRANCH", ground-right "ADVISORY". Spell each label
+exactly as given; these eight are the only text in the image.
+
 Material and color: light stone and warm wood surfaces, glass, professional and
 restrained. Accent color deep Deloitte green (#046A38) with a secondary brighter
 green (#86BC25); a cool cyan accent (#7EC8FF) only as subtle glow on flat
-screens, never as free-floating holograms. Monochrome, single-color signage —
+screens, never as free-floating holograms. Monochrome, single-color icons —
 no multi-color or gradient icons. Even, clean daylight, high detail, crisp
 edges, architectural rendering quality.
 
@@ -103,7 +110,8 @@ Aspect ratio 3:2, 1536x1024.
 a person standing on every elevator floor (forbidden), multiple stacked people
 inside the elevator shaft (forbidden), an empty boardroom with no people
 (forbidden), a floating hologram or cyan light wave hovering in the server room
-(forbidden), no baked-in text labels, no lorem ipsum, no gibberish signage,
+(forbidden), misspelled or gibberish room labels (forbidden — only the eight
+given labels, spelled exactly), no extra signage beyond the room labels,
 no watermark, no logos, no emojis, no people's faces in close-up, no dark night
 mood, no neon cyberpunk, no fisheye or perspective distortion, no clutter,
 no multi-color gradient icons, not isometric, not a floor plan seen from above.
@@ -118,18 +126,22 @@ ChatGPT (GPT-Image / DALL·E) hat **kein separates Negativ-Feld** — alles muss
 Bildformat zusätzlich im ChatGPT-UI auf Querformat (3:2 / Landscape) stellen.
 
 ```
-Create a photorealistic orthographic architectural cross-section of a modern bank building in 2030 — a clean dollhouse cutaway with the front facade removed so you look straight into every room. Four stacked floors of equal height plus a ground floor, perfectly symmetric, the building centered and filling the frame, soft natural daylight, calm, premium and boardroom-grade (not toy-like). Wide landscape format, aspect ratio 3:2 (1536×1024).
+Create a photorealistic orthographic architectural cross-section of a modern bank building in 2030 — a clean dollhouse cutaway with the front facade removed so you look straight into every room. Four stacked floors of equal height plus a ground floor, perfectly symmetric, centered and filling the frame, soft natural daylight, calm, premium and boardroom-grade (not toy-like). Wide landscape format, aspect ratio 3:2 (1536×1024).
 
-A central full-height glass elevator shaft runs as a vertical spine, subtly glowing deep green. It holds exactly one glass elevator car, stopped at a single floor, with at most one person inside — the rest of the shaft is just empty glass. Do not put a person on every floor and do not stack several people up the shaft.
+A central full-height glass elevator shaft runs as a vertical spine, subtly glowing deep green. It holds exactly one glass elevator car, stopped at a single floor, with at most one person inside — the rest of the shaft is empty glass. Do not put a person on every floor and do not stack several people up the shaft.
 
-Rooms, from top to bottom:
-- Top floor left: an occupied executive boardroom — several board members seated around a large conference table, facing a wall-mounted "governance cockpit" dashboard with abstract donut charts and bars. Top floor right: a product & innovation project room with two or three people at whiteboard walls covered in product mockups.
-- Second floor left: a compliance & risk control room — risk controllers seated at rows of monitors, a calm trading-desk look, not a boardroom. Second floor right: an IT server room with rows of dark server racks and one technician at a monitoring desk with ordinary flat screens and small green rack lights — there is no floating hologram and no glowing wave hovering in the air.
-- First floor left: a corporate services / HR open team-and-learning space with people at tables. First floor right: a back-office loan-operations floor with rows of workflow screens, quiet and orderly.
-- Ground floor left: a welcoming retail branch with a self-service lounge and a staffed teller counter. Ground floor right: a sales advisory meeting — an adviser and a client at a table with a screen.
-- Outside, to the left, right and below: a subtle plaza with a few customer silhouettes for context.
+Each room shows one small, clean, correctly spelled room label as a neat sign on the back wall, in a consistent modern uppercase style, deep green on a light background. Use exactly these labels:
+- Top floor left, label "BOARDROOM": an occupied executive boardroom, several board members seated around a large conference table, facing a wall-mounted governance-cockpit dashboard with abstract donut charts and bars.
+- Top floor right, label "PRODUCT & INNOVATION": a project room with two or three people at whiteboard walls covered in product mockups.
+- Second floor left, label "COMPLIANCE & RISK": a control room with risk controllers seated at rows of monitors, a calm trading-desk look.
+- Second floor right, label "IT SERVER ROOM": rows of dark server racks and one technician at a monitoring desk with ordinary flat screens and small green rack lights; no floating hologram and no glowing wave hovering in the air.
+- First floor left, label "CORPORATE SERVICES / HR": an open team-and-learning space with people at tables.
+- First floor right, label "LOAN OPERATIONS": a back-office floor with rows of workflow screens, quiet and orderly.
+- Ground floor left, label "BRANCH": a welcoming retail branch with a self-service lounge and a staffed teller counter.
+- Ground floor right, label "ADVISORY": an adviser and a client at a table with a screen.
+Outside, to the left, right and below: a subtle plaza with a few customer silhouettes for context.
 
-Style: light stone and warm wood surfaces, glass, professional and restrained; deep green accent #046A38 with a brighter secondary green #86BC25, and a cool cyan #7EC8FF used only as a subtle glow on the flat screens, never as a free-floating hologram; monochrome single-color icons only. Even, clean daylight, high detail, crisp edges, architectural-rendering quality. Keep the image clean with no readable text or signage on the walls, no logos and no watermark.
+Style: light stone and warm wood surfaces, glass, professional and restrained; deep green accent #046A38 with a brighter secondary green #86BC25, cool cyan #7EC8FF only as a subtle glow on the flat screens, never as a free-floating hologram; monochrome single-color icons. Even, clean daylight, high detail, crisp edges, architectural-rendering quality. The only text in the image is the eight short room labels above, each spelled exactly as given; no other signage, no logos, no watermark.
 ```
 
 > Für die **Hypothesen-Bilder** in `bild-prompt-hypothesen-2030.md` gilt dasselbe:
@@ -152,9 +164,11 @@ mockup whiteboards; 2F-left compliance & risk control room (controllers at
 monitor rows); 2F-right IT server room with racks and a monitoring desk (NO
 floating hologram); 1F-left corporate/HR learning space; 1F-right back-office
 workflow floor; ground-left retail branch with self-service lounge; ground-right
-advisory meeting. Light stone and wood, glass, Deloitte-green accent #046A38,
-cyan glow only on flat screens, monochrome signage, no baked-in text, calm and
-high-end. Aspect 3:2, 1536x1024.
+advisory meeting. One short correctly-spelled room label per room on the back
+wall (BOARDROOM, PRODUCT & INNOVATION, COMPLIANCE & RISK, IT SERVER ROOM,
+CORPORATE SERVICES / HR, LOAN OPERATIONS, BRANCH, ADVISORY). Light stone and
+wood, glass, Deloitte-green accent #046A38, cyan glow only on flat screens,
+monochrome icons, calm and high-end. Aspect 3:2, 1536x1024.
 ```
 
 ---

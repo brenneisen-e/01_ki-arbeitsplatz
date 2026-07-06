@@ -519,79 +519,6 @@
   font-weight: 700;
 }
 
-.leitfrage {
-  width: 100%;
-  max-width: var(--media-w);
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 13px 16px;
-  border-radius: var(--r-sm);
-  background: var(--surface-1);
-  border: 1px dashed var(--border-strong);
-  font-size: 14.5px;
-  font-style: italic;
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-
-.leitfrage > svg {
-  flex: none;
-  margin-top: 2px;
-  color: var(--accent-bright);
-}
-
-/* Leitfrage-Sprechblase rechts neben dem 2030-Bild — nur auf breiten Screens
-   (siehe @media unten). Standardmäßig ausgeblendet; dann greift .leitfrage. */
-.calloutFloat {
-  display: none;
-}
-
-.calloutHead {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-bright);
-}
-
-.calloutText {
-  font-size: clamp(15px, 1vw, 17px);
-  font-style: italic;
-  line-height: 1.5;
-  color: var(--ink);
-}
-
-/* Echte Sprechblase: komplette Silhouette (Körper + Tail) als ein SVG-Pfad. */
-.calloutBubble {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.calloutBubble path {
-  fill: var(--surface-2);
-  stroke: var(--accent);
-  stroke-width: 1.5;
-  stroke-linejoin: round;
-}
-
-.calloutInner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 16px 20px 16px 28px;
-}
-
 /* ── Aktivitäts-Schritt (Demo / Tool) ── */
 .activityBox {
   width: 100%;
@@ -742,24 +669,6 @@
   }
 }
 
-/* Breite Screens: Leitfrage als Sprechblase rechts neben das 2030-Bild legen
-   und die Leiste unten ausblenden. */
-@media (min-width: 1800px) {
-  .calloutFloat {
-    display: block;
-    position: absolute;
-    left: calc(100% + clamp(14px, 1vw, 22px));
-    top: 50%;
-    transform: translateY(-50%);
-    width: clamp(224px, 15vw, 264px);
-    aspect-ratio: 250 / 162;
-    filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.5));
-  }
-  .leitfrage {
-    display: none;
-  }
-}
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -825,33 +734,6 @@
   color: var(--ink);
 }
 .summaryText strong { color: var(--ink); font-weight: 700; }
-
-/* ── Leitfrage → Overlay-Chatbot: Auslöser-Buttons ──────────────────────────── */
-.leitfrageChatBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  padding: 6px 12px;
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  background: var(--accent-tint);
-  color: var(--accent-bright);
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
-}
-.leitfrageChatBtn:hover { background: rgba(134, 188, 37, 0.2); }
-.leitfrageChatBtn:active { transform: translateY(1px); }
-.leitfrageWrap {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-.leitfrageWrap .leitfrage { margin: 0; }
 
 /* ── Management-Summary-Kachel (letzter Schritt, nach der Live-Demo) ─────────── */
 .summaryStep {

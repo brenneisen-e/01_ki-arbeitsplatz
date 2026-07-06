@@ -593,32 +593,6 @@ export function ChapterReader({
               </div>
             )}
           </div>
-          {/* Leitfrage als Sprechblase rechts neben dem 2030-Bild (breite Screens).
-              Auf schmalen Screens unsichtbar — dort greift die Leiste unten. */}
-          {!editMode && effLeitfrage && (
-            <aside className={styles.calloutFloat}>
-              {/* PowerPoint-Form „Sprechblase: abgerundetes Rechteck"
-                  (wedgeRoundRectCallout): abgerundetes Rechteck + gerader,
-                  dreieckiger Zeiger nach links auf das 2030-Bild — als ein
-                  einziger SVG-Pfad, damit die Kontur durchgehend bleibt. */}
-              <svg
-                className={styles.calloutBubble}
-                viewBox="0 0 250 162"
-                preserveAspectRatio="none"
-                aria-hidden
-                focusable="false"
-              >
-                <path d="M38,6 H226 Q246,6 246,26 V136 Q246,156 226,156 H38 Q18,156 18,136 V112 L2,96 L18,80 V26 Q18,6 38,6 Z" />
-              </svg>
-              <div className={styles.calloutInner}>
-                <span className={styles.calloutHead}>
-                  <Lightbulb size={14} strokeWidth={2} aria-hidden />
-                  {t.leitfrage}
-                </span>
-                <p className={styles.calloutText}>{effLeitfrage}</p>
-              </div>
-            </aside>
-          )}
         </div>
 
         {editMode && (
@@ -678,7 +652,9 @@ export function ChapterReader({
                 )}
               </article>
             </div>
-            {editMode ? (
+            {/* Im Lese-Modus präsentiert allein der Consultant unten rechts die
+                Leitfrage — keine zweite statische Darstellung mehr. */}
+            {editMode && (
               <div className={styles.editLeitfrage}>
                 <span className={styles.editLabel}>
                   <Lightbulb size={13} strokeWidth={2} aria-hidden /> {t.leitfrage}
@@ -691,13 +667,6 @@ export function ChapterReader({
                   rows={2}
                 />
               </div>
-            ) : (
-              effLeitfrage && (
-                <p className={styles.leitfrage}>
-                  <Lightbulb size={16} strokeWidth={2} aria-hidden />
-                  <span>{effLeitfrage}</span>
-                </p>
-              )
             )}
           </>
         ) : (

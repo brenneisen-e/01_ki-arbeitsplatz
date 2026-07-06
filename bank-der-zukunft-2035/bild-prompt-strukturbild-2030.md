@@ -43,6 +43,12 @@ Kunden-Silhouetten, damit das Gebäude im Kontext steht (nicht freigestellt).
 
 ## PROMPT (englisch — zum Kopieren ins Bildmodell)
 
+> **v2 — Logikfehler aus dem ersten Rendering korrigiert:** (1) Aufzug hatte auf
+> jeder Etage eine Person → jetzt genau **eine** Kabine mit max. einer Person;
+> (2) Boardroom war leer → jetzt **besetzt** (Vorstände am Tisch); (3) im
+> Serverraum schwebte eine **Hologramm-Welle** → entfernt, nur normale Screens +
+> dezente Rack-LEDs.
+
 ```
 Photorealistic orthographic architectural cross-section of a modern bank
 building in 2030 — a clean dollhouse cutaway with the front facade removed so
@@ -50,18 +56,24 @@ you look straight into every room. Four stacked floors of equal height plus a
 ground floor, perfectly symmetric, the building centered and filling the frame,
 soft natural daylight, calm and premium, boardroom-grade, not toy-like.
 
-A central full-height GLASS PANORAMA ELEVATOR runs as a vertical spine through
-all floors, subtly glowing deep green, connecting the levels.
+A central full-height glass elevator shaft runs as a vertical spine, subtly
+glowing deep green. It contains exactly ONE glass elevator car, stopped at a
+single floor, with at most one person inside; the rest of the shaft is empty
+glass. Do NOT place a person on every floor and do NOT stack multiple people up
+the shaft.
 
-Top floor, LEFT: an executive BOARDROOM — bright daylit room, large conference
-table, a wall-mounted "governance cockpit" dashboard with donut charts, bars and
-KPI tiles. Top floor, RIGHT: a product & INNOVATION project room with whiteboard
+Top floor, LEFT: an executive BOARDROOM, occupied — several board members /
+executives seated around a large conference table, facing a wall-mounted
+"governance cockpit" dashboard with donut charts, bars and KPI tiles. Top floor,
+RIGHT: a product & INNOVATION project room, two or three people at whiteboard
 walls covered in product mockups, design-sprint feel.
 
 Second floor, LEFT: a COMPLIANCE & RISK control room — risk controllers seated
 at rows of monitors, risk-monitoring desks, a trading-desk look (not a
-boardroom). Second floor, RIGHT: an IT SERVER ROOM with rows of server racks, a
-monitoring workstation and fibre-optic light streaks.
+boardroom). Second floor, RIGHT: an IT SERVER ROOM with rows of dark server
+racks and one technician at a monitoring workstation with ordinary flat screens;
+only small green indicator lights on the racks — NO floating hologram, no cyan
+light wave hovering in mid-air.
 
 First floor, LEFT: a CORPORATE SERVICES / HR open team-and-learning space, people
 at tables, a hint of immersive training. First floor, RIGHT: a back-office
@@ -69,17 +81,18 @@ open-plan floor (loan operations) with rows of workflow screens, quiet and
 orderly.
 
 Ground floor, LEFT: a welcoming retail BRANCH with a self-service lounge and a
-teller counter. Ground floor, RIGHT: a sales ADVISORY meeting — an adviser and a
-client at a table with an advisory cockpit screen.
+teller counter with staff and customers. Ground floor, RIGHT: a sales ADVISORY
+meeting — an adviser and a client at a table with an advisory cockpit screen.
 
 Outside, left and right and below: a subtle plaza with a few customer
 silhouettes for context.
 
 Material and color: light stone and warm wood surfaces, glass, professional and
 restrained. Accent color deep Deloitte green (#046A38) with a secondary brighter
-green (#86BC25); a cool cyan hologram accent (#7EC8FF) only on screens and
-dashboards. Monochrome, single-color signage — no multi-color or gradient icons.
-Even, clean daylight, high detail, crisp edges, architectural rendering quality.
+green (#86BC25); a cool cyan accent (#7EC8FF) only as subtle glow on flat
+screens, never as free-floating holograms. Monochrome, single-color signage —
+no multi-color or gradient icons. Even, clean daylight, high detail, crisp
+edges, architectural rendering quality.
 
 Aspect ratio 3:2, 1536x1024.
 ```
@@ -87,9 +100,12 @@ Aspect ratio 3:2, 1536x1024.
 ### Negativ-Prompt / Ausschlüsse
 
 ```
-no baked-in text labels, no lorem ipsum, no gibberish signage, no watermark,
-no logos, no emojis, no people's faces in close-up, no dark night mood,
-no neon cyberpunk, no fisheye or perspective distortion, no clutter,
+a person standing on every elevator floor (forbidden), multiple stacked people
+inside the elevator shaft (forbidden), an empty boardroom with no people
+(forbidden), a floating hologram or cyan light wave hovering in the server room
+(forbidden), no baked-in text labels, no lorem ipsum, no gibberish signage,
+no watermark, no logos, no emojis, no people's faces in close-up, no dark night
+mood, no neon cyberpunk, no fisheye or perspective distortion, no clutter,
 no multi-color gradient icons, not isometric, not a floor plan seen from above.
 ```
 
@@ -100,13 +116,15 @@ no multi-color gradient icons, not isometric, not a floor plan seen from above.
 ```
 Photorealistic orthographic cross-section (dollhouse cutaway, front wall removed)
 of a premium 2030 bank, four equal floors plus ground floor, symmetric, daylight,
-central glowing green glass elevator spine. Top-left executive boardroom with a
-governance-cockpit dashboard wall; top-right innovation room with mockup
-whiteboards; 2F-left compliance & risk control room (controllers at monitor
-rows); 2F-right IT server room; 1F-left corporate/HR learning space; 1F-right
-back-office workflow floor; ground-left retail branch with self-service lounge;
-ground-right advisory meeting. Light stone and wood, glass, Deloitte-green accent
-#046A38, cyan screen glow, monochrome signage, no baked-in text, calm and
+central green glass elevator spine with exactly ONE car (one person max, not one
+per floor). Top-left OCCUPIED executive boardroom (executives seated at the
+table) with a governance-cockpit dashboard wall; top-right innovation room with
+mockup whiteboards; 2F-left compliance & risk control room (controllers at
+monitor rows); 2F-right IT server room with racks and a monitoring desk (NO
+floating hologram); 1F-left corporate/HR learning space; 1F-right back-office
+workflow floor; ground-left retail branch with self-service lounge; ground-right
+advisory meeting. Light stone and wood, glass, Deloitte-green accent #046A38,
+cyan glow only on flat screens, monochrome signage, no baked-in text, calm and
 high-end. Aspect 3:2, 1536x1024.
 ```
 

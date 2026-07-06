@@ -13,7 +13,7 @@ also jederzeit lauffähig.
 | `src/consultant/ConsultantCanvas.tsx` | react-three-fiber-Bühne (lazy → eigener Chunk) |
 | `src/consultant/Consultant3D.tsx` | GLB laden, Animationen (idle/greeting/talking) mappen |
 | `src/consultant/consultantConfig.ts` | Modell-URL, Clip-Namen, Kamera-Fit |
-| `public/models/consultant.glb` | das geriggte Modell (nicht eingecheckt, wird erzeugt) |
+| `public/models/consultant.glb` | das geriggte, animierte Modell (eingecheckt, einmalig per Meshy erzeugt) |
 
 ## Modell erzeugen — zwei Wege (gleiche Meshy-API, gleicher Key)
 
@@ -22,11 +22,16 @@ also jederzeit lauffähig.
 ```bash
 export MESHY_API_KEY=msy_...          # https://www.meshy.ai/api
 cd bank-der-zukunft-2035
-npm run generate:consultant           # Preview → Refine → Rigging → Animation → GLB
+npm run generate:consultant           # Preview → Refine → Rigging → Animationen → GLB
 npm run build                         # dist/ neu bauen, danach dist/ committen
 ```
 
-Flags: `--prompt "…"`, `--style realistic|sculpture`, `--action idle`, `--skip-rig`.
+Flags: `--prompt "…"`, `--style realistic|sculpture`, `--actions idle=0,wave=28,talk=313`, `--skip-rig`.
+
+Das Script erzeugt drei Animations-Clips (Idle, Winken, Sprechen — Action-IDs aus
+der [Meshy-Animation-Library](https://docs.meshy.ai/en/api/animation-library))
+und führt sie zu **einem** GLB mit benannten Clips (`idle`, `wave`, `talk`)
+zusammen, die `Consultant3D.tsx` über `CONSULTANT_CLIPS` zuordnet.
 
 ### B) Meshy-MCP-Server (interaktiv, agentengesteuert)
 

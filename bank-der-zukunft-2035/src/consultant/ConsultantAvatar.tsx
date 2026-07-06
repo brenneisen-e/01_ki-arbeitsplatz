@@ -46,18 +46,31 @@ export function ConsultantAvatar({
   const enterTimer = useRef<number | null>(null)
 
   // Modell-Verfügbarkeit einmalig prüfen, damit useGLTF nicht auf eine fehlende
-  // Datei läuft. Achtung: SPA-Hosts (Cloudflare Pages, vite preview) liefern für
-  // fehlende Dateien den index.html-Fallback mit HTTP 200 — daher NICHT nur auf
-  // r.ok prüfen, sondern HTML-Antworten explizit als "kein Modell" behandeln.
+  // Datei läuft. GET mit Range statt HEAD: manche Proxies/Extensions filtern
+  // HEAD-Requests, und SPA-Hosts (Cloudflare Pages, vite preview) liefern für
+  // fehlende Dateien den index.html-Fallback mit HTTP 200 — Content-Type-
+  // Heuristiken sind dort unzuverlässig. Einzig verlässlicher Nachweis sind
+  // die GLB-Magic-Bytes "glTF" am Dateianfang.
   useEffect(() => {
     let alive = true
-    fetch(CONSULTANT_MODEL_URL, { method: 'HEAD' })
-      .then((r) => {
-        const ct = r.headers.get('content-type') ?? ''
-        const present = r.ok && !ct.includes('text/html')
+    fetch(CONSULTANT_MODEL_URL, { headers: { Range: 'bytes=0-3' } })
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        const head = await (await r.blob()).slice(0, 4).arrayBuffer()
+        const magic = String.fromCharCode(...new Uint8Array(head))
+        const present = magic === 'glTF'
+        if (!present) {
+          console.info(
+            `Consultant-3D: ${CONSULTANT_MODEL_URL} liefert kein GLB ` +
+              `(Antwort beginnt mit ${JSON.stringify(magic)}) — 2D-Fallback aktiv.`,
+          )
+        }
         if (alive) setModelState(present ? 'present' : 'absent')
       })
-      .catch(() => alive && setModelState('absent'))
+      .catch((err) => {
+        console.info(`Consultant-3D: Modell-Check für ${CONSULTANT_MODEL_URL} fehlgeschlagen — 2D-Fallback aktiv.`, err)
+        if (alive) setModelState('absent')
+      })
     return () => {
       alive = false
     }

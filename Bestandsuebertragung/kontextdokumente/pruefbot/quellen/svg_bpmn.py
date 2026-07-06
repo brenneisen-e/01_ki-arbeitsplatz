@@ -38,8 +38,8 @@ def wrap(text, maxw, fs=FS):
     return out
 
 # ---- Modell ----------------------------------------------------------------
-LANES=[('ein','Eingang & Eingangsmanagement · Outlook / EDM-KWAD'),
-       ('cel','KI-Strukturierung & Deckblatt · Celonis'),
+LANES=[('ein','Eingang & Umleitung · Outlook / bustrukturierung@ergo.de'),
+       ('cel','KI-Strukturierung · Celonis Action Workflow'),
        ('sb','Sachbearbeitung · HITL'),
        ('bot','Prüf-Bot (System-Prüfung) · Blue Prism'),
        ('sys','Hostsysteme / Datenquellen'),
@@ -49,13 +49,13 @@ LANEY={k:i for i,(k,_) in enumerate(LANES)}
 # nodes: id -> (lane, col, type, label)  type: start,end,task,gw,gwpar,event,check,data,ghost,deck
 NODES={
  # Phase 1
- 'start':('ein',0,'start','BÜ-Anfrage per Mail (Makler-Gruppenpostfach)'),
- 'edm':('ein',1,'task','Mail in Postkorbvorgang umwandeln · Verbund & VNR (EDM/KWAD)'),
+ 'start':('ein',0,'start','BÜ-Anfrage per Mail (wie bisher)'),
+ 'edm':('ein',1,'task','Umleitung an neues Gruppenpostfach bustrukturierung@ergo.de (Celonis Action Workflow)'),
  # Phase 2 – Celonis
  'emma':('cel',0,'data','EMMA-Datenabzug · PNR / Partnerdaten'),
- 'cel_struk':('cel',2,'task','Eingang strukturieren · Dokumente per Image/Jadice (OCR) lesen'),
- 'cel_deck':('cel',3,'task','Werte extrahieren & interpretieren · KI-Deckblatt erstellen (Prüfschritte 1–5)'),
- 'ablage':('cel',4,'task','Deckblatt & Übergabe-Datensatz ablegen · Übergabepunkt offen: ERGO Datapool, SharePoint oder anderes'),
+ 'cel_struk':('cel',2,'task','Action Workflow von Celonis · Mail strukturieren (Image/Jadice OCR)'),
+ 'cel_deck':('cel',3,'task','Werte extrahieren & interpretieren · KI-Deckblatt (je Vorgang) + Excel (über alle Vorgänge) erzeugen · Prüfschritte 1–5'),
+ 'ablage':('cel',4,'task','Strukturierte Daten an Robotics übergeben (zum Prüfen) · Übergabepunkt offen: ERGO Datapool, SharePoint oder anderes'),
  'gw_bue':('cel',5,'gw','BÜ-Wunsch vorhanden? (Deckblatt)'),
  'keinbue':('ein',5,'task','An Eingangsmanagement umrouten · kein BÜ-Wunsch (Umindizierung)'),
  'end_keinbue':('ein',6,'end','Zurück an Eingangsmanagement'),
@@ -228,7 +228,7 @@ ub_x0=OFFX+colx[2]-6; ub_x1=OFFX+colx[5]+colw[5]+6
 ub_y0=laney['cel']+92; ub_y1=laney['cel']+laneh['cel']-10
 S.append(f'<rect x="{ub_x0}" y="{ub_y0}" width="{ub_x1-ub_x0}" height="{ub_y1-ub_y0}" rx="7" fill="#EAF1F7" stroke="#5577aa" stroke-width="1.3" stroke-dasharray="5,3"/>')
 ubw=ub_x1-ub_x0-24
-S.append(f'<text x="{ub_x0+12}" y="{ub_y0+18}" font-size="12.5" font-weight="bold" fill="#274">Übergabe-Datensatz (KI-Deckblatt) an den Prüf-Bot</text>')
+S.append(f'<text x="{ub_x0+12}" y="{ub_y0+18}" font-size="12.5" font-weight="bold" fill="#274">Übergabe an Robotics: KI-Deckblatt (je Vorgang) + Excel (über alle Vorgänge)</text>')
 ex_txt=("Extrahiert (OCR aus Dokument): Kundenname · Geburtsdatum · Adresse · Versicherungsnummer(n) · Sparte · "
         "Kunden-/Partnernummer (PNR aus EMMA) · VN laut MV · Pool · Vermittler · Agentur-/Personalnummer · "
         "Makler-Adresse · Auftragsdatum · MV-Inhalt & -Einschränkungen · Unterschrift Kunde/Makler")

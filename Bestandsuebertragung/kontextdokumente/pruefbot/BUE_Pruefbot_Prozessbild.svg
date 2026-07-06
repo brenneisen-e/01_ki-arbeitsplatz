@@ -27,13 +27,14 @@
 <rect x="150" y="52" width="7690" height="132" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="52" width="150" height="132" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
 <text x="10" y="74" font-size="13.0" font-weight="bold" fill="#53565A">Eingang &amp;</text>
-<text x="10" y="90" font-size="13.0" font-weight="bold" fill="#53565A">Eingangsmanageme</text>
-<text x="10" y="106" font-size="13.0" font-weight="bold" fill="#53565A">nt · Outlook /</text>
-<text x="10" y="122" font-size="13.0" font-weight="bold" fill="#53565A">EDM-KWAD</text>
+<text x="10" y="90" font-size="13.0" font-weight="bold" fill="#53565A">Umleitung ·</text>
+<text x="10" y="106" font-size="13.0" font-weight="bold" fill="#53565A">Outlook /</text>
+<text x="10" y="122" font-size="13.0" font-weight="bold" fill="#53565A">bustrukturierung</text>
+<text x="10" y="138" font-size="13.0" font-weight="bold" fill="#53565A">@ergo.de</text>
 <rect x="150" y="184" width="7690" height="210" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="184" width="150" height="210" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
-<text x="10" y="206" font-size="13.0" font-weight="bold" fill="#046A38">KI-Strukturierung &amp;</text>
-<text x="10" y="222" font-size="13.0" font-weight="bold" fill="#046A38">Deckblatt · Celonis</text>
+<text x="10" y="206" font-size="13.0" font-weight="bold" fill="#046A38">KI-Strukturierung · Celonis</text>
+<text x="10" y="222" font-size="13.0" font-weight="bold" fill="#046A38">Action Workflow</text>
 <rect x="150" y="394" width="7690" height="144" fill="none" stroke="#C9CDD1" stroke-width="1"/>
 <rect x="0" y="394" width="150" height="144" fill="#eef1f4" stroke="#C9CDD1" stroke-width="1"/>
 <text x="10" y="416" font-size="13.0" font-weight="bold" fill="#53565A">Sachbearbeitung ·</text>
@@ -53,13 +54,13 @@
 <text x="10" y="826" font-size="13.0" font-weight="bold" fill="#53565A">72h-/BÜ-Bot ·</text>
 <text x="10" y="842" font-size="13.0" font-weight="bold" fill="#53565A">BeMaS</text>
 <rect x="710" y="276" width="970" height="108" rx="7" fill="#EAF1F7" stroke="#5577aa" stroke-width="1.3" stroke-dasharray="5,3"/>
-<text x="722" y="294" font-size="12.5" font-weight="bold" fill="#274">Übergabe-Datensatz (KI-Deckblatt) an den Prüf-Bot</text>
+<text x="722" y="294" font-size="12.5" font-weight="bold" fill="#274">Übergabe an Robotics: KI-Deckblatt (je Vorgang) + Excel (über alle Vorgänge)</text>
 <text x="722" y="312" font-size="11.5" fill="#1d4">Extrahiert (OCR aus Dokument): Kundenname · Geburtsdatum · Adresse · Versicherungsnummer(n) · Sparte · Kunden-/Partnernummer (PNR aus EMMA) · VN laut MV</text>
 <text x="722" y="327" font-size="11.5" fill="#1d4">· Pool · Vermittler · Agentur-/Personalnummer · Makler-Adresse · Auftragsdatum · MV-Inhalt &amp; -Einschränkungen · Unterschrift Kunde/Makler</text>
 <text x="722" y="346" font-size="11.5" fill="#274">Interpretiert (KI): Vorgangstyp · Klassifikation · BÜ-Wunsch (ja/nein) · MV-Status (formal &amp; inhaltlich) · MV vollumfänglich · Untervollmacht ·</text>
 <text x="722" y="361" font-size="11.5" fill="#274">Vollständigkeit der Unterlagen · Reminder/Wiedervorlage · BÜ-Ampel · Typ Makler/MFA · Zusammenfassung · Hinweis (Auffälligkeiten)</text>
 <path d="M344.0,118.0 L468.0,118.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
-<path d="M575.0,151.0 L575.0,174.0 L823.0,174.0 L823.0,197.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
+<path d="M575.0,159.0 L575.0,178.0 L823.0,178.0 L823.0,197.0" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <path d="M434.0,230 L964.0,230" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <path d="M930.0,230 L964.0,230" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
 <path d="M1178.0,230 L1212.0,230" fill="none" stroke="#333" stroke-width="1.3" marker-end="url(#arr)"/>
@@ -174,30 +175,31 @@
 <text x="4543.0" y="728" font-size="12.0" text-anchor="middle" fill="#274">DiOrg/SAP</text>
 <circle cx="327.0" cy="118.0" r="17.0" fill="white" stroke="#046A38" stroke-width="1.6"/>
 <text x="327.0" y="148.0" font-size="11" text-anchor="middle" fill="#1A1A1A">BÜ-Anfrage per Mail</text>
-<text x="327.0" y="161.0" font-size="11" text-anchor="middle" fill="#1A1A1A">(Makler-Gruppenpostfa</text>
-<text x="327.0" y="174.0" font-size="11" text-anchor="middle" fill="#1A1A1A">ch)</text>
-<rect x="468.0" y="85.0" width="214" height="66" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
-<text x="575.0" y="106.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Mail in Postkorbvorgang</text>
-<text x="575.0" y="122.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">umwandeln · Verbund &amp; VNR</text>
-<text x="575.0" y="138.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(EDM/KWAD)</text>
+<text x="327.0" y="161.0" font-size="11" text-anchor="middle" fill="#1A1A1A">(wie bisher)</text>
+<rect x="468.0" y="77.0" width="214" height="82" rx="9" fill="white" stroke="#53565A" stroke-width="1.4"/>
+<text x="575.0" y="98.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Umleitung an neues</text>
+<text x="575.0" y="114.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Gruppenpostfach</text>
+<text x="575.0" y="130.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">bustrukturierung@ergo.de</text>
+<text x="575.0" y="146.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(Celonis Action Workflow)</text>
 <rect x="220.0" y="205.0" width="214" height="50" rx="6" fill="#EAF1F7" stroke="#5577aa" stroke-width="1.3" stroke-dasharray="5,3"/>
 <text x="327.0" y="226.0" font-size="13.0" text-anchor="middle" fill="#274">EMMA-Datenabzug · PNR /</text>
 <text x="327.0" y="242.0" font-size="13.0" text-anchor="middle" fill="#274">Partnerdaten</text>
 <rect x="716.0" y="197.0" width="214" height="66" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
-<text x="823.0" y="218.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Eingang strukturieren ·</text>
-<text x="823.0" y="234.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Dokumente per Image/Jadice</text>
-<text x="823.0" y="250.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(OCR) lesen</text>
-<rect x="964.0" y="189.0" width="214" height="82" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
-<text x="1071.0" y="210.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Werte extrahieren &amp;</text>
-<text x="1071.0" y="226.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">interpretieren ·</text>
-<text x="1071.0" y="242.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">KI-Deckblatt erstellen</text>
-<text x="1071.0" y="258.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(Prüfschritte 1–5)</text>
+<text x="823.0" y="218.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Action Workflow von Celonis</text>
+<text x="823.0" y="234.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">· Mail strukturieren</text>
+<text x="823.0" y="250.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">(Image/Jadice OCR)</text>
+<rect x="964.0" y="181.0" width="214" height="98" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
+<text x="1071.0" y="202.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Werte extrahieren &amp;</text>
+<text x="1071.0" y="218.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">interpretieren ·</text>
+<text x="1071.0" y="234.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">KI-Deckblatt (je Vorgang) +</text>
+<text x="1071.0" y="250.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Excel (über alle Vorgänge)</text>
+<text x="1071.0" y="266.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">erzeugen · Prüfschritte 1–5</text>
 <rect x="1212.0" y="181.0" width="214" height="98" rx="9" fill="#eef6ef" stroke="#046A38" stroke-width="1.4"/>
-<text x="1319.0" y="202.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Deckblatt &amp;</text>
-<text x="1319.0" y="218.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Übergabe-Datensatz ablegen</text>
-<text x="1319.0" y="234.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">· Übergabepunkt offen: ERGO</text>
-<text x="1319.0" y="250.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Datapool, SharePoint oder</text>
-<text x="1319.0" y="266.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">anderes</text>
+<text x="1319.0" y="202.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Strukturierte Daten an</text>
+<text x="1319.0" y="218.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Robotics übergeben (zum</text>
+<text x="1319.0" y="234.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">Prüfen) · Übergabepunkt</text>
+<text x="1319.0" y="250.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">offen: ERGO Datapool,</text>
+<text x="1319.0" y="266.0" font-size="13.0" text-anchor="middle" font-weight="normal" fill="#1A1A1A">SharePoint oder anderes</text>
 <path d="M1567.0,207.0 L1590.0,230 L1567.0,253.0 L1544.0,230 z" fill="white" stroke="#1A1A1A" stroke-width="1.6"/>
 <text x="1567.0" y="236" font-size="18" text-anchor="middle" fill="#1A1A1A">×</text>
 <text x="1567.0" y="267.0" font-size="11.5" text-anchor="middle" fill="#1A1A1A">BÜ-Wunsch vorhanden?</text>

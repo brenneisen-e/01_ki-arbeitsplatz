@@ -170,23 +170,21 @@ PA("Ablauf von der eingehenden E-Mail bis zur freigegebenen Roboter-Notiz in sec
    "umsetzbar sind, muss das Robotics Competence Center noch bewerten und validieren.", size=10, color=GREY)
 
 PHASEN=[
- ("1 · E-Mail-Eingang bei ERGO",
-  "Bestandsübertragungs-Anfragen treffen weiterhin unstrukturiert als E-Mail über die Makler-Gruppenpostfächer ein. "
-  "Anhänge (Maklervollmacht, Anschreiben, Vertragslisten) liegen in unterschiedlichen Formaten vor. In dieser Phase "
-  "findet noch keine fachliche Prüfung statt.",
-  ["Eingang über die bestehenden Gruppenpostfächer — kein geänderter Zugangskanal für Makler",
-   "Heterogene Anhänge: Vollmacht, Anschreiben, Vertragsliste — ggf. mehrere je Mail",
-   "Umwandlung in einen Postkorbvorgang (EDM/KWAD), Verbund- und VNR-Zuordnung"]),
- ("2 · Strukturierung durch Celonis · BÜ-Relevanz",
-  "Celonis liest die Dokumente per Image/Jadice (OCR), reichert Partnerdaten/PNR aus EMMA an und erzeugt je Vorgang "
-  "das KI-Deckblatt (Prüfschritte 1–5). Dabei werden alle Rohwerte extrahiert und die fachlichen Eckdaten interpretiert. "
-  "Wird kein BÜ-Wunsch erkannt, endet die Kette hier: Der Vorgang wird NICHT an den Prüf-Bot übergeben, sondern ans "
-  "Eingangsmanagement umgeroutet. Nur als BÜ klassifizierte Vorgänge werden mit dem vollständigen Übergabe-Datensatz "
-  "an den Prüf-Bot weitergereicht.",
-  ["KI-Deckblatt deckt die Prüfschritte 1–5 ab (BÜ-Wunsch, MV formal & inhaltlich, Pool/Untervollmacht, Unterschriften)",
+ ("1 · Eingang und Umleitung an die Strukturierung",
+  "Die BÜ-Anfrage geht wie bisher per Mail ein und wird an das neue Gruppenpostfach bustrukturierung@ergo.de umgeleitet, "
+  "in dem ein Action Workflow von Celonis sitzt. In dieser Phase findet noch keine fachliche Prüfung statt.",
+  ["Mail-Eingang wie bisher; Umleitung an das neue Gruppenpostfach bustrukturierung@ergo.de",
+   "Dort sitzt der Action Workflow von Celonis, der die Strukturierung übernimmt",
+   "Ablösung der heutigen manuellen, unstrukturierten Indizierung"]),
+ ("2 · Strukturierung durch den Celonis Action Workflow",
+  "Der Action Workflow strukturiert die Mail (OCR über Image/Jadice, Anreicherung Partnerdaten/PNR aus EMMA) und erzeugt "
+  "zwei Artefakte: das KI-Deckblatt je Vorgang und eine Excel über alle Vorgänge. Das Deckblatt deckt bereits die "
+  "Prüfschritte 1–5 ab. Wird kein BÜ-Wunsch erkannt, endet die Kette hier. Nur als BÜ klassifizierte Vorgänge werden mit "
+  "dem vollständigen Datensatz an Robotics übergeben.",
+  ["Zwei Artefakte: KI-Deckblatt (je Vorgang) + Excel (über alle Vorgänge)",
+   "KI-Deckblatt deckt die Prüfschritte 1–5 ab (BÜ-Wunsch, MV formal & inhaltlich, Pool/Untervollmacht, Unterschriften)",
    "Übergabe-Datensatz = alle extrahierten + alle interpretierten Werte (vollständige Liste siehe Tabelle unten)",
-   "Kein BÜ-Wunsch: Umrouting ans Eingangsmanagement, keine automatisierte Prüfung",
-   "Ablage am Übergabepunkt: ERGO Datapool, SharePoint oder ein anderer Kanal (noch offen)"]),
+   "Übergabe an Robotics am Übergabepunkt: ERGO Datapool, SharePoint oder anderes (noch offen)"]),
  ("3 · Prüf-Bot · Einzelprüfung je Vorgang und digitales Prüfdeckblatt",
   "Der Prüf-Bot prüft jeden BÜ-Vorgang einzeln und durchläuft je Mail alle System-Prüfungen 6–16 (Schritt 9/VVR erfolgt "
   "manuell am Ende, da Robots im Vermittlerregister nicht zulässig sind). Bei Wunsch „gesamte Kundenverbindung“ werden "

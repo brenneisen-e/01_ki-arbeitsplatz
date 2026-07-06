@@ -876,7 +876,7 @@ const RAW_CHAPTERS: RawChapter[] = [
   {
     id: 'transformation',
     kapitel: '07',
-    label: { de: 'Transformation', en: 'Transformation' },
+    label: { de: 'Transformation mit Deloitte', en: 'Transformation with Deloitte' },
     ort: { de: 'Glas-Aufzug (vertikal, alle Etagen)', en: 'Glass elevator (vertical, all floors)' },
     keyObject: 'die Glas-Spine durch alle Etagen',
     zone: { centerX: 50, centerY: 50, width: 16, height: 92, fit: 'contain', labelX: 50, labelY: 50, hitWidth: 13, hitHeight: 86 },

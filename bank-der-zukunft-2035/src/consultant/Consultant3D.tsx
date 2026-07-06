@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { Bounds, Center, useAnimations, useGLTF } from '@react-three/drei'
-import { LoopOnce, LoopRepeat, type AnimationAction, type Group } from 'three'
-import { CONSULTANT_CLIPS, CONSULTANT_FIT_MARGIN, CONSULTANT_MODEL_URL } from './consultantConfig'
+import { useAnimations, useGLTF } from '@react-three/drei'
+import { Box3, LoopOnce, LoopRepeat, Vector3, type AnimationAction, type Group } from 'three'
+import { CONSULTANT_CLIPS, CONSULTANT_MODEL_URL, CONSULTANT_TARGET_HEIGHT } from './consultantConfig'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Consultant3D — rendert das geriggte GLB-Modell in der react-three-fiber-Szene.
@@ -29,6 +29,28 @@ export function Consultant3D({ speaking, reducedMotion }: { speaking: boolean; r
   const group = useRef<Group>(null)
   const { scene, animations } = useGLTF(CONSULTANT_MODEL_URL)
   const { actions, names } = useAnimations(animations, group)
+
+  // Deterministische Rahmung statt drei <Bounds>/<Center>: deren precise-Messung
+  // liest bone-transformierte Vertices und liefert bei animierten geskinnten
+  // Meshes je nach Lade-/Animations-Timing falsche Offsets. Hier stattdessen
+  // einmalig die statische Bind-Pose-Geometrie messen (animationsunabhängig)
+  // und das Modell auf Zielhöhe skaliert um den Ursprung zentrieren.
+  const frame = useMemo(() => {
+    scene.updateMatrixWorld(true)
+    const box = new Box3().setFromObject(scene)
+    const size = box.getSize(new Vector3())
+    const center = box.getCenter(new Vector3())
+    const scale = size.y > 0 ? CONSULTANT_TARGET_HEIGHT / size.y : 1
+    return { scale, center }
+  }, [scene])
+
+  // Kleine Bühne, Figur immer komplett sichtbar: Culling-Sphäre der Bind-Pose
+  // kann bei ausladenden Gesten (Winken) sonst knapp daneben liegen.
+  useEffect(() => {
+    scene.traverse((obj) => {
+      if ((obj as { isSkinnedMesh?: boolean }).isSkinnedMesh) obj.frustumCulled = false
+    })
+  }, [scene])
 
   const clips = useMemo(() => {
     const idle = pickClip(names, CONSULTANT_CLIPS.idle) ?? names[0]
@@ -85,13 +107,9 @@ export function Consultant3D({ speaking, reducedMotion }: { speaking: boolean; r
   }, [speaking, actions, clips, reducedMotion])
 
   return (
-    <Bounds fit clip observe margin={CONSULTANT_FIT_MARGIN}>
-      <Center>
-        <group ref={group}>
-          <primitive object={scene} />
-        </group>
-      </Center>
-    </Bounds>
+    <group ref={group} scale={frame.scale} position={[-frame.center.x * frame.scale, -frame.center.y * frame.scale, -frame.center.z * frame.scale]}>
+      <primitive object={scene} />
+    </group>
   )
 }
 

@@ -21,5 +21,9 @@ export const CONSULTANT_CLIPS = {
   talking: ['talk', 'Talk', 'talking', 'speak', 'gesture', 'Armature|talk'],
 } as const
 
-/** Feinjustierung der Kamera-/Modell-Rahmung (Auto-Fit via drei <Bounds>). */
-export const CONSULTANT_FIT_MARGIN = 1.15
+/**
+ * Höhe (in Szenen-Einheiten), auf die das Modell normiert wird. Die feste
+ * Kamera in ConsultantCanvas (y=0.15, z=4, fov 28°) zeigt bei z=0 einen
+ * vertikalen Ausschnitt von ca. 2 Einheiten — 1.7 lässt oben/unten Luft.
+ */
+export const CONSULTANT_TARGET_HEIGHT = 1.7

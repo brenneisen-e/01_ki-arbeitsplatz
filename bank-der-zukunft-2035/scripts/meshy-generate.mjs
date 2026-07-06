@@ -212,9 +212,29 @@ async function mergeAnimations(parts) {
     }
   }
 
+  liftSkinnedMeshes(base)
+
   const clips = base.getRoot().listAnimations().map((a) => a.getName()).join(', ')
   console.log(`  Zusammengeführte Clips: ${clips}`)
   return Buffer.from(await io.writeBinary(base))
+}
+
+// Hängt geskinnte Mesh-Nodes an die Szenenwurzel. Laut glTF-Spec wird die
+// Node-Transform eines geskinnten Meshes beim Rendern ignoriert (die Vertices
+// folgen allein den Joints) — Bounding-Box-Messungen wie drei <Bounds> laufen
+// aber über die Node-Hierarchie. Unter Meshys 0.01-skaliertem "Armature"-Node
+// wäre die gemessene Box 100-fach zu klein und die Kamera zoomt auf die Beine.
+function liftSkinnedMeshes(doc) {
+  const root = doc.getRoot()
+  const scene = root.getDefaultScene() ?? root.listScenes()[0]
+  for (const node of root.listNodes()) {
+    if (!node.getMesh() || !node.getSkin()) continue
+    const parent = node.getParentNode()
+    if (!parent) continue
+    parent.removeChild(node)
+    node.setTranslation([0, 0, 0]).setRotation([0, 0, 0, 1]).setScale([1, 1, 1])
+    scene.addChild(node)
+  }
 }
 
 async function main() {

@@ -15,6 +15,7 @@ import {
   Play,
   RotateCcw,
   Sparkles,
+  TrendingDown,
   TrendingUp,
   Users,
 } from 'lucide-react'
@@ -62,6 +63,14 @@ type ReaderStrings = {
   editTitleAria: string
   excel: string
   exporting: string
+  summaryKicker: string
+  summaryTitle: string
+  summaryAria: string
+  mgmtSummaryLabel: string
+  businessCaseLabel: string
+  kpiHeading: string
+  kpiHint: string
+  kpiFootnote: string
 }
 
 const STR: Record<Lang, ReaderStrings> = {
@@ -99,6 +108,14 @@ const STR: Record<Lang, ReaderStrings> = {
     editTitleAria: 'Titel bearbeiten',
     excel: 'Excel',
     exporting: 'Erzeuge…',
+    summaryKicker: 'Management Summary',
+    summaryTitle: 'Management Summary & Business Case',
+    summaryAria: 'Management Summary',
+    mgmtSummaryLabel: 'Management Summary',
+    businessCaseLabel: 'Business Case (exemplarisch)',
+    kpiHeading: 'Erwartete Wirkung bei Erfüllung der Hypothesen',
+    kpiHint: 'bei Erfüllung der Hypothesen',
+    kpiFootnote: 'Illustrative Platzhalter — konkrete Zielwerte je Kapitel folgen.',
   },
   en: {
     back: 'Overview',
@@ -134,8 +151,28 @@ const STR: Record<Lang, ReaderStrings> = {
     editTitleAria: 'Edit title',
     excel: 'Excel',
     exporting: 'Exporting…',
+    summaryKicker: 'Management summary',
+    summaryTitle: 'Management summary & business case',
+    summaryAria: 'Management summary',
+    mgmtSummaryLabel: 'Management summary',
+    businessCaseLabel: 'Business case (illustrative)',
+    kpiHeading: 'Expected impact once the hypotheses are met',
+    kpiHint: 'once the hypotheses are met',
+    kpiFootnote: 'Illustrative placeholders — concrete targets per chapter to follow.',
   },
 }
+
+// KPI-Framework für die Management-Summary-Kachel (letzter Schritt). Gleiche
+// Struktur für ALLE Kapitel; Werte sind Platzhalter und je Kapitel zu füllen.
+const KPIS: {
+  label: { de: string; en: string }
+  value: string
+  trend: 'up' | 'down'
+}[] = [
+  { label: { de: 'Kundenzufriedenheit', en: 'Customer satisfaction' }, value: '+ X %', trend: 'up' },
+  { label: { de: 'Betriebskosten', en: 'Operating costs' }, value: '− X %', trend: 'down' },
+  { label: { de: 'Marge', en: 'Margin' }, value: '+ X pp', trend: 'up' },
+]
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ChapterReader — die Kapitel-Sequenz nach dem Kameraflug:
@@ -247,8 +284,9 @@ export function ChapterReader({
   const { edits, setText, setComment, resetStep } = useChapterEdits()
   const [editMode, setEditMode] = useState(readEditMode)
 
-  // Schrittzahl aus dem Kapitel: N Hypothesen + 1 Aktivität.
-  const stepCount = chapter.hypotheses.length + 1
+  // Schrittzahl: N Hypothesen + 1 Aktivität/Live-Demo + 1 Management Summary.
+  const stepCount = chapter.hypotheses.length + 2
+  const activityIndex = chapter.hypotheses.length
 
   // Overlay-Chatbot zur Leitfrage (statt statischer Sprechblase). Beim Wechsel
   // von Schritt oder Kapitel schließen, damit die Leitfrage zum Kontext passt.
@@ -299,16 +337,19 @@ export function ChapterReader({
     return () => window.removeEventListener('keydown', onKey)
   }, [onBack, goNext, goPrev])
 
-  const isActivity = step === stepCount - 1
-  const hypothesis = isActivity ? null : chapter.hypotheses[step]
+  const isSummary = step === stepCount - 1
+  const isActivity = step === activityIndex
+  const hypothesis = isActivity || isSummary ? null : chapter.hypotheses[step]
   const activity = chapter.activity
 
   const image = hypothesis ? hypothesis.image : activity.image
   const title = hypothesis ? hypothesis.title : activity.title
   const chapterLabel = `${t.chapterPrefix} ${chapter.kapitel}`
-  const kicker = hypothesis
-    ? `${chapterLabel} · ${t.hypothesisOf(step + 1, chapter.hypotheses.length)}`
-    : `${chapterLabel} · ${t.activityKicker}`
+  const kicker = isSummary
+    ? `${chapterLabel} · ${t.summaryKicker}`
+    : hypothesis
+      ? `${chapterLabel} · ${t.hypothesisOf(step + 1, chapter.hypotheses.length)}`
+      : `${chapterLabel} · ${t.activityKicker}`
   const slotLabel = hypothesis
     ? `${chapterLabel} · ${t.hypothesisSlot(step + 1)}`
     : `${chapterLabel} · ${t.activitySlot}`
@@ -394,7 +435,9 @@ export function ChapterReader({
           </div>
         )}
 
-        {editMode ? (
+        {isSummary ? (
+          <h1 className={styles.title}>{t.summaryTitle}</h1>
+        ) : editMode ? (
           <textarea
             className={styles.titleInput}
             value={effTitle}
@@ -406,31 +449,53 @@ export function ChapterReader({
           <h1 className={styles.title}>{effTitle}</h1>
         )}
 
-        {/* Management Summary & exemplarischer Business Case — je Kapitel,
-            aufklappbar direkt im Kapitel. Quelle: chapter.vision + chapter.businessCase. */}
-        <details className={styles.summaryPanel}>
-          <summary className={styles.summaryToggle}>
-            <BookOpen size={15} strokeWidth={2} aria-hidden />
-            {lang === 'de' ? 'Management Summary & Business Case' : 'Management summary & business case'}
-          </summary>
-          <div className={styles.summaryBody}>
-            <div className={styles.summaryBlock}>
-              <span className={styles.summaryBlockLabel}>
-                <Sparkles size={13} strokeWidth={2.2} aria-hidden />
-                {lang === 'de' ? 'Management Summary' : 'Management summary'}
-              </span>
-              <p className={styles.summaryText}>{renderRichText(chapter.vision)}</p>
+        {isSummary ? (
+          /* Letzte Kachel: Management Summary + Business Case + KPI-Framework
+             (gleiches Framework für alle Kapitel; KPI-Werte sind Platzhalter). */
+          <div className={styles.summaryStep}>
+            <div className={styles.summaryBody}>
+              <div className={styles.summaryBlock}>
+                <span className={styles.summaryBlockLabel}>
+                  <Sparkles size={13} strokeWidth={2.2} aria-hidden />
+                  {t.mgmtSummaryLabel}
+                </span>
+                <p className={styles.summaryText}>{renderRichText(chapter.vision)}</p>
+              </div>
+              <div className={styles.summaryBlock}>
+                <span className={styles.summaryBlockLabel}>
+                  <TrendingUp size={13} strokeWidth={2.2} aria-hidden />
+                  {t.businessCaseLabel}
+                </span>
+                <p className={styles.summaryText}>{renderRichText(chapter.businessCase)}</p>
+              </div>
             </div>
-            <div className={styles.summaryBlock}>
-              <span className={styles.summaryBlockLabel}>
-                <TrendingUp size={13} strokeWidth={2.2} aria-hidden />
-                {lang === 'de' ? 'Business Case (exemplarisch)' : 'Business case (illustrative)'}
+
+            <div className={styles.kpiSection}>
+              <span className={styles.kpiHeading}>
+                <BookOpen size={14} strokeWidth={2.2} aria-hidden />
+                {t.kpiHeading}
               </span>
-              <p className={styles.summaryText}>{renderRichText(chapter.businessCase)}</p>
+              <div className={styles.kpiRow}>
+                {KPIS.map((kpi) => (
+                  <div className={styles.kpiCard} key={kpi.label.en} data-trend={kpi.trend}>
+                    <span className={styles.kpiLabel}>{kpi.label[lang]}</span>
+                    <span className={styles.kpiValue}>
+                      {kpi.trend === 'up' ? (
+                        <TrendingUp size={20} strokeWidth={2.4} aria-hidden />
+                      ) : (
+                        <TrendingDown size={20} strokeWidth={2.4} aria-hidden />
+                      )}
+                      {kpi.value}
+                    </span>
+                    <span className={styles.kpiHint}>{t.kpiHint}</span>
+                  </div>
+                ))}
+              </div>
+              <p className={styles.kpiFootnote}>{t.kpiFootnote}</p>
             </div>
           </div>
-        </details>
-
+        ) : (
+          <>
         <div className={styles.media}>
           <div className={styles.imageInner}>
             <ImageSlot
@@ -618,6 +683,8 @@ export function ChapterReader({
             </div>
           </div>
         )}
+          </>
+        )}
       </div>
 
       <footer className={styles.pager}>
@@ -640,9 +707,16 @@ export function ChapterReader({
               aria-selected={i === step}
               className={styles.dot}
               data-active={i === step || undefined}
-              data-activity={i === stepCount - 1 || undefined}
+              data-activity={i === activityIndex || undefined}
+              data-summary={i === stepCount - 1 || undefined}
               onClick={() => onStepChange(i)}
-              aria-label={i === stepCount - 1 ? t.activity : t.hypothesisAria(i + 1)}
+              aria-label={
+                i === stepCount - 1
+                  ? t.summaryAria
+                  : i === activityIndex
+                    ? t.activity
+                    : t.hypothesisAria(i + 1)
+              }
             />
           ))}
         </div>
@@ -651,7 +725,7 @@ export function ChapterReader({
           type="button"
           className={styles.pagerBtn}
           onClick={goNext}
-          disabled={isActivity}
+          disabled={isSummary}
           aria-label={t.nextStep}
         >
           <ChevronRight size={18} strokeWidth={2} />

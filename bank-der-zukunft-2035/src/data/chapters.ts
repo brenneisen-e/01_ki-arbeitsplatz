@@ -1301,7 +1301,8 @@ export const CHAPTER_NUMBERS: Record<string, ChapterId> = Object.fromEntries(
  */
 export function stepCountForChapter(id: ChapterId): number {
   const raw = RAW_CHAPTERS.find((c) => c.id === id)
-  return (raw ? raw.hypotheses.length : 3) + 1
+  // N Hypothesen + 1 Aktivität/Live-Demo + 1 Management Summary (letzte Kachel).
+  return (raw ? raw.hypotheses.length : 3) + 2
 }
 
 /** Alle Kapitel in der aktiven Sprache. */

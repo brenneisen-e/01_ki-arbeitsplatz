@@ -834,3 +834,96 @@
   gap: 10px;
 }
 .leitfrageWrap .leitfrage { margin: 0; }
+
+/* ── Management-Summary-Kachel (letzter Schritt, nach der Live-Demo) ─────────── */
+.summaryStep {
+  width: 100%;
+  max-width: var(--media-w);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2vw, 28px);
+}
+
+.kpiSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kpiHeading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(12px, 1.4vw, 20px);
+}
+
+.kpiCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(16px, 1.6vw, 24px);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-soft);
+  border-top: 3px solid var(--accent);
+  background: var(--surface-1);
+}
+
+.kpiLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.kpiValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  white-space: nowrap;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(24px, 2vw, 32px);
+  line-height: 1.05;
+  color: var(--accent);
+}
+
+.kpiValue > svg {
+  color: var(--accent-bright);
+  flex: none;
+}
+
+.kpiHint {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.kpiFootnote {
+  margin: 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+/* Pager-Dot für die Summary-Kachel (abgerundetes Quadrat, nicht rotiert). */
+.dot[data-summary] {
+  border-radius: 4px;
+}
+
+@media (max-width: 760px) {
+  .kpiRow {
+    grid-template-columns: 1fr;
+  }
+}

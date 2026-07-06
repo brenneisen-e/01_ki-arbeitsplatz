@@ -22,16 +22,26 @@ also jederzeit lauffähig.
 ```bash
 export MESHY_API_KEY=msy_...          # https://www.meshy.ai/api
 cd bank-der-zukunft-2035
-npm run generate:consultant           # Preview → Refine → Rigging → Animationen → GLB
+npm run generate:consultant           # Preview → Refine → Rigging → Idle → normalisieren → optimieren
 npm run build                         # dist/ neu bauen, danach dist/ committen
 ```
 
-Flags: `--prompt "…"`, `--style realistic|sculpture`, `--actions idle=0,wave=28,talk=313`, `--skip-rig`.
+Flags: `--prompt "…"`, `--ai-model meshy-6`, `--pose t-pose`, `--polycount 60000`,
+`--actions idle=0`, `--skip-rig`.
 
-Das Script erzeugt drei Animations-Clips (Idle, Winken, Sprechen — Action-IDs aus
-der [Meshy-Animation-Library](https://docs.meshy.ai/en/api/animation-library))
-und führt sie zu **einem** GLB mit benannten Clips (`idle`, `wave`, `talk`)
-zusammen, die `Consultant3D.tsx` über `CONSULTANT_CLIPS` zuordnet.
+Das Script erzeugt den Charakter mit **Meshy-6 in T-Pose** (realistische
+Proportionen; T-Pose ist Voraussetzung für sauberes Rigging), riggt ihn und legt
+den **idle**-Clip darauf. Danach normalisiert es die Materialien und verkleinert
+das GLB (Geometrie-Simplify + WebP-1024-Textur) auf ~3–4 MB.
+
+**Warum nur `idle`?** Meshys Auto-Rigging setzt an den Schultern zu grobe
+Skin-Weights. Sobald eine Bibliotheks-Animation die Arme **hebt** (wave, talk …),
+reißt es den Torso-Mesh zu grotesken „Flügeln" auseinander (an den rohen
+Meshy-GLBs verifiziert, nicht erst nach dem Merge). `idle` hält die Arme am
+Körper und bleibt stabil; `pickClip()` in `Consultant3D.tsx` fällt für
+greeting/talking automatisch auf `idle` zurück. Weitere Clips (Action-IDs aus der
+[Meshy-Animation-Library](https://docs.meshy.ai/en/api/animation-library)) nur mit
+einem besseren Rig via `--actions idle=0,talk=313`.
 
 ### B) Meshy-MCP-Server (interaktiv, agentengesteuert)
 

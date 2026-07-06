@@ -38,6 +38,9 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { NodeIO } from '@gltf-transform/core'
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions'
+import { dedup, prune, simplify, textureCompress, weld } from '@gltf-transform/functions'
+import { MeshoptSimplifier } from 'meshoptimizer'
+import sharp from 'sharp'
 
 const API = 'https://api.meshy.ai'
 const EP = {
@@ -49,32 +52,52 @@ const EP = {
 // Clip-Name → action_id aus der Meshy-Animation-Library. Die Namen müssen zu
 // den Kandidatenlisten in src/consultant/consultantConfig.ts (CONSULTANT_CLIPS)
 // passen, damit Consultant3D.tsx die Clips zuordnen kann.
-//   0   = "Idle"                  (DailyActions / Idle)
+//   0   = "Idle"                  (DailyActions / Idle)   — Arme unten, sauber
 //   28  = "Big_Wave_Hello"        (DailyActions / Interacting)
 //   313 = "Talk_with_Hands_Open"  (DailyActions / Interacting)
-const DEFAULT_ACTIONS = [
-  { clip: 'idle', actionId: 0 },
-  { clip: 'wave', actionId: 28 },
-  { clip: 'talk', actionId: 313 },
-]
+//
+// NUR idle: Meshys Auto-Rigging setzt an Schulter/Oberarm zu grobe Skin-Weights;
+// sobald eine Animation die Arme HEBT (wave, talk …), reißt es den Torso-Mesh zu
+// grotesken „Flügeln" auseinander (verifiziert an den rohen Meshy-Animations-GLBs,
+// nicht erst nach dem Merge). idle hält die Arme nah am Körper und bleibt über die
+// volle Dauer stabil. pickClip() in Consultant3D.tsx fällt für greeting/talking
+// automatisch auf idle zurück. Weitere Clips nur mit besserem Rig via --actions.
+const DEFAULT_ACTIONS = [{ clip: 'idle', actionId: 0 }]
 
+// Realistischer, gut proportionierter Charakter in T-Pose. WICHTIG für die
+// Animation: Die Figur MUSS in neutraler T-Pose mit seitlich ausgestreckten
+// Armen stehen (pose_mode: 't-pose'). Steht sie z. B. mit verschränkten Armen,
+// verzerrt das Auto-Rigging die Arme bei den Bibliotheks-Animationen zu
+// „Flügeln". „realistic proportions" verhindert den Bobblehead-Effekt.
 const DEFAULT_PROMPT =
-  'A friendly, stylised male management consultant standing figure, full body, ' +
-  'dark green tailored business suit, white shirt, approachable smile, clean ' +
-  'corporate character, neutral T-pose, simple stylised low-poly-ish look, ' +
-  'symmetrical, suitable for auto-rigging.'
+  'Full-body realistic 3D character of a professional male management consultant ' +
+  'in his early 40s, standing upright in a neutral T-pose with both arms extended ' +
+  'straight out to the sides, realistic human body proportions, wearing a ' +
+  'dark green tailored business suit, white dress shirt and tie, short dark hair, ' +
+  'neatly groomed short beard, calm confident friendly expression, photorealistic ' +
+  'PBR skin and fabric textures, symmetrical, clean game-ready character topology.'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..')
 
 // ── CLI-Argumente ────────────────────────────────────────────────────────────
 function parseArgs(argv) {
-  const args = { style: 'realistic', actions: DEFAULT_ACTIONS, skipRig: false, out: 'public/models/consultant.glb', prompt: DEFAULT_PROMPT }
+  const args = {
+    aiModel: 'meshy-6',
+    pose: 't-pose',
+    polycount: 60000,
+    actions: DEFAULT_ACTIONS,
+    skipRig: false,
+    out: 'public/models/consultant.glb',
+    prompt: DEFAULT_PROMPT,
+  }
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--skip-rig') args.skipRig = true
     else if (a === '--prompt') args.prompt = argv[++i]
-    else if (a === '--style') args.style = argv[++i]
+    else if (a === '--ai-model') args.aiModel = argv[++i]
+    else if (a === '--pose') args.pose = argv[++i]
+    else if (a === '--polycount') args.polycount = Number(argv[++i])
     else if (a === '--actions') {
       args.actions = argv[++i].split(',').map((pair) => {
         const [clip, id] = pair.split('=')
@@ -212,11 +235,56 @@ async function mergeAnimations(parts) {
     }
   }
 
-  liftSkinnedMeshes(base)
-
   const clips = base.getRoot().listAnimations().map((a) => a.getName()).join(', ')
   console.log(`  Zusammengeführte Clips: ${clips}`)
-  return Buffer.from(await io.writeBinary(base))
+  return base
+}
+
+// Nachbearbeitung, die IMMER läuft (egal ob ein oder mehrere Clips, oder
+// --skip-rig): Material-Normalisierung, geskinnte Meshes anheben und das GLB
+// für den kleinen Dock-Avatar deutlich verkleinern.
+async function finalize(doc) {
+  normalizeMaterials(doc)
+  liftSkinnedMeshes(doc)
+
+  // Verkleinern: Geometrie halbieren (meshopt-Simplify) und die PBR-Textur auf
+  // 1024px als WebP. Bewusst OHNE Draco/Meshopt-Geometriekompression, die einen
+  // zusätzlichen Decoder (DRACOLoader/MeshoptDecoder) im react-three-Loader
+  // bräuchte — WebP-Textur + weniger Vertices laden ohne App-seitigen Decoder.
+  await MeshoptSimplifier.ready
+  await doc.transform(
+    dedup(),
+    weld(),
+    simplify({ simplifier: MeshoptSimplifier, ratio: 0.5, error: 0.0015 }),
+    textureCompress({ encoder: sharp, targetFormat: 'webp', resize: [1024, 1024], quality: 82 }),
+    prune(),
+  )
+
+  const io = new NodeIO().registerExtensions(ALL_EXTENSIONS)
+  return Buffer.from(await io.writeBinary(doc))
+}
+
+// Korrigiert Meshys PBR-Materialdefaults, die in einer Szene ohne HDRI/Environment
+// den „Geister-Look" verursachen:
+//   • metallicFactor: glTF-Default ist 1.0, wenn ungesetzt — ein voll metallischer
+//     Anzug/Haut hat ohne Environment-Map nichts zu spiegeln und wirkt flach/falsch.
+//     → auf 0 setzen (Stoff/Haut sind dielektrisch).
+//   • emissiveFactor [1,1,1] + Emissive-Textur: die Figur „leuchtet" ihre Basisfarbe
+//     voll ab, überstrahlt jede Schattierung und wirkt ausgewaschen/durchscheinend.
+//     → Emissive aus.
+//   • KHR_materials_specular specularColorFactor [2,2,2]: übertriebene Glanzlichter.
+//     → auf neutrale 1.0 zurücksetzen.
+function normalizeMaterials(doc) {
+  for (const mat of doc.getRoot().listMaterials()) {
+    mat.setMetallicFactor(0)
+    mat.setEmissiveFactor([0, 0, 0])
+    if (mat.getEmissiveTexture()) mat.setEmissiveTexture(null)
+    const spec = mat.getExtension('KHR_materials_specular')
+    if (spec && typeof spec.setSpecularColorFactor === 'function') {
+      spec.setSpecularColorFactor([1, 1, 1])
+    }
+  }
+  console.log('  Materialien normalisiert (metalness 0, Emissive aus).')
 }
 
 // Hängt geskinnte Mesh-Nodes an die Szenenwurzel. Laut glTF-Spec wird die
@@ -240,19 +308,21 @@ function liftSkinnedMeshes(doc) {
 async function main() {
   const args = parseArgs(process.argv)
   console.log('Meshy-Consultant-Pipeline')
-  console.log(`  Stil:   ${args.style}`)
+  console.log(`  Modell: ${args.aiModel}   Pose: ${args.pose}   Polycount: ${args.polycount}`)
   console.log(`  Clips:  ${args.actions.map((a) => `${a.clip}=${a.actionId}`).join(', ')}`)
   console.log(`  Ziel:   ${args.out}`)
   console.log(`  Prompt: ${args.prompt}\n`)
 
-  // 1) Preview
+  // 1) Preview — Meshy-6 in T-Pose: neutrale Pose ist Voraussetzung dafür, dass
+  // die Bibliotheks-Animationen das Auto-Rig sauber bewegen (keine Flügel-Arme).
   console.log('1/5  Text-to-3D (Preview) …')
   const previewId = await postJson(EP.textTo3d, {
     mode: 'preview',
     prompt: args.prompt,
-    art_style: args.style,
-    should_remesh: true,
+    ai_model: args.aiModel,
+    pose_mode: args.pose,
     topology: 'quad',
+    target_polycount: args.polycount,
   })
   await poll(EP.textTo3d, previewId, 'Preview')
 
@@ -261,6 +331,7 @@ async function main() {
   const refineId = await postJson(EP.textTo3d, {
     mode: 'refine',
     preview_task_id: previewId,
+    ai_model: args.aiModel,
     enable_pbr: true,
   })
   const refineTask = await poll(EP.textTo3d, refineId, 'Refine')
@@ -290,15 +361,17 @@ async function main() {
       }),
     )
 
-    // 5) Merge + Download
-    console.log('5/5  Clips zusammenführen und GLB schreiben …')
-    bin = parts.length > 1 ? await mergeAnimations(parts) : parts[0].bin
+    // 5) Merge + Nachbearbeitung
+    console.log('5/5  Clips zusammenführen, normalisieren, optimieren …')
+    const merged = await mergeAnimations(parts)
+    bin = await finalize(merged)
   } else {
     console.log('3-4/5  (übersprungen: --skip-rig)')
-    console.log('5/5  Download GLB …')
+    console.log('5/5  Download, normalisieren, optimieren …')
     const glb = glbUrlOf(refineTask)
     if (!glb) throw new Error(`Keine GLB-URL im Ergebnis gefunden: ${JSON.stringify(refineTask).slice(0, 400)}`)
-    bin = await download(glb)
+    const io = new NodeIO().registerExtensions(ALL_EXTENSIONS)
+    bin = await finalize(await io.readBinary(new Uint8Array(await download(glb))))
   }
 
   const outPath = resolve(ROOT, args.out)

@@ -11,6 +11,7 @@ import { ArrowLeft, ScrollText } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
 import { ChapterReader } from './ChapterReader'
+import { TransformationOffering } from './TransformationOffering'
 import { EinstiegsBuehne } from './EinstiegsBuehne'
 import { IframeStage } from './IframeStage'
 import { StrategyLab } from './StrategyLab'
@@ -483,15 +484,24 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
           <span>{t.summary}</span>
         </button>
 
-        {/* Kapitel-Reader (Hypothesen → Aktivität) — erst nach dem Kameraflug */}
+        {/* Kapitel-Reader (Hypothesen → Aktivität) — erst nach dem Kameraflug.
+            Das Transformationskapitel zeigt stattdessen das Deloitte-Offering. */}
         {activeChapter && readerShown && !einstiegOpen && (
-          <ChapterReader
-            chapter={activeChapter}
-            step={step}
-            onStepChange={setStep}
-            onBack={handleBack}
-            onHandoff={handleHandoff}
-          />
+          activeChapter.id === 'transformation' ? (
+            <TransformationOffering
+              chapter={activeChapter}
+              onBack={handleBack}
+              onHandoff={handleHandoff}
+            />
+          ) : (
+            <ChapterReader
+              chapter={activeChapter}
+              step={step}
+              onStepChange={setStep}
+              onBack={handleBack}
+              onHandoff={handleHandoff}
+            />
+          )
         )}
 
         {/* Einstiegsbühne: nach dem Reinzoomen zuerst der Raum groß + Heute/

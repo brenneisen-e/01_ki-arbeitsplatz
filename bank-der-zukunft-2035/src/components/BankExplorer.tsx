@@ -288,11 +288,15 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
       setEinstiegOpen(false)
       animateTo(chapter, opts)
       if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
-      // Reader nach ~60 % des Flugs einblenden (instant bei reduced motion).
-      const delay = reducedMotion || opts.instant ? 0 : ZOOM_DURATION * 600
       // Frisches Öffnen eines Raum-Kapitels (Schritt 0): zuerst die Einstiegs-
-      // bühne (Raum groß + Heute/Morgen), danach per CTA in den Reader.
+      // bühne (Raum groß), danach per CTA in den Reader.
       const wantEinstieg = nextStep === 0 && hasEinstieg(id)
+      // Die Einstiegsbühne erst einblenden, wenn der Kameraflug fast steht
+      // (~92 %) — sonst faded das Raumbild über eine noch bewegte Kamera und es
+      // wirkt abgehackt. Der reine Reader darf früher (~60 %) erscheinen.
+      const delay = reducedMotion || opts.instant
+        ? 0
+        : ZOOM_DURATION * (wantEinstieg ? 920 : 600)
       flyTimeoutRef.current = window.setTimeout(() => {
         setReaderShown(true)
         if (wantEinstieg) setEinstiegOpen(true)

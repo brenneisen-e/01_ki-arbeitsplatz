@@ -376,8 +376,10 @@ function handoffIcon(kind: Handoff['kind']): React.ReactElement {
 
 // iframe rendert bei fester Logik-Auflösung und wird per CSS-Transform passgenau
 // auf die Bildschirmfläche im Foto skaliert (cover, kein Scrollbalken).
-const IFRAME_LOGICAL_W = 1920
-const IFRAME_LOGICAL_H = 1080
+// Bewusst niedrige Logik-Auflösung (1280×720 statt 1920×1080): die eingebettete
+// Live-Demo wird dadurch deutlich weniger herunterskaliert und bleibt lesbar.
+const IFRAME_LOGICAL_W = 1280
+const IFRAME_LOGICAL_H = 720
 
 /** Live-iframe auf einer im Aktivitäts-Bild sichtbaren Bildschirmfläche. */
 function ScreenIframe({ overlay }: { overlay: ScreenOverlay }): React.ReactElement {

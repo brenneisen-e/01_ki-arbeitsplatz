@@ -38,6 +38,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { pick, type L, type Lang } from '../i18n/LanguageContext'
+import { LEITFRAGE_BY_IMAGE } from './leitfragen'
 
 export type ChapterId =
   | 'kunde'
@@ -1250,13 +1251,22 @@ function localizeScreenOverlay(overlay: RawScreenOverlay, lang: Lang): ScreenOve
   }
 }
 
+/** Bildnummer aus dem Pfad ziehen, z. B. './images/Kapitel 3_2.png' -> '3_2'. */
+function imageKeyOf(src: string): string {
+  const m = src.match(/Kapitel\s+(\d+_\d+)\.png/)
+  return m ? m[1] : ''
+}
+
 function localizeHypothesis(h: RawHypothesis, lang: Lang): Hypothesis {
+  // Inline-Leitfrage hat Vorrang; sonst Fallback über die Bildnummer, damit
+  // JEDE Hypothese eine Leitfrage trägt (Consultant, Editor, Excel-Export).
+  const rawLeitfrage = h.leitfrage ?? LEITFRAGE_BY_IMAGE[imageKeyOf(h.image.src)]
   return {
     title: pick(h.title, lang),
     image: localizeImage(h.image, lang),
     statusQuo: pick(h.statusQuo, lang),
     in2030: pick(h.in2030, lang),
-    ...(h.leitfrage ? { leitfrage: pick(h.leitfrage, lang) } : {}),
+    ...(rawLeitfrage ? { leitfrage: pick(rawLeitfrage, lang) } : {}),
   }
 }
 

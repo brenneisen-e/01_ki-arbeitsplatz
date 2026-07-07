@@ -72,6 +72,14 @@ export function summaryBulletKey(chapterId: string, lang: Lang, i: number): stri
 export function einstiegKey(chapterId: string, lang: Lang, field: 'rolle' | 'frage'): string {
   return `${chapterId}|einstieg-${field}|${lang}`
 }
+/** Deloitte-Offering-Ansprechpartner (Transformationskapitel). Name sprach-
+ *  unabhängig, Rolle je Sprache; Foto über imageKey(contact.imageSrc). */
+export function contactNameKey(i: number): string {
+  return `transformation|contactName|${i}`
+}
+export function contactRoleKey(i: number, lang: Lang): string {
+  return `transformation|contactRole|${lang}|${i}`
+}
 export function kpiValueKey(chapterId: string, i: number): string {
   return `${chapterId}|kpiValue|${i}`
 }

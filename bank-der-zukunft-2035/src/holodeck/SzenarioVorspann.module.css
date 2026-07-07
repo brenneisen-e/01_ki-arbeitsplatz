@@ -271,8 +271,14 @@
   z-index: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0.3;
+  opacity: 0.14;
   pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+/* Freigeschaltete Kachel zeigt das Szenario-Bild deutlicher. */
+.tile[data-unlocked] .tileBg {
+  opacity: 0.32;
 }
 
 .tileBg::after {

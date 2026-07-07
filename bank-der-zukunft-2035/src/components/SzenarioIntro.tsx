@@ -302,13 +302,13 @@ export function SzenarioIntro({ onEnter }: Props): React.ReactElement {
                     aria-pressed={active === s.id}
                     aria-label={offen ? s.title : T.quadrantLock(i + 1)}
                   >
+                    <span
+                      className={styles.tileBg}
+                      style={{ backgroundImage: `url(${SZENARIO_IMG[s.id]})` }}
+                      aria-hidden
+                    />
                     {offen ? (
                       <>
-                        <span
-                          className={styles.tileBg}
-                          style={{ backgroundImage: `url(${SZENARIO_IMG[s.id]})` }}
-                          aria-hidden
-                        />
                         <span className={styles.tileHead}>
                           <span className={styles.tileTitle}>{s.title}</span>
                         </span>

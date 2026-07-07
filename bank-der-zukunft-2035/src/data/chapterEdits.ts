@@ -68,6 +68,10 @@ export function businessCaseKey(chapterId: string, lang: Lang): string {
 export function summaryBulletKey(chapterId: string, lang: Lang, i: number): string {
   return `${chapterId}|summaryBullet|${lang}|${i}`
 }
+/** Einstiegsbühne (Einleitung/Denkanstoß beim Reinzoomen). */
+export function einstiegKey(chapterId: string, lang: Lang, field: 'rolle' | 'frage'): string {
+  return `${chapterId}|einstieg-${field}|${lang}`
+}
 export function kpiValueKey(chapterId: string, i: number): string {
   return `${chapterId}|kpiValue|${i}`
 }

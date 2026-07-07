@@ -4,6 +4,7 @@ import styles from './EinstiegsBuehne.module.css'
 import { useLang } from '../i18n/LanguageContext'
 import type { Chapter } from '../data/chapters'
 import { EINSTIEG, einstiegImage, hasEinstieg, type Einstieg } from '../data/einstieg'
+import { useChapterEdits, einstiegKey } from '../data/chapterEdits'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // EinstiegsBuehne — Landing eines Raum-Kapitels direkt nach dem Reinzoomen.
@@ -23,6 +24,7 @@ type Props = { chapter: Chapter; onWeiter: () => void }
 export function EinstiegsBuehne({ chapter, onWeiter }: Props): React.ReactElement | null {
   const { lang } = useLang()
   const t = STR[lang]
+  const { edits } = useChapterEdits()
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -35,6 +37,9 @@ export function EinstiegsBuehne({ chapter, onWeiter }: Props): React.ReactElemen
   const id = chapter.id
   if (!hasEinstieg(id)) return null
   const e: Einstieg = EINSTIEG[id]
+  // Overrides aus dem Änderungsbereich (Einstiegs-Einleitung + Denkanstoß).
+  const rolle = edits.texts[einstiegKey(id, lang, 'rolle')] ?? e.rolle[lang]
+  const frage = edits.texts[einstiegKey(id, lang, 'frage')] ?? e.frage[lang]
 
   return (
     <div className={styles.overlay} role="dialog" aria-label={chapter.label}>
@@ -51,8 +56,8 @@ export function EinstiegsBuehne({ chapter, onWeiter }: Props): React.ReactElemen
           {t.kapitel} {chapter.kapitel}
         </span>
         <h1 className={styles.title}>{chapter.label}</h1>
-        <p className={styles.rolle}>{e.rolle[lang]}</p>
-        <p className={styles.frage}>{e.frage[lang]}</p>
+        <p className={styles.rolle}>{rolle}</p>
+        <p className={styles.frage}>{frage}</p>
 
         <button type="button" className={styles.cta} onClick={onWeiter}>
           {t.cta}

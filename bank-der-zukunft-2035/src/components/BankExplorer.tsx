@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import { gsap } from 'gsap'
-import { ArrowLeft, ScrollText, SlidersHorizontal } from 'lucide-react'
+import { ArrowLeft, FileSpreadsheet, Loader2, ScrollText, SlidersHorizontal } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
 import { ChapterReader } from './ChapterReader'
@@ -34,6 +34,8 @@ import {
   type Handoff,
 } from '../data/chapters'
 import { hasEinstieg } from '../data/einstieg'
+import { useChapterEdits } from '../data/chapterEdits'
+import { exportChaptersXlsx } from '../data/exportChaptersXlsx'
 
 type ExplorerStrings = {
   backToChat: string
@@ -173,6 +175,8 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   const [summaryOpen, setSummaryOpen] = useState(false)
   // Änderungsbereich (Admin-CMS) — strukturierte Bearbeitung aller Kapitelinhalte.
   const [cmsOpen, setCmsOpen] = useState(false)
+  // Excel-Export: Ladezustand (edits/lang/Handler weiter unten, nach useLang).
+  const [exporting, setExporting] = useState(false)
   // Einstiegsbühne (Raum groß + Heute/Morgen) beim frischen Öffnen eines Raum-
   // Kapitels, bevor der Reader mit den Hypothesen übernimmt.
   const [einstiegOpen, setEinstiegOpen] = useState(false)
@@ -180,6 +184,18 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   const reducedMotion = useReducedMotion()
   const { lang } = useLang()
   const t = STR[lang]
+  // Excel-Export aller Kapitel (inkl. gespeicherter Edits) — von der Übersicht aus.
+  const { edits } = useChapterEdits()
+  const onExport = useCallback(async () => {
+    setExporting(true)
+    try {
+      await exportChaptersXlsx(lang, edits)
+    } catch (err) {
+      console.error('Excel-Export fehlgeschlagen', err)
+    } finally {
+      setExporting(false)
+    }
+  }, [lang, edits])
   const chapters = useMemo(() => api.getChapters(lang), [api, lang])
   const masterImage = useMemo(() => api.getMasterImage(lang), [api, lang])
   const activeChapter = useMemo(() => api.getChapter(activeId, lang), [api, activeId, lang])
@@ -474,6 +490,21 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
           >
             <SlidersHorizontal size={16} strokeWidth={2} aria-hidden />
             <span>{lang === 'de' ? 'Bearbeiten' : 'Edit'}</span>
+          </button>
+          <button
+            type="button"
+            className={styles.introBtn}
+            tabIndex={isOverview ? 0 : -1}
+            onClick={onExport}
+            disabled={exporting}
+            aria-label={lang === 'de' ? 'Excel-Export aller Kapitel' : 'Excel export of all chapters'}
+          >
+            {exporting ? (
+              <Loader2 size={16} strokeWidth={2} className={styles.spin} aria-hidden />
+            ) : (
+              <FileSpreadsheet size={16} strokeWidth={2} aria-hidden />
+            )}
+            <span>Excel</span>
           </button>
         </div>
 

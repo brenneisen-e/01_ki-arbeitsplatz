@@ -186,6 +186,22 @@
   transform: translateY(-2px);
 }
 
+.introBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
+
+.spin {
+  animation: bxSpin 0.9s linear infinite;
+}
+
+@keyframes bxSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Titel-Box oben mittig -- fährt von oben herein (nur Übersicht) */
 .topbar {
   position: absolute;

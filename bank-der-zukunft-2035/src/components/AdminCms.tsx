@@ -14,12 +14,15 @@ import { useLang, type Lang } from '../i18n/LanguageContext'
 import { getChapters, type Chapter } from '../data/chapters'
 import { SUMMARY_BULLETS } from '../data/summaryBullets'
 import { EINSTIEG, hasEinstieg } from '../data/einstieg'
+import { OFFERING_IMAGE_SRC, OFFERING_CONTACTS } from '../data/offering'
 import {
   useChapterEdits,
   textKey,
   visionKey,
   summaryBulletKey,
   einstiegKey,
+  contactNameKey,
+  contactRoleKey,
   imageKey,
   uploadImage,
 } from '../data/chapterEdits'
@@ -53,6 +56,14 @@ const STR = {
     einstieg: 'Einstiegsbühne',
     fEinRolle: 'Einleitung (was die Abteilung heute tut)',
     fEinFrage: 'Denkanstoß (grün hervorgehoben)',
+    offeringSection: 'Deloitte-Offering (2. Bühne)',
+    hOffering: 'Erscheint im Transformationskapitel hinter dem Chevron-Pfeil („Zu unserem Offering"). Bild, Namen, Rollen und Fotos sind Platzhalter.',
+    offeringImg: 'Offering-Übersicht (Bild)',
+    kontaktSection: 'Ansprechpartner (Partner & Directors)',
+    cName: 'Name',
+    cRole: 'Rolle',
+    cPhoto: 'Foto',
+    contactN: 'Ansprechpartner',
     hEinstieg: 'Erscheint direkt beim Reinzoomen in den Raum — bevor die Hypothesen kommen.',
     mgmtOverview: 'Management-Summary-Übersicht (Vision)',
     hMgmtOverview:
@@ -96,6 +107,14 @@ const STR = {
     einstieg: 'Entry stage',
     fEinRolle: 'Intro (what the department does today)',
     fEinFrage: 'Provocation (highlighted in green)',
+    offeringSection: 'Deloitte offering (2nd stage)',
+    hOffering: 'Shown in the transformation chapter behind the chevron (“To our offering”). Image, names, roles and photos are placeholders.',
+    offeringImg: 'Offering overview (image)',
+    kontaktSection: 'Contacts (partners & directors)',
+    cName: 'Name',
+    cRole: 'Role',
+    cPhoto: 'Photo',
+    contactN: 'Contact',
     hEinstieg: 'Shown right when you zoom into the room — before the hypotheses.',
     mgmtOverview: 'Management summary overview (vision)',
     hMgmtOverview:
@@ -280,6 +299,59 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
               </>
             )}
 
+            {chapter.id === 'transformation' && (
+              <>
+                <h2 className={styles.section}>{t.offeringSection}</h2>
+                <p className={styles.sectionHint}>{t.hOffering}</p>
+                <div className={styles.card}>
+                  <ImageField
+                    src={OFFERING_IMAGE_SRC}
+                    edits={edits}
+                    setText={setText}
+                    resetKey={resetKey}
+                    t={{ ...t, image: t.offeringImg }}
+                  />
+                </div>
+                <h2 className={styles.section}>{t.kontaktSection}</h2>
+                {OFFERING_CONTACTS.map((c, i) => (
+                  <div className={styles.card} key={i}>
+                    <div className={styles.cardHead}>
+                      {t.contactN} {i + 1}
+                    </div>
+                    <Field
+                      label={t.cName}
+                      original=""
+                      editKey={contactNameKey(i)}
+                      edits={edits}
+                      setText={setText}
+                      resetKey={resetKey}
+                      t={t}
+                      input
+                    />
+                    <Field
+                      label={t.cRole}
+                      original={c.defaultRole[lang]}
+                      editKey={contactRoleKey(i, lang)}
+                      edits={edits}
+                      setText={setText}
+                      resetKey={resetKey}
+                      t={t}
+                      input
+                    />
+                    <ImageField
+                      src={c.imageSrc}
+                      edits={edits}
+                      setText={setText}
+                      resetKey={resetKey}
+                      t={{ ...t, image: t.cPhoto }}
+                    />
+                  </div>
+                ))}
+              </>
+            )}
+
+            {chapter.id !== 'transformation' && (
+              <>
             <h2 className={styles.section}>{t.hypotheses}</h2>
             <p className={styles.sectionHint}>{t.hHypo}</p>
             {chapter.hypotheses.map((h, i) => (
@@ -388,6 +460,9 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
                 ))
               )}
             </div>
+
+              </>
+            )}
 
             <h2 className={styles.section}>{t.mgmtOverview}</h2>
             <p className={styles.sectionHint}>{t.hMgmtOverview}</p>

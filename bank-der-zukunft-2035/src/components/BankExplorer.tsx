@@ -7,7 +7,14 @@ import {
   useState,
 } from 'react'
 import { gsap } from 'gsap'
-import { ArrowLeft, FileSpreadsheet, Loader2, ScrollText, SlidersHorizontal } from 'lucide-react'
+import {
+  ArrowLeft,
+  Download,
+  FileSpreadsheet,
+  Loader2,
+  ScrollText,
+  SlidersHorizontal,
+} from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
 import { ChapterReader } from './ChapterReader'
@@ -506,6 +513,16 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             )}
             <span>Excel</span>
           </button>
+          <a
+            className={styles.introBtn}
+            href={`${import.meta.env.BASE_URL}Banking_Horizon_2030_KPI-Modell.xlsx`}
+            download
+            tabIndex={isOverview ? 0 : -1}
+            aria-label={lang === 'de' ? 'KPI-Modell (Excel) herunterladen' : 'Download KPI model (Excel)'}
+          >
+            <Download size={16} strokeWidth={2} aria-hidden />
+            <span>{lang === 'de' ? 'KPI-Modell' : 'KPI model'}</span>
+          </a>
         </div>
 
         {/* Titel-Box, kommt oben mittig herein (nur Übersicht) */}
@@ -532,11 +549,7 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             Das Transformationskapitel zeigt stattdessen das Deloitte-Offering. */}
         {activeChapter && readerShown && !einstiegOpen && (
           activeChapter.id === 'transformation' ? (
-            <TransformationOffering
-              chapter={activeChapter}
-              onBack={handleBack}
-              onHandoff={handleHandoff}
-            />
+            <TransformationOffering chapter={activeChapter} onBack={handleBack} />
           ) : (
             <ChapterReader
               chapter={activeChapter}

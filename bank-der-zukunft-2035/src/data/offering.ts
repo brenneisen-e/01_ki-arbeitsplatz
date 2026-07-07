@@ -11,6 +11,9 @@ import type { L } from '../i18n/LanguageContext'
 /** Ein Baustein des Deloitte-Transformationsangebots. `icon` = Lucide-Name. */
 export type OfferingPillar = { icon: string; title: L; text: L }
 
+/** Ansprechpartner-Platzhalter (Name/Rolle/Foto werden im CMS gepflegt). */
+export type OfferingContact = { defaultRole: L; imageSrc: string }
+
 export type Offering = {
   kicker: L
   title: L
@@ -18,9 +21,19 @@ export type Offering = {
   pillars: OfferingPillar[]
   whyTitle: L
   why: L[]
-  ctaLead: L
-  ctaButton: L
+  kontaktTitle: L
+  offeringLabel: L
+  contactHint: L
 }
+
+/** Platzhalter-Bildpfade (existieren als Datei nicht — im CMS per Upload ersetzbar). */
+export const OFFERING_IMAGE_SRC = './images/offering-uebersicht.png'
+export const OFFERING_CONTACTS: OfferingContact[] = [
+  { defaultRole: { de: 'Partner', en: 'Partner' }, imageSrc: './images/offering-kontakt-1.png' },
+  { defaultRole: { de: 'Partner', en: 'Partner' }, imageSrc: './images/offering-kontakt-2.png' },
+  { defaultRole: { de: 'Director', en: 'Director' }, imageSrc: './images/offering-kontakt-3.png' },
+  { defaultRole: { de: 'Director', en: 'Director' }, imageSrc: './images/offering-kontakt-4.png' },
+]
 
 export const DELOITTE_OFFERING: Offering = {
   kicker: { de: 'Transformation mit Deloitte', en: 'Transformation with Deloitte' },
@@ -89,9 +102,10 @@ export const DELOITTE_OFFERING: Offering = {
     { de: 'End-to-end: von der Strategie bis zur Skalierung', en: 'End-to-end: from strategy to scale' },
     { de: 'Branchentiefe in Banking & Regulatorik', en: 'Deep expertise in banking & regulation' },
   ],
-  ctaLead: {
-    de: 'Lassen Sie uns Ihr Zielbild gemeinsam entwickeln — wer künftig entscheidet, was Sie abgeben und wo Sie starten.',
-    en: 'Let us shape your target picture together — who decides in future, what you hand over and where you start.',
+  kontaktTitle: { de: 'Ihr Deloitte-Team', en: 'Your Deloitte team' },
+  offeringLabel: {
+    de: 'Deloitte-Offering — Platzhalter (im Änderungsbereich hochladbar)',
+    en: 'Deloitte offering — placeholder (uploadable in the editing area)',
   },
-  ctaButton: { de: 'Future Interaction Model entwickeln', en: 'Develop the future interaction model' },
+  contactHint: { de: 'Name & Foto folgen', en: 'Name & photo to follow' },
 }

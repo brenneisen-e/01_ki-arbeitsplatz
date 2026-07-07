@@ -88,11 +88,4 @@ export const KPIS_BY_CHAPTER: Record<string, Kpi[]> = {
     { label: { de: 'Marge/Ertrag', en: 'Margin / revenue' }, unit: 'Index (100)', base: 100, konservativ: 101, basis: 103, ambitioniert: 106, featured: false },
     { label: { de: 'Forecast-Genauigkeit', en: 'Forecast accuracy' }, unit: '%', base: 0, konservativ: 5, basis: 7, ambitioniert: 15, featured: false },
   ],
-  transformation: [
-    { label: { de: 'Value-Realization-Quote', en: 'Value-realisation rate' }, unit: '%', base: 50, konservativ: 50, basis: 67, ambitioniert: 80, featured: true },
-    { label: { de: 'Time-to-Value', en: 'Time-to-value' }, unit: 'Monate', base: 18, konservativ: 12, basis: 9, ambitioniert: 6, featured: true },
-    { label: { de: 'Change-Adoption-Quote', en: 'Change-adoption rate' }, unit: '%', base: 50, konservativ: 65, basis: 80, ambitioniert: 93, featured: true },
-    { label: { de: 'Transformations-ROI (Amortisation)', en: 'Transformation ROI (payback)' }, unit: 'Monate', base: 24, konservativ: 24, basis: 18, ambitioniert: 12, featured: true },
-    { label: { de: 'Anteil Budget Change & Enablement', en: 'Budget share: change & enablement' }, unit: '%', base: 20, konservativ: 40, basis: 55, ambitioniert: 70, featured: false },
-  ],
 }

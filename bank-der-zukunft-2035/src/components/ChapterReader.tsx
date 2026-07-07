@@ -3,10 +3,13 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  Check,
+  CloudUpload,
   ChevronLeft,
   ChevronRight,
   Clock,
   FileSpreadsheet,
+  ImageUp,
   LayoutGrid,
   Lightbulb,
   Loader2,
@@ -28,8 +31,11 @@ import { useLang, type Lang } from '../i18n/LanguageContext'
 import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
 import {
   commentKey,
+  imageKey,
   readEditMode,
+  summaryBulletKey,
   textKey,
+  uploadImage,
   useChapterEdits,
   writeEditMode,
   type EditField,
@@ -78,6 +84,12 @@ type ReaderStrings = {
   kpiFootnote: string
   consultantOpen: string
   consultantClose: string
+  saveShared: string
+  saving: string
+  saved: string
+  serverOff: string
+  replaceImage: string
+  uploadFailed: string
 }
 
 const STR: Record<Lang, ReaderStrings> = {
@@ -105,7 +117,7 @@ const STR: Record<Lang, ReaderStrings> = {
     },
     edit: 'Bearbeiten',
     editDone: 'Fertig',
-    editBanner: 'Änderungen werden nur lokal in diesem Browser gespeichert (localStorage) — die Demo-Daten bleiben unverändert.',
+    editBanner: 'Änderungen werden sofort lokal gespeichert. Mit „Für alle speichern" werden sie über den Server geteilt und für alle sichtbar.',
     editTag: 'Bearbeiten',
     resetStep: 'Diesen Schritt zurücksetzen',
     commentLabel: 'Kommentar zum Bild',
@@ -128,6 +140,12 @@ const STR: Record<Lang, ReaderStrings> = {
       'Zielwerte aus dem KPI-Modell (Szenario Basis; Spanne konservativ–ambitioniert im Modell). Illustrative Eckwerte, quellenbasiert.',
     consultantOpen: 'Leitfrage anzeigen',
     consultantClose: 'Leitfrage ausblenden',
+    saveShared: 'Für alle speichern',
+    saving: 'Speichere…',
+    saved: 'Gespeichert',
+    serverOff: 'Server nicht verbunden — nur lokal',
+    replaceImage: 'Bild ersetzen',
+    uploadFailed: 'Upload nicht möglich (Server nicht verbunden)',
   },
   en: {
     back: 'Overview',
@@ -153,7 +171,7 @@ const STR: Record<Lang, ReaderStrings> = {
     },
     edit: 'Edit',
     editDone: 'Done',
-    editBanner: 'Changes are stored only locally in this browser (localStorage) — the demo data stays unchanged.',
+    editBanner: 'Changes are saved locally right away. Use “Save for everyone” to share them via the server so all viewers see them.',
     editTag: 'Editing',
     resetStep: 'Reset this step',
     commentLabel: 'Comment on the image',
@@ -176,6 +194,12 @@ const STR: Record<Lang, ReaderStrings> = {
       'Targets from the KPI model (base scenario; conservative–ambitious range in the model). Illustrative, source-based figures.',
     consultantOpen: 'Show guiding question',
     consultantClose: 'Hide guiding question',
+    saveShared: 'Save for everyone',
+    saving: 'Saving…',
+    saved: 'Saved',
+    serverOff: 'Server not connected — local only',
+    replaceImage: 'Replace image',
+    uploadFailed: 'Upload not possible (server not connected)',
   },
 }
 
@@ -410,8 +434,11 @@ export function ChapterReader({
 }: ChapterReaderProps): React.ReactElement {
   const { lang } = useLang()
   const t = STR[lang]
-  const { edits, setText, setComment, resetStep } = useChapterEdits()
+  const { edits, setText, setComment, resetStep, saveToServer, syncState } = useChapterEdits()
   const [editMode, setEditMode] = useState(readEditMode)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadErr, setUploadErr] = useState(false)
 
   // Schrittzahl: N Hypothesen + 1 Aktivität/Live-Demo + 1 Management Summary.
   const stepCount = chapter.hypotheses.length + 2
@@ -472,6 +499,18 @@ export function ChapterReader({
   const activity = chapter.activity
 
   const image = hypothesis ? hypothesis.image : activity.image
+  const effImageSrc = edits.texts[imageKey(image.src)] ?? image.src
+  const onImageFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]
+    e.target.value = ''
+    if (!f) return
+    setUploadErr(false)
+    setUploading(true)
+    const url = await uploadImage(f)
+    setUploading(false)
+    if (url) setText(imageKey(image.src), url)
+    else setUploadErr(true)
+  }
   const title = hypothesis ? hypothesis.title : activity.title
   const chapterLabel = `${t.chapterPrefix} ${chapter.kapitel}`
   const kicker = isSummary
@@ -554,6 +593,25 @@ export function ChapterReader({
             </span>
             <span>{t.editBanner}</span>
             <span className={styles.editSpacer} />
+            {syncState === 'unconfigured' && (
+              <span className={styles.saveHint}>{t.serverOff}</span>
+            )}
+            <button
+              type="button"
+              className={styles.saveBtn}
+              onClick={saveToServer}
+              disabled={syncState === 'saving'}
+              data-state={syncState}
+            >
+              {syncState === 'saving' ? (
+                <Loader2 size={13} strokeWidth={2} className={styles.spin} aria-hidden />
+              ) : syncState === 'saved' ? (
+                <Check size={13} strokeWidth={2.6} aria-hidden />
+              ) : (
+                <CloudUpload size={13} strokeWidth={2} aria-hidden />
+              )}
+              {syncState === 'saving' ? t.saving : syncState === 'saved' ? t.saved : t.saveShared}
+            </button>
             <button
               type="button"
               className={styles.resetBtn}
@@ -589,17 +647,30 @@ export function ChapterReader({
               </span>
               <ul className={styles.summaryBullets}>
                 {(SUMMARY_BULLETS[chapter.id] ?? [{ de: chapter.vision, en: chapter.vision }]).map(
-                  (b, i) => (
-                    <li className={styles.summaryBullet} key={i}>
-                      <ArrowRight
-                        className={styles.summaryBulletIcon}
-                        size={19}
-                        strokeWidth={2.4}
-                        aria-hidden
-                      />
-                      <span className={styles.summaryBulletText}>{renderRichText(b[lang])}</span>
-                    </li>
-                  ),
+                  (b, i) => {
+                    const bk = summaryBulletKey(chapter.id, lang, i)
+                    const bv = edits.texts[bk] ?? b[lang]
+                    return (
+                      <li className={styles.summaryBullet} key={i}>
+                        <ArrowRight
+                          className={styles.summaryBulletIcon}
+                          size={19}
+                          strokeWidth={2.4}
+                          aria-hidden
+                        />
+                        {editMode ? (
+                          <textarea
+                            className={styles.editInput}
+                            value={bv}
+                            onChange={(e) => setText(bk, e.target.value)}
+                            rows={2}
+                          />
+                        ) : (
+                          <span className={styles.summaryBulletText}>{renderRichText(bv)}</span>
+                        )}
+                      </li>
+                    )
+                  },
                 )}
               </ul>
             </div>
@@ -640,7 +711,7 @@ export function ChapterReader({
         <div className={styles.media}>
           <div className={styles.imageInner}>
             <ImageSlot
-              src={image.src}
+              src={effImageSrc}
               alt={image.alt}
               fit="cover"
               label={slotLabel}
@@ -665,6 +736,31 @@ export function ChapterReader({
                   aria-hidden
                 />
                 <span>{comment}</span>
+              </div>
+            )}
+            {editMode && (
+              <div className={styles.imgUpload}>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={onImageFile}
+                />
+                <button
+                  type="button"
+                  className={styles.imgUploadBtn}
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <Loader2 size={14} strokeWidth={2} className={styles.spin} aria-hidden />
+                  ) : (
+                    <ImageUp size={14} strokeWidth={2} aria-hidden />
+                  )}
+                  {t.replaceImage}
+                </button>
+                {uploadErr && <span className={styles.imgUploadErr}>{t.uploadFailed}</span>}
               </div>
             )}
           </div>

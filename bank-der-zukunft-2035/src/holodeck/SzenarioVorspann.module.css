@@ -259,8 +259,39 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 3px;
+  z-index: 2;
   background: var(--sz);
   opacity: 0.85;
+}
+
+/* Szenario-Illustration als dezenter Kachel-Hintergrund (freigeschaltet) */
+.tileBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.14;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+/* Freigeschaltete Kachel zeigt das Szenario-Bild deutlicher. */
+.tile[data-unlocked] .tileBg {
+  opacity: 0.32;
+}
+
+.tileBg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 12, 21, 0.35) 0%, rgba(4, 12, 21, 0.9) 100%);
+}
+
+.tileHead,
+.tileList {
+  position: relative;
+  z-index: 1;
 }
 
 .tile[data-active] {
@@ -431,6 +462,18 @@
 /* Detail (Szenario aktiv) */
 .detail {
   animation: fadeIn 0.22s ease;
+}
+
+/* Hero-Illustration des aktiven Szenarios */
+.detailHero {
+  height: clamp(140px, 22vh, 220px);
+  margin-bottom: 20px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--sz) 40%, transparent),
+    0 12px 34px rgba(0, 0, 0, 0.45);
 }
 
 @keyframes fadeIn {

@@ -3,8 +3,12 @@ import { gsap } from 'gsap'
 import {
   ArrowRight,
   BookOpen,
+  Check,
   ChevronLeft,
   ChevronRight,
+  CloudUpload,
+  Loader2,
+  Pencil,
   Sparkles,
   X,
 } from 'lucide-react'
@@ -12,6 +16,13 @@ import styles from './ManagementSummary.module.css'
 import { getChapters, getMasterImage, type Chapter } from '../data/chapters'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useLang, type Lang } from '../i18n/LanguageContext'
+import {
+  businessCaseKey,
+  readEditMode,
+  useChapterEdits,
+  visionKey,
+  writeEditMode,
+} from '../data/chapterEdits'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ManagementSummary — die Vision der „Bank 2030" als hochwertiges, blätterbares
@@ -50,6 +61,12 @@ type SummaryStrings = {
   pageLabel: string
   prev: string
   next: string
+  businessCaseLabel: string
+  edit: string
+  editDone: string
+  saveShared: string
+  saving: string
+  saved: string
 }
 
 // Gesamtzusammenfassung — synthetisiert die acht Bereichs-Visionen zu einem
@@ -77,6 +94,12 @@ const STR: Record<Lang, SummaryStrings> = {
     pageLabel: 'Seite',
     prev: 'Vorherige Seite',
     next: 'Nächste Seite',
+    businessCaseLabel: 'Business Case (exemplarisch)',
+    edit: 'Bearbeiten',
+    editDone: 'Fertig',
+    saveShared: 'Für alle speichern',
+    saving: 'Speichere…',
+    saved: 'Gespeichert',
   },
   en: {
     aria: 'Management summary — vision of the bank in 2030 as a magazine',
@@ -100,6 +123,12 @@ const STR: Record<Lang, SummaryStrings> = {
     pageLabel: 'Page',
     prev: 'Previous page',
     next: 'Next page',
+    businessCaseLabel: 'Business case (illustrative)',
+    edit: 'Edit',
+    editDone: 'Done',
+    saveShared: 'Save for everyone',
+    saving: 'Saving…',
+    saved: 'Saved',
   },
 }
 
@@ -139,6 +168,13 @@ export function ManagementSummary({
   const t = STR[lang]
   const chapters = getChapters(lang)
   const masterImage = getMasterImage(lang)
+  const { edits, setText, saveToServer, syncState } = useChapterEdits()
+  const [editMode, setEditMode] = useState(readEditMode)
+  const toggleEdit = () =>
+    setEditMode((on) => {
+      writeEditMode(!on)
+      return !on
+    })
 
   const pages: Page[] = [
     { kind: 'cover' },
@@ -234,6 +270,36 @@ export function ManagementSummary({
   return (
     <div className={styles.root} role="dialog" aria-modal="true" aria-label={t.aria}>
       <div ref={backdropRef} className={styles.backdrop} onClick={onClose} aria-hidden />
+
+      <div className={styles.msTools}>
+        <button
+          type="button"
+          className={styles.msTool}
+          data-on={editMode || undefined}
+          onClick={toggleEdit}
+          aria-pressed={editMode}
+        >
+          <Pencil size={14} strokeWidth={2} aria-hidden /> {editMode ? t.editDone : t.edit}
+        </button>
+        {editMode && (
+          <button
+            type="button"
+            className={styles.msSave}
+            onClick={saveToServer}
+            disabled={syncState === 'saving'}
+            data-state={syncState}
+          >
+            {syncState === 'saving' ? (
+              <Loader2 size={13} strokeWidth={2} className={styles.spin} aria-hidden />
+            ) : syncState === 'saved' ? (
+              <Check size={13} strokeWidth={2.6} aria-hidden />
+            ) : (
+              <CloudUpload size={13} strokeWidth={2} aria-hidden />
+            )}
+            {syncState === 'saving' ? t.saving : syncState === 'saved' ? t.saved : t.saveShared}
+          </button>
+        )}
+      </div>
 
       <button type="button" className={styles.closeBtn} onClick={onClose} aria-label={t.close}>
         <X size={18} strokeWidth={2} />
@@ -372,7 +438,19 @@ export function ManagementSummary({
                 {t.ortLabel}: {c.ort}
               </span>
             </div>
-            <p className={styles.chapterVision}>{renderRichText(c.vision)}</p>
+            {editMode ? (
+              <textarea
+                className={styles.editArea}
+                value={edits.texts[visionKey(c.id, lang)] ?? c.vision}
+                onChange={(e) => setText(visionKey(c.id, lang), e.target.value)}
+                rows={4}
+                aria-label={t.visionTag}
+              />
+            ) : (
+              <p className={styles.chapterVision}>
+                {renderRichText(edits.texts[visionKey(c.id, lang)] ?? c.vision)}
+              </p>
+            )}
             <div className={styles.hypoBlock}>
               <span className={styles.hypoLabel}>
                 <Sparkles size={12} strokeWidth={2.2} />
@@ -389,6 +467,25 @@ export function ManagementSummary({
                   </li>
                 ))}
               </ul>
+            </div>
+            <div className={styles.bcBlock}>
+              <span className={styles.bcLabel}>
+                <BookOpen size={12} strokeWidth={2.2} aria-hidden />
+                {t.businessCaseLabel}
+              </span>
+              {editMode ? (
+                <textarea
+                  className={styles.editArea}
+                  value={edits.texts[businessCaseKey(c.id, lang)] ?? c.businessCase}
+                  onChange={(e) => setText(businessCaseKey(c.id, lang), e.target.value)}
+                  rows={3}
+                  aria-label={t.businessCaseLabel}
+                />
+              ) : (
+                <p className={styles.bcText}>
+                  {renderRichText(edits.texts[businessCaseKey(c.id, lang)] ?? c.businessCase)}
+                </p>
+              )}
             </div>
           </div>
         )

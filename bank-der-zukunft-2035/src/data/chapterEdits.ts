@@ -1,22 +1,33 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// chapterEdits — lokaler Bearbeitungs-Layer für den ChapterReader.
+// chapterEdits — Bearbeitungs-Layer für (fast) alle Inhalte des Tools.
 //
-// Erlaubt es, die Hypothesen-Texte (Titel, Status Quo, 2030, Leitfrage) sowie
-// optionale Bild-Kommentare im Workshop anzupassen. Die Änderungen werden NUR
-// lokal im Browser (localStorage) gehalten — die Demo-Daten im Repo bleiben
-// unverändert. Beim Rendern werden vorhandene Overrides über die Basisdaten
-// gelegt.
+// Erlaubt es, im Bearbeitungsmodus praktisch jeden Text anzupassen: Hypothesen
+// (Titel, Status Quo, 2030, Leitfrage), Aktivitäts-/Demo-Texte, Bild-Kommentare
+// sowie die Management-Summary-Bausteine, KPI-Werte, Vision und Business Case.
+// Ausgenommen ist nur das Strukturbild.
 //
-// Schlüssel:
-//   Text:     `${chapterId}|${step}|${lang}|${field}`   (sprachabhängig)
-//   Kommentar:`${chapterId}|${step}`                    (sprachunabhängig)
+// PERSISTENZ (zweistufig):
+//   1) sofort lokal im Browser (localStorage) — schnell, offline, pro Gerät.
+//   2) geteilt auf dem Server (Cloudflare KV via /api/content) — per „Speichern"
+//      für alle sichtbar. Beim Laden holt die App den geteilten Stand und legt
+//      ihn über die Basisdaten. Ist der Server (KV) noch nicht eingerichtet,
+//      bleibt alles beim localStorage-Verhalten — die App bricht nie.
+//
+// Schlüssel (alle im flachen `texts`-Record):
+//   Hypothese/Aktivität:  `${chapterId}|${step}|${lang}|${field}`
+//   Vision:               `${chapterId}|vision|${lang}`
+//   Business Case:        `${chapterId}|businessCase|${lang}`
+//   Summary-Bullet:       `${chapterId}|summaryBullet|${lang}|${i}`
+//   KPI-Wert:             `${chapterId}|kpiValue|${i}`         (sprachunabhängig)
+//   Kommentar (separat):  `${chapterId}|${step}`               (sprachunabhängig)
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Lang } from '../i18n/LanguageContext'
 
 const STORAGE_KEY = 'bz2030:edits'
 const MODE_KEY = 'bz2030:editmode'
+const CONTENT_API = `${import.meta.env.BASE_URL}api/content`
 
 export type EditField =
   | 'title'
@@ -25,6 +36,8 @@ export type EditField =
   | 'leitfrage'
   | 'activityTitle'
   | 'activityText'
+  | 'vision'
+  | 'businessCase'
 
 export type EditsData = {
   texts: Record<string, string>
@@ -41,15 +54,57 @@ export function commentKey(chapterId: string, step: number): string {
   return `${chapterId}|${step}`
 }
 
+/** Chapter-Level-Schlüssel (unabhängig vom Reader-Schritt). */
+export function visionKey(chapterId: string, lang: Lang): string {
+  return `${chapterId}|vision|${lang}`
+}
+export function businessCaseKey(chapterId: string, lang: Lang): string {
+  return `${chapterId}|businessCase|${lang}`
+}
+export function summaryBulletKey(chapterId: string, lang: Lang, i: number): string {
+  return `${chapterId}|summaryBullet|${lang}|${i}`
+}
+export function kpiValueKey(chapterId: string, i: number): string {
+  return `${chapterId}|kpiValue|${i}`
+}
+/** Bild-Override: Ersatz-URL je Standard-Bildpfad (z. B. hochgeladenes Bild). */
+export function imageKey(src: string): string {
+  return `img|${src}`
+}
+
+/**
+ * Lädt eine Bilddatei in den Server-Store (Cloudflare R2 via /api/upload) und
+ * liefert die öffentliche URL zurück — oder null, wenn kein Upload möglich ist
+ * (R2 nicht gebunden / offline). Der Aufrufer speichert die URL als Override.
+ */
+export async function uploadImage(file: File): Promise<string | null> {
+  try {
+    const res = await fetch(`${import.meta.env.BASE_URL}api/upload`, {
+      method: 'POST',
+      headers: { 'content-type': file.type || 'application/octet-stream' },
+      body: file,
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as { url?: string }
+    return typeof data?.url === 'string' ? data.url : null
+  } catch {
+    return null
+  }
+}
+
+function coerce(parsed: Partial<EditsData> | null | undefined): EditsData {
+  if (!parsed || typeof parsed !== 'object') return { texts: {}, comments: {} }
+  return {
+    texts: parsed.texts && typeof parsed.texts === 'object' ? parsed.texts : {},
+    comments: parsed.comments && typeof parsed.comments === 'object' ? parsed.comments : {},
+  }
+}
+
 function read(): EditsData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return EMPTY
-    const parsed = JSON.parse(raw) as Partial<EditsData>
-    return {
-      texts: parsed.texts && typeof parsed.texts === 'object' ? parsed.texts : {},
-      comments: parsed.comments && typeof parsed.comments === 'object' ? parsed.comments : {},
-    }
+    return coerce(JSON.parse(raw) as Partial<EditsData>)
   } catch {
     return EMPTY
   }
@@ -79,6 +134,34 @@ function writeEditMode(on: boolean): void {
   }
 }
 
+// ─── Server-Sync (Cloudflare KV via Pages Function) ──────────────────────────
+
+async function fetchRemote(): Promise<EditsData | null> {
+  try {
+    const res = await fetch(CONTENT_API, { cache: 'no-store' })
+    if (!res.ok) return null
+    const data = (await res.json()) as Partial<EditsData>
+    return coerce(data)
+  } catch {
+    return null
+  }
+}
+
+async function pushRemote(data: EditsData): Promise<boolean> {
+  try {
+    const res = await fetch(CONTENT_API, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
+export type SyncState = 'idle' | 'loading' | 'saving' | 'saved' | 'error' | 'unconfigured'
+
 export type ChapterEditsApi = {
   edits: EditsData
   setText: (key: string, value: string) => void
@@ -86,11 +169,36 @@ export type ChapterEditsApi = {
   resetStep: (chapterId: string, step: number, lang: Lang) => void
   clearAll: () => void
   hasAny: boolean
+  saveToServer: () => void
+  syncState: SyncState
 }
 
-/** Hook: hält den Bearbeitungs-Layer und schreibt Änderungen durch in localStorage. */
+/**
+ * Hook: hält den Bearbeitungs-Layer, schreibt lokal sofort durch (localStorage)
+ * und synchronisiert mit dem geteilten Server-Stand (Cloudflare KV).
+ */
 export function useChapterEdits(): ChapterEditsApi {
   const [edits, setEdits] = useState<EditsData>(read)
+  const [syncState, setSyncState] = useState<SyncState>('idle')
+  const savedTimer = useRef<number | null>(null)
+
+  // Beim Start den geteilten Stand laden und über die lokale Basis legen.
+  useEffect(() => {
+    let alive = true
+    setSyncState('loading')
+    fetchRemote().then((remote) => {
+      if (!alive) return
+      if (remote && (Object.keys(remote.texts).length || Object.keys(remote.comments).length)) {
+        setEdits(remote)
+        write(remote)
+      }
+      setSyncState('idle')
+    })
+    return () => {
+      alive = false
+      if (savedTimer.current) window.clearTimeout(savedTimer.current)
+    }
+  }, [])
 
   const setText = useCallback((key: string, value: string) => {
     setEdits((prev) => {
@@ -136,9 +244,22 @@ export function useChapterEdits(): ChapterEditsApi {
     setEdits(EMPTY)
   }, [])
 
+  const saveToServer = useCallback(() => {
+    setSyncState('saving')
+    // aktuellen Stand aus dem State ziehen (setEdits-Callback als Getter)
+    setEdits((current) => {
+      pushRemote(current).then((ok) => {
+        setSyncState(ok ? 'saved' : 'unconfigured')
+        if (savedTimer.current) window.clearTimeout(savedTimer.current)
+        savedTimer.current = window.setTimeout(() => setSyncState('idle'), 2600)
+      })
+      return current
+    })
+  }, [])
+
   const hasAny = Object.keys(edits.texts).length > 0 || Object.keys(edits.comments).length > 0
 
-  return { edits, setText, setComment, resetStep, clearAll, hasAny }
+  return { edits, setText, setComment, resetStep, clearAll, hasAny, saveToServer, syncState }
 }
 
 export { writeEditMode }

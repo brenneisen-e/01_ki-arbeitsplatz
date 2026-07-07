@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react'
 import styles from './ManagementSummary.module.css'
+import { renderRichHtml } from '../data/richtext'
 import { getChapters, getMasterImage, type Chapter } from '../data/chapters'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useLang, type Lang } from '../i18n/LanguageContext'
@@ -132,14 +133,9 @@ const STR: Record<Lang, SummaryStrings> = {
   },
 }
 
-// Mini-Markdown: **fett** → <strong>. Sonst Klartext (analog ChapterReader).
-function renderRichText(text: string): React.ReactNode[] {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>
-    }
-    return <span key={i}>{part}</span>
-  })
+// Rich-Text-Anzeige (Fett/Kursiv/Farbe/Größe + Legacy `**fett**`) als saniertes HTML.
+function rich(value: string): { __html: string } {
+  return { __html: renderRichHtml(value) }
 }
 
 type Page =
@@ -404,7 +400,7 @@ export function ManagementSummary({
               <BookOpen size={13} strokeWidth={2} />
               {t.leadTitle}
             </span>
-            <p className={styles.lead}>{renderRichText(t.gesamt)}</p>
+            <p className={styles.lead} dangerouslySetInnerHTML={rich(t.gesamt)} />
             <div className={styles.tocBlock}>
               <span className={styles.tocTitle}>{t.tocTitle}</span>
               <ol className={styles.toc}>
@@ -447,9 +443,10 @@ export function ManagementSummary({
                 aria-label={t.visionTag}
               />
             ) : (
-              <p className={styles.chapterVision}>
-                {renderRichText(edits.texts[visionKey(c.id, lang)] ?? c.vision)}
-              </p>
+              <p
+                className={styles.chapterVision}
+                dangerouslySetInnerHTML={rich(edits.texts[visionKey(c.id, lang)] ?? c.vision)}
+              />
             )}
             <div className={styles.hypoBlock}>
               <span className={styles.hypoLabel}>
@@ -462,7 +459,7 @@ export function ManagementSummary({
                     <span className={styles.hypoTitle}>{h.title}</span>
                     <span className={styles.hypoFuture}>
                       <span className={styles.hypoTag}>{t.futureLabel}</span>
-                      {renderRichText(h.in2030)}
+                      <span dangerouslySetInnerHTML={rich(h.in2030)} />
                     </span>
                   </li>
                 ))}
@@ -482,9 +479,10 @@ export function ManagementSummary({
                   aria-label={t.businessCaseLabel}
                 />
               ) : (
-                <p className={styles.bcText}>
-                  {renderRichText(edits.texts[businessCaseKey(c.id, lang)] ?? c.businessCase)}
-                </p>
+                <p
+                  className={styles.bcText}
+                  dangerouslySetInnerHTML={rich(edits.texts[businessCaseKey(c.id, lang)] ?? c.businessCase)}
+                />
               )}
             </div>
           </div>
@@ -499,7 +497,7 @@ export function ManagementSummary({
               {t.visionTag}
             </span>
             <h3 className={styles.closingTitle}>{t.closingTitle}</h3>
-            <p className={styles.closingText}>{renderRichText(t.closingText)}</p>
+            <p className={styles.closingText} dangerouslySetInnerHTML={rich(t.closingText)} />
             <span className={styles.closingFoot}>{t.footNote}</span>
             <span className={styles.logoTile}>
               {logoFailed ? (

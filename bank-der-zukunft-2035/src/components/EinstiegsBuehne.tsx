@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { ArrowRight, Clock, Sparkles, X } from 'lucide-react'
+import { ArrowRight, X } from 'lucide-react'
 import styles from './EinstiegsBuehne.module.css'
 import { useLang } from '../i18n/LanguageContext'
 import type { Chapter } from '../data/chapters'
@@ -8,15 +8,14 @@ import { EINSTIEG, einstiegImage, hasEinstieg, type Einstieg } from '../data/ein
 // ─────────────────────────────────────────────────────────────────────────────
 // EinstiegsBuehne — Landing eines Raum-Kapitels direkt nach dem Reinzoomen.
 //
-// Zeigt das hochauflösende Raum-Detailbild groß, dazu Kapitelname und die
-// „Heute vs. Morgen"-Kurzbeschreibung (McKinsey-Executive-Stil). Ein CTA führt
-// weiter in den Kapitel-Reader (Hypothesen). Liegt als Overlay über dem Reader,
-// ohne dessen Schritt-System zu berühren.
+// Zeigt das hochauflösende Raum-Detailbild groß und LEITET das Kapitel ein
+// (McKinsey-Stil): was die Abteilung heute tut (rolle) + ein Denkanstoß (frage)
+// — OHNE die Hypothesen/2030 vorwegzunehmen. Ein CTA führt in den Reader.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const STR = {
-  de: { heute: 'Heute', morgen: '2030', cta: 'Zu den Hypothesen', skip: 'Überspringen', kapitel: 'Kapitel' },
-  en: { heute: 'Today', morgen: '2030', cta: 'To the hypotheses', skip: 'Skip', kapitel: 'Chapter' },
+  de: { cta: 'Zu den Hypothesen', skip: 'Überspringen', kapitel: 'Kapitel' },
+  en: { cta: 'To the hypotheses', skip: 'Skip', kapitel: 'Chapter' },
 } as const
 
 type Props = { chapter: Chapter; onWeiter: () => void }
@@ -49,25 +48,11 @@ export function EinstiegsBuehne({ chapter, onWeiter }: Props): React.ReactElemen
 
       <div className={styles.panel}>
         <span className={styles.kicker}>
-          {t.kapitel} {chapter.kapitel} · {chapter.ort}
+          {t.kapitel} {chapter.kapitel}
         </span>
         <h1 className={styles.title}>{chapter.label}</h1>
-        <p className={styles.essenz}>{e.essenz[lang]}</p>
-
-        <div className={styles.cards}>
-          <article className={styles.card} data-quo>
-            <span className={styles.cardHead}>
-              <Clock size={15} strokeWidth={2.2} aria-hidden /> {t.heute}
-            </span>
-            <p className={styles.cardText}>{e.heute[lang]}</p>
-          </article>
-          <article className={styles.card} data-future>
-            <span className={styles.cardHead}>
-              <Sparkles size={15} strokeWidth={2.2} aria-hidden /> {t.morgen}
-            </span>
-            <p className={styles.cardText}>{e.morgen[lang]}</p>
-          </article>
-        </div>
+        <p className={styles.rolle}>{e.rolle[lang]}</p>
+        <p className={styles.frage}>{e.frage[lang]}</p>
 
         <button type="button" className={styles.cta} onClick={onWeiter}>
           {t.cta}

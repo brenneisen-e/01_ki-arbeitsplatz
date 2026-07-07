@@ -480,7 +480,7 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
         </button>
 
         {/* Kapitel-Reader (Hypothesen → Aktivität) — erst nach dem Kameraflug */}
-        {activeChapter && readerShown && (
+        {activeChapter && readerShown && !einstiegOpen && (
           <ChapterReader
             chapter={activeChapter}
             step={step}

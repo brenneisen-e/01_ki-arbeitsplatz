@@ -2,127 +2,97 @@
 // EINSTIEG — „Einstiegsbühne" je Raum-Kapitel.
 //
 // Beim Reinzoomen in einen Raum zeigt die App zunächst das hochauflösende
-// Raum-Detailbild groß, dazu Kapitelname und eine „Heute vs. Morgen"-Kurz-
-// beschreibung im McKinsey-Executive-Stil (essenz = die so-what-Botschaft).
+// Raum-Detailbild groß und EINE Einleitung im McKinsey-Executive-Stil:
+//   · `rolle`  — was diese Abteilung HEUTE tut und wofür sie verantwortlich ist
+//                (Status quo, KEIN Vorgriff auf 2030 / die Hypothesen).
+//   · `frage`  — ein Denkanstoß, der die Transformation nur anteasert.
 // Zweisprachig; NUR die 8 raumgebundenen Kapitel (kein `transformation`).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { ChapterId } from './chapters'
 import type { L } from '../i18n/LanguageContext'
 
-export type Einstieg = { essenz: L; heute: L; morgen: L }
+export type Einstieg = { rolle: L; frage: L }
 
 export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = {
   kunde: {
-    essenz: {
-      de: 'Banking verschwindet als eigener Moment und wird zur proaktiven, KI-gesteuerten Finanzbegleitung im Alltag — der Kunde entscheidet, aber auf vorbereiteter Basis.',
-      en: 'Banking ceases to be a distinct moment and becomes proactive, AI-driven financial guidance in everyday life — the customer decides, but on a prepared basis.',
+    rolle: {
+      de: 'Im Zentrum jedes Bankgeschäfts steht die Kund:in — und heute wird Banking aktiv gemacht: Konto prüfen, Angebote vergleichen, Termin buchen, selbst entscheiden. Jede Interaktion ist ein bewusster Moment, den die Kund:in über App, Filiale oder Online-Banking selbst anstößt. Die Bank liefert Produkte und Kanäle, den Takt gibt die Kund:in vor.',
+      en: 'The customer sits at the centre of every banking relationship — and today, banking is something you actively do: check the account, compare offers, book an appointment, decide for yourself. Every interaction is a deliberate moment the customer initiates through app, branch or online banking. The bank supplies the products and channels; the customer sets the pace.',
     },
-    heute: {
-      de: 'Kund:innen machen Banking aktiv über App, Filiale und Online — kanalzentriert und reaktiv. Sie erhalten Produktoptionen und entscheiden allein, während die Bank auf ihre Initiative wartet.',
-      en: 'Customers do banking actively via app, branch and online — channel-centric and reactive. They receive product options and decide alone, while the bank waits for their initiative.',
-    },
-    morgen: {
-      de: 'Persönliche KI-Finanzassistenten begleiten kontinuierlich, verdichten Optionen zu klaren, simulierten Empfehlungen und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus Warten wird teilautonome Finanzsteuerung mit Vertrauensmandat.',
-      en: 'Personal AI financial assistants accompany continuously, distil options into clear, simulated recommendations and act proactively within agreed guardrails. Waiting gives way to semi-autonomous financial management with a trust mandate.',
+    frage: {
+      de: 'Doch was, wenn Banking nicht mehr etwas ist, das man tut — sondern etwas, das einfach geschieht?',
+      en: 'But what if banking is no longer something you do — but something that simply happens?',
     },
   },
   vertrieb: {
-    essenz: {
-      de: 'Vertrieb verkauft keine Produkte mehr, sondern orchestriert KI-gestützt individuelle Lösungen entlang der Kundenziele — Berater:innen werden zu Sparringspartnern für die komplexen Entscheidungen.',
-      en: 'Distribution no longer sells products but orchestrates individual, AI-driven solutions around customer goals — advisors become sparring partners for the complex decisions.',
+    rolle: {
+      de: 'Der Vertrieb ist der Wachstumsmotor der Bank: Berater:innen führen die Kundenbeziehung, übersetzen Bedarf in Abschlüsse und tragen Ertrag und Marktanteil. Heute ist das Geschäft produkt- und kanalzentriert organisiert — strukturierte Beratungsgespräche, definierte Produktportfolios, klare Vertriebsziele. Aus Kontakten werden Abschlüsse, aus Abschlüssen Erträge.',
+      en: 'Distribution is the growth engine of the bank: advisors own the customer relationship, translate needs into deals and carry revenue and market share. Today the business is organised in a product- and channel-centric way — structured advisory conversations, defined product portfolios, clear sales targets. Contacts become deals, and deals become revenue.',
     },
-    heute: {
-      de: 'Vertrieb ist produkt- und kanalzentriert, Beratung folgt standardisierten Skripten, und KI dient nur als Produktivitätswerkzeug. Kundenkontakt bleibt punktuell und reaktiv auf fragmentierten CRM-Landschaften.',
-      en: 'Distribution is product- and channel-centric, advice follows standardised scripts, and AI serves only as a productivity tool. Customer contact stays sporadic and reactive on fragmented CRM landscapes.',
-    },
-    morgen: {
-      de: 'Die Bank orchestriert Finanz-, Service- und Ökosystemleistungen in Echtzeit zu individuellen Lösungen, und Berater:innen agieren als KI-augmentierte Sparringspartner bei komplexen Themen. Die Kundenbeziehung wird permanent, kanalübergreifend und hyperpersonalisiert.',
-      en: 'The bank orchestrates financial, service and ecosystem capabilities in real time into individual solutions, and advisors act as AI-augmented sparring partners on complex topics. The customer relationship becomes permanent, cross-channel and hyper-personalised.',
+    frage: {
+      de: 'Doch wie verändert sich die Beratung, wenn Technologie den Kunden immer besser kennt?',
+      en: 'But how does the role of the advisor change as technology comes to know the customer ever better?',
     },
   },
   marktfolge: {
-    essenz: {
-      de: 'Die Marktfolge wandelt sich vom internen Kostenblock zur wertschöpfenden Plattform: Standardvorfälle laufen vollautonom Ende-zu-Ende, und die besten Services skalieren als Banking-as-a-Service für Dritte.',
-      en: 'Operations shift from an internal cost block to a value-creating platform: standard cases run fully autonomously end-to-end, and the best services scale as banking-as-a-service for third parties.',
+    rolle: {
+      de: 'Die Marktfolge ist das Rückgrat des Bankbetriebs: Sie wickelt Kredite, KYC und Zahlungsverkehr zuverlässig ab, sichert Qualität und Kontrolle und hält den Betrieb am Laufen. Heute geschieht das über weitgehend interne Prozesse mit hohem manuellem Anteil und gewachsenen Systemen. Verlässlichkeit ist ihr Markenzeichen, Effizienz ihr täglicher Auftrag.',
+      en: 'Operations are the backbone of the bank: they process credit, KYC and payments reliably, safeguard quality and control, and keep the machine running. Today this happens through largely in-house processes with a high manual share and grown systems. Reliability is their hallmark; efficiency, their daily mandate.',
     },
-    heute: {
-      de: 'Die Marktfolge arbeitet mit fragmentierten Prozessen, Legacy-Systemen und hohem manuellem Anteil, überwiegend intern erbracht und als Kostenstelle geführt. Compliance greift nachgelagert als separater Kontrollschritt.',
-      en: 'Operations run on fragmented processes, legacy systems and high manual effort, largely delivered in-house and managed as a cost centre. Compliance intervenes downstream as a separate control step.',
-    },
-    morgen: {
-      de: 'Standardvorfälle laufen als vollautonome Dunkelverarbeitung Ende-zu-Ende, Menschen lösen nur noch komplexe Sonderfälle, und Regulatorik ist compliant by design eingebaut. Die Bank orchestriert ein modulares Ökosystem und bietet ihre besten Services als Banking-as-a-Service für Dritte an.',
-      en: 'Standard cases run as fully autonomous straight-through processing end-to-end, people only resolve complex exceptions, and regulation is built in compliant by design. The bank orchestrates a modular ecosystem and offers its best services as banking-as-a-service to third parties.',
+    frage: {
+      de: 'Aber wie viel dieser täglichen Bearbeitung braucht in einem Jahrzehnt noch eine menschliche Hand?',
+      en: 'But how much of this daily processing will still need a human hand a decade from now?',
     },
   },
   corporate: {
-    essenz: {
-      de: 'Corporate Services werden zum Enabler des Wandels: Die Organisation wird nicht mehr über starre Strukturen, sondern über Skills, Rollen und Teams in Echtzeit gesteuert — getragen von kontinuierlichem, KI-gestütztem Reskilling.',
-      en: 'Corporate Services become the enabler of change: the organisation is steered no longer by rigid structures but by skills, roles and teams in real time — carried by continuous, AI-supported reskilling.',
+    rolle: {
+      de: 'Corporate Services und HR sind die Gestalter der Organisation: Sie gewinnen Talente, entwickeln Kompetenzen, formen Strukturen und halten die Bank personell handlungsfähig. Heute folgt das etablierten Bahnen — funktionale Aufbauorganisation, feste Rollenprofile, Weiterbildung in klar abgegrenzten Formaten. Menschen und Strukturen sind das Fundament, auf dem alles andere steht.',
+      en: 'Corporate Services and HR shape the organisation: they win talent, build capabilities, form structures and keep the workforce ready to act. Today this runs along established lines — a functional org design, fixed role profiles, training in clearly bounded formats. People and structures are the foundation on which everything else rests.',
     },
-    heute: {
-      de: 'Weiterbildung findet isoliert und reaktiv in klassischen Formaten statt, kaum an künftigen Skill-Bedarfen ausgerichtet. Die Organisation ist funktional und silo-orientiert, Workforce-Planung administrativ und rückwärtsgewandt.',
-      en: 'Upskilling happens in isolation and reactively in classic formats, barely aligned with future skill needs. The organisation is functional and siloed, and workforce planning is administrative and backward-looking.',
-    },
-    morgen: {
-      de: 'HR treibt kontinuierliches Up- und Reskilling für neue Profile wie den AI-Translator, immersiv und KI-personalisiert bis ins Alter 50+. KI orchestriert Skills, Rollen und Teams in Echtzeit, und datenbasierte, vorausschauende Workforce-Steuerung wird zum Wettbewerbsvorteil.',
-      en: 'HR drives continuous up- and reskilling for new profiles such as the AI translator, immersive and AI-personalised well into age 50+. AI orchestrates skills, roles and teams in real time, and data-driven, forward-looking workforce management becomes a competitive advantage.',
+    frage: {
+      de: 'Aber wie steuert man eine Organisation, in der sich die gefragten Fähigkeiten schneller wandeln als die Stellenprofile?',
+      en: 'But how do you steer an organisation in which the skills that matter change faster than the job profiles?',
     },
   },
   it: {
-    essenz: {
-      de: 'Software entwickelt, testet und deployt sich weitgehend selbst; die IT wird zur modularen Plattform, verliert ihre Gatekeeper-Rolle — und der Vorsprung entsteht aus reiner Umsetzungsgeschwindigkeit.',
-      en: 'Software largely develops, tests and deploys itself; IT becomes a modular platform, loses its gatekeeper role — and the edge comes purely from delivery speed.',
+    rolle: {
+      de: 'Die IT ist der Maschinenraum der Bank: Sie entwickelt, betreibt und sichert die Systeme, auf denen jedes Produkt und jeder Prozess läuft. Heute wird Software in geplanten Zyklen von Menschen gebaut, getestet und ausgerollt. Die IT setzt die Anforderungen der Fachbereiche um und wacht über Stabilität, Sicherheit und Kontrolle. Ohne sie steht die Bank still.',
+      en: 'IT is the engine room of the bank: it builds, runs and secures the systems on which every product and process depends. Today software is built, tested and rolled out by people in planned cycles. IT implements the requirements of the business and guards stability, security and control. Without it, the bank stands still.',
     },
-    heute: {
-      de: 'Software entsteht in linearen, deterministischen Zyklen durch Menschen, gesteuert über Regeln und manuelle Freigaben auf monolithischen Landschaften. Die IT ist eine eigenständige Funktion und Gatekeeper zwischen Business und System.',
-      en: 'Software is built by people in linear, deterministic cycles, steered via rules and manual approvals on monolithic landscapes. IT is a standalone function and gatekeeper between business and system.',
-    },
-    morgen: {
-      de: 'Software entwickelt, testet und deployt sich kontinuierlich selbst, während KI autonom innerhalb gesetzter Governance und Leitplanken entscheidet. Fachbereiche steuern die modulare, API-basierte Plattform direkt — die Gatekeeper-Rolle der IT verschwindet, der Vorsprung entsteht aus Geschwindigkeit.',
-      en: 'Software continuously develops, tests and deploys itself, while AI decides autonomously within the governance and guardrails we set. Business units steer the modular, API-based platform directly — IT loses its gatekeeper role, and the edge comes from speed.',
+    frage: {
+      de: 'Aber reicht das in einer Welt, in der Code in Minuten statt Monaten entsteht?',
+      en: 'But is that enough in a world where code emerges in minutes rather than months?',
     },
   },
   compliance: {
-    essenz: {
-      de: 'Compliance ist kein nachgelagerter Bremsklotz mehr, sondern in jede Entscheidung eingebaut: aus Stichprobe und Ex-post-Review wird kontinuierliche, technisch integrierte Echtzeit-Kontrolle mit dem CAIO im Zentrum.',
-      en: 'Compliance is no longer a downstream brake but built into every decision: sampling and ex-post review give way to continuous, technically integrated real-time control with the CAIO at the centre.',
+    rolle: {
+      de: 'Compliance und Risk sind die Wächter der Bank: Sie sichern die regulatorische Konformität, steuern Risiken und schützen Integrität und Lizenz zum Geschäft. Heute wirkt diese Kontrolle überwiegend nachgelagert — über Prüfungen, Stichproben und klar getrennte Verteidigungslinien. Sie ist die Instanz, die dafür sorgt, dass Wachstum und Vertrauen zusammenpassen.',
+      en: 'Compliance and Risk are the guardians of the bank: they secure regulatory conformity, steer risk and protect integrity and the licence to operate. Today this control works largely downstream — through reviews, sample checks and clearly separated lines of defence. They are the function that keeps growth and trust aligned.',
     },
-    heute: {
-      de: 'Risiko und Compliance greifen nachgelagert ein, erzeugen zusätzliche Prozessschritte und bremsen Innovation bei hohen Kosten. Drei getrennte Verteidigungslinien kontrollieren über Stichproben, und Cybersecurity bleibt perimeterorientierte Schutzfunktion.',
-      en: 'Risk and compliance intervene downstream, create additional process steps and slow innovation at high cost. Three separate lines of defence control via sampling, and cybersecurity remains a perimeter-oriented protective function.',
-    },
-    morgen: {
-      de: 'Regulatorik ist direkt in Systeme und Entscheidungslogiken eingebettet, Kontrolle läuft kontinuierlich und technisch integriert in Echtzeit mit dem CAIO im Zentrum. Cyber- und Operational Risk werden untrennbarer Teil des Betriebsmodells, und Compliance sichert als Enabler die Explainability jeder wesentlichen KI-Entscheidung.',
-      en: 'Regulation is embedded directly into systems and decision logic, and control runs continuously and technically integrated in real time with the CAIO at the centre. Cyber and operational risk become an inseparable part of the operating model, and compliance, as an enabler, secures the explainability of every material AI decision.',
+    frage: {
+      de: 'Aber kann Kontrolle, die erst hinterher prüft, mit Entscheidungen Schritt halten, die in Millisekunden fallen?',
+      en: 'But can control that only checks after the fact keep pace with decisions made in milliseconds?',
     },
   },
   projekt: {
-    essenz: {
-      de: 'Der Produktkatalog verschwindet: KI komponiert im Moment des Bedarfs lebende, adaptive Lösungen für das Segment of One — und entwickelt sie kontinuierlich statt in Jahresprojekten, die Time-to-Market fällt von Jahren auf Tage.',
-      en: 'The product catalogue disappears: at the moment of need, AI composes living, adaptive solutions for the segment of one — and develops them continuously rather than in annual projects, dropping time-to-market from years to days.',
+    rolle: {
+      de: 'Produkte und Innovation gestalten das Angebot der Bank: Sie entwickeln Produkte, definieren Konditionen und bringen neue Leistungen an den Markt. Heute entsteht das über standardisierte Kataloge für breite Kundensegmente — abgestimmt in Gremien, umgesetzt in der IT, geprüft von der Compliance. Ein einmal aufgesetztes Produkt trägt oft über Jahre.',
+      en: 'Products & Innovation design what the bank offers: they develop products, define terms and bring new services to market. Today this happens through standardised catalogues for broad customer segments — aligned in committees, implemented in IT, checked by compliance. A product, once set up, often carries for years.',
     },
-    heute: {
-      de: 'Banken bieten standardisierte Produktkataloge für breite Segmente, individualisierbar nur über wenige Parameter. Produkte sind statisch, jede Anpassung erfordert einen Neuabschluss, und die Entwicklung dauert Monate bis Jahre.',
-      en: 'Banks offer standardised product catalogues for broad segments, individualisable only through a few parameters. Products are static, every adjustment requires a new contract, and development takes months to years.',
-    },
-    morgen: {
-      de: 'KI komponiert aus modularen Bausteinen hyperpersonalisierte Lösungen für das Segment of One, die sich als lebende Services innerhalb von Leitplanken selbst an Lebensereignisse anpassen. Neue Produkte entstehen kontinuierlich, compliant by design — Time-to-Market sinkt auf Tage.',
-      en: 'From modular building blocks, AI composes hyper-personalised solutions for the segment of one that adapt themselves as living services to life events within guardrails. New products emerge continuously, compliant by design — time-to-market drops to days.',
+    frage: {
+      de: 'Doch wie lange trägt ein Produkt, das für Millionen gedacht ist, in einer Welt, die den Einzelnen kennt?',
+      en: 'But how far does a product built for millions carry in a world that knows the individual?',
     },
   },
   vorstand: {
-    essenz: {
-      de: 'Der Vorstand steuert die Bank datenbasiert in Echtzeit und macht AI-Governance zur Chefsache — aus dem jährlichen Strategiezyklus wird kontinuierliche, adaptive Steuerung.',
-      en: 'The board steers the bank on live data in real time and makes AI governance a board responsibility — the annual strategy cycle becomes continuous, adaptive steering.',
+    rolle: {
+      de: 'Der Vorstand steuert die Bank und trägt die letzte Verantwortung: Er setzt die Strategie, allokiert Kapital, gibt den Risikoappetit vor und steht für die Ergebnisse gerade. Heute entscheidet er auf Basis periodischer Berichte und in einem festen Jahreszyklus — verdichtete Kennzahlen, Quartalsstände, Erfahrung und Urteilskraft. Hier laufen alle Fäden zusammen.',
+      en: 'The board steers the bank and carries ultimate accountability: it sets strategy, allocates capital, defines risk appetite and answers for the results. Today it decides on periodic reports and within a fixed annual cycle — condensed metrics, quarter-end figures, experience and judgement. This is where all the threads come together.',
     },
-    heute: {
-      de: 'Der Vorstand entscheidet auf periodischen, rückwärtsgerichteten Berichten, oft aus Erfahrung und Bauchgefühl, mit Wochen zwischen Ereignis und Entscheidung. KI-Verantwortung ist an Fachbereiche und IT delegiert, und Strategie wie Kapitalallokation folgen einem starren Jahreszyklus.',
-      en: 'The board decides on periodic, backward-looking reports, often from experience and gut feeling, with weeks between event and decision. Responsibility for AI is delegated to business units and IT, and strategy and capital allocation follow a rigid annual cycle.',
-    },
-    morgen: {
-      de: 'Ein Echtzeit-Governance-Cockpit bündelt Kapital, Liquidität, Risiko und Ertrag live, KI simuliert Handlungsoptionen, und der Vorstand verantwortet Leitplanken, Risikoappetit und Ethik der KI zentral. Aus dem Jahreszyklus wird kontinuierliche, adaptive Steuerung mit dynamischer Kapitalallokation.',
-      en: 'A real-time governance cockpit brings capital, liquidity, risk and earnings together live, AI simulates options for action, and the board owns the guardrails, risk appetite and ethics of AI centrally. The annual cycle gives way to continuous, adaptive steering with dynamic capital allocation.',
+    frage: {
+      de: 'Aber wie führt man ein Haus, dessen Kennzahlen sich in Echtzeit bewegen, mit Berichten von gestern?',
+      en: 'But how do you lead a house whose numbers move in real time, on reports written yesterday?',
     },
   },
 }

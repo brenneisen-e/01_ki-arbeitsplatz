@@ -32,7 +32,6 @@ import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
 import {
   commentKey,
   imageKey,
-  kpiValueKey,
   readEditMode,
   summaryBulletKey,
   textKey,
@@ -42,6 +41,7 @@ import {
   type EditField,
 } from '../data/chapterEdits'
 import { exportChaptersXlsx } from '../data/exportChaptersXlsx'
+import { KPIS_BY_CHAPTER, type Kpi } from '../data/kpis'
 
 type ReaderStrings = {
   back: string
@@ -79,6 +79,8 @@ type ReaderStrings = {
   businessCaseLabel: string
   kpiHeading: string
   kpiHint: string
+  kpiTodayLabel: string
+  kpiScenarioLabel: string
   kpiFootnote: string
   consultantOpen: string
   consultantClose: string
@@ -130,9 +132,12 @@ const STR: Record<Lang, ReaderStrings> = {
     summaryAria: 'Management Summary',
     mgmtSummaryLabel: 'Management Summary',
     businessCaseLabel: 'Business Case (exemplarisch)',
-    kpiHeading: 'Erwartete Wirkung bei Erfüllung der Hypothesen',
+    kpiHeading: 'Zielwerte 2030 bei Erfüllung der Hypothesen',
     kpiHint: 'bei Erfüllung der Hypothesen',
-    kpiFootnote: 'Illustrative Platzhalter — konkrete Zielwerte je Kapitel folgen.',
+    kpiTodayLabel: 'heute',
+    kpiScenarioLabel: 'Szenario Basis',
+    kpiFootnote:
+      'Zielwerte aus dem KPI-Modell (Szenario Basis; Spanne konservativ–ambitioniert im Modell). Illustrative Eckwerte, quellenbasiert.',
     consultantOpen: 'Leitfrage anzeigen',
     consultantClose: 'Leitfrage ausblenden',
     saveShared: 'Für alle speichern',
@@ -181,9 +186,12 @@ const STR: Record<Lang, ReaderStrings> = {
     summaryAria: 'Management summary',
     mgmtSummaryLabel: 'Management summary',
     businessCaseLabel: 'Business case (illustrative)',
-    kpiHeading: 'Expected impact once the hypotheses are met',
+    kpiHeading: '2030 targets once the hypotheses are met',
     kpiHint: 'once the hypotheses are met',
-    kpiFootnote: 'Illustrative placeholders — concrete targets per chapter to follow.',
+    kpiTodayLabel: 'today',
+    kpiScenarioLabel: 'Base scenario',
+    kpiFootnote:
+      'Targets from the KPI model (base scenario; conservative–ambitious range in the model). Illustrative, source-based figures.',
     consultantOpen: 'Show guiding question',
     consultantClose: 'Hide guiding question',
     saveShared: 'Save for everyone',
@@ -195,17 +203,76 @@ const STR: Record<Lang, ReaderStrings> = {
   },
 }
 
-// KPI-Framework für die Management-Summary-Kachel (letzter Schritt). Gleiche
-// Struktur für ALLE Kapitel; Werte sind Platzhalter und je Kapitel zu füllen.
-const KPIS: {
-  label: { de: string; en: string }
-  value: string
-  trend: 'up' | 'down'
-}[] = [
-  { label: { de: 'Kundenzufriedenheit', en: 'Customer satisfaction' }, value: '+ X %', trend: 'up' },
-  { label: { de: 'Betriebskosten', en: 'Operating costs' }, value: '− X %', trend: 'down' },
-  { label: { de: 'Marge', en: 'Margin' }, value: '+ X pp', trend: 'up' },
-]
+// KPI-Zielwerte je Kapitel kommen aus dem Modell (src/data/kpis.ts, generiert aus
+// Banking_Horizon_2030_KPI-Modell.xlsx). Angezeigt wird das Szenario „Basis";
+// die Zahl rollt beim Aufruf der Summary-Kachel von 0 auf den Zielwert hoch.
+
+/** Nachkommastellen je Einheit/Zielwert (stabil über alle Animations-Frames). */
+function kpiDecimals(unit: string, target: number): number {
+  if (
+    unit === '€ p.a.' ||
+    unit === 'Anzahl' ||
+    unit === 'Index (100)' ||
+    unit === 'Punkte' ||
+    unit === 'Min' ||
+    unit === 'Std. p.a.'
+  ) {
+    return 0
+  }
+  if (unit === 'Produkte/Kunde') return 1
+  return Number.isInteger(target) ? 0 : 1
+}
+
+/** Deutsche Formatierung inkl. knapper Einheit (z. B. „625.000 €", „58 %", „6,6 Mon."). */
+function formatKpi(value: number, unit: string, decimals: number): string {
+  const de = (n: number) =>
+    n.toLocaleString('de-DE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+  switch (unit) {
+    case '€ p.a.':
+      return `${de(Math.round(value))} €`
+    case '%':
+      return `${de(value)} %`
+    case 'Min':
+      return `${de(Math.round(value))} Min`
+    case 'Tage':
+      return `${de(value)} Tage`
+    case 'Monate':
+      return `${de(value)} Mon.`
+    case 'Std. p.a.':
+      return `${de(Math.round(value))} Std.`
+    default:
+      // Punkte, Index (100), Anzahl, Produkte/Kunde: reine Zahl
+      return de(value)
+  }
+}
+
+/** Zählt beim Mounten von 0 auf `to` hoch (Ease-out); respektiert reduzierte Bewegung. */
+function CountUp({ to, unit, decimals }: { to: number; unit: string; decimals: number }) {
+  const [value, setValue] = useState(0)
+  useEffect(() => {
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      setValue(to)
+      return
+    }
+    let raf = 0
+    let start: number | null = null
+    const duration = 1100
+    const tick = (ts: number) => {
+      if (start === null) start = ts
+      const p = Math.min(1, (ts - start) / duration)
+      const eased = 1 - Math.pow(1 - p, 3)
+      setValue(to * eased)
+      if (p < 1) raf = requestAnimationFrame(tick)
+      else setValue(to)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [to])
+  return <>{formatKpi(value, unit, decimals)}</>
+}
 
 // Management Summary je Kapitel als McKinsey-Style-Bulletpoints für den Vorstand
 // (so-what-first, prägnant). Werden mit SVG-Icon-Marker gerendert. **fett** hebt
@@ -612,32 +679,26 @@ export function ChapterReader({
               <span className={styles.kpiHeading}>
                 <BookOpen size={14} strokeWidth={2.2} aria-hidden />
                 {t.kpiHeading}
+                <span className={styles.kpiScenarioTag}>{t.kpiScenarioLabel}</span>
               </span>
               <div className={styles.kpiRow}>
-                {KPIS.map((kpi, i) => {
-                  const kk = kpiValueKey(chapter.id, i)
-                  const kv = edits.texts[kk] ?? kpi.value
+                {(KPIS_BY_CHAPTER[chapter.id] ?? []).filter((k) => k.featured).map((kpi: Kpi) => {
+                  const up = kpi.basis >= kpi.base
+                  const dec = kpiDecimals(kpi.unit, kpi.basis)
                   return (
-                    <div className={styles.kpiCard} key={kpi.label.en} data-trend={kpi.trend}>
+                    <div className={styles.kpiCard} key={kpi.label.en} data-trend={up ? 'up' : 'down'}>
                       <span className={styles.kpiLabel}>{kpi.label[lang]}</span>
                       <span className={styles.kpiValue}>
-                        {kpi.trend === 'up' ? (
+                        {up ? (
                           <TrendingUp size={20} strokeWidth={2.4} aria-hidden />
                         ) : (
                           <TrendingDown size={20} strokeWidth={2.4} aria-hidden />
                         )}
-                        {editMode ? (
-                          <input
-                            className={styles.kpiInput}
-                            value={kv}
-                            onChange={(e) => setText(kk, e.target.value)}
-                            aria-label={kpi.label[lang]}
-                          />
-                        ) : (
-                          kv
-                        )}
+                        <CountUp to={kpi.basis} unit={kpi.unit} decimals={dec} />
                       </span>
-                      <span className={styles.kpiHint}>{t.kpiHint}</span>
+                      <span className={styles.kpiHint}>
+                        {t.kpiTodayLabel}: {formatKpi(kpi.base, kpi.unit, kpiDecimals(kpi.unit, kpi.base))}
+                      </span>
                     </div>
                   )
                 })}

@@ -233,7 +233,7 @@
 }
 
 .section {
-  margin: 30px 0 12px;
+  margin: 30px 0 4px;
   font-family: var(--font-mono, monospace);
   font-size: 12px;
   font-weight: 700;
@@ -242,6 +242,14 @@
   color: var(--accent, #046a38);
   border-bottom: 1px solid rgba(27, 28, 26, 0.12);
   padding-bottom: 6px;
+}
+
+/* „Wo erscheint das im Tool?" — Orientierungshinweis unter der Sektion. */
+.sectionHint {
+  margin: 0 0 14px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #6b6d64;
 }
 
 /* ── Card (Hypothese / Aktivität / Bullets) ── */

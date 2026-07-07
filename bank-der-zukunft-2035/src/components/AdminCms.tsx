@@ -13,12 +13,14 @@ import { RichEditor } from './RichEditor'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 import { getChapters, type Chapter } from '../data/chapters'
 import { SUMMARY_BULLETS } from '../data/summaryBullets'
+import { EINSTIEG, hasEinstieg } from '../data/einstieg'
 import {
   useChapterEdits,
   textKey,
   visionKey,
   businessCaseKey,
   summaryBulletKey,
+  einstiegKey,
   imageKey,
   uploadImage,
 } from '../data/chapterEdits'
@@ -49,6 +51,14 @@ const STR = {
     hypothesis: 'Hypothese',
     activity: 'Aktivität / Demo',
     bullets: 'Kernaussagen (Management Summary)',
+    einstieg: 'Einstiegsbühne',
+    fEinRolle: 'Einleitung (was die Abteilung heute tut)',
+    fEinFrage: 'Denkanstoß (grün hervorgehoben)',
+    hEinstieg: 'Erscheint direkt beim Reinzoomen in den Raum — bevor die Hypothesen kommen.',
+    hVision: 'Erscheint in der Management Summary (Button „Management Summary" auf der Übersicht).',
+    hHypo: 'Die Vergleichs-Slides Status Quo | 2030 im Kapitel (plus Bild und Leitfrage des Beraters).',
+    hActivity: 'Die Demo-/Absprung-Kachel am Ende des Kapitels.',
+    hBullets: 'Die Kachel „Management Summary | Kapitel" am Ende des Kapitels.',
     fTitle: 'Titel',
     fQuo: 'Status Quo (heute)',
     fFuture: '2030',
@@ -82,6 +92,14 @@ const STR = {
     hypothesis: 'Hypothesis',
     activity: 'Activity / demo',
     bullets: 'Key takeaways (management summary)',
+    einstieg: 'Entry stage',
+    fEinRolle: 'Intro (what the department does today)',
+    fEinFrage: 'Provocation (highlighted in green)',
+    hEinstieg: 'Shown right when you zoom into the room — before the hypotheses.',
+    hVision: 'Shown in the management summary (the “Management Summary” button on the overview).',
+    hHypo: 'The comparison slides status quo | 2030 in the chapter (plus image and the advisor’s guiding question).',
+    hActivity: 'The demo / hand-off tile at the end of the chapter.',
+    hBullets: 'The “Management Summary | Chapter” tile at the end of the chapter.',
     fTitle: 'Title',
     fQuo: 'Status quo (today)',
     fFuture: '2030',
@@ -121,6 +139,8 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
   )
   const [activeIdx, setActiveIdx] = useState(0)
   const chapter: Chapter = chapters[activeIdx] ?? chapters[0]
+  // Einstiegs-Einleitung/Denkanstoß (nur Raum-Kapitel, kein Transformationskapitel).
+  const einstieg = hasEinstieg(chapter.id) ? EINSTIEG[chapter.id] : null
   const mainRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -228,10 +248,41 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
               <p className={styles.hint}>{t.transformationHint}</p>
             )}
 
+            {einstieg && (
+              <>
+                <h2 className={styles.section}>{t.einstieg}</h2>
+                <p className={styles.sectionHint}>{t.hEinstieg}</p>
+                <div className={styles.card}>
+                  <Field
+                    label={t.fEinRolle}
+                    original={einstieg.rolle[lang]}
+                    editKey={einstiegKey(chapter.id, lang, 'rolle')}
+                    edits={edits}
+                    setText={setText}
+                    resetKey={resetKey}
+                    t={t}
+                    rows={4}
+                  />
+                  <Field
+                    label={t.fEinFrage}
+                    original={einstieg.frage[lang]}
+                    editKey={einstiegKey(chapter.id, lang, 'frage')}
+                    edits={edits}
+                    setText={setText}
+                    resetKey={resetKey}
+                    t={t}
+                    rows={2}
+                  />
+                </div>
+              </>
+            )}
+
+            <h2 className={styles.section}>{t.vision}</h2>
+            <p className={styles.sectionHint}>{t.hVision}</p>
             <Field
               label={t.vision}
               original={chapter.vision}
-                  rich
+              rich
               editKey={visionKey(chapter.id, lang)}
               edits={edits}
               setText={setText}
@@ -242,7 +293,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
             <Field
               label={t.businessCase}
               original={chapter.businessCase}
-                  rich
+              rich
               editKey={businessCaseKey(chapter.id, lang)}
               edits={edits}
               setText={setText}
@@ -252,6 +303,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
             />
 
             <h2 className={styles.section}>{t.hypotheses}</h2>
+            <p className={styles.sectionHint}>{t.hHypo}</p>
             {chapter.hypotheses.map((h, i) => (
               <div className={styles.card} key={i}>
                 <div className={styles.cardHead}>
@@ -304,6 +356,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
             ))}
 
             <h2 className={styles.section}>{t.activity}</h2>
+            <p className={styles.sectionHint}>{t.hActivity}</p>
             <div className={styles.card}>
               <Field
                 label={t.fActTitle}
@@ -336,6 +389,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
             </div>
 
             <h2 className={styles.section}>{t.bullets}</h2>
+            <p className={styles.sectionHint}>{t.hBullets}</p>
             <div className={styles.card}>
               {(SUMMARY_BULLETS[chapter.id] ?? []).length === 0 ? (
                 <p className={styles.hint}>{t.noBullets}</p>

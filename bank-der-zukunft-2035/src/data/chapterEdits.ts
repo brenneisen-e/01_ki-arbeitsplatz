@@ -166,6 +166,7 @@ export type ChapterEditsApi = {
   edits: EditsData
   setText: (key: string, value: string) => void
   setComment: (key: string, value: string) => void
+  resetKey: (key: string) => void
   resetStep: (chapterId: string, step: number, lang: Lang) => void
   clearAll: () => void
   hasAny: boolean
@@ -219,6 +220,18 @@ export function useChapterEdits(): ChapterEditsApi {
     })
   }, [])
 
+  /** Einen einzelnen Text-Override löschen (Feld zurück auf Originalwert). */
+  const resetKey = useCallback((key: string) => {
+    setEdits((prev) => {
+      if (!(key in prev.texts)) return prev
+      const texts = { ...prev.texts }
+      delete texts[key]
+      const next: EditsData = { ...prev, texts }
+      write(next)
+      return next
+    })
+  }, [])
+
   const resetStep = useCallback((chapterId: string, step: number, lang: Lang) => {
     setEdits((prev) => {
       const texts = { ...prev.texts }
@@ -259,7 +272,7 @@ export function useChapterEdits(): ChapterEditsApi {
 
   const hasAny = Object.keys(edits.texts).length > 0 || Object.keys(edits.comments).length > 0
 
-  return { edits, setText, setComment, resetStep, clearAll, hasAny, saveToServer, syncState }
+  return { edits, setText, setComment, resetKey, resetStep, clearAll, hasAny, saveToServer, syncState }
 }
 
 export { writeEditMode }

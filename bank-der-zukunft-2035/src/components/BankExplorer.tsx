@@ -7,11 +7,12 @@ import {
   useState,
 } from 'react'
 import { gsap } from 'gsap'
-import { ArrowLeft, ScrollText } from 'lucide-react'
+import { ArrowLeft, ScrollText, SlidersHorizontal } from 'lucide-react'
 import styles from './BankExplorer.module.css'
 import { ImageSlot } from './ImageSlot'
 import { ChapterReader } from './ChapterReader'
 import { TransformationOffering } from './TransformationOffering'
+import { AdminCms } from './AdminCms'
 import { EinstiegsBuehne } from './EinstiegsBuehne'
 import { IframeStage } from './IframeStage'
 import { StrategyLab } from './StrategyLab'
@@ -170,6 +171,8 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   const [readerShown, setReaderShown] = useState(initialNav.chapter !== null)
   // Management-Summary-Overlay (Vision der Bank 2030) — nur aus der Übersicht.
   const [summaryOpen, setSummaryOpen] = useState(false)
+  // Änderungsbereich (Admin-CMS) — strukturierte Bearbeitung aller Kapitelinhalte.
+  const [cmsOpen, setCmsOpen] = useState(false)
   // Einstiegsbühne (Raum groß + Heute/Morgen) beim frischen Öffnen eines Raum-
   // Kapitels, bevor der Reader mit den Hypothesen übernimmt.
   const [einstiegOpen, setEinstiegOpen] = useState(false)
@@ -462,6 +465,16 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             </button>
           )}
           <DeloitteBadge />
+          <button
+            type="button"
+            className={styles.introBtn}
+            tabIndex={isOverview ? 0 : -1}
+            onClick={() => setCmsOpen(true)}
+            aria-label={lang === 'de' ? 'Änderungsbereich öffnen' : 'Open editing area'}
+          >
+            <SlidersHorizontal size={16} strokeWidth={2} aria-hidden />
+            <span>{lang === 'de' ? 'Bearbeiten' : 'Edit'}</span>
+          </button>
         </div>
 
         {/* Titel-Box, kommt oben mittig herein (nur Übersicht) */}
@@ -525,6 +538,9 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
 
         {/* Management-Summary-Overlay (Vision der Bank 2030) */}
         {summaryOpen && <ManagementSummary onClose={() => setSummaryOpen(false)} />}
+
+        {/* Änderungsbereich (Admin-CMS) — strukturierte Bearbeitung je Kapitel */}
+        {cmsOpen && <AdminCms onClose={() => setCmsOpen(false)} />}
       </div>
     </div>
   )

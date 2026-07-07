@@ -259,8 +259,8 @@ const RAW_CHAPTERS: RawChapter[] = [
           en: 'Banking happens through **personal AI financial assistants / agents** that continuously accompany, contextualise and proactively provide relevant nudges – banking becomes **part of everyday life** rather than a separate interaction.',
         },
         leitfrage: {
-          de: 'Wenn das stimmt – was bleibt von Ihrer Bank sichtbar?',
-          en: 'If this holds true – what remains visible of your bank?',
+          de: 'Wenn Banking künftig unsichtbar im Hintergrund über persönliche KI-Assistenten läuft – was bleibt von Ihrer Bank für die Kund:innen überhaupt noch sichtbar?',
+          en: 'If banking runs invisibly in the background through personal AI assistants – what of your bank remains visible to customers at all?',
         },
       },
       {
@@ -353,8 +353,8 @@ const RAW_CHAPTERS: RawChapter[] = [
           en: 'The bank acts as a **context-based solution orchestrator**: AI dynamically combines financial, service and ecosystem capabilities into individual solutions. **The customer defines both the goal and the starting point** – no longer the product portfolio.',
         },
         leitfrage: {
-          de: 'Was passiert mit Ihrem Vertrieb, wenn das stimmt?',
-          en: 'What happens to your distribution if this holds true?',
+          de: 'Wenn Kund:innen künftig nur noch ihr Ziel nennen und die KI in Echtzeit die passende Lösung orchestriert – was passiert dann mit Ihrem produktzentrierten Vertrieb?',
+          en: 'If customers merely state their goal and AI orchestrates the fitting solution in real time – what then happens to your product-centric distribution?',
         },
       },
       {
@@ -1145,8 +1145,8 @@ const RAW_CHAPTERS: RawChapter[] = [
           en: 'A **real-time governance cockpit** brings capital, liquidity, risk and earnings together live. AI **simulates scenarios and options** – the board decides **on current data instead of quarter-end snapshots**, faster and better founded.',
         },
         leitfrage: {
-          de: 'Welche Vorstandsentscheidung würden Sie anders treffen, wenn Sie sie in Echtzeit simulieren könnten?',
-          en: 'Which board decision would you make differently if you could simulate it in real time?',
+          de: 'Wenn Kapital, Liquidität und Risiko künftig live statt im Quartalsbericht vorliegen und die KI Szenarien simuliert – welche Vorstandsentscheidung würden Sie dann anders treffen?',
+          en: 'If capital, liquidity and risk are available live rather than in a quarterly report and AI simulates the scenarios – which board decision would you then make differently?',
         },
       },
       {
@@ -1167,8 +1167,8 @@ const RAW_CHAPTERS: RawChapter[] = [
           en: '**AI governance becomes a board responsibility**: the board sets **guardrails, risk appetite and ethical limits** for AI, anchors a **CAIO role or AI committee** and requires **explainability** for material AI decisions.',
         },
         leitfrage: {
-          de: 'Wer in Ihrem Vorstand verantwortet 2030 die Entscheidungen der KI?',
-          en: 'Who on your board will be accountable for the AI’s decisions in 2030?',
+          de: 'Wenn KI künftig wesentliche Entscheidungen Ihrer Bank mitträgt – wer in Ihrem Vorstand verantwortet dann ihre Leitplanken, ihren Risikoappetit und ihre Ergebnisse?',
+          en: 'If AI comes to carry material decisions in your bank – who on your board is then accountable for its guardrails, its risk appetite and its outcomes?',
         },
       },
       {
@@ -1189,8 +1189,8 @@ const RAW_CHAPTERS: RawChapter[] = [
           en: 'The board steers **continuously and adaptively**: AI provides an **ongoing situational picture**. Capital, risk and resources are allocated **dynamically to the living operating model** – strategy becomes a **continuous process rather than an annual ritual**.',
         },
         leitfrage: {
-          de: 'Was würde Ihre Bank anders machen, wenn Strategie ein kontinuierlicher statt jährlicher Prozess wäre?',
-          en: 'What would your bank do differently if strategy were a continuous rather than annual process?',
+          de: 'Wenn Kapital und Ressourcen künftig dynamisch am lebenden Betriebsmodell statt im starren Jahreszyklus allokiert werden – was würde Ihre Bank dann anders machen?',
+          en: 'If capital and resources are allocated dynamically to the living operating model rather than in a rigid annual cycle – what would your bank then do differently?',
         },
       },
     ],

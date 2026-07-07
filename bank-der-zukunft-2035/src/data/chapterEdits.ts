@@ -27,7 +27,11 @@ import type { Lang } from '../i18n/LanguageContext'
 
 const STORAGE_KEY = 'bz2030:edits'
 const MODE_KEY = 'bz2030:editmode'
-const CONTENT_API = `${import.meta.env.BASE_URL}api/content`
+// Absoluter Pfad: die Pages Functions liegen im deployten Root-`functions/`
+// (das Pages-Projekt deployt das Repo-Root) und werden unter /api/* bedient —
+// unabhängig vom Unterpfad, unter dem die App ausgeliefert wird.
+const CONTENT_API = '/api/content'
+const UPLOAD_API = '/api/upload'
 
 export type EditField =
   | 'title'
@@ -79,7 +83,7 @@ export function imageKey(src: string): string {
  */
 export async function uploadImage(file: File): Promise<string | null> {
   try {
-    const res = await fetch(`${import.meta.env.BASE_URL}api/upload`, {
+    const res = await fetch(UPLOAD_API, {
       method: 'POST',
       headers: { 'content-type': file.type || 'application/octet-stream' },
       body: file,

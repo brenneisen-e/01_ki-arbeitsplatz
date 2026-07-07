@@ -104,53 +104,24 @@
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
 }
 
-.essenz {
+.rolle {
   max-width: 940px;
-  font-size: clamp(17px, 1.7vw, 23px);
-  line-height: 1.5;
-  color: #f4f1ea;
+  font-size: clamp(16px, 1.5vw, 21px);
+  line-height: 1.55;
+  color: rgba(244, 241, 234, 0.94);
 }
 
-.cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(14px, 1.8vw, 22px);
-  margin: clamp(20px, 3vh, 30px) 0;
-}
-
-.card {
-  padding: 18px 20px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(6px);
-}
-
-.card[data-future] {
-  border-color: rgba(4, 106, 56, 0.6);
-  background: rgba(4, 106, 56, 0.16);
-}
-
-.cardHead {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #b7d98a;
-}
-
-.card[data-quo] .cardHead {
-  color: #bbb8ae;
-}
-
-.cardText {
-  margin-top: 8px;
-  font-size: clamp(14px, 1.15vw, 17px);
-  line-height: 1.5;
-  color: rgba(244, 241, 234, 0.92);
+/* Denkanstoß — hebt die Zukunftsfrage hervor, ohne die Hypothesen zu verraten. */
+.frage {
+  max-width: 900px;
+  margin: clamp(20px, 3vh, 30px) 0 clamp(24px, 3.5vh, 34px);
+  padding-left: 18px;
+  border-left: 3px solid #86bc25;
+  font-size: clamp(19px, 2vw, 27px);
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
 }
 
 .cta {

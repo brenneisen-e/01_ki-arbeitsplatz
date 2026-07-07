@@ -583,16 +583,9 @@ export function ChapterReader({
           <Pencil size={14} strokeWidth={2} aria-hidden />
           {editMode ? t.editDone : t.edit}
         </button>
-      </header>
 
-      <div className={styles.content} key={`content-${step}`}>
         {editMode && (
-          <div className={styles.editBanner}>
-            <span className={styles.editBannerText}>
-              <Pencil size={13} strokeWidth={2} aria-hidden /> {t.editTag}
-            </span>
-            <span>{t.editBanner}</span>
-            <span className={styles.editSpacer} />
+          <>
             {syncState === 'unconfigured' && (
               <span className={styles.saveHint}>{t.serverOff}</span>
             )}
@@ -619,9 +612,11 @@ export function ChapterReader({
             >
               <RotateCcw size={13} strokeWidth={2} aria-hidden /> {t.resetStep}
             </button>
-          </div>
+          </>
         )}
+      </header>
 
+      <div className={styles.content} key={`content-${step}`}>
         {isSummary ? (
           <h1 className={styles.title}>{t.summaryTitle}</h1>
         ) : editMode ? (

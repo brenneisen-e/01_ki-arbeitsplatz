@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Clock,
   FileSpreadsheet,
+  ImageUp,
   LayoutGrid,
   Lightbulb,
   Loader2,
@@ -30,10 +31,12 @@ import { useLang, type Lang } from '../i18n/LanguageContext'
 import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
 import {
   commentKey,
+  imageKey,
   kpiValueKey,
   readEditMode,
   summaryBulletKey,
   textKey,
+  uploadImage,
   useChapterEdits,
   writeEditMode,
   type EditField,
@@ -83,6 +86,8 @@ type ReaderStrings = {
   saving: string
   saved: string
   serverOff: string
+  replaceImage: string
+  uploadFailed: string
 }
 
 const STR: Record<Lang, ReaderStrings> = {
@@ -134,6 +139,8 @@ const STR: Record<Lang, ReaderStrings> = {
     saving: 'Speichere…',
     saved: 'Gespeichert',
     serverOff: 'Server nicht verbunden — nur lokal',
+    replaceImage: 'Bild ersetzen',
+    uploadFailed: 'Upload nicht möglich (Server nicht verbunden)',
   },
   en: {
     back: 'Overview',
@@ -183,6 +190,8 @@ const STR: Record<Lang, ReaderStrings> = {
     saving: 'Saving…',
     saved: 'Saved',
     serverOff: 'Server not connected — local only',
+    replaceImage: 'Replace image',
+    uploadFailed: 'Upload not possible (server not connected)',
   },
 }
 
@@ -360,6 +369,9 @@ export function ChapterReader({
   const t = STR[lang]
   const { edits, setText, setComment, resetStep, saveToServer, syncState } = useChapterEdits()
   const [editMode, setEditMode] = useState(readEditMode)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadErr, setUploadErr] = useState(false)
 
   // Schrittzahl: N Hypothesen + 1 Aktivität/Live-Demo + 1 Management Summary.
   const stepCount = chapter.hypotheses.length + 2
@@ -420,6 +432,18 @@ export function ChapterReader({
   const activity = chapter.activity
 
   const image = hypothesis ? hypothesis.image : activity.image
+  const effImageSrc = edits.texts[imageKey(image.src)] ?? image.src
+  const onImageFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]
+    e.target.value = ''
+    if (!f) return
+    setUploadErr(false)
+    setUploading(true)
+    const url = await uploadImage(f)
+    setUploading(false)
+    if (url) setText(imageKey(image.src), url)
+    else setUploadErr(true)
+  }
   const title = hypothesis ? hypothesis.title : activity.title
   const chapterLabel = `${t.chapterPrefix} ${chapter.kapitel}`
   const kicker = isSummary
@@ -626,7 +650,7 @@ export function ChapterReader({
         <div className={styles.media}>
           <div className={styles.imageInner}>
             <ImageSlot
-              src={image.src}
+              src={effImageSrc}
               alt={image.alt}
               fit="cover"
               label={slotLabel}
@@ -651,6 +675,31 @@ export function ChapterReader({
                   aria-hidden
                 />
                 <span>{comment}</span>
+              </div>
+            )}
+            {editMode && (
+              <div className={styles.imgUpload}>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={onImageFile}
+                />
+                <button
+                  type="button"
+                  className={styles.imgUploadBtn}
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <Loader2 size={14} strokeWidth={2} className={styles.spin} aria-hidden />
+                  ) : (
+                    <ImageUp size={14} strokeWidth={2} aria-hidden />
+                  )}
+                  {t.replaceImage}
+                </button>
+                {uploadErr && <span className={styles.imgUploadErr}>{t.uploadFailed}</span>}
               </div>
             )}
           </div>

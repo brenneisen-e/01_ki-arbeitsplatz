@@ -48,6 +48,25 @@ Der Client ruft `${BASE_URL}api/content` auf (BASE_URL = Vite-`base`, i. d. R.
 Cloudflare unter `/api/content` bereitgestellt. Wird die App unter einem
 Unterpfad ausgeliefert, muss der Funktions-Pfad entsprechend übereinstimmen.
 
+## Bilder ersetzen (Upload) — Cloudflare R2
+
+Im Bearbeiten-Modus lässt sich jedes Kapitel-/Demo-Bild per **„Bild ersetzen"**
+gegen ein hochgeladenes austauschen (auch die bisher grauen Demo-Platzhalter).
+Der Upload läuft über `functions/api/upload.ts` in einen R2-Bucket; ausgeliefert
+werden die Bilder über `functions/api/asset/[[path]].ts`. Die Ersatz-URL wird als
+Override gespeichert und über „Für alle speichern" geteilt.
+
+Einmalige Einrichtung:
+
+```bash
+npx wrangler r2 bucket create bdz-content-assets
+```
+
+Dann in `wrangler.toml` den `[[r2_buckets]]`-Block aktivieren (Binding
+`CONTENT_R2`) **oder** im Pages-Dashboard unter *Settings → Functions → R2 bucket
+bindings* die Variable `CONTENT_R2` auf den Bucket binden. Ohne Bindung ist der
+Upload deaktiviert; die Standardbilder bleiben erhalten (die App bricht nie).
+
 ## Nicht editierbar
 
 - Das **Strukturbild** (Master) bleibt bewusst außen vor.

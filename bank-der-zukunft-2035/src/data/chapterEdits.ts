@@ -67,6 +67,30 @@ export function summaryBulletKey(chapterId: string, lang: Lang, i: number): stri
 export function kpiValueKey(chapterId: string, i: number): string {
   return `${chapterId}|kpiValue|${i}`
 }
+/** Bild-Override: Ersatz-URL je Standard-Bildpfad (z. B. hochgeladenes Bild). */
+export function imageKey(src: string): string {
+  return `img|${src}`
+}
+
+/**
+ * Lädt eine Bilddatei in den Server-Store (Cloudflare R2 via /api/upload) und
+ * liefert die öffentliche URL zurück — oder null, wenn kein Upload möglich ist
+ * (R2 nicht gebunden / offline). Der Aufrufer speichert die URL als Override.
+ */
+export async function uploadImage(file: File): Promise<string | null> {
+  try {
+    const res = await fetch(`${import.meta.env.BASE_URL}api/upload`, {
+      method: 'POST',
+      headers: { 'content-type': file.type || 'application/octet-stream' },
+      body: file,
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as { url?: string }
+    return typeof data?.url === 'string' ? data.url : null
+  } catch {
+    return null
+  }
+}
 
 function coerce(parsed: Partial<EditsData> | null | undefined): EditsData {
   if (!parsed || typeof parsed !== 'object') return { texts: {}, comments: {} }

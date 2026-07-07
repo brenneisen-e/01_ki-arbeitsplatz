@@ -18,7 +18,6 @@ import { getChapters, getMasterImage, type Chapter } from '../data/chapters'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 import {
-  businessCaseKey,
   readEditMode,
   useChapterEdits,
   visionKey,
@@ -464,26 +463,6 @@ export function ManagementSummary({
                   </li>
                 ))}
               </ul>
-            </div>
-            <div className={styles.bcBlock}>
-              <span className={styles.bcLabel}>
-                <BookOpen size={12} strokeWidth={2.2} aria-hidden />
-                {t.businessCaseLabel}
-              </span>
-              {editMode ? (
-                <textarea
-                  className={styles.editArea}
-                  value={edits.texts[businessCaseKey(c.id, lang)] ?? c.businessCase}
-                  onChange={(e) => setText(businessCaseKey(c.id, lang), e.target.value)}
-                  rows={3}
-                  aria-label={t.businessCaseLabel}
-                />
-              ) : (
-                <p
-                  className={styles.bcText}
-                  dangerouslySetInnerHTML={rich(edits.texts[businessCaseKey(c.id, lang)] ?? c.businessCase)}
-                />
-              )}
             </div>
           </div>
         )

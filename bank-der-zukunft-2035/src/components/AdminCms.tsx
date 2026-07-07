@@ -18,7 +18,6 @@ import {
   useChapterEdits,
   textKey,
   visionKey,
-  businessCaseKey,
   summaryBulletKey,
   einstiegKey,
   imageKey,
@@ -55,7 +54,7 @@ const STR = {
     fEinRolle: 'Einleitung (was die Abteilung heute tut)',
     fEinFrage: 'Denkanstoß (grün hervorgehoben)',
     hEinstieg: 'Erscheint direkt beim Reinzoomen in den Raum — bevor die Hypothesen kommen.',
-    mgmtOverview: 'Management-Summary-Übersicht (Vision & Business Case)',
+    mgmtOverview: 'Management-Summary-Übersicht (Vision)',
     hMgmtOverview:
       'Erscheint im Magazin, das über den Button „Management Summary" auf der Startseite aufgeht — nicht in der Kapitel-Kachel am Ende.',
     hHypo: 'Die Vergleichs-Slides Status Quo | 2030 im Kapitel (plus Bild und Leitfrage des Beraters).',
@@ -98,7 +97,7 @@ const STR = {
     fEinRolle: 'Intro (what the department does today)',
     fEinFrage: 'Provocation (highlighted in green)',
     hEinstieg: 'Shown right when you zoom into the room — before the hypotheses.',
-    mgmtOverview: 'Management summary overview (vision & business case)',
+    mgmtOverview: 'Management summary overview (vision)',
     hMgmtOverview:
       'Shown in the magazine opened via the “Management Summary” button on the start screen — not in the chapter tile at the end.',
     hHypo: 'The comparison slides status quo | 2030 in the chapter (plus image and the advisor’s guiding question).',
@@ -398,17 +397,6 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
                 original={chapter.vision}
                 rich
                 editKey={visionKey(chapter.id, lang)}
-                edits={edits}
-                setText={setText}
-                resetKey={resetKey}
-                t={t}
-                rows={4}
-              />
-              <Field
-                label={t.businessCase}
-                original={chapter.businessCase}
-                rich
-                editKey={businessCaseKey(chapter.id, lang)}
                 edits={edits}
                 setText={setText}
                 resetKey={resetKey}

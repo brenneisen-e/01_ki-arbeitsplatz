@@ -80,7 +80,7 @@ const STR: Record<Lang, SummaryStrings> = {
     coverSubtitle: 'Die Vision der Bank 2030 — zum Durchblättern',
     leadTitle: 'Gesamtzusammenfassung',
     gesamt:
-      'Bis 2030 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kund:innen **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Produkte entstehen als **lebende, adaptive Services für das Segment of One** — komponiert in Tagen statt Jahren. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.',
+      'Bis 2030 wird unsere Bank zur **AI-nativen Plattform-Bank**: Banking wird für Kunden **unsichtbar und Teil des Alltags**, der Vertrieb **orchestriert hyperpersonalisierte Lösungen** statt Produkte, die Marktfolge wird **vom Kostenblock zur Plattform**. Produkte entstehen als **lebende, adaptive Services für das Segment of One** — komponiert in Tagen statt Jahren. Software **entwickelt sich weitgehend selbst** in klaren Leitplanken, Compliance ist **in jede Entscheidung eingebaut** — den Weg dorthin gehen wir **decision-first**.',
     tocTitle: 'In dieser Ausgabe',
     hypothesesLabel: 'Kernhypothesen',
     todayLabel: 'Heute',

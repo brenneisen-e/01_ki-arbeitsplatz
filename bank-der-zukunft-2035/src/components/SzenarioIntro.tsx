@@ -73,7 +73,7 @@ type IntroTexte = {
   }
 }
 
-// Pro Detailpunkt ein einfarbiges Icon: Kund:innen → Markt & Wettbewerb →
+// Pro Detailpunkt ein einfarbiges Icon: Kunden → Markt & Wettbewerb →
 // IT & Ökosystem → KI & Governance.
 const DETAIL_ICONS = [Users, TrendingUp, Network, Lightbulb] as const
 
@@ -155,28 +155,28 @@ function getSzenarien(lang: Lang): Szenario[] {
       title: 'Souveräne KI-Inseln',
       kernthemen: ['Datensouveränität & regionale KI-Ökosysteme', 'Regulatorische Blöcke (EU/US/China)', 'Nationale Champions statt globaler Plattformen'],
       narrativ: 'KI ist reif und breit akzeptiert, doch die Welt zerfällt in regulatorische Blöcke. Banken gewinnen als souveräne, regionale KI-Plattformen — grenzüberschreitende Skalierung bleibt schwierig.',
-      details: ['Kund:innen akzeptieren KI, aber in vertrauten, lokalen Ökosystemen.', 'Wettbewerb ist regional; die Reichweite globaler Big Tech ist regulatorisch begrenzt.', 'Hohe Compliance-Kosten, aber ein klarer KI-Vorsprung im jeweiligen Block.'],
+      details: ['Kunden akzeptieren KI, aber in vertrauten, lokalen Ökosystemen.', 'Wettbewerb ist regional; die Reichweite globaler Big Tech ist regulatorisch begrenzt.', 'Hohe Compliance-Kosten, aber ein klarer KI-Vorsprung im jeweiligen Block.'],
     },
     {
       id: 'grenzenlos', quadrant: 'oben-rechts', color: '#7EC8FF',
       title: 'Grenzenlose KI-Ökonomie',
       kernthemen: ['Offene, harmonisierte Regulierung (Open Finance)', 'Plattform-Banken & Embedded Finance', 'Starker Wettbewerb mit Big Tech'],
       narrativ: 'Reife KI trifft auf offene, harmonisierte Märkte. Plattform-Banken und Big Tech konkurrieren offen; Hyperpersonalisierung und Embedded Finance werden zum Standard.',
-      details: ['Kund:innen nutzen selbstverständlich KI-geführte, grenzüberschreitende Services.', 'Gewinner orchestrieren Ökosysteme; Nachzügler werden aus der Kundenschnittstelle gedrängt.', 'Offene APIs und interoperable Daten sind das Schlachtfeld.'],
+      details: ['Kunden nutzen selbstverständlich KI-geführte, grenzüberschreitende Services.', 'Gewinner orchestrieren Ökosysteme; Nachzügler werden aus der Kundenschnittstelle gedrängt.', 'Offene APIs und interoperable Daten sind das Schlachtfeld.'],
     },
     {
       id: 'festung', quadrant: 'unten-links', color: '#C68A12',
       title: 'Festung Bank',
       kernthemen: ['Protektionismus & geopolitische Unsicherheit', 'Zurückhaltende KI-Adoption, geringes Vertrauen', 'Defensive, kostenorientierte Strategie'],
       narrativ: 'Geringes KI-Vertrauen trifft auf eine protektionistische Welt. Banken werden defensiv und compliance-lastig, schützen das Kerngeschäft und optimieren auf Resilienz und Kosten.',
-      details: ['Kund:innen bleiben vorsichtig; Automatisierung schreitet nur langsam voran.', 'Fragmentierte Märkte erhöhen die Kosten und begrenzen Skalierung.', 'Fokus auf Kerngeschäft, Resilienz und regulatorische Sicherheit.'],
+      details: ['Kunden bleiben vorsichtig; Automatisierung schreitet nur langsam voran.', 'Fragmentierte Märkte erhöhen die Kosten und begrenzen Skalierung.', 'Fokus auf Kerngeschäft, Resilienz und regulatorische Sicherheit.'],
     },
     {
       id: 'vorsichtig', quadrant: 'unten-rechts', color: '#2FA86B',
       title: 'Offen, aber vorsichtig',
-      kernthemen: ['Offene Märkte, aber vorsichtige Kund:innen', 'Mensch-zentrierte Beratung bleibt zentral', 'Vertrauen & Transparenz als Differenzierer'],
-      narrativ: 'Die Märkte sind offen, doch die Kund:innen bleiben skeptisch gegenüber Automatisierung. Mensch-zentrierte, vertrauensbasierte Beratung bleibt zentral; Automatisierung kommt Schritt für Schritt.',
-      details: ['Kund:innen schätzen Transparenz und den Menschen im Prozess.', 'Offene Märkte locken neue Anbieter, doch die Adoption ist graduell.', 'Vertrauen und Erklärbarkeit werden zum entscheidenden Differenzierer.'],
+      kernthemen: ['Offene Märkte, aber vorsichtige Kunden', 'Mensch-zentrierte Beratung bleibt zentral', 'Vertrauen & Transparenz als Differenzierer'],
+      narrativ: 'Die Märkte sind offen, doch die Kunden bleiben skeptisch gegenüber Automatisierung. Mensch-zentrierte, vertrauensbasierte Beratung bleibt zentral; Automatisierung kommt Schritt für Schritt.',
+      details: ['Kunden schätzen Transparenz und den Menschen im Prozess.', 'Offene Märkte locken neue Anbieter, doch die Adoption ist graduell.', 'Vertrauen und Erklärbarkeit werden zum entscheidenden Differenzierer.'],
     },
   ]
 }

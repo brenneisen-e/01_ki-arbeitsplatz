@@ -233,11 +233,11 @@ const RAW_CHAPTERS: RawChapter[] = [
     // Bewusst NICHT die ganze Etage/den Fahrstuhl, sondern der Schalterbereich.
     zone: { centerX: 27, centerY: 85, width: 38, height: 22, labelX: 30, labelY: 82, hitWidth: 32, hitHeight: 18 },
     vision: {
-      de: 'Für unsere Kund:innen wird Banking 2030 **unsichtbar und Teil des Alltags** statt eigener Interaktion: Persönliche KI-Finanzassistenten begleiten kontinuierlich, verwandeln eine Flut von Optionen in **klare, simulierte und begründete Empfehlungen** und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus reaktivem Warten wird **teilautonome Finanzsteuerung mit Vertrauensmandat — die Kund:in entscheidet, aber auf KI-vorbereiteter Grundlage**.',
+      de: 'Für unsere Kunden wird Banking 2030 **unsichtbar und Teil des Alltags** statt eigener Interaktion: Persönliche KI-Finanzassistenten begleiten kontinuierlich, verwandeln eine Flut von Optionen in **klare, simulierte und begründete Empfehlungen** und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus reaktivem Warten wird **teilautonome Finanzsteuerung mit Vertrauensmandat — der Kunde entscheidet, aber auf KI-vorbereiteter Grundlage**.',
       en: 'For our customers, banking in 2030 becomes **invisible and part of everyday life** rather than a separate interaction: personal AI financial assistants accompany them continuously, turn a flood of options into **clear, simulated and reasoned recommendations** and act proactively within agreed guardrails. Reactive waiting gives way to **semi-autonomous financial management with a trust mandate — the customer decides, but on an AI-prepared basis**.',
     },
     businessCase: {
-      de: 'Exemplarisch (mittelgroße Bank, illustrativ): Proaktive KI-Finanzassistenten heben die Cross-Selling-Quote um **10–15 %** und senken die Abwanderung um **15–20 %**. Bei rund 250.000 Kund:innen entspricht das etwa **8–12 Mio € Mehrertrag p.a.**. Zugleich sinken die Servicekosten je Kontakt um **30–40 %**.',
+      de: 'Exemplarisch (mittelgroße Bank, illustrativ): Proaktive KI-Finanzassistenten heben die Cross-Selling-Quote um **10–15 %** und senken die Abwanderung um **15–20 %**. Bei rund 250.000 Kunden entspricht das etwa **8–12 Mio € Mehrertrag p.a.**. Zugleich sinken die Servicekosten je Kontakt um **30–40 %**.',
       en: 'Illustrative example (mid-sized bank): Proactive AI financial assistants lift the cross-selling rate by **10–15 %** and cut churn by **15–20 %**. For around 250,000 customers that is roughly **€8–12m additional revenue p.a.**. At the same time, service cost per contact drops by **30–40 %**.',
     },
     hypotheses: [
@@ -251,7 +251,7 @@ const RAW_CHAPTERS: RawChapter[] = [
           },
         },
         statusQuo: {
-          de: 'Kund:innen „machen Banking" aktiv über App, Filiale oder Online-Banking – Interaktion ist **kanalzentriert und reaktiv**.',
+          de: 'Kunden „machen Banking" aktiv über App, Filiale oder Online-Banking – Interaktion ist **kanalzentriert und reaktiv**.',
           en: 'Customers actively “do banking” via app, branch or online banking – interaction is **channel-centric and reactive**.',
         },
         in2030: {
@@ -259,7 +259,7 @@ const RAW_CHAPTERS: RawChapter[] = [
           en: 'Banking happens through **personal AI financial assistants / agents** that continuously accompany, contextualise and proactively provide relevant nudges – banking becomes **part of everyday life** rather than a separate interaction.',
         },
         leitfrage: {
-          de: 'Wenn Banking künftig unsichtbar im Hintergrund über persönliche KI-Assistenten läuft – was bleibt von Ihrer Bank für die Kund:innen überhaupt noch sichtbar?',
+          de: 'Wenn Banking künftig unsichtbar im Hintergrund über persönliche KI-Assistenten läuft – was bleibt von Ihrer Bank für die Kunden überhaupt noch sichtbar?',
           en: 'If banking runs invisibly in the background through personal AI assistants – what of your bank remains visible to customers at all?',
         },
       },
@@ -273,7 +273,7 @@ const RAW_CHAPTERS: RawChapter[] = [
           },
         },
         statusQuo: {
-          de: 'Kund:innen erhalten Produktangebote und **müssen selbst entscheiden** – wenig echte Entscheidungsunterstützung.',
+          de: 'Kunden erhalten Produktangebote und **müssen selbst entscheiden** – wenig echte Entscheidungsunterstützung.',
           en: 'Customers receive product offers and **have to decide for themselves** – with little genuine decision support.',
         },
         in2030: {
@@ -291,7 +291,7 @@ const RAW_CHAPTERS: RawChapter[] = [
           },
         },
         statusQuo: {
-          de: 'Interaktion erfolgt überwiegend auf **Kund:inneninitiative** – Bank **reagiert** auf Anfragen oder Ereignisse.',
+          de: 'Interaktion erfolgt überwiegend auf **Kundeninitiative** – Bank **reagiert** auf Anfragen oder Ereignisse.',
           en: 'Interaction happens mostly on **the customer’s initiative** – the bank **reacts** to requests or events.',
         },
         in2030: {
@@ -327,11 +327,11 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: '„VERTRIEBS-COCKPIT"-Screen',
     zone: { centerX: 73, centerY: 85, width: 40, height: 22, labelX: 72, labelY: 82, hitWidth: 32, hitHeight: 18 },
     vision: {
-      de: '2030 verkaufen wir keine Produkte mehr, sondern **orchestrieren Lösungen entlang der Ziele unserer Kund:innen**. KI kombiniert Finanz-, Service- und Ökosystemleistungen in Echtzeit. Unsere Berater:innen werden zu **KI-augmentierten Sparringspartnern**, die bei komplexen Entscheidungen den Unterschied machen, während Standardvorgänge autonom laufen. Die Kundenbeziehung wird **permanent, kanalübergreifend und hyperpersonalisiert**.',
+      de: '2030 verkaufen wir keine Produkte mehr, sondern **orchestrieren Lösungen entlang der Ziele unserer Kunden**. KI kombiniert Finanz-, Service- und Ökosystemleistungen in Echtzeit. Unsere Berater werden zu **KI-augmentierten Sparringspartnern**, die bei komplexen Entscheidungen den Unterschied machen, während Standardvorgänge autonom laufen. Die Kundenbeziehung wird **permanent, kanalübergreifend und hyperpersonalisiert**.',
       en: 'By 2030 we no longer sell products but **orchestrate solutions around our customers’ goals**. AI combines financial, service and ecosystem capabilities in real time. Our advisors become **AI-augmented sparring partners** who make the difference on complex decisions, while standard transactions run autonomously. The customer relationship becomes **permanent, cross-channel and hyper-personalised**.',
     },
     businessCase: {
-      de: 'Exemplarisch (illustrativ): KI-augmentierte Beratung steigert die Beraterproduktivität um **25–30 %** und den Ertrag je Kund:in um **10–15 %**. Bei 400 Berater:innen ergibt das rund **15–20 Mio € p.a.** — bei zugleich höherer Abschlussqualität durch Lösungsorchestrierung.',
+      de: 'Exemplarisch (illustrativ): KI-augmentierte Beratung steigert die Beraterproduktivität um **25–30 %** und den Ertrag je Kunde um **10–15 %**. Bei 400 Berater ergibt das rund **15–20 Mio € p.a.** — bei zugleich höherer Abschlussqualität durch Lösungsorchestrierung.',
       en: 'Illustrative example: AI-augmented advisory raises advisor productivity by **25–30 %** and revenue per customer by **10–15 %**. Across 400 advisors that is roughly **€15–20m p.a.** — with higher deal quality from solution orchestration.',
     },
     hypotheses: [
@@ -353,12 +353,12 @@ const RAW_CHAPTERS: RawChapter[] = [
           en: 'The bank acts as a **context-based solution orchestrator**: AI dynamically combines financial, service and ecosystem capabilities into individual solutions. **The customer defines both the goal and the starting point** – no longer the product portfolio.',
         },
         leitfrage: {
-          de: 'Wenn Kund:innen künftig nur noch ihr Ziel nennen und die KI in Echtzeit die passende Lösung orchestriert – was passiert dann mit Ihrem produktzentrierten Vertrieb?',
+          de: 'Wenn Kunden künftig nur noch ihr Ziel nennen und die KI in Echtzeit die passende Lösung orchestriert – was passiert dann mit Ihrem produktzentrierten Vertrieb?',
           en: 'If customers merely state their goal and AI orchestrates the fitting solution in real time – what then happens to your product-centric distribution?',
         },
       },
       {
-        title: { de: 'Vom Kund:innenberater zu KI-augmentierten Strategieberatern', en: 'From client advisor to AI-augmented strategic advisor' },
+        title: { de: 'Vom Kundenberater zu KI-augmentierten Strategieberatern', en: 'From client advisor to AI-augmented strategic advisor' },
         image: {
           src: './images/Kapitel 2_2.png',
           alt: {
@@ -376,7 +376,7 @@ const RAW_CHAPTERS: RawChapter[] = [
         },
       },
       {
-        title: { de: 'Kund:innenschnittstelle wird permanent und hyperpersonalisiert', en: 'The customer interface becomes permanent and hyper-personalised' },
+        title: { de: 'Kundenschnittstelle wird permanent und hyperpersonalisiert', en: 'The customer interface becomes permanent and hyper-personalised' },
         image: {
           src: './images/Kapitel 2_3.png',
           alt: {
@@ -1038,7 +1038,7 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 8_1.png',
           alt: {
-            de: 'Status Quo: Regal mit identischen Standard-Produktmappen, mehrere Kund:innen halten dieselbe Mappe. 2030: jede Kund:in sieht auf dem eigenen Gerät eine sichtbar andere, individuell komponierte Produktlösung.',
+            de: 'Status Quo: Regal mit identischen Standard-Produktmappen, mehrere Kunden halten dieselbe Mappe. 2030: jeder Kunde sieht auf dem eigenen Gerät eine sichtbar andere, individuell komponierte Produktlösung.',
             en: 'Status quo: a shelf of identical standard product folders, several customers holding the same folder. 2030: each customer sees a visibly different, individually composed product solution on their own device.',
           },
         },

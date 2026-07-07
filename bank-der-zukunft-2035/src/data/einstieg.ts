@@ -17,7 +17,7 @@ export type Einstieg = { rolle: L; frage: L }
 export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = {
   kunde: {
     rolle: {
-      de: 'Im Zentrum jedes Bankgeschäfts steht die Kund:in — und heute wird Banking aktiv gemacht: Konto prüfen, Angebote vergleichen, Termin buchen, selbst entscheiden. Jede Interaktion ist ein bewusster Moment, den die Kund:in über App, Filiale oder Online-Banking selbst anstößt. Die Bank liefert Produkte und Kanäle, den Takt gibt die Kund:in vor.',
+      de: 'Im Zentrum jedes Bankgeschäfts steht der Kunde — und heute wird Banking aktiv gemacht: Konto prüfen, Angebote vergleichen, Termin buchen, selbst entscheiden. Jede Interaktion ist ein bewusster Moment, den der Kunde über App, Filiale oder Online-Banking selbst anstößt. Die Bank liefert Produkte und Kanäle, den Takt gibt der Kunde vor.',
       en: 'The customer sits at the centre of every banking relationship — and today, banking is something you actively do: check the account, compare offers, book an appointment, decide for yourself. Every interaction is a deliberate moment the customer initiates through app, branch or online banking. The bank supplies the products and channels; the customer sets the pace.',
     },
     frage: {
@@ -27,7 +27,7 @@ export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = 
   },
   vertrieb: {
     rolle: {
-      de: 'Der Vertrieb ist der Wachstumsmotor der Bank: Berater:innen führen die Kundenbeziehung, übersetzen Bedarf in Abschlüsse und tragen Ertrag und Marktanteil. Heute ist das Geschäft produkt- und kanalzentriert organisiert — strukturierte Beratungsgespräche, definierte Produktportfolios, klare Vertriebsziele. Aus Kontakten werden Abschlüsse, aus Abschlüssen Erträge.',
+      de: 'Der Vertrieb ist der Wachstumsmotor der Bank: Berater führen die Kundenbeziehung, übersetzen Bedarf in Abschlüsse und tragen Ertrag und Marktanteil. Heute ist das Geschäft produkt- und kanalzentriert organisiert — strukturierte Beratungsgespräche, definierte Produktportfolios, klare Vertriebsziele. Aus Kontakten werden Abschlüsse, aus Abschlüssen Erträge.',
       en: 'Distribution is the growth engine of the bank: advisors own the customer relationship, translate needs into deals and carry revenue and market share. Today the business is organised in a product- and channel-centric way — structured advisory conversations, defined product portfolios, clear sales targets. Contacts become deals, and deals become revenue.',
     },
     frage: {

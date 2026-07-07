@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Lightbulb, MessageCircle, X } from 'lucide-react'
 import styles from './ConsultantAvatar.module.css'
 import { useReducedMotion } from '../hooks/useReducedMotion'
@@ -19,6 +19,8 @@ type ConsultantAvatarProps = {
   leitfrage: string
   /** Beschriftung "Leitfrage" / "Guiding question". */
   label: string
+  /** Badge-Text, der auf eine neue Leitfrage hinweist. */
+  newLabel: string
   /** Kontext-Zeile über der Frage (z. B. "Kapitel 01 · Hypothese 2"). */
   context?: string
   /** Aria-Label für den Öffnen-Button. */
@@ -30,30 +32,34 @@ type ConsultantAvatarProps = {
 export function ConsultantAvatar({
   leitfrage,
   label,
+  newLabel,
   context,
   openLabel,
   closeLabel,
 }: ConsultantAvatarProps): React.ReactElement | null {
   const reducedMotion = useReducedMotion()
   const [open, setOpen] = useState(false)
-  const enterTimer = useRef<number | null>(null)
+  // Ob die aktuelle Leitfrage noch ungelesen ist (steuert das „Neu"-Badge).
+  const [unread, setUnread] = useState(false)
 
-  // Bei neuer Leitfrage: Sprechblase automatisch öffnen (nach kurzer Auftauch-
-  // verzögerung). Ohne Leitfrage: geschlossen.
+  // Bei neuer Leitfrage NICHT automatisch aufklappen, sondern nur als „neu"
+  // markieren — der Nutzer öffnet die Blase per Klick auf den Avatar/das Badge.
   const hasLeitfrage = leitfrage.trim().length > 0
   useEffect(() => {
-    if (enterTimer.current) window.clearTimeout(enterTimer.current)
-    if (!hasLeitfrage) {
-      setOpen(false)
-      return
-    }
-    enterTimer.current = window.setTimeout(() => setOpen(true), reducedMotion ? 0 : 480)
-    return () => {
-      if (enterTimer.current) window.clearTimeout(enterTimer.current)
-    }
-  }, [leitfrage, hasLeitfrage, reducedMotion])
+    setOpen(false)
+    setUnread(hasLeitfrage)
+  }, [leitfrage, hasLeitfrage])
 
   if (!hasLeitfrage) return null
+
+  // Öffnen/Schließen; beim Öffnen ist die Frage gelesen -> Badge verschwindet.
+  const toggle = () => {
+    setOpen((v) => {
+      const next = !v
+      if (next) setUnread(false)
+      return next
+    })
+  }
 
   return (
     <div className={styles.dock} data-open={open || undefined}>
@@ -79,10 +85,25 @@ export function ConsultantAvatar({
         </div>
       )}
 
+      {/* Badge „Neue Leitfrage": weist auf eine noch ungelesene Frage hin. Klick
+          öffnet die Blase (wie auf dem Avatar). Ist die Frage gelesen, bleibt nur
+          ein dezenter Punkt als Wiederöffnen-Hinweis. */}
+      {!open && unread && (
+        <button
+          type="button"
+          className={styles.newBadge}
+          onClick={toggle}
+          data-motion={reducedMotion ? undefined : 'on'}
+        >
+          <Lightbulb size={14} strokeWidth={2.4} aria-hidden />
+          {newLabel}
+        </button>
+      )}
+
       <button
         type="button"
         className={styles.avatarBtn}
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
         aria-label={open ? closeLabel : openLabel}
         aria-expanded={open}
         data-motion={reducedMotion ? undefined : 'on'}
@@ -98,7 +119,11 @@ export function ConsultantAvatar({
           />
         </span>
         {!open && (
-          <span className={styles.avatarPing} aria-hidden>
+          <span
+            className={styles.avatarPing}
+            data-unread={unread || undefined}
+            aria-hidden
+          >
             <MessageCircle size={14} strokeWidth={2.4} />
           </span>
         )}

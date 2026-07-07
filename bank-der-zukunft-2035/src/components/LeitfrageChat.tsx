@@ -61,7 +61,7 @@ const STR: Record<Lang, ChatStrings> = {
     },
     freeFollowups: (c) => [
       'Guter Punkt. Und was wäre das stärkste Gegenargument dazu?',
-      `Wie würde sich das auf die Kund:innen im Bereich „${c.label}" auswirken?`,
+      `Wie würde sich das auf die Kunden im Bereich „${c.label}" auswirken?`,
       'Was müsste wahr sein, damit das gelingt — welche Voraussetzung ist am kritischsten?',
       'Woran würden Sie in zwei Jahren messen, ob wir auf dem richtigen Weg sind?',
     ],

@@ -49,7 +49,7 @@ export const ANKER = {
 //    (Taste „D" / ?debug) final justieren. ────────────────────────────────────
 export const ZONES: Record<AreaId, Zone> = {
   // Auf das gelieferte Ankerbild ausgemessen: die fünf Stationen (sitzende
-  // Operator:innen im Bogen), nicht die beiden Vorstände vorne. Bei Bedarf über
+  // Operatoren im Bogen), nicht die beiden Vorstände vorne. Bei Bedarf über
   // den Debug-Editor (Taste „D") final justieren.
   vertrieb: { x: 8, y: 60, r: 8 }, // vorne links (Flanke)
   it: { x: 92, y: 60, r: 8 }, // vorne rechts (Flanke)

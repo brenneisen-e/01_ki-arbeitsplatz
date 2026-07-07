@@ -17,22 +17,22 @@ export type Einstieg = { rolle: L; frage: L }
 export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = {
   kunde: {
     rolle: {
-      de: 'Im Zentrum jedes Bankgeschäfts steht die Kund:in — und heute wird Banking aktiv gemacht: Konto prüfen, Angebote vergleichen, Termin buchen, selbst entscheiden. Jede Interaktion ist ein bewusster Moment, den die Kund:in über App, Filiale oder Online-Banking selbst anstößt. Die Bank liefert Produkte und Kanäle, den Takt gibt die Kund:in vor.',
+      de: 'Im Zentrum jedes Bankgeschäfts steht der Kunde — und heute wird Banking aktiv gemacht: Konto prüfen, Angebote vergleichen, Termin buchen, selbst entscheiden. Jede Interaktion ist ein bewusster Moment, den der Kunde über App, Filiale oder Online-Banking selbst anstößt. Die Bank liefert Produkte und Kanäle, den Takt gibt der Kunde vor.',
       en: 'The customer sits at the centre of every banking relationship — and today, banking is something you actively do: check the account, compare offers, book an appointment, decide for yourself. Every interaction is a deliberate moment the customer initiates through app, branch or online banking. The bank supplies the products and channels; the customer sets the pace.',
     },
     frage: {
-      de: 'Doch was, wenn Banking nicht mehr etwas ist, das man tut — sondern etwas, das einfach geschieht?',
-      en: 'But what if banking is no longer something you do — but something that simply happens?',
+      de: 'Die eigentliche Frage ist nicht, wie gut Ihre Bank ihre Kunden bedient — sondern ob der Kunde sie im Alltag überhaupt noch bemerkt.',
+      en: 'The real question is no longer how well your bank serves its customers — but whether the customer still notices it at all.',
     },
   },
   vertrieb: {
     rolle: {
-      de: 'Der Vertrieb ist der Wachstumsmotor der Bank: Berater:innen führen die Kundenbeziehung, übersetzen Bedarf in Abschlüsse und tragen Ertrag und Marktanteil. Heute ist das Geschäft produkt- und kanalzentriert organisiert — strukturierte Beratungsgespräche, definierte Produktportfolios, klare Vertriebsziele. Aus Kontakten werden Abschlüsse, aus Abschlüssen Erträge.',
+      de: 'Der Vertrieb ist der Wachstumsmotor der Bank: Berater führen die Kundenbeziehung, übersetzen Bedarf in Abschlüsse und tragen Ertrag und Marktanteil. Heute ist das Geschäft produkt- und kanalzentriert organisiert — strukturierte Beratungsgespräche, definierte Produktportfolios, klare Vertriebsziele. Aus Kontakten werden Abschlüsse, aus Abschlüssen Erträge.',
       en: 'Distribution is the growth engine of the bank: advisors own the customer relationship, translate needs into deals and carry revenue and market share. Today the business is organised in a product- and channel-centric way — structured advisory conversations, defined product portfolios, clear sales targets. Contacts become deals, and deals become revenue.',
     },
     frage: {
-      de: 'Doch wie verändert sich die Beratung, wenn Technologie den Kunden immer besser kennt?',
-      en: 'But how does the role of the advisor change as technology comes to know the customer ever better?',
+      de: 'Wenn die KI den Kunden besser kennt als jeder Berater — worin liegt dann der Wert des Gesprächs?',
+      en: 'When AI knows the customer better than any advisor — where, then, does the value of the conversation lie?',
     },
   },
   marktfolge: {
@@ -41,8 +41,8 @@ export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = 
       en: 'Operations are the backbone of the bank: they process credit, KYC and payments reliably, safeguard quality and control, and keep the machine running. Today this happens through largely in-house processes with a high manual share and grown systems. Reliability is their hallmark; efficiency, their daily mandate.',
     },
     frage: {
-      de: 'Aber wie viel dieser täglichen Bearbeitung braucht in einem Jahrzehnt noch eine menschliche Hand?',
-      en: 'But how much of this daily processing will still need a human hand a decade from now?',
+      de: 'Die Frage ist nicht mehr, wie effizient Sie jeden Fall bearbeiten — sondern wie viele davon 2030 überhaupt noch eine menschliche Hand berühren.',
+      en: 'The question is no longer how efficiently you process each case — but how many of them will still touch a human hand at all in 2030.',
     },
   },
   corporate: {
@@ -51,8 +51,8 @@ export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = 
       en: 'Corporate Services and HR shape the organisation: they win talent, build capabilities, form structures and keep the workforce ready to act. Today this runs along established lines — a functional org design, fixed role profiles, training in clearly bounded formats. People and structures are the foundation on which everything else rests.',
     },
     frage: {
-      de: 'Aber wie steuert man eine Organisation, in der sich die gefragten Fähigkeiten schneller wandeln als die Stellenprofile?',
-      en: 'But how do you steer an organisation in which the skills that matter change faster than the job profiles?',
+      de: 'Was, wenn die wichtigste Kompetenz Ihrer Bank 2030 eine ist, für die es heute noch kein Stellenprofil gibt?',
+      en: 'What if your bank’s most important capability in 2030 is one for which no job profile exists today?',
     },
   },
   it: {
@@ -61,8 +61,8 @@ export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = 
       en: 'IT is the engine room of the bank: it builds, runs and secures the systems on which every product and process depends. Today software is built, tested and rolled out by people in planned cycles. IT implements the requirements of the business and guards stability, security and control. Without it, the bank stands still.',
     },
     frage: {
-      de: 'Aber reicht das in einer Welt, in der Code in Minuten statt Monaten entsteht?',
-      en: 'But is that enough in a world where code emerges in minutes rather than months?',
+      de: 'Wenn Software in Minuten entsteht statt in Monaten — wird die IT dann zum Engpass oder zum Taktgeber der Bank?',
+      en: 'When software emerges in minutes rather than months — does IT become the bottleneck or the pacemaker of the bank?',
     },
   },
   compliance: {
@@ -71,8 +71,8 @@ export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = 
       en: 'Compliance and Risk are the guardians of the bank: they secure regulatory conformity, steer risk and protect integrity and the licence to operate. Today this control works largely downstream — through reviews, sample checks and clearly separated lines of defence. They are the function that keeps growth and trust aligned.',
     },
     frage: {
-      de: 'Aber kann Kontrolle, die erst hinterher prüft, mit Entscheidungen Schritt halten, die in Millisekunden fallen?',
-      en: 'But can control that only checks after the fact keep pace with decisions made in milliseconds?',
+      de: 'Wenn Entscheidungen in Millisekunden fallen — kann eine Kontrolle, die erst hinterher prüft, dann überhaupt noch schützen?',
+      en: 'When decisions fall in milliseconds — can control that only checks after the fact still protect anything at all?',
     },
   },
   projekt: {
@@ -81,8 +81,8 @@ export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = 
       en: 'Products & Innovation design what the bank offers: they develop products, define terms and bring new services to market. Today this happens through standardised catalogues for broad customer segments — aligned in committees, implemented in IT, checked by compliance. A product, once set up, often carries for years.',
     },
     frage: {
-      de: 'Doch wie lange trägt ein Produkt, das für Millionen gedacht ist, in einer Welt, die den Einzelnen kennt?',
-      en: 'But how far does a product built for millions carry in a world that knows the individual?',
+      de: 'Was ist ein Produktkatalog noch wert, wenn die Bank für jeden Kunden ein eigenes Produkt bauen kann?',
+      en: 'What is a product catalogue still worth once the bank can build a distinct product for every single customer?',
     },
   },
   vorstand: {
@@ -91,8 +91,8 @@ export const EINSTIEG: Record<Exclude<ChapterId, 'transformation'>, Einstieg> = 
       en: 'The board steers the bank and carries ultimate accountability: it sets strategy, allocates capital, defines risk appetite and answers for the results. Today it decides on periodic reports and within a fixed annual cycle — condensed metrics, quarter-end figures, experience and judgement. This is where all the threads come together.',
     },
     frage: {
-      de: 'Aber wie führt man ein Haus, dessen Kennzahlen sich in Echtzeit bewegen, mit Berichten von gestern?',
-      en: 'But how do you lead a house whose numbers move in real time, on reports written yesterday?',
+      de: 'Wie steuert man ein Haus, das sich in Echtzeit bewegt, mit Zahlen von gestern?',
+      en: 'How do you steer an institution that moves in real time with numbers from yesterday?',
     },
   },
 }

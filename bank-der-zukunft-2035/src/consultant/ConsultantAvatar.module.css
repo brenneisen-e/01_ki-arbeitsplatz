@@ -94,7 +94,55 @@
   }
 }
 
-/* Kleiner Sprechhinweis-Punkt, wenn die Blase geschlossen ist. */
+/* Badge „Neue Leitfrage" — Callout über dem Avatar, solange die Frage ungelesen
+   und die Blase zu ist. Klick öffnet die Blase. */
+.newBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  font-family: var(--font-body, sans-serif);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(4, 106, 56, 0.36), 0 2px 6px rgba(27, 28, 26, 0.18);
+  transition: transform var(--t-fast, 180ms) var(--ease-out), background var(--t-fast, 180ms);
+}
+
+.newBadge:hover {
+  transform: translateY(-2px);
+  background: #05532d;
+}
+
+.newBadge[data-motion='on'] {
+  animation: badgeIn 320ms var(--ease-out) both, badgeNudge 2.6s ease-in-out 0.6s infinite;
+}
+
+@keyframes badgeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+}
+
+@keyframes badgeNudge {
+  0%,
+  86%,
+  100% {
+    transform: translateY(0);
+  }
+  92% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Kleiner Sprechhinweis-Punkt, wenn die Blase geschlossen ist. Ungelesen =
+   Akzent-Grün, bereits gelesen = dezenter, damit klar ist: wieder öffnenbar. */
 .avatarPing {
   position: absolute;
   top: -4px;
@@ -110,7 +158,12 @@
   box-shadow: 0 4px 12px rgba(4, 106, 56, 0.4);
 }
 
-.avatarBtn[data-motion='on'] .avatarPing {
+.avatarPing:not([data-unread]) {
+  background: #9a9c92;
+  box-shadow: 0 3px 8px rgba(27, 28, 26, 0.24);
+}
+
+.avatarBtn[data-motion='on'] .avatarPing[data-unread] {
   animation: ping 2.4s ease-in-out infinite;
 }
 

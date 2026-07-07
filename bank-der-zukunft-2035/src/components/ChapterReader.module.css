@@ -433,6 +433,14 @@
   color: var(--ink);
 }
 
+/* Trenner in „Management Summary | Kapitel" — dezent. */
+.titleSep {
+  color: var(--accent);
+  font-weight: 300;
+  opacity: 0.55;
+  margin: 0 2px;
+}
+
 .media {
   position: relative;
   width: 100%;
@@ -814,7 +822,8 @@
 /* ── Management-Summary-Kachel (letzter Schritt, nach der Live-Demo) ─────────── */
 .summaryStep {
   width: 100%;
-  max-width: min(1360px, 94vw);
+  /* Bewusst breit, damit die Kernaussagen möglichst einzeilig stehen. */
+  max-width: min(1640px, 96vw);
   display: flex;
   flex-direction: column;
   gap: clamp(18px, 2vw, 28px);
@@ -824,25 +833,31 @@
 .summaryBullets {
   list-style: none;
   display: grid;
-  gap: clamp(12px, 1.2vw, 18px);
+  gap: clamp(10px, 1vw, 16px);
 }
 
 .summaryBullet {
   display: grid;
   grid-template-columns: auto 1fr;
-  align-items: start;
+  align-items: center;
   gap: 12px;
 }
 
+/* Runder Check-Marker (bewusst KEIN Pfeil). */
 .summaryBulletIcon {
   flex: none;
-  margin-top: 3px;
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-tint);
   color: var(--accent);
 }
 
 .summaryBulletText {
-  font-size: clamp(17px, 1.4vw, 23px);
-  line-height: 1.55;
+  font-size: clamp(16px, 1.28vw, 21px);
+  line-height: 1.45;
   color: var(--ink);
 }
 

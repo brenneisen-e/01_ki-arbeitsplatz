@@ -42,7 +42,7 @@ function rich(text: string): React.ReactNode[] {
 }
 
 // Pro Detailpunkt ein einfarbiges Icon (in der Szenariofarbe). Die vier Punkte
-// folgen in allen Szenarien demselben Bogen: Verbraucher:innen → Markt &
+// folgen in allen Szenarien demselben Bogen: Verbraucher → Markt &
 // Wettbewerb → IT & Ökosystem → KI & Beratung.
 const DETAIL_ICONS = [Users, TrendingUp, Network, Lightbulb] as const
 

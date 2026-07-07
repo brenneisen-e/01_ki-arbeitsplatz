@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   ArrowLeft,
-  ArrowRight,
   BookOpen,
   Check,
   CloudUpload,
@@ -84,6 +83,7 @@ type ReaderStrings = {
   kpiFootnote: string
   consultantOpen: string
   consultantClose: string
+  consultantNew: string
   saveShared: string
   saving: string
   saved: string
@@ -128,9 +128,9 @@ const STR: Record<Lang, ReaderStrings> = {
     excel: 'Excel',
     exporting: 'Erzeuge…',
     summaryKicker: 'Management Summary',
-    summaryTitle: 'Management Summary & Business Case',
+    summaryTitle: 'Management Summary',
     summaryAria: 'Management Summary',
-    mgmtSummaryLabel: 'Management Summary',
+    mgmtSummaryLabel: 'Kernaussagen',
     businessCaseLabel: 'Business Case (exemplarisch)',
     kpiHeading: 'Zielwerte 2030 bei Erfüllung der Hypothesen',
     kpiHint: 'bei Erfüllung der Hypothesen',
@@ -140,6 +140,7 @@ const STR: Record<Lang, ReaderStrings> = {
       'Zielwerte aus dem KPI-Modell (Szenario Basis; Spanne konservativ–ambitioniert im Modell). Illustrative Eckwerte, quellenbasiert.',
     consultantOpen: 'Leitfrage anzeigen',
     consultantClose: 'Leitfrage ausblenden',
+    consultantNew: 'Neue Leitfrage',
     saveShared: 'Für alle speichern',
     saving: 'Speichere…',
     saved: 'Gespeichert',
@@ -182,9 +183,9 @@ const STR: Record<Lang, ReaderStrings> = {
     excel: 'Excel',
     exporting: 'Exporting…',
     summaryKicker: 'Management summary',
-    summaryTitle: 'Management summary & business case',
+    summaryTitle: 'Management summary',
     summaryAria: 'Management summary',
-    mgmtSummaryLabel: 'Management summary',
+    mgmtSummaryLabel: 'Key takeaways',
     businessCaseLabel: 'Business case (illustrative)',
     kpiHeading: '2030 targets once the hypotheses are met',
     kpiHint: 'once the hypotheses are met',
@@ -194,6 +195,7 @@ const STR: Record<Lang, ReaderStrings> = {
       'Targets from the KPI model (base scenario; conservative–ambitious range in the model). Illustrative, source-based figures.',
     consultantOpen: 'Show guiding question',
     consultantClose: 'Hide guiding question',
+    consultantNew: 'New guiding question',
     saveShared: 'Save for everyone',
     saving: 'Saving…',
     saved: 'Saved',
@@ -279,51 +281,51 @@ function CountUp({ to, unit, decimals }: { to: number; unit: string; decimals: n
 // die Kernaussage hervor.
 const SUMMARY_BULLETS: Record<string, { de: string; en: string }[]> = {
   kunde: [
-    { de: '**Banking wird unsichtbar**: KI-Assistenten begleiten Kund:innen kontinuierlich im Alltag; die aktive, kanalzentrierte Interaktion tritt in den Hintergrund.', en: '**Banking becomes invisible**: AI assistants accompany customers continuously in daily life; active, channel-centric interaction recedes into the background.' },
-    { de: '**Von der Auswahl zur Entscheidung**: KI überführt eine Vielzahl an Optionen in klare, simulierte und begründete Empfehlungen.', en: '**From selection to decision**: AI turns a multitude of options into clear, simulated and reasoned recommendations.' },
-    { de: '**Von reaktiv zu proaktiv**: teilautonome Finanzsteuerung mit Vertrauensmandat — die Kund:in entscheidet auf KI-vorbereiteter Grundlage.', en: '**From reactive to proactive**: semi-autonomous financial management with a trust mandate — the customer decides on an AI-prepared basis.' },
+    { de: '**Banking wird unsichtbar** — KI-Assistenten begleiten Kunden kontinuierlich im Alltag.', en: '**Banking becomes invisible** — AI assistants accompany customers continuously in daily life.' },
+    { de: '**Von der Auswahl zur Entscheidung** — KI macht aus vielen Optionen klare, begründete Empfehlungen.', en: '**From selection to decision** — AI turns many options into clear, reasoned recommendations.' },
+    { de: '**Von reaktiv zu proaktiv** — teilautonome Finanzsteuerung mit Vertrauensmandat.', en: '**From reactive to proactive** — semi-autonomous financial management with a trust mandate.' },
   ],
   vertrieb: [
-    { de: '**Vom Produktvertrieb zur Lösungsorchestrierung**: Berater:innen entwickeln mit KI maßgeschneiderte Lösungen.', en: '**From product sales to solution orchestration**: advisers develop tailored solutions with AI.' },
-    { de: '**Beratung wird KI-augmentiert**: der Mensch fokussiert komplexe und emotionale Entscheidungen.', en: '**Advisory becomes AI-augmented**: people focus on complex and emotional decisions.' },
-    { de: '**Die Kundenschnittstelle wird dauerhaft und hyperpersonalisiert** — kanalübergreifend und in Echtzeit.', en: '**The customer interface becomes permanent and hyper-personalised** — cross-channel and in real time.' },
+    { de: '**Vom Produktvertrieb zur Lösungsorchestrierung** — Berater bauen mit KI maßgeschneiderte Lösungen.', en: '**From product sales to solution orchestration** — advisors build tailored solutions with AI.' },
+    { de: '**Beratung wird KI-augmentiert** — der Mensch fokussiert komplexe Entscheidungen.', en: '**Advisory becomes AI-augmented** — people focus on complex decisions.' },
+    { de: '**Die Kundenschnittstelle wird dauerhaft und hyperpersonalisiert** — kanalübergreifend, in Echtzeit.', en: '**The customer interface becomes permanent and hyper-personalised** — cross-channel, in real time.' },
   ],
   marktfolge: [
-    { de: '**Marktfolge wird zur autonomen Dunkelverarbeitung**; menschliches Eingreifen beschränkt sich auf begründete Ausnahmefälle.', en: '**Operations become autonomous straight-through processing**; human intervention is limited to justified exceptions.' },
-    { de: '**Die interne Wertschöpfung öffnet sich**: modulare Utility-Plattformen, die Bank agiert als Orchestrator.', en: '**The internal value chain opens up**: modular utility platforms, with the bank acting as orchestrator.' },
-    { de: '**Von der Kostenstelle zur skalierbaren Serviceplattform** (Banking-as-a-Service); Compliance ist „by design" im Prozess-Lifecycle verankert.', en: '**From cost centre to a scalable service platform** (banking-as-a-service); compliance is embedded “by design” in the process lifecycle.' },
+    { de: '**Marktfolge wird zur autonomen Dunkelverarbeitung** — Menschen greifen nur im Ausnahmefall ein.', en: '**Operations become autonomous straight-through processing** — humans step in only for exceptions.' },
+    { de: '**Die interne Wertschöpfung öffnet sich** — modulare Plattformen, die Bank als Orchestrator.', en: '**The internal value chain opens up** — modular platforms, the bank as orchestrator.' },
+    { de: '**Von der Kostenstelle zur Serviceplattform** — Banking-as-a-Service mit Compliance by Design.', en: '**From cost centre to service platform** — banking-as-a-service with compliance by design.' },
   ],
   corporate: [
-    { de: '**Von punktuellem Training zu kontinuierlichem, KI-personalisiertem Kompetenzaufbau** (inklusive immersiver Lernformate).', en: '**From point-in-time training to continuous, AI-personalised capability building** (including immersive formats).' },
-    { de: '**Die Organisation wird über Kompetenzen gesteuert statt über Strukturen** — flexible, fließende Teams.', en: '**The organisation is steered by capabilities rather than structures** — flexible, fluid teams.' },
-    { de: '**Personalsteuerung wird vorausschauend und datenbasiert**; der demografische Wandel erfordert lebenslanges Reskilling.', en: '**Workforce management becomes predictive and data-driven**; demographic change requires lifelong reskilling.' },
+    { de: '**Von punktuellem Training zu kontinuierlichem Kompetenzaufbau** — KI-personalisiert und immersiv.', en: '**From point-in-time training to continuous capability building** — AI-personalised and immersive.' },
+    { de: '**Steuerung über Kompetenzen statt Strukturen** — flexible, fließende Teams.', en: '**Steering by capabilities rather than structures** — flexible, fluid teams.' },
+    { de: '**Personalsteuerung wird vorausschauend und datenbasiert** — mit lebenslangem Reskilling.', en: '**Workforce management becomes predictive and data-driven** — with lifelong reskilling.' },
   ],
   it: [
-    { de: '**Selbstoptimierende AI-Delivery löst die klassische Softwareentwicklung ab**; Teams steuern und überwachen, statt zu programmieren.', en: '**Self-optimising AI delivery replaces classic software development**; teams steer and oversee rather than program.' },
-    { de: '**Die IT wird zur datengetriebenen, sich kontinuierlich verbessernden Plattform.**', en: '**IT becomes a data-driven, continuously self-improving platform.**' },
-    { de: '**Von der Gatekeeper- zur Enabler-Rolle**: integrierte, vertikale Delivery-Teams; KI entscheidet innerhalb definierter Leitplanken.', en: '**From gatekeeper to enabler**: integrated, vertical delivery teams; AI decides within defined guardrails.' },
+    { de: '**AI-Delivery löst die klassische Softwareentwicklung ab** — Teams steuern statt zu programmieren.', en: '**AI delivery replaces classic software development** — teams steer rather than program.' },
+    { de: '**Die IT wird zur selbstoptimierenden, datengetriebenen Plattform.**', en: '**IT becomes a self-optimising, data-driven platform.**' },
+    { de: '**Von der Gatekeeper- zur Enabler-Rolle** — KI entscheidet in klaren Leitplanken.', en: '**From gatekeeper to enabler** — AI decides within clear guardrails.' },
   ],
   compliance: [
-    { de: '**Von der nachgelagerten Prüfung zur Echtzeit-Compliance** direkt in den Systemen.', en: '**From ex-post review to real-time compliance** embedded directly in the systems.' },
-    { de: '**Integrierte, kontinuierliche Kontrolle** in einem KI-überwachten Governance-Cockpit.', en: '**Integrated, continuous control** in an AI-monitored governance cockpit.' },
-    { de: '**Cyber- und Operational-Risk-Resilienz wird geschäftskritisch** und ist fest im Betriebsmodell verankert.', en: '**Cyber and operational-risk resilience becomes business-critical** and is firmly anchored in the operating model.' },
-    { de: '**Compliance und Innenrevision werden zu Enablern** der KI-Transformation (Explainability).', en: '**Compliance and internal audit become enablers** of the AI transformation (explainability).' },
+    { de: '**Von der nachgelagerten Prüfung zur Echtzeit-Compliance** — direkt in den Systemen.', en: '**From ex-post review to real-time compliance** — embedded directly in the systems.' },
+    { de: '**Integrierte, kontinuierliche Kontrolle** — in einem KI-überwachten Governance-Cockpit.', en: '**Integrated, continuous control** — in an AI-monitored governance cockpit.' },
+    { de: '**Cyber- und Operational-Risk-Resilienz wird geschäftskritisch** — fest im Betriebsmodell verankert.', en: '**Cyber and operational-risk resilience becomes business-critical** — anchored in the operating model.' },
+    { de: '**Compliance und Revision werden zu Enablern** — der KI-Transformation, mit Explainability.', en: '**Compliance and audit become enablers** — of the AI transformation, with explainability.' },
   ],
   transformation: [
-    { de: '**KI als strategischer Fixstern**: die Plattform wird zum Geschäfts- und Betriebsmodell; Fokus auf Kultur und Befähigung.', en: '**AI as a strategic guiding star**: the platform becomes the business and operating model; focus on culture and enablement.' },
-    { de: '**Ein KI-natives Target Operating Model** mit durchgängigen Journey-Teams und Human-in-the-loop.', en: '**An AI-native target operating model** with end-to-end journey teams and human-in-the-loop.' },
-    { de: '**Decision-first statt einer Vielzahl isolierter Use Cases**: klare Roadmap und skalierbare Decision Spine vor dem Rollout.', en: '**Decision-first rather than a multitude of isolated use cases**: a clear roadmap and scalable decision spine before rollout.' },
-    { de: '**Wandel ist im Target Operating Model verankert**; eine strukturierte Projektmethodik führt vom Reifegrad zum Zielbild.', en: '**Change is anchored in the target operating model**; a structured project methodology leads from maturity to the target picture.' },
+    { de: '**KI als strategischer Fixstern** — die Plattform wird zum Geschäfts- und Betriebsmodell.', en: '**AI as a strategic guiding star** — the platform becomes the business and operating model.' },
+    { de: '**Ein KI-natives Target Operating Model** — mit Journey-Teams und Human-in-the-loop.', en: '**An AI-native target operating model** — with journey teams and human-in-the-loop.' },
+    { de: '**Decision-first statt isolierter Use Cases** — klare Roadmap, skalierbare Decision Spine.', en: '**Decision-first rather than isolated use cases** — a clear roadmap, a scalable decision spine.' },
+    { de: '**Wandel im Target Operating Model verankert** — strukturiert vom Reifegrad zum Zielbild.', en: '**Change anchored in the target operating model** — structured from maturity to target picture.' },
   ],
   projekt: [
-    { de: '**Vom Produktkatalog zum „Segment of One"**: KI komponiert hyperpersonalisierte Lösungen im Moment des Bedarfs.', en: '**From product catalogue to a “segment of one”**: AI composes hyper-personalised solutions at the moment of need.' },
-    { de: '**Produkte werden zu lebenden, adaptiven Services** — Selbstanpassung innerhalb definierter Leitplanken.', en: '**Products become living, adaptive services** — self-adjusting within defined guardrails.' },
-    { de: '**Produktentwicklung wird kontinuierlich**; die Time-to-Market sinkt von Jahren auf Tage.', en: '**Product development becomes continuous**; time-to-market drops from years to days.' },
+    { de: '**Vom Produktkatalog zum Segment of One** — KI komponiert Lösungen im Moment des Bedarfs.', en: '**From product catalogue to segment of one** — AI composes solutions at the moment of need.' },
+    { de: '**Produkte werden zu lebenden, adaptiven Services** — Selbstanpassung in klaren Leitplanken.', en: '**Products become living, adaptive services** — self-adjusting within clear guardrails.' },
+    { de: '**Produktentwicklung wird kontinuierlich** — Time-to-Market von Jahren auf Tage.', en: '**Product development becomes continuous** — time-to-market from years to days.' },
   ],
   vorstand: [
-    { de: '**Von der periodischen Berichterstattung zur Echtzeit-Steuerung** über ein Governance-Cockpit.', en: '**From periodic reporting to real-time steering** via a governance cockpit.' },
-    { de: '**AI-Governance wird zur Vorstandsverantwortung**: Leitplanken, Risikoappetit, Ethik und Explainability.', en: '**AI governance becomes a board responsibility**: guardrails, risk appetite, ethics and explainability.' },
-    { de: '**Von der Jahresstrategie zur kontinuierlichen, adaptiven Steuerung** mit dynamischer Kapital- und Ressourcenallokation.', en: '**From annual strategy to continuous, adaptive steering** with dynamic allocation of capital and resources.' },
+    { de: '**Von periodischer Berichterstattung zur Echtzeit-Steuerung** — über ein Governance-Cockpit.', en: '**From periodic reporting to real-time steering** — via a governance cockpit.' },
+    { de: '**AI-Governance wird Vorstandsverantwortung** — Leitplanken, Risikoappetit, Ethik, Explainability.', en: '**AI governance becomes a board responsibility** — guardrails, risk appetite, ethics, explainability.' },
+    { de: '**Von der Jahresstrategie zur kontinuierlichen Steuerung** — mit dynamischer Kapitalallokation.', en: '**From annual strategy to continuous steering** — with dynamic capital allocation.' },
   ],
 }
 
@@ -618,7 +620,9 @@ export function ChapterReader({
 
       <div className={styles.content} key={`content-${step}`}>
         {isSummary ? (
-          <h1 className={styles.title}>{t.summaryTitle}</h1>
+          <h1 className={styles.title}>
+            {t.summaryTitle} <span className={styles.titleSep}>|</span> {chapter.label}
+          </h1>
         ) : editMode ? (
           <textarea
             className={styles.titleInput}
@@ -647,12 +651,9 @@ export function ChapterReader({
                     const bv = edits.texts[bk] ?? b[lang]
                     return (
                       <li className={styles.summaryBullet} key={i}>
-                        <ArrowRight
-                          className={styles.summaryBulletIcon}
-                          size={19}
-                          strokeWidth={2.4}
-                          aria-hidden
-                        />
+                        <span className={styles.summaryBulletIcon} aria-hidden>
+                          <Check size={14} strokeWidth={3} />
+                        </span>
                         {editMode ? (
                           <textarea
                             className={styles.editInput}
@@ -933,6 +934,7 @@ export function ChapterReader({
         <ConsultantAvatar
           leitfrage={hypothesis ? effLeitfrage : ''}
           label={t.leitfrage}
+          newLabel={t.consultantNew}
           context={kicker}
           openLabel={t.consultantOpen}
           closeLabel={t.consultantClose}

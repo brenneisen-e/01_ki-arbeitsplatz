@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Home, ChevronDown, ShieldCheck, FileText, Sparkles, Bot, BookOpen, Download, FileBarChart, FileSpreadsheet, Wand2, Users, Check } from 'lucide-react';
+import { Home, ChevronDown, ShieldCheck, FileText, Sparkles, Bot, BookOpen, Download, FileBarChart, FileSpreadsheet, Wand2, Users, Check, Recycle } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useInstitut } from '../../hooks/useInstitut';
 import { useSmartIcs } from '../../hooks/useSmartIcs';
@@ -272,6 +272,7 @@ export default function GlobalHeader({ activeView, onViewChange }) {
 
   const modes = [
     { id: 'workflow', label: 'b-IKS Agent', icon: Wand2 },
+    { id: 'optimierung', label: 'b-IKS Optimierung', icon: Recycle, badge: 'Showcase' },
     { id: 'methodik', label: 'Methodik & Regelkreis',  icon: BookOpen },
   ];
 
@@ -401,6 +402,16 @@ export default function GlobalHeader({ activeView, onViewChange }) {
             >
               <Icon size={16} strokeWidth={1.75} />
               {m.label}
+              {m.badge && (
+                <span
+                  className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded"
+                  style={activeView === m.id
+                    ? { background: '#EDE9FE', color: '#5B21B6' }
+                    : { background: 'rgba(255,255,255,0.18)', color: 'rgba(255,255,255,0.85)' }}
+                >
+                  {m.badge}
+                </span>
+              )}
             </button>
           );
         })}

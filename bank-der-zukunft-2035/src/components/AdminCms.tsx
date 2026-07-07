@@ -55,7 +55,9 @@ const STR = {
     fEinRolle: 'Einleitung (was die Abteilung heute tut)',
     fEinFrage: 'Denkanstoß (grün hervorgehoben)',
     hEinstieg: 'Erscheint direkt beim Reinzoomen in den Raum — bevor die Hypothesen kommen.',
-    hVision: 'Erscheint in der Management Summary (Button „Management Summary" auf der Übersicht).',
+    mgmtOverview: 'Management-Summary-Übersicht (Vision & Business Case)',
+    hMgmtOverview:
+      'Erscheint im Magazin, das über den Button „Management Summary" auf der Startseite aufgeht — nicht in der Kapitel-Kachel am Ende.',
     hHypo: 'Die Vergleichs-Slides Status Quo | 2030 im Kapitel (plus Bild und Leitfrage des Beraters).',
     hActivity: 'Die Demo-/Absprung-Kachel am Ende des Kapitels.',
     hBullets: 'Die Kachel „Management Summary | Kapitel" am Ende des Kapitels.',
@@ -96,7 +98,9 @@ const STR = {
     fEinRolle: 'Intro (what the department does today)',
     fEinFrage: 'Provocation (highlighted in green)',
     hEinstieg: 'Shown right when you zoom into the room — before the hypotheses.',
-    hVision: 'Shown in the management summary (the “Management Summary” button on the overview).',
+    mgmtOverview: 'Management summary overview (vision & business case)',
+    hMgmtOverview:
+      'Shown in the magazine opened via the “Management Summary” button on the start screen — not in the chapter tile at the end.',
     hHypo: 'The comparison slides status quo | 2030 in the chapter (plus image and the advisor’s guiding question).',
     hActivity: 'The demo / hand-off tile at the end of the chapter.',
     hBullets: 'The “Management Summary | Chapter” tile at the end of the chapter.',
@@ -277,31 +281,6 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
               </>
             )}
 
-            <h2 className={styles.section}>{t.vision}</h2>
-            <p className={styles.sectionHint}>{t.hVision}</p>
-            <Field
-              label={t.vision}
-              original={chapter.vision}
-              rich
-              editKey={visionKey(chapter.id, lang)}
-              edits={edits}
-              setText={setText}
-              resetKey={resetKey}
-              t={t}
-              rows={4}
-            />
-            <Field
-              label={t.businessCase}
-              original={chapter.businessCase}
-              rich
-              editKey={businessCaseKey(chapter.id, lang)}
-              edits={edits}
-              setText={setText}
-              resetKey={resetKey}
-              t={t}
-              rows={4}
-            />
-
             <h2 className={styles.section}>{t.hypotheses}</h2>
             <p className={styles.sectionHint}>{t.hHypo}</p>
             {chapter.hypotheses.map((h, i) => (
@@ -409,6 +388,33 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
                   />
                 ))
               )}
+            </div>
+
+            <h2 className={styles.section}>{t.mgmtOverview}</h2>
+            <p className={styles.sectionHint}>{t.hMgmtOverview}</p>
+            <div className={styles.card}>
+              <Field
+                label={t.vision}
+                original={chapter.vision}
+                rich
+                editKey={visionKey(chapter.id, lang)}
+                edits={edits}
+                setText={setText}
+                resetKey={resetKey}
+                t={t}
+                rows={4}
+              />
+              <Field
+                label={t.businessCase}
+                original={chapter.businessCase}
+                rich
+                editKey={businessCaseKey(chapter.id, lang)}
+                edits={edits}
+                setText={setText}
+                resetKey={resetKey}
+                t={t}
+                rows={4}
+              />
             </div>
 
             <div className={styles.pager}>

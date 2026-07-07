@@ -13,6 +13,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { getChapters } from './chapters'
+import { stripRich } from './richtext'
 import { commentKey, textKey, type EditField, type EditsData } from './chapterEdits'
 import type { Lang } from '../i18n/LanguageContext'
 
@@ -187,8 +188,8 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       setCell(sum, `A${sr}`, `${ch.kapitel} · ${ch.label}`, { size: 11, wrap: true })
       setCell(sum, `B${sr}`, String(step + 1), { size: 11, align: 'center' })
       setCell(sum, `C${sr}`, eff(ch.id, step, 'title', h.title), { size: 11, bold: true, wrap: true })
-      setCell(sum, `D${sr}`, eff(ch.id, step, 'statusQuo', h.statusQuo), { size: 11, wrap: true })
-      setCell(sum, `E${sr}`, eff(ch.id, step, 'in2030', h.in2030), { size: 11, wrap: true })
+      setCell(sum, `D${sr}`, stripRich(eff(ch.id, step, 'statusQuo', h.statusQuo)), { size: 11, wrap: true })
+      setCell(sum, `E${sr}`, stripRich(eff(ch.id, step, 'in2030', h.in2030)), { size: 11, wrap: true })
       setCell(sum, `F${sr}`, eff(ch.id, step, 'leitfrage', h.leitfrage ?? ''), { size: 11, wrap: true, italic: true })
       // Leere Notiz-Spalte für gewünschte Bildanpassungen.
       setCell(sum, `G${sr}`, '', { size: 11, wrap: true, fill: NOTE_FILL })
@@ -221,8 +222,8 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
         comment: edits.comments[commentKey(ch.id, step)] ?? '',
         fill: ACCENT,
         rows: [
-          [LBL.today, eff(ch.id, step, 'statusQuo', h.statusQuo), false],
-          [LBL.future, eff(ch.id, step, 'in2030', h.in2030), false],
+          [LBL.today, stripRich(eff(ch.id, step, 'statusQuo', h.statusQuo)), false],
+          [LBL.future, stripRich(eff(ch.id, step, 'in2030', h.in2030)), false],
           [LBL.leitfrage, eff(ch.id, step, 'leitfrage', h.leitfrage ?? ''), true],
         ],
       })
@@ -234,7 +235,7 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
       alt: ch.activity.image.alt,
       comment: edits.comments[commentKey(ch.id, activityStep)] ?? '',
       fill: ACCENT_DARK,
-      rows: [['', eff(ch.id, activityStep, 'activityText', ch.activity.text), false]],
+      rows: [['', stripRich(eff(ch.id, activityStep, 'activityText', ch.activity.text)), false]],
     })
 
     for (const b of blocks) {

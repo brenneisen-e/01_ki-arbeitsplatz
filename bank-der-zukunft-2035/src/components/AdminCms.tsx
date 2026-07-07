@@ -9,6 +9,7 @@ import {
   X,
 } from 'lucide-react'
 import styles from './AdminCms.module.css'
+import { RichEditor } from './RichEditor'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 import { getChapters, type Chapter } from '../data/chapters'
 import { SUMMARY_BULLETS } from '../data/summaryBullets'
@@ -230,6 +231,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
             <Field
               label={t.vision}
               original={chapter.vision}
+                  rich
               editKey={visionKey(chapter.id, lang)}
               edits={edits}
               setText={setText}
@@ -240,6 +242,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
             <Field
               label={t.businessCase}
               original={chapter.businessCase}
+                  rich
               editKey={businessCaseKey(chapter.id, lang)}
               edits={edits}
               setText={setText}
@@ -267,6 +270,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
                 <Field
                   label={t.fQuo}
                   original={h.statusQuo}
+                  rich
                   editKey={textKey(chapter.id, i, lang, 'statusQuo')}
                   edits={edits}
                   setText={setText}
@@ -277,6 +281,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
                 <Field
                   label={t.fFuture}
                   original={h.in2030}
+                  rich
                   editKey={textKey(chapter.id, i, lang, 'in2030')}
                   edits={edits}
                   setText={setText}
@@ -313,6 +318,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
               <Field
                 label={t.fActText}
                 original={chapter.activity.text}
+                  rich
                 editKey={textKey(chapter.id, chapter.hypotheses.length, lang, 'activityText')}
                 edits={edits}
                 setText={setText}
@@ -339,6 +345,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
                     key={i}
                     label={`${i + 1}.`}
                     original={b[lang]}
+                  rich
                     editKey={summaryBulletKey(chapter.id, lang, i)}
                     edits={edits}
                     setText={setText}
@@ -388,14 +395,22 @@ type FieldProps = {
   t: CmsStrings
   rows?: number
   input?: boolean
+  /** WYSIWYG-Editor (Fett/Kursiv/Farbe/Größe) statt reinem Textfeld. */
+  rich?: boolean
 }
 
-function Field({ label, original, editKey, edits, setText, resetKey, t, rows = 3, input }: FieldProps): React.ReactElement {
+function Field({ label, original, editKey, edits, setText, resetKey, t, rows = 3, input, rich }: FieldProps): React.ReactElement {
   const override = edits.texts[editKey]
   const value = override ?? original
   const changed = override !== undefined && override !== original
+  // Remount-Zähler: setzt den (unkontrollierten) Rich-Editor beim Zurücksetzen neu.
+  const [resetV, setResetV] = useState(0)
+  const doReset = () => {
+    resetKey(editKey)
+    setResetV((v) => v + 1)
+  }
   return (
-    <label className={styles.field}>
+    <div className={styles.field}>
       <span className={styles.fieldHead}>
         <span className={styles.fieldLabel}>{label}</span>
         {changed && (
@@ -404,7 +419,7 @@ function Field({ label, original, editKey, edits, setText, resetKey, t, rows = 3
             <button
               type="button"
               className={styles.resetFieldBtn}
-              onClick={() => resetKey(editKey)}
+              onClick={doReset}
               aria-label={t.resetField}
               title={t.resetField}
             >
@@ -413,7 +428,14 @@ function Field({ label, original, editKey, edits, setText, resetKey, t, rows = 3
           </span>
         )}
       </span>
-      {input ? (
+      {rich ? (
+        <RichEditor
+          key={`${editKey}:${resetV}`}
+          value={value}
+          onChange={(html) => setText(editKey, html)}
+          ariaLabel={label}
+        />
+      ) : input ? (
         <input
           className={styles.inputField}
           value={value}
@@ -427,7 +449,7 @@ function Field({ label, original, editKey, edits, setText, resetKey, t, rows = 3
           onChange={(e) => setText(editKey, e.target.value)}
         />
       )}
-    </label>
+    </div>
   )
 }
 

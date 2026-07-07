@@ -29,6 +29,7 @@ import { ConsultantAvatar } from '../consultant/ConsultantAvatar'
 import { useLang, type Lang } from '../i18n/LanguageContext'
 import type { Chapter, Handoff, ScreenOverlay } from '../data/chapters'
 import { SUMMARY_BULLETS } from '../data/summaryBullets'
+import { renderRichHtml } from '../data/richtext'
 import {
   commentKey,
   imageKey,
@@ -301,14 +302,10 @@ type ChapterReaderProps = {
   onHandoff: (handoff: Handoff) => void
 }
 
-// Mini-Markdown: **fett** → <strong>. Sonst Klartext.
-function renderRichText(text: string): React.ReactNode[] {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>
-    }
-    return <span key={i}>{part}</span>
-  })
+// Rich-Text-Anzeige: gibt saniertes HTML für dangerouslySetInnerHTML zurück.
+// Unterstützt WYSIWYG-Formatierung (Fett/Kursiv/Farbe/Größe) und Legacy `**fett**`.
+function rich(value: string): { __html: string } {
+  return { __html: renderRichHtml(value) }
 }
 
 function handoffIcon(kind: Handoff['kind']): React.ReactElement {
@@ -614,7 +611,7 @@ export function ChapterReader({
                             rows={2}
                           />
                         ) : (
-                          <span className={styles.summaryBulletText}>{renderRichText(bv)}</span>
+                          <span className={styles.summaryBulletText} dangerouslySetInnerHTML={rich(bv)} />
                         )}
                       </li>
                     )
@@ -748,7 +745,7 @@ export function ChapterReader({
                     <div className={styles.boldHint}>{t.boldHint}</div>
                   </>
                 ) : (
-                  <p className={styles.compareText}>{renderRichText(effStatusQuo)}</p>
+                  <p className={styles.compareText} dangerouslySetInnerHTML={rich(effStatusQuo)} />
                 )}
               </article>
               <article className={styles.compareCard} data-future>
@@ -767,7 +764,7 @@ export function ChapterReader({
                     <div className={styles.boldHint}>{t.boldHint}</div>
                   </>
                 ) : (
-                  <p className={styles.compareText}>{renderRichText(effIn2030)}</p>
+                  <p className={styles.compareText} dangerouslySetInnerHTML={rich(effIn2030)} />
                 )}
               </article>
             </div>
@@ -805,7 +802,7 @@ export function ChapterReader({
                 <div className={styles.boldHint}>{t.boldHint}</div>
               </>
             ) : (
-              <p className={styles.copy}>{renderRichText(effActivityText)}</p>
+              <p className={styles.copy} dangerouslySetInnerHTML={rich(effActivityText)} />
             )}
             <div className={styles.ctaRow}>
               <button

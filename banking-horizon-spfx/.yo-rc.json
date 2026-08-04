@@ -1,0 +1,17 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.22.2",
+    "version": "1.21.1",
+    "libraryName": "banking-horizon-2030-spfx",
+    "libraryId": "8ae19c0f-611c-4b6f-8199-357a843207d3",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "banking-horizon-2030-spfx",
+    "solutionShortDescription": "Banking Horizon 2030 als SharePoint-WebPart",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

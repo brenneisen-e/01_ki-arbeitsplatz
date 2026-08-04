@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "Banking Horizon 2030",
+    "id": "8ae19c0f-611c-4b6f-8199-357a843207d3",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "KI Arbeitsplatz",
+      "websiteUrl": "https://kiarbeitsplatz.pages.dev",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": ""
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Banking Horizon 2030 — begehbares Strukturbild der Bank für den Vorstands-Workshop."
+      },
+      "longDescription": {
+        "default": "Interaktives Strukturbild der Bank für den Vorstands-Workshop: 8 Zonen, Hypothesen-Vergleiche, Management Summary, Strategy Lab und Demo-Absprünge. Die komplette App wird als WebPart auf SharePoint-Seiten eingebunden."
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Banking Horizon 2030 WebPart",
+        "description": "Stellt das WebPart 'Banking Horizon 2030' bereit.",
+        "id": "b644c704-0f17-45d9-b77c-6aaa5eaff792",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/banking-horizon-2030.sppkg"
+  }
+}

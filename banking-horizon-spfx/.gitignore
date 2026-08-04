@@ -1,0 +1,15 @@
+# Build-Zwischenstände
+node_modules/
+lib/
+temp/
+release/
+dist/
+
+# Aus bank-der-zukunft-2035/dist generierte, optimierte App-Assets
+appassets/
+
+# Debug-Artefakte des Packagings — das fertige .sppkg wird eingecheckt
+sharepoint/**/debug/
+
+*.log
+.heft/

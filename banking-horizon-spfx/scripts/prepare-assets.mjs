@@ -9,11 +9,15 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { execSync } from 'node:child_process'
 import sharp from 'sharp'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(here, '..')
-const SRC = path.resolve(root, '../bank-der-zukunft-2035/dist')
+const APP_DIR = path.resolve(root, '../bank-der-zukunft-2035')
+// dist-spfx: IIFE-Build (klassisches Skript statt ES-Modul), siehe
+// vite.spfx.config.ts — ES-Module scheitern am CORS des Office-365-CDN.
+const SRC = path.join(APP_DIR, 'dist-spfx')
 const OUT = path.join(root, 'appassets', 'app')
 const GENERATED = path.join(root, 'src', 'webparts', 'bankingHorizon2030', 'generated', 'appFiles.ts')
 
@@ -42,6 +46,9 @@ async function walk(dir) {
 }
 
 async function main() {
+  console.log('Baue App (IIFE-Variante) …')
+  execSync('npx vite build --config vite.spfx.config.ts', { cwd: APP_DIR, stdio: 'inherit' })
+
   await fs.rm(path.join(root, 'appassets'), { recursive: true, force: true })
 
   const files = await walk(SRC)
@@ -98,11 +105,14 @@ async function main() {
     console.log(`prepare-assets: ${renames.length} Dateinamen OPC-konform bereinigt (Leerzeichen etc.)`)
   }
 
-  // Entry-Dateinamen aus index.html auslesen
-  const html = await fs.readFile(path.join(SRC, 'index.html'), 'utf8')
-  const js = html.match(/src="\.\/(assets\/[^"]+\.js)"/)?.[1]
-  const css = html.match(/href="\.\/(assets\/[^"]+\.css)"/)?.[1]
-  if (!js || !css) throw new Error('Entry-JS/CSS in dist/index.html nicht gefunden')
+  // Entry-Dateien ermitteln: fester JS-Name aus vite.spfx.config.ts,
+  // die (einzige, cssCodeSplit:false) CSS-Datei per Verzeichnis-Scan.
+  const js = 'assets/app.js'
+  const assetFiles = await fs.readdir(path.join(OUT, 'assets'))
+  const cssFiles = assetFiles.filter((f) => f.endsWith('.css'))
+  if (cssFiles.length !== 1) throw new Error(`Erwartet genau eine CSS-Datei, gefunden: ${cssFiles.join(', ') || 'keine'}`)
+  const css = `assets/${cssFiles[0]}`
+  await fs.access(path.join(OUT, js))
 
   await fs.mkdir(path.dirname(GENERATED), { recursive: true })
   await fs.writeFile(

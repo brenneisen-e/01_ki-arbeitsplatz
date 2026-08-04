@@ -163,6 +163,22 @@ type BankExplorerProps = {
   api?: ExperienceApi
 }
 
+/** Plaza-Sprites: transparente Fußgänger-Loops (VP9-Alpha-WebM) über dem
+ *  Strukturbild-Still. bottom/height in % des Kamera-Rahmens (Tiefe), dur =
+ *  Sekunden für eine Plaza-Querung, delay negativ = versetzter Start. */
+const PLAZA_SPRITES: Array<{
+  file: string
+  dir: 'l' | 'r'
+  bottom: string
+  height: string
+  dur: number
+  delay: number
+}> = [
+  { file: 'sprite-frau.webm', dir: 'r', bottom: '0.5%', height: '17%', dur: 58, delay: -12 },
+  { file: 'sprite-mann.webm', dir: 'l', bottom: '2.6%', height: '15%', dur: 70, delay: -44 },
+  { file: 'sprite-jung.webm', dir: 'r', bottom: '4.4%', height: '13%', dur: 48, delay: -30 },
+]
+
 export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerProps): React.ReactElement {
   const rootRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -210,11 +226,18 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   }, [lang, edits])
   const chapters = useMemo(() => api.getChapters(lang), [api, lang])
   const masterImage = useMemo(() => api.getMasterImage(lang), [api, lang])
-  // Video-Loop nur für das Standard-Strukturbild (andere Instanzen: Standbild).
-  const masterLoopSrc = masterImage.src.includes('Strukturbild')
-    ? `${import.meta.env.BASE_URL}videos/Strukturbild-Loop.mp4`
-    : null
-  const [loopReady, setLoopReady] = useState(false)
+  // Plaza-Sprites (transparente Video-Loops einzelner Fußgänger) nur für das
+  // Standard-Strukturbild — das Still bleibt in voller Schärfe, nur die
+  // Personen bewegen sich. Braucht VP9/WebM (Alpha-Kanal); Safari o. ä. ohne
+  // Support bekommt einfach das unbewegte Bild.
+  const spritesEnabled = masterImage.src.includes('Strukturbild')
+  const spriteOk = useMemo(() => {
+    try {
+      return document.createElement('video').canPlayType('video/webm; codecs="vp9"') !== ''
+    } catch {
+      return false
+    }
+  }, [])
   const activeChapter = useMemo(() => api.getChapter(activeId, lang), [api, activeId, lang])
   const isOverview = activeChapter === null
 
@@ -423,29 +446,32 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             caption={t.masterCaption}
           />
 
-          {/* Belebtes Strukturbild: 16:9-Veo-Loop über dem Standbild. Der 3:2-
-              Rahmen schneidet die (gespiegelten) Seitenränder des Videos per
-              object-fit: cover exakt weg — die Klick-Zonen bleiben pixelgenau
-              ausgerichtet. Bleibt unsichtbar, bis das Video wirklich spielt;
-              fehlt die Datei oder ist Reduced Motion aktiv, bleibt das Still. */}
-          {masterLoopSrc && !reducedMotion && (
-            <video
-              className={styles.masterLoop}
-              data-ready={loopReady || undefined}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              aria-hidden
-              onPlaying={() => setLoopReady(true)}
-              onError={() => setLoopReady(false)}
-            >
-              {/* MP4/H.264 zuerst (kleiner, überall außer Codec-freien Builds),
-                  WebM/VP9 als Fallback für Browser ohne H.264. */}
-              <source src={masterLoopSrc} type="video/mp4" />
-              <source src={masterLoopSrc.replace(/\.mp4$/, '.webm')} type="video/webm" />
-            </video>
+          {/* Belebtes Strukturbild über Plaza-Sprites: das Still bleibt in
+              voller Auflösung, einzelne Fußgänger (transparente VP9-WebM-
+              Loops) laufen per CSS-Animation in unterschiedlichen Tiefen und
+              Geschwindigkeiten über den Vorplatz. pointer-events: none — die
+              Klick-Zonen bleiben unberührt. */}
+          {spritesEnabled && spriteOk && !reducedMotion && (
+            <div className={styles.spriteLayer} aria-hidden>
+              {PLAZA_SPRITES.map((sp) => (
+                <video
+                  key={sp.file}
+                  className={`${styles.walker} ${sp.dir === 'l' ? styles.walkLeft : styles.walkRight}`}
+                  style={{
+                    bottom: sp.bottom,
+                    height: sp.height,
+                    animationDuration: `${sp.dur}s`,
+                    animationDelay: `${sp.delay}s`,
+                  }}
+                  src={`${import.meta.env.BASE_URL}videos/${sp.file}`}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+              ))}
+            </div>
           )}
 
           {isOverview && (

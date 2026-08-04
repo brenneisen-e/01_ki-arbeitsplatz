@@ -38,23 +38,54 @@
 }
 
 /* HOVER-/KLICK-ZONEN. Liegen IN der Camera -- mit dem Bild ausgerichtet. */
-/* Belebtes Strukturbild (Veo-Loop). 16:9-Video im 3:2-Rahmen: object-fit
-   cover schneidet die gepolsterten Seitenränder weg, der sichtbare Ausschnitt
-   deckt sich exakt mit dem Standbild darunter. Erst sichtbar, wenn es spielt. */
-.masterLoop {
+/* Plaza-Sprites: transparente Fußgänger-Videos, die per CSS über den
+   Vorplatz des (scharfen) Strukturbild-Stills laufen. Der Layer fängt keine
+   Events ab — die Klick-Zonen darüber bleiben unberührt. */
+.spriteLayer {
   position: absolute;
   inset: 0;
   z-index: 1;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  overflow: hidden;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.9s ease;
 }
 
-.masterLoop[data-ready] {
-  opacity: 1;
+.walker {
+  position: absolute;
+  left: 0;
+  width: auto;
+  filter: drop-shadow(0 0.4vh 0.5vh rgba(20, 24, 18, 0.35));
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.walkRight {
+  animation-name: bxWalkRight;
+}
+
+.walkLeft {
+  animation-name: bxWalkLeft;
+}
+
+/* Querung in Container-Breiten: translateX in cqw wäre ideal, aber der
+   Kamera-Rahmen ist kein Container — daher über left+eigene Breite:
+   Start knapp links außerhalb, Ende knapp rechts außerhalb. */
+@keyframes bxWalkRight {
+  from {
+    left: -12%;
+  }
+  to {
+    left: 104%;
+  }
+}
+
+@keyframes bxWalkLeft {
+  from {
+    left: 104%;
+  }
+  to {
+    left: -12%;
+  }
 }
 
 .zones {

@@ -210,6 +210,11 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   }, [lang, edits])
   const chapters = useMemo(() => api.getChapters(lang), [api, lang])
   const masterImage = useMemo(() => api.getMasterImage(lang), [api, lang])
+  // Video-Loop nur für das Standard-Strukturbild (andere Instanzen: Standbild).
+  const masterLoopSrc = masterImage.src.includes('Strukturbild')
+    ? `${import.meta.env.BASE_URL}videos/Strukturbild-Loop.mp4`
+    : null
+  const [loopReady, setLoopReady] = useState(false)
   const activeChapter = useMemo(() => api.getChapter(activeId, lang), [api, activeId, lang])
   const isOverview = activeChapter === null
 
@@ -417,6 +422,27 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             label={t.masterLabel}
             caption={t.masterCaption}
           />
+
+          {/* Belebtes Strukturbild: 16:9-Veo-Loop über dem Standbild. Der 3:2-
+              Rahmen schneidet die (gespiegelten) Seitenränder des Videos per
+              object-fit: cover exakt weg — die Klick-Zonen bleiben pixelgenau
+              ausgerichtet. Bleibt unsichtbar, bis das Video wirklich spielt;
+              fehlt die Datei oder ist Reduced Motion aktiv, bleibt das Still. */}
+          {masterLoopSrc && !reducedMotion && (
+            <video
+              className={styles.masterLoop}
+              data-ready={loopReady || undefined}
+              src={masterLoopSrc}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-hidden
+              onPlaying={() => setLoopReady(true)}
+              onError={() => setLoopReady(false)}
+            />
+          )}
 
           {isOverview && (
             <div className={styles.zones}>

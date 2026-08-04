@@ -38,6 +38,25 @@
 }
 
 /* HOVER-/KLICK-ZONEN. Liegen IN der Camera -- mit dem Bild ausgerichtet. */
+/* Belebtes Strukturbild (Veo-Loop). 16:9-Video im 3:2-Rahmen: object-fit
+   cover schneidet die gepolsterten Seitenränder weg, der sichtbare Ausschnitt
+   deckt sich exakt mit dem Standbild darunter. Erst sichtbar, wenn es spielt. */
+.masterLoop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.masterLoop[data-ready] {
+  opacity: 1;
+}
+
 .zones {
   position: absolute;
   inset: 0;

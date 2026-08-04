@@ -61,6 +61,8 @@ npm run package
 2. `gulp bundle --ship` — baut das WebPart-Bundle.
 3. `scripts/copy-assets-to-deploy.mjs` — legt die App-Assets ins Deploy-Verzeichnis.
 4. `gulp package-solution --ship` — erzeugt das `.sppkg` inklusive ClientSideAssets.
+5. `scripts/strip-dir-entries.mjs` — entfernt Ordner-Einträge aus dem Zip; OPC-Part-URIs
+   dürfen nicht mit `/` enden, sonst lehnt SharePoint das Paket als ungültig ab.
 
 Nach einem neuen Build der App (`cd ../bank-der-zukunft-2035 && npm run build`)
 einfach `npm run package` erneut ausführen und das aktualisierte `.sppkg`

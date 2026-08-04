@@ -99,23 +99,54 @@ export default class BankingHorizon2030WebPart extends BaseClientSideWebPart<IBa
     // Initiales about:blank-load ignorieren; unser Dokument hat #root
     if (!doc || !doc.body || !doc.getElementById('root')) {
       if (!doc) {
-        this._showError(status, 'Kein Zugriff auf das iframe-Dokument (Browser-/CSP-Einschränkung).', appBase);
+        this._showError(status, ['Kein Zugriff auf das iframe-Dokument (Browser-/CSP-Einschränkung).'], appBase);
       }
       return;
     }
 
+    // Fehler nur SAMMELN — angezeigt wird erst, wenn die App wirklich nicht
+    // startet (script.onerror oder Watchdog-Timeout). Ein einzelner uncaught
+    // Error muss den Start nicht verhindern; mountet die App trotzdem,
+    // landen die Details nur in der Konsole.
+    const problems: string[] = [];
     const win: Window | null = iframe.contentWindow;
     if (win) {
+      // In srcdoc-iframes (about:srcdoc) werfen history.pushState/replaceState
+      // SecurityErrors (die App nutzt sie für Hash-Deep-Links, z. B.
+      // BankExplorer). Hier in No-Throw-Wrapper einpacken — Deep-Links gibt es
+      // innerhalb von SharePoint ohnehin nicht.
+      try {
+        const hist: History = win.history;
+        const wrapHistory = (name: 'replaceState' | 'pushState'): void => {
+          const original: (data: unknown, unused: string, url?: string | null) => void =
+            hist[name].bind(hist);
+          Object.defineProperty(hist, name, {
+            value: (data: unknown, unused: string, url?: string | null): void => {
+              try {
+                original(data, unused, url);
+              } catch { /* about:srcdoc erlaubt keine URL-Änderung — ignorieren */ }
+            }
+          });
+        };
+        wrapHistory('replaceState');
+        wrapHistory('pushState');
+      } catch { /* history nicht überschreibbar — App-Fehler werden gesammelt */ }
       win.addEventListener('error', (e: ErrorEvent) => {
-        if (e && e.message) {
-          this._showError(status, e.message, appBase);
-        }
+        const parts: string[] = [];
+        if (e.message) { parts.push(e.message); }
+        if (e.filename) { parts.push(`${e.filename}:${e.lineno}:${e.colno}`); }
+        const err: Error | undefined = e.error as Error | undefined;
+        if (err && err.stack) { parts.push(String(err.stack).slice(0, 500)); }
+        problems.push(parts.join(' — ') || 'Unbekannter Fehler (leere Fehlermeldung)');
+      });
+      win.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
+        problems.push(`Unbehandelte Promise-Rejection: ${String(e.reason).slice(0, 300)}`);
       });
     }
 
     const script: HTMLScriptElement = doc.createElement('script');
     script.src = `${appBase}${APP_ENTRY_JS}`;
-    script.onerror = () => this._showError(status, `App-Bundle nicht erreichbar: ${script.src}`, appBase);
+    script.onerror = () => this._showError(status, [`App-Bundle nicht erreichbar: ${script.src}`], appBase);
     doc.body.appendChild(script);
 
     let tries: number = 0;
@@ -136,27 +167,43 @@ export default class BankingHorizon2030WebPart extends BaseClientSideWebPart<IBa
         clearInterval(this._watchdog);
         this._watchdog = undefined;
         status.style.display = 'none';
+        if (problems.length > 0) {
+          // eslint-disable-next-line no-console
+          console.warn(`[BankingHorizon2030] App läuft, aber es gab uncaught Errors:\n${problems.join('\n')}`);
+        }
       } else if (++tries > 150) {
         clearInterval(this._watchdog);
         this._watchdog = undefined;
-        this._showError(status, 'Zeitüberschreitung beim Start der App (Details: F12-Konsole).', appBase);
+        const details: string[] = problems.length > 0
+          ? problems.slice(0, 3)
+          : ['Zeitüberschreitung beim Start der App, keine Fehlerdetails erfasst (F12-Konsole prüfen).'];
+        this._showError(status, details, appBase);
       }
     }, 200);
   }
 
-  private _showError(status: HTMLDivElement, message: string, appBase: string): void {
+  private _showError(status: HTMLDivElement, messages: string[], appBase: string): void {
     status.innerHTML = '';
+    const inner: HTMLDivElement = document.createElement('div');
+    inner.style.maxWidth = '1100px';
     const strong: HTMLElement = document.createElement('strong');
     strong.textContent = `Banking Horizon 2030 (SPFx v${APP_VERSION}) konnte nicht geladen werden.`;
-    const msg: HTMLDivElement = document.createElement('div');
-    msg.textContent = message;
+    inner.appendChild(strong);
+    for (const message of messages) {
+      const msg: HTMLDivElement = document.createElement('div');
+      msg.textContent = message;
+      msg.style.marginTop = '10px';
+      msg.style.wordBreak = 'break-word';
+      msg.style.whiteSpace = 'pre-wrap';
+      msg.style.textAlign = 'left';
+      msg.style.fontFamily = 'monospace';
+      msg.style.fontSize = '12px';
+      inner.appendChild(msg);
+    }
     const base: HTMLDivElement = document.createElement('div');
     base.textContent = `Asset-Basis: ${appBase}`;
     base.style.opacity = '0.7';
     base.style.marginTop = '12px';
-    const inner: HTMLDivElement = document.createElement('div');
-    inner.appendChild(strong);
-    inner.appendChild(msg);
     inner.appendChild(base);
     status.appendChild(inner);
     status.style.display = 'flex';

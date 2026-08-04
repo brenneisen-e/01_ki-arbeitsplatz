@@ -3,4 +3,4 @@
 // config/package-solution.json (solution.version und features[*].version,
 // vierstellig "x.y.0.0") erhöht werden — mindestens die MINOR-Stelle,
 // sonst liefert SharePoint teils das alte Bundle weiter aus.
-export const APP_VERSION: string = '1.2.0';
+export const APP_VERSION: string = '1.3.0';

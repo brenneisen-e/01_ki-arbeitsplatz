@@ -170,6 +170,12 @@ export type Chapter = {
   /** Ein bis mehrere Hypothesen (i. d. R. drei; Kapitel mit Zusatz-Hypothesen mehr). */
   hypotheses: Hypothesis[]
   activity: Activity
+  /**
+   * Teaser-Kapitel: Es wird NUR die Einstiegsbühne gezeigt (keine Hypothesen,
+   * keine Aktivität, keine Summary) — der Raum wird kundenspezifisch bei Bedarf
+   * gestaltet. Auch aus Management-Summary-Übersicht und Excel-Export ausgenommen.
+   */
+  teaserOnly?: boolean
 }
 
 // ─── Roh-Typen (zweisprachig). Werden über `localize*` in die obigen flachen
@@ -215,6 +221,7 @@ export type RawChapter = {
   businessCase: L
   hypotheses: RawHypothesis[]
   activity: RawActivity
+  teaserOnly?: boolean
 }
 
 // Live-Demo des KI-Vertriebsarbeitsplatzes (bereits deployt). Wird im
@@ -287,8 +294,8 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 1_3.png',
           alt: {
-            de: 'Status Quo: Kunde kontaktiert die Bank und wartet auf Reaktion. 2030: autonomer KI-Agent erkennt ein Ereignis früh und handelt, der Kunde gibt frei.',
-            en: 'Status quo: a customer contacts the bank and waits for a response. 2030: an autonomous AI agent detects an event early and acts, with the customer giving approval.',
+            de: 'Status Quo: Kunde hängt in der Warteschleife der Bank und wartet auf Reaktion. 2030: Kunde läuft an einer zu verkaufenden Immobilie vorbei — der KI-Agent hat proaktiv bereits eine Finanzierung vorbereitet, der Kunde gibt nur noch frei.',
+            en: 'Status quo: a customer is stuck in the bank’s hold loop waiting for a response. 2030: the customer walks past a property for sale — the AI agent has proactively prepared a financing proposal, and the customer only approves.',
           },
         },
         statusQuo: {
@@ -1021,6 +1028,10 @@ const RAW_CHAPTERS: RawChapter[] = [
   {
     id: 'projekt',
     kapitel: '07',
+    // Teaser-Kapitel: nur die Einstiegsbühne wird gezeigt — der Produktraum
+    // wird kundenspezifisch bei Bedarf gestaltet. Hypothesen/Aktivität bleiben
+    // als Material im Datenbestand, werden aber nirgends mehr gerendert.
+    teaserOnly: true,
     label: { de: 'Produkte & Innovation', en: 'Products & Innovation' },
     ort: { de: '3. OG rechts (Projektraum)', en: '3rd floor right (project room)' },
     keyObject: 'Whiteboard-Wand mit Produkt-Mockups',
@@ -1133,8 +1144,8 @@ const RAW_CHAPTERS: RawChapter[] = [
         image: {
           src: './images/Kapitel 9_1.png',
           alt: {
-            de: 'Status Quo: Vorstand entscheidet in einer Sitzung anhand gedruckter Quartalsberichte und Rückspiegel-Kennzahlen. 2030: Vorstand steuert live an einem großen Governance-Cockpit mit Echtzeit-Kennzahlen und KI-simulierten Szenarien.',
-            en: 'Status quo: the board decides in a meeting based on printed quarterly reports and rear-view metrics. 2030: the board steers live at a large governance cockpit with real-time metrics and AI-simulated scenarios.',
+            de: 'Status Quo: Vorstand entscheidet in einer Sitzung anhand gedruckter Quartalsberichte und Rückspiegel-Kennzahlen. 2030: Vorstand steht in einem immersiven Datenraum — kein Konferenztisch — und steuert live über eine raumhohe Cockpit-Wand mit Echtzeit-Kennzahlen und KI-simulierten Szenarien.',
+            en: 'Status quo: the board decides in a meeting based on printed quarterly reports and rear-view metrics. 2030: the board stands in an immersive data room — no conference table — steering live via a floor-to-ceiling cockpit wall with real-time metrics and AI-simulated scenarios.',
           },
         },
         statusQuo: {
@@ -1293,11 +1304,17 @@ function localizeChapter(c: RawChapter, lang: Lang): Chapter {
     businessCase: pick(c.businessCase, lang),
     hypotheses: c.hypotheses.map((h) => localizeHypothesis(h, lang)),
     activity: localizeActivity(c.activity, lang),
+    ...(c.teaserOnly ? { teaserOnly: true } : {}),
   }
 }
 
 /** Sprachunabhängige Liste der Kapitel-IDs (z. B. zur Navigations-Validierung). */
 export const CHAPTER_IDS: ChapterId[] = RAW_CHAPTERS.map((c) => c.id)
+
+/** Teaser-Kapitel (nur Einstiegsbühne)? Sprachunabhängig, z. B. für Init-Logik. */
+export function isTeaserChapter(id: ChapterId | null): boolean {
+  return !!id && RAW_CHAPTERS.find((c) => c.id === id)?.teaserOnly === true
+}
 
 /** Map Kapitel-Nummer (z. B. '02') → ChapterId (z. B. 'vertrieb') für Deep-Links. */
 export const CHAPTER_NUMBERS: Record<string, ChapterId> = Object.fromEntries(

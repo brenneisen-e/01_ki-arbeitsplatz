@@ -100,7 +100,9 @@ export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<
   wb.creator = 'Banking Horizon 2030'
   wb.created = new Date()
 
-  const chapters = getChapters(lang)
+  // Teaser-Kapitel (nur Einstiegsbühne, z. B. Produktraum) nicht exportieren —
+  // sie tragen keine Hypothesen im Tool und werden kundenspezifisch gestaltet.
+  const chapters = getChapters(lang).filter((c) => !c.teaserOnly)
   const eff = (chapterId: string, step: number, field: EditField, base: string) =>
     edits.texts[textKey(chapterId, step, lang, field)] ?? base
 

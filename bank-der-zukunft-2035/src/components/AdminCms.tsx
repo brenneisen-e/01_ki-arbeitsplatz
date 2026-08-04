@@ -15,6 +15,7 @@ import { getChapters, type Chapter } from '../data/chapters'
 import { SUMMARY_BULLETS } from '../data/summaryBullets'
 import { EINSTIEG, hasEinstieg } from '../data/einstieg'
 import { OFFERING_IMAGE_SRC, OFFERING_CONTACTS } from '../data/offering'
+import { DILEMMA_PHOTOS } from '../data/dilemma'
 import {
   useChapterEdits,
   textKey,
@@ -89,6 +90,9 @@ const STR = {
     noBullets: 'Für dieses Kapitel sind keine Kernaussagen hinterlegt.',
     transformationHint:
       'Dieses Kapitel zeigt im Tool das Deloitte-Offering. Die folgenden Felder betreffen die Datengrundlage (u. a. Excel-Export).',
+    teaserHint:
+      'Teaser-Kapitel: Im Tool wird nur die Einstiegsbühne gezeigt — der Raum wird kundenspezifisch bei Bedarf gestaltet. Entsprechend sind hier nur die Einstiegs-Texte editierbar.',
+    dilemmaPhoto: 'Anrufer-Foto Station',
   },
   en: {
     title: 'Editing area',
@@ -140,6 +144,9 @@ const STR = {
     noBullets: 'No key takeaways defined for this chapter.',
     transformationHint:
       'In the tool this chapter shows the Deloitte offering. The fields below concern the underlying data (e.g. Excel export).',
+    teaserHint:
+      'Teaser chapter: the tool shows only the entry stage — the room is designed client-specifically on demand. Accordingly, only the entry texts are editable here.',
+    dilemmaPhoto: 'Caller photo, station',
   },
 } as const
 
@@ -269,6 +276,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
             {chapter.id === 'transformation' && (
               <p className={styles.hint}>{t.transformationHint}</p>
             )}
+            {chapter.teaserOnly && <p className={styles.hint}>{t.teaserHint}</p>}
 
             {einstieg && (
               <>
@@ -350,7 +358,7 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
               </>
             )}
 
-            {chapter.id !== 'transformation' && (
+            {chapter.id !== 'transformation' && !chapter.teaserOnly && (
               <>
             <h2 className={styles.section}>{t.hypotheses}</h2>
             <p className={styles.sectionHint}>{t.hHypo}</p>
@@ -436,6 +444,18 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
                 resetKey={resetKey}
                 t={t}
               />
+              {/* Kredit-Dilemma (Kapitel 06): Fotos der vier Telefon-Stationen. */}
+              {chapter.id === 'compliance' &&
+                DILEMMA_PHOTOS.map((p, i) => (
+                  <ImageField
+                    key={p.src}
+                    src={p.src}
+                    edits={edits}
+                    setText={setText}
+                    resetKey={resetKey}
+                    t={{ ...t, image: `${t.dilemmaPhoto} ${i + 1} — ${p.caller[lang]}` }}
+                  />
+                ))}
             </div>
 
             <h2 className={styles.section}>{t.bullets}</h2>
@@ -464,21 +484,26 @@ export function AdminCms({ onClose }: Props): React.ReactElement {
               </>
             )}
 
-            <h2 className={styles.section}>{t.mgmtOverview}</h2>
-            <p className={styles.sectionHint}>{t.hMgmtOverview}</p>
-            <div className={styles.card}>
-              <Field
-                label={t.vision}
-                original={chapter.vision}
-                rich
-                editKey={visionKey(chapter.id, lang)}
-                edits={edits}
-                setText={setText}
-                resetKey={resetKey}
-                t={t}
-                rows={4}
-              />
-            </div>
+            {/* Teaser-Kapitel sind nicht im Summary-Magazin — Vision entfällt. */}
+            {!chapter.teaserOnly && (
+              <>
+                <h2 className={styles.section}>{t.mgmtOverview}</h2>
+                <p className={styles.sectionHint}>{t.hMgmtOverview}</p>
+                <div className={styles.card}>
+                  <Field
+                    label={t.vision}
+                    original={chapter.vision}
+                    rich
+                    editKey={visionKey(chapter.id, lang)}
+                    edits={edits}
+                    setText={setText}
+                    resetKey={resetKey}
+                    t={t}
+                    rows={4}
+                  />
+                </div>
+              </>
+            )}
 
             <div className={styles.pager}>
               <button

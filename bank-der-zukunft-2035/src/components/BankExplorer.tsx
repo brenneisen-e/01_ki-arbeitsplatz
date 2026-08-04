@@ -34,6 +34,7 @@ import { parseHash, formatHash } from '../deeplink'
 import {
   CHAPTER_IDS,
   DEFAULT_API,
+  isTeaserChapter,
   stepCountForChapter,
   type Chapter,
   type ChapterId,
@@ -171,8 +172,11 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
 
   // Gemerkten Navigationsstand einmalig laden (Refresh-Wiederherstellung).
   const [initialNav] = useState(loadNav)
+  // Teaser-Kapitel haben nur die Einstiegsbühne: Schritt auf 0 klemmen und die
+  // Bühne beim Wiederherstellen sofort öffnen (es gibt keinen Reader dahinter).
+  const initialTeaser = isTeaserChapter(initialNav.chapter)
   const [activeId, setActiveId] = useState<ChapterId | null>(initialNav.chapter)
-  const [step, setStep] = useState(initialNav.step)
+  const [step, setStep] = useState(initialTeaser ? 0 : initialNav.step)
   const [hoverId, setHoverId] = useState<ChapterId | null>(null)
   const [handoff, setHandoff] = useState<Handoff | null>(null)
   // Reader erst NACH dem Kameraflug zeigen, damit der Zoom sichtbar bleibt —
@@ -185,8 +189,9 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   // Excel-Export: Ladezustand (edits/lang/Handler weiter unten, nach useLang).
   const [exporting, setExporting] = useState(false)
   // Einstiegsbühne (Raum groß + Heute/Morgen) beim frischen Öffnen eines Raum-
-  // Kapitels, bevor der Reader mit den Hypothesen übernimmt.
-  const [einstiegOpen, setEinstiegOpen] = useState(false)
+  // Kapitels, bevor der Reader mit den Hypothesen übernimmt. Bei einem
+  // wiederhergestellten Teaser-Kapitel sofort offen (einzige Ansicht).
+  const [einstiegOpen, setEinstiegOpen] = useState(initialTeaser)
 
   const reducedMotion = useReducedMotion()
   const { lang } = useLang()
@@ -310,14 +315,18 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
       if (!chapter) return
       setHoverId(null)
       setActiveId(id)
-      setStep(nextStep)
+      // Teaser-Kapitel (z. B. Produktraum): es gibt nur die Einstiegsbühne —
+      // Deep-Links auf spätere Schritte werden auf 0 geklemmt.
+      const teaser = chapter.teaserOnly === true
+      const effStep = teaser ? 0 : nextStep
+      setStep(effStep)
       setReaderShown(false)
       setEinstiegOpen(false)
       animateTo(chapter, opts)
       if (flyTimeoutRef.current) window.clearTimeout(flyTimeoutRef.current)
       // Frisches Öffnen eines Raum-Kapitels (Schritt 0): zuerst die Einstiegs-
       // bühne (Raum groß), danach per CTA in den Reader.
-      const wantEinstieg = nextStep === 0 && hasEinstieg(id)
+      const wantEinstieg = (effStep === 0 || teaser) && hasEinstieg(id)
       // Die Einstiegsbühne erst einblenden, wenn der Kameraflug fast steht
       // (~92 %) — sonst faded das Raumbild über eine noch bewegte Kamera und es
       // wirkt abgehackt. Der reine Reader darf früher (~60 %) erscheinen.
@@ -546,8 +555,10 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
         </button>
 
         {/* Kapitel-Reader (Hypothesen → Aktivität) — erst nach dem Kameraflug.
-            Das Transformationskapitel zeigt stattdessen das Deloitte-Offering. */}
-        {activeChapter && readerShown && !einstiegOpen && (
+            Das Transformationskapitel zeigt stattdessen das Deloitte-Offering.
+            Teaser-Kapitel (Produktraum) haben keinen Reader — nur die
+            Einstiegsbühne, danach zurück zur Übersicht. */}
+        {activeChapter && readerShown && !einstiegOpen && !activeChapter.teaserOnly && (
           activeChapter.id === 'transformation' ? (
             <TransformationOffering chapter={activeChapter} onBack={handleBack} />
           ) : (
@@ -566,7 +577,11 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
         {activeChapter && einstiegOpen && (
           <EinstiegsBuehne
             chapter={activeChapter}
-            onWeiter={() => setEinstiegOpen(false)}
+            onWeiter={
+              activeChapter.teaserOnly
+                ? handleBack
+                : () => setEinstiegOpen(false)
+            }
           />
         )}
 

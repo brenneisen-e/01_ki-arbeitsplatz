@@ -161,7 +161,9 @@ export function ManagementSummary({
   const reducedMotion = useReducedMotion()
   const { lang } = useLang()
   const t = STR[lang]
-  const chapters = getChapters(lang)
+  // Teaser-Kapitel (nur Einstiegsbühne, z. B. Produktraum) erscheinen nicht
+  // im Summary-Magazin — sie werden kundenspezifisch bei Bedarf gestaltet.
+  const chapters = getChapters(lang).filter((c) => !c.teaserOnly)
   const masterImage = getMasterImage(lang)
   const { edits, setText, saveToServer, syncState } = useChapterEdits()
   const [editMode, setEditMode] = useState(readEditMode)

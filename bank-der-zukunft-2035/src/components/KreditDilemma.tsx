@@ -11,16 +11,18 @@
  * Zweisprachig (DE/EN): die Delta-Logik der Optionen ist sprachunabhängig
  * (STATION_DELTAS), nur die Texte werden übersetzt.
  *
- * Hinweis für spätere Integration: Echte Videoclips können über
- * `./ch06-clip-<n>.mp4` eingebunden werden — dazu das ClipPlaceholder-Element
- * durch ein <video>-Tag ersetzen.
+ * Je Station wird ein Foto des Anrufers gezeigt (DILEMMA_PHOTOS, Kapitel
+ * 6_Dilemma1–4) — über den Änderungsbereich (CMS) per Upload austauschbar.
  */
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { Phone, Play, ShieldCheck, Gauge, Smile, X, RotateCcw, ArrowRight } from 'lucide-react'
+import { ShieldCheck, Gauge, Smile, X, RotateCcw, ArrowRight } from 'lucide-react'
 import styles from './KreditDilemma.module.css'
+import { ImageSlot } from './ImageSlot'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useLang, type Lang } from '../i18n/LanguageContext'
+import { DILEMMA_PHOTOS } from '../data/dilemma'
+import { useChapterEdits, imageKey } from '../data/chapterEdits'
 
 // ─── Typen ────────────────────────────────────────────────────────────────────
 
@@ -89,8 +91,7 @@ type DilemmaStrings = {
   start: string
   stationProgress: (i: number, total: number) => string
   stationLabel: (i: number, total: number) => string
-  clipCaption: string
-  clipAria: (caller: string) => string
+  photoAlt: (caller: string) => string
   optionsAria: string
   deltaReg: string
   deltaSpeed: string
@@ -129,8 +130,7 @@ const STR: Record<Lang, DilemmaStrings> = {
     start: 'Szenario starten',
     stationProgress: (i, total) => `Station ${i} von ${total}`,
     stationLabel: (i, total) => `Station ${i} / ${total}`,
-    clipCaption: 'Clip-Platzhalter',
-    clipAria: (caller) => `Clip-Platzhalter: ${caller}`,
+    photoAlt: (caller) => `Am Telefon: ${caller}`,
     optionsAria: 'Entscheidungsoptionen',
     deltaReg: 'Konf.',
     deltaSpeed: 'Speed',
@@ -213,8 +213,7 @@ const STR: Record<Lang, DilemmaStrings> = {
     start: 'Start the scenario',
     stationProgress: (i, total) => `Station ${i} of ${total}`,
     stationLabel: (i, total) => `Station ${i} / ${total}`,
-    clipCaption: 'Clip placeholder',
-    clipAria: (caller) => `Clip placeholder: ${caller}`,
+    photoAlt: (caller) => `On the phone: ${caller}`,
     optionsAria: 'Decision options',
     deltaReg: 'Comp.',
     deltaSpeed: 'Speed',
@@ -346,17 +345,12 @@ function StatusBar({
   )
 }
 
-/** Clip-Platzhalter (16:9). Kann später durch <video src="./ch06-clip-<n>.mp4"> ersetzt werden. */
-function ClipPlaceholder({ caller, t }: { caller: string; t: DilemmaStrings }): React.ReactElement {
+/** Anrufer-Foto der Station (16:9). CMS-Override via imageKey(src) möglich;
+ *  fehlt die Datei, zeigt ImageSlot einen ruhigen Platzhalter mit dem Namen. */
+function StationPhoto({ src, caller, t }: { src: string; caller: string; t: DilemmaStrings }): React.ReactElement {
   return (
-    <div className={styles.clip} aria-label={t.clipAria(caller)}>
-      <div className={styles.clipInner}>
-        <div className={styles.clipIconGroup}>
-          <Phone size={22} strokeWidth={1.6} aria-hidden />
-          <Play size={22} strokeWidth={1.6} aria-hidden />
-        </div>
-        <span className={styles.clipCaption}>{t.clipCaption} &middot; {caller}</span>
-      </div>
+    <div className={styles.clip}>
+      <ImageSlot src={src} alt={t.photoAlt(caller)} fit="cover" caption={caller} />
     </div>
   )
 }
@@ -368,6 +362,7 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
   const { lang } = useLang()
   const t = STR[lang]
   const stations = buildStations(t)
+  const { edits } = useChapterEdits()
 
   const [bars, setBars] = useState<Bars>(INITIAL_BARS)
   const [phase, setPhase] = useState<Phase>({ kind: 'briefing' })
@@ -511,8 +506,16 @@ export function KreditDilemma({ onClose }: { onClose: () => void }): React.React
                 <span className={styles.progressLabel}>{t.stationLabel(phase.index + 1, stations.length)}</span>
               </div>
 
-              {/* Clip-Platzhalter */}
-              <ClipPlaceholder caller={currentStation.caller} t={t} />
+              {/* Anrufer-Foto der Station */}
+              <StationPhoto
+                src={
+                  edits.texts[imageKey(DILEMMA_PHOTOS[phase.index]?.src ?? '')] ??
+                  DILEMMA_PHOTOS[phase.index]?.src ??
+                  ''
+                }
+                caller={currentStation.caller}
+                t={t}
+              />
 
               {/* Transkript */}
               <div className={styles.transcriptBox}>

@@ -284,31 +284,12 @@
   border: 1px solid var(--border-soft);
   border-radius: var(--r-md);
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.clipInner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  color: var(--ink-3);
-}
-
-.clipIconGroup {
-  display: flex;
-  gap: 12px;
-  color: var(--ink-3);
-}
-
-.clipCaption {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+/* ImageSlot (Anrufer-Foto bzw. Platzhalter) füllt den 16:9-Rahmen. */
+.clip > * {
+  width: 100%;
+  height: 100%;
 }
 
 /* ─── Transkript ──────────────────────────────────────────────────────────── */

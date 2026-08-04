@@ -169,12 +169,15 @@ type BankExplorerProps = {
  *  enthalten exakt den Kern-Ausschnitt; Position in % des Master-Bilds
  *  (2304×1536). */
 const MASTER_TILES: Array<{ file: string; left: string; top: string; width: string; height: string }> = [
-  { file: 'tile-00.webm', left: '0%', top: '0%', width: '50%', height: '24.349%' },
-  { file: 'tile-01.webm', left: '50%', top: '0%', width: '50%', height: '24.349%' },
-  { file: 'tile-10.webm', left: '0%', top: '24.349%', width: '50%', height: '36.849%' },
-  { file: 'tile-11.webm', left: '50%', top: '24.349%', width: '50%', height: '36.849%' },
-  { file: 'tile-20.webm', left: '0%', top: '61.198%', width: '50%', height: '38.802%' },
-  { file: 'tile-21.webm', left: '50%', top: '61.198%', width: '50%', height: '38.802%' },
+  // Der Aufzugschacht (x 1040–1170 von 2304) bleibt bewusst statisch (Still) —
+  // die Kachel-Crops schließen ihn komplett aus, sonst halluziniert die
+  // Video-Generierung dort zusätzliche Kabinen.
+  { file: 't2-0l.webm', left: '0%', top: '0%', width: '45.139%', height: '24.349%' },
+  { file: 't2-0r.webm', left: '50.781%', top: '0%', width: '49.219%', height: '24.349%' },
+  { file: 't2-1l.webm', left: '0%', top: '24.349%', width: '45.139%', height: '37.630%' },
+  { file: 't2-1r.webm', left: '50.781%', top: '24.349%', width: '49.219%', height: '37.630%' },
+  { file: 't2-2l.webm', left: '0%', top: '61.979%', width: '45.139%', height: '38.021%' },
+  { file: 't2-2r.webm', left: '50.781%', top: '61.979%', width: '49.219%', height: '38.021%' },
 ]
 
 export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerProps): React.ReactElement {

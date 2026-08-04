@@ -432,7 +432,6 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             <video
               className={styles.masterLoop}
               data-ready={loopReady || undefined}
-              src={masterLoopSrc}
               autoPlay
               muted
               loop
@@ -441,7 +440,12 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
               aria-hidden
               onPlaying={() => setLoopReady(true)}
               onError={() => setLoopReady(false)}
-            />
+            >
+              {/* MP4/H.264 zuerst (kleiner, überall außer Codec-freien Builds),
+                  WebM/VP9 als Fallback für Browser ohne H.264. */}
+              <source src={masterLoopSrc} type="video/mp4" />
+              <source src={masterLoopSrc.replace(/\.mp4$/, '.webm')} type="video/webm" />
+            </video>
           )}
 
           {isOverview && (

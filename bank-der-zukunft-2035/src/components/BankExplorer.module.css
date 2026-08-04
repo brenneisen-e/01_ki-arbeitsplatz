@@ -49,43 +49,17 @@
   pointer-events: none;
 }
 
-.walker {
+/* Video-Kacheln: exakt über der jeweiligen Bildregion, weiches Einblenden
+   sobald sie spielen — vorher scheint das scharfe Still durch. */
+.tile {
   position: absolute;
-  left: 0;
-  width: auto;
-  filter: drop-shadow(0 0.4vh 0.5vh rgba(20, 24, 18, 0.35));
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  will-change: transform;
+  object-fit: fill;
+  opacity: 0;
+  transition: opacity 1.1s ease;
 }
 
-.walkRight {
-  animation-name: bxWalkRight;
-}
-
-.walkLeft {
-  animation-name: bxWalkLeft;
-}
-
-/* Querung in Container-Breiten: translateX in cqw wäre ideal, aber der
-   Kamera-Rahmen ist kein Container — daher über left+eigene Breite:
-   Start knapp links außerhalb, Ende knapp rechts außerhalb. */
-@keyframes bxWalkRight {
-  from {
-    left: -12%;
-  }
-  to {
-    left: 104%;
-  }
-}
-
-@keyframes bxWalkLeft {
-  from {
-    left: 104%;
-  }
-  to {
-    left: -12%;
-  }
+.tile[data-ready] {
+  opacity: 1;
 }
 
 .zones {

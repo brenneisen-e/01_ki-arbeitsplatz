@@ -163,20 +163,18 @@ type BankExplorerProps = {
   api?: ExperienceApi
 }
 
-/** Plaza-Sprites: transparente Fußgänger-Loops (VP9-Alpha-WebM) über dem
- *  Strukturbild-Still. bottom/height in % des Kamera-Rahmens (Tiefe), dur =
- *  Sekunden für eine Plaza-Querung, delay negativ = versetzter Start. */
-const PLAZA_SPRITES: Array<{
-  file: string
-  dir: 'l' | 'r'
-  bottom: string
-  height: string
-  dur: number
-  delay: number
-}> = [
-  { file: 'sprite-frau.webm', dir: 'r', bottom: '0.5%', height: '17%', dur: 58, delay: -12 },
-  { file: 'sprite-mann.webm', dir: 'l', bottom: '2.6%', height: '15%', dur: 70, delay: -44 },
-  { file: 'sprite-jung.webm', dir: 'r', bottom: '4.4%', height: '13%', dur: 48, delay: -30 },
+/** Belebtes Strukturbild in 6 Kacheln: je Kachel ein Veo-Loop (1080p für die
+ *  halbe Bildbreite → Schärfe auf Original-Niveau). Die Kachelgrenzen liegen
+ *  auf statischer Architektur (Geschossdecken, Aufzugsmitte), die Videos
+ *  enthalten exakt den Kern-Ausschnitt; Position in % des Master-Bilds
+ *  (2304×1536). */
+const MASTER_TILES: Array<{ file: string; left: string; top: string; width: string; height: string }> = [
+  { file: 'tile-00.webm', left: '0%', top: '0%', width: '50%', height: '24.349%' },
+  { file: 'tile-01.webm', left: '50%', top: '0%', width: '50%', height: '24.349%' },
+  { file: 'tile-10.webm', left: '0%', top: '24.349%', width: '50%', height: '36.849%' },
+  { file: 'tile-11.webm', left: '50%', top: '24.349%', width: '50%', height: '36.849%' },
+  { file: 'tile-20.webm', left: '0%', top: '61.198%', width: '50%', height: '38.802%' },
+  { file: 'tile-21.webm', left: '50%', top: '61.198%', width: '50%', height: '38.802%' },
 ]
 
 export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerProps): React.ReactElement {
@@ -446,29 +444,27 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             caption={t.masterCaption}
           />
 
-          {/* Belebtes Strukturbild über Plaza-Sprites: das Still bleibt in
-              voller Auflösung, einzelne Fußgänger (transparente VP9-WebM-
-              Loops) laufen per CSS-Animation in unterschiedlichen Tiefen und
-              Geschwindigkeiten über den Vorplatz. pointer-events: none — die
-              Klick-Zonen bleiben unberührt. */}
+          {/* Belebtes Strukturbild: 6 Video-Kacheln exakt über ihren Bild-
+              regionen (Grenzen auf statischer Architektur). Jede Kachel
+              blendet erst ein, wenn sie wirklich spielt — bis dahin (und bei
+              Ladefehlern) sieht man das scharfe Still darunter.
+              pointer-events: none — die Klick-Zonen bleiben unberührt. */}
           {spritesEnabled && spriteOk && !reducedMotion && (
             <div className={styles.spriteLayer} aria-hidden>
-              {PLAZA_SPRITES.map((sp) => (
+              {MASTER_TILES.map((tile) => (
                 <video
-                  key={sp.file}
-                  className={`${styles.walker} ${sp.dir === 'l' ? styles.walkLeft : styles.walkRight}`}
-                  style={{
-                    bottom: sp.bottom,
-                    height: sp.height,
-                    animationDuration: `${sp.dur}s`,
-                    animationDelay: `${sp.delay}s`,
-                  }}
-                  src={`${import.meta.env.BASE_URL}videos/${sp.file}`}
+                  key={tile.file}
+                  className={styles.tile}
+                  style={{ left: tile.left, top: tile.top, width: tile.width, height: tile.height }}
+                  src={`${import.meta.env.BASE_URL}videos/${tile.file}`}
                   autoPlay
                   muted
                   loop
                   playsInline
                   preload="auto"
+                  onPlaying={(e) => {
+                    e.currentTarget.dataset.ready = '1'
+                  }}
                 />
               ))}
             </div>

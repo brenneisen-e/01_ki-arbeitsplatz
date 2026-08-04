@@ -25,35 +25,149 @@ export interface IBankingHorizon2030WebPartProps {
 
 export default class BankingHorizon2030WebPart extends BaseClientSideWebPart<IBankingHorizon2030WebPartProps> {
 
+  private _watchdog: number | undefined;
+
   public render(): void {
-    const iframe: HTMLIFrameElement = document.createElement('iframe');
-    iframe.style.width = '100%';
-    iframe.style.border = '0';
-    iframe.style.display = 'block';
-    iframe.style.background = '#0b1410';
-    iframe.style.height = this.properties.fullHeight
+    if (this._watchdog !== undefined) {
+      clearInterval(this._watchdog);
+      this._watchdog = undefined;
+    }
+
+    const height: string = this.properties.fullHeight
       ? 'calc(100vh - 120px)'
       : `${this.properties.fixedHeight || 900}px`;
+
+    const wrap: HTMLDivElement = document.createElement('div');
+    wrap.style.position = 'relative';
+    wrap.style.width = '100%';
+    wrap.style.height = height;
+    wrap.style.background = '#0b1410';
+
+    const iframe: HTMLIFrameElement = document.createElement('iframe');
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = '0';
+    iframe.style.display = 'block';
     iframe.setAttribute('allow', 'fullscreen; clipboard-write');
     iframe.setAttribute('allowfullscreen', 'true');
     iframe.title = 'Banking Horizon 2030';
+    wrap.appendChild(iframe);
+
+    // Host-Badge im WebPart-DOM (außerhalb des iframes): belegt zweifelsfrei,
+    // welches WebPart-Bundle die Seite wirklich ausliefert — der SPFx-Loader
+    // cached aggressiv und serviert nach Updates gern das alte Bundle weiter.
+    const badge: HTMLDivElement = document.createElement('div');
+    badge.textContent = `SPFx v${APP_VERSION}`;
+    badge.style.cssText = 'position:absolute;left:8px;bottom:8px;z-index:20;pointer-events:none;'
+      + 'color:rgba(232,243,209,0.6);background:rgba(11,20,16,0.6);border-radius:4px;'
+      + 'padding:2px 7px;font-family:monospace;font-size:11px';
+    wrap.appendChild(badge);
+
+    // Host-seitiges Status-/Fehlerpanel — funktioniert auch dann, wenn im
+    // iframe gar kein Skript ausgeführt werden kann.
+    const status: HTMLDivElement = document.createElement('div');
+    status.style.cssText = 'position:absolute;inset:0;display:none;align-items:center;'
+      + 'justify-content:center;text-align:center;padding:24px;color:#e8f3d1;'
+      + 'background:#0b1410;font-family:sans-serif;font-size:14px;line-height:1.6;z-index:10';
+    wrap.appendChild(status);
+
+    this.domElement.innerHTML = '';
+    this.domElement.appendChild(wrap);
 
     const externalUrl: string = (this.properties.externalUrl || '').trim();
     if (externalUrl) {
       iframe.src = externalUrl;
-    } else {
-      iframe.srcdoc = this._buildSrcdoc(this._resolveAppBaseUrl());
+      return;
     }
 
-    this.domElement.innerHTML = '';
-    this.domElement.appendChild(iframe);
+    const appBase: string = this._resolveAppBaseUrl();
+    iframe.addEventListener('load', () => this._bootApp(iframe, appBase, status));
+    iframe.srcdoc = this._buildSrcdoc(appBase);
+  }
+
+  /**
+   * Startet die App im iframe: Das App-Skript wird vom Host aus als
+   * <script>-Element ins iframe-Dokument injiziert (das srcdoc selbst ist
+   * bewusst skriptfrei, damit eine etwaige CSP gegen Inline-Skripte nicht
+   * greift), und ein Host-seitiger Watchdog meldet Ladefehler sichtbar.
+   */
+  private _bootApp(iframe: HTMLIFrameElement, appBase: string, status: HTMLDivElement): void {
+    let doc: Document | null = null;
+    try {
+      doc = iframe.contentDocument;
+    } catch { /* Zugriff verweigert — unten behandelt */ }
+    // Initiales about:blank-load ignorieren; unser Dokument hat #root
+    if (!doc || !doc.body || !doc.getElementById('root')) {
+      if (!doc) {
+        this._showError(status, 'Kein Zugriff auf das iframe-Dokument (Browser-/CSP-Einschränkung).', appBase);
+      }
+      return;
+    }
+
+    const win: Window | null = iframe.contentWindow;
+    if (win) {
+      win.addEventListener('error', (e: ErrorEvent) => {
+        if (e && e.message) {
+          this._showError(status, e.message, appBase);
+        }
+      });
+    }
+
+    const script: HTMLScriptElement = doc.createElement('script');
+    script.src = `${appBase}${APP_ENTRY_JS}`;
+    script.onerror = () => this._showError(status, `App-Bundle nicht erreichbar: ${script.src}`, appBase);
+    doc.body.appendChild(script);
+
+    let tries: number = 0;
+    this._watchdog = window.setInterval(() => {
+      let mounted: boolean = false;
+      try {
+        const innerDoc: Document | null = iframe.contentDocument;
+        const root: HTMLElement | null = innerDoc ? innerDoc.getElementById('root') : null;
+        mounted = !!root && root.childElementCount > 0;
+        if (mounted && innerDoc) {
+          const overlay: HTMLElement | null = innerDoc.getElementById('bh-status');
+          if (overlay) {
+            overlay.style.display = 'none';
+          }
+        }
+      } catch { /* iframe kurzzeitig nicht lesbar — weiter versuchen */ }
+      if (mounted) {
+        clearInterval(this._watchdog);
+        this._watchdog = undefined;
+        status.style.display = 'none';
+      } else if (++tries > 150) {
+        clearInterval(this._watchdog);
+        this._watchdog = undefined;
+        this._showError(status, 'Zeitüberschreitung beim Start der App (Details: F12-Konsole).', appBase);
+      }
+    }, 200);
+  }
+
+  private _showError(status: HTMLDivElement, message: string, appBase: string): void {
+    status.innerHTML = '';
+    const strong: HTMLElement = document.createElement('strong');
+    strong.textContent = `Banking Horizon 2030 (SPFx v${APP_VERSION}) konnte nicht geladen werden.`;
+    const msg: HTMLDivElement = document.createElement('div');
+    msg.textContent = message;
+    const base: HTMLDivElement = document.createElement('div');
+    base.textContent = `Asset-Basis: ${appBase}`;
+    base.style.opacity = '0.7';
+    base.style.marginTop = '12px';
+    const inner: HTMLDivElement = document.createElement('div');
+    inner.appendChild(strong);
+    inner.appendChild(msg);
+    inner.appendChild(base);
+    status.appendChild(inner);
+    status.style.display = 'flex';
   }
 
   /**
    * Basis-URL der im Paket mitgelieferten App-Assets. SPFx stellt die
    * Auslieferungs-URL der ClientSideAssets (App-Katalog oder Office-365-CDN)
-   * über die loaderConfig des Komponenten-Manifests bereit; die App selbst
-   * liegt darunter im Unterordner `app/`.
+   * über die loaderConfig des Komponenten-Manifests bereit. Die App-Dateien
+   * liegen flach (versionspräfixiert) direkt auf dieser Wurzelebene —
+   * Unterordner des Pakets werden nicht in jedem Tenant ausgeliefert.
    */
   private _resolveAppBaseUrl(): string {
     const loaderConfig: { internalModuleBaseUrls: string[] } =
@@ -63,28 +177,19 @@ export default class BankingHorizon2030WebPart extends BaseClientSideWebPart<IBa
     if (base && base.lastIndexOf('/') !== base.length - 1) {
       base += '/';
     }
-    return `${base}app/`;
+    return base;
   }
 
   /**
    * Baut das komplette HTML-Dokument der App für das iframe. Der <base>-Tag
    * sorgt dafür, dass alle relativen Pfade der App ('./assets/…', './images/…')
    * gegen die ClientSideAssets-URL aufgelöst werden — exakt so, als würde die
-   * App von ihrem eigenen index.html ausgeliefert. Das App-Bundle ist bewusst
-   * ein klassisches IIFE-Skript (kein ES-Modul): Modul-Skripte werden immer
-   * mit CORS geladen und scheitern, wenn das Office-365-CDN die Assets ohne
-   * CORS-Header ausliefert. Ein Status-Overlay macht Ladefehler sichtbar,
-   * statt einen schwarzen Bildschirm zu hinterlassen.
+   * App von ihrem eigenen index.html ausgeliefert. Das srcdoc ist bewusst
+   * skriptfrei: Das App-Bundle (klassisches IIFE-Skript, kein ES-Modul —
+   * Module scheitern am CORS des Office-365-CDN) wird von _bootApp aus dem
+   * Host injiziert, der auch Ladefehler sichtbar meldet.
    */
   private _buildSrcdoc(appBaseUrl: string): string {
-    const statusScript: string = [
-      'var st=document.getElementById("bh-status");',
-      'function bhFail(msg){if(st){st.innerHTML="<strong>Banking Horizon 2030 konnte nicht geladen werden.</strong><br>"+msg+"<br><br>Asset-Basis: "+document.baseURI;st.style.display="block";}}',
-      'window.addEventListener("error",function(e){if(e&&e.message){bhFail(e.message);}},true);',
-      'var tries=0;var t=setInterval(function(){var r=document.getElementById("root");',
-      'if(r&&r.childElementCount>0){if(st){st.style.display="none";}clearInterval(t);}',
-      'else if(++tries>150){bhFail("Zeitüberschreitung beim Start der App.");clearInterval(t);}},200);'
-    ].join('');
     return [
       '<!doctype html>',
       '<html lang="de">',
@@ -99,8 +204,6 @@ export default class BankingHorizon2030WebPart extends BaseClientSideWebPart<IBa
       '<div id="root"></div>',
       `<div id="bh-status" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:#e8f3d1;background:#0b1410;font-family:sans-serif;font-size:15px;line-height:1.5;z-index:9999">Banking Horizon 2030 wird geladen … (v${APP_VERSION})</div>`,
       `<div style="position:fixed;right:8px;bottom:8px;z-index:10000;pointer-events:none;color:rgba(232,243,209,0.55);background:rgba(11,20,16,0.55);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">v${APP_VERSION}</div>`,
-      `<script>${statusScript}</script>`,
-      `<script src="./${APP_ENTRY_JS}" onerror="bhFail('Bundle nicht erreichbar: ' + this.src)"></script>`,
       '</body>',
       '</html>'
     ].join('');

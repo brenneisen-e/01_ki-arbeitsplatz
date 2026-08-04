@@ -1,10 +1,22 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// prepare-assets — kopiert den Build der App (../bank-der-zukunft-2035/dist)
-// nach ./appassets/app und optimiert dabei große PNGs per Palette-Quantisierung
-// (sharp/libimagequant), damit das fertige .sppkg unter der GitHub-Grenze von
-// 100 MB pro Datei bleibt. Außerdem werden die gehashten Entry-Dateinamen aus
-// dist/index.html ausgelesen und nach src/…/generated/appFiles.ts geschrieben,
-// damit das WebPart sie im iframe-Dokument referenzieren kann.
+// prepare-assets — baut die App (IIFE-Variante, siehe vite.spfx.config.ts),
+// kopiert den Build nach ./appassets/app und optimiert große PNGs per
+// Palette-Quantisierung (sharp/libimagequant), damit das .sppkg unter der
+// GitHub-Grenze von 100 MB pro Datei bleibt.
+//
+// Die Dateien werden dabei FLACH und mit Versions-Präfix abgelegt
+// (z. B. images/rooms/it.png → v120_images_rooms_it.png):
+//   · flach, weil im Ziel-Tenant nachweislich nur Dateien auf Wurzelebene der
+//     ClientSideAssets-Bibliothek ausgeliefert werden (Unterordner des Pakets
+//     kamen dort nie an → 404 → Blackscreen),
+//   · versionspräfixiert, weil SharePoint beim Solution-Update die Assets
+//     teils nicht neu extrahiert — neue Dateinamen pro Release umgehen jeden
+//     Stale-Zustand,
+//   · OPC-konform bereinigt (keine Leerzeichen etc.), sonst lehnt SharePoint
+//     das Paket als "Invalid App package" ab.
+// Alle Referenzen (statische Pfade, gehashte new-URL()-Assets, dynamische
+// Verzeichnis-Präfixe wie "./images/rooms/"+id) werden in den Text-Assets in
+// einem Single-Pass-Rewrite passend umgeschrieben.
 // ─────────────────────────────────────────────────────────────────────────────
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
@@ -15,8 +27,6 @@ import sharp from 'sharp'
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(here, '..')
 const APP_DIR = path.resolve(root, '../bank-der-zukunft-2035')
-// dist-spfx: IIFE-Build (klassisches Skript statt ES-Modul), siehe
-// vite.spfx.config.ts — ES-Module scheitern am CORS des Office-365-CDN.
 const SRC = path.join(APP_DIR, 'dist-spfx')
 const OUT = path.join(root, 'appassets', 'app')
 const GENERATED = path.join(root, 'src', 'webparts', 'bankingHorizon2030', 'generated', 'appFiles.ts')
@@ -27,12 +37,7 @@ const SKIP = new Set(['plaza-video.mp4', 'index.html'])
 // PNGs oberhalb dieser Größe werden quantisiert
 const PNG_THRESHOLD = 200 * 1024
 
-// Das .sppkg ist ein OPC-Paket (Open Packaging Conventions): Part-URIs dürfen
-// keine Leerzeichen o. ä. enthalten, sonst lehnt SharePoint das Paket als
-// "Invalid App package" ab. Dateinamen werden deshalb segmentweise bereinigt
-// und alle Referenzen darauf in Text-Assets (JS/CSS/HTML) mit umgeschrieben.
 const sanitizeSegment = (s) => s.replace(/[^A-Za-z0-9._-]/g, '_')
-const sanitizeRel = (relPosix) => relPosix.split('/').map(sanitizeSegment).join('/')
 
 async function walk(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true })
@@ -45,25 +50,44 @@ async function walk(dir) {
   return files
 }
 
+const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 async function main() {
+  const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8'))
+  const prefix = 'v' + pkg.version.split('.').join('') + '_'
+  console.log(`prepare-assets: Version ${pkg.version} → Datei-Präfix "${prefix}"`)
+
   console.log('Baue App (IIFE-Variante) …')
   execSync('npx vite build --config vite.spfx.config.ts', { cwd: APP_DIR, stdio: 'inherit' })
 
   await fs.rm(path.join(root, 'appassets'), { recursive: true, force: true })
+  await fs.mkdir(OUT, { recursive: true })
 
   const files = await walk(SRC)
   let inTotal = 0
   let outTotal = 0
-  const renames = []
+  // Ersetzungs-Map: Original-Referenz → neue Referenz (Single-Pass-Rewrite)
+  const replacements = new Map()
+  const dirs = new Set()
 
   for (const file of files) {
     const rel = path.relative(SRC, file)
     if (SKIP.has(rel.split(path.sep)[0]) || SKIP.has(path.basename(file))) continue
     const relPosix = rel.split(path.sep).join('/')
-    const relClean = sanitizeRel(relPosix)
-    if (relClean !== relPosix) renames.push([relPosix, relClean])
-    const dest = path.join(OUT, ...relClean.split('/'))
-    await fs.mkdir(path.dirname(dest), { recursive: true })
+    const flat = prefix + relPosix.split('/').map(sanitizeSegment).join('_')
+    const dest = path.join(OUT, flat)
+
+    replacements.set(`./${relPosix}`, `./${flat}`)
+    // Gehashte Vite-Assets werden per new URL("<basename>", scriptBase)
+    // relativ zum Skript aufgelöst — das Skript liegt künftig flach daneben.
+    if (relPosix.startsWith('assets/')) {
+      replacements.set(relPosix.slice('assets/'.length), flat)
+    }
+    let d = path.posix.dirname(relPosix)
+    while (d && d !== '.') {
+      dirs.add(d)
+      d = path.posix.dirname(d)
+    }
 
     const stat = await fs.stat(file)
     inTotal += stat.size
@@ -79,39 +103,36 @@ async function main() {
           continue
         }
       } catch (err) {
-        console.warn(`  ! Quantisierung fehlgeschlagen, kopiere Original: ${rel} (${err.message})`)
+        console.warn(`  ! Quantisierung fehlgeschlagen, kopiere Original: ${relPosix} (${err.message})`)
       }
     }
     await fs.copyFile(file, dest)
     outTotal += stat.size
   }
 
-  // Referenzen auf umbenannte Dateien in allen Text-Assets umschreiben
-  // (längste Pfade zuerst, damit kein Teilpfad einen längeren überschreibt)
-  renames.sort((a, b) => b[0].length - a[0].length)
-  if (renames.length > 0) {
-    const textFiles = (await walk(OUT)).filter((f) => /\.(js|css|html|json|svg|map)$/i.test(f))
-    for (const tf of textFiles) {
-      let content = await fs.readFile(tf, 'utf8')
-      let changed = false
-      for (const [from, to] of renames) {
-        if (content.includes(from)) {
-          content = content.split(from).join(to)
-          changed = true
-        }
-      }
-      if (changed) await fs.writeFile(tf, content)
-    }
-    console.log(`prepare-assets: ${renames.length} Dateinamen OPC-konform bereinigt (Leerzeichen etc.)`)
+  // Dynamische Pfad-Konstruktionen wie `./images/rooms/${id}.png`:
+  // Verzeichnis-Präfix mitsamt Slash auf das flache Namensschema mappen.
+  for (const d of dirs) {
+    replacements.set(`./${d}/`, `./${prefix}${d.split('/').map(sanitizeSegment).join('_')}_`)
   }
 
-  // Entry-Dateien ermitteln: fester JS-Name aus vite.spfx.config.ts,
-  // die (einzige, cssCodeSplit:false) CSS-Datei per Verzeichnis-Scan.
-  const js = 'assets/app.js'
-  const assetFiles = await fs.readdir(path.join(OUT, 'assets'))
-  const cssFiles = assetFiles.filter((f) => f.endsWith('.css'))
+  // Single-Pass-Rewrite (längste Muster zuerst, keine Doppel-Ersetzungen)
+  const patterns = [...replacements.keys()].sort((a, b) => b.length - a.length)
+  const rx = new RegExp(patterns.map(escapeRegExp).join('|'), 'g')
+  const textFiles = (await walk(OUT)).filter((f) => /\.(js|css|html|json|svg|map)$/i.test(f))
+  for (const tf of textFiles) {
+    const content = await fs.readFile(tf, 'utf8')
+    const rewritten = content.replace(rx, (m) => replacements.get(m))
+    if (rewritten !== content) await fs.writeFile(tf, rewritten)
+  }
+
+  // Entry-Dateien ermitteln (fester JS-Name aus vite.spfx.config.ts, genau
+  // eine CSS-Datei wegen cssCodeSplit:false)
+  const outNames = await fs.readdir(OUT)
+  const js = `${prefix}assets_app.js`
+  const cssFiles = outNames.filter((f) => f.endsWith('.css'))
   if (cssFiles.length !== 1) throw new Error(`Erwartet genau eine CSS-Datei, gefunden: ${cssFiles.join(', ') || 'keine'}`)
-  const css = `assets/${cssFiles[0]}`
+  const css = cssFiles[0]
   await fs.access(path.join(OUT, js))
 
   await fs.mkdir(path.dirname(GENERATED), { recursive: true })
@@ -119,7 +140,7 @@ async function main() {
     GENERATED,
     [
       '// AUTO-GENERIERT von scripts/prepare-assets.mjs — nicht von Hand editieren.',
-      '// Gehashte Entry-Dateinamen des Vite-Builds aus bank-der-zukunft-2035/dist.',
+      '// Flache, versionspräfixierte Entry-Dateinamen des SPFx-App-Builds.',
       `export const APP_ENTRY_JS: string = '${js}';`,
       `export const APP_ENTRY_CSS: string = '${css}';`,
       ''
@@ -127,7 +148,7 @@ async function main() {
   )
 
   const mb = (n) => (n / 1024 / 1024).toFixed(1)
-  console.log(`prepare-assets: ${files.length} Dateien, ${mb(inTotal)} MB → ${mb(outTotal)} MB`)
+  console.log(`prepare-assets: ${outNames.length} Dateien (flach), ${mb(inTotal)} MB → ${mb(outTotal)} MB`)
   console.log(`Entry: ${js} / ${css}`)
 }
 

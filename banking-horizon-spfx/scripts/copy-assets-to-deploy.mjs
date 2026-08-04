@@ -22,8 +22,10 @@ if (!(await exists(src))) {
 let copied = false
 for (const dir of candidates) {
   if (await exists(dir)) {
-    await fs.cp(src, path.join(dir, 'app'), { recursive: true })
-    console.log(`App-Assets nach ${path.relative(root, dir)}/app kopiert.`)
+    // Flach direkt auf die Wurzelebene der ClientSideAssets — Unterordner
+    // werden im Ziel-Tenant nicht zuverlässig ausgeliefert.
+    await fs.cp(src, dir, { recursive: true })
+    console.log(`App-Assets flach nach ${path.relative(root, dir)}/ kopiert.`)
     copied = true
     break
   }

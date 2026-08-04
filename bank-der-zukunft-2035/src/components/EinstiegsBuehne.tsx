@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { ArrowRight, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, X } from 'lucide-react'
 import styles from './EinstiegsBuehne.module.css'
 import { useLang } from '../i18n/LanguageContext'
 import type { Chapter } from '../data/chapters'
@@ -15,8 +15,18 @@ import { useChapterEdits, einstiegKey } from '../data/chapterEdits'
 // ─────────────────────────────────────────────────────────────────────────────
 
 const STR = {
-  de: { cta: 'Zu den Hypothesen', skip: 'Überspringen', kapitel: 'Kapitel' },
-  en: { cta: 'To the hypotheses', skip: 'Skip', kapitel: 'Chapter' },
+  de: {
+    cta: 'Zu den Hypothesen',
+    ctaTeaser: 'Zurück zur Übersicht',
+    skip: 'Überspringen',
+    kapitel: 'Kapitel',
+  },
+  en: {
+    cta: 'To the hypotheses',
+    ctaTeaser: 'Back to overview',
+    skip: 'Skip',
+    kapitel: 'Chapter',
+  },
 } as const
 
 type Props = { chapter: Chapter; onWeiter: () => void }
@@ -59,10 +69,18 @@ export function EinstiegsBuehne({ chapter, onWeiter }: Props): React.ReactElemen
         <p className={styles.rolle}>{rolle}</p>
         <p className={styles.frage}>{frage}</p>
 
-        <button type="button" className={styles.cta} onClick={onWeiter}>
-          {t.cta}
-          <ArrowRight size={17} strokeWidth={2.2} aria-hidden />
-        </button>
+        {/* Teaser-Kapitel (nur Einstiegsbühne): CTA führt zurück zur Übersicht. */}
+        {chapter.teaserOnly ? (
+          <button type="button" className={styles.cta} onClick={onWeiter}>
+            <ArrowLeft size={17} strokeWidth={2.2} aria-hidden />
+            {t.ctaTeaser}
+          </button>
+        ) : (
+          <button type="button" className={styles.cta} onClick={onWeiter}>
+            {t.cta}
+            <ArrowRight size={17} strokeWidth={2.2} aria-hidden />
+          </button>
+        )}
       </div>
     </div>
   )

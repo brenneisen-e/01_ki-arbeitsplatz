@@ -23,6 +23,13 @@ const SKIP = new Set(['plaza-video.mp4', 'index.html'])
 // PNGs oberhalb dieser Größe werden quantisiert
 const PNG_THRESHOLD = 200 * 1024
 
+// Das .sppkg ist ein OPC-Paket (Open Packaging Conventions): Part-URIs dürfen
+// keine Leerzeichen o. ä. enthalten, sonst lehnt SharePoint das Paket als
+// "Invalid App package" ab. Dateinamen werden deshalb segmentweise bereinigt
+// und alle Referenzen darauf in Text-Assets (JS/CSS/HTML) mit umgeschrieben.
+const sanitizeSegment = (s) => s.replace(/[^A-Za-z0-9._-]/g, '_')
+const sanitizeRel = (relPosix) => relPosix.split('/').map(sanitizeSegment).join('/')
+
 async function walk(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true })
   const files = []
@@ -40,11 +47,15 @@ async function main() {
   const files = await walk(SRC)
   let inTotal = 0
   let outTotal = 0
+  const renames = []
 
   for (const file of files) {
     const rel = path.relative(SRC, file)
     if (SKIP.has(rel.split(path.sep)[0]) || SKIP.has(path.basename(file))) continue
-    const dest = path.join(OUT, rel)
+    const relPosix = rel.split(path.sep).join('/')
+    const relClean = sanitizeRel(relPosix)
+    if (relClean !== relPosix) renames.push([relPosix, relClean])
+    const dest = path.join(OUT, ...relClean.split('/'))
     await fs.mkdir(path.dirname(dest), { recursive: true })
 
     const stat = await fs.stat(file)
@@ -66,6 +77,25 @@ async function main() {
     }
     await fs.copyFile(file, dest)
     outTotal += stat.size
+  }
+
+  // Referenzen auf umbenannte Dateien in allen Text-Assets umschreiben
+  // (längste Pfade zuerst, damit kein Teilpfad einen längeren überschreibt)
+  renames.sort((a, b) => b[0].length - a[0].length)
+  if (renames.length > 0) {
+    const textFiles = (await walk(OUT)).filter((f) => /\.(js|css|html|json|svg|map)$/i.test(f))
+    for (const tf of textFiles) {
+      let content = await fs.readFile(tf, 'utf8')
+      let changed = false
+      for (const [from, to] of renames) {
+        if (content.includes(from)) {
+          content = content.split(from).join(to)
+          changed = true
+        }
+      }
+      if (changed) await fs.writeFile(tf, content)
+    }
+    console.log(`prepare-assets: ${renames.length} Dateinamen OPC-konform bereinigt (Leerzeichen etc.)`)
   }
 
   // Entry-Dateinamen aus index.html auslesen

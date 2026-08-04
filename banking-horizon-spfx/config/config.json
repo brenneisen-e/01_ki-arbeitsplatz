@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "banking-horizon-2030-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/bankingHorizon2030/BankingHorizon2030WebPart.js",
+          "manifest": "./src/webparts/bankingHorizon2030/BankingHorizon2030WebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "BankingHorizon2030WebPartStrings": "lib/webparts/bankingHorizon2030/loc/{locale}.js"
+  }
+}

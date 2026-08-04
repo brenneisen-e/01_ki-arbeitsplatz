@@ -1,0 +1,28 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "b517b633-0c45-4242-9a27-d9ff7346f5f9",
+  "alias": "BankingHorizon2030WebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "supportedHosts": ["SharePointWebPart", "SharePointFullPage"],
+  "supportsThemeVariants": true,
+  "preconfiguredEntries": [
+    {
+      "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+      "group": { "default": "Advanced" },
+      "title": { "default": "Banking Horizon 2030", "de-de": "Banking Horizon 2030" },
+      "description": {
+        "default": "Begehbares Strukturbild der Bank fuer den Vorstands-Workshop",
+        "de-de": "Begehbares Strukturbild der Bank fuer den Vorstands-Workshop"
+      },
+      "officeFabricIconFontName": "BankSolid",
+      "properties": {
+        "externalUrl": "",
+        "fullHeight": true,
+        "fixedHeight": 900
+      }
+    }
+  ]
+}

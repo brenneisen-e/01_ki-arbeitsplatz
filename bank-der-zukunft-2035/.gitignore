@@ -4,5 +4,9 @@ node_modules
 .vite
 package-lock.json
 
+# Build-Ausgabe der SPFx-Variante (siehe vite.spfx.config.ts) — wird nur
+# transient von banking-horizon-spfx/scripts/prepare-assets.mjs konsumiert
+dist-spfx/
+
 # Zu groß für Cloudflare Pages (>25 MiB) — blockiert das Deployment
 Banking-Horizon-2035_Hypothesen_DE.xlsx

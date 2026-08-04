@@ -64,7 +64,23 @@ npm run package
 5. `scripts/strip-dir-entries.mjs` — entfernt Ordner-Einträge aus dem Zip; OPC-Part-URIs
    dürfen nicht mit `/` enden, sonst lehnt SharePoint das Paket als ungültig ab.
 
-Nach einem neuen Build der App (`cd ../bank-der-zukunft-2035 && npm run build`)
-einfach `npm run package` erneut ausführen und das aktualisierte `.sppkg`
-(mit hochgezählter Version in `config/package-solution.json`) neu in den
-App-Katalog hochladen.
+`prepare-assets` baut die App vorher selbst in der IIFE-Variante
+(`vite.spfx.config.ts` → `dist-spfx/`) — ES-Module würden am CORS des
+Office-365-CDN scheitern (Blackscreen).
+
+## Release-Regeln (Lessons Learned aus DEX)
+
+- **Jedes Release erhöht mindestens die MINOR-Version** (1.1 → 1.2 → …).
+  SharePoint erkennt Patch-Sprünge im App-Katalog oft nicht und liefert
+  dann das alte Bundle weiter aus. Die Version steht an **drei Stellen**
+  und muss identisch gepflegt werden:
+  1. `package.json` → `"version": "x.y.0"`
+  2. `config/package-solution.json` → `solution.version` **und**
+     `features[*].version` (vierstellig `x.y.0.0`)
+  3. `src/webparts/bankingHorizon2030/version.ts` → `APP_VERSION = 'x.y.0'`
+- Der Wert aus `version.ts` wird als **Badge unten rechts im WebPart**
+  gerendert — erst wenn der Badge die neue Nummer zeigt (nach hartem
+  Reload, Strg+F5), ist das neue Bundle wirklich aktiv.
+- Immer **clean bauen**: `rm -rf lib release temp sharepoint` vor dem
+  Paketieren (macht `npm run package` nicht automatisch), und prüfen,
+  dass in `release/assets/` genau **ein** `…web-part_<hash>.js` liegt.

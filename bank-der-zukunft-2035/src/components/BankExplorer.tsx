@@ -227,11 +227,11 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   }, [lang, edits])
   const chapters = useMemo(() => api.getChapters(lang), [api, lang])
   const masterImage = useMemo(() => api.getMasterImage(lang), [api, lang])
-  // Plaza-Sprites (transparente Video-Loops einzelner Fußgänger) nur für das
-  // Standard-Strukturbild — das Still bleibt in voller Schärfe, nur die
-  // Personen bewegen sich. Braucht VP9/WebM (Alpha-Kanal); Safari o. ä. ohne
-  // Support bekommt einfach das unbewegte Bild.
-  const spritesEnabled = masterImage.src.includes('Strukturbild')
+  // Kachel-Videos vorerst deaktiviert: unabhängige Veo-Drifts brechen an den
+  // Kachelgrenzen die durchgehenden Gebäudelinien (Decken, Fassade). Nächster
+  // Ansatz: je ein Video pro Raumöffnung (Grenzen auf Fensterrahmen), Struktur
+  // bleibt komplett Still — kommt mit dem neuen Master-Bild.
+  const spritesEnabled = false
   const spriteOk = useMemo(() => {
     try {
       return document.createElement('video').canPlayType('video/webm; codecs="vp9"') !== ''

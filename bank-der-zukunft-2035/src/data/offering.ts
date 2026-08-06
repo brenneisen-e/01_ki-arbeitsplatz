@@ -8,8 +8,21 @@
 
 import type { L } from '../i18n/LanguageContext'
 
-/** Ein Baustein des Deloitte-Transformationsangebots. `icon` = Lucide-Name. */
-export type OfferingPillar = { icon: string; title: L; text: L }
+/**
+ * Dimension des Deloitte AI Transformation Framework (offizielles Rad):
+ * sechs Segmente Strategie/People/Prozesse/Governance/Daten/Technologie,
+ * gruppiert nach den Leitfragen WARUM / WER / WIE / WOMIT.
+ * `color` = Außenring, `colorInner` = Innenring (dunkler), `icon` = Lucide-Name.
+ */
+export type FrameworkDimension = {
+  id: string
+  frage: L
+  label: L
+  text: L
+  icon: string
+  color: string
+  colorInner: string
+}
 
 /** Ansprechpartner-Platzhalter (Name/Rolle/Foto werden im CMS gepflegt). */
 export type OfferingContact = { defaultRole: L; imageSrc: string }
@@ -18,13 +31,92 @@ export type Offering = {
   kicker: L
   title: L
   lead: L
-  pillars: OfferingPillar[]
   whyTitle: L
   why: L[]
   kontaktTitle: L
   offeringLabel: L
   contactHint: L
 }
+
+/**
+ * Die sechs Dimensionen des Deloitte AI Transformation Framework in der
+ * Reihenfolge des Rads (im Uhrzeigersinn ab 12 Uhr). Farben entsprechen dem
+ * offiziellen Schaubild; Texte sind auf die Bank-Transformation zugespitzt.
+ */
+export const FRAMEWORK_DIMENSIONS: FrameworkDimension[] = [
+  {
+    id: 'strategie',
+    frage: { de: 'Warum', en: 'Why' },
+    label: { de: 'Strategie', en: 'Strategy' },
+    text: {
+      de: 'Wir schärfen Ambition und Zielbild: Wo schafft KI im Geschäftsmodell Ihrer Bank messbaren Wert, und welche Entscheidungen sollen künftig KI-gestützt fallen? Ein klares Zielbild statt verstreuter Einzel-Use-Cases.',
+      en: 'We sharpen ambition and target picture: where does AI create measurable value in your bank’s business model, and which decisions should be AI-supported in future? A clear target picture instead of scattered point use cases.',
+    },
+    icon: 'Lightbulb',
+    color: '#0097A9',
+    colorInner: '#1B7480',
+  },
+  {
+    id: 'people',
+    frage: { de: 'Wer', en: 'Who' },
+    label: { de: 'People', en: 'People' },
+    text: {
+      de: 'Transformation gelingt über Menschen: Rollen, Skills und Anreize werden im Target Operating Model verankert, Change und Adoption von Anfang an mitgeführt — damit Veränderung nicht nur beschlossen, sondern nachhaltig gelebt wird.',
+      en: 'Transformation succeeds through people: roles, skills and incentives are anchored in the target operating model, with change and adoption managed from day one — so change is not merely decided but sustainably lived.',
+    },
+    icon: 'Users',
+    color: '#86BC25',
+    colorInner: '#6E9A22',
+  },
+  {
+    id: 'prozesse',
+    frage: { de: 'Wie', en: 'How' },
+    label: { de: 'Prozesse', en: 'Processes' },
+    text: {
+      de: 'Wir übersetzen die Entscheidungslogik in Prozesse: Journey-Teams mit End-to-End-Ownership, priorisierte Decision Journeys und eine Delivery, die von 2–4 auf 100+ Deployments pro Jahr skaliert.',
+      en: 'We translate decision logic into processes: journey teams with end-to-end ownership, prioritised decision journeys and a delivery that scales from 2–4 to 100+ deployments per year.',
+    },
+    icon: 'Settings',
+    color: '#00778B',
+    colorInner: '#1D5F6B',
+  },
+  {
+    id: 'governance',
+    frage: { de: 'Wie', en: 'How' },
+    label: { de: 'Governance', en: 'Governance' },
+    text: {
+      de: 'Trustworthy AI „by design": Leitplanken, Risiko- und Compliance-Kontrollen sind integraler Teil der Plattform — mit klarer Verantwortung bis auf Vorstandsebene, nicht als nachgelagerte Kontrolle.',
+      en: 'Trustworthy AI “by design”: guardrails, risk and compliance controls are an integral part of the platform — with clear accountability up to board level, not a downstream control.',
+    },
+    icon: 'Scale',
+    color: '#1F9163',
+    colorInner: '#2A6A52',
+  },
+  {
+    id: 'daten',
+    frage: { de: 'Womit', en: 'With what' },
+    label: { de: 'Daten', en: 'Data' },
+    text: {
+      de: 'Wir schaffen das Datenfundament: verlässliche, verfügbare Datenprodukte und eine skalierbare Decision Spine als Rückgrat, damit KI-Entscheidungen auf belastbarer Basis fallen.',
+      en: 'We build the data foundation: reliable, available data products and a scalable decision spine as the backbone, so AI decisions rest on a solid basis.',
+    },
+    icon: 'Database',
+    color: '#383838',
+    colorInner: '#4C4C4C',
+  },
+  {
+    id: 'technologie',
+    frage: { de: 'Womit', en: 'With what' },
+    label: { de: 'Technologie', en: 'Technology' },
+    text: {
+      de: 'Wir bauen die AI-native Plattform: modulare, API-basierte Architektur, MLOps und wiederverwendbare Accelerators — beschleunigt durch Deloittes Methodik und Assets.',
+      en: 'We build the AI-native platform: modular, API-based architecture, MLOps and reusable accelerators — sped up by Deloitte’s methodology and assets.',
+    },
+    icon: 'BarChart3',
+    color: '#808080',
+    colorInner: '#666666',
+  },
+]
 
 /** Platzhalter-Bildpfade (existieren als Datei nicht — im CMS per Upload ersetzbar). */
 export const OFFERING_IMAGE_SRC = './images/offering-uebersicht.png'
@@ -38,63 +130,13 @@ export const OFFERING_CONTACTS: OfferingContact[] = [
 export const DELOITTE_OFFERING: Offering = {
   kicker: { de: 'Transformation mit Deloitte', en: 'Transformation with Deloitte' },
   title: {
-    de: 'Wir bringen Sie zur AI-nativen Bank',
-    en: 'We take you to the AI-native bank',
+    de: 'KI-Transformation holistisch gestalten',
+    en: 'Shaping AI transformation holistically',
   },
   lead: {
-    de: 'Der Weg von der heutigen Bank zur AI-nativen Plattform-Bank ist kein Technologieprojekt, sondern eine Transformation von Strategie, Betriebsmodell, Governance und Menschen. Deloitte begleitet Sie decision-first — von der Ambition bis zur Skalierung.',
-    en: 'The path from today’s bank to an AI-native platform bank is not a technology project but a transformation of strategy, operating model, governance and people. Deloitte guides you decision-first — from ambition to scale.',
+    de: 'Der Weg zur AI-nativen Bank ist weit mehr als ein IT-Projekt — er verändert, wie Entscheidungen getroffen, Arbeit organisiert und Wert geschaffen wird. Mit dem Deloitte AI Transformation Framework bewerten wir systematisch die KI-Readiness Ihrer Bank entlang von sechs Dimensionen — von der Strategie bis zur Technologie — und machen Handlungsbedarf sichtbar, priorisierbar und umsetzbar.',
+    en: 'The path to the AI-native bank is far more than an IT project — it changes how decisions are made, work is organised and value is created. With the Deloitte AI Transformation Framework we systematically assess your bank’s AI readiness across six dimensions — from strategy to technology — making the need for action visible, prioritisable and actionable.',
   },
-  pillars: [
-    {
-      icon: 'Compass',
-      title: { de: 'Ambition & Strategie', en: 'Ambition & strategy' },
-      text: {
-        de: 'Wir schärfen Ihre KI-Ambition und richten Geschäfts- und Betriebsmodell auf die KI als Fixstern aus — ein klares Zielbild statt verstreuter Einzel-Use-Cases.',
-        en: 'We sharpen your AI ambition and align business and operating model to AI as the guiding star — a clear target picture instead of scattered point use cases.',
-      },
-    },
-    {
-      icon: 'Network',
-      title: { de: 'AI-natives Operating Model', en: 'AI-native operating model' },
-      text: {
-        de: 'Wir gestalten Ihr Zielbetriebsmodell entlang der Entscheidungslogik: Journey-Teams mit End-to-End-Ownership, Human-in-the-loop und AI-Governance fest verankert.',
-        en: 'We design your target operating model along decision logic: journey teams with end-to-end ownership, human-in-the-loop and AI governance firmly anchored.',
-      },
-    },
-    {
-      icon: 'GitBranch',
-      title: { de: 'Decision-first Delivery', en: 'Decision-first delivery' },
-      text: {
-        de: 'Wir priorisieren die wenigen kritischen Decision Journeys und bauen eine skalierbare Decision Spine — der Sprung von 2–4 auf 100+ Deployments pro Jahr.',
-        en: 'We prioritise the few critical decision journeys and build a scalable decision spine — the leap from 2–4 to 100+ deployments per year.',
-      },
-    },
-    {
-      icon: 'ShieldCheck',
-      title: { de: 'Trustworthy AI & Governance', en: 'Trustworthy AI & governance' },
-      text: {
-        de: 'Wir verankern Governance, Risk und Compliance „by design" — als integralen Teil der Plattform, nicht als nachgelagerte Kontrolle.',
-        en: 'We embed governance, risk and compliance “by design” — as an integral part of the platform, not a downstream control.',
-      },
-    },
-    {
-      icon: 'Users',
-      title: { de: 'People, Change & Adoption', en: 'People, change & adoption' },
-      text: {
-        de: 'Wir verankern Change im Target Operating Model: Rollen, Anreize und Skills, damit Veränderung nicht nur beschlossen, sondern nachhaltig gelebt wird.',
-        en: 'We anchor change in the target operating model: roles, incentives and skills, so change is not merely decided but sustainably lived.',
-      },
-    },
-    {
-      icon: 'Layers',
-      title: { de: 'Methodik & Assets', en: 'Methodology & assets' },
-      text: {
-        de: 'AI-native Projektmethodik mit wiederverwendbaren Artefakten und einem klaren Pfad von der Reifegrad-Bestimmung zum Zielbild — beschleunigt durch Deloittes Accelerators.',
-        en: 'An AI-native project methodology with reusable artefacts and a clear path from maturity assessment to the target picture — accelerated by Deloitte’s accelerators.',
-      },
-    },
-  ],
   whyTitle: { de: 'Warum Deloitte', en: 'Why Deloitte' },
   why: [
     { de: 'Decision-first statt technologiegetrieben', en: 'Decision-first, not technology-driven' },

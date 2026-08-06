@@ -12,6 +12,7 @@ import {
   Lightbulb,
   Loader2,
   MessageSquare,
+  ArrowRight,
   Pencil,
   Phone,
   Play,
@@ -79,6 +80,7 @@ type ReaderStrings = {
   kpiHeading: string
   kpiHint: string
   kpiApprox: string
+  todayTag: string
   kpiScenarioLabel: string
   kpiFootnote: string
   consultantOpen: string
@@ -135,6 +137,7 @@ const STR: Record<Lang, ReaderStrings> = {
     kpiHeading: 'Zielwerte 2030 bei Erfüllung der Hypothesen',
     kpiHint: 'bei Erfüllung der Hypothesen',
     kpiApprox: 'ca.',
+    todayTag: 'Heute',
     kpiScenarioLabel: 'Szenario Basis',
     kpiFootnote:
       'Gerundete Zielwerte aus dem KPI-Modell (Szenario Basis; exakte Werte und Spannen im KPI-Modell-Download). Illustrative Eckwerte, quellenbasiert.',
@@ -190,6 +193,7 @@ const STR: Record<Lang, ReaderStrings> = {
     kpiHeading: '2030 targets once the hypotheses are met',
     kpiHint: 'once the hypotheses are met',
     kpiApprox: '~',
+    todayTag: 'Today',
     kpiScenarioLabel: 'Base scenario',
     kpiFootnote:
       'Rounded targets from the KPI model (base scenario; exact values and ranges in the KPI model download). Illustrative, source-based figures.',
@@ -542,8 +546,11 @@ export function ChapterReader({
       </header>
 
       <div className={styles.content} key={`content-${step}`}>
+        {/* Weiße Folien-Fläche: Inhalt liegt auf Weiß, das gezoomte Haus bleibt
+            drumherum transparent sichtbar. */}
+        <div className={styles.slide}>
         {isSummary ? (
-          <h1 className={styles.title}>
+          <h1 className={styles.title} data-wide>
             {t.summaryTitle} <span className={styles.titleSep}>|</span> {chapter.label}
           </h1>
         ) : editMode ? (
@@ -563,10 +570,6 @@ export function ChapterReader({
              (gleiches Framework für alle Kapitel; KPI-Werte sind Platzhalter). */
           <div className={styles.summaryStep}>
             <div className={styles.summaryBlock}>
-              <span className={styles.summaryBlockLabel}>
-                <Sparkles size={13} strokeWidth={2.2} aria-hidden />
-                {t.mgmtSummaryLabel}
-              </span>
               <ul className={styles.summaryBullets}>
                 {(SUMMARY_BULLETS[chapter.id] ?? [{ de: chapter.vision, en: chapter.vision }]).map(
                   (b, i) => {
@@ -598,7 +601,6 @@ export function ChapterReader({
               <span className={styles.kpiHeading}>
                 <BookOpen size={14} strokeWidth={2.2} aria-hidden />
                 {t.kpiHeading}
-                <span className={styles.kpiScenarioTag}>{t.kpiScenarioLabel}</span>
               </span>
               <div className={styles.kpiRow}>
                 {(KPIS_BY_CHAPTER[chapter.id] ?? []).filter((k) => k.featured).map((kpi: Kpi) => {
@@ -627,38 +629,72 @@ export function ChapterReader({
         <div className={styles.media}>
           <div className={styles.imageInner} data-compare={hypothesis ? '' : undefined}>
             {hypothesis ? (
-              /* Vergleichsbild als zwei getrennt gerahmte Hälften: der im Bild
-                 eingebackene Trennbalken (mittlere ~4 %) wird weggecroppt, die
-                 Kante entsteht durch den echten Abstand zwischen den Karten. */
+              /* Konsulting-Folien-Layout: zwei flache Spalten (Kicker + Spalten-
+                 Überschrift + Bildhälfte + Text) statt Karten-Patchwork. Der im
+                 Vergleichsbild eingebackene Trennbalken (mittlere ~4 %) wird
+                 weggecroppt; im Kanal dazwischen verbindet ein runder Pfeil-Badge
+                 (Heute → 2030) die beiden Szenen. „Heute" und „2030" stehen genau
+                 einmal — im Kicker der jeweiligen Spalte. */
               <div className={styles.compareMedia}>
-                <figure className={styles.compareHalf} data-quo>
-                  <figcaption className={styles.compareHalfHead}>
-                    <Clock size={14} strokeWidth={2.2} aria-hidden />
-                    <span className={styles.compareHalfTag}>{t.statusQuo}</span>
-                    {hypothesis.imageTitles && (
-                      <span className={styles.compareHalfTitle}>
-                        {hypothesis.imageTitles.statusQuo}
-                      </span>
-                    )}
-                  </figcaption>
-                  <div className={styles.compareHalfImg}>
-                    <img src={effImageSrc} alt={image.alt} />
-                  </div>
-                </figure>
-                <figure className={styles.compareHalf} data-future>
-                  <figcaption className={styles.compareHalfHead}>
-                    <Sparkles size={14} strokeWidth={2.2} aria-hidden />
-                    <span className={styles.compareHalfTag}>{t.future}</span>
-                    {hypothesis.imageTitles && (
-                      <span className={styles.compareHalfTitle}>
-                        {hypothesis.imageTitles.in2030}
-                      </span>
-                    )}
-                  </figcaption>
-                  <div className={styles.compareHalfImg}>
-                    <img src={effImageSrc} alt="" />
-                  </div>
-                </figure>
+                <div className={`${styles.cmpHead}`} data-quo>
+                  <span className={styles.cmpKicker}>
+                    <Clock size={13} strokeWidth={2.2} aria-hidden />
+                    {t.todayTag}
+                  </span>
+                  {hypothesis.imageTitles && (
+                    <span className={styles.cmpTitle}>{hypothesis.imageTitles.statusQuo}</span>
+                  )}
+                </div>
+                <div className={`${styles.cmpHead}`} data-future>
+                  <span className={styles.cmpKicker}>
+                    <Sparkles size={13} strokeWidth={2.2} aria-hidden />
+                    {t.future}
+                  </span>
+                  {hypothesis.imageTitles && (
+                    <span className={styles.cmpTitle}>{hypothesis.imageTitles.in2030}</span>
+                  )}
+                </div>
+                <div className={styles.cmpImg} data-quo>
+                  <img src={effImageSrc} alt={image.alt} />
+                </div>
+                <div className={styles.cmpBadge} aria-hidden>
+                  <span className={styles.cmpBadgeCircle}>
+                    <ArrowRight size={20} strokeWidth={2.6} />
+                  </span>
+                </div>
+                <div className={styles.cmpImg} data-future>
+                  <img src={effImageSrc} alt="" />
+                </div>
+                <div className={styles.cmpBody} data-quo>
+                  {editMode ? (
+                    <>
+                      <textarea
+                        className={styles.editInput}
+                        value={effStatusQuo}
+                        onChange={onEdit('statusQuo')}
+                        rows={4}
+                      />
+                      <div className={styles.boldHint}>{t.boldHint}</div>
+                    </>
+                  ) : (
+                    <p className={styles.cmpText} dangerouslySetInnerHTML={rich(effStatusQuo)} />
+                  )}
+                </div>
+                <div className={styles.cmpBody} data-future>
+                  {editMode ? (
+                    <>
+                      <textarea
+                        className={styles.editInput}
+                        value={effIn2030}
+                        onChange={onEdit('in2030')}
+                        rows={4}
+                      />
+                      <div className={styles.boldHint}>{t.boldHint}</div>
+                    </>
+                  ) : (
+                    <p className={styles.cmpText} dangerouslySetInnerHTML={rich(effIn2030)} />
+                  )}
+                </div>
               </div>
             ) : (
               <ImageSlot
@@ -728,47 +764,8 @@ export function ChapterReader({
 
         {hypothesis ? (
           <>
-            <div className={styles.compareGrid}>
-              <article className={styles.compareCard} data-quo>
-                <span className={styles.compareHead}>
-                  <Clock size={14} strokeWidth={2.2} aria-hidden />
-                  {t.today}
-                </span>
-                {editMode ? (
-                  <>
-                    <textarea
-                      className={styles.editInput}
-                      value={effStatusQuo}
-                      onChange={onEdit('statusQuo')}
-                      rows={3}
-                    />
-                    <div className={styles.boldHint}>{t.boldHint}</div>
-                  </>
-                ) : (
-                  <p className={styles.compareText} dangerouslySetInnerHTML={rich(effStatusQuo)} />
-                )}
-              </article>
-              <article className={styles.compareCard} data-future>
-                <span className={styles.compareHead}>
-                  <Sparkles size={14} strokeWidth={2.2} aria-hidden />
-                  {t.future}
-                </span>
-                {editMode ? (
-                  <>
-                    <textarea
-                      className={styles.editInput}
-                      value={effIn2030}
-                      onChange={onEdit('in2030')}
-                      rows={3}
-                    />
-                    <div className={styles.boldHint}>{t.boldHint}</div>
-                  </>
-                ) : (
-                  <p className={styles.compareText} dangerouslySetInnerHTML={rich(effIn2030)} />
-                )}
-              </article>
-            </div>
-            {/* Im Lese-Modus präsentiert allein der Consultant unten rechts die
+            {/* Status-Quo-/2030-Texte stehen direkt in den Vergleichsspalten oben.
+                Im Lese-Modus präsentiert allein der Consultant unten rechts die
                 Leitfrage — keine zweite statische Darstellung mehr. */}
             {editMode && (
               <div className={styles.editLeitfrage}>
@@ -818,6 +815,7 @@ export function ChapterReader({
         )}
           </>
         )}
+        </div>
       </div>
 
       <footer className={styles.pager}>

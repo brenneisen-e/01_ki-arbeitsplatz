@@ -74,11 +74,14 @@
   overflow-x: hidden;
 }
 
+/* Weiße Folien-Fläche: Inhalt auf Weiß, das Haus bleibt drumherum sichtbar. */
 .inner {
-  width: 100%;
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: clamp(28px, 5vh, 64px) clamp(20px, 4vw, 56px) clamp(40px, 7vh, 90px);
+  width: min(1180px, calc(100% - clamp(32px, 6vw, 96px)));
+  margin: clamp(20px, 3.5vh, 40px) auto clamp(28px, 5vh, 56px);
+  padding: clamp(24px, 4vh, 52px) clamp(20px, 4vw, 56px) clamp(32px, 6vh, 72px);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
 }
 
 .kicker {
@@ -88,7 +91,8 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--accent-bright);
+  /* Dunkles Akzentgrün — helles Grün ist auf hellem Grund schlecht lesbar. */
+  color: var(--accent);
 }
 
 .title {
@@ -107,59 +111,113 @@
   color: var(--ink-2);
 }
 
-.grid {
-  margin-top: clamp(28px, 4vh, 48px);
+/* ── AI Transformation Framework: Rad + Detail-Panel ── */
+.fwGrid {
+  margin-top: clamp(24px, 3.5vh, 44px);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: clamp(14px, 1.6vw, 22px);
+  grid-template-columns: minmax(320px, 46%) 1fr;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
 }
 
-.card {
-  padding: clamp(18px, 1.8vw, 26px);
-  border-radius: 18px;
-  border: 1px solid var(--border-soft);
-  background: var(--surface-1);
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+.fwWheel {
+  min-width: 0;
 }
 
-.card:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent);
-  background: var(--surface-2);
+.fwSvg {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
 }
 
-.cardIcon {
-  display: inline-grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 13px;
-  background: var(--accent-tint);
-  color: var(--accent);
-  margin-bottom: 14px;
+.fwSeg {
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+  outline: none;
 }
 
-.cardTitle {
-  font-size: clamp(18px, 1.5vw, 22px);
+.fwSeg:hover {
+  opacity: 0.9;
+}
+
+.fwSeg:focus-visible path:first-of-type {
+  stroke: var(--ink);
+  stroke-width: 4;
+}
+
+.fwSegLabel {
+  font-family: var(--font-heading, inherit);
+  font-size: 21px;
   font-weight: 700;
-  line-height: 1.2;
-  color: var(--ink);
-  margin-bottom: 8px;
+  letter-spacing: 0.06em;
+  fill: #fff;
+  pointer-events: none;
 }
 
-.cardText {
-  font-size: clamp(14px, 1.05vw, 16px);
-  line-height: 1.55;
+.fwQuestion {
+  font-family: var(--font-mono, monospace);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  fill: var(--ink-3);
+}
+
+.fwCenter {
+  font-family: var(--font-heading, inherit);
+  font-size: 25px;
+  font-weight: 800;
+  fill: var(--ink);
+}
+
+.fwDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  /* Flache Folien-Sektion: Hairline statt Box. */
+  border-top: 3px solid var(--accent);
+  padding-top: clamp(12px, 1.4vw, 18px);
+}
+
+.fwDetailKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.fwDetailTitle {
+  margin: 0;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.fwDetailText {
+  margin: 0;
+  font-size: clamp(15.5px, 1.35vw, 19px);
+  line-height: 1.6;
   color: var(--ink-2);
 }
 
-/* ── „Warum Deloitte" ── */
+.fwDetailHint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* ── „Warum Deloitte" — flache Sektion mit Hairline ── */
 .why {
   margin-top: clamp(28px, 4vh, 48px);
-  padding: clamp(20px, 2.4vw, 30px);
-  border-radius: 18px;
-  border: 1px solid var(--accent);
-  background: linear-gradient(120deg, rgba(4, 106, 56, 0.08), rgba(134, 188, 37, 0.06));
+  padding-top: clamp(14px, 1.6vw, 20px);
+  border-top: 1px solid rgba(27, 28, 26, 0.24);
 }
 
 .whyTitle {
@@ -195,11 +253,15 @@
   flex: none;
   display: inline-grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .fwGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Weiter zur 2. Bühne (Chevron-Pfeil) ── */

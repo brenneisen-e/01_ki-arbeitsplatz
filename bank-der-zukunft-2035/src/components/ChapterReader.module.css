@@ -909,7 +909,7 @@
 }
 
 .summaryBulletText {
-  font-size: clamp(16px, 1.28vw, 21px);
+  font-size: 18px;
   line-height: 1.45;
   color: var(--ink);
 }
@@ -987,6 +987,8 @@
   color: var(--ink-3);
 }
 
+/* Ruhige, einheitliche Wertgröße — springt nicht mehr zwischen den Karten
+   und dominiert die Folie nicht. */
 .kpiValue {
   display: inline-flex;
   align-items: center;
@@ -994,7 +996,7 @@
   white-space: nowrap;
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: clamp(26px, 2.1vw, 38px);
+  font-size: 26px;
   line-height: 1.05;
   color: var(--accent);
   font-variant-numeric: tabular-nums;

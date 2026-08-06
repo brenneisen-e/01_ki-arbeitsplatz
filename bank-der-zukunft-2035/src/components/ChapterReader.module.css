@@ -478,52 +478,99 @@
   display: block;
 }
 
-/* Status-Quo / 2030 Split-Markierung auf dem Bild */
-.split {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+/* ── Vergleichsbild als zwei getrennt gerahmte Hälften (Heute | 2030) ──
+   Das Quellbild enthält beide Szenen nebeneinander samt eingebackenem
+   Trennbalken; jede Karte zeigt per Crop nur ihre äußeren ~48 % (img-Breite
+   210 %), der Balken in der Bildmitte verschwindet. Die klare Kante entsteht
+   durch den Abstand zwischen den Karten. */
+.imageInner[data-compare] {
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
 }
 
-.splitLine {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-  transform: translateX(-50%);
+.compareMedia {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(14px, 1.6vw, 26px);
 }
 
-.splitLeft,
-.splitRight {
-  position: absolute;
-  top: 14px;
-  transform: translateX(-50%);
-  padding: 7px 18px;
-  border-radius: 999px;
-  font-family: var(--font-heading);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  box-shadow: var(--shadow-1);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.splitLeft {
-  left: 25%;
-  background: rgba(11, 12, 15, 0.85);
+.compareHalf {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-lg);
+  overflow: hidden;
   border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-2);
+  background: var(--bg-1);
+}
+
+.compareHalf[data-future] {
+  border-color: var(--accent);
+}
+
+/* Prägnante Bild-Überschrift als Kopfbalken über jeder Hälfte */
+.compareHalfHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  /* Einheitliche Balkenhöhe, damit beide Bildkanten exakt fluchten,
+     auch wenn nur eine der beiden Überschriften zweizeilig umbricht. */
+  min-height: 56px;
   color: #fff;
 }
 
-.splitRight {
-  left: 75%;
+.compareHalf[data-quo] .compareHalfHead {
+  background: rgba(11, 12, 15, 0.92);
+}
+
+.compareHalf[data-future] .compareHalfHead {
   background: var(--accent);
-  border: 1px solid var(--accent-bright);
-  color: #fff;
+}
+
+.compareHalfTag {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.compareHalfTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(13px, 1.05vw, 16px);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.compareHalfImg {
+  position: relative;
+  aspect-ratio: 8 / 9;
+  overflow: hidden;
+  background: var(--bg-1);
+}
+
+.compareHalfImg img {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 210%;
+  height: auto;
+}
+
+.compareHalf[data-quo] .compareHalfImg img {
+  left: 0;
+}
+
+.compareHalf[data-future] .compareHalfImg img {
+  right: 0;
 }
 
 /* ── Zwei-Spalten-Vergleich UNTER dem Bild ── */
@@ -745,7 +792,8 @@
     order: 3;
     width: 100%;
   }
-  .compareGrid {
+  .compareGrid,
+  .compareMedia {
     grid-template-columns: 1fr;
   }
   .title {

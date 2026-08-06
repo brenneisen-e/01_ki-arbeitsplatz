@@ -40,6 +40,7 @@
 
 import { pick, type L, type Lang } from '../i18n/LanguageContext'
 import { LEITFRAGE_BY_IMAGE } from './leitfragen'
+import { BILD_TITEL_BY_IMAGE } from './bildTitel'
 
 export type ChapterId =
   | 'kunde'
@@ -99,6 +100,8 @@ export type Hypothesis = {
   in2030: string
   /** Optionale Leitfrage aus dem Deck. */
   leitfrage?: string
+  /** Prägnante Kopfzeilen über den beiden Vergleichsbild-Hälften. */
+  imageTitles?: { statusQuo: string; in2030: string }
 }
 
 /**
@@ -1273,12 +1276,21 @@ function localizeHypothesis(h: RawHypothesis, lang: Lang): Hypothesis {
   // Inline-Leitfrage hat Vorrang; sonst Fallback über die Bildnummer, damit
   // JEDE Hypothese eine Leitfrage trägt (Consultant, Editor, Excel-Export).
   const rawLeitfrage = h.leitfrage ?? LEITFRAGE_BY_IMAGE[imageKeyOf(h.image.src)]
+  const rawBildTitel = BILD_TITEL_BY_IMAGE[imageKeyOf(h.image.src)]
   return {
     title: pick(h.title, lang),
     image: localizeImage(h.image, lang),
     statusQuo: pick(h.statusQuo, lang),
     in2030: pick(h.in2030, lang),
     ...(rawLeitfrage ? { leitfrage: pick(rawLeitfrage, lang) } : {}),
+    ...(rawBildTitel
+      ? {
+          imageTitles: {
+            statusQuo: pick(rawBildTitel.statusQuo, lang),
+            in2030: pick(rawBildTitel.in2030, lang),
+          },
+        }
+      : {}),
   }
 }
 

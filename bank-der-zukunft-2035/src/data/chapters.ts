@@ -243,7 +243,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     keyObject: 'Self-Service-Lounge & Schalter',
     // Filiale links unten im Erdgeschoss (Bank'26-Schalter mit Kundenkontakt).
     // Bewusst NICHT die ganze Etage/den Fahrstuhl, sondern der Schalterbereich.
-    zone: { centerX: 24, centerY: 75.5, width: 40, height: 13.8, labelX: 24, labelY: 70.5, hitWidth: 35, hitHeight: 12 },
+    zone: { centerX: 24.3, centerY: 81.5, width: 41, height: 16, labelX: 24.3, labelY: 75.5, hitWidth: 36, hitHeight: 14 },
     vision: {
       de: 'Für unsere Kunden wird Banking 2030 **unsichtbar und Teil des Alltags** statt eigener Interaktion: Persönliche KI-Finanzassistenten begleiten kontinuierlich, verwandeln eine Flut von Optionen in **klare, simulierte und begründete Empfehlungen** und handeln innerhalb vereinbarter Leitplanken proaktiv. Aus reaktivem Warten wird **teilautonome Finanzsteuerung mit Vertrauensmandat — der Kunde entscheidet, aber auf KI-vorbereiteter Grundlage**.',
       en: 'For our customers, banking in 2030 becomes **invisible and part of everyday life** rather than a separate interaction: personal AI financial assistants accompany them continuously, turn a flood of options into **clear, simulated and reasoned recommendations** and act proactively within agreed guardrails. Reactive waiting gives way to **semi-autonomous financial management with a trust mandate — the customer decides, but on an AI-prepared basis**.',
@@ -337,7 +337,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     label: { de: 'Markt & Vertrieb', en: 'Sales & Distribution' },
     ort: { de: 'Erdgeschoss rechts (Beratung)', en: 'Ground floor right (advisory)' },
     keyObject: '„VERTRIEBS-COCKPIT"-Screen',
-    zone: { centerX: 76.8, centerY: 75.5, width: 39.5, height: 13.8, labelX: 76.8, labelY: 70.5, hitWidth: 35, hitHeight: 12 },
+    zone: { centerX: 76, centerY: 81.5, width: 41, height: 16, labelX: 76, labelY: 75.5, hitWidth: 36, hitHeight: 14 },
     vision: {
       de: '2030 verkaufen wir keine Produkte mehr, sondern **orchestrieren Lösungen entlang der Ziele unserer Kunden**. KI kombiniert Finanz-, Service- und Ökosystemleistungen in Echtzeit. Unsere Berater werden zu **KI-augmentierten Sparringspartnern**, die bei komplexen Entscheidungen den Unterschied machen, während Standardvorgänge autonom laufen. Die Kundenbeziehung wird **permanent, kanalübergreifend und hyperpersonalisiert**.',
       en: 'By 2030 we no longer sell products but **orchestrate solutions around our customers’ goals**. AI combines financial, service and ecosystem capabilities in real time. Our advisors become **AI-augmented sparring partners** who make the difference on complex decisions, while standard transactions run autonomously. The customer relationship becomes **permanent, cross-channel and hyper-personalised**.',
@@ -446,7 +446,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     label: { de: 'Marktfolge', en: 'Operations' },
     ort: { de: '1. OG rechts (Backoffice-Großraum)', en: '1st floor right (open-plan back office)' },
     keyObject: '„WORKFLOW AUTOMATION"-Screen',
-    zone: { centerX: 76.8, centerY: 59.6, width: 39.5, height: 14, labelX: 76.8, labelY: 54.5, hitWidth: 35, hitHeight: 12 },
+    zone: { centerX: 76, centerY: 61.5, width: 41, height: 16, labelX: 76, labelY: 55.5, hitWidth: 36, hitHeight: 14 },
     vision: {
       de: 'Unsere Marktfolge entwickelt sich 2030 **vom internen Kostenblock zur wertschöpfenden Plattform**. Standardvorfälle laufen als **vollautonome Dunkelverarbeitung Ende-zu-Ende**, Menschen lösen nur noch komplexe Sonderfälle. Wir entscheiden bewusst, **was intern bleibt und was ein orchestriertes Ökosystem übernimmt — und bieten unsere besten Services als skalierbares Banking-as-a-Service für Dritte an**.',
       en: 'By 2030 our operations evolve **from an internal cost block into a value-creating platform**. Standard cases run as **fully autonomous straight-through processing end-to-end**, while people only resolve complex exceptions. We deliberately decide **what stays in-house and what an orchestrated ecosystem takes over — and offer our best services as scalable banking-as-a-service to third parties**.',
@@ -559,7 +559,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     },
     ort: { de: '1. OG links (Corporate / HR)', en: '1st floor left (Corporate / HR)' },
     keyObject: '„ORGANISATION"-Screen',
-    zone: { centerX: 24, centerY: 59.6, width: 40, height: 14, labelX: 24, labelY: 54.5, hitWidth: 35, hitHeight: 12 },
+    zone: { centerX: 24.3, centerY: 61.5, width: 41, height: 16, labelX: 24.3, labelY: 55.5, hitWidth: 36, hitHeight: 14 },
     vision: {
       de: 'Corporate Services sind 2030 der **Enabler des Wandels**. Lernen ist kein Event mehr, sondern **kontinuierlicher, KI-gestützter Skill-Aufbau** für neue Profile wie den AI-Translator. Unsere Organisation wird **nicht mehr von starren Strukturen, sondern von Skills, Rollen und Teams in Echtzeit gesteuert** — und datenbasierte, vorausschauende Workforce-Steuerung wird zum Wettbewerbsvorteil.',
       en: 'In 2030, Corporate Services are the **enabler of change**. Learning is no longer an event but **continuous, AI-supported skill building** for new profiles such as the AI translator. Our organisation is **no longer steered by rigid structures but by skills, roles and teams in real time** — and data-driven, forward-looking workforce management becomes a competitive advantage.',
@@ -691,7 +691,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     label: { de: 'Technologie / IT', en: 'Technology / IT' },
     ort: { de: '2. OG rechts (Technology)', en: '2nd floor right (technology)' },
     keyObject: 'Monitoring-Arbeitsplatz am Server-Rack',
-    zone: { centerX: 76.8, centerY: 42.3, width: 39.5, height: 16, labelX: 76.8, labelY: 36.2, hitWidth: 35, hitHeight: 14 },
+    zone: { centerX: 76, centerY: 41.5, width: 41, height: 16, labelX: 76, labelY: 35.5, hitWidth: 36, hitHeight: 14 },
     vision: {
       de: '2030 **entwickelt, testet und deployt sich unsere Software weitgehend selbst**. KI entscheidet autonom innerhalb der von uns gesetzten **Governance und Leitplanken**, während die IT zur **modularen, API-basierten Plattform** wird. Fachbereiche steuern diese Systeme zunehmend direkt — die **Gatekeeper-Rolle der klassischen IT verschwindet**, und unser Vorsprung entsteht aus der Geschwindigkeit, mit der wir Anforderungen in Lösungen verwandeln.',
       en: 'By 2030 **our software largely develops, tests and deploys itself**. AI decides autonomously within the **governance and guardrails** we set, while IT becomes a **modular, API-based platform**. Business units increasingly steer these systems directly — the **gatekeeper role of classic IT disappears**, and our edge comes from the speed at which we turn requirements into solutions.',
@@ -781,7 +781,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     label: { de: 'Compliance & Risk', en: 'Compliance & Risk' },
     ort: { de: '2. OG links (Compliance & Risk)', en: '2nd floor left (compliance & risk)' },
     keyObject: '„GOVERNANCE COCKPIT"-Screen',
-    zone: { centerX: 24, centerY: 42.3, width: 40, height: 16, labelX: 24, labelY: 36.2, hitWidth: 35, hitHeight: 14 },
+    zone: { centerX: 24.3, centerY: 41.5, width: 41, height: 16, labelX: 24.3, labelY: 35.5, hitWidth: 36, hitHeight: 14 },
     vision: {
       de: 'Compliance ist 2030 **kein nachgelagerter Bremsklotz mehr, sondern in jede Entscheidung eingebaut**. Regulatorik ist direkt in Systeme und Entscheidungslogiken integriert. Aus dem Three-Lines-of-Defense-Modell wird **kontinuierliche, technisch integrierte Echtzeit-Kontrolle mit dem CAIO im Zentrum**. Cyber- und Operational Risk werden **untrennbarer Teil des Betriebsmodells — Sicherheit heißt permanente Resilienzsteuerung statt nachträglicher Schutzwall**.',
       en: 'By 2030 compliance is **no longer a downstream brake but built into every decision**. Regulation is integrated directly into systems and decision logic. The three-lines-of-defence model becomes **continuous, technically integrated real-time control with the CAIO at the centre**. Cyber and operational risk become **an inseparable part of the operating model — security means permanent resilience management rather than a retrofitted protective wall**.',
@@ -891,7 +891,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     label: { de: 'Transformation mit Deloitte', en: 'Transformation with Deloitte' },
     ort: { de: 'Glas-Aufzug (vertikal, alle Etagen)', en: 'Glass elevator (vertical, all floors)' },
     keyObject: 'die Glas-Spine durch alle Etagen',
-    zone: { centerX: 50.4, centerY: 50, width: 11, height: 92, fit: 'contain', labelX: 50.4, labelY: 50, hitWidth: 9.5, hitHeight: 86 },
+    zone: { centerX: 50.3, centerY: 50, width: 11, height: 92, fit: 'contain', labelX: 50.3, labelY: 50, hitWidth: 9.5, hitHeight: 86 },
     vision: {
       de: 'Wir wandeln uns bis 2030 **zur AI-nativen Plattform-Bank** — aufgebaut aus Daten, Ökosystem und **integrierter Governance statt nachgelagerter Kontrolle**. Unser Operating Model folgt der Entscheidungslogik: **Journey-Teams mit End-to-End-Ownership, Human-in-the-loop und AI-Governance**. Wir transformieren **decision-first** — zuerst die wenigen kritischen Decision Journeys und eine **skalierbare Decision Spine**, dann der systematische Roll-out von KI und Technologie.',
       en: 'By 2030 we transform **into an AI-native platform bank** — built from data, ecosystem and **integrated governance instead of downstream control**. Our operating model follows decision logic: **journey teams with end-to-end ownership, human-in-the-loop and AI governance**. We transform **decision-first** — starting with the few critical decision journeys and a **scalable decision spine**, then the systematic roll-out of AI and technology.',
@@ -1039,7 +1039,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     label: { de: 'Produkte & Innovation', en: 'Products & Innovation' },
     ort: { de: '3. OG rechts (Projektraum)', en: '3rd floor right (project room)' },
     keyObject: 'Whiteboard-Wand mit Produkt-Mockups',
-    zone: { centerX: 76.8, centerY: 23, width: 39.5, height: 16.7, labelX: 76.8, labelY: 16.6, hitWidth: 35, hitHeight: 15 },
+    zone: { centerX: 76, centerY: 21.5, width: 41, height: 16, labelX: 76, labelY: 15.5, hitWidth: 36, hitHeight: 14 },
     vision: {
       de: '2030 gibt es keinen Produktkatalog mehr: KI komponiert aus modularen Bausteinen **hyperpersonalisierte Lösungen für das Segment of One** — im Moment des Bedarfs. Produkte sind **lebende, adaptive Services**, die sich innerhalb definierter Leitplanken selbst an Lebensereignisse und Marktlage anpassen. Und sie entstehen **kontinuierlich statt in Jahresprojekten**: KI entwirft, simuliert und testet compliant by design — **Time-to-Market sinkt von Jahren auf Tage**.',
       en: 'In 2030 there is no longer a product catalogue: from modular building blocks, AI composes **hyper-personalised solutions for the segment of one** — at the moment of need. Products are **living, adaptive services** that adjust themselves to life events and market conditions within defined guardrails. And they emerge **continuously rather than in annual projects**: AI designs, simulates and tests compliant by design — **time-to-market drops from years to days**.',
@@ -1133,7 +1133,7 @@ const RAW_CHAPTERS: RawChapter[] = [
     label: { de: 'Vorstand & Governance', en: 'Executive Board & Governance' },
     ort: { de: '3. OG links (Boardroom)', en: '3rd floor left (boardroom)' },
     keyObject: 'Governance-Cockpit an der Wand',
-    zone: { centerX: 24, centerY: 23, width: 40, height: 16.7, labelX: 24, labelY: 16.6, hitWidth: 35, hitHeight: 15 },
+    zone: { centerX: 24.3, centerY: 21.5, width: 41, height: 16, labelX: 24.3, labelY: 15.5, hitWidth: 36, hitHeight: 14 },
     vision: {
       de: 'Der Vorstand steuert die Bank 2030 **datenbasiert, in Echtzeit und mit klarer AI-Governance**: Ein Governance-Cockpit macht Kapital, Liquidität, Risiko und Ertrag **live** sichtbar, KI **simuliert Handlungsoptionen**, und der Vorstand verantwortet **Leitplanken, Risikoappetit und Ethik der KI** zentral. Aus dem jährlichen Strategiezyklus wird eine **kontinuierliche, adaptive Steuerung**. (Platzhalter-Vorschlag — vor Nutzung freigeben.)',
       en: 'In 2030 the board steers the bank **on live data, in real time and with clear AI governance**: a governance cockpit makes capital, liquidity, risk and earnings visible **live**, AI **simulates options for action**, and the board owns the **guardrails, risk appetite and ethics of AI** centrally. The annual strategy cycle turns into **continuous, adaptive steering**. (Placeholder proposal — to be signed off before use.)',

@@ -422,15 +422,38 @@
   }
 }
 
+/* Weiße Folien-Fläche: der Inhalt jedes Schritts liegt auf Weiß (lesbar,
+   Konsulting-Folie), das gezoomte Haus bleibt an den Rändern transparent
+   sichtbar. */
+.slide {
+  width: min(1560px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 1.1vw, 16px);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: clamp(18px, 2.2vw, 34px) clamp(20px, 2.6vw, 44px) clamp(22px, 2.6vw, 40px);
+}
+
+/* Action-Title im Konsulting-Folien-Stil: linksbündig, mit Hairline darunter. */
 .title {
   width: 100%;
   max-width: var(--media-w);
-  text-align: center;
+  text-align: left;
   font-size: clamp(24px, 2.3vw, 34px);
   font-weight: 600;
   line-height: 1.18;
   letter-spacing: -0.02em;
   color: var(--ink);
+  padding-bottom: clamp(8px, 0.9vw, 12px);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+/* Summary-Schritt: Titel läuft in Sektionsbreite (breiter als --media-w). */
+.title[data-wide] {
+  max-width: min(1640px, 96vw);
 }
 
 /* Trenner in „Management Summary | Kapitel" — dezent. */
@@ -451,7 +474,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: var(--r-lg);
+  border-radius: 2px;
   overflow: hidden;
   border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-2);
@@ -478,11 +501,12 @@
   display: block;
 }
 
-/* ── Vergleichsbild als zwei getrennt gerahmte Hälften (Heute | 2030) ──
-   Das Quellbild enthält beide Szenen nebeneinander samt eingebackenem
-   Trennbalken; jede Karte zeigt per Crop nur ihre äußeren ~48 % (img-Breite
-   210 %), der Balken in der Bildmitte verschwindet. Die klare Kante entsteht
-   durch den Abstand zwischen den Karten. */
+/* ── Vergleich Heute | 2030 als flaches Konsulting-Folien-Layout ──
+   Zwei ruhige Spalten ohne Karten-Chrome: Kicker + Spalten-Überschrift,
+   darunter die Bildhälfte (harte Kanten, Hairline-Rahmen), darunter der Text.
+   Das Quellbild enthält beide Szenen samt eingebackenem Trennbalken; jede
+   Spalte zeigt per Crop nur ihre äußeren ~48 % (img-Breite 210 %), der Balken
+   verschwindet. Im Kanal verbindet ein runder Pfeil-Badge die Szenen. */
 .imageInner[data-compare] {
   aspect-ratio: auto;
   border: 0;
@@ -494,70 +518,71 @@
 
 .compareMedia {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(14px, 1.6vw, 26px);
+  grid-template-columns: 1fr clamp(36px, 3vw, 48px) 1fr;
+  grid-template-areas:
+    'headq  .     headf'
+    'imgq   badge imgf'
+    'bodyq  .     bodyf';
+  column-gap: clamp(10px, 1.1vw, 16px);
 }
 
-.compareHalf {
-  margin: 0;
+.cmpHead {
   display: flex;
   flex-direction: column;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-2);
-  background: var(--bg-1);
+  gap: 3px;
+  padding-bottom: 10px;
 }
 
-.compareHalf[data-future] {
-  border-color: var(--accent);
+.cmpHead[data-quo] {
+  grid-area: headq;
 }
 
-/* Prägnante Bild-Überschrift als Kopfbalken über jeder Hälfte */
-.compareHalfHead {
-  display: flex;
+.cmpHead[data-future] {
+  grid-area: headf;
+}
+
+.cmpKicker {
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 14px;
-  /* Einheitliche Balkenhöhe, damit beide Bildkanten exakt fluchten,
-     auch wenn nur eine der beiden Überschriften zweizeilig umbricht. */
-  min-height: 56px;
-  color: #fff;
-}
-
-.compareHalf[data-quo] .compareHalfHead {
-  background: rgba(11, 12, 15, 0.92);
-}
-
-.compareHalf[data-future] .compareHalfHead {
-  background: var(--accent);
-}
-
-.compareHalfTag {
-  flex-shrink: 0;
+  gap: 6px;
   font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  opacity: 0.75;
+  color: var(--ink-3);
 }
 
-.compareHalfTitle {
+.cmpHead[data-future] .cmpKicker {
+  color: var(--accent);
+}
+
+.cmpTitle {
   font-family: var(--font-heading);
-  font-size: clamp(13px, 1.05vw, 16px);
+  font-size: clamp(15px, 1.25vw, 19px);
   font-weight: 700;
   line-height: 1.25;
+  color: var(--ink);
 }
 
-.compareHalfImg {
+.cmpImg {
   position: relative;
   aspect-ratio: 8 / 9;
   overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
   background: var(--bg-1);
 }
 
-.compareHalfImg img {
+.cmpImg[data-quo] {
+  grid-area: imgq;
+}
+
+.cmpImg[data-future] {
+  grid-area: imgf;
+}
+
+.cmpImg img {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -565,90 +590,60 @@
   height: auto;
 }
 
-.compareHalf[data-quo] .compareHalfImg img {
+.cmpImg[data-quo] img {
   left: 0;
 }
 
-.compareHalf[data-future] .compareHalfImg img {
+.cmpImg[data-future] img {
   right: 0;
 }
 
-/* ── Zwei-Spalten-Vergleich UNTER dem Bild ── */
-.compareGrid {
-  width: 100%;
-  max-width: var(--media-w);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(14px, 1.6vw, 26px);
-}
-
-.compareCard {
-  border-radius: var(--r-lg);
-  padding: clamp(13px, 1.2vw, 18px) clamp(16px, 1.5vw, 24px);
-  border: 1px solid var(--border-soft);
-  background: var(--surface-1);
-  backdrop-filter: blur(7px) saturate(115%);
-  -webkit-backdrop-filter: blur(7px) saturate(115%);
-  box-shadow: var(--shadow-1);
-  transition:
-    background var(--t-med) var(--ease-out),
-    border-color var(--t-med) var(--ease-out);
-}
-
-.compareCard:hover {
-  background: var(--surface-2);
-  border-color: var(--accent);
-}
-
-.compareCard[data-quo] {
-  border-top: 3px solid var(--ink-3);
-}
-
-.compareCard[data-future] {
-  border: 1px solid var(--accent);
-  border-top: 3px solid var(--accent-bright);
-  background: var(--accent-tint);
-}
-
-.compareCard[data-future]:hover {
-  background: rgba(4, 106, 56, 0.2);
-  border-color: var(--accent-bright);
-}
-
-.compareHead {
-  display: inline-flex;
+/* Runder Verbinder-Badge im Kanal zwischen den Bildern (Heute -> 2030). */
+.cmpBadge {
+  grid-area: badge;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  justify-content: center;
 }
 
-.compareCard[data-quo] .compareHead {
-  color: var(--ink-3);
+.cmpBadgeCircle {
+  display: grid;
+  place-items: center;
+  width: clamp(38px, 3.2vw, 48px);
+  height: clamp(38px, 3.2vw, 48px);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.9);
 }
 
-.compareCard[data-future] .compareHead {
-  color: var(--accent);
+.cmpBody {
+  padding-top: 12px;
+  min-width: 0;
 }
 
-.compareText {
-  font-size: clamp(16px, 1.35vw, 21px);
+.cmpBody[data-quo] {
+  grid-area: bodyq;
+}
+
+.cmpBody[data-future] {
+  grid-area: bodyf;
+}
+
+.cmpText {
+  margin: 0;
+  font-size: clamp(15.5px, 1.28vw, 20px);
   line-height: 1.55;
   color: var(--ink-2);
 }
 
-.compareCard[data-future] .compareText {
-  color: var(--ink);
-}
-
-.compareText strong {
+.cmpText strong {
   color: var(--ink);
   font-weight: 700;
 }
+
+/* (Die früheren Text-Karten unter dem Bild sind entfallen — Status-Quo-/
+   2030-Texte stehen jetzt direkt in den Vergleichsspalten, siehe .cmpBody.) */
 
 /* ── Aktivitäts-Schritt (Demo / Tool) ── */
 .activityBox {
@@ -792,9 +787,21 @@
     order: 3;
     width: 100%;
   }
-  .compareGrid,
   .compareMedia {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      'headq'
+      'imgq'
+      'bodyq'
+      'headf'
+      'imgf'
+      'bodyf';
+  }
+  .cmpBadge {
+    display: none;
+  }
+  .cmpBody[data-quo] {
+    padding-bottom: 22px;
   }
   .title {
     font-size: clamp(20px, 6vw, 26px);
@@ -891,15 +898,13 @@
   gap: 12px;
 }
 
-/* Runder Check-Marker (bewusst KEIN Pfeil). */
+/* Flacher Check-Marker in Akzentfarbe (bewusst KEIN Pfeil, kein Kreis-Chip). */
 .summaryBulletIcon {
   flex: none;
   display: inline-grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--accent-tint);
+  width: 20px;
+  height: 20px;
   color: var(--accent);
 }
 
@@ -933,13 +938,16 @@
   color: var(--accent);
 }
 
+/* Szenario-Hinweis als Klartext neben der Überschrift (kein Pill-Chip). */
 .kpiScenarioTag {
-  padding: 2px 9px;
-  border-radius: 999px;
-  background: var(--accent-tint);
-  color: var(--accent);
+  color: var(--ink-3);
   font-size: 11px;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.kpiScenarioTag::before {
+  content: '· ';
 }
 
 .kpiRow {
@@ -948,44 +956,26 @@
   gap: clamp(12px, 1.4vw, 20px);
 }
 
+/* Flache Folien-Sektion ohne Karten-Chrome (die Hairline liefert der
+   Action-Title darüber — keine doppelten Linien). */
 .summaryBlock {
-  padding: clamp(16px, 1.6vw, 24px);
-  border-radius: var(--r-lg);
-  border: 1px solid var(--border-soft);
-  background: var(--surface-1);
-  backdrop-filter: blur(7px) saturate(115%);
-  -webkit-backdrop-filter: blur(7px) saturate(115%);
-  box-shadow: var(--shadow-1);
-  transition:
-    background var(--t-med) var(--ease-out),
-    border-color var(--t-med) var(--ease-out);
+  padding: clamp(4px, 0.5vw, 8px) 0 0;
 }
 
-.summaryBlock:hover {
-  background: var(--surface-2);
-  border-color: var(--accent);
-}
-
+/* Flache Stat-Spalte: 3px-Akzent-Rule oben, sonst kein Chrome. */
 .kpiCard {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: clamp(16px, 1.6vw, 24px);
-  border-radius: var(--r-lg);
-  border: 1px solid var(--border-soft);
+  padding: clamp(10px, 1vw, 14px) 0 0;
   border-top: 3px solid var(--accent);
-  background: var(--surface-1);
-  backdrop-filter: blur(7px) saturate(115%);
-  -webkit-backdrop-filter: blur(7px) saturate(115%);
-  box-shadow: var(--shadow-1);
   transition:
     background var(--t-med) var(--ease-out),
     border-color var(--t-med) var(--ease-out);
 }
 
 .kpiCard:hover {
-  background: var(--accent-tint);
-  border-color: var(--accent);
+  border-top-color: var(--accent-bright);
 }
 
 .kpiLabel {

@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   Download,
   FileSpreadsheet,
+  ImageDown,
   Loader2,
   ScrollText,
   SlidersHorizontal,
@@ -27,6 +28,7 @@ import { CoCreationCanvas } from './CoCreationCanvas'
 import { KreditDilemma } from './KreditDilemma'
 import { ManagementSummary } from './ManagementSummary'
 import { DeloitteBadge } from './DeloitteBadge'
+import { downloadStrukturbild } from '../data/strukturbildDownload'
 import { LanguageSwitch } from './LanguageSwitch'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useLang, type Lang } from '../i18n/LanguageContext'
@@ -205,6 +207,8 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   const [cmsOpen, setCmsOpen] = useState(false)
   // Excel-Export: Ladezustand (edits/lang/Handler weiter unten, nach useLang).
   const [exporting, setExporting] = useState(false)
+  // Strukturbild-Download: Ladezustand.
+  const [imgSaving, setImgSaving] = useState(false)
   // Einstiegsbühne (Raum groß + Heute/Morgen) beim frischen Öffnen eines Raum-
   // Kapitels, bevor der Reader mit den Hypothesen übernimmt. Bei einem
   // wiederhergestellten Teaser-Kapitel sofort offen (einzige Ansicht).
@@ -227,6 +231,21 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
   }, [lang, edits])
   const chapters = useMemo(() => api.getChapters(lang), [api, lang])
   const masterImage = useMemo(() => api.getMasterImage(lang), [api, lang])
+  // Strukturbild als Bilddatei speichern (statt Browser-Screenshot mit UI).
+  // Mit gedrückter Alt- oder Shift-Taste ohne die Kapitelnummern.
+  const onImageDownload = useCallback(
+    async (e: React.MouseEvent) => {
+      setImgSaving(true)
+      try {
+        await downloadStrukturbild(masterImage.src, chapters, !(e.altKey || e.shiftKey))
+      } catch (err) {
+        console.error('Strukturbild-Download fehlgeschlagen', err)
+      } finally {
+        setImgSaving(false)
+      }
+    },
+    [masterImage, chapters],
+  )
   // Kachel-Videos vorerst deaktiviert: unabhängige Veo-Drifts brechen an den
   // Kachelgrenzen die durchgehenden Gebäudelinien (Decken, Fassade). Nächster
   // Ansatz: je ein Video pro Raumöffnung (Grenzen auf Fensterrahmen), Struktur
@@ -587,6 +606,27 @@ export function BankExplorer({ onExitToIntro, api = DEFAULT_API }: BankExplorerP
             <Download size={16} strokeWidth={2} aria-hidden />
             <span>{lang === 'de' ? 'KPI-Modell' : 'KPI model'}</span>
           </a>
+          {/* Strukturbild als Bilddatei — ohne Bedienelemente, daher kein
+              Screenshot nötig. Klick = mit Kapitelnummern, Alt/Shift = pur. */}
+          <button
+            type="button"
+            className={styles.introBtn}
+            tabIndex={isOverview ? 0 : -1}
+            onClick={onImageDownload}
+            disabled={imgSaving}
+            aria-label={
+              lang === 'de'
+                ? 'Strukturbild als Bild herunterladen (mit Alt-Taste ohne Kapitelnummern)'
+                : 'Download the structure image (hold Alt for a version without chapter numbers)'
+            }
+          >
+            {imgSaving ? (
+              <Loader2 size={16} strokeWidth={2} className={styles.spin} aria-hidden />
+            ) : (
+              <ImageDown size={16} strokeWidth={2} aria-hidden />
+            )}
+            <span>{lang === 'de' ? 'Bild' : 'Image'}</span>
+          </button>
         </div>
 
         {/* Titel-Box, kommt oben mittig herein (nur Übersicht) */}

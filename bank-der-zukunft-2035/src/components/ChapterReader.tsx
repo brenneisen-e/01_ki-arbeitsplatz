@@ -134,7 +134,7 @@ const STR: Record<Lang, ReaderStrings> = {
     summaryAria: 'Management Summary',
     mgmtSummaryLabel: 'Kernaussagen',
     businessCaseLabel: 'Business Case (exemplarisch)',
-    kpiHeading: 'Zielwerte 2030 bei Erfüllung der Hypothesen',
+    kpiHeading: 'Potenzial',
     kpiHint: 'bei Erfüllung der Hypothesen',
     kpiApprox: 'ca.',
     todayTag: 'Heute',
@@ -190,7 +190,7 @@ const STR: Record<Lang, ReaderStrings> = {
     summaryAria: 'Management summary',
     mgmtSummaryLabel: 'Key takeaways',
     businessCaseLabel: 'Business case (illustrative)',
-    kpiHeading: '2030 targets once the hypotheses are met',
+    kpiHeading: 'Potential',
     kpiHint: 'once the hypotheses are met',
     kpiApprox: '~',
     todayTag: 'Today',
@@ -221,6 +221,16 @@ function smoothKpi(n: number): number {
   return r === 0 ? 0 : r
 }
 
+/** Prozentwerte noch großzügiger runden: einstellige Werte werden zu 10,
+    darüber Fünferschritte — keine krummen 7 % im Board-Blick. */
+function smoothPercent(n: number): number {
+  const a = Math.abs(n)
+  if (a < 5) return Math.round(n)
+  if (a < 10) return Math.sign(n) * 10
+  const r = Math.round(n / 5) * 5
+  return r === 0 ? 0 : r
+}
+
 /**
  * Gerundeter Anzeige-Zielwert je KPI. Index- und Absolut-KPIs (Index 100,
  * € p.a., Anzahl) werden zur Veränderung in Prozent („ca. +25 %" Wachstum,
@@ -232,7 +242,7 @@ function kpiDisplay(kpi: Kpi, approx: string): { target: number; fmt: (v: number
     return z.toLocaleString('de-DE')
   }
   if (kpi.unit === 'Index (100)' || kpi.unit === '€ p.a.' || kpi.unit === 'Anzahl') {
-    const delta = smoothKpi(((kpi.basis - kpi.base) / kpi.base) * 100)
+    const delta = smoothPercent(((kpi.basis - kpi.base) / kpi.base) * 100)
     return {
       target: delta,
       fmt: (v) => {
@@ -248,39 +258,15 @@ function kpiDisplay(kpi: Kpi, approx: string): { target: number; fmt: (v: number
     Min: ' Min',
     'Std. p.a.': ' Std.',
   }
+  const target = kpi.unit === '%' ? smoothPercent(kpi.basis) : smoothKpi(kpi.basis)
   return {
-    target: smoothKpi(kpi.basis),
+    target,
     fmt: (v) => `${approx} ${de(Math.round(v))}${suffix[kpi.unit] ?? ''}`,
   }
 }
 
-/** Zählt beim Mounten von 0 auf `to` hoch (Ease-out); respektiert reduzierte Bewegung. */
-function CountUp({ to, fmt }: { to: number; fmt: (v: number) => string }) {
-  const [value, setValue] = useState(0)
-  useEffect(() => {
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    if (reduce) {
-      setValue(to)
-      return
-    }
-    let raf = 0
-    let start: number | null = null
-    const duration = 1100
-    const tick = (ts: number) => {
-      if (start === null) start = ts
-      const p = Math.min(1, (ts - start) / duration)
-      const eased = 1 - Math.pow(1 - p, 3)
-      setValue(to * eased)
-      if (p < 1) raf = requestAnimationFrame(tick)
-      else setValue(to)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [to])
-  return <>{fmt(value)}</>
-}
+/* (Die frühere CountUp-Animation ist bewusst entfernt — die Potenzial-Werte
+   stehen ruhig und fest, nichts rollt oder springt.) */
 
 // Management-Summary-Kernaussagen je Kapitel — jetzt zentral in data/summaryBullets.
 
@@ -615,7 +601,7 @@ export function ChapterReader({
                         ) : (
                           <TrendingDown size={20} strokeWidth={2.4} aria-hidden />
                         )}
-                        <CountUp to={target} fmt={fmt} />
+                        {fmt(target)}
                       </span>
                     </div>
                   )

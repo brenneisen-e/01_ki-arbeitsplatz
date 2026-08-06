@@ -78,7 +78,7 @@ type ReaderStrings = {
   businessCaseLabel: string
   kpiHeading: string
   kpiHint: string
-  kpiTodayLabel: string
+  kpiApprox: string
   kpiScenarioLabel: string
   kpiFootnote: string
   consultantOpen: string
@@ -134,10 +134,10 @@ const STR: Record<Lang, ReaderStrings> = {
     businessCaseLabel: 'Business Case (exemplarisch)',
     kpiHeading: 'Zielwerte 2030 bei Erfüllung der Hypothesen',
     kpiHint: 'bei Erfüllung der Hypothesen',
-    kpiTodayLabel: 'heute',
+    kpiApprox: 'ca.',
     kpiScenarioLabel: 'Szenario Basis',
     kpiFootnote:
-      'Zielwerte aus dem KPI-Modell (Szenario Basis; Spanne konservativ–ambitioniert im Modell). Illustrative Eckwerte, quellenbasiert.',
+      'Gerundete Zielwerte aus dem KPI-Modell (Szenario Basis; exakte Werte und Spannen im KPI-Modell-Download). Illustrative Eckwerte, quellenbasiert.',
     consultantOpen: 'Leitfrage anzeigen',
     consultantClose: 'Leitfrage ausblenden',
     consultantNew: 'Neue Leitfrage',
@@ -189,10 +189,10 @@ const STR: Record<Lang, ReaderStrings> = {
     businessCaseLabel: 'Business case (illustrative)',
     kpiHeading: '2030 targets once the hypotheses are met',
     kpiHint: 'once the hypotheses are met',
-    kpiTodayLabel: 'today',
+    kpiApprox: '~',
     kpiScenarioLabel: 'Base scenario',
     kpiFootnote:
-      'Targets from the KPI model (base scenario; conservative–ambitious range in the model). Illustrative, source-based figures.',
+      'Rounded targets from the KPI model (base scenario; exact values and ranges in the KPI model download). Illustrative, source-based figures.',
     consultantOpen: 'Show guiding question',
     consultantClose: 'Hide guiding question',
     consultantNew: 'New guiding question',
@@ -206,50 +206,52 @@ const STR: Record<Lang, ReaderStrings> = {
 }
 
 // KPI-Zielwerte je Kapitel kommen aus dem Modell (src/data/kpis.ts, generiert aus
-// Banking_Horizon_2030_KPI-Modell.xlsx). Angezeigt wird das Szenario „Basis";
+// Banking_Horizon_2030_KPI-Modell.xlsx). Angezeigt wird das Szenario „Basis" als
+// bewusst gerundeter Circa-Wert (keine Scheingenauigkeit, keine Ist-Werte);
 // die Zahl rollt beim Aufruf der Summary-Kachel von 0 auf den Zielwert hoch.
+// Exakte Werte und Spannen stehen im KPI-Modell-Download.
 
-/** Nachkommastellen je Einheit/Zielwert (stabil über alle Animations-Frames). */
-function kpiDecimals(unit: string, target: number): number {
-  if (
-    unit === '€ p.a.' ||
-    unit === 'Anzahl' ||
-    unit === 'Index (100)' ||
-    unit === 'Punkte' ||
-    unit === 'Min' ||
-    unit === 'Std. p.a.'
-  ) {
-    return 0
-  }
-  if (unit === 'Produkte/Kunde') return 1
-  return Number.isInteger(target) ? 0 : 1
+/** Glättet einen Zielwert: ab 15 auf Fünferschritte, darunter auf ganze Zahlen. */
+function smoothKpi(n: number): number {
+  const r = Math.abs(n) >= 15 ? Math.round(n / 5) * 5 : Math.round(n)
+  return r === 0 ? 0 : r
 }
 
-/** Deutsche Formatierung inkl. knapper Einheit (z. B. „625.000 €", „58 %", „6,6 Mon."). */
-function formatKpi(value: number, unit: string, decimals: number): string {
-  const de = (n: number) =>
-    n.toLocaleString('de-DE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
-  switch (unit) {
-    case '€ p.a.':
-      return `${de(Math.round(value))} €`
-    case '%':
-      return `${de(value)} %`
-    case 'Min':
-      return `${de(Math.round(value))} Min`
-    case 'Tage':
-      return `${de(value)} Tage`
-    case 'Monate':
-      return `${de(value)} Mon.`
-    case 'Std. p.a.':
-      return `${de(Math.round(value))} Std.`
-    default:
-      // Punkte, Index (100), Anzahl, Produkte/Kunde: reine Zahl
-      return de(value)
+/**
+ * Gerundeter Anzeige-Zielwert je KPI. Index- und Absolut-KPIs (Index 100,
+ * € p.a., Anzahl) werden zur Veränderung in Prozent („ca. +25 %" Wachstum,
+ * „ca. −20 %" Kostenabbau), alle übrigen bleiben absolute Circa-Werte.
+ */
+function kpiDisplay(kpi: Kpi, approx: string): { target: number; fmt: (v: number) => string } {
+  const de = (n: number) => {
+    const z = n === 0 ? 0 : n
+    return z.toLocaleString('de-DE')
+  }
+  if (kpi.unit === 'Index (100)' || kpi.unit === '€ p.a.' || kpi.unit === 'Anzahl') {
+    const delta = smoothKpi(((kpi.basis - kpi.base) / kpi.base) * 100)
+    return {
+      target: delta,
+      fmt: (v) => {
+        const n = Math.round(v)
+        return `${approx} ${n > 0 ? '+' : ''}${de(n)} %`
+      },
+    }
+  }
+  const suffix: Record<string, string> = {
+    '%': ' %',
+    Tage: ' Tage',
+    Monate: ' Mon.',
+    Min: ' Min',
+    'Std. p.a.': ' Std.',
+  }
+  return {
+    target: smoothKpi(kpi.basis),
+    fmt: (v) => `${approx} ${de(Math.round(v))}${suffix[kpi.unit] ?? ''}`,
   }
 }
 
 /** Zählt beim Mounten von 0 auf `to` hoch (Ease-out); respektiert reduzierte Bewegung. */
-function CountUp({ to, unit, decimals }: { to: number; unit: string; decimals: number }) {
+function CountUp({ to, fmt }: { to: number; fmt: (v: number) => string }) {
   const [value, setValue] = useState(0)
   useEffect(() => {
     const reduce =
@@ -273,7 +275,7 @@ function CountUp({ to, unit, decimals }: { to: number; unit: string; decimals: n
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
   }, [to])
-  return <>{formatKpi(value, unit, decimals)}</>
+  return <>{fmt(value)}</>
 }
 
 // Management-Summary-Kernaussagen je Kapitel — jetzt zentral in data/summaryBullets.
@@ -601,7 +603,7 @@ export function ChapterReader({
               <div className={styles.kpiRow}>
                 {(KPIS_BY_CHAPTER[chapter.id] ?? []).filter((k) => k.featured).map((kpi: Kpi) => {
                   const up = kpi.basis >= kpi.base
-                  const dec = kpiDecimals(kpi.unit, kpi.basis)
+                  const { target, fmt } = kpiDisplay(kpi, t.kpiApprox)
                   return (
                     <div className={styles.kpiCard} key={kpi.label.en} data-trend={up ? 'up' : 'down'}>
                       <span className={styles.kpiLabel}>{kpi.label[lang]}</span>
@@ -611,10 +613,7 @@ export function ChapterReader({
                         ) : (
                           <TrendingDown size={20} strokeWidth={2.4} aria-hidden />
                         )}
-                        <CountUp to={kpi.basis} unit={kpi.unit} decimals={dec} />
-                      </span>
-                      <span className={styles.kpiHint}>
-                        {t.kpiTodayLabel}: {formatKpi(kpi.base, kpi.unit, kpiDecimals(kpi.unit, kpi.base))}
+                        <CountUp to={target} fmt={fmt} />
                       </span>
                     </div>
                   )
@@ -626,20 +625,49 @@ export function ChapterReader({
         ) : (
           <>
         <div className={styles.media}>
-          <div className={styles.imageInner}>
-            <ImageSlot
-              src={effImageSrc}
-              alt={image.alt}
-              fit="cover"
-              label={slotLabel}
-              caption={effTitle}
-            />
-            {hypothesis && (
-              <div className={styles.split} aria-hidden>
-                <span className={styles.splitLine} />
-                <span className={styles.splitLeft}>{t.statusQuo}</span>
-                <span className={styles.splitRight}>{t.future}</span>
+          <div className={styles.imageInner} data-compare={hypothesis ? '' : undefined}>
+            {hypothesis ? (
+              /* Vergleichsbild als zwei getrennt gerahmte Hälften: der im Bild
+                 eingebackene Trennbalken (mittlere ~4 %) wird weggecroppt, die
+                 Kante entsteht durch den echten Abstand zwischen den Karten. */
+              <div className={styles.compareMedia}>
+                <figure className={styles.compareHalf} data-quo>
+                  <figcaption className={styles.compareHalfHead}>
+                    <Clock size={14} strokeWidth={2.2} aria-hidden />
+                    <span className={styles.compareHalfTag}>{t.statusQuo}</span>
+                    {hypothesis.imageTitles && (
+                      <span className={styles.compareHalfTitle}>
+                        {hypothesis.imageTitles.statusQuo}
+                      </span>
+                    )}
+                  </figcaption>
+                  <div className={styles.compareHalfImg}>
+                    <img src={effImageSrc} alt={image.alt} />
+                  </div>
+                </figure>
+                <figure className={styles.compareHalf} data-future>
+                  <figcaption className={styles.compareHalfHead}>
+                    <Sparkles size={14} strokeWidth={2.2} aria-hidden />
+                    <span className={styles.compareHalfTag}>{t.future}</span>
+                    {hypothesis.imageTitles && (
+                      <span className={styles.compareHalfTitle}>
+                        {hypothesis.imageTitles.in2030}
+                      </span>
+                    )}
+                  </figcaption>
+                  <div className={styles.compareHalfImg}>
+                    <img src={effImageSrc} alt="" />
+                  </div>
+                </figure>
               </div>
+            ) : (
+              <ImageSlot
+                src={effImageSrc}
+                alt={image.alt}
+                fit="cover"
+                label={slotLabel}
+                caption={effTitle}
+              />
             )}
             {isActivity && activity.screenOverlay && (
               <ScreenIframe overlay={activity.screenOverlay} />

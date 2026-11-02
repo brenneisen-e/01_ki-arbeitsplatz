@@ -1,0 +1,166 @@
+[
+ {
+  "de": "Start – Vorgang aus dem Themenpostkorb übernehmen",
+  "art": "text"
+ },
+ {
+  "de": "Postkorbvorgang und Datenpool lesen",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb „HSB4 K BÜ Prüf BOT“, Postkorb-Nr. 2015, siehe Kapitel „Details zum Startereignis“) öffnen. Dokumenttyp 02015 (Maklervollmacht) bzw. 06065 (Betreuung / Anfrage Betreuung).",
+  "art": "text"
+ },
+ {
+  "de": "Lese die Vorgang-Lfd-Nr aus und speichere als <Vorgang-Lfd-Nr>.",
+  "art": "text"
+ },
+ {
+  "de": "<Vorgang-Lfd-Nr> ist der Ordnungsbegriff dieses Prozesses.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die Versicherungsnummer des Postkorbvorgangs aus und speichere als <Vorgang-VNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <Vorgang-VNR> ist die Nummer, mit der Celonis den Vorgang eröffnet hat, bereits normiert auf zwei Buchstaben Spartenkürzel und neun Ziffern. Sie ist der Einstieg für alle Hostaufrufe und bleibt für den gesamten Vorgang die führende Nummer. <BUE_VNR> und <BUE_VNR_2> aus dem Datenpool werden nicht gegen sie geprüft; sie führen nachrichtlich alle im Auftrag genannten Nummern und gehen in Notiz und Bearbeitungshinweis ein.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Celonis eröffnet je Versicherungsnummer einen eigenen Postkorbvorgang mit derselben E-Mail, allen Anhängen, dem KI-Deckblatt und dem zugehörigen Datensatz im Datenpool.",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Datenpool: Wechsel vom Postkorbvorgang in den Datenpool, Datensatz zum Postkorbvorgang mit <Vorgang-Lfd-Nr> öffnen.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die folgenden 35 Felder des Datenpools aus und speichere jedes unter dem gleichnamigen Variablennamen (vollständige Liste mit Format, Werteliste und Pflichtfeldkennzeichen im Kapitel „Tabelle der genutzten Variablen“, Herkunft „Datenpool“):",
+  "art": "text"
+ },
+ {
+  "de": "Lese <BUE_MV_EINGANGSDATUM> aus und speichere als <Eingangsdatum-BUE> (Format tt.mm.jjjj). Ist das Feld leer, wird das Eröffnungsdatum des Postkorbvorgangs verwendet.",
+  "art": "text"
+ },
+ {
+  "de": "Vom Roboter initialisiert: Die Variablen für das BE-Handling werden zu Beginn jedes Vorgangs zurückgesetzt:",
+  "art": "text"
+ },
+ {
+  "de": "<BE> = leer",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = leer",
+  "art": "text"
+ },
+ {
+  "de": "<Fehlerliste> = leer",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „Vorprüfung“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Trennung nach Sparte erfolgt vor dem Prüf-Bot: KV-Vorgänge und Vorgänge aus Komposit und Leben liegen in getrennten Postkörben. Dieser Prüf-Bot bedient ausschließlich den Postkorb Gesundheit; die Notiz entspricht damit fest der KV-Variante.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Spartenweiche innerhalb des Prozesses ist deshalb nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Prüfung der Klassifikation (<BUE_KLASSIFIKATION>) findet nicht statt. Der Prüf-Bot wird nur durch Vorgänge ausgelöst, die als Bestandsübertragung in den Themenpostkorb gestellt wurden – heute durch Celonis, künftig auch durch Weiterleitung aus der Sparte, wenn dort zuerst ein anderes Anliegen zu bearbeiten war.",
+  "art": "text"
+ },
+ {
+  "de": "Vorprüfung – Business Exceptions aus dem KI-Deckblatt",
+  "art": "text"
+ },
+ {
+  "de": "Ausschlusskriterien aus dem KI-Deckblatt prüfen",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Vor den fachlichen Prüfungen wird anhand des KI-Deckblatts festgestellt, ob der Vorgang bearbeitbar ist. Jedes Ausschlusskriterium ist eine Business Exception. Geprüft wird ausschließlich gegen die Datenpoolfelder, also ohne Hostzugriff.",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = leer",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Vermittlertyp nicht angegeben“ in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> = leer",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Agenturnummer nicht vorhanden“",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „VII. Abschluss mit Befund“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = „MFA“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_WUNSCH_VORHANDEN> = „nein“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „BÜ-Wunsch nicht vorhanden“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_MV_AUF_MAKLER> <> „ja“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Betreuungswunsch nicht auf MFA ausgestellt“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_MV_UNTERSCHRIFT_KUNDE> <> „ja“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Unterschrift VN fehlt“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_PRUEFUNG_UNTERLAGEN> <> „Vollständig“",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Unterlagen nicht vollständig“ in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „I. Kunde (VN)“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Beim Mehrfachagenten (<BUE_VERMITTLER_TYP> = „MFA“) gibt es keine Maklervollmacht; für ihn zählen der ausformulierte BÜ-Wunsch und der auf ihn ausgestellte Betreuungswunsch. Die Felder <BUE_MV_ENTHALTEN>, <BUE_MV_STATUS>, <BUE_MV_VOLLUMFAENGLICH> und <BUE_UV_ERTEILT> stehen bei ihm auf N/A und werden nicht geprüft.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Beim Makler belegt die Maklervollmacht den Auftrag; <BUE_WUNSCH_VORHANDEN> wird deshalb nur beim Mehrfachagenten geprüft. Die Unterschrift des Versicherungsnehmers steht auf der Maklervollmacht und ist beim Makler das harte Kriterium.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein anderer Wert als „Vollständig“ ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz „Unterlagen nicht vollständig“ in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer, läuft der Vorgang durch den Makler-Zweig; die Prüfnotiz stellt sicher, dass der Vorgang in die Nachprüfung geht (Vorschlag, durch den Fachbereich zu bestätigen).",
+  "art": "text"
+ }
+]

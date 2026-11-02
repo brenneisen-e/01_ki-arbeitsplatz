@@ -1,0 +1,21 @@
+Hallo Martin, hallo zusammen,
+
+ja, ein kurzer Termin wäre aus meiner Sicht sinnvoll. Damit wir ihn kurz halten können, vorab der Sachstand und ein Vorschlag, wie wir die Situation pragmatisch auflösen könnten. Wenn ihr damit leben könnt, müssten wir im Termin nur noch die Details festzurren.
+
+Die Budgetzuweisung ist in den letzten Wochen etwas unübersichtlich geworden, das will ich gar nicht schönreden: Der Prüf-Bot war im Zwischenbericht vom 10.06. über HS (TTB) eingeplant, dieses Budget ist zwischenzeitlich für einen anderen Roboter verwendet worden, und Robotics möchte die 40 PT inzwischen auf die Makler-ID buchen (Modernization of Broker Sales IT, ID-1006080). Parallel sind die Kollegen mit derselben Frage auf Arndt und Pierre zugegangen. Auf Maklerseite stehen nach meinem Verständnis 75.000 EUR zur Verfügung, die Gesamtkosten von rund 96.000 EUR, die zuletzt im Raum standen, lassen sich dort nicht abbilden. Gleichzeitig wartet Robotics noch auf ein Staffing, um loszulegen.
+
+Gegenüberstellung der IT-Aufwände: Zwischenbericht 10.06. und Stand heute
+
+[TABELLE]Zwei Dinge haben sich seit Juni geändert: Das Eingangsmanagement liegt um 14 PT (8.624 EUR) über der Kalkulation (3 PT bereits über Herrn Holthusen gebucht, 5 PT für die Datenpoolfelder, 6 PT für die OCR-Auslesung der KI-Deckblätter). Und die Celonis-Ausbaustufe 2 mit 10 bis 15 PT fällt nach aktueller Abstimmung voraussichtlich nicht mehr 2026 an, sondern 2027; sie wäre damit ein eigener Kostenpunkt für das kommende Jahr. Die Kosten 2026 lägen dadurch bei rund 75.500 EUR und damit in der Größenordnung des Maklerbudgets. Tagessätze unverändert: Eingangsmanagement 616 EUR (interne Verrechnung ITERGO), Celonis maximal 1.323 EUR (Infomotion), Robotics 616,20 EUR.
+
+Vorschlag für eine pragmatische Lösung
+
+[TABELLE]Mein Vorschlag wäre, die Kosten nach Jahren zu trennen statt nach Bausteinen: Alle Kosten des Jahres 2026 (75.524 EUR, inklusive der 25.000 EUR für den Prüf-Bot) würden über Makler auf ID-1006080 laufen. Für das Eingangsmanagement ist das faktisch schon der Fall: Die 8 PT von Herrn Holthusen sind über Makler abgerechnet, die 11 PT für Datenpoolfelder und OCR sind seit dem 15.09. auf ID-1006080 gestafft. Es ginge also nur noch darum, den Prüf-Bot ebenfalls dort zu führen. Damit könnte Robotics das Staffing (20 PT September, 20 PT Oktober) sofort abschließen, ohne dass wir vorher die Budgetverschiebung zwischen HS und Makler auflösen müssten. HS würde sich wie besprochen mit 25.000 EUR beteiligen, diesen Beitrag aber als Kosten im Jahr 2027 tragen; daraus würden zuerst die Celonis-Ausbaustufe 2 und dann die Bot-Wartung und die AI-Lizenz finanziert. Über beide Jahre wäre die Gesamtkalkulation von 88.754 bis 95.369 EUR damit vollständig gedeckt.
+
+Falls ihr diesen Weg mitgehen könnt, bräuchte ich zwei Bestätigungen: von Pierre, dass die 2026er Kosten in dieser Höhe über MBS auf ID-1006080 laufen können, und von Klemens, dass der HS-Beitrag von 25.000 EUR ins Jahr 2027 geht. Arndt könnte dann das Staffing gegenüber Robotics (Herr Ghosh) und dem Eingangsmanagement (Herr Schumann) bestätigen. Für 2027 bleiben zwei Werte offen, die wir im Termin mitnehmen sollten: Die AI-Lizenz ist für 2026 mit 15.000 EUR fix, die Höhe für 2027 ist noch nicht bekannt; für die Wartung des Bots setzt Robotics 10.000 EUR pro Jahr an (im Zwischenbericht waren 15.000 EUR MTB eingeplant), und wo sie ab 2027 gebucht wird, ist noch zu klären.
+
+Wenn das für euch eine tragfähige Richtung ist, würde ich 30 Minuten in dieser Woche vorschlagen; Martin, magst du einladen? Wenn ihr einen anderen Schnitt bevorzugt, bin ich dafür natürlich offen, wichtig wäre mir vor allem, dass das Staffing nicht länger hängt.
+
+Beste Grüße
+
+Eike

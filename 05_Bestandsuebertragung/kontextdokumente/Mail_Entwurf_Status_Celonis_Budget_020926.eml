@@ -1,0 +1,167 @@
+From: Eike Brenneisen <ebrenneisen@deloitte.de>
+To: Steiner, Klemens (HSD) <Klemens.Steiner@ergo.de>,
+ Richarz, Martin (HSBK) <Martin.Richarz@ergo.de>,
+ Koch, Marcus (ODPBD) <Marcus.Koch@ergo.de>,
+ Amend, Dirk (HSB4K) <Dirk.Amend@ergo.de>
+Cc: Marco Jeglorz <mjeglorz@deloitte.de>
+Subject: =?utf-8?q?Makler_B=C3=9C_meets_KI_=7C_Celonis-Austausch_02=2E09=2E2026=3A_Pr?=
+ =?utf-8?q?ozesskette_steht=2C_Budgetausblick?=
+Date: Wed, 02 Sep 2026 18:30:00 +0200
+X-Unsent: 1
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="----=_BUE_Status_020926"
+
+------=_BUE_Status_020926
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Hallo zusammen,
+
+wir hatten heute den Weekly-Austausch zur KI-Strukturierung mit Celonis, Eingangsmanagement und Maklerservice. Kurz der fachliche Stand und - wichtiger - der budgetäre Ausblick.
+
+FACHLICHER STAND: DIE PROZESSKETTE STEHT
+
+- Celonis hat die Fehler aus dem letzten Testdurchlauf nahezu vollständig behoben. Wir gehen davon aus, dass wir am Freitag den nächsten Test fahren können; eine begleitende Qualitätssicherung setzen wir wieder auf.
+- Celonis wird die strukturierten Daten über EWMS in den Postkorb schreiben können. Der Zugriff auf die Testumgebung ist gegeben; sobald die Datenpool-Felder angelegt sind, lässt sich der Request formulieren und es können Postkorbvorgänge eröffnet werden. Damit haben wir zum ersten Mal Klarheit über die durchgehende Kette: E-Mail-Eingang, KI-Strukturierung, Datenpool, Postkorbvorgang, Prüf-Bot.
+- Der Roboter wird wie ein Sachbearbeiter mit eigenem Postkorb angelegt. Wir können damit direkt in seinen Postkorb eröffnen, statt über die Zuständigkeitsermittlung zu gehen - die klar bessere Lösung. Das klären wir Freitag mit Robotics ab.
+- Die Produktivsetzung ist releaseabhängig (Anfang Oktober oder Mitte November). Für Test und Botentwicklung reicht die Testumgebung.
+
+BUDGET
+
+Die IT-Aufwände 2026 waren mit 66.900 EUR netto kalkuliert, davon 25.000 EUR bereits über HS für den Bot budgetiert. Aufgrund der zusätzlichen Anforderungen an das Deckblatt (Prüfung auf Anforderung von Unterlagen sowie Klassifikation MFA / Makler) und der erhöhten Komplexität bei der Schnittstelle wird es vor allem bei Celonis eine Aufwandserhöhung geben.
+
+1. Celonis: Das kalkulierte Budget ist mit den Reportingthemen und der Ausbaustufe 1 ausgeschöpft. Die fachliche Erweiterung des Deckblatts (Prüfung Unterlagen, MFA) und die Komplexität der EWMS-Schnittstelle kommen obendrauf. Eine Schätzung erhalten wir voraussichtlich morgen; nach heutiger Einschätzung bleibt sie unter dem Aufwand für Ausbaustufe 1, also bei rund 10 PT.
+
+2. Eingangsmanagement, bereits gebucht: Ursprünglich waren 5 PT angesetzt, gebucht wurden von Herrn Holthusen bereits 8 PT (Abrechnung vom 10.07.). Diesen Aufwand können wir aus unserer Sicht nicht vollständig einordnen: Bis zu diesem Zeitpunkt gab es im Wesentlichen einzelne Austausche mit dem Eingangsmanagement, einschließlich der Teilnahme an zwei Workshops mit zusammen rund 1 PT. Aktuell ist Herr Holthusen stärker in den Aufbau der EWMS-Schnittstelle zu Celonis eingebunden, nach unserer Einschätzung jedoch im Umfang einzelner Stunden pro Woche; eine größere Umsetzungstätigkeit in dieser Größenordnung hat bisher nicht stattgefunden.
+
+3. Eingangsmanagement, noch zu beauftragen: 3 PT für die Anlage der Datenpool-Felder (1 PT RE Sahil Hadse, 1 PT RE Bastian Roth, 1 PT IT Umadevi Ramamoorthy), anzustoßen über den Demand-Bereich von Markus Schumann. Diese fallen unabhängig von Punkt 2 in einem anderen Bereich an. Das würden wir gerne Ende dieser Woche, spätestens Anfang kommender Woche auslösen, damit wir die technische Anbindung zeitnah testen können. Ohne diese Felder steht die Schnittstelle still.
+
+4. Gegenläufig gibt es einen Punkt mit Einsparpotenzial: Ich kläre gerade, ob die AI-Lizenz mit 15.000 EUR in voller Höhe für dieses Jahr anfällt oder anteilig monatlich abgerechnet wird. Im zweiten Fall ließe sich hier etwas gegenrechnen.
+
+WAS ICH BRAUCHE
+
+Sobald mir die angepasste IT-Schätzung von Celonis vorliegt, melde ich mich mit den finalen Zahlen. Unabhängig davon brauche ich von euch eine Rückmeldung zum Eingangsmanagement:
+
+- Eine kurze Einordnung zum Umgang mit den bereits gebuchten 8 PT.
+- Freigabe für die 3 PT zur Anlage der Datenfelder, damit wir die Beauftragung Ende dieser Woche auslösen können.
+
+Position                                  Aufwand        Betrag (netto)
+Kalkulation Zwischenbericht 10.06.2026    -              66.900 EUR
+Mehraufwand Eingangsmanagement            6 PT            3.696 EUR
+Celonis zusätzlich, erwartet              10-15 PT       13.230 - 19.845 EUR
+Gesamt ca.                                               83.800 - 90.400 EUR
+
+Tagessätze: Eingangsmanagement 616 EUR (interne Verrechnung ITERGO), Celonis maximal 1.323 EUR (Infomotion). Davon weiterhin 25.000 EUR über HS für den Bot budgetiert. Das Eingangsmanagement liegt damit bei insgesamt 11 PT: 5 kalkuliert, 3 zusätzlich gebucht, 3 noch zu beauftragen.
+
+Beste Grüße
+Eike Brenneisen
+
+------=_BUE_Status_020926
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+<html><head><meta charset="utf-8"></head>
+<body style="font-family:Calibri,Arial,sans-serif; font-size:11pt; color:#1f1f1f; line-height:1.45;">
+
+<p>Hallo zusammen,</p>
+
+<p>wir hatten heute den Weekly-Austausch zur KI-Strukturierung mit Celonis, Eingangsmanagement und
+Maklerservice. Kurz der fachliche Stand und &ndash; wichtiger &ndash; der budget&auml;re Ausblick.</p>
+
+<p style="margin:18px 0 6px 0;"><b style="font-size:12pt;">Fachlicher Stand: die Prozesskette steht</b></p>
+
+<ul style="margin:0 0 0 18px; padding:0;">
+  <li style="margin-bottom:8px;"><b>Celonis hat die Fehler aus dem letzten Testdurchlauf nahezu vollst&auml;ndig
+      behoben.</b> Wir gehen davon aus, dass wir am <b>Freitag den n&auml;chsten Test</b> fahren k&ouml;nnen; eine
+      begleitende Qualit&auml;tssicherung setzen wir wieder auf.</li>
+  <li style="margin-bottom:8px;"><b>Celonis wird die strukturierten Daten &uuml;ber EWMS in den Postkorb schreiben
+      k&ouml;nnen.</b> Der Zugriff auf die Testumgebung ist gegeben; sobald die Datenpool-Felder angelegt sind,
+      l&auml;sst sich der Request formulieren und es k&ouml;nnen Postkorbvorg&auml;nge er&ouml;ffnet werden. Damit
+      haben wir zum ersten Mal Klarheit &uuml;ber die durchgehende Kette: E-Mail-Eingang, KI-Strukturierung,
+      Datenpool, Postkorbvorgang, Pr&uuml;f-Bot.</li>
+  <li style="margin-bottom:8px;">Der Roboter wird wie ein Sachbearbeiter mit <b>eigenem Postkorb</b> angelegt. Wir
+      k&ouml;nnen damit direkt in seinen Postkorb er&ouml;ffnen, statt &uuml;ber die Zust&auml;ndigkeitsermittlung zu
+      gehen &ndash; die klar bessere L&ouml;sung. Das kl&auml;ren wir Freitag mit Robotics ab.</li>
+  <li>Die Produktivsetzung ist <b>releaseabh&auml;ngig</b> (Anfang Oktober oder Mitte November). F&uuml;r Test und
+      Botentwicklung reicht die Testumgebung.</li>
+</ul>
+
+<p style="margin:22px 0 6px 0;"><b style="font-size:12pt;">Budget</b></p>
+
+<p>Die IT-Aufw&auml;nde 2026 waren mit <b>66.900 EUR netto</b> kalkuliert, davon 25.000 EUR bereits &uuml;ber HS
+f&uuml;r den Bot budgetiert. Aufgrund der zus&auml;tzlichen Anforderungen an das Deckblatt (Pr&uuml;fung auf
+Anforderung von Unterlagen sowie Klassifikation MFA / Makler) und der erh&ouml;hten Komplexit&auml;t bei der
+Schnittstelle wird es vor allem bei Celonis eine Aufwandserh&ouml;hung geben.</p>
+
+<ol style="margin:0 0 0 18px; padding:0;">
+  <li style="margin-bottom:8px;"><b>Celonis:</b> Das kalkulierte Budget ist mit den Reportingthemen und der
+      Ausbaustufe 1 ausgesch&ouml;pft. Die fachliche Erweiterung des Deckblatts (Pr&uuml;fung Unterlagen, MFA) und die
+      Komplexit&auml;t der EWMS-Schnittstelle kommen obendrauf. Eine Sch&auml;tzung erhalten wir voraussichtlich
+      morgen; nach heutiger Einsch&auml;tzung bleibt sie unter dem Aufwand f&uuml;r Ausbaustufe 1, also bei
+      rund 10 PT.</li>
+  <li style="margin-bottom:8px;"><b>Eingangsmanagement, bereits gebucht:</b> Urspr&uuml;nglich waren 5 PT angesetzt,
+      gebucht wurden von Herrn Holthusen bereits 8 PT (Abrechnung vom 10.07.). Diesen Aufwand k&ouml;nnen wir aus
+      unserer Sicht nicht vollst&auml;ndig einordnen: Bis zu diesem Zeitpunkt gab es im Wesentlichen einzelne
+      Austausche mit dem Eingangsmanagement, einschlie&szlig;lich der Teilnahme an zwei Workshops mit zusammen rund
+      1 PT. Aktuell ist Herr Holthusen st&auml;rker in den Aufbau der EWMS-Schnittstelle zu Celonis eingebunden, nach
+      unserer Einsch&auml;tzung jedoch im Umfang einzelner Stunden pro Woche; eine gr&ouml;&szlig;ere
+      Umsetzungst&auml;tigkeit in dieser Gr&ouml;&szlig;enordnung hat bisher nicht stattgefunden.</li>
+  <li style="margin-bottom:8px;"><b>Eingangsmanagement, noch zu beauftragen:</b> 3 PT f&uuml;r die Anlage der
+      Datenpool-Felder (1 PT RE Sahil Hadse, 1 PT RE Bastian Roth, 1 PT IT Umadevi Ramamoorthy), anzusto&szlig;en
+      &uuml;ber den Demand-Bereich von Markus Schumann. Diese fallen unabh&auml;ngig von Punkt 2 in einem anderen
+      Bereich an. Das w&uuml;rden wir gerne <b>Ende dieser Woche, sp&auml;testens Anfang kommender Woche</b>
+      ausl&ouml;sen, damit wir die technische Anbindung zeitnah testen k&ouml;nnen. Ohne diese Felder steht die
+      Schnittstelle still.</li>
+  <li>Gegenl&auml;ufig gibt es einen Punkt mit <b>Einsparpotenzial</b>: Ich kl&auml;re gerade, ob die AI-Lizenz mit
+      15.000 EUR in voller H&ouml;he f&uuml;r dieses Jahr anf&auml;llt oder anteilig monatlich abgerechnet wird. Im
+      zweiten Fall lie&szlig;e sich hier etwas gegenrechnen.</li>
+</ol>
+
+<p style="margin:22px 0 6px 0;"><b style="font-size:12pt;">Was ich brauche</b></p>
+
+<p>Sobald mir die angepasste IT-Sch&auml;tzung von Celonis vorliegt, melde ich mich mit den finalen Zahlen.
+Unabh&auml;ngig davon brauche ich von euch eine R&uuml;ckmeldung zum Eingangsmanagement:</p>
+
+<ul style="margin:0 0 0 18px; padding:0;">
+  <li style="margin-bottom:6px;">Eine kurze Einordnung zum Umgang mit den bereits gebuchten 8 PT.</li>
+  <li>Freigabe f&uuml;r die 3 PT zur Anlage der Datenfelder, damit wir die Beauftragung Ende dieser Woche
+      ausl&ouml;sen k&ouml;nnen.</li>
+</ul>
+
+<table cellpadding="7" cellspacing="0" style="border-collapse:collapse; margin:22px 0 6px 0; font-size:10.5pt;">
+  <tr style="background:#c8102e; color:#ffffff;">
+    <th align="left"   style="border:1px solid #c8102e;">Position</th>
+    <th align="center" style="border:1px solid #c8102e;">Aufwand</th>
+    <th align="right"  style="border:1px solid #c8102e;">Betrag (netto)</th>
+  </tr>
+  <tr>
+    <td style="border:1px solid #d9d9d9;">Kalkulation Zwischenbericht 10.06.2026</td>
+    <td style="border:1px solid #d9d9d9;" align="center">&ndash;</td>
+    <td style="border:1px solid #d9d9d9;" align="right">66.900 EUR</td>
+  </tr>
+  <tr style="background:#f7f7f7;">
+    <td style="border:1px solid #d9d9d9;">Mehraufwand Eingangsmanagement</td>
+    <td style="border:1px solid #d9d9d9;" align="center">6 PT</td>
+    <td style="border:1px solid #d9d9d9;" align="right">3.696 EUR</td>
+  </tr>
+  <tr>
+    <td style="border:1px solid #d9d9d9;">Celonis zus&auml;tzlich, erwartet</td>
+    <td style="border:1px solid #d9d9d9;" align="center">10&ndash;15 PT</td>
+    <td style="border:1px solid #d9d9d9;" align="right">13.230 &ndash; 19.845 EUR</td>
+  </tr>
+  <tr style="font-weight:bold; background:#f7f7f7;">
+    <td style="border:1px solid #d9d9d9; border-top:2px solid #c8102e;">Gesamt ca.</td>
+    <td style="border:1px solid #d9d9d9; border-top:2px solid #c8102e;" align="center">&nbsp;</td>
+    <td style="border:1px solid #d9d9d9; border-top:2px solid #c8102e;" align="right">83.800 &ndash; 90.400 EUR</td>
+  </tr>
+</table>
+
+<p style="font-size:9.5pt; color:#595959; margin:0 0 14px 0;">
+Tagess&auml;tze: Eingangsmanagement 616 EUR (interne Verrechnung ITERGO), Celonis maximal 1.323 EUR (Infomotion).
+Davon weiterhin 25.000 EUR &uuml;ber HS f&uuml;r den Bot budgetiert. Das Eingangsmanagement liegt damit bei insgesamt
+11 PT: 5 kalkuliert, 3 zus&auml;tzlich gebucht, 3 noch zu beauftragen.</p>
+
+<p style="margin-top:20px;">Beste Gr&uuml;&szlig;e<br>Eike Brenneisen</p>
+
+</body></html>
+------=_BUE_Status_020926--

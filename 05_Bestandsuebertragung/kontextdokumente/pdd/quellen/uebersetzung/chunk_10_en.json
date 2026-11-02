@@ -1,0 +1,207 @@
+[
+ {
+  "de": "Start – Vorgang aus dem Themenpostkorb übernehmen",
+  "en": "Start – take over the case from the topic mailbox",
+  "art": "text"
+ },
+ {
+  "de": "Postkorbvorgang und Datenpool lesen",
+  "en": "Read mailbox case and data pool",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb „HSB4 K BÜ Prüf BOT“, Postkorb-Nr. 2015, siehe Kapitel „Details zum Startereignis“) öffnen. Dokumenttyp 02015 (Maklervollmacht) bzw. 06065 (Betreuung / Anfrage Betreuung).",
+  "en": "Values from the mailbox case: open the mailbox case in the start mailbox (topic mailbox „HSB4 K BÜ Prüf BOT“, Postkorb-Nr. 2015, see chapter „Details zum Startereignis“). Dokumenttyp 02015 (broker power of attorney) or 06065 (support / support enquiry).",
+  "art": "text"
+ },
+ {
+  "de": "Lese die Vorgang-Lfd-Nr aus und speichere als <Vorgang-Lfd-Nr>.",
+  "en": "Read the Vorgang-Lfd-Nr and store as <Vorgang-Lfd-Nr>.",
+  "art": "text"
+ },
+ {
+  "de": "<Vorgang-Lfd-Nr> ist der Ordnungsbegriff dieses Prozesses.",
+  "en": "<Vorgang-Lfd-Nr> is the order key of this process.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die Versicherungsnummer des Postkorbvorgangs aus und speichere als <Vorgang-VNR>.",
+  "en": "Read the policy number of the mailbox case and store as <Vorgang-VNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <Vorgang-VNR> ist die Nummer, mit der Celonis den Vorgang eröffnet hat, bereits normiert auf zwei Buchstaben Spartenkürzel und neun Ziffern. Sie ist der Einstieg für alle Hostaufrufe und bleibt für den gesamten Vorgang die führende Nummer. <BUE_VNR> und <BUE_VNR_2> aus dem Datenpool werden nicht gegen sie geprüft; sie führen nachrichtlich alle im Auftrag genannten Nummern und gehen in Notiz und Bearbeitungshinweis ein.",
+  "en": "Note: <Vorgang-VNR> is the number with which Celonis opened the case, already normalised to a two-letter line-of-business code and nine digits. It is the entry point for all host calls and remains the leading number for the entire case. <BUE_VNR> and <BUE_VNR_2> from the data pool are not checked against it; they carry, for information only, all numbers stated in the order and are included in the note and the processing note.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Celonis eröffnet je Versicherungsnummer einen eigenen Postkorbvorgang mit derselben E-Mail, allen Anhängen, dem KI-Deckblatt und dem zugehörigen Datensatz im Datenpool.",
+  "en": "Note: Celonis opens a separate mailbox case per policy number with the same e-mail, all attachments, the AI cover sheet and the associated data record in the data pool.",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Datenpool: Wechsel vom Postkorbvorgang in den Datenpool, Datensatz zum Postkorbvorgang mit <Vorgang-Lfd-Nr> öffnen.",
+  "en": "Values from the data pool: switch from the mailbox case to the data pool, open the data record for the mailbox case with <Vorgang-Lfd-Nr>.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die folgenden 35 Felder des Datenpools aus und speichere jedes unter dem gleichnamigen Variablennamen (vollständige Liste mit Format, Werteliste und Pflichtfeldkennzeichen im Kapitel „Tabelle der genutzten Variablen“, Herkunft „Datenpool“):",
+  "en": "Read the following 35 fields of the data pool and store each one under the variable name of the same name (complete list with format, list of values and mandatory field indicator in chapter „Tabelle der genutzten Variablen“, origin „Datenpool“):",
+  "art": "text"
+ },
+ {
+  "de": "Lese <BUE_MV_EINGANGSDATUM> aus und speichere als <Eingangsdatum-BUE> (Format tt.mm.jjjj). Ist das Feld leer, wird das Eröffnungsdatum des Postkorbvorgangs verwendet.",
+  "en": "Read <BUE_MV_EINGANGSDATUM> and store as <Eingangsdatum-BUE> (Format tt.mm.jjjj). If the field is empty, the opening date of the mailbox case is used.",
+  "art": "text"
+ },
+ {
+  "de": "Vom Roboter initialisiert: Die Variablen für das BE-Handling werden zu Beginn jedes Vorgangs zurückgesetzt:",
+  "en": "Initialised by the robot: the variables for BE handling are reset at the start of each case:",
+  "art": "text"
+ },
+ {
+  "de": "<BE> = leer",
+  "en": "<BE> = empty",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = leer",
+  "en": "<BE-Klassifikation> = empty",
+  "art": "text"
+ },
+ {
+  "de": "<Fehlerliste> = leer",
+  "en": "<Fehlerliste> = empty",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „Vorprüfung“",
+  "en": "Continue with chapter „Vorprüfung“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Trennung nach Sparte erfolgt vor dem Prüf-Bot: KV-Vorgänge und Vorgänge aus Komposit und Leben liegen in getrennten Postkörben. Dieser Prüf-Bot bedient ausschließlich den Postkorb Gesundheit; die Notiz entspricht damit fest der KV-Variante.",
+  "en": "Note: The separation by line of business takes place before the Prüf-Bot: KV cases and cases from Komposit (P&C) and Leben (life) are held in separate mailboxes. This Prüf-Bot serves exclusively the Gesundheit (health) mailbox; the note is therefore fixed to the KV variant.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Spartenweiche innerhalb des Prozesses ist deshalb nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt.",
+  "en": "Note: A line-of-business switch within the process is therefore not required. <BUE_SPARTE> is carried along for information only.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Prüfung der Klassifikation (<BUE_KLASSIFIKATION>) findet nicht statt. Der Prüf-Bot wird nur durch Vorgänge ausgelöst, die als Bestandsübertragung in den Themenpostkorb gestellt wurden – heute durch Celonis, künftig auch durch Weiterleitung aus der Sparte, wenn dort zuerst ein anderes Anliegen zu bearbeiten war.",
+  "en": "Note: There is no check of the classification (<BUE_KLASSIFIKATION>). The Prüf-Bot is only triggered by cases that were placed in the topic mailbox as a portfolio transfer – today by Celonis, in future also by forwarding from the line of business if another matter had to be processed there first.",
+  "art": "text"
+ },
+ {
+  "de": "Vorprüfung – Business Exceptions aus dem KI-Deckblatt",
+  "en": "Preliminary check – business exceptions from the AI cover sheet",
+  "art": "text"
+ },
+ {
+  "de": "Ausschlusskriterien aus dem KI-Deckblatt prüfen",
+  "en": "Check exclusion criteria from the AI cover sheet",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Vor den fachlichen Prüfungen wird anhand des KI-Deckblatts festgestellt, ob der Vorgang bearbeitbar ist. Jedes Ausschlusskriterium ist eine Business Exception. Geprüft wird ausschließlich gegen die Datenpoolfelder, also ohne Hostzugriff.",
+  "en": "Note: Before the business checks, the AI cover sheet is used to determine whether the case can be processed. Each exclusion criterion is a business exception. The check is made exclusively against the data pool fields, i.e. without host access.",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = leer",
+  "en": "<BUE_VERMITTLER_TYP> = empty",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Vermittlertyp nicht angegeben“ in <Fehlerliste>",
+  "en": "Record check note „Vermittlertyp nicht angegeben“ in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> = leer",
+  "en": "<BUE_AGENTUR_NR> = empty",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Agenturnummer nicht vorhanden“",
+  "en": "<BE-Klassifikation> = „Agenturnummer nicht vorhanden“ (agency number not available)",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „VII. Abschluss mit Befund“",
+  "en": "Continue with chapter „VII. Abschluss mit Befund“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = „MFA“",
+  "en": "<BUE_VERMITTLER_TYP> = „MFA“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_WUNSCH_VORHANDEN> = „nein“",
+  "en": "<BUE_WUNSCH_VORHANDEN> = „nein“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „BÜ-Wunsch nicht vorhanden“",
+  "en": "<BE-Klassifikation> = „BÜ-Wunsch nicht vorhanden“ (transfer request not available)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_MV_AUF_MAKLER> <> „ja“",
+  "en": "<BUE_MV_AUF_MAKLER> <> „ja“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Betreuungswunsch nicht auf MFA ausgestellt“",
+  "en": "<BE-Klassifikation> = „Betreuungswunsch nicht auf MFA ausgestellt“ (support request not made out to MFA)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_MV_UNTERSCHRIFT_KUNDE> <> „ja“",
+  "en": "<BUE_MV_UNTERSCHRIFT_KUNDE> <> „ja“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Unterschrift VN fehlt“",
+  "en": "<BE-Klassifikation> = „Unterschrift VN fehlt“ (policyholder signature missing)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_PRUEFUNG_UNTERLAGEN> <> „Vollständig“",
+  "en": "<BUE_PRUEFUNG_UNTERLAGEN> <> „Vollständig“",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Unterlagen nicht vollständig“ in <Fehlerliste>",
+  "en": "Record check note „Unterlagen nicht vollständig“ in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „I. Kunde (VN)“",
+  "en": "Continue with chapter „I. Kunde (VN)“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Beim Mehrfachagenten (<BUE_VERMITTLER_TYP> = „MFA“) gibt es keine Maklervollmacht; für ihn zählen der ausformulierte BÜ-Wunsch und der auf ihn ausgestellte Betreuungswunsch. Die Felder <BUE_MV_ENTHALTEN>, <BUE_MV_STATUS>, <BUE_MV_VOLLUMFAENGLICH> und <BUE_UV_ERTEILT> stehen bei ihm auf N/A und werden nicht geprüft.",
+  "en": "Note: For a multiple agent (<BUE_VERMITTLER_TYP> = „MFA“) there is no broker power of attorney; what counts for the multiple agent are the explicitly worded transfer request and the support request (Betreuungswunsch) made out to it. The fields <BUE_MV_ENTHALTEN>, <BUE_MV_STATUS>, <BUE_MV_VOLLUMFAENGLICH> and <BUE_UV_ERTEILT> are set to N/A for the multiple agent and are not checked.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Beim Makler belegt die Maklervollmacht den Auftrag; <BUE_WUNSCH_VORHANDEN> wird deshalb nur beim Mehrfachagenten geprüft. Die Unterschrift des Versicherungsnehmers steht auf der Maklervollmacht und ist beim Makler das harte Kriterium.",
+  "en": "Note: For a broker, the broker power of attorney evidences the order; <BUE_WUNSCH_VORHANDEN> is therefore checked only for a multiple agent. The policyholder's signature is on the broker power of attorney and is the hard criterion for a broker.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein anderer Wert als „Vollständig“ ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz „Unterlagen nicht vollständig“ in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“.",
+  "en": "Note: <BUE_PRUEFUNG_UNTERLAGEN> is a business value of the document check, not a technical error. A value other than „Vollständig“ is not an exclusion criterion: the bot records the check note „Unterlagen nicht vollständig“ in <Fehlerliste>, and the remaining checks continue. Only the test for error list leads to the BE „Nachprüfung erforderlich“ if <Fehlerliste> is populated.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer, läuft der Vorgang durch den Makler-Zweig; die Prüfnotiz stellt sicher, dass der Vorgang in die Nachprüfung geht (Vorschlag, durch den Fachbereich zu bestätigen).",
+  "en": "Note: If <BUE_VERMITTLER_TYP> is empty, the case runs through the broker branch; the check note ensures that the case goes to re-examination (proposal, to be confirmed by the business department).",
+  "art": "text"
+ }
+]

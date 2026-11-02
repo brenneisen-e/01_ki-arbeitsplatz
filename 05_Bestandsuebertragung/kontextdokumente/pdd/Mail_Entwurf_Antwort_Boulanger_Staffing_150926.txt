@@ -1,0 +1,21 @@
+Hallo Pierre, hallo zusammen,
+
+vielen Dank für die Clarity-ID und dir, Klemens, für die klare Ansage zum Roboter-Budget. Wir arbeiten wie geplant weiter.
+
+Für den Start der Umsetzung reicht die Clarity-ID allein leider nicht aus. Herr Schumann hat heute Morgen zurückgemeldet, dass die Kollegen des Eingangsmanagements noch nicht in Clarity gestafft sind und wir das Staffing über den Projektleiter anfordern müssen. Die Approvals kommen anschließend von den zuständigen Teamleitern; erst danach können die Datenpoolfelder in der FA eingerichtet werden. Personen und Aufwände stehen im Kleinauftrag KLEIN-6096.
+
+Ich bitte euch daher, das Staffing auf ID-1006080 anzufordern:
+
+[TABELLE]
+
+Zum zweiten Block: Für die Vorgänge, die nicht über EWMS laufen, brauchen wir eine bessere Indizierung im Eingangsmanagement. Dafür muss das KI-Deckblatt per OCR („AIDA") ausgelesen werden. Das erläutere ich morgen im FK-Austausch. Damit wir keine Zeit verlieren, wäre es gut, diese 6 PT gleich mit zu staffen; sollte sich im Austausch etwas ändern, können wir sie immer noch zurückziehen.
+
+Damit ergibt sich für die IT-Aufwände 2026 folgendes Bild:
+
+[KOSTEN]
+
+Der Mehraufwand des Eingangsmanagements umfasst die 3 PT, die über Herrn Holthusen bereits gebucht wurden, die 5 PT für die Datenpoolfelder und die 6 PT für die OCR-Auslesung. Tagessätze unverändert: Eingangsmanagement 616 EUR (interne Verrechnung ITERGO), Celonis maximal 1.323 EUR (Infomotion).
+
+Vielen Dank und schöne Grüße
+
+Eike

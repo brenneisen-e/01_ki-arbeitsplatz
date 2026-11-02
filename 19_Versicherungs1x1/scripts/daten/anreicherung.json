@@ -1,0 +1,1301 @@
+{
+  "stand": "2026-09-18",
+  "hinweis": "Redaktionelles Werk des Agenten Daten: Kernaussagen (kurzgesagt) und Lernziele je Lerneinheit, Zuordnung der Quizfragen zu Lerneinheiten (einheitId) und neue Quizfragen. Alle Aussagen stammen aus dem Text der jeweiligen Lerneinheit (level1, bei Bedarf level2/level3). Eingetragen wird die Datei durch scripts/daten-anreicherung.mjs.",
+  "kapitel": {
+    "01-marktueberblick": {
+      "einheiten": {
+        "marktstruktur": {
+          "kurzgesagt": [
+            "Der deutsche Versicherungsmarkt gliedert sich in Schaden/Unfall, Leben und PKV; 2024 hat die Schaden-/Unfallsparte die Lebensversicherung beim Beitragsvolumen erstmals seit 1996 überholt.",
+            "Die Beitragseinnahmen stiegen von rund 160 Mrd. € (2005) auf 254 Mrd. € (2025), allein 2025 um 6,6 %; für 2026 erwartet der GDV rund 266 Mrd. €.",
+            "Die Combined Ratio der Schaden-/Unfallversicherung lag 2024 bei 96,1 %; die Kfz-Sparte erholte sich vom Tiefpunkt 111,3 % (2023) auf rund 106 %."
+          ],
+          "lernziele": [
+            "die drei Marktsegmente nennen und ihr Beitragsvolumen 2025 einordnen",
+            "die Combined Ratio als Profitabilitätskennzahl erläutern und Werte über und unter 100 % deuten",
+            "die Beitragsentwicklung seit 2005 und die Wachstumsraten 2024 und 2025 beschreiben"
+          ]
+        },
+        "segmente": {
+          "kurzgesagt": [
+            "Die Versicherungswirtschaft beschäftigte 2024 480.200 Erwerbstätige; im Vermittlerregister standen zum 1. Januar 2025 noch 181.761 Vermittler, 2009 waren es über 260.000.",
+            "Von 810 Versicherungsunternehmen (1980) stehen noch rund 490 unter BaFin-Aufsicht, darunter 349 Erst- und Rückversicherer; die Fusion von Barmenia und Gothaer 2024 war die größte seit über zwei Jahrzehnten.",
+            "Naturgefahrenschäden lagen 2023 und 2024 bei je 5,7 Mrd. €, nur 57 % der Wohngebäude sind gegen Elementargefahren versichert; der Koalitionsvertrag 2025 sieht eine Pflichtversicherung vor."
+          ],
+          "lernziele": [
+            "die drei Segmente Leben, Schaden/Unfall und Kranken mit ihren Beitragseinnahmen vergleichen",
+            "die Meilensteine des Marktes von der Deregulierung 1994 bis zur Zinswende 2022 zeitlich einordnen",
+            "Konsolidierung, Run-off und Elementarschadenlücke als Strukturtrends beschreiben"
+          ]
+        },
+        "konjunktur": {
+          "kurzgesagt": [
+            "Die Beitragseinnahmen des Gesamtmarktes wuchsen von 192 Mrd. € (2015) auf 254 Mrd. € (2025); Schaden/Unfall stieg von 57 auf 113 Mrd. €, Leben blieb bei rund 90 Mrd. €, die PKV wuchs von 36 auf 52 Mrd. €.",
+            "Im weltweiten Vergleich liegt Deutschland mit rund 260 Mrd. USD Beitragsvolumen auf Platz 6 hinter den USA (2.800 Mrd. USD), China, Japan, dem Vereinigten Königreich und Frankreich."
+          ],
+          "lernziele": [
+            "die Beitragsentwicklung der drei Sparten 2015–2025 aus dem Liniendiagramm ablesen",
+            "Deutschlands Position unter den zehn größten Versicherungsmärkten der Welt einordnen"
+          ]
+        },
+        "international": {
+          "kurzgesagt": [
+            "Deutschland hält 3,4 % des globalen Versicherungsmarktes und ist damit der sechstgrößte Markt; im Rückversicherungsmarkt liegt es mit 19,7 % Weltmarktanteil auf Platz 2 hinter den USA.",
+            "Die Versicherungsdichte beträgt rund 3.150 US-Dollar je Kopf, deutlich über dem Weltdurchschnitt von 943 USD, aber weit unter den USA mit rund 10.700 USD.",
+            "Die Versicherungsdurchdringung (Prämien/BIP) liegt mit 5,5–6,0 % unter dem OECD-Durchschnitt von 6,2 %; Swiss Re erwartet, dass Indien den deutschen Markt bis etwa 2032 überholt."
+          ],
+          "lernziele": [
+            "Versicherungsdichte und Versicherungsdurchdringung definieren und für Deutschland beziffern",
+            "Deutschlands Rang unter den Top-10-Märkten und im Rückversicherungsmarkt nennen",
+            "die Verschiebung der Weltmarktanteile weg von Westeuropa erläutern"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 0,
+          "frage": "Wie hoch war das Beitragsvolumen",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 1,
+          "frage": "Welches Segment hat 2024 erstmals",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 2,
+          "frage": "Welchen globalen Marktanteil",
+          "einheitId": "international"
+        },
+        {
+          "index": 3,
+          "frage": "Welche Sparte hat 2024 erstmals seit 1996",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 4,
+          "frage": "Wie viele GDV-Mitgliedsunternehmen",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 5,
+          "frage": "Wie hoch sind die Kapitalanlagen",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 6,
+          "frage": "Wie viele Erwerbstätige",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 7,
+          "frage": "Was war der Höchstrechnungszins",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 8,
+          "frage": "Welche Prognose gibt der GDV",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 9,
+          "frage": "Auf welchen Betrag stieg",
+          "einheitId": "marktstruktur"
+        },
+        {
+          "index": 10,
+          "frage": "Wie viele Versicherungsverträge bestehen",
+          "einheitId": "marktstruktur"
+        }
+      ],
+      "neueFragen": [
+        {
+          "question": "Wie hat sich das Beitragsvolumen der Schaden-/Unfallversicherung zwischen 2015 und 2025 entwickelt?",
+          "options": [
+            "Von 57 auf 113 Mrd. € – fast verdoppelt",
+            "Von 91 auf 92 Mrd. € – nahezu unverändert",
+            "Von 36 auf 52 Mrd. € – um knapp die Hälfte gestiegen",
+            "Von 192 auf 254 Mrd. € – um ein Drittel gestiegen"
+          ],
+          "correct": 0,
+          "explanation": "Das Liniendiagramm „Beitragsentwicklung nach Sparten 2015–2025“ zeigt Schaden/Unfall bei 57 Mrd. € (2015) und 113 Mrd. € (2025). Leben bleibt bei 91 bis 92 Mrd. €, die PKV wächst von 36 auf 52 Mrd. €, der Gesamtmarkt von 192 auf 254 Mrd. €.",
+          "einheitId": "konjunktur"
+        }
+      ]
+    },
+    "02-marktteilnehmer": {
+      "einheiten": {
+        "erstversicherer": {
+          "kurzgesagt": [
+            "Die Allianz führt den deutschen Markt mit rund 41,5 Mrd. € Beitragseinnahmen und etwa 17,4 % Marktanteil an; es folgen R+V (rund 8,0 %), ERGO, HUK-COBURG, Debeka und Talanx/HDI.",
+            "Vier Rechtsform-Kategorien prägen den Markt: Aktiengesellschaften (Allianz, ERGO), Versicherungsvereine auf Gegenseitigkeit (HUK-COBURG, Debeka), öffentlich-rechtliche Versicherer und InsurTechs.",
+            "Munich Re ist der weltweit größte Rückversicherer, Hannover Rück liegt auf Platz 3; Deutschland zeichnet rund 19,7 % des globalen Rückversicherungsgeschäfts."
+          ],
+          "lernziele": [
+            "die zehn größten Versicherungsgruppen Deutschlands mit Marktanteil und Rechtsform nennen",
+            "die vier Rechtsform-Kategorien unterscheiden und je ein Beispiel zuordnen",
+            "die Spartenführer in Kfz, Leben, PKV, Wohngebäude und Gewerbe benennen"
+          ]
+        },
+        "marktanteile": {
+          "kurzgesagt": [
+            "Die Allianz hält 17,4 % des Gesamtmarktes 2024, R+V 8 %, ERGO und HUK-COBURG je 7,2 %; auf die acht größten Gruppen entfallen zusammen rund 61 %, auf alle übrigen 39,3 %.",
+            "Die Konzentration ist in der PKV am höchsten (Top 5 rund 55 %), in der Lebensversicherung liegt sie bei rund 45 %, in der Kfz-Versicherung bei etwa 40 %.",
+            "Trotz Konsolidierung von 810 auf rund 490 Unternehmen bleibt der Markt fragmentiert: 71 Gruppen haben über 50 Mio. € Prämien, zwei Drittel davon halten unter 1 % Marktanteil."
+          ],
+          "lernziele": [
+            "die Marktanteile der größten Versicherungsgruppen aus dem Diagramm ablesen",
+            "die Marktkonzentration in PKV, Leben und Kfz vergleichen"
+          ]
+        },
+        "rueckversicherer": {
+          "kurzgesagt": [
+            "Munich Re ist mit rund 44 Mrd. € Bruttoprämien im Rückversicherungssegment (2024) der weltweit größte Rückversicherer, Hannover Rück liegt mit etwa 28 Mrd. € auf Platz 3 hinter Swiss Re.",
+            "Rückversicherer übernehmen Teile des Risikos von Erstversicherern; man unterscheidet proportionale Formen (Quote, Summenexzedent) und nicht-proportionale Formen (Schadenexzedent, Stop Loss).",
+            "Katastrophenanleihen (Cat Bonds) erreichten 2024 ein Rekordvolumen von 17 Mrd. USD; über Retrozession geben Rückversicherer Risiken an andere Rückversicherer weiter."
+          ],
+          "lernziele": [
+            "die Funktion der Rückversicherung für Erstversicherer erläutern",
+            "proportionale und nicht-proportionale Rückversicherung unterscheiden",
+            "die größten Rückversicherer weltweit mit Prämienvolumen und Rating nennen"
+          ]
+        },
+        "sonstige": {
+          "kurzgesagt": [
+            "Öffentlich-rechtliche Versicherer wie die Provinzial (rund 6,5 Mrd. € Beiträge), SV, VGH und Versicherungskammer Bayern vertreiben regional und exklusiv über Sparkassen und schütten nichts an Aktionäre aus.",
+            "Beim Versicherungsverein auf Gegenseitigkeit (VVaG) sind die Versicherungsnehmer zugleich Mitglieder und Eigentümer – ohne Aktionäre, mit langfristiger Orientierung und Beitragsrückerstattungen.",
+            "Wichtige VVaG sind HUK-COBURG (Kfz-Marktführer), Debeka (PKV-Marktführer), DEVK, LVM, Alte Leipziger, Stuttgarter und Continentale."
+          ],
+          "lernziele": [
+            "die Rechtsform VVaG beschreiben und von der Aktiengesellschaft abgrenzen",
+            "Besonderheiten öffentlich-rechtlicher Versicherer wie Gewährträgerhaftung und Sparkassenvertrieb erläutern"
+          ]
+        },
+        "insurtechs": {
+          "kurzgesagt": [
+            "Nach 32 Neugründungen 2018 gab es 2024 keine einzige InsurTech-Neugründung mehr; die rund 146 verbliebenen InsurTechs sind mehrheitlich B2B-Enabler.",
+            "wefox (einst 4,5 Mrd. € bewertet) zerschlug sich 2024 und Element Insurance ging 2025 insolvent, während Clark (135 Mio. € Umsatz, über 2 Mio. Kunden) und Getsafe profitabel wurden.",
+            "Check24 dominiert mit 80–87 % Marktanteil unter Portalnutzern; 48 % aller Versicherungsentscheider haben die Plattform genutzt, bei den 18- bis 39-Jährigen sind es 56 %."
+          ],
+          "lernziele": [
+            "die vier InsurTech-Kategorien Vollversicherer, MGA, Plattform und B2B-Tech mit Beispielen nennen",
+            "die Bereinigung der InsurTech-Szene seit 2021 anhand von wefox, Element und Getsafe beschreiben",
+            "die Marktstellung von Check24 und Verivox einordnen"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 0,
+          "frage": "Welcher Versicherer hat den größten Marktanteil",
+          "einheitId": "erstversicherer"
+        },
+        {
+          "index": 1,
+          "frage": "Was bedeutet die Rechtsform VVaG",
+          "einheitId": "sonstige"
+        },
+        {
+          "index": 2,
+          "frage": "Welchen Marktanteil hält die Allianz",
+          "einheitId": "erstversicherer"
+        },
+        {
+          "index": 3,
+          "frage": "Welche Rechtsform hat die HUK-COBURG",
+          "einheitId": "erstversicherer"
+        },
+        {
+          "index": 4,
+          "frage": "Was ist ein InsurTech",
+          "einheitId": "insurtechs"
+        },
+        {
+          "index": 5,
+          "frage": "Welchem Konzern gehört die HUK24",
+          "einheitId": "erstversicherer"
+        },
+        {
+          "index": 7,
+          "frage": "Was kennzeichnet eine Mutual",
+          "einheitId": "sonstige"
+        },
+        {
+          "index": 8,
+          "frage": "Wer ist der größte Rückversicherer",
+          "einheitId": "rueckversicherer"
+        }
+      ],
+      "neueFragen": [
+        {
+          "question": "Welche drei Versicherungsgruppen folgen im Gesamtmarkt 2024 auf die Allianz?",
+          "options": [
+            "HUK-COBURG, Debeka und Talanx/HDI",
+            "R+V, ERGO und HUK-COBURG",
+            "Generali, Zurich und AXA",
+            "ERGO, Debeka und BarmeniaGothaer"
+          ],
+          "correct": 1,
+          "explanation": "Das Donut-Diagramm „Marktanteile Top-Versicherer (Gesamtmarkt 2024)“ zeigt nach der Allianz (17,4 %) R+V mit 8 %, dann ERGO und HUK-COBURG mit je 7,2 %, gefolgt von Debeka (6,1 %) und Talanx/HDI (5,8 %).",
+          "einheitId": "marktanteile"
+        },
+        {
+          "question": "In welcher Sparte ist die Marktkonzentration der fünf größten Anbieter am höchsten?",
+          "options": [
+            "Kfz-Versicherung",
+            "Lebensversicherung",
+            "Private Krankenversicherung",
+            "Wohngebäude- und Hausratversicherung"
+          ],
+          "correct": 2,
+          "explanation": "In der PKV vereinen die Top 5 rund 55 % des Marktes; in der Lebensversicherung sind es rund 45 %, in der Kfz-Versicherung etwa 40 % (Lerneinheit Marktanteile, Abschnitt Marktkonzentration).",
+          "einheitId": "marktanteile"
+        }
+      ]
+    },
+    "03-produktlandschaft": {
+      "einheiten": {
+        "ueberblick": {
+          "kurzgesagt": [
+            "Der deutsche Versicherungsmarkt ist mit 238 Mrd. € Beitragseinnahmen (2024) und rund 488 Millionen Verträgen der sechstgrößte Erstversicherungsmarkt der Welt und der zweitgrößte Rückversicherungsstandort.",
+            "Die Produktlandschaft gliedert sich in sieben Kategorien: Leben & Rente, Berufsunfähigkeit, betriebliche Altersversorgung, Krankenversicherung, Sach-, Gewerbe- und innovative Versicherungen.",
+            "Spartenübergreifend gelten die vorvertragliche Anzeigepflicht (§§ 19–22 VVG) mit Quotelungsprinzip, Standardausschlüsse wie Vorsatz, Krieg und Kernenergie sowie Obliegenheiten vor, während und nach dem Vertrag."
+          ],
+          "lernziele": [
+            "die sieben Produktkategorien des deutschen Marktes nennen und je ein Produkt zuordnen",
+            "mit dem Entscheidungsbaum den typischen Versicherungsbedarf einer Lebenssituation herleiten",
+            "Anzeigepflicht, Quotelungsprinzip und Obliegenheiten als spartenübergreifende Tarifmerkmale erläutern"
+          ]
+        },
+        "leben-rente": {
+          "kurzgesagt": [
+            "Die Lebensversicherung ist mit rund 90 Mrd. € Beitragseinnahmen das größte Einzelsegment; 2024 gab es 84 Mio. Verträge, davon über 46 Mio. Rentenversicherungen, und Auszahlungen von 101,8 Mrd. €.",
+            "Der Höchstrechnungszins wurde zum 1. Januar 2025 erstmals seit über 30 Jahren angehoben, von 0,25 % auf 1,0 %; die laufende Verzinsung lag 2024 im Schnitt bei 2,77 %.",
+            "Die Riester-Rente steckt in der Krise (nur rund 41.000 Neuverträge 2023); das Altersvorsorgereformgesetz soll ab 2027 drei Garantieniveaus und ein Altersvorsorgedepot einführen."
+          ],
+          "lernziele": [
+            "Kapital-LV, Risiko-LV, Fondspolice, private Rente, Riester und Rürup nach Leistung, Zielgruppe und Besteuerung vergleichen",
+            "die drei Quellen der Überschussbeteiligung und die 12/62-Regel erläutern",
+            "die geplante Reform der geförderten Altersvorsorge ab 2027 beschreiben"
+          ]
+        },
+        "bu": {
+          "kurzgesagt": [
+            "Berufsunfähig nach § 172 VVG ist, wer den zuletzt ausgeübten Beruf zu mindestens 50 % voraussichtlich sechs Monate nicht ausüben kann; jeder vierte Arbeitnehmer wird im Erwerbsleben berufsunfähig.",
+            "Rund 14,5 Mio. BU-Verträge bestehen, aber unter 30 % der Erwerbstätigen sind abgesichert; die staatliche Erwerbsminderungsrente liegt im Schnitt bei nur 1.041 € im Monat.",
+            "Die branchenweite Leistungsquote liegt bei rund 80 %; psychische Erkrankungen sind mit 38 % die häufigste BU-Ursache, gefolgt von Krebs (19 %) und Bewegungsapparat (16 %)."
+          ],
+          "lernziele": [
+            "die BU-Definition mit 50-%-Grad und Prognosezeitraum wiedergeben",
+            "die wichtigsten Bausteine wie Verzicht auf abstrakte Verweisung, AU-Klausel und Nachversicherungsgarantie erläutern",
+            "BU mit Grundfähigkeits-, Erwerbsunfähigkeits- und Dread-Disease-Versicherung vergleichen"
+          ]
+        },
+        "bav": {
+          "kurzgesagt": [
+            "Die bAV kennt fünf Durchführungswege: Direktversicherung (häufigster Weg, 8,81 Mio. Verträge Ende 2024), Pensionskasse, Pensionsfonds, Unterstützungskasse und Direktzusage.",
+            "Entgeltumwandlung ist 2025 bis 3.624 € pro Jahr sozialversicherungsfrei und nach § 3 Nr. 63 EStG bis 7.248 € steuerfrei; der Arbeitgeber muss 15 % Zuschuss leisten.",
+            "Die Gesamtdeckungsmittel betrugen 2023 727,9 Mrd. €, die Verbreitungsquote stagniert bei 51,9 %; das im Dezember 2025 beschlossene BRSG II öffnet das Sozialpartnermodell ohne Garantien."
+          ],
+          "lernziele": [
+            "die fünf Durchführungswege der bAV mit Träger und Insolvenzschutz nennen",
+            "die steuerliche und sozialversicherungsrechtliche Förderung der Entgeltumwandlung berechnen",
+            "die Rolle des PSVaG und die Neuerungen des BRSG II erläutern"
+          ]
+        },
+        "kv": {
+          "kurzgesagt": [
+            "Ende 2024 waren 8,74 Mio. Menschen privat vollversichert; Zugang haben Beamte, Selbständige und Angestellte über der Versicherungspflichtgrenze (2025: 73.800 €, 2026: 77.400 €).",
+            "Die PKV kalkuliert risikoadäquat und baut Alterungsrückstellungen auf, die GKV finanziert sich einkommensabhängig im Umlageverfahren und bietet eine kostenlose Familienversicherung.",
+            "Zusatzversicherungen stiegen 2024 auf 31,2 Mio. Verträge, davon über 17,8 Mio. Zahnzusatz; der Eigenanteil im Pflegeheim erreichte Mitte 2025 durchschnittlich 3.108 € im Monat."
+          ],
+          "lernziele": [
+            "PKV und GKV nach Zugang, Beitrag, Leistung und Altersrückstellungen vergleichen",
+            "die drei Formen der privaten Pflegezusatzversicherung unterscheiden",
+            "Beitragsanpassungen und das Tarifwechselrecht nach § 204 VVG erläutern"
+          ]
+        },
+        "sach": {
+          "kurzgesagt": [
+            "Die Privathaftpflicht gilt als wichtigste freiwillige Versicherung; empfohlen sind mindestens 50 Mio. € Deckung, dennoch haben rund 30 % der Deutschen keine.",
+            "Die Kfz-Haftpflicht ist Pflicht mit 7,5 Mio. € Mindestdeckung für Personenschäden; die Sparte war 2024 mit einer Combined Ratio von 106 % defizitär und erreichte 2025 mit 96 % die Gewinnzone.",
+            "Nur 54 % der Wohngebäude haben Elementarschutz; versicherte Naturkatastrophenschäden lagen 2024 bei 5,7 Mrd. €, und der Koalitionsvertrag 2025 sieht eine Pflichtversicherung mit Opt-out vor."
+          ],
+          "lernziele": [
+            "Haftpflicht, Kfz, Hausrat, Wohngebäude, Unfall und Rechtsschutz mit ihrem Kernschutz beschreiben",
+            "Kfz-Haftpflicht, Teilkasko und Vollkasko nach Deckung und Pflicht unterscheiden",
+            "Gliedertaxe und Progression in der Unfallversicherung anwenden"
+          ]
+        },
+        "gewerbe": {
+          "kurzgesagt": [
+            "Die Betriebshaftpflicht ist das Fundament des Gewerbeschutzes mit marktüblich 5–10 Mio. € Deckung; 2024 erzielte sie bei 8,7 Mrd. € Prämien eine Combined Ratio von 86 %.",
+            "Die D&O-Versicherung schützt Organmitglieder nach dem Claims-made-Prinzip; für AG-Vorstände gilt ein Pflicht-Selbstbehalt von mindestens 10 % des Schadens (§ 93 Abs. 2 AktG).",
+            "Die Cyberversicherung wuchs 2024 auf 330 Mio. € Prämien bei einer Combined Ratio von 80,7 %; nur 18 % der Prämien entfallen auf KMU, obwohl 60 % der Angriffe den Mittelstand treffen."
+          ],
+          "lernziele": [
+            "die wichtigsten Gewerbeversicherungen und ihre Deckungen nennen",
+            "das Claims-made-Prinzip und den Pflicht-Selbstbehalt der D&O-Versicherung erläutern",
+            "Eigen-, Dritt- und Assistance-Deckungen einer Cyberversicherung sowie ihre Ausschlüsse beschreiben"
+          ]
+        },
+        "innovativ": {
+          "kurzgesagt": [
+            "Parametrische Versicherungen zahlen einen vorab definierten Betrag, sobald ein messbarer Parameter einen Schwellenwert überschreitet – ohne Schadennachweis, aber mit Basisrisiko.",
+            "Embedded Insurance soll laut BCG bis 2030 über 70 Mrd. USD Bruttoprämien erreichen; nur 33 % der deutschen Versicherungskunden befürworten das Modell grundsätzlich.",
+            "Telematik-Tarife erreichen nur 4–6 % des Kfz-Bestands; 2024 gab es keine InsurTech-Neugründung mehr, und über 30 % der Schadenfälle werden bereits vollautomatisch abgewickelt."
+          ],
+          "lernziele": [
+            "parametrische, Embedded-, On-Demand- und Telematik-Modelle mit je einem Beispiel beschreiben",
+            "das Basisrisiko parametrischer Deckungen erläutern",
+            "die Konsolidierung der InsurTech-Szene und die drei strukturellen Entwicklungen der Produktlandschaft einordnen"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 0,
+          "frage": "Wie viele Lebensversicherungsverträge",
+          "einheitId": "leben-rente"
+        },
+        {
+          "index": 1,
+          "frage": "Welcher Anteil der Gebäude",
+          "einheitId": "sach"
+        },
+        {
+          "index": 2,
+          "frage": "Welcher bAV-Durchführungsweg",
+          "einheitId": "bav"
+        },
+        {
+          "index": 5,
+          "frage": "Was versichert eine Betriebshaftpflichtversicherung",
+          "einheitId": "gewerbe"
+        },
+        {
+          "index": 6,
+          "frage": "Was ist eine D&O-Versicherung",
+          "einheitId": "gewerbe"
+        },
+        {
+          "index": 8,
+          "frage": "Was unterscheidet die Kfz-Haftpflicht",
+          "einheitId": "sach"
+        },
+        {
+          "index": 9,
+          "frage": "Was ist „Cyber-Versicherung“",
+          "einheitId": "gewerbe"
+        }
+      ],
+      "neueFragen": [
+        {
+          "question": "Welche Folge hat eine grob fahrlässige Verletzung der vorvertraglichen Anzeigepflicht (§§ 19–22 VVG)?",
+          "options": [
+            "Anfechtung – der Vertrag ist von Anfang an nichtig",
+            "Rücktritt des Versicherers mit Leistungsfreiheit",
+            "Anteilige Kürzung der Leistung nach dem Quotelungsprinzip",
+            "Keine – die Anzeigepflicht gilt nur bei vorsätzlicher Täuschung"
+          ],
+          "correct": 1,
+          "explanation": "Vorsätzlich falsche Angaben führen zur Anfechtung, grobe Fahrlässigkeit zum Rücktritt mit Leistungsfreiheit und einfache Fahrlässigkeit zur anteiligen Kürzung nach dem Quotelungsprinzip – eine Kernneuerung der VVG-Reform 2008 (Lerneinheit Überblick, Tiefe Experte).",
+          "einheitId": "ueberblick"
+        },
+        {
+          "question": "Ab welchem Grad der Berufsunfähigkeit leistet eine BU-Versicherung nach § 172 VVG?",
+          "options": [
+            "100 %",
+            "75 %",
+            "50 %",
+            "25 %"
+          ],
+          "correct": 2,
+          "explanation": "Berufsunfähig ist, wer seinen zuletzt ausgeübten Beruf zu mindestens 50 % voraussichtlich mindestens sechs Monate nicht mehr ausüben kann (§ 172 VVG). Staffelregelungen für Teilberufsunfähigkeit ab 25 % bieten nur manche Tarife.",
+          "einheitId": "bu"
+        },
+        {
+          "question": "Welche Erkrankungen sind die häufigste Ursache für Berufsunfähigkeit?",
+          "options": [
+            "Erkrankungen des Bewegungsapparats",
+            "Krebserkrankungen",
+            "Unfälle",
+            "Psychische Erkrankungen"
+          ],
+          "correct": 3,
+          "explanation": "Psychische Erkrankungen sind mit 38 % die häufigste BU-Ursache, gefolgt von Krebs (19 %) und Erkrankungen des Bewegungsapparats (16 %); die branchenweite Leistungsquote liegt bei rund 80 % (Lerneinheit Berufsunfähigkeit, Vertiefung).",
+          "einheitId": "bu"
+        },
+        {
+          "question": "Wer hat Zugang zur privaten Krankenvollversicherung?",
+          "options": [
+            "Beamte, Selbständige und Angestellte über der Versicherungspflichtgrenze",
+            "Alle sozialversicherungspflichtig Beschäftigten gegen einen Zusatzbeitrag",
+            "Ausschließlich Beamte sowie ihre Familienangehörigen",
+            "Nur Selbständige und freiberuflich tätige Personen"
+          ],
+          "correct": 0,
+          "explanation": "Die PKV-Vollversicherung steht Beamten, Selbständigen und Angestellten oberhalb der Versicherungspflichtgrenze offen (2025: 73.800 €, 2026: 77.400 €); Ende 2024 waren 8,74 Mio. Menschen vollversichert.",
+          "einheitId": "kv"
+        },
+        {
+          "question": "Was erlaubt das Tarifwechselrecht nach § 204 VVG einem PKV-Versicherten?",
+          "options": [
+            "Den Wechsel zu einem anderen Versicherer unter vollständiger Mitnahme der Altersrückstellungen",
+            "Den Wechsel in einen gleichartigen Tarif beim selben Versicherer samt Altersrückstellungen",
+            "Den Wechsel in die gesetzliche Krankenversicherung nach dem 55. Lebensjahr",
+            "Eine Beitragsgarantie für zehn Jahre nach dem Vertragsabschluss"
+          ],
+          "correct": 1,
+          "explanation": "§ 204 VVG erlaubt jedem Versicherten den Wechsel in einen gleichartigen Tarif beim selben Versicherer unter voller Anrechnung der Altersrückstellungen – fast immer vorteilhafter als ein Anbieterwechsel (Lerneinheit Krankenversicherung, Vertiefung).",
+          "einheitId": "kv"
+        },
+        {
+          "question": "Was ist der zentrale Nachteil parametrischer Versicherungen?",
+          "options": [
+            "Lange Schadenregulierung, weil jeder Einzelfall geprüft werden muss",
+            "Basisrisiko: Parameter und realer Schaden fallen auseinander",
+            "Hohe Verwaltungskosten durch individuelle Gutachten",
+            "Fehlende Zulassung durch die BaFin für Privatkunden"
+          ],
+          "correct": 1,
+          "explanation": "Parametrische Policen zahlen ohne Schadennachweis, sobald ein messbarer Parameter einen Schwellenwert überschreitet. Der zentrale Nachteil bleibt das Basisrisiko: Der Parameter kann eintreten, ohne dass ein Schaden vorliegt – oder umgekehrt (Lerneinheit Innovative Produkte).",
+          "einheitId": "innovativ"
+        },
+        {
+          "question": "Welchen Anteil des Kfz-Bestands erreichen Telematik-Tarife (Usage-Based Insurance) in Deutschland?",
+          "options": [
+            "Über 30 %",
+            "15–20 %",
+            "4–6 %",
+            "Unter 1 %"
+          ],
+          "correct": 2,
+          "explanation": "Usage-Based Insurance per Telematik erreicht nur 4–6 % des Kfz-Bestands; HUK-Coburg (650.000 Kunden) und Allianz (über 700.000) sind die größten Anbieter mit Rabatten bis 30 % (Lerneinheit Innovative Produkte, Vertiefung).",
+          "einheitId": "innovativ"
+        }
+      ]
+    },
+    "04-vertriebswege": {
+      "einheiten": {
+        "ueberblick": {
+          "kurzgesagt": [
+            "Der deutsche Versicherungsvertrieb ist ein Mehrkanalmodell aus Ausschließlichkeit, Maklern, Mehrfachagenten, Banken und Direktvertrieb; anders als in Frankreich, Spanien oder Italien dominiert nicht der Bankvertrieb.",
+            "Im Sach/Unfall-Neugeschäft 2024 erreichten Makler mit 40,6 % fast Gleichstand mit der AO (41,1 %); in der Lebensversicherung hält die AO 37,6 %, Makler 29,8 % und Banken 19,4 %.",
+            "Seit 2010 fiel der AO-Anteil von 52 auf 35 %, während Online/Direkt von 8 auf 29 % stieg; rund 97.000 gebundenen Vertretern stehen 46.951 Makler (Januar 2026) gegenüber."
+          ],
+          "lernziele": [
+            "die Vertriebskanäle des deutschen Marktes nennen und ihre Neugeschäftsanteile 2024 je Sparte ablesen",
+            "die Verschiebung der Vertriebsweganteile seit 2010 beschreiben",
+            "aus Heatmap und Vertriebsströmen ableiten, welcher Kanal für welche Kundengruppe und Sparte dominiert"
+          ]
+        },
+        "ausschliesslichkeit": {
+          "kurzgesagt": [
+            "Der Ausschließlichkeitsvertreter ist Handelsvertreter nach § 84 HGB, arbeitet exklusiv für einen Versicherer, trägt das unternehmerische Risiko selbst und erhält Provisionen sowie Bestandspflegegelder.",
+            "Die AO schrumpft stark: Von über 250.000 gebundenen Vermittlern im Jahr 2005 sind heute noch rund 120.000 aktiv, das Durchschnittsalter liegt über 52 Jahren.",
+            "Aus Versicherersicht bietet die AO maximale Steuerung bei hohen Kosten; makler-vermittelte Lebensversicherungen haben mit 1.484 € höhere laufende Beiträge als AO-Verträge mit 1.271 €."
+          ],
+          "lernziele": [
+            "die Rechtsstellung des Ausschließlichkeitsvertreters nach § 84 HGB beschreiben",
+            "Vor- und Nachteile der AO aus Versicherer- und Kundensicht gegenüberstellen",
+            "das Demografieproblem des AO-Kanals mit Zahlen belegen"
+          ]
+        },
+        "makler": {
+          "kurzgesagt": [
+            "Der Versicherungsmakler (§ 93 HGB) vertritt den Kunden, nicht den Versicherer; er ist zur marktübergreifenden Beratung verpflichtet und haftet persönlich für Beratungsfehler.",
+            "Von 263.000 registrierten Vermittlern (2011) sind Anfang 2026 noch 178.791 übrig; gegen den Trend erreichen Makler mit 46.951 einen Rekordstand, während die gebundenen Vertreter unter 100.000 fielen.",
+            "Maklerpools wie BCA, maxpool oder blau direkt erleichtern IT, Abrechnung und Anbindung; Mehrfachagenten nach § 34d GewO vertreten mehrere Versicherer ohne die umfassende Maklerpflicht."
+          ],
+          "lernziele": [
+            "Makler, Mehrfachagent und gebundenen Vertreter nach § 34d GewO unterscheiden",
+            "die Funktion von Maklerpools und Struktur-/Finanzvertrieben erläutern",
+            "die Entwicklung des Vermittlerbestands seit 2011 mit Zahlen beschreiben"
+          ]
+        },
+        "direkt-online": {
+          "kurzgesagt": [
+            "Direktversicherer wie CosmosDirekt (rund 1,8 Mio. Kunden) und HUK24 (über 2 Mio. Fahrzeuge) erreichen in der Kfz-Versicherung 20,2 % Neugeschäftsanteil, in der Lebensversicherung nur 2,4 %.",
+            "Check24 vereint 80–87 % aller Portalnutzer; der digitale Abschlussanteil über alle Sparten stieg von 9 % (2019) auf 22 % (2024).",
+            "Embedded Insurance ist der jüngste Vertriebsweg (ERGO mit O2 Telefónica, simplesurance in über 30 Ländern); 33 % der Kunden stehen dem Modell positiv, 28 % ablehnend gegenüber."
+          ],
+          "lernziele": [
+            "Direktvertrieb, Vergleichsportale und Embedded Insurance als digitale Kanäle mit Beispielen beschreiben",
+            "erklären, warum die Kfz-Versicherung digital dominiert und die Lebensversicherung beratungsintensiv bleibt",
+            "die drei Megatrends Demografie, Plattformisierung und Hybridisierung erläutern"
+          ]
+        },
+        "bancassurance": {
+          "kurzgesagt": [
+            "Bancassurance beruht auf gewachsenen Partnerschaften: Sparkassen mit den öffentlichen Versicherern (Provinzial, VKB, SV) und Volks- und Raiffeisenbanken mit R+V.",
+            "In der Lebensversicherung erzielen Banken rund 19 % Neugeschäftsanteil nach Beitragssumme und dominieren das Einmalbeitragsgeschäft mit 41 %; in Sach und PKV liegen sie unter 6 %.",
+            "Typische Bancassurance-Produkte sind Restschuld-, Raten- und Lebensversicherungen; die JDC Group dient zunehmend als Technologieplattform für den Bankvertrieb."
+          ],
+          "lernziele": [
+            "Bancassurance definieren und die wichtigsten Bank-Versicherer-Partnerschaften nennen",
+            "die Bedeutung des Bankvertriebs je Sparte mit den Neugeschäftsanteilen einordnen"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 0,
+          "frage": "Wie viel Prozent der Lebensversicherungen werden digital",
+          "einheitId": "ausschliesslichkeit"
+        },
+        {
+          "index": 1,
+          "frage": "Welchen Anteil der Portalnutzer hat Check24",
+          "einheitId": "direkt-online"
+        },
+        {
+          "index": 3,
+          "frage": "Was ist der Unterschied zwischen einem Versicherungsvertreter",
+          "einheitId": "makler"
+        },
+        {
+          "index": 4,
+          "frage": "Was ist Bancassurance",
+          "einheitId": "bancassurance"
+        },
+        {
+          "index": 6,
+          "frage": "Was ist ein Mehrfachagent",
+          "einheitId": "makler"
+        },
+        {
+          "index": 9,
+          "frage": "Welcher Kanal wächst am stärksten",
+          "einheitId": "ueberblick"
+        }
+      ],
+      "neueFragen": [
+        {
+          "question": "Welche Rechtsstellung hat ein Ausschließlichkeitsvertreter?",
+          "options": [
+            "Angestellter Außendienstmitarbeiter des Versicherers mit Festgehalt",
+            "Selbständiger Handelsvertreter nach § 84 HGB für einen Versicherer",
+            "Unabhängiger Sachwalter des Kunden nach § 93 HGB",
+            "Versicherungsberater auf Honorarbasis nach § 34d Abs. 2 GewO"
+          ],
+          "correct": 1,
+          "explanation": "Der Ausschließlichkeitsvertreter ist Handelsvertreter gemäß § 84 HGB im Auftrag eines einzigen Versicherers, trägt das unternehmerische Risiko selbst und erhält Provisionen sowie Bestandspflegegelder (Lerneinheit Ausschließlichkeit).",
+          "einheitId": "ausschliesslichkeit"
+        },
+        {
+          "question": "Wie unterscheiden sich laut WTW die laufenden Beiträge makler- und AO-vermittelter Lebensversicherungen?",
+          "options": [
+            "AO-Verträge liegen mit 1.484 € über Makler-Verträgen mit 1.271 €",
+            "Beide Kanäle liegen gleichauf bei rund 1.300 €",
+            "Makler-Verträge liegen mit 1.484 € über AO-Verträgen mit 1.271 €",
+            "AO-Verträge liegen mit 2.100 € deutlich vor Makler-Verträgen"
+          ],
+          "correct": 2,
+          "explanation": "Laut WTW liegt der laufende Beitrag bei makler-vermittelten Lebensversicherungen bei 1.484 € gegenüber 1.271 € in der AO; aus Versicherersicht bietet die AO dafür maximale Steuerung bei hohen Kosten (Lerneinheit Ausschließlichkeit, Tiefe Experte).",
+          "einheitId": "ausschliesslichkeit"
+        }
+      ]
+    },
+    "05-verguetung-provision": {
+      "einheiten": {
+        "provisionsarten": {
+          "kurzgesagt": [
+            "Rund 99 % des deutschen Versicherungsvertriebs sind provisionsfinanziert; die Vergütung ruht auf der Abschlussprovision (einmalig beim Abschluss) und der Bestandsprovision (laufend für die Betreuung).",
+            "In der Lebensversicherung beträgt die Abschlussprovision 25–50 Promille der Bewertungssumme, die Bestandsprovision 1–2 % des Jahresbeitrags; in der Sachversicherung dominiert eine durchlaufende Courtage von 15–25 %.",
+            "Der Vertreter (§ 84 HGB) erhält Provision und hat einen Ausgleichsanspruch nach § 89b HGB; der Makler ist Sachwalter des Kunden, seine Courtage folgt dem Schicksal der Prämie, und er trägt alle Kosten selbst."
+          ],
+          "lernziele": [
+            "Abschluss-, Bestands- und Dynamikprovision sowie Courtage unterscheiden",
+            "die Bewertungssumme und die Abschlussprovision eines Lebensversicherungsvertrags berechnen",
+            "die rechtliche Stellung von Vertreter und Makler und ihre Folgen für die Vergütung erläutern"
+          ]
+        },
+        "stornohaftung": {
+          "kurzgesagt": [
+            "Nach § 49 VAG haftet der Vermittler bei Lebens-, PKV-Voll- und Restschuldversicherungen fünf Jahre: Pro Monat gilt 1/60 der Abschlussprovision als verdient, der Rest ist bei vorzeitigem Vertragsende zurückzuzahlen.",
+            "In der Praxis liegen die Haftungszeiten bei 5,8 bis 6,1 Jahren, in Strukturvertrieben teils bei 7 bis 10; Versicherer behalten üblicherweise 10–20 % der Abschlussprovision als Stornoreserve ein.",
+            "Die Stornoquote in der Lebensversicherung lag 2024 bei 2,72 %; Superprovisionen als Differenz zwischen Hierarchiestufen sind der ökonomische Kern von Strukturvertrieben wie der DVAG (2.308 Mio. € Provisionserlöse 2023)."
+          ],
+          "lernziele": [
+            "die gesetzliche Stornohaftung nach § 49 VAG und ihre zeitanteilige Verdienung berechnen",
+            "Stornohaftungszeiten und Stornoreserve je Sparte beschreiben",
+            "das Prinzip der Superprovision im Strukturvertrieb erläutern"
+          ]
+        },
+        "saetze": {
+          "kurzgesagt": [
+            "In der Lebens- und Rentenversicherung liegt die Abschlussprovision bei 25–50 ‰ der Bewertungssumme; der marktanteilsgewichtete Durchschnitt betrug laut BaFin 38,2 ‰ (AO 36,6 ‰, Mehrfachvertreter 52,1 ‰, Makler 40,2 ‰).",
+            "Die PKV-Abschlussprovision ist auf 9 Monatsbeiträge gedeckelt (§ 50 VAG), marktüblich sind 6–9, bei Maklern im Schnitt 7; in der bAV liegen die Sätze bei 15–30 ‰ der Bewertungssumme.",
+            "In der Sachversicherung dominiert die laufende Courtage: Kfz ist mit nur 6–10 % am schwächsten vergütet, Privathaftpflicht, Hausrat und Rechtsschutz mit 20–25 % am besten."
+          ],
+          "lernziele": [
+            "die marktüblichen Provisionssätze für Leben, BU, PKV, Sach und bAV nennen",
+            "die Provision aus Bewertungssumme und Promillesatz oder aus Monatsbeiträgen berechnen",
+            "die Vergütung von Vertreter und Makler je Sparte vergleichen"
+          ]
+        },
+        "regulierung": {
+          "kurzgesagt": [
+            "Das LVRG senkte 2015 den Höchstzillmersatz von 40 auf 25 Promille der Beitragssumme; die reinen Abschlussprovisionen sanken danach nur um 12,9 %, die durchschnittliche Abschlussprovision stieg 2018 sogar auf 38,2 ‰.",
+            "Der Referentenentwurf eines Provisionsdeckels von 2019 (maximal 25 Promille, bis 40 bei Qualitätskriterien) scheiterte; nur der Deckel für Restschuldversicherungen (§ 50a VAG, maximal 2,5 %) wurde 2022 umgesetzt.",
+            "Statt eines Deckels wirkt die Wohlverhaltensaufsicht der BaFin: Bis 2024 wurden 13 Lebensversicherer geprüft, Generali musste Ende 2024 Kosten erstatten; die EU-Retail-Investment-Strategy bringt kein Provisionsverbot."
+          ],
+          "lernziele": [
+            "die Wirkung des LVRG 2015 auf Zillmersatz und Provisionen beschreiben",
+            "den gescheiterten Provisionsdeckel 2019 und den Restschuld-Deckel nach § 50a VAG erläutern",
+            "die Wohlverhaltensaufsicht der BaFin als faktisches Regulierungsinstrument einordnen"
+          ]
+        },
+        "honorar": {
+          "kurzgesagt": [
+            "Nettotarife enthalten keinen Provisionsanteil; der Kunde schließt mit dem Berater eine separate Honorarvereinbarung, und Nettopolicen haben ab dem ersten Monat Rückkaufswerte von mindestens 98 % der Beiträge.",
+            "Nur rund 70 Versicherer bieten Nettotarife an; Anfang 2026 waren lediglich 350 Honorar-Finanzanlagenberater (§ 34h GewO) registriert, das sind 0,13 % aller Vermittler und Berater.",
+            "Gründe für die Nische sind geringe Zahlungsbereitschaft, die Lobby der rund 235.000 Provisionsvermittler und die aufwendige Regelung des § 48c VAG; Provisionsverbote im Ausland schufen eine Beratungslücke."
+          ],
+          "lernziele": [
+            "Nettotarif und Honorarberatung definieren und die Berufszulassungen nach § 34h und § 34d Abs. 2 GewO nennen",
+            "Vorteile von Nettopolicen gegenüber Bruttotarifen erläutern",
+            "die Gründe für die geringe Verbreitung der Honorarberatung in Deutschland beschreiben"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 0,
+          "frage": "Was ist die BWS",
+          "einheitId": "provisionsarten"
+        },
+        {
+          "index": 1,
+          "frage": "Wie lange beträgt die gesetzliche Stornohaftung",
+          "einheitId": "stornohaftung"
+        },
+        {
+          "index": 2,
+          "frage": "Was bedeutet „Stornohaftung“",
+          "einheitId": "stornohaftung"
+        },
+        {
+          "index": 3,
+          "frage": "Was ist der Unterschied zwischen Abschlussprovision",
+          "einheitId": "provisionsarten"
+        },
+        {
+          "index": 4,
+          "frage": "Was ist das „LVRG“",
+          "einheitId": "regulierung"
+        },
+        {
+          "index": 5,
+          "frage": "Was ist Courtage",
+          "einheitId": "provisionsarten"
+        },
+        {
+          "index": 6,
+          "frage": "Wofür steht der Begriff „BWS“",
+          "einheitId": "provisionsarten"
+        },
+        {
+          "index": 7,
+          "frage": "Was ist ein Nettotarif",
+          "einheitId": "honorar"
+        },
+        {
+          "index": 8,
+          "frage": "In welchem Bereich ist eine AP",
+          "einheitId": "saetze"
+        },
+        {
+          "index": 9,
+          "frage": "Was regelt § 49 VAG",
+          "einheitId": "stornohaftung"
+        }
+      ],
+      "neueFragen": [
+        {
+          "question": "Auf wie viele Monatsbeiträge ist die PKV-Abschlussprovision nach § 50 VAG gesetzlich gedeckelt?",
+          "options": [
+            "9 Monatsbeiträge",
+            "12 Monatsbeiträge",
+            "7 Monatsbeiträge",
+            "6 Monatsbeiträge"
+          ],
+          "correct": 0,
+          "explanation": "Die PKV-Abschlussprovision ist gesetzlich auf maximal 9 Monatsbeiträge gedeckelt (§ 50 VAG); marktüblich sind 6–9 Monatsbeiträge, bei Maklern im Schnitt etwa 7 (Lerneinheit Provisionssätze).",
+          "einheitId": "saetze"
+        },
+        {
+          "question": "Welche Sparte ist im Maklervertrieb am schwächsten vergütet?",
+          "options": [
+            "Privathaftpflicht",
+            "Rechtsschutzversicherung",
+            "Wohngebäudeversicherung",
+            "Kfz-Versicherung"
+          ],
+          "correct": 3,
+          "explanation": "Die Kfz-Versicherung bildet mit nur 6–10 % Courtage die am schwächsten vergütete Sparte – Folge des Preiswettbewerbs durch Direktversicherer und Vergleichsportale. Privathaftpflicht, Hausrat und Rechtsschutz liegen bei 20–25 %, Wohngebäude bei 15–25 % (Lerneinheit Provisionssätze).",
+          "einheitId": "saetze"
+        },
+        {
+          "question": "Wie viele Honorar-Finanzanlagenberater nach § 34h GewO waren Anfang 2026 in Deutschland registriert?",
+          "options": [
+            "rund 350",
+            "rund 3.500",
+            "rund 35.000",
+            "rund 235.000"
+          ],
+          "correct": 0,
+          "explanation": "Laut DIHK-Statistik vom 1. Januar 2026 sind lediglich 350 Honorar-Finanzanlagenberater nach § 34h GewO registriert – 0,13 % aller Vermittler und Berater; die rund 235.000 Provisionsvermittler bilden die Gegenseite (Lerneinheit Honorarberatung).",
+          "einheitId": "honorar"
+        },
+        {
+          "question": "Welchen Rückkaufswert haben Nettopolicen bereits ab dem ersten Monat?",
+          "options": [
+            "Mindestens 50 % der eingezahlten Beiträge",
+            "Mindestens 75 % der eingezahlten Beiträge",
+            "Den vollen Beitrag zuzüglich garantierter Zinsen",
+            "Mindestens 98 % der eingezahlten Beiträge"
+          ],
+          "correct": 3,
+          "explanation": "Nettopolicen haben ab dem ersten Monat Rückkaufswerte von mindestens 98 % der Beiträge – statt oft negativer Werte in den ersten Jahren bei Bruttotarifen – und keine Stornogebühren (Lerneinheit Honorarberatung).",
+          "einheitId": "honorar"
+        }
+      ]
+    },
+    "06-regulatorik": {
+      "einheiten": {
+        "vvg": {
+          "kurzgesagt": [
+            "Das VVG von 2007 regelt in 216 Paragraphen die Beziehung zwischen Versicherungsnehmer, Versicherer und Vermittler; die meisten Normen sind halbzwingend zugunsten des Kunden.",
+            "Die VVG-Reform 2008 ersetzte das Alles-oder-Nichts-Prinzip durch die Quotelung nach Verschulden (§ 28 VVG), das Policen- durch das Antragsmodell und beschränkte die Anzeigepflicht auf konkrete Fragen in Textform.",
+            "Versicherer (§ 6 VVG) und Vermittler (§ 61 VVG) müssen befragen, beraten und in Textform dokumentieren; das Widerrufsrecht beträgt 14 Tage, bei Lebensversicherungen 30 Tage."
+          ],
+          "lernziele": [
+            "Aufbau und Geltung des Versicherungsvertragsgesetzes beschreiben",
+            "die vier Kernänderungen der VVG-Reform 2008 erläutern",
+            "Beratungs-, Dokumentations- und Widerrufsregeln auf einen Beratungsfall anwenden"
+          ]
+        },
+        "solvency2": {
+          "kurzgesagt": [
+            "Das VAG (seit 2016) setzt Solvency II um; das SCR entspricht dem Value-at-Risk der Eigenmittel zu 99,5 % über ein Jahr (200-Jahres-Ereignis), das MCR bildet mit 25–45 % des SCR die Untergrenze.",
+            "Säule 2 verlangt vier Schlüsselfunktionen (Risikomanagement, Compliance, Interne Revision, Versicherungsmathematik) und das jährliche ORSA; Säule 3 schafft Transparenz über SFCR, RSR und QRT.",
+            "Die SCR-Quoten lagen Ende 2024 bei 295 % (Leben), 260 % (Schaden/Unfall) und 293 % (Rückversicherung); 44 von 76 Lebensversicherern nutzten noch das Rückstellungstransitional, das spätestens 2032 ausläuft."
+          ],
+          "lernziele": [
+            "die drei Säulen von Solvency II und ihre Instrumente nennen",
+            "SCR und MCR erläutern und eine Bedeckungsquote interpretieren",
+            "die Rolle der BaFin, der MaGo und des Proportionalitätsprinzips einordnen"
+          ]
+        },
+        "idd": {
+          "kurzgesagt": [
+            "Die IDD (Richtlinie 2016/97) gilt in Deutschland seit dem 23. Februar 2018 für alle Vertriebskanäle einschließlich des Direktvertriebs und wurde in GewO, VVG, VAG und VersVermV umgesetzt.",
+            "Erlaubnisinhaber und gebundene Vertreter müssen 15 Zeitstunden Weiterbildung pro Jahr nachweisen; das POG-Verfahren verlangt einen Zielmarkt je Produkt und eine mindestens jährliche Überprüfung.",
+            "Das Vermittlerrecht kennt Makler (§ 59 Abs. 3 VVG), Vertreter (Abs. 2) und Versicherungsberater (Abs. 4); im Register standen am 1. Oktober 2025 179.426 Vermittler, darunter 46.885 Makler auf Rekordniveau."
+          ],
+          "lernziele": [
+            "Umsetzung und Geltungsbereich der IDD in Deutschland beschreiben",
+            "Weiterbildungspflicht, POG-Verfahren und Cross-Selling-Regeln erläutern",
+            "die drei Vermittlertypen nach § 59 VVG und ihre Pflichten unterscheiden"
+          ]
+        },
+        "bafin": {
+          "kurzgesagt": [
+            "Die BaFin beaufsichtigt rund 490 Versicherungsunternehmen und übt neben der Solvenzaufsicht eine Wohlverhaltensaufsicht über Produktgestaltung, Vermittlerverhalten und Beschwerdemanagement aus.",
+            "Ihre Aufgaben umfassen Solvenzaufsicht (SCR-Quoten, ORSA), Wohlverhaltensaufsicht (Provisionsoffenlegung, POG), Zulassung und Lizenzentzug sowie die Kooperation mit EIOPA.",
+            "Das IPID fasst jedes Produkt auf maximal zwei Seiten zusammen; der Versicherungsombudsmann verzeichnete 2024 21.548 Beschwerden, seine Entscheidungen bis 10.000 € binden den Versicherer."
+          ],
+          "lernziele": [
+            "die vier Aufgabenfelder der BaFin in der Versicherungsaufsicht nennen",
+            "IPID, PRIIP-KID und VVG-InfoV als Informationspflichten unterscheiden",
+            "Verfahren und Bindungswirkung des Versicherungsombudsmanns erläutern"
+          ]
+        },
+        "neue-regulierung": {
+          "kurzgesagt": [
+            "FIDA soll Versicherer ab 250 Mitarbeitern oder 50 Mio. € Umsatz verpflichten, Kundendaten über standardisierte APIs bereitzustellen – gestaffelt von Q4 2027 (Kfz) bis Q3 2029.",
+            "DORA gilt seit dem 17. Januar 2025 für IKT-Risikomanagement und Incident-Reporting; der EU AI Act stuft KI zur Risikobewertung und Preisgestaltung in Leben und Kranken als Hochrisiko ein.",
+            "Der Solvency-II-Review gilt ab dem 30. Januar 2027 (Risikomarge von 6 % auf 4,75 %); der Koalitionsvertrag 2025 sieht eine Elementarschadenpflichtversicherung vor, da nur 54 % der Wohngebäude versichert sind."
+          ],
+          "lernziele": [
+            "FIDA, DORA und den EU AI Act mit ihren Pflichten für Versicherer beschreiben",
+            "die Kernänderungen des Solvency-II-Reviews ab 2027 nennen",
+            "die Debatten um Elementarschadenpflichtversicherung und Provisionsdeckel einordnen"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 0,
+          "frage": "Welches Konfidenzniveau verlangt Solvency II",
+          "einheitId": "solvency2"
+        },
+        {
+          "index": 2,
+          "frage": "Was regelt § 19 VVG",
+          "einheitId": "vvg"
+        },
+        {
+          "index": 3,
+          "frage": "Auf welchem Quantil basiert",
+          "einheitId": "solvency2"
+        },
+        {
+          "index": 4,
+          "frage": "Was ist der SFCR",
+          "einheitId": "solvency2"
+        },
+        {
+          "index": 5,
+          "frage": "Wer beaufsichtigt die deutschen Versicherungsunternehmen",
+          "einheitId": "bafin"
+        },
+        {
+          "index": 6,
+          "frage": "Was regelt die DORA-Verordnung",
+          "einheitId": "neue-regulierung"
+        },
+        {
+          "index": 7,
+          "frage": "Was sind die drei Säulen",
+          "einheitId": "solvency2"
+        },
+        {
+          "index": 8,
+          "frage": "Was ist das FIDA",
+          "einheitId": "neue-regulierung"
+        },
+        {
+          "index": 9,
+          "frage": "Was besagt der „Grundsatz der Spartentrennung“",
+          "einheitId": "solvency2"
+        }
+      ],
+      "neueFragen": []
+    },
+    "07-wertschoepfungskette": {
+      "einheiten": {
+        "produktentwicklung": {
+          "kurzgesagt": [
+            "Die Produktentwicklung durchläuft neun Phasen von der Ideenfindung bis zum Produktcontrolling; mindestens elf Abteilungen wirken mit, und die IDD verlangt ein Genehmigungsverfahren (POG) je Produkt.",
+            "Agile Methoden und Low-Code-Plattformen verkürzen die Time-to-Market auf unter zwei Wochen statt 6 bis 18 Monate; 87 % der Versicherer setzen auf modulare Baukastensysteme.",
+            "Im Underwriting stehen in Leben und Kranken 7 bis 14 Gesundheitsfragen im Zentrum (ärztliche Untersuchung ab 400.000 €); in Sach und Kfz dominieren Typ-, Regional- und Schadenfreiheitsklasse."
+          ],
+          "lernziele": [
+            "die neun Phasen der Produktentwicklung und die beteiligten Abteilungen nennen",
+            "klassische und agile Produktentwicklung vergleichen",
+            "die Underwriting-Prozesse in Leben/Kranken und Sach/Kfz unterscheiden"
+          ]
+        },
+        "ueberblick": {
+          "kurzgesagt": [
+            "Die Dunkelverarbeitungsquote lag 2023 bei 33,5 % in Sach/Unfall, 32,5 % in der Krankenversicherung und 24,1 % bei Kfz-Neuverträgen; der Münchener Verein erreicht online 90 %.",
+            "Die Wertschöpfungskette reicht von Produktentwicklung über Underwriting, Vertrieb, Vertragsverwaltung und Schadenmanagement bis zu Kapitalanlage und Kundenservice; SAP FS-CD ist Standard für den Zahlungsverkehr.",
+            "Der Anteil der Kundenkommunikation über Online-Portale stieg von 10 % (2019) auf 22 % (2023); „Meine Allianz“ nutzen über 5 Millionen Kunden, „Meine HUK“ über 4 Millionen."
+          ],
+          "lernziele": [
+            "die Glieder der Wertschöpfungskette eines Versicherers in der richtigen Reihenfolge nennen",
+            "eine Combined Ratio aus Schaden- und Kostenquote berechnen und interpretieren",
+            "Dunkelverarbeitungsquote und Digital Touchpoint Index als Prozesskennzahlen erläutern"
+          ]
+        },
+        "schadenmgmt": {
+          "kurzgesagt": [
+            "Der Schadenprozess folgt der Kette Schadenmeldung, Deckungsprüfung, Begutachtung, Regulierung, Auszahlung und Regress; einfache Vollkaskoschäden reguliert die Allianz KI-gestützt innerhalb eines Tages.",
+            "Die Kfz-Combined-Ratio erreichte 2023 112,2 %, verbesserte sich 2024 auf 106,56 % und soll 2025 bei rund 97 % liegen; Haupttreiber war der durchschnittliche Sachschaden von 3.700 €.",
+            "Versicherungsbetrug kostet jährlich über 6 Mrd. €, rund 10 % aller Schadenmeldungen gelten als dubios; die HUK-COBURG steuert Reparaturen über 1.800 Partnerwerkstätten, ERGO setzt über 100 KI-Anwendungen ein."
+          ],
+          "lernziele": [
+            "die Stufen des Schadenprozesses nennen",
+            "Schadensteuerung über Werkstattnetze als Kostenhebel erläutern",
+            "Betrugserkennung und KI-Einsatz im Schadenmanagement mit Beispielen beschreiben"
+          ]
+        },
+        "kundenservice": {
+          "kurzgesagt": [
+            "E-Mail ist mit 58 % Nutzungsrate der beliebteste Kontaktkanal, gefolgt von Brief (47 %) und Telefon; der Net Promoter Score der Branche erreichte 2025 mit 49 Punkten einen Höchstwert.",
+            "Der Versicherungsombudsmann zählte 2024 21.548 Beschwerden (+19,5 %); die BaFin-Beschwerdequote liegt bei 2,02 je 100.000 Verträge, Run-off-Gesellschaften wie Proxalto fallen mit hohen Quoten auf.",
+            "ERGO verarbeitet täglich rund 10.000 Anrufe über Sprachassistenten; dennoch wünschen sich nur 14 % der Kunden KI-Chatbots, 64 % bestehen auf einem menschlichen Ansprechpartner."
+          ],
+          "lernziele": [
+            "die wichtigsten Kontaktkanäle und Zufriedenheitskennzahlen (NPS, Schulnote) nennen",
+            "Beschwerdewege über Ombudsmann und BaFin unterscheiden",
+            "Chancen und Grenzen von KI im Kundenservice anhand der Kundenerwartungen einordnen"
+          ]
+        },
+        "kapitalanlage": {
+          "kurzgesagt": [
+            "Deutsche Erstversicherer verwalteten Ende 2024 Kapitalanlagen von 1.603,8 Mrd. €, davon 75,8 % Renten, 12,2 % Beteiligungen, 5,1 % Aktien und 4,8 % Immobilien.",
+            "Die Zinszusatzreserve erreichte Ende 2021 rund 96 Mrd. € und wird seit 2022 abgebaut (Ende 2024: circa 84 Mrd. €); die laufende Verzinsung stieg von rund 2,0 % (2022) auf 2,52 % (2025).",
+            "Die SCR-Basisquote liegt im Schnitt bei circa 357 %; Rückversicherung wirkt als Risikotransfer und Kapitalentlastung, und der Cat-Bond-Markt erreichte 2025 mit 25,6 Mrd. USD Emissionen ein Rekordjahr."
+          ],
+          "lernziele": [
+            "die Asset Allocation deutscher Versicherer und ihre regulatorischen Gründe beschreiben",
+            "Zinszusatzreserve und Höchstrechnungszins in ihrer Wirkung auf die Überschussbeteiligung erläutern",
+            "Funktion und Formen der Rückversicherung sowie Cat Bonds als Kapitalmarktinstrument einordnen"
+          ]
+        },
+        "it-digitalisierung": {
+          "kurzgesagt": [
+            "Run-off-Plattformen übernehmen Altbestände: Viridium verwaltet rund 68 Mrd. € und über 3,2 Mio. Verträge, etwa 5 % des Lebensversicherungsmarktes; jede Bestandsübertragung braucht nach § 13 VAG die Genehmigung der BaFin.",
+            "Bis zu 70 % des IT-Budgets fließen in Legacy-Systeme; 75 % der DACH-Versicherer wollen binnen drei Jahren ein Kernsystem austauschen, Großtransformationen kosten über 250 Mio. €.",
+            "Outsourcing bleibt reguliert: § 32 VAG belässt die volle Verantwortung beim Versicherer, DORA verschärft seit 2025 das IKT-Drittanbieter-Management; ERGO plant den Abbau von 1.000 Stellen bis 2030."
+          ],
+          "lernziele": [
+            "Run-off als Geschäftsmodell und seine regulatorischen Bedingungen beschreiben",
+            "das Legacy-Problem der Versicherungs-IT mit Kennzahlen erläutern",
+            "Anforderungen an Outsourcing nach VAG, MaGo und DORA nennen"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 0,
+          "frage": "Welches IT-System dominiert",
+          "einheitId": "ueberblick"
+        },
+        {
+          "index": 1,
+          "frage": "Was bedeutet eine Combined Ratio von 95",
+          "einheitId": "ueberblick"
+        },
+        {
+          "index": 2,
+          "frage": "Was ist „Dunkelverarbeitung“",
+          "einheitId": "ueberblick"
+        },
+        {
+          "index": 3,
+          "frage": "Was sind „Kernsysteme“",
+          "einheitId": "it-digitalisierung"
+        },
+        {
+          "index": 4,
+          "frage": "Was ist ein „Run-off“",
+          "einheitId": "it-digitalisierung"
+        },
+        {
+          "index": 6,
+          "frage": "Welche Funktion hat das Underwriting",
+          "einheitId": "produktentwicklung"
+        },
+        {
+          "index": 7,
+          "frage": "Was ist der Unterschied zwischen Erst- und Rückversicherung",
+          "einheitId": "kapitalanlage"
+        },
+        {
+          "index": 8,
+          "frage": "Was ist „Actuarial“",
+          "einheitId": "produktentwicklung"
+        },
+        {
+          "index": 9,
+          "frage": "Was ist „Kapitalanlage-Management“",
+          "einheitId": "kapitalanlage"
+        }
+      ],
+      "neueFragen": [
+        {
+          "question": "Welcher Kontaktkanal ist bei deutschen Versicherungskunden laut KUBUS-Studie 2025 am beliebtesten?",
+          "options": [
+            "E-Mail",
+            "Brief",
+            "Telefon",
+            "Chatbot"
+          ],
+          "correct": 0,
+          "explanation": "E-Mail ist mit 58 % Nutzungsrate der beliebteste Kontaktkanal, gefolgt vom Brief (47 %, stark rückläufig) und Telefon; KI-Chatbots wünschen sich nur 14 % der Kunden (Lerneinheit Kundenservice).",
+          "einheitId": "kundenservice"
+        },
+        {
+          "question": "Wie viel Prozent der Kunden bestehen auf der Option eines menschlichen Ansprechpartners?",
+          "options": [
+            "14 %",
+            "34 %",
+            "49 %",
+            "64 %"
+          ],
+          "correct": 3,
+          "explanation": "64 % der Kunden bestehen auf einem menschlichen Ansprechpartner, nur 14 % wünschen sich KI-Chatbots; 49 Punkte ist der Net Promoter Score der Branche 2025 (Lerneinheit Kundenservice).",
+          "einheitId": "kundenservice"
+        }
+      ]
+    },
+    "08-zukunftsthemen": {
+      "einheiten": {
+        "ki-automation": {
+          "kurzgesagt": [
+            "50 % der europäischen Nicht-Leben-Versicherer setzen laut EIOPA bereits KI produktiv ein; die Allianz nutzt ihren „Insurance Copilot“ seit Februar 2025 für die Schadenregulierung und kooperiert mit Anthropic.",
+            "Die Dunkelverarbeitungsquote liegt bei 33,5 % in Sach/Unfall (2009: 23 %) und 32,5 % in der Krankenversicherung; Claims Automation mit Vision Language Models könnte sie auf 70–85 % heben.",
+            "Der EU AI Act stuft KI zur Risikobewertung und Preisgestaltung in Lebens- und Krankenversicherungen als Hochrisiko ein; ab August 2026 drohen bei Verstößen bis zu 35 Mio. € oder 7 % des Umsatzes."
+          ],
+          "lernziele": [
+            "die Einsatzfelder von KI im Underwriting, in der Schadenbearbeitung und in der Betrugserkennung mit Beispielen beschreiben",
+            "die Entwicklung der Dunkelverarbeitungsquoten mit Zahlen belegen",
+            "die Hochrisiko-Einstufung des EU AI Act und ihre Anforderungen für Versicherer erläutern"
+          ]
+        },
+        "insurtechs-plattformen": {
+          "kurzgesagt": [
+            "Embedded Insurance integriert Versicherung per API in fremde Kaufprozesse; laut GDV kommen rund 40 % der digital abgeschlossenen Privatkundenverträge in Sach, Unfall und Haftpflicht so zustande.",
+            "Plattformbetreiber agieren meist als gebundene Vertreter (§ 34d Abs. 7 GewO) oder produktakzessorische Vermittler; Check24 hält 80–87 % der Vergleichsportal-Nutzer, Verivox nur 12 %.",
+            "wefox wurde von 4,5 Mrd. € (2022) auf 500 Mio. € abgewertet, Element ging 2025 insolvent und Getsafe gab die BaFin-Lizenz zurück; Clark erreichte 2023 mit 135 Mio. € Umsatz erstmals ein positives operatives Ergebnis."
+          ],
+          "lernziele": [
+            "Embedded Insurance definieren und ihre regulatorische Einordnung nach § 34d GewO erläutern",
+            "parametrische Versicherungen mit Basisrisiko und Abgrenzung zum Finanzderivat erklären",
+            "die Marktstellung von Check24 und die Konsolidierung der InsurTechs mit Zahlen einordnen"
+          ]
+        },
+        "open-insurance": {
+          "kurzgesagt": [
+            "FIDA soll das Open-Banking-Prinzip auf Versicherungen ausweiten: Versicherer müssten Kundendaten über standardisierte APIs unentgeltlich und in Echtzeit bereitstellen; Gesundheitsdaten sind ausgenommen.",
+            "Der Zeitplan verzögert sich: erster Trilog im April 2025, phasenweise Umsetzung frühestens ab 2027–2028; EU-weit wären rund 400 Millionen Verträge betroffen.",
+            "Der GDV nennt FIDA „neue Bürokratie ohne klaren Nutzen“, FRIDA e. V. einen „Meilenstein“ für digitale Ökosysteme; die EU-Kommission schätzt den Nutzen auf 4,6 bis 12,4 Mrd. € jährlich."
+          ],
+          "lernziele": [
+            "Ziel und Geltungsbereich der FIDA-Verordnung beschreiben",
+            "den Zeitplan und die geplanten Umsetzungsphasen nennen",
+            "die Positionen von GDV und FRIDA zu Open Insurance gegenüberstellen"
+          ]
+        },
+        "esg-klima": {
+          "kurzgesagt": [
+            "Deutsche Versicherer halten 184 Mrd. € explizit nachhaltige Kapitalanlagen (rund 10 % des Portfolios); der CO₂-Fußabdruck sank auf 47 Tonnen je investierte Million Euro, 23 % weniger als im Vorjahr.",
+            "Versicherte Elementarschäden lagen 2024 bei 5,7 Mrd. €; nur rund 57 % der Wohngebäude sind gegen Elementarschäden versichert, in Baden-Württemberg 94 %, in Rheinland-Pfalz 46 %.",
+            "Der Koalitionsvertrag 2025 sieht Elementarschutz im Neugeschäft, eine Opt-out-Lösung und eine staatliche Rückversicherung vor; der GDV schlägt „Elementar Re“ mit Staatshaftung ab 30 Mrd. € Gesamtschaden vor."
+          ],
+          "lernziele": [
+            "SFDR, EU-Taxonomie und CSRD als Nachhaltigkeitspflichten für Versicherer unterscheiden",
+            "die Elementarschadenlücke in Deutschland mit Zahlen beschreiben",
+            "Opt-out-Modell, Pflichtversicherung und internationale Vorbilder wie CatNat und Flood Re vergleichen"
+          ]
+        },
+        "ma-konsolidierung": {
+          "kurzgesagt": [
+            "Der europäische Versicherungs-M&A-Markt erreichte 2024 mit 694 Transaktionen ein Rekordniveau; in der DACH-Region waren es 106 Deals, fünfmal so viele wie 2020.",
+            "Die Viridium-Übernahme durch Allianz, BlackRock und T&D Holdings (rund 3,5 Mrd. €) war die größte Run-off-Transaktion; die Barmenia-Gothaer-Fusion schuf mit rund 8 Mrd. € Prämien den zehntgrößten Versicherer.",
+            "Im Maklermarkt kaufen PE-getriebene Konsolidierer wie GGW (knapp 2 Mrd. €) und MRH Trowe; die Top 10 vereinen 67 % des Gesamtmarktes, die Allianz hält 17,4 %, in der Lebensversicherung 26,6 %."
+          ],
+          "lernziele": [
+            "die wichtigsten Versicherungstransaktionen 2024/2025 und ihre Treiber nennen",
+            "Run-off-Markt und Maklerkonsolidierung als Wachstumsfelder erläutern",
+            "die Marktkonzentration in Deutschland mit Kennzahlen einordnen"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 1,
+          "frage": "Welches Unternehmen war einst",
+          "einheitId": "insurtechs-plattformen"
+        },
+        {
+          "index": 2,
+          "frage": "Was ist FIDA",
+          "einheitId": "open-insurance"
+        },
+        {
+          "index": 3,
+          "frage": "Was ist eine „Embedded Insurance“",
+          "einheitId": "insurtechs-plattformen"
+        },
+        {
+          "index": 4,
+          "frage": "Was ist der Unterschied zwischen einer „Plattform“",
+          "einheitId": "insurtechs-plattformen"
+        },
+        {
+          "index": 5,
+          "frage": "Welcher Megatrend hat den größten Einfluss",
+          "einheitId": "esg-klima"
+        },
+        {
+          "index": 6,
+          "frage": "Was versteht man unter „Telematics“",
+          "einheitId": "insurtechs-plattformen"
+        },
+        {
+          "index": 7,
+          "frage": "Was ist „Generative KI“",
+          "einheitId": "ki-automation"
+        },
+        {
+          "index": 8,
+          "frage": "Was sind ESG-Kriterien",
+          "einheitId": "esg-klima"
+        }
+      ],
+      "neueFragen": [
+        {
+          "question": "Wie stuft der EU AI Act KI-Systeme zur Risikobewertung und Preisgestaltung in Lebens- und Krankenversicherungen ein?",
+          "options": [
+            "Als Systeme mit minimalem Risiko ohne besondere Pflichten",
+            "Als verbotene Praktiken",
+            "Als nicht erfasst, weil bereits durch das VAG geregelt",
+            "Als Hochrisiko-Systeme nach Anhang III"
+          ],
+          "correct": 3,
+          "explanation": "Der EU AI Act (in Kraft seit 1. August 2024) stuft KI zur Risikobewertung von Einzelpersonen und zur Preisgestaltung in Lebens- und Krankenversicherungen explizit als Hochrisiko-Systeme ein (Anhang III, Nr. 5). Ab August 2026 gelten dafür umfassende Anforderungen; bei Verstößen drohen bis zu 35 Mio. € oder 7 % des weltweiten Umsatzes.",
+          "einheitId": "ki-automation"
+        },
+        {
+          "question": "Wie hoch war die Dunkelverarbeitungsquote bei Sach- und Unfallversicherern laut GDV-Erhebung zuletzt?",
+          "options": [
+            "33,5 %",
+            "23 %",
+            "50 %",
+            "70–85 %"
+          ],
+          "correct": 0,
+          "explanation": "33,5 % der Geschäftsprozesse bei Sach- und Unfallversicherern werden vollmaschinell abgewickelt (2009: nur 23 %); 70–85 % gelten mit Vision Language Models als mittelfristig erreichbar (Lerneinheit KI & Automatisierung).",
+          "einheitId": "ki-automation"
+        },
+        {
+          "question": "Welche Transaktion war 2025 die größte Run-off-Transaktion im deutschen Markt?",
+          "options": [
+            "Die Fusion der Versicherer Barmenia und Gothaer zur BarmeniaGothaer",
+            "Die Übernahme der Maklergruppe GGW durch den Investor Permira",
+            "Die Übernahme von Viridium durch Allianz, BlackRock und T&D Holdings",
+            "Der Verkauf des deutschen Zurich-Lebensbestands an die Athora-Gruppe"
+          ],
+          "correct": 2,
+          "explanation": "Die Viridium-Übernahme (März 2025) durch ein Konsortium aus Allianz, BlackRock und T&D Holdings für rund 3,5 Mrd. € war die größte Run-off-Transaktion der letzten Jahre; Viridium verwaltet rund 3,4 Mio. Policen (Lerneinheit M&A & Konsolidierung).",
+          "einheitId": "ma-konsolidierung"
+        },
+        {
+          "question": "Wie viele Versicherungstransaktionen wurden 2024 in der DACH-Region registriert?",
+          "options": [
+            "106",
+            "694",
+            "46",
+            "20"
+          ],
+          "correct": 0,
+          "explanation": "In der DACH-Region wurden 2024 106 Deals registriert – ein Fünffaches gegenüber 2020; europaweit waren es 694 angekündigte Transaktionen, ein Rekordniveau (Lerneinheit M&A & Konsolidierung).",
+          "einheitId": "ma-konsolidierung"
+        }
+      ]
+    },
+    "09-verbaende-institutionen": {
+      "einheiten": {
+        "branchenverbande": {
+          "kurzgesagt": [
+            "Der GDV (gegründet 1948, Sitz Berlin) vertritt rund 470 Mitgliedsunternehmen mit circa 488 Millionen Verträgen und 1,9 Billionen Euro Kapitalanlagen; Präsident ist Norbert Rollinger, Hauptgeschäftsführer Jörg Asmussen.",
+            "Der GDV beschäftigt rund 200 Mitarbeiter, unterhält ein Lobbybudget von circa 15 Mio. € mit 93 registrierten Lobbyisten und betreibt Infrastruktur wie den Zentralruf der Autoversicherer und die eVB.",
+            "Der PKV-Verband (1947 gegründet) vertritt 39 Mitgliedsunternehmen mit 8,79 Mio. Vollversicherten und 54,4 Mrd. € Beiträgen (2025) und verwaltet die Sozialtarife Standard-, Basis- und Notlagentarif."
+          ],
+          "lernziele": [
+            "Aufgaben, Struktur und aktuelle Positionen des GDV nennen",
+            "die Rolle des PKV-Verbands und die drei Sozialtarife beschreiben",
+            "das institutionelle Ökosystem aus Aufsicht, Verbänden, Schlichtung und Rating einordnen"
+          ]
+        },
+        "vermittlerverbande": {
+          "kurzgesagt": [
+            "Der AfW (1992) vertritt mit 2.117 Mitgliedern rund 40.000 unabhängige Vermittler; sein Vermittlerbarometer zeigt ein Durchschnittsalter von 53,7 Jahren, 67,2 % der Vermittler sind über 50.",
+            "Der BVK (1901) ist mit rund 40.000 Gesamtmitgliedern der mitgliederstärkste Verband und vertritt Makler wie Vertreter; VOTUM (1995) vertritt Pools, Finanzvertriebe und Assekuradeure.",
+            "Per 1. Januar 2025 waren 181.761 Vermittler nach § 34d GewO registriert (2011: über 263.000); die IHK-Sachkundeprüfung hat eine Durchfallquote von circa 45 %."
+          ],
+          "lernziele": [
+            "AfW, BVK und VOTUM nach Mitgliederkreis und Schwerpunkt unterscheiden",
+            "die Entwicklung des Vermittlerregisters seit 2011 beschreiben",
+            "Sachkundeprüfung und Weiterbildungspflicht im IHK-System erläutern"
+          ]
+        },
+        "aufsicht": {
+          "kurzgesagt": [
+            "Die BaFin (gegründet 2002, Sitze Bonn und Frankfurt, 2.700–2.800 Mitarbeiter) finanziert sich vollständig über Umlagen der Beaufsichtigten; oberstes Ziel nach § 294 VAG ist der Schutz der Versicherungsnehmer.",
+            "Die Aufsicht gliedert sich in Solvenz-, Rechts- und Wohlverhaltensaufsicht; 2024 prüfte die BaFin 13 Lebensversicherer mit über 20 % Marktanteil auf überhöhte Kosten.",
+            "EIOPA (Frankfurt, Vorsitz Petra Hielkema) beaufsichtigt keine Unternehmen direkt, sondern setzt Standards; im Stresstest 2024 fiel die aggregierte Solvenzquote von 221,8 % auf 123,3 %."
+          ],
+          "lernziele": [
+            "Organisation, Finanzierung und Aufsichtsbereiche der BaFin beschreiben",
+            "die Rolle von EIOPA gegenüber nationalen Aufsehern erläutern",
+            "die Ergebnisse des EIOPA-Stresstests 2024 einordnen"
+          ]
+        },
+        "schlichtung": {
+          "kurzgesagt": [
+            "Der Versicherungsombudsmann e. V. (gegründet 2001, 315 Mitgliedsversicherer) ist die anerkannte Verbraucherschlichtungsstelle; seit April 2024 leitet Sibylle Kessal-Wulf das Amt.",
+            "2024 gingen 21.548 Beschwerden ein (+19,5 %), vor allem zu Kfz, Leben, Rechtsschutz und Hausrat; die Bearbeitungsdauer stieg auf 68,3 Tage.",
+            "Das Verfahren ist kostenlos, Entscheidungen bis 10.000 € binden den Versicherer, bis 100.000 € gibt es Empfehlungen; die Erfolgsquote liegt in Sachsparten über 50 %, in der Lebensversicherung bei 35 %."
+          ],
+          "lernziele": [
+            "Zuständigkeit und Bindungswirkung des Versicherungsombudsmanns erläutern",
+            "die Beschwerdestatistik 2024 mit Zahlen wiedergeben",
+            "weitere Institutionen wie den Arbeitskreis Beratungsprozesse und das iff einordnen"
+          ]
+        },
+        "rating-agenturen": {
+          "kurzgesagt": [
+            "Drei deutsche Ratinghäuser ergänzen sich: Assekurata bewertet Unternehmensqualität (A++ bis D), Franke und Bornberg Bedingungsqualität (FFF+ bis F−), MORGEN & MORGEN Tarife mit fünf Sternen plus Vergleichssoftware.",
+            "S&P, Moody's, Fitch und AM Best bewerten die Finanzkraft: Die Allianz SE erhält AA (S&P), Munich Re und Hannover Re AA−, Talanx/HDI A+.",
+            "Die DAV (1993, rund 6.700 Mitglieder) empfiehlt jährlich den Höchstrechnungszins – 1,0 % ab 2025 nach 0,25 % in 2022–2024; der Verantwortliche Aktuar ist gesetzlich vorgeschrieben (§§ 141, 156, 161–162 VAG)."
+          ],
+          "lernziele": [
+            "die drei deutschen Ratinghäuser mit Bewertungsgegenstand und Skala unterscheiden",
+            "Finanzstärke-Ratings internationaler Agenturen lesen und einordnen",
+            "die Aufgaben der DAV und des Verantwortlichen Aktuars erläutern"
+          ]
+        }
+      },
+      "quizEinheiten": [
+        {
+          "index": 0,
+          "frage": "Bis zu welchem Streitwert",
+          "einheitId": "schlichtung"
+        },
+        {
+          "index": 1,
+          "frage": "Was ist der Versicherungsombudsmann",
+          "einheitId": "schlichtung"
+        },
+        {
+          "index": 2,
+          "frage": "Wer ist Mitglied im GDV",
+          "einheitId": "branchenverbande"
+        },
+        {
+          "index": 3,
+          "frage": "Was macht EIOPA",
+          "einheitId": "aufsicht"
+        },
+        {
+          "index": 4,
+          "frage": "Was ist der Unterschied zwischen BdV und GDV",
+          "einheitId": "branchenverbande"
+        },
+        {
+          "index": 5,
+          "frage": "Was sind die Ratingagenturen",
+          "einheitId": "rating-agenturen"
+        },
+        {
+          "index": 6,
+          "frage": "Wer prüft, ob eine Solvenzquote ausreicht",
+          "einheitId": "aufsicht"
+        },
+        {
+          "index": 7,
+          "frage": "Was ist der AfW",
+          "einheitId": "vermittlerverbande"
+        },
+        {
+          "index": 8,
+          "frage": "Was ist die IVFP",
+          "einheitId": "branchenverbande"
+        },
+        {
+          "index": 9,
+          "frage": "Was ist der PKV-Verband",
+          "einheitId": "branchenverbande"
+        }
+      ],
+      "neueFragen": []
+    }
+  }
+}

@@ -1,0 +1,92 @@
+From: Eike Brenneisen <ebrenneisen@deloitte.de>
+To: Lütke, Niels (HSB4K) <Niels.Luetke@ergo.de>,
+ Rypa, Kamil (MSUE1D) <Kamil.Rypa@ergo.de>
+Cc: Lorusso, Inge (HSB4K) <Inge.Lorusso@ergo.de>,
+ Wesche, Anika (HSB4K) <Anika.Wesche@ergo.de>,
+ Mai, Alexandra (HSB4K) <Alexandra.Mai@ergo.de>,
+ Fey, Pauline (ODPV1D) <Pauline.Fey@ergo.de>,
+ Koch, Marcus (ODPBD) <Marcus.Koch@ergo.de>,
+ Amend, Dirk (HSB4K) <Dirk.Amend@ergo.de>,
+ Garcia-Fernandez, Nuria (ODPBD) <Nuria.Garcia-Fernandez@ergo.de>,
+ Schwarz, Stefan (DSTPB) <Stefan.Schwarz@ergo.de>,
+ Marco Jeglorz <mjeglorz@deloitte.de>
+Subject: =?utf-8?q?Makler_B=C3=9C_meets_KI_=7C_Stand_nach_dem_Celonis-Austausch_und_Q?=
+ =?utf-8?q?S_f=C3=BCr_den_Testlauf_am_Freitag?=
+Date: Wed, 02 Sep 2026 18:45:00 +0200
+X-Unsent: 1
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="----=_BUE_Team_020926"
+
+------=_BUE_Team_020926
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Hallo zusammen,
+
+kurz der Stand nach dem heutigen Austausch mit Celonis und ein Anliegen für Freitag.
+
+STAND
+
+- Celonis hat die Fehler aus dem letzten Testdurchlauf nahezu vollständig behoben. Auch der Schnitzer im Prompt, der zu den auffälligen Konstellationen geführt hatte, ist gefixt.
+- Die Entscheidung zur Untervollmacht von Kamil vom heutigen Vormittag gilt als abschließend und ist eingearbeitet: ein zentrales Feld „Untervollmacht erteilt" mit ja/nein statt der bisherigen Aufteilung. Damit fällt ein Datenpool-Feld weg. Gleiches gilt für das Format der VNR.
+- Die Anbindung an EWMS ist geklärt: Celonis kann die strukturierten Daten in den Postkorb schreiben, sobald die Datenpool-Felder angelegt sind. Auf der Testumgebung geht das kurzfristig, die Produktivsetzung ist releaseabhängig (Anfang Oktober oder Mitte November).
+- Der Roboter bekommt einen eigenen Postkorb und wird wie ein Sachbearbeiter angelegt. Wir können also direkt in seinen Postkorb eröffnen. Das klären wir Freitag mit Robotics ab.
+- Die finale Feldliste geben wir Freitag an das Eingangsmanagement, damit die Felder angelegt werden können.
+
+FREITAG: NÄCHSTER TESTDURCHLAUF
+
+Wir gehen davon aus, dass wir am Freitag den nächsten Test fahren können.
+
+Niels, Kamil: Hättet ihr wieder Kapazität, die Qualitätssicherung zu übernehmen? Es geht um rund 50 Vorgänge, wie beim letzten Mal im Abgleich der Deckblätter gegen die ursprünglichen Mails und Anlagen. Gebt mir bitte kurz Bescheid, ob das bei euch passt und wie viel Zeit ihr dafür einplanen könnt.
+
+Falls der Testlauf am Freitag doch nicht steht, melde ich mich rechtzeitig.
+
+Beste Grüße
+Eike Brenneisen
+
+------=_BUE_Team_020926
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+<html><head><meta charset="utf-8"></head>
+<body style="font-family:Calibri,Arial,sans-serif; font-size:11pt; color:#1f1f1f; line-height:1.45;">
+
+<p>Hallo zusammen,</p>
+
+<p>kurz der Stand nach dem heutigen Austausch mit Celonis und ein Anliegen f&uuml;r Freitag.</p>
+
+<p style="margin:18px 0 6px 0;"><b style="font-size:12pt;">Stand</b></p>
+
+<ul style="margin:0 0 0 18px; padding:0;">
+  <li style="margin-bottom:8px;"><b>Celonis hat die Fehler aus dem letzten Testdurchlauf nahezu vollst&auml;ndig
+      behoben.</b> Auch der Schnitzer im Prompt, der zu den auff&auml;lligen Konstellationen gef&uuml;hrt hatte, ist
+      gefixt.</li>
+  <li style="margin-bottom:8px;">Die <b>Entscheidung zur Untervollmacht</b> von Kamil vom heutigen Vormittag gilt als
+      abschlie&szlig;end und ist eingearbeitet: ein zentrales Feld &bdquo;Untervollmacht erteilt&ldquo; mit ja/nein
+      statt der bisherigen Aufteilung. Damit f&auml;llt ein Datenpool-Feld weg. Gleiches gilt f&uuml;r das Format der
+      VNR.</li>
+  <li style="margin-bottom:8px;">Die <b>Anbindung an EWMS ist gekl&auml;rt</b>: Celonis kann die strukturierten Daten
+      in den Postkorb schreiben, sobald die Datenpool-Felder angelegt sind. Auf der Testumgebung geht das
+      kurzfristig, die Produktivsetzung ist releaseabh&auml;ngig (Anfang Oktober oder Mitte November).</li>
+  <li style="margin-bottom:8px;">Der Roboter bekommt einen <b>eigenen Postkorb</b> und wird wie ein Sachbearbeiter
+      angelegt. Wir k&ouml;nnen also direkt in seinen Postkorb er&ouml;ffnen. Das kl&auml;ren wir Freitag mit Robotics
+      ab.</li>
+  <li>Die <b>finale Feldliste</b> geben wir Freitag an das Eingangsmanagement, damit die Felder angelegt werden
+      k&ouml;nnen.</li>
+</ul>
+
+<p style="margin:22px 0 6px 0;"><b style="font-size:12pt;">Freitag: n&auml;chster Testdurchlauf</b></p>
+
+<p>Wir gehen davon aus, dass wir am <b>Freitag den n&auml;chsten Test</b> fahren k&ouml;nnen.</p>
+
+<p><b>Niels, Kamil:</b> H&auml;ttet ihr wieder Kapazit&auml;t, die Qualit&auml;tssicherung zu &uuml;bernehmen? Es geht
+um <b>rund 50 Vorg&auml;nge</b>, wie beim letzten Mal im Abgleich der Deckbl&auml;tter gegen die urspr&uuml;nglichen
+Mails und Anlagen. Gebt mir bitte kurz Bescheid, ob das bei euch passt und wie viel Zeit ihr daf&uuml;r einplanen
+k&ouml;nnt.</p>
+
+<p>Falls der Testlauf am Freitag doch nicht steht, melde ich mich rechtzeitig.</p>
+
+<p style="margin-top:20px;">Beste Gr&uuml;&szlig;e<br>Eike Brenneisen</p>
+
+</body></html>
+------=_BUE_Team_020926--

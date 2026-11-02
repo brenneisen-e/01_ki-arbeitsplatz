@@ -1,0 +1,17 @@
+/* Topbar-Stufen, die index.css (Abschnitt 25) nicht führt.
+   Bei 1280 px bleiben der Mitte rund 320 px; der Wähler braucht mit
+   Statusabzeichen rund 380 px, ohne rund 280 px. Deshalb weicht das
+   Abzeichen schon ab 1280 (der Status steht im Aufklappmenü, der Ton als
+   Punkt), damit der Fassungsname vollständig steht. Ab 1100 px fehlen
+   weitere 60 px: das Tastenkürzel neben der Lupe und das Grundlagen-Icon
+   (erreichbar über „?“ und die Palette) weichen, die Leiste rückt enger. */
+@media (max-width: 1280px) {
+  .vg-topbar-waehler > .vg-btn { max-width: min(268px, 100%); }
+  .vg-topbar-waehler .vg-topbar-schmal-weg { display: none; }
+}
+@media (max-width: 1100px) {
+  .vg-topbar { gap: var(--vg-a4); }
+  .vg-topbar-schmal-weg { display: none; }
+  .vg-topbar-grundlagen,
+  .vg-topbar-rechts > .vg-tip:has(> .vg-topbar-grundlagen) { display: none; }
+}

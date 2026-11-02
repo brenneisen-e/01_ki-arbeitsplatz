@@ -1,0 +1,89 @@
+.slot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-1);
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  background:
+    radial-gradient(120% 120% at 50% 0%, var(--accent-tint), transparent 60%),
+    repeating-linear-gradient(
+      -45deg,
+      var(--surface-1),
+      var(--surface-1) 14px,
+      transparent 14px,
+      transparent 28px
+    ),
+    var(--bg-1);
+  border: 1px dashed var(--border-strong);
+  border-radius: inherit;
+}
+
+.phIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: var(--accent-bright);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  margin-bottom: 2px;
+}
+
+.phLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.phCaption {
+  font-family: var(--font-heading);
+  font-size: clamp(14px, 1.4vw, 18px);
+  font-weight: 600;
+  color: var(--ink);
+  max-width: 32ch;
+  line-height: 1.3;
+}
+
+.phFile {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-xs);
+  padding: 4px 10px;
+}
+
+.phHint {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.phHint code {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-2);
+}

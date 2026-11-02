@@ -1,0 +1,1227 @@
+[
+ {
+  "de": "<BE-Klassifikation> = „Agenturnummer in OB726 unbekannt“",
+  "en": "<BE-Klassifikation> = „Agenturnummer in OB726 unbekannt“ (agency number unknown in OB726)",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Vertrag zur VNR nicht gefunden“",
+  "en": "<BE-Klassifikation> = „Vertrag zur VNR nicht gefunden“ (no contract found for the policy number)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> in der Spalte „Agenturnummer / PNR“ der Sonderliste TOP-Makler enthalten (Tabelle unten; verglichen wird die Agenturnummer, die PNR steht nachrichtlich)",
+  "en": "<BUE_AGENTUR_NR> contained in the column „Agenturnummer / PNR“ of the Sonderliste TOP-Makler (table below; the agency number is compared, the PNR is listed for information only)",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-AGT-Inh-Klassifizierung> enthält „Makler“",
+  "en": "<OB726-AGT-Inh-Klassifizierung> contains „Makler“",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-PNR> = <BUE_VERMITTLER_NR>, links mit Nullen auf 7 Stellen aufgefüllt",
+  "en": "<OB726-PNR> = <BUE_VERMITTLER_NR>, padded with leading zeros to 7 digits",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-AGT-Inhaber> = leer",
+  "en": "<VA230-AGT-Inhaber> = empty",
+  "art": "text"
+ },
+ {
+  "de": "Abschnitt",
+  "en": "Section",
+  "art": "text"
+ },
+ {
+  "de": "Agenturnummer in OB726 unbekannt",
+  "en": "Agenturnummer in OB726 unbekannt (agency number unknown in OB726)",
+  "art": "wert"
+ },
+ {
+  "de": "Aufbau des Bearbeitungshinweises",
+  "en": "Structure of the processing note",
+  "art": "text"
+ },
+ {
+  "de": "BE",
+  "en": "BE",
+  "art": "wert"
+ },
+ {
+  "de": "BE: Nachprüfung erforderlich",
+  "en": "BE: Nachprüfung erforderlich",
+  "art": "wert"
+ },
+ {
+  "de": "Bearbeitungshinweis am Postkorbvorgang speichern (ErgoNotiz, Vorlage 2011, siehe Screenshot)",
+  "en": "Save the processing note on the mailbox case (ErgoNotiz, template 2011, see screenshot)",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis am Postkorbvorgang speichern (Notiz am Postkorbvorgang; Anwendung und Vorlage durch den Fachbereich zu bestätigen)",
+  "en": "Save the processing note on the mailbox case (note on the mailbox case; application and template to be confirmed by the business department)",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis in drei Abschnitten füllen – „BE:“, „Fehler:“, „Hinweis:“ – nach der Tabelle „Aufbau des Bearbeitungshinweises“ unten.",
+  "en": "Fill the processing note in three sections – „BE:“, „Fehler:“, „Hinweis:“ – according to the table „Aufbau des Bearbeitungshinweises“ below.",
+  "art": "text"
+ },
+ {
+  "de": "Beispiel",
+  "en": "Example",
+  "art": "text"
+ },
+ {
+  "de": "Bestandsinhaber nicht ermittelbar",
+  "en": "Bestandsinhaber nicht ermittelbar (portfolio holder cannot be determined)",
+  "art": "wert"
+ },
+ {
+  "de": "Die E-Mail-Adresse wird für das Notizfeld „E-Mail aufnehmender Makler“ benötigt. Sie wird in fester Reihenfolge bestimmt: Sonderliste TOP-Makler, sonst die in OB726 hinterlegte Adresse (<OB726-Email>, bereits im OB726-Block gelesen), bei fehlender oder interner Adresse die Absenderadresse aus dem Datenpool.",
+  "en": "The e-mail address is needed for the note field „E-Mail aufnehmender Makler“. It is determined in a fixed order: Sonderliste TOP-Makler, otherwise the address stored in OB726 (<OB726-Email>, already read in the OB726 block), and if the address is missing or internal, the sender address from the data pool.",
+  "art": "text"
+ },
+ {
+  "de": "Die Prüfschritte in IS011 einschließlich Scout-Service, VA230, OB726 und GH040 sind lesend. Schreibende Schritte sind die Telefonnotiz (Kapitel „VI. Abschluss ohne Befund“), der Bearbeitungshinweis (Kapitel „VII. Abschluss mit Befund“) und die jeweilige Weiterleitung am Prozessende; ein Wiederanlauf ist zulässig, solange diese noch nicht erfolgt sind.",
+  "en": "The check steps in IS011 including the Scout-Service, VA230, OB726 and GH040 are read-only. Writing steps are the telephone note (chapter „VI. Abschluss ohne Befund“), the processing note (chapter „VII. Abschluss mit Befund“) and the respective forwarding at the end of the process; a restart is permitted as long as these have not yet taken place.",
+  "art": "text"
+ },
+ {
+  "de": "Fehler",
+  "en": "Fehler (errors)",
+  "art": "text"
+ },
+ {
+  "de": "Fehler:",
+  "en": "Fehler:",
+  "art": "wert"
+ },
+ {
+  "de": "Grund der Abweichung bestimmen (nur über den Sprung aus der vorigen Zeile erreicht): Rufe im Scout-Service die Vertragsübersicht zu <IS011-KNR> auf und lese alle Versicherungsnummern (Spalte „VNR“).",
+  "en": "Determine the reason for the deviation (Grund der Abweichung bestimmen; reached only via the jump from the previous row): Call up the contract overview for <IS011-KNR> in the Scout-Service and read all policy numbers (column „VNR“).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis",
+  "en": "Hinweis (note)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis:",
+  "en": "Hinweis:",
+  "art": "wert"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein Mangel („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz mit dem Feldwert in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Ein leeres Feld und der Wert „Reminder - keine Vollst.-Prüfung“ bedeuten, dass keine Vollständigkeitsprüfung stattgefunden hat; sie lösen keine Prüfnotiz aus. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“.",
+  "en": "Note: <BUE_PRUEFUNG_UNTERLAGEN> is a business value of the document check, not a technical error. A defect („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) is not an exclusion criterion: the bot records the check note with the field value in <Fehlerliste>, and the remaining checks continue. An empty field and the value „Reminder - keine Vollst.-Prüfung“ mean that no completeness check has taken place; they do not trigger a check note. Only the test for error list leads to the BE „Nachprüfung erforderlich“ if <Fehlerliste> is filled.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein Mangel („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz mit dem Feldwert in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Ein leeres Feld und der Wert „Reminder - keine Vollst.-Prüfung“ bedeuten, dass keine Vollständigkeitsprüfung stattgefunden hat; sie lösen keine Prüfnotiz aus. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“. Ist <BUE_ANF_UNTERLAGEN> = „ja“, entsteht keine Prüfnotiz; die Unterlagen werden über die Notiz angefordert.",
+  "en": "Note: <BUE_PRUEFUNG_UNTERLAGEN> is a business value of the document check, not a technical error. A defect („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) is not an exclusion criterion: the bot records the check note with the field value in <Fehlerliste>, and the remaining checks continue. An empty field and the value „Reminder - keine Vollst.-Prüfung“ mean that no completeness check has taken place; they do not trigger a check note. Only the test for error list leads to the BE „Nachprüfung erforderlich“ if <Fehlerliste> is filled. If <BUE_ANF_UNTERLAGEN> = „ja“, no check note is created; the documents are requested via the note.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Auch bei einer harten Business Exception werden die bis dahin gemerkten Prüfnotizen im Abschnitt „Fehler:“ ausgegeben; die Sachbearbeitung sieht so alle Abweichungen auf einen Blick.",
+  "en": "Note: Even in the case of a hard business exception, the check notes recorded up to that point are output in the section „Fehler:“; the case handler thus sees all deviations at a glance.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei Komposit und Leben entscheidet die Klassifizierung des abgebenden Bestandsinhabers aus OB726 (Kapitel II): ein Makler führt nach ODPB, alle übrigen Fälle einschließlich eines nicht ermittelbaren Bestandsinhabers oder einer BE vor Kapitel II führen nach HSB4K KO.",
+  "en": "Note: For Komposit (P&C) and Leben (life), the classification of the transferring portfolio holder from OB726 (chapter II) decides: a broker leads to ODPB, all other cases including a portfolio holder that cannot be determined or a BE before chapter II lead to HSB4K KO.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Das Geburtsdatum geht nicht in die Suche ein. Es wird erst nach der Suche als Gegenprobe verglichen (Schritt „Geburtsdatum abgleichen“ unten). Als Suchbegriff würde ein abweichendes Geburtsdatum die Suche scheitern lassen; der Vorgang endete dann als harte BE mit falschem Grund statt als Prüfnotiz.",
+  "en": "Note: The date of birth is not part of the search. It is only compared after the search as a cross-check (step „Geburtsdatum abgleichen“ below). As a search criterion, a differing date of birth would cause the search to fail; the case would then end as a hard BE with the wrong reason instead of as a check note.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Anbindungsprüfung steht am Ende der OB726-Schritte, damit OB726 nicht erneut aufgerufen werden muss; PNR, Name, Klassifizierung und E-Mail-Adresse sind dort bereits gelesen.",
+  "en": "Note: The affiliation check is placed at the end of the OB726 steps so that OB726 does not have to be called up again; PNR, name, classification and e-mail address have already been read there.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ein leeres Feld „Betreuung“ (etwa Direktbestand ohne Vermittler) ist kein Ausschlusskriterium; der Bestandsinhaber wird in der Nachprüfung manuell bestimmt.",
+  "en": "Note: An empty field „Betreuung“ (for example a direct portfolio without an intermediary) is not an exclusion criterion; the portfolio holder is determined manually in the re-examination.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Nennt der Auftrag mehrere Versicherungsnummern, wird zu jeder Nummer ein eigener Vorgang geprüft. Die vollständige Liste steht im Abschnitt „Hinweis:“ des Bearbeitungshinweises („Weitere VNR“), damit die Sachbearbeitung den Zusammenhang der Vorgänge erkennt.",
+  "en": "Note: If the order names several policy numbers, a separate case is checked for each number. The complete list is placed in the section „Hinweis:“ of the processing note („Weitere VNR“) so that the case handler recognises the connection between the cases.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die OB726-Kopfzeile mit der Vermittler-Nr. („P,…“) aus und speichere den Text hinter der Nummer als <OB726-AGT-Inh-Klassifizierung> (steuert im Kapitel „VII. Abschluss mit Befund“ das Routing nach ODPB oder HSB4K KO).",
+  "en": "Read the OB726 header line with the intermediary number („P,…“) and store the text after the number as <OB726-AGT-Inh-Klassifizierung> (controls the routing to ODPB or HSB4K KO in chapter „VII. Abschluss mit Befund“).",
+  "art": "text"
+ },
+ {
+  "de": "Lese die hinterlegte E-Mail-Adresse des Vermittlers und speichere als <OB726-Email> (leer, wenn keine Adresse hinterlegt ist). Sie wird im Schritt „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“ ausgewertet.",
+  "en": "Read the stored e-mail address of the intermediary and store it as <OB726-Email> (empty if no address is stored). It is evaluated in the step „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“.",
+  "art": "text"
+ },
+ {
+  "de": "Lesehilfe zur Farblogik: Systeme stehen fett (OB726), Felder aus dem Datenpool dunkelblau (<BUE_VNR>), im Lauf erzeugte Variablen dunkelgrün (<Vorgang-VNR>), die <BE-Klassifikation> dunkelrot. Die Steuerwörter WENN / DANN / SONST / SONST WENN / Ende WENN stehen türkis in der Formatvorlage „WENN DANN“ und sind wie Programmcode eingerückt; „SONST WENN“ hängt eine weitere Bedingung an denselben Block, ein „Ende WENN“ schließt die ganze Kette. Querverweise auf andere Kapitel und Schritte sind Links und stehen fett und unterstrichen, Hinweise kursiv.",
+  "en": "Reading aid for the colour logic: systems are shown in bold (OB726), fields from the data pool in dark blue (<BUE_VNR>), variables created during the run in dark green (<Vorgang-VNR>), the <BE-Klassifikation> in dark red. The keywords IF / THEN / ELSE / ELSE IF / END IF are shown in turquoise in the paragraph style „WENN DANN“ and are indented like program code; „SONST WENN“ (ELSE IF) adds a further condition to the same block, and one „Ende WENN“ (END IF) closes the whole chain. Cross-references to other chapters and steps are links and are shown in bold and underlined, notes in italics.",
+  "art": "text"
+ },
+ {
+  "de": "Maskenname <> „IS011/VAF017“ ODER Feld „KD“ leer (IS011 zeigt zur <Vorgang-VNR> keine Stammdaten)",
+  "en": "Mask name <> „IS011/VAF017“ OR field „KD“ empty (IS011 shows no master data for the <Vorgang-VNR>)",
+  "art": "text"
+ },
+ {
+  "de": "Maskenname weder „IS011/VAF121“ noch „IS011/VAF017“ (Fehlermeldung von IS011)",
+  "en": "Mask name neither „IS011/VAF121“ nor „IS011/VAF017“ (error message from IS011)",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Bestandsinhaber nicht ermittelbar“ in <Fehlerliste>",
+  "en": "Record check note „Bestandsinhaber nicht ermittelbar“ in <Fehlerliste> (portfolio holder cannot be determined)",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Unterlagen nicht vollständig: <BUE_PRUEFUNG_UNTERLAGEN>“ in <Fehlerliste>",
+  "en": "Record check note „Unterlagen nicht vollständig: <BUE_PRUEFUNG_UNTERLAGEN>“ in <Fehlerliste> (documents not complete, with the field value)",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; <OB726-PNR> = <BUE_VERMITTLER_NR> (auf 7 Stellen aufgefüllt); Name, Klassifizierung und E-Mail-Adresse lesen; Anbindung in GH040 prüfen",
+  "en": "Open OB726 via <BUE_AGENTUR_NR>; <OB726-PNR> = <BUE_VERMITTLER_NR> (padded to 7 digits); read name, classification and e-mail address; check affiliation in GH040",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; PNR aus OB726 lesen; Name, Klassifizierung und E-Mail-Adresse lesen; Anbindung in GH040 prüfen",
+  "en": "Open OB726 via <BUE_AGENTUR_NR>; read the PNR from OB726; read name, classification and e-mail address; check affiliation in GH040",
+  "art": "text"
+ },
+ {
+  "de": "Regel",
+  "en": "Rule",
+  "art": "text"
+ },
+ {
+  "de": "Reihenfolge, in der die Prüfnotizen gemerkt wurden; ist <Fehlerliste> leer, lautet die Zeile „Fehler: keine“",
+  "en": "In the order in which the check notes were recorded; if <Fehlerliste> is empty, the line reads „Fehler: keine“",
+  "art": "text"
+ },
+ {
+  "de": "UND <BUE_PRUEFUNG_UNTERLAGEN> <> leer",
+  "en": "AND <BUE_PRUEFUNG_UNTERLAGEN> <> empty",
+  "art": "text"
+ },
+ {
+  "de": "UND <BUE_PRUEFUNG_UNTERLAGEN> <> „Reminder - keine Vollst.-Prüfung“",
+  "en": "AND <BUE_PRUEFUNG_UNTERLAGEN> <> „Reminder - keine Vollst.-Prüfung“",
+  "art": "text"
+ },
+ {
+  "de": "Unterlagen nicht vollständig: <BUE_PRUEFUNG_UNTERLAGEN>",
+  "en": "Unterlagen nicht vollständig: <BUE_PRUEFUNG_UNTERLAGEN> (documents not complete: field value)",
+  "art": "wert"
+ },
+ {
+  "de": "Unterlagen nicht vollständig: MV fehlt",
+  "en": "Unterlagen nicht vollständig: MV fehlt",
+  "art": "wert"
+ },
+ {
+  "de": "Verarbeitung dieses Vorgangs als System Exception abbrechen; der Vorgang bleibt unbearbeitet im Themenpostkorb.",
+  "en": "Abort the processing of this case as a system exception; the case remains unprocessed in the topic mailbox.",
+  "art": "text"
+ },
+ {
+  "de": "Vertrag zur VNR nicht gefunden",
+  "en": "Vertrag zur VNR nicht gefunden (no contract found for the policy number)",
+  "art": "wert"
+ },
+ {
+  "de": "Weiter mit „Grund der Abweichung bestimmen“ (nächste Zeile)",
+  "en": "Continue with „Grund der Abweichung bestimmen“ (next row)",
+  "art": "text"
+ },
+ {
+  "de": "Weitere VNR: KV204071336; KV204071337",
+  "en": "Weitere VNR: KV204071336; KV204071337",
+  "art": "wert"
+ },
+ {
+  "de": "Zeilen im Bearbeitungshinweis",
+  "en": "Lines in the processing note",
+  "art": "text"
+ },
+ {
+  "de": "alle im Auftrag genannten Versicherungsnummern, wie im Datenpool geliefert; <BUE_VNR_2> nur, wenn gefüllt. Der Abschnitt ist für weitere Hinweise vorgesehen, die später ergänzt werden können, ohne den Aufbau zu ändern.",
+  "en": "all policy numbers named in the order, as delivered in the data pool; <BUE_VNR_2> only if filled. The section is intended for further notes that can be added later without changing the structure.",
+  "art": "text"
+ },
+ {
+  "de": "darunter je Prüfnotiz aus <Fehlerliste> eine eigene Zeile",
+  "en": "below it, one separate line per check note from <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "darunter „Weitere VNR: “ + <BUE_VNR> + „; “ + <BUE_VNR_2>",
+  "en": "below it „Weitere VNR: “ + <BUE_VNR> + „; “ + <BUE_VNR_2>",
+  "art": "text"
+ },
+ {
+  "de": "immer genau eine Zeile; Werte siehe Liste „Mögliche Werte von <BE-Klassifikation>“ oben",
+  "en": "always exactly one line; for the values see the list „Mögliche Werte von <BE-Klassifikation>“ above",
+  "art": "text"
+ },
+ {
+  "de": "„BE: “ + <BE-Klassifikation>",
+  "en": "„BE: “ + <BE-Klassifikation>",
+  "art": "wert"
+ },
+ {
+  "de": "„Fehler:“",
+  "en": "„Fehler:“",
+  "art": "wert"
+ },
+ {
+  "de": "„Hinweis:“",
+  "en": "„Hinweis:“",
+  "art": "wert"
+ },
+ {
+  "de": "(durch Fachbereich festzulegen: Klassifikation für nicht aktuelle Verträge)",
+  "en": "(durch Fachbereich festzulegen: Klassifikation für nicht aktuelle Verträge) (to be defined by the business department: classification for non-current contracts)",
+  "art": "wert"
+ },
+ {
+  "de": "<BE-Klassifikation> = „(durch Fachbereich festzulegen: Klassifikation für nicht aktuelle Verträge)“",
+  "en": "<BE-Klassifikation> = „(durch Fachbereich festzulegen: Klassifikation für nicht aktuelle Verträge)“ (to be defined by the business department: classification for non-current contracts)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> in der Spalte „Agenturnummer“ der Sonderliste TOP-Makler enthalten (Tabelle unten; verglichen wird ausschließlich die Agenturnummer, die PNR steht nachrichtlich)",
+  "en": "<BUE_AGENTUR_NR> contained in the column „Agenturnummer“ of the Sonderliste TOP-Makler (table below; only the agency number is compared, the PNR is listed for information only)",
+  "art": "text"
+ },
+ {
+  "de": "Agenturnummer (Vergleichswert)",
+  "en": "Agenturnummer (agency number, comparison value)",
+  "art": "text"
+ },
+ {
+  "de": "PNR (nachrichtlich)",
+  "en": "PNR (for information only)",
+  "art": "text"
+ },
+ {
+  "de": "Alle Felder werden ohne weitere Prüfung aus den Variablen übernommen (Ausfüllhinweise in der Tabelle unten). Die Telefonnotiz wird erst nach dem Schritt „Anforderung von Unterlagen in der Notiz kennzeichnen“ gespeichert.",
+  "en": "All fields are taken from the variables without further checks (filling instructions in the table below). The telephone note is only saved after the step „Anforderung von Unterlagen in der Notiz kennzeichnen“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein Mangel („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz mit dem Feldwert in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Ein leeres Feld und der Wert „Reminder - keine Vollst.-Prüfung“ bedeuten, dass keine Vollständigkeitsprüfung stattgefunden hat; sie lösen keine Prüfnotiz aus. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“. Die Anforderung von Unterlagen durch den Makler (<BUE_ANF_UNTERLAGEN>) ist davon unabhängig und wird im Kapitel „VI. Abschluss ohne Befund“ in der Notiz gekennzeichnet.",
+  "en": "Note: <BUE_PRUEFUNG_UNTERLAGEN> is a business value of the document check, not a technical error. A defect („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) is not an exclusion criterion: the bot records the check note with the field value in <Fehlerliste>, and the remaining checks continue. An empty field and the value „Reminder - keine Vollst.-Prüfung“ mean that no completeness check has taken place; they do not trigger a check note. Only the test for error list leads to the BE „Nachprüfung erforderlich“ if <Fehlerliste> is filled. The request for documents by the broker (<BUE_ANF_UNTERLAGEN>) is independent of this and is flagged in the note in chapter „VI. Abschluss ohne Befund“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Prüfung auf Mantelvertrag ist noch zu validieren – durch den Fachbereich (K. Rypa) sind das Feld in VA230 und die Ausprägung festzulegen, an der der Bot einen Flottenvertrag mit führendem Mantel erkennt. Maßgeblich ist die Sparte der <Vorgang-VNR>; <BUE_SPARTE> kann bei mehreren Nummern mehrere Kürzel enthalten und wird deshalb nicht ausgewertet.",
+  "en": "Note: The check for an umbrella contract still has to be validated – the business department (K. Rypa) has to define the field in VA230 and the value by which the bot recognises a fleet contract with a leading umbrella contract. The line of business of the <Vorgang-VNR> is decisive; <BUE_SPARTE> can contain several codes if several numbers are named and is therefore not evaluated.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Dieser Schritt steuert nicht die Prüfung, sondern die Folgearbeit. <BUE_ANF_UNTERLAGEN> sagt, ob der übernehmende Makler Unterlagen zum Vertrag anfordert, die ERGO ihm liefert; <BUE_ART_UNTERLAGEN> nennt die Arten, mit Semikolon getrennt. Die Anforderung ist unabhängig von der Vollständigkeitsprüfung der eingereichten Unterlagen in der Vorprüfung.",
+  "en": "Note: This step does not control the check but the follow-up work. <BUE_ANF_UNTERLAGEN> states whether the acquiring broker requests contract documents that ERGO supplies to them; <BUE_ART_UNTERLAGEN> names the types, separated by semicolons. The request is independent of the completeness check of the submitted documents in the preliminary check.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Spartenweiche innerhalb des Prozesses ist deshalb nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt; die Prüfung auf Mantelvertrag bei KR im Kapitel „IV. Vertrag“ nutzt das Spartenkürzel der <Vorgang-VNR>.",
+  "en": "Note: A line-of-business switch within the process is therefore not required. <BUE_SPARTE> is carried along for information only; the check for an umbrella contract for KR in chapter „IV. Vertrag“ uses the line-of-business code of the <Vorgang-VNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ob Celonis zusätzlich einen eigenen GeVo „Anforderung von Unterlagen“ eröffnet, ist mit Celonis festzulegen, damit nicht doppelt angefordert wird. Die Bedeutung des Kennzeichens (Anforderung durch den Makler) ist durch den Fachbereich zu bestätigen.",
+  "en": "Note: Whether Celonis additionally opens a separate GeVo „Anforderung von Unterlagen“ has to be agreed with Celonis so that documents are not requested twice. The meaning of the flag (request by the broker) has to be confirmed by the business department.",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz anlegen: Vorlage BOT2011 (Krankenversicherung); der Feldumfang entspricht der Notizmaske 1515, der Abschnitt „Folgearbeit für Komposit“ bleibt leer. Ob die Vorlage bestückt oder eine Freitextnotiz mit gleichem Aufbau erzeugt wird, ist durch den Fachbereich zu bestätigen.",
+  "en": "Create the telephone note: template BOT2011 (health insurance); the set of fields corresponds to the note mask 1515, the section „Folgearbeit für Komposit“ remains empty. Whether the template is filled or a free-text note with the same structure is created has to be confirmed by the business department.",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz speichern.",
+  "en": "Save the telephone note.",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an ODPB übergeben (Art der Übergabe und Postkorb-Nr. TBD – Fachbereich)",
+  "en": "Hand the case over to ODPB (type of handover and mailbox no. TBD – business department)",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb Prüf-Bot Komposit / Leben – Postkorb-Nr. TBD, siehe Kapitel „Details zum Startereignis“) öffnen. GeVo 108 (Bestandsübertragung) bzw. 469 (Bezeichnung durch den Fachbereich zu benennen) (zu bestätigen).",
+  "en": "Values from the mailbox case: open the mailbox case in the start mailbox (topic mailbox Prüf-Bot Komposit / Leben – mailbox no. TBD, see chapter „Details zum Startereignis“). GeVo 108 (portfolio transfer) or 469 (designation to be named by the business department) (to be confirmed).",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb „HSB4 K BÜ Prüf BOT“, Postkorb-Nr. 2015, siehe Kapitel „Details zum Startereignis“) öffnen. Dokumenttyp 02015 (Maklervollmacht) bzw. 06065 (Betreuung / Anfrage Betreuung) (zu bestätigen).",
+  "en": "Values from the mailbox case: open the mailbox case in the start mailbox (topic mailbox „HSB4 K BÜ Prüf BOT“, mailbox no. 2015, see chapter „Details zum Startereignis“). Document type 02015 (broker power of attorney) or 06065 (support / support enquiry) (to be confirmed).",
+  "art": "text"
+ },
+ {
+  "de": "Zuordnung der Spartenkürzel zu Komposit und Leben durch den Fachbereich zu liefern; bei <BUE_UMFANG> = „Gesamt“ zusätzlich „Auftrag: gesamte Kundenverbindung“",
+  "en": "Assignment of the line-of-business codes to Komposit and Leben to be supplied by the business department; if <BUE_UMFANG> = „Gesamt“, additionally „Auftrag: gesamte Kundenverbindung“",
+  "art": "text"
+ },
+ {
+  "de": "die ersten zwei Zeichen von <Vorgang-VNR> = „KR“ (Spartenkürzel der geprüften Versicherungsnummer)",
+  "en": "the first two characters of <Vorgang-VNR> = „KR“ (line-of-business code of the policy number being checked)",
+  "art": "text"
+ },
+ {
+  "de": "„Komposit“ oder „Leben“ nach dem Spartenkürzel der <Vorgang-VNR>",
+  "en": "„Komposit“ or „Leben“ according to the line-of-business code of the <Vorgang-VNR>",
+  "art": "text"
+ },
+ {
+  "de": "Die E-Mail-Adresse wird für das Notizfeld „E-Mail aufnehmender Makler“ benötigt. Es gilt in dieser Reihenfolge:",
+  "en": "The e-mail address is needed for the note field „E-Mail aufnehmender Makler“. The following order applies:",
+  "art": "text"
+ },
+ {
+  "de": "1. TOP-Makler laut Sonderliste: die dort hinterlegte Ausgangsadresse für die Bestandsübertragung.",
+  "en": "1. TOP broker according to the Sonderliste: the outgoing address for the portfolio transfer stored there.",
+  "art": "text"
+ },
+ {
+  "de": "2. Ausnahme Fonds Finanz: die Absenderadresse der Eingangsmail (<BUE_MAKLER_EMAIL>), weil Fonds Finanz je Sparte eine eigene Adresse nutzt.",
+  "en": "2. Exception Fonds Finanz: the sender address of the incoming e-mail (<BUE_MAKLER_EMAIL>), because Fonds Finanz uses a separate address per line of business.",
+  "art": "text"
+ },
+ {
+  "de": "3. Sonst die im System hinterlegte Adresse (<OB726-Email>, im OB726-Block gelesen), außer sie ist eine interne ERGO-Adresse (enthält „@ergo“).",
+  "en": "3. Otherwise the address stored in the system (<OB726-Email>, read in the OB726 block), unless it is an internal ERGO address (contains „@ergo“).",
+  "art": "text"
+ },
+ {
+  "de": "4. Sonst die Absenderadresse der Eingangsmail (<BUE_MAKLER_EMAIL>).",
+  "en": "4. Otherwise the sender address of the incoming e-mail (<BUE_MAKLER_EMAIL>).",
+  "art": "text"
+ },
+ {
+  "de": "600020034",
+  "en": "600020034",
+  "art": "wert"
+ },
+ {
+  "de": "600020036",
+  "en": "600020036",
+  "art": "wert"
+ },
+ {
+  "de": "600021389",
+  "en": "600021389",
+  "art": "wert"
+ },
+ {
+  "de": "600042497",
+  "en": "600042497",
+  "art": "wert"
+ },
+ {
+  "de": "600082061",
+  "en": "600082061",
+  "art": "wert"
+ },
+ {
+  "de": "811774",
+  "en": "811774",
+  "art": "wert"
+ },
+ {
+  "de": "811781",
+  "en": "811781",
+  "art": "wert"
+ },
+ {
+  "de": "811801",
+  "en": "811801",
+  "art": "wert"
+ },
+ {
+  "de": "811809",
+  "en": "811809",
+  "art": "wert"
+ },
+ {
+  "de": "818468",
+  "en": "818468",
+  "art": "wert"
+ },
+ {
+  "de": "823007",
+  "en": "823007",
+  "art": "wert"
+ },
+ {
+  "de": "8903235",
+  "en": "8903235",
+  "art": "wert"
+ },
+ {
+  "de": "8905060",
+  "en": "8905060",
+  "art": "wert"
+ },
+ {
+  "de": "891300",
+  "en": "891300",
+  "art": "wert"
+ },
+ {
+  "de": "Hinweis zu den Screenshots: Die Bildschirmfotos stammen aus der KV-Fassung (Postkorb, VA230 mit Sparte Kranken) und sind für Komposit / Leben durch den Fachbereich zu ersetzen.",
+  "en": "Note on the screenshots: The screen images are taken from the KV version (mailbox, VA230 with line of business Kranken) and are to be replaced for Komposit / Leben by the business department.",
+  "art": "text"
+ },
+ {
+  "de": "<Suche-ohne-Gebdat> = leer",
+  "en": "<Suche-ohne-Gebdat> = empty",
+  "art": "text"
+ },
+ {
+  "de": "<Suche-ohne-Gebdat> = „ja“",
+  "en": "<Suche-ohne-Gebdat> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "Geb-Dat = <BUE_KUNDE_GEBDAT>, aufgeteilt auf die drei Felder TT MM JJJJ (nur wenn <BUE_KUNDE_GEBDAT> <> leer und <Suche-ohne-Gebdat> = leer)",
+  "en": "Geb-Dat (date of birth) = <BUE_KUNDE_GEBDAT>, split across the three fields TT MM JJJJ (only if <BUE_KUNDE_GEBDAT> <> empty and <Suche-ohne-Gebdat> = empty)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Das Geburtsdatum ist zunächst Suchfeld. Bleibt die Trefferliste leer, wird die Suche einmal ohne Geburtsdatum wiederholt (nächste Zeile). So führt ein im Auftrag falsch angegebenes Geburtsdatum nicht zur BE „Kunde in IS011 nicht gefunden“, sondern nach der Suche zur Prüfnotiz „Geburtsdatum abweichend“ (Schritt „Geburtsdatum abgleichen“ unten).",
+  "en": "Note: The date of birth is initially a search field. If the hit list remains empty, the search is repeated once without the date of birth (next row). In this way, a date of birth stated incorrectly in the order does not lead to the BE „Kunde in IS011 nicht gefunden“ but, after the search, to the check note „Geburtsdatum abweichend“ (step „Geburtsdatum abgleichen“ below).",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_KUNDE_GEBDAT> <> leer UND <Suche-ohne-Gebdat> = leer",
+  "en": "<BUE_KUNDE_GEBDAT> <> empty AND <Suche-ohne-Gebdat> = empty",
+  "art": "text"
+ },
+ {
+  "de": "Matchcodesuche wiederholen mit denselben Angaben, aber ohne das Feld Geb-Dat, und Enter.",
+  "en": "Repeat the match code search with the same details but without the field Geb-Dat, and press Enter.",
+  "art": "text"
+ },
+ {
+  "de": "Weiter mit „Lese den Maskennamen“ (Beginn dieser Zeile)",
+  "en": "Continue with „Lese den Maskennamen“ (beginning of this row)",
+  "art": "text"
+ },
+ {
+  "de": "Lese in OB726 die hinterlegte E-Mail-Adresse des Vermittlers und speichere als <OB729-Email>.",
+  "en": "Read the intermediary's e-mail address stored in OB726 and store as <OB729-Email>.",
+  "art": "text"
+ },
+ {
+  "de": "<OB729-Email> = leer",
+  "en": "<OB729-Email> = empty",
+  "art": "text"
+ },
+ {
+  "de": "ODER <OB729-Email> enthält „@ergo“",
+  "en": "OR <OB729-Email> contains „@ergo“",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = <OB729-Email>",
+  "en": "<Makler-Email> = <OB729-Email>",
+  "art": "text"
+ },
+ {
+  "de": "Die E-Mail-Adresse wird für das Notizfeld „E-Mail aufnehmender Makler“ benötigt. Sie wird in fester Reihenfolge bestimmt: Sonderliste TOP-Makler, sonst die in OB726 hinterlegte Adresse (<OB729-Email>, bereits im OB726-Block gelesen), bei fehlender oder interner Adresse die Absenderadresse aus dem Datenpool.",
+  "en": "The e-mail address is needed for the note field „E-Mail aufnehmender Makler“. It is determined in a fixed order: Sonderliste TOP-Makler, otherwise the address stored in OB726 (<OB729-Email>, already read in the OB726 block), and if the address is missing or internal, the sender address from the data pool.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die hinterlegte E-Mail-Adresse des Vermittlers und speichere als <OB729-Email> (leer, wenn keine Adresse hinterlegt ist). Sie wird im Schritt „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“ ausgewertet.",
+  "en": "Read the stored e-mail address of the intermediary and store it as <OB729-Email> (empty if no address is stored). It is evaluated in the step „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“.",
+  "art": "text"
+ },
+ {
+  "de": "3. Sonst die im System hinterlegte Adresse (<OB729-Email>, im OB726-Block gelesen), außer sie ist eine interne ERGO-Adresse (enthält „@ergo“).",
+  "en": "3. Otherwise the address stored in the system (<OB729-Email>, read in the OB726 block), unless it is an internal ERGO address (contains „@ergo“).",
+  "art": "text"
+ },
+ {
+  "de": "D. Amend (Process Owner HS, SME), C.-R. Lucht (Process Owner ODPP)",
+  "en": "D. Amend (Process Owner HS, SME), C.-R. Lucht (Process Owner ODPP)",
+  "art": "wert"
+ },
+ {
+  "de": "Dirk Amend (HS), Christoph-Reber Lucht (ODPP)",
+  "en": "Dirk Amend (HS), Christoph-Reber Lucht (ODPP)",
+  "art": "wert"
+ },
+ {
+  "de": "Öffne OB729 mit <BUE_AGENTUR_NR>, lese die hinterlegte E-Mail-Adresse und speichere als <OB729-Email> (leer, wenn keine Adresse hinterlegt ist).",
+  "en": "Open OB729 with <BUE_AGENTUR_NR>, read the stored e-mail address and store it as <OB729-Email> (empty if no address is stored).",
+  "art": "text"
+ },
+ {
+  "de": "3. Sonst die in OB729 (Vermittlerkommunikation) zur Agenturnummer hinterlegte Adresse (<OB729-Email>), außer sie ist eine interne ERGO-Adresse (enthält „@ergo“).",
+  "en": "3. Otherwise the address stored for the agency number in OB729 (intermediary communication) (<OB729-Email>), unless it is an internal ERGO address (contains „@ergo“).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Sonderliste gilt einmalig (Stand 23.09.2026, M. Abbas) und wird nicht laufend gepflegt.",
+  "en": "Note: The Sonderliste applies on a one-off basis (as at 23.09.2026, M. Abbas) and is not maintained on an ongoing basis.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Anbindungsprüfung steht am Ende der OB726-Schritte, damit OB726 nicht erneut aufgerufen werden muss; die E-Mail-Adresse kommt aus OB729 und wird im nächsten Schritt gelesen.",
+  "en": "Note: The affiliation check is placed at the end of the OB726 steps so that OB726 does not have to be called up again; the e-mail address comes from OB729 and is read in the next step.",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; <OB726-PNR> = <BUE_VERMITTLER_NR> (auf 7 Stellen aufgefüllt); Name und Klassifizierung prüfen; Anbindung in GH040 prüfen; E-Mail-Adresse ermitteln",
+  "en": "Open OB726 via <BUE_AGENTUR_NR>; <OB726-PNR> = <BUE_VERMITTLER_NR> (padded to 7 digits); check name and classification; check affiliation in GH040; determine e-mail address",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; PNR aus OB726 lesen; Name und Klassifizierung prüfen; Anbindung in GH040 prüfen; E-Mail-Adresse ermitteln",
+  "en": "Open OB726 via <BUE_AGENTUR_NR>; read the PNR from OB726; check name and classification; check affiliation in GH040; determine e-mail address",
+  "art": "text"
+ },
+ {
+  "de": "Die Prüfschritte in IS011 einschließlich Scout-Service, VA230, OB726 und GH040 sowie OB729 sind lesend. Schreibende Schritte sind die Telefonnotiz (Kapitel „VI. Abschluss ohne Befund“), der Bearbeitungshinweis (Kapitel „VII. Abschluss mit Befund“) und die jeweilige Weiterleitung am Prozessende; ein Wiederanlauf ist zulässig, solange diese noch nicht erfolgt sind.",
+  "en": "The check steps in IS011 including the Scout-Service, VA230, OB726 and GH040 as well as OB729 are read-only. Writing steps are the telephone note (chapter „VI. Abschluss ohne Befund“), the processing note (chapter „VII. Abschluss mit Befund“) and the respective forwarding at the end of the process; a restart is permitted as long as these have not yet taken place.",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb „MV 23724 BÜ Prüf BOT“, Postkorb-Nr. 23724, siehe Kapitel „Details zum Startereignis“) öffnen. Dokumenttyp 2015.",
+  "en": "Values from the mailbox case: open the mailbox case in the start mailbox (topic mailbox „MV 23724 BÜ Prüf BOT“, mailbox no. 23724, see chapter „Details zum Startereignis“). Document type 2015.",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb „MV 23724 BÜ Prüf BOT“, Postkorb-Nr. 23724, siehe Kapitel „Details zum Startereignis“) öffnen. GeVo 108 (Bestandsübertragung).",
+  "en": "Values from the mailbox case: open the mailbox case in the start mailbox (topic mailbox „MV 23724 BÜ Prüf BOT“, mailbox no. 23724, see chapter „Details zum Startereignis“). GeVo 108 (portfolio transfer).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Der Themenpostkorb „MV 23724 BÜ Prüf BOT“ nimmt Bestandsübertragungen aller Sparten auf. Die Sparte ist am Vorgang erkennbar (Dokumenttyp 2015 bei KV, GeVo 108 bei Komposit und Leben) und am Spartenkürzel der <Vorgang-VNR>. Diese Fassung gilt für die Krankenversicherung; die Notiz entspricht der KV-Variante.",
+  "en": "Note: The topic mailbox „MV 23724 BÜ Prüf BOT“ receives portfolio transfers of all lines of business. The line of business can be recognised from the case (document type 2015 for KV, GeVo 108 for Komposit and Leben) and from the line-of-business code of the <Vorgang-VNR>. This version applies to health insurance; the note corresponds to the KV variant.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Der Themenpostkorb „MV 23724 BÜ Prüf BOT“ nimmt Bestandsübertragungen aller Sparten auf. Die Sparte ist am Vorgang erkennbar (Dokumenttyp 2015 bei KV, GeVo 108 bei Komposit und Leben) und am Spartenkürzel der <Vorgang-VNR>. Diese Fassung gilt für Komposit und Leben; die Notiz entspricht der Vorlage 1515.",
+  "en": "Note: The topic mailbox „MV 23724 BÜ Prüf BOT“ receives portfolio transfers of all lines of business. The line of business can be recognised from the case (document type 2015 for KV, GeVo 108 for Komposit and Leben) and from the line-of-business code of the <Vorgang-VNR>. This version applies to Komposit and Leben; the note corresponds to template 1515.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt.",
+  "en": "Note: No further line-of-business switch within the process is required. <BUE_SPARTE> is carried along for information only.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt; die Prüfung auf Mantelvertrag bei KR im Kapitel „IV. Vertrag“ nutzt das Spartenkürzel der <Vorgang-VNR>.",
+  "en": "Note: No further line-of-business switch within the process is required. <BUE_SPARTE> is carried along for information only; the check for an umbrella contract for KR in chapter „IV. Vertrag“ uses the line-of-business code of the <Vorgang-VNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die <Vorgang-VNR> stammt aus dem VDB-Abruf durch Celonis und ist damit eine echte Nummer; ob ein Vertrag existiert, wird nicht eigens geprüft. Die Sparte des Vorgangs steht mit Dokumenttyp bzw. GeVo und dem Spartenkürzel der <Vorgang-VNR> fest, und mit ihr die Notizvariante.",
+  "en": "Note: The <Vorgang-VNR> originates from the VDB retrieval by Celonis and is therefore a genuine number; whether a contract exists is not checked separately. The line of business of the case is fixed by document type or GeVo and the line-of-business code of the <Vorgang-VNR>, and with it the note variant.",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Vertrag nicht aktuell: <VA230-Status>“",
+  "en": "<BE-Klassifikation> = „Vertrag nicht aktuell: <VA230-Status>“ (contract not current, with the status read)",
+  "art": "text"
+ },
+ {
+  "de": "Vertrag nicht aktuell: <VA230-Status>",
+  "en": "Vertrag nicht aktuell: <VA230-Status> (contract not current: status read)",
+  "art": "wert"
+ },
+ {
+  "de": "Den bestehenden Postkorbvorgang mit der Telefonnotiz an den 72-Stunden-BOT weiterleiten (Themenpostkorb „HSB4K 72“, Postkorb-Nr. TBD).",
+  "en": "Forward the existing mailbox case with the telephone note to the 72-Stunden-BOT (topic mailbox „HSB4K 72“, mailbox no. TBD).",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-AGT-Inh-Klassifizierung> = AO (Ausschließlichkeitsorganisation; Ausprägung in der OB726-Kopfzeile durch den Fachbereich zu bestätigen)",
+  "en": "<OB726-AGT-Inh-Klassifizierung> = AO (tied-agent organisation; value in the OB726 header line to be confirmed by the business department)",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „HSB4K KO“ (Postkorb-Nr. TBD) weiterleiten",
+  "en": "Forward the case to the topic mailbox „HSB4K KO“ (mailbox no. TBD)",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb von ODPB weiterleiten (Postkorb und Postkorb-Nr. TBD – durch Fachbereich zu benennen)",
+  "en": "Forward the case to the topic mailbox of ODPB (mailbox and mailbox no. TBD – to be named by the business department)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei Komposit und Leben entscheidet die Klassifizierung des abgebenden Bestandsinhabers aus OB726 (Kapitel II): gehört er der AO an, geht der Vorgang nach HSB4K KO, alle übrigen (Makler, Mehrfachagent, sonstige) nach ODPB. Ist der Bestandsinhaber nicht ermittelbar oder endet die Prüfung vor Kapitel II, geht der Vorgang nach HSB4K KO (Vorschlag, durch den Fachbereich zu bestätigen).",
+  "en": "Note: For Komposit (P&C) and Leben (life), the classification of the transferring portfolio holder from OB726 (chapter II) decides: if they belong to the AO, the case goes to HSB4K KO, all others (broker, multiple agent, other) to ODPB. If the portfolio holder cannot be determined or the check ends before chapter II, the case goes to HSB4K KO (proposal, to be confirmed by the business department).",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_SPARTE> = „KR“ (bei mehreren Kürzeln das Kürzel an der Position der <Vorgang-VNR> in <BUE_VNR>)",
+  "en": "<BUE_SPARTE> = „KR“ (if there are several codes, the code at the position of the <Vorgang-VNR> in <BUE_VNR>)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Prüfung auf Mantelvertrag ist noch zu validieren – durch den Fachbereich (K. Rypa) sind das Feld in VA230 und die Ausprägung festzulegen, an der der Bot einen Flottenvertrag mit führendem Mantel erkennt. Die Sparte kommt aus dem Datenpoolfeld <BUE_SPARTE>; nennt der Auftrag mehrere Nummern, gilt das Kürzel an der Position der <Vorgang-VNR>.",
+  "en": "Note: The check for an umbrella contract still has to be validated – the business department (K. Rypa) has to define the field in VA230 and the value by which the bot recognises a fleet contract with a leading umbrella contract. The line of business comes from the data pool field <BUE_SPARTE>; if the order names several numbers, the code at the position of the <Vorgang-VNR> applies.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt; bei „KR“ steuert das Feld im Kapitel „IV. Vertrag“ die Prüfung auf Mantelvertrag.",
+  "en": "Note: No further line-of-business switch within the process is required. <BUE_SPARTE> is carried along for information only; for „KR“ the field controls the check for an umbrella contract in chapter „IV. Vertrag“.",
+  "art": "text"
+ },
+ {
+  "de": "„Komposit“ oder „Leben“ nach <BUE_SPARTE>",
+  "en": "„Komposit“ or „Leben“ according to <BUE_SPARTE>",
+  "art": "text"
+ },
+ {
+  "de": "1. TOP-Makler laut Sonderliste: die dort hinterlegte E-Mail-Adresse für die Antwort auf BÜ-Anfragen.",
+  "en": "1. TOP broker according to the Sonderliste: the e-mail address stored there for replies to portfolio transfer enquiries.",
+  "art": "text"
+ },
+ {
+  "de": "2. Sonst die in OB729 (Vermittlerkommunikation) zur Agenturnummer hinterlegte Adresse (<OB729-Email>), außer sie ist eine interne ERGO-Adresse (enthält „@ergo“).",
+  "en": "2. Otherwise the address stored for the agency number in OB729 (intermediary communication) (<OB729-Email>), unless it is an internal ERGO address (contains „@ergo“).",
+  "art": "text"
+ },
+ {
+  "de": "3. Sonst die Absenderadresse der Eingangsmail (<BUE_MAKLER_EMAIL>).",
+  "en": "3. Otherwise the sender address of the incoming e-mail (<BUE_MAKLER_EMAIL>).",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> in der Spalte „Agentur-Nr.“ der Sonderliste TOP-Makler enthalten (Tabelle unten; Vergleich der Ziffernfolge ohne führende Nullen)",
+  "en": "<BUE_AGENTUR_NR> contained in the column „Agentur-Nr.“ of the Sonderliste TOP-Makler (table below; comparison of the digit sequence without leading zeros)",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = E-Mail-Adresse aus der Sonderliste",
+  "en": "<Makler-Email> = e-mail address from the Sonderliste",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Sonderliste gilt einmalig (Stand 23.09.2026) und wird nicht laufend gepflegt. Fonds Finanz hat inzwischen eine eigene Adresse für Bestandsübertragungen; die frühere Ausnahme (Absenderadresse je Sparte) entfällt.",
+  "en": "Note: The Sonderliste applies on a one-off basis (as at 23.09.2026) and is not maintained on an ongoing basis. Fonds Finanz now has its own address for portfolio transfers; the former exception (sender address per line of business) no longer applies.",
+  "art": "text"
+ },
+ {
+  "de": "Agentur-Nr. (Vergleichswert)",
+  "en": "Agentur-Nr. (agency number, comparison value)",
+  "art": "text"
+ },
+ {
+  "de": "Agentur-Name (Sonderliste TOP-Makler)",
+  "en": "Agentur-Name (agency name, Sonderliste TOP-Makler)",
+  "art": "text"
+ },
+ {
+  "de": "E-Mail-Adresse für Antwort auf BÜ-Anfrage",
+  "en": "E-mail address for replies to portfolio transfer enquiries",
+  "art": "text"
+ },
+ {
+  "de": "600041966",
+  "en": "600041966",
+  "art": "wert"
+ },
+ {
+  "de": "600010016",
+  "en": "600010016",
+  "art": "wert"
+ },
+ {
+  "de": "008903235",
+  "en": "008903235",
+  "art": "wert"
+ },
+ {
+  "de": "008982800",
+  "en": "008982800",
+  "art": "wert"
+ },
+ {
+  "de": "1 zu 1 Assekuranzservice AG",
+  "en": "1 zu 1 Assekuranzservice AG",
+  "art": "wert"
+ },
+ {
+  "de": "Apella AG",
+  "en": "Apella AG",
+  "art": "wert"
+ },
+ {
+  "de": "blau direkt GmbH",
+  "en": "blau direkt GmbH",
+  "art": "wert"
+ },
+ {
+  "de": "DEMA Deutsche Versicherungsmakler AG",
+  "en": "DEMA Deutsche Versicherungsmakler AG",
+  "art": "wert"
+ },
+ {
+  "de": "Fonds Finanz Maklerservice GmbH",
+  "en": "Fonds Finanz Maklerservice GmbH",
+  "art": "wert"
+ },
+ {
+  "de": "INVERS Versicherungsvermittlungsgesellschaft mbH",
+  "en": "INVERS Versicherungsvermittlungsgesellschaft mbH",
+  "art": "wert"
+ },
+ {
+  "de": "Jung, DMS & Cie Pool GmbH",
+  "en": "Jung, DMS & Cie Pool GmbH",
+  "art": "wert"
+ },
+ {
+  "de": "VEMA Versicherungsmakler Genossenschaft e.G.",
+  "en": "VEMA Versicherungsmakler Genossenschaft e.G.",
+  "art": "wert"
+ },
+ {
+  "de": "bestandsuebertragung@1zu1.ag",
+  "en": "bestandsuebertragung@1zu1.ag",
+  "art": "wert"
+ },
+ {
+  "de": "bestandsuebertragung@fondsfinanz.de",
+  "en": "bestandsuebertragung@fondsfinanz.de",
+  "art": "wert"
+ },
+ {
+  "de": "bestandsuebertragung@invers-gruppe.de",
+  "en": "bestandsuebertragung@invers-gruppe.de",
+  "art": "wert"
+ },
+ {
+  "de": "poolservice@vema-eg.de",
+  "en": "poolservice@vema-eg.de",
+  "art": "wert"
+ },
+ {
+  "de": "Hinweis: Alle Werte von <BE-Klassifikation> und alle Prüfnotizen stehen mit Kapitel und Auslöser in den Tabellen „Werteliste der BE-Klassifikation“ und „Werteliste der Prüfnotizen“ unten.",
+  "en": "Note: All values of <BE-Klassifikation> and all check notes are listed with chapter and trigger in the tables „Werteliste der BE-Klassifikation“ and „Werteliste der Prüfnotizen“ below.",
+  "art": "text"
+ },
+ {
+  "de": "immer genau eine Zeile; Werte siehe Tabelle „Werteliste der BE-Klassifikation“ unten",
+  "en": "always exactly one line; for the values see the table „Werteliste der BE-Klassifikation“ below",
+  "art": "text"
+ },
+ {
+  "de": "Werteliste der BE-Klassifikation",
+  "en": "List of values of the BE classification",
+  "art": "text"
+ },
+ {
+  "de": "Werteliste der Prüfnotizen",
+  "en": "List of check notes",
+  "art": "text"
+ },
+ {
+  "de": "Wert von <BE-Klassifikation>",
+  "en": "Value of <BE-Klassifikation>",
+  "art": "text"
+ },
+ {
+  "de": "Gesetzt in",
+  "en": "Set in",
+  "art": "text"
+ },
+ {
+  "de": "Auslöser",
+  "en": "Trigger",
+  "art": "text"
+ },
+ {
+  "de": "Prüfnotiz in <Fehlerliste>",
+  "en": "Check note in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "Gemerkt in",
+  "en": "Recorded in",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> = leer",
+  "en": "<BUE_AGENTUR_NR> = empty",
+  "art": "text"
+ },
+ {
+  "de": "Mehrfachagent: <BUE_WUNSCH_VORHANDEN> = „nein“",
+  "en": "Multiple agent: <BUE_WUNSCH_VORHANDEN> = „nein“",
+  "art": "text"
+ },
+ {
+  "de": "Mehrfachagent: <BUE_MV_AUF_MAKLER> <> „ja“",
+  "en": "Multiple agent: <BUE_MV_AUF_MAKLER> <> „ja“",
+  "art": "text"
+ },
+ {
+  "de": "Makler: <BUE_MV_UNTERSCHRIFT_KUNDE> <> „ja“",
+  "en": "Broker: <BUE_MV_UNTERSCHRIFT_KUNDE> <> „ja“",
+  "art": "text"
+ },
+ {
+  "de": "IS011 zeigt zur <Vorgang-VNR> keine Stammdaten",
+  "en": "IS011 shows no master data for the <Vorgang-VNR>",
+  "art": "text"
+ },
+ {
+  "de": "Trefferliste der Matchcodesuche leer, auch nach der Wiederholung ohne Geburtsdatum",
+  "en": "Hit list of the match code search empty, even after the repetition without the date of birth",
+  "art": "text"
+ },
+ {
+  "de": "<IS011-KNR-VN> nicht in der Trefferliste, oder der gefundene Partner ist am Vertrag in anderer Rolle beteiligt",
+  "en": "<IS011-KNR-VN> not in the hit list, or the partner found is involved in the contract in another role",
+  "art": "text"
+ },
+ {
+  "de": "gefundener Partner ohne die <Vorgang-VNR> in seiner Vertragsübersicht (Scout-Service)",
+  "en": "partner found without the <Vorgang-VNR> in their contract overview (Scout-Service)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweistext „IS0042I“ beim Aufruf mit <BUE_AGENTUR_NR>",
+  "en": "Message text „IS0042I“ when called up with <BUE_AGENTUR_NR>",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-Name> enthält „INAKTIV“ oder Status der Beschäftigung in GH040 <> „aktiv“",
+  "en": "<OB726-Name> contains „INAKTIV“ or employment status in GH040 <> „aktiv“",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-Status> <> „aktuell“",
+  "en": "<VA230-Status> <> „aktuell“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_SPARTE> = „KR“ und <VA230-Mantel> = „ja“",
+  "en": "<BUE_SPARTE> = „KR“ and <VA230-Mantel> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "<Fehlerliste> <> leer",
+  "en": "<Fehlerliste> <> empty",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = leer",
+  "en": "<BUE_VERMITTLER_TYP> = empty",
+  "art": "text"
+ },
+ {
+  "de": "Makler: Feldwert weder „Vollständig“ noch leer noch „Reminder - keine Vollst.-Prüfung“",
+  "en": "Broker: field value neither „Vollständig“ nor empty nor „Reminder - keine Vollst.-Prüfung“",
+  "art": "text"
+ },
+ {
+  "de": "<IS011-Gebdat> <> <BUE_KUNDE_GEBDAT>",
+  "en": "<IS011-Gebdat> <> <BUE_KUNDE_GEBDAT>",
+  "art": "text"
+ },
+ {
+  "de": "Feld „Betreuung“ in VA230 leer oder Hinweistext „IS0042I“ in OB726",
+  "en": "Field „Betreuung“ in VA230 empty or message text „IS0042I“ in OB726",
+  "art": "text"
+ },
+ {
+  "de": "Status der Beschäftigung in GH040 <> „aktiv“",
+  "en": "Employment status in GH040 <> „aktiv“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> passt nicht zu <OB726-Klassifizierung>",
+  "en": "<BUE_VERMITTLER_TYP> does not match <OB726-Klassifizierung>",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = leer",
+  "en": "<Makler-Email> = empty",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> enthält „@ergo“",
+  "en": "<Makler-Email> contains „@ergo“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „Vorprüfung“",
+  "en": "Kapitel „Vorprüfung“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „I. Kunde (VN)“",
+  "en": "Kapitel „I. Kunde (VN)“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „II. Abgebender Bestandsinhaber“",
+  "en": "Kapitel „II. Abgebender Bestandsinhaber“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „III. Übernehmender Makler“",
+  "en": "Kapitel „III. Übernehmender Makler“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „IV. Vertrag“",
+  "en": "Kapitel „IV. Vertrag“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „V. Test auf Fehlerliste“",
+  "en": "Kapitel „V. Test auf Fehlerliste“",
+  "art": "text"
+ },
+ {
+  "de": "Keine Zusammenarbeit",
+  "en": "Keine Zusammenarbeit (no cooperation)",
+  "art": "wert"
+ },
+ {
+  "de": "KR Flottenvertrag",
+  "en": "KR Flottenvertrag (KR fleet contract)",
+  "art": "wert"
+ },
+ {
+  "de": "Nachprüfung erforderlich",
+  "en": "Nachprüfung erforderlich (re-check required)",
+  "art": "wert"
+ },
+ {
+  "de": "Kunde ist nicht Versicherungsnehmer",
+  "en": "Kunde ist nicht Versicherungsnehmer (customer is not the policyholder)",
+  "art": "wert"
+ },
+ {
+  "de": "Kunde in IS011 nicht gefunden",
+  "en": "Kunde in IS011 nicht gefunden (customer not found in IS011)",
+  "art": "wert"
+ },
+ {
+  "de": "Vertrag gehört nicht zum Kunden",
+  "en": "Vertrag gehört nicht zum Kunden (contract does not belong to the customer)",
+  "art": "wert"
+ },
+ {
+  "de": "Agenturnummer nicht vorhanden",
+  "en": "Agenturnummer nicht vorhanden (agency number not present)",
+  "art": "wert"
+ },
+ {
+  "de": "BÜ-Wunsch nicht vorhanden",
+  "en": "BÜ-Wunsch nicht vorhanden (transfer request not present)",
+  "art": "wert"
+ },
+ {
+  "de": "Betreuungswunsch nicht auf MFA ausgestellt",
+  "en": "Betreuungswunsch nicht auf MFA ausgestellt (support request not made out to MFA)",
+  "art": "wert"
+ },
+ {
+  "de": "Unterschrift VN fehlt",
+  "en": "Unterschrift VN fehlt (policyholder signature missing)",
+  "art": "wert"
+ },
+ {
+  "de": "Vermittlertyp nicht angegeben",
+  "en": "Vermittlertyp nicht angegeben (intermediary type not specified)",
+  "art": "wert"
+ },
+ {
+  "de": "Geburtsdatum abweichend",
+  "en": "Geburtsdatum abweichend (date of birth differs)",
+  "art": "wert"
+ },
+ {
+  "de": "Anbindung Bestandsinhaber nicht aktiv",
+  "en": "Anbindung Bestandsinhaber nicht aktiv (portfolio holder affiliation not active)",
+  "art": "wert"
+ },
+ {
+  "de": "Vermittlertyp abweichend",
+  "en": "Vermittlertyp abweichend (intermediary type differs)",
+  "art": "wert"
+ },
+ {
+  "de": "E-Mail-Adresse des Vermittlers fehlt",
+  "en": "E-Mail-Adresse des Vermittlers fehlt (intermediary e-mail address missing)",
+  "art": "wert"
+ },
+ {
+  "de": "Absender ist eine interne ERGO-Adresse",
+  "en": "Absender ist eine interne ERGO-Adresse (sender is an internal ERGO address)",
+  "art": "wert"
+ },
+ {
+  "de": "Hinweis: Die Sonderliste gilt einmalig (Stand 23.09.2026) und wird nicht laufend gepflegt.",
+  "en": "Note: The Sonderliste applies on a one-off basis (as at 23.09.2026) and is not maintained on an ongoing basis.",
+  "art": "text"
+ },
+ {
+  "de": "kein Screenshot erforderlich",
+  "en": "kein Screenshot erforderlich",
+  "art": "wert"
+ },
+ {
+  "de": "D. Amend",
+  "en": "D. Amend",
+  "art": "wert"
+ },
+ {
+  "de": "D. Amend (Process Owner)",
+  "en": "D. Amend (Process Owner)",
+  "art": "wert"
+ },
+ {
+  "de": "PDD – Reviewversion zur Prozessvalidierung",
+  "en": "PDD – Reviewversion zur Prozessvalidierung (review version for process validation)",
+  "art": "wert"
+ },
+ {
+  "de": "Lese die folgenden 19 Felder des Datenpools aus und speichere jedes unter dem gleichnamigen Variablennamen (Format, Werteliste und Pflichtfeldkennzeichen im Kapitel „Tabelle der genutzten Variablen“, Herkunft „Datenpool“):",
+  "en": "Read the following 19 fields of the data pool and store each one under the variable of the same name (format, list of values and mandatory-field indicator in chapter „Tabelle der genutzten Variablen“, origin „Datenpool“):",
+  "art": "text"
+ },
+ {
+  "de": "Lese die folgenden 22 Felder des Datenpools aus und speichere jedes unter dem gleichnamigen Variablennamen (Format, Werteliste und Pflichtfeldkennzeichen im Kapitel „Tabelle der genutzten Variablen“, Herkunft „Datenpool“):",
+  "en": "Read the following 22 fields of the data pool and store each one under the variable of the same name (format, list of values and mandatory-field indicator in chapter „Tabelle der genutzten Variablen“, origin „Datenpool“):",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Beim Mehrfachagenten (<BUE_VERMITTLER_TYP> = „MFA“) gibt es keine Maklervollmacht; für ihn zählen der ausformulierte BÜ-Wunsch und der auf ihn ausgestellte Betreuungswunsch. <BUE_UV_ERTEILT> steht bei ihm auf N/A und wird nicht geprüft.",
+  "en": "Note: For a multiple agent (<BUE_VERMITTLER_TYP> = „MFA“) there is no broker power of attorney; for them the written portfolio-transfer request and the service request issued to them are decisive. <BUE_UV_ERTEILT> is N/A for them and is not checked.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Prüfung der Klassifikation aus dem Datenpool findet nicht statt. Der Prüf-Bot wird nur durch Vorgänge ausgelöst, die als Bestandsübertragung in den Themenpostkorb gestellt wurden – heute durch Celonis, künftig auch durch Weiterleitung aus der Sparte, wenn dort zuerst ein anderes Anliegen zu bearbeiten war.",
+  "en": "Note: The classification from the data pool is not checked. The Prüf-Bot is only triggered by cases that were placed in the topic mailbox as a portfolio transfer – today by Celonis, in future also by forwarding from the line of business when another request had to be handled there first.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich; die Sparte ist durch den Dokumenttyp vorgegeben.",
+  "en": "Note: No further line-of-business switch is required within the process; the line of business is determined by the document type.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich; <BUE_SPARTE> steuert nur bei „KR“ im Kapitel „IV. Vertrag“ die Prüfung auf Mantelvertrag.",
+  "en": "Note: No further line-of-business switch is required within the process; <BUE_SPARTE> only controls the check for a fleet master contract in chapter „IV. Vertrag“ when it is „KR“.",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_ART_UNTERLAGEN> <> leer",
+  "en": "<BUE_ART_UNTERLAGEN> <> empty",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein Mangel („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz mit dem Feldwert in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Ein leeres Feld und der Wert „Reminder - keine Vollst.-Prüfung“ bedeuten, dass keine Vollständigkeitsprüfung stattgefunden hat; sie lösen keine Prüfnotiz aus. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“. Die Anforderung von Unterlagen durch den Makler (<BUE_ART_UNTERLAGEN>) ist davon unabhängig und wird im Kapitel „VI. Abschluss ohne Befund“ in der Notiz gekennzeichnet.",
+  "en": "Note: <BUE_PRUEFUNG_UNTERLAGEN> is a business value of the document check, not a technical error. A defect („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) is not an exclusion criterion: the bot records the check note with the field value in <Fehlerliste>, and the remaining checks continue. An empty field and the value „Reminder - keine Vollst.-Prüfung“ mean that no completeness check has taken place; they do not trigger a check note. Only the test for error list leads to the BE „Nachprüfung erforderlich“ if <Fehlerliste> is filled. The request for documents by the broker (<BUE_ART_UNTERLAGEN>) is independent of this and is flagged in the note in chapter „VI. Abschluss ohne Befund“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Dieser Schritt steuert nicht die Prüfung, sondern die Folgearbeit. <BUE_ART_UNTERLAGEN> nennt die Unterlagen, die der übernehmende Makler zum Vertrag anfordert und die ERGO ihm liefert, mit Semikolon getrennt; das Feld ist leer, wenn er nichts anfordert. Die Anforderung ist unabhängig von der Vollständigkeitsprüfung der eingereichten Unterlagen in der Vorprüfung.",
+  "en": "Note: This step does not control the check but the follow-up work. <BUE_ART_UNTERLAGEN> names the documents that the acquiring broker requests for the contract and that ERGO supplies to them, separated by semicolons; the field is empty if they request nothing. The request is independent of the completeness check of the submitted documents in the preliminary check.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ob Celonis zusätzlich einen eigenen GeVo „Anforderung von Unterlagen“ eröffnet, ist mit Celonis festzulegen, damit nicht doppelt angefordert wird. Die Bedeutung des Feldes (Anforderung durch den Makler) ist durch den Fachbereich zu bestätigen.",
+  "en": "Note: Whether Celonis additionally opens a separate GeVo „Anforderung von Unterlagen“ has to be agreed with Celonis so that documents are not requested twice. The meaning of the field (request by the broker) has to be confirmed by the business department.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die folgenden 21 Felder des Datenpools aus und speichere jedes unter dem gleichnamigen Variablennamen (Format, Werteliste und Pflichtfeldkennzeichen im Kapitel „Tabelle der genutzten Variablen“, Herkunft „Datenpool“):",
+  "en": "Read the following 21 fields of the data pool and store each one under the variable of the same name (format, list of values and mandatory-field indicator in chapter „Tabelle der genutzten Variablen“, origin „Datenpool“):",
+  "art": "text"
+ },
+ {
+  "de": "Setze im Abschnitt „Folgearbeit für Komposit“ je in <BUE_ART_UNTERLAGEN> enthaltener Art das Kennzeichen: „Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw.“, „Schadenaufstellung/Schadenrenta usw.“, „Sonstige Unterlagen“.",
+  "en": "In the section „Folgearbeit für Komposit“, set the indicator for each type contained in <BUE_ART_UNTERLAGEN>: „Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw.“, „Schadenaufstellung/Schadenrenta usw.“, „Sonstige Unterlagen“.",
+  "art": "text"
+ },
+ {
+  "de": "nur bei gefülltem <BUE_ART_UNTERLAGEN> (siehe „Anforderung von Unterlagen“ unten)",
+  "en": "only if <BUE_ART_UNTERLAGEN> is filled (see „Anforderung von Unterlagen“ below)",
+  "art": "text"
+ },
+ {
+  "de": "setzen, wenn <BUE_ART_UNTERLAGEN> die Art enthält",
+  "en": "set if <BUE_ART_UNTERLAGEN> contains the type",
+  "art": "text"
+ },
+ {
+  "de": "Lesehilfe zur Farblogik: Systeme stehen fett (OB726), Felder aus dem Datenpool dunkelblau (<BUE_VNR>), im Lauf erzeugte Variablen dunkelgrün (<Vorgang-VNR>), die <BE-Klassifikation> dunkelrot; Prüfnotizen stehen orange und in eigener Zeile. Die Steuerwörter WENN / DANN / SONST / SONST WENN / Ende WENN stehen türkis in der Formatvorlage „WENN DANN“ und sind wie Programmcode eingerückt; „SONST WENN“ hängt eine weitere Bedingung an denselben Block, ein „Ende WENN“ schließt die ganze Kette. Querverweise auf andere Kapitel und Schritte sind Links und stehen fett und unterstrichen, Hinweise kursiv.",
+  "en": "Reading aid for the colour logic: systems are shown in bold (OB726), fields from the data pool in dark blue (<BUE_VNR>), variables created during the run in dark green (<Vorgang-VNR>), the <BE-Klassifikation> in dark red; check notes are shown in orange on a line of their own. The keywords IF / THEN / ELSE / ELSE IF / END IF are shown in turquoise in the paragraph style „WENN DANN“ and are indented like program code; „SONST WENN“ (ELSE IF) adds a further condition to the same block, and one „Ende WENN“ (END IF) closes the whole chain. Cross-references to other chapters and steps are links and are shown in bold and underlined, notes in italics.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer, läuft der Vorgang ohne eigene Prüfnotiz durch den Makler-Zweig: Dann muss eine vom Versicherungsnehmer unterschriebene Maklervollmacht vorliegen, sonst entsteht ohnehin die BE „Unterschrift VN fehlt“. Liegt sie vor, läuft die Prüfung normal weiter (Entscheidung E. Brenneisen, 23.09.2026).",
+  "en": "Note: If <BUE_VERMITTLER_TYP> is empty, the case runs through the broker branch without a check note of its own: a broker power of attorney signed by the policyholder must then be present, otherwise the BE „Unterschrift VN fehlt“ arises anyway. If it is present, the check continues normally (decision E. Brenneisen, 23.09.2026).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer, wurde in der Vorprüfung der Makler-Zweig durchlaufen; nennt OB726 einen Mehrfachagenten, greift die zweite Bedingung und der Sachbearbeiter prüft den Betreuungswunsch in der Nachprüfung.",
+  "en": "Note: If <BUE_VERMITTLER_TYP> is empty, the broker branch was run in the preliminary check; if OB726 names a multiple agent, the second condition applies and the clerk checks the service request in the re-check.",
+  "art": "text"
+ },
+ {
+  "de": "ODER <BUE_VERMITTLER_TYP> <> „MFA“ UND <OB726-Klassifizierung> = „Mehrfachagent“",
+  "en": "OR <BUE_VERMITTLER_TYP> <> „MFA“ AND <OB726-Klassifizierung> = „Mehrfachagent“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Jeder Vorgang ohne Befund geht an den 72-Stunden-BOT, auch wenn der abgebende Bestandsinhaber selbst ein Makler ist (Makler auf Makler). Der 72-Stunden-BOT erkennt diesen Fall und leitet ihn ohne Wartefrist direkt an den BÜ-BOT weiter; der Prüf-Bot braucht dafür keine eigene Weiche (E. Brenneisen, 23.09.2026).",
+  "art": "text",
+  "en": "Note: Every case without findings goes to the 72-Stunden-BOT, even if the transferring portfolio holder is a broker themselves (broker to broker). The 72-Stunden-BOT recognises this case and forwards it directly to the BÜ-BOT without a waiting period; the Prüf-Bot needs no separate switch for it (E. Brenneisen, 23.09.2026)."
+ },
+ {
+  "de": "<BE-Klassifikation> = „Keine Bestandsübertragung möglich: <BUE_VERMITTLER_TYP>“",
+  "en": "<BE-Klassifikation> = „Keine Bestandsübertragung möglich: <BUE_VERMITTLER_TYP>“ (no portfolio transfer possible, with the intermediary type)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = „Courtagefortzahler“ ODER <BUE_VERMITTLER_TYP> = „Kontaktgeber“",
+  "en": "<BUE_VERMITTLER_TYP> = „Courtagefortzahler“ OR <BUE_VERMITTLER_TYP> = „Kontaktgeber“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = „Courtagefortzahler“ oder „Kontaktgeber“ – der Typ wird mitgeführt",
+  "en": "<BUE_VERMITTLER_TYP> = „Courtagefortzahler“ or „Kontaktgeber“ – the type is carried along",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Courtagefortzahler und Kontaktgeber erhalten keine Bestände übertragen (M. Koch, 24.09.2026). Die BE führt den Typ mit, damit der Sachbearbeiter die Ablehnung versendet und die Ablehnungsnachricht später anhand des Typs automatisiert werden kann. Vollmacht, Unterschrift und Unterlagen werden für diese Typen nicht geprüft; die übrigen Felder des KI-Deckblatts stehen wie beim Mehrfachagenten auf N/A. Die Prüfung steht deshalb vor allen anderen Ausschlusskriterien.",
+  "en": "Note: Commission recipients (Courtagefortzahler) and contact providers (Kontaktgeber) do not receive portfolio transfers (M. Koch, 24.09.2026). The BE carries the type so that the clerk sends the rejection and the rejection message can later be automated based on the type. Power of attorney, signature and documents are not checked for these types; the remaining fields of the AI cover sheet are N/A as for the multiple agent. The check therefore precedes all other exclusion criteria.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer oder „Fremdversicherungsunternehmen“, läuft der Vorgang ohne eigene Prüfnotiz durch den Makler-Zweig: Dann muss eine vom Versicherungsnehmer unterschriebene Maklervollmacht vorliegen, sonst entsteht ohnehin die BE „Unterschrift VN fehlt“. Liegt sie vor, läuft die Prüfung normal weiter (Entscheidung E. Brenneisen, 23.09.2026).",
+  "en": "Note: If <BUE_VERMITTLER_TYP> is empty or „Fremdversicherungsunternehmen“, the case runs through the broker branch without a check note of its own: a broker power of attorney signed by the policyholder must then be present, otherwise the BE „Unterschrift VN fehlt“ arises anyway. If it is present, the check continues normally (decision E. Brenneisen, 23.09.2026).",
+  "art": "text"
+ },
+ {
+  "de": "Keine Bestandsübertragung möglich: <BUE_VERMITTLER_TYP>",
+  "en": "Keine Bestandsübertragung möglich: <BUE_VERMITTLER_TYP> (no portfolio transfer possible)",
+  "art": "wert"
+ }
+]

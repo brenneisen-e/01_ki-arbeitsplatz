@@ -1,0 +1,192 @@
+/* ==========================================================================
+   STARTSEITE — Modulklassen
+   Drei Ebenen: Leitband, zwei Türen, ein Diagramm. Leitband, Tür und
+   Anteilsbalken selbst stehen in index.css (Abschnitt 24); hier liegen nur
+   die Waageachse, die Türvorschauen und die Erscheinens-Staffel.
+   ========================================================================== */
+
+.vg-start {
+  display: grid;
+  gap: var(--vg-luft-abschnitt);
+  min-width: 0;
+}
+
+/* Leitband-Kopf rechts: Fassung · Mandant · Go-Live, eine Zeile, gedämpft */
+.vg-leitband-meta {
+  font-size: var(--vg-fs-sm);
+  color: var(--vg-text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+/* Das Urteil trägt den Methodensatz als Tip — der Text bleibt klickfrei,
+   nur der Zeiger zeigt, dass es mehr zu lesen gibt. */
+.vg-leitband-urteil { cursor: help; }
+
+/* Die Tonkante oben folgt der Leitzahl: sie färbt sich erst, wenn die Zahl
+   90 % ihres Wegs hinter sich hat. */
+.vg-start .vg-leitband::before {
+  transition: background-color var(--vg-ruhig) var(--vg-kurve-weich);
+}
+
+/* ---- Waageachse ------------------------------------------------------------
+   Bahn 4 px, Toleranzband ±2 % als Fläche, Nullkerbe 1 px, drei Marker mit
+   Wert darüber und Label darunter. Höhe: 26 + 4 + 38 = 68 px, mit zweiter
+   Labelzeile 83 px. */
+.vg-waageachse {
+  position: relative;
+  min-width: 0;
+  padding-top: var(--vg-a5);
+  border-top: 1px solid var(--vg-rand);
+}
+.vg-waageachse-bahn {
+  position: relative;
+  height: 4px;
+  margin: 26px 0 38px;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-rand);
+}
+.vg-waageachse[data-zwei-zeilen] .vg-waageachse-bahn { margin-bottom: 53px; }
+.vg-waageachse-toleranz {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-positiv-weich);
+}
+.vg-waageachse-null {
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  width: 1px;
+  height: 10px;
+  background: var(--vg-text-4);
+}
+.vg-waageachse-kappe {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  font-family: var(--vg-schrift-zahl);
+  font-size: var(--vg-fs-2xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--vg-text-4);
+  white-space: nowrap;
+}
+.vg-waageachse-kappe[data-seite="links"] { left: 0; }
+.vg-waageachse-kappe[data-seite="rechts"] { right: 0; }
+
+/* Marker: ein Nullpunkt-Anker auf der Bahn; Kreis, Wert und Label hängen
+   absolut daran. Erscheinen über die Bühnen-Einblendung mit eigener
+   Verzögerung (500/620/740 ms aus dem Bauteil). */
+.vg-waageachse-marker {
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  animation: vg-buehne-ein var(--vg-ruhig) var(--vg-kurve-ein) backwards;
+}
+.vg-waageachse-kreis {
+  position: absolute;
+  left: 0; top: 0;
+  width: 9px; height: 9px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--vg-neutral-flaeche);
+  box-shadow: 0 0 0 2px var(--vg-flaeche);
+  transition: background-color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-waageachse-marker[data-ton="positiv"] .vg-waageachse-kreis { background: var(--vg-positiv); }
+.vg-waageachse-marker[data-ton="warnung"] .vg-waageachse-kreis { background: var(--vg-warnung); }
+.vg-waageachse-marker[data-ton="negativ"] .vg-waageachse-kreis { background: var(--vg-negativ); }
+
+.vg-waageachse-wert {
+  position: absolute;
+  left: 0;
+  bottom: 8px;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-family: var(--vg-schrift-zahl);
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  color: var(--vg-text);
+}
+.vg-waageachse-wert .vg-tip,
+.vg-waageachse-label .vg-tip { cursor: help; }
+.vg-waageachse-label {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-size: var(--vg-fs-xs);
+  line-height: 1.2;
+  color: var(--vg-text-3);
+}
+.vg-waageachse-marker[data-zeile="1"] .vg-waageachse-label { top: 23px; }
+.vg-waageachse-marker[data-zeile="2"] .vg-waageachse-label { top: 46px; }
+.vg-waageachse[data-zeilen="3"] .vg-waageachse-bahn { margin-bottom: 76px; }
+/* Am Rand richtet sich der Text an der Achsenkante aus statt am Marker */
+.vg-waageachse-marker[data-rand="links"] .vg-waageachse-wert,
+.vg-waageachse-marker[data-rand="links"] .vg-waageachse-label { translate: 0 0; }
+.vg-waageachse-marker[data-rand="rechts"] .vg-waageachse-wert,
+.vg-waageachse-marker[data-rand="rechts"] .vg-waageachse-label { translate: -100% 0; }
+
+/* ---- Türvorschauen ----------------------------------------------------- */
+.vg-tuer-vorschau { display: grid; gap: var(--vg-a3); min-width: 0; }
+.vg-tuer-balkenzeile {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vg-a4);
+}
+.vg-tuer-balkenlabel {
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-3);
+  white-space: nowrap;
+}
+.vg-tuer-legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vg-a3) var(--vg-a6);
+  margin-top: var(--vg-a2);
+  padding-left: calc(64px + var(--vg-a4));
+}
+.vg-tuer-legende-eintrag { display: inline-flex; align-items: center; gap: var(--vg-a3); min-width: 0; }
+.vg-tuer-legende-label { font-size: var(--vg-fs-xs); color: var(--vg-text-3); }
+.vg-tuer-legende-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-size: var(--vg-fs-xs);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--vg-text);
+  white-space: nowrap;
+}
+
+.vg-tuer-haeuser { display: grid; gap: var(--vg-a2); min-width: 0; }
+.vg-tuer-haeuser-kopf { font-size: var(--vg-fs-xs); color: var(--vg-text-4); }
+
+/* ---- Höhe bei 1024: Leitband kompakter, damit die Türtitel bei 768 px
+   Höhe ohne Scrollen stehen (Ziel: Türen beginnen ≤ 400 px). ------------- */
+@media (max-width: 1024px) {
+  .vg-start .vg-leitband {
+    gap: var(--vg-a5);
+    padding: var(--vg-a6) var(--vg-a7) var(--vg-a6);
+  }
+  .vg-waageachse { padding-top: var(--vg-a4); }
+}
+
+/* Die Bühnen-Einblendung (.vg-buehne-ein) verliert ihre Verzögerung schon
+   über den globalen Block in index.css; hier nur die Marker der Achse. */
+@media (prefers-reduced-motion: reduce) {
+  .vg-waageachse-marker { animation: none; }
+}
+
+/* Hinweis im Leitband, wenn die Fassung dem heutigen Modell entspricht */
+.vg-leitband-hinweis {
+  margin: var(--vg-a3) 0 0;
+  font-size: var(--vg-fs-sm);
+  color: var(--vg-text-3);
+  max-width: 60ch;
+}
+.vg-leitband-hinweis a { color: var(--vg-marke); text-decoration: underline; text-underline-offset: 2px; }

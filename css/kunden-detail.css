@@ -1,0 +1,220 @@
+/* css/kunden-detail.css - Kundendetail Page (A-10) */
+/* Extracted from styles.css for modularity */
+
+/* ========================================
+   KUNDENDETAIL PAGE
+   ======================================== */
+
+.kunden-page {
+    min-height: 100vh;
+    background: #f8fafc;
+    padding: var(--spacing-lg, 24px); /* OPT-25-E */
+}
+
+.kunden-header {
+    max-width: 1200px;
+    margin: 0 auto var(--spacing-lg, 24px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.kunden-page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    flex: 1;
+}
+
+.kunden-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.kunden-card {
+    background: white;
+    border-radius: var(--card-radius, 12px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    margin-bottom: var(--spacing-lg, 24px);
+    overflow: hidden;
+}
+
+.kunden-card-header {
+    padding: 18px var(--spacing-lg, 24px);
+    background: #f8fdf5;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.kunden-card-header.fida {
+    background: #eff6ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kunden-card-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.consent-info {
+    font-size: 14px;
+    font-weight: 600;
+    color: #166534;
+    background: #dcfce7;
+    padding: 4px 12px;
+    border-radius: 12px;
+}
+
+.kunden-stammdaten {
+    display: flex;
+    gap: 40px;
+    padding: 28px var(--spacing-lg, 24px);
+}
+
+.kunden-foto-container {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.kunden-foto {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 3px solid #86BC25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.kunden-foto svg {
+    width: 48px;
+    height: 48px;
+    color: #64748b;
+}
+
+.kunden-foto-container h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.kunden-id {
+    font-size: 15px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* === Cross-Referenz Card === */
+.linked-customer-card {
+    margin: 16px 0;
+    border-left: 4px solid #3b82f6;
+    background: #eff6ff;
+    border-radius: 8px;
+    padding: 0;
+}
+.linked-customer-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md, 16px);
+    padding: 14px 18px;
+}
+.linked-customer-icon {
+    flex-shrink: 0;
+    color: #3b82f6;
+}
+.linked-customer-text {
+    flex: 1;
+    font-size: 15px;
+    color: #1e40af;
+    line-height: 1.4;
+}
+.linked-customer-btn {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.linked-customer-btn:hover {
+    background: #2563eb;
+}
+
+/* === OPT-17: Impulse/Potentiale Source Footer === */
+.impulse-source-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px var(--spacing-lg, 24px);
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 8px;
+}
+.impulse-source-footer svg {
+    flex-shrink: 0;
+    color: #94a3b8;
+}
+
+/* ========================================
+   20-D: LÜCKEN-LEISTE (Badge-Bar)
+   ======================================== */
+.luecken-leiste-container { margin-bottom: var(--card-gap, 16px); }
+.luecken-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; }
+.luecken-card .kunden-card-header { margin-bottom: 12px; padding-bottom: 0; border-bottom: none; }
+.luecken-card .kunden-card-header h2 { display: flex; align-items: center; gap: var(--spacing-sm, 8px); font-size: 15px; font-weight: 600; color: #334155; margin: 0; }
+.luecken-badges { display: flex; flex-wrap: wrap; gap: var(--spacing-sm, 8px); margin-bottom: 12px; }
+.luecke-badge { display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.luecke-ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.luecke-fehlt { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+.luecken-detail { font-size: 13px; color: #475569; padding-top: 8px; border-top: 1px solid #f1f5f9; }
+.luecken-detail ul { margin: 8px 0 0; padding-left: 0; list-style: none; }
+.luecken-detail li { padding: 4px 0; }
+.luecke-link { color: #3b82f6; font-size: 12px; text-decoration: none; margin-left: 8px; }
+.luecke-link:hover { text-decoration: underline; }
+.luecken-ok-msg { color: #166534; }
+
+/* 20-B: LEBENSSITUATIONS-BADGE – GELÖSCHT (OPT-24) */
+
+/* ========================================
+   20-C: FINANZPROFIL-TAB
+   ======================================== */
+.finanzprofil-container { max-width: 900px; }
+.fp-quote-bar { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 14px; }
+.fp-progress { height: 8px; background: #e2e8f0; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+.fp-progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.fp-quote-hint { font-size: 12px; color: #94a3b8; }
+.fp-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.fp-col { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+.fp-col h3 { font-size: 14px; font-weight: 600; color: #334155; margin: 0 0 12px; }
+.fp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.fp-table td { padding: 6px 0; border-bottom: 1px solid #f1f5f9; }
+.fp-table .fp-amount { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fp-table .fp-total { border-top: 2px solid #334155; font-weight: 700; }
+.fp-anbieter { color: #94a3b8; font-size: 11px; }
+.fp-fida { background: #dbeafe; color: #1e40af; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-weight: 600; }
+.fp-section { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+.fp-section h3 { font-size: 14px; font-weight: 600; color: #334155; margin: 0 0 12px; }
+.fp-summary { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+.fp-summary-item { font-size: 14px; color: #334155; padding: 4px 0; }
+.fp-actions { display: flex; gap: var(--spacing-md, 16px); }
+.fp-actions .btn-primary { background: #3b82f6; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+.fp-actions .btn-primary:hover { background: #2563eb; }
+.fp-actions .btn-secondary { background: #fff; color: #3b82f6; border: 1px solid #3b82f6; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+.fp-actions .btn-secondary:hover { background: #eff6ff; }
+

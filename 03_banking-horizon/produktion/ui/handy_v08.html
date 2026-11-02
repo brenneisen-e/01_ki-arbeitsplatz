@@ -1,0 +1,127 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Banking Operations 2030 — Telefon (v08)</title>
+<!--
+  Der Overnight Report der achten Fassung.
+
+  Der schwerste Befund des Reviews vom 25.08.2026 hing an genau dieser Seite:
+  sie nannte Zahlen, die in keiner spaeteren Szene wieder auftauchten („one
+  pattern building in card disputes" — gezeigt werden spaeter drei; „128
+  patterns detected, 96 resolved, 3 escalated" — was mit den restlichen 29
+  geschah, stand nirgends). Jede Zeile hier ist deshalb an eine spaetere
+  Station gebunden, und die Zeile sagt selbst, an welche:
+
+    Performance   99.4 % / 370 Faelle      -> 08:00 und 09:00
+    Patterns      7 erkannt, 4 geloest, 3 eskaliert -> 08:00, 08:15, 16:00
+    Remedies      370 Kunden, Budget offen   -> 08:05 und 08:10
+    Agent health  Workforce laeuft normal    -> 16:00
+    Briefing      Team-Meeting 09:00         -> 09:00
+
+  „All fleets nominal" ist raus: im Review klang es fuer Nicht-Operations
+  raetselhaft. Es heisst jetzt, was es heisst.
+-->
+<style>
+  :root {
+    /* Bankpalette wie auf den Bildschirmen (stationen_v08.py, DB_FARBEN):
+       Grund bleibt schwarz, Karten mit einem Hauch Dark Blue, Akzent Bright
+       Blue 52|166|220, Schrift Ice Blue. Bernstein bleibt fuer "wartet". */
+    --grund: #101317; --karte: #141a2b; --rand: #242b48; --schrift: #ecf4fc;
+    --leise: #93a3bb; --gruen: #34a6dc; --bernstein: #d29a3c;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 900px; height: 1950px; overflow: hidden; }
+  body {
+    background: var(--grund); color: var(--schrift);
+    font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif;
+    font-size: 34px; padding: 62px 48px 52px;
+    display: flex; flex-direction: column; gap: 26px;
+  }
+  .leiste { display: flex; justify-content: space-between; align-items: center;
+    font-size: 28px; color: var(--leise); }
+  .leiste b { color: var(--schrift); font-weight: 600; }
+  .leiste .rechts { display: flex; align-items: center; gap: 18px; }
+  .leiste .marke-db { width: 50px; height: 50px; flex: none; border-radius: 10px; object-fit: contain; }
+  header h1 { font-size: 58px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; }
+  header p { margin-top: 12px; font-size: 30px; color: var(--leise); }
+  .karten { display: flex; flex-direction: column; gap: 22px; flex: 1; min-height: 0;
+    justify-content: stretch; }
+  .karte { background: var(--karte); border: 1px solid var(--rand); border-radius: 24px;
+    padding: 26px 30px; opacity: 0; transform: translateY(14px);
+    flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
+  .karte .marke { font-size: 22px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--leise); }
+  .karte .satz { margin-top: 10px; font-size: 36px; font-weight: 600; line-height: 1.2; }
+  .karte .satz em { font-style: normal; color: var(--gruen); }
+  .karte .satz b { color: var(--bernstein); font-weight: 600; }
+
+  /* Die Belege unter der Ueberschrift — das, was spaeter am Tag wiederkommt. */
+  .posten { margin-top: 16px; display: flex; flex-direction: column; gap: 11px; }
+  .posten div { display: flex; align-items: baseline; gap: 14px; font-size: 27px; color: #c3cde0; }
+  .posten div u { text-decoration: none; color: var(--schrift); font-weight: 700;
+    font-variant-numeric: tabular-nums; min-width: 132px; }
+  .posten div.warn u { color: var(--bernstein); }
+  .posten div i { font-style: normal; margin-left: auto; font-size: 22px; color: var(--leise);
+    letter-spacing: 0.04em; white-space: nowrap; }
+
+  .fuss { display: flex; align-items: center; gap: 18px; color: var(--leise); font-size: 26px; }
+  .balken { flex: 1; height: 8px; border-radius: 99px; background: var(--rand); overflow: hidden; }
+  .balken i { display: block; height: 100%; width: 0; background: var(--gruen); }
+</style>
+<div class="leiste"><b>07:00</b><span class="rechts">Operations · overnight<img class="marke-db" src="db_logo.png" alt="Deutsche Bank"></span></div>
+<header><h1>Good morning, Mara.</h1><p>Your agent workforce worked while you slept.</p></header>
+<div class="karten">
+
+  <div class="karte" data-ein="0.04">
+    <div class="marke">Overnight change to performance</div>
+    <div class="satz"><em>99.4 %</em> autonomous resolution</div>
+    <div class="posten">
+      <div><u>370</u> cases resolved overnight <i>08:00</i></div>
+      <div class="warn"><u>3</u> patterns need your review <i>08:15</i></div>
+      <div class="warn"><u>370</u> remedies awaiting budget approval <i>08:05</i></div>
+    </div>
+  </div>
+
+  <div class="karte" data-ein="0.24">
+    <div class="marke">Emerging risk</div>
+    <div class="satz"><b>Three patterns</b> detected and escalated, awaiting review</div>
+    <div class="posten">
+      <div><u>7</u> patterns detected overnight <i>08:00</i></div>
+      <div><u>4</u> resolved at the root cause <i>08:00</i></div>
+      <div class="warn"><u>3</u> held back for your judgement <i>08:15</i></div>
+    </div>
+  </div>
+
+  <div class="karte" data-ein="0.44">
+    <div class="marke">Agent health</div>
+    <div class="satz">Agent workforce <em>operating normally</em></div>
+    <div class="posten">
+      <div><u>120</u> agent instances across six roles <i>16:00</i></div>
+      <div><u>0</u> escalations from calibration or drift <i>16:00</i></div>
+    </div>
+  </div>
+
+  <div class="karte" data-ein="0.62">
+    <div class="marke">Meeting briefing</div>
+    <div class="satz">Team meeting <em>09:00</em> — briefing prepared</div>
+    <div class="posten">
+      <div><u>1 of 3</u> garnishment exemption pattern <i>08:15 · 09:00</i></div>
+    </div>
+  </div>
+
+</div>
+<div class="fuss"><span>Preparing</span><span class="balken"><i></i></span></div>
+<script>
+  const karten = [...document.querySelectorAll('[data-ein]')]
+  const balken = document.querySelector('.balken i')
+  const DAUER = 8
+  window.setT = (sek) => {
+    const t = Math.max(0, Math.min(1, sek / DAUER))
+    for (const k of karten) {
+      const ab = parseFloat(k.dataset.ein)
+      const f = Math.max(0, Math.min(1, (t - ab) / 0.14))
+      k.style.opacity = f
+      k.style.transform = `translateY(${(1 - f) * 14}px)`
+    }
+    balken.style.width = `${Math.min(1, t / 0.9) * 100}%`
+  }
+  window.setT(DAUER)
+</script>

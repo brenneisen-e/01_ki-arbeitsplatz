@@ -1,0 +1,404 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Banking Operations 2030 — Bildschirme</title>
+<style>
+  /* ── Ein Designsystem fuer alle Bildschirme ──────────────────────────────
+     Jede Station ist eine <section data-station>. Sichtbar ist die, die der
+     Aufruf ueber ?s=… verlangt. So haben zwoelf Bildschirme zwangslaeufig
+     dieselbe Schrift, dieselben Karten und dieselben Farben — bei zwoelf
+     einzeln erzeugten Bildern war genau das nie der Fall.
+
+     Der Ablauf haengt allein an setT(t). Kein Timer, kein Zufall: derselbe
+     Zeitpunkt liefert immer dasselbe Bild, sonst waere die Aufnahme nicht
+     wiederholbar. Kein Mauszeiger und kein Klick — das System arbeitet
+     sichtbar von selbst, sie schaut zu und entscheidet. */
+  :root {
+    --grund: #101317;
+    --karte: #171c22;
+    --rand: #232a32;
+    --schrift: #e9edf1;
+    --leise: #8a95a1;
+    --gruen: #34a06a;
+    --gruen-weich: rgba(52, 160, 106, 0.16);
+    --bernstein: #d29a3c;
+    --bernstein-weich: rgba(210, 154, 60, 0.16);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body {
+    background: var(--grund); color: var(--schrift);
+    font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif;
+    font-size: 24px; display: flex;
+  }
+  section[data-station] { display: none; flex: 1; min-width: 0; }
+
+  section[data-station="s3"] { --gruen: #d29a3c; --gruen-weich: rgba(210, 154, 60, 0.16); }
+  section[data-station="s4"] { --gruen: #5b8def; --gruen-weich: rgba(91, 141, 239, 0.16); }
+  section[data-station="s5"] { --gruen: #8b7ce8; --gruen-weich: rgba(139, 124, 232, 0.16); }
+  section[data-station="s6"] { --gruen: #45b8c8; --gruen-weich: rgba(69, 184, 200, 0.15); }
+  section[data-station="s7"] { --gruen: #2fa397; --gruen-weich: rgba(47, 163, 151, 0.15); }
+  section[data-station="s9"] { --gruen: #e08a4c; --gruen-weich: rgba(224, 138, 76, 0.16); }
+
+  .karte.licht { background: #f2efe8; border-color: #e3ddcf; color: #1d2227; }
+  .karte.licht h3 { color: #171c21; }
+  .karte.licht .text { color: #444c55; }
+  .karte.licht .posten div { border-color: #ddd5c4; }
+  .karte.licht > h2 { color: #8b8677; }
+  .karte.licht .blase.a { background: #ffffff; border: 1px solid #e0d9c9; color: #262c33; }
+  .karte.licht .blase.b { background: var(--gruen-weich); color: #1d2227; }
+  .karte.licht .blase b { color: #8b8677; }
+
+  section[data-station="s6"] .regeln {
+    font-family: 'JetBrains Mono', 'Liberation Mono', monospace;
+    font-size: 17.5px; line-height: 1.9;
+  }
+  .versionspille {
+    display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 16px;
+    font-weight: 700; letter-spacing: 0.05em; background: var(--gruen-weich); color: var(--gruen);
+  }
+
+  .ring { display: flex; align-items: center; gap: 20px; margin: 14px 0 6px; }
+  .ring svg { width: 108px; height: 108px; flex: none; transform: rotate(-90deg); }
+  .ring .bahn { fill: none; stroke: #262d36; stroke-width: 9; }
+  .ring .wert { fill: none; stroke: var(--gruen); stroke-width: 9; stroke-linecap: round; }
+  .ring b { font-size: 24px; line-height: 1.3; }
+  .ring span { display: block; font-size: 17px; color: var(--leise); font-weight: 400; }
+
+  .route { width: 100%; height: 170px; margin-top: 12px; flex: none; }
+  .route .kante { fill: none; stroke: var(--gruen); stroke-width: 2.4; }
+  .route .knoten circle { fill: #171c22; stroke: var(--gruen); stroke-width: 2.4; }
+  .route .knoten text { fill: #c4ccd4; font-size: 13.5px; }
+  section.zeigen { display: flex; }
+
+  .rail {
+    width: 84px; flex: none; border-right: 1px solid var(--rand);
+    padding: 26px 0; display: flex; flex-direction: column; align-items: center; gap: 24px;
+  }
+  .rail svg { width: 28px; height: 28px; stroke: var(--leise); fill: none; stroke-width: 1.7; }
+  .rail i { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 13px; }
+  .rail i.an { background: var(--gruen-weich); }
+  .rail i.an svg { stroke: var(--gruen); }
+
+  .buehne { flex: 1; min-width: 0; position: relative; }
+  .sicht {
+    position: absolute; inset: 0; padding: 36px 40px;
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .sicht[data-nr="1"] { opacity: 0; }
+
+  .kopf { display: flex; align-items: baseline; gap: 16px; flex: none; }
+  h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.01em; }
+  .kopf span { font-size: 20px; color: var(--leise); }
+
+  .reihe { display: grid; gap: 18px; flex: 1; min-height: 0; }
+  .reihe.kpi { flex: none; grid-template-columns: repeat(var(--n, 3), 1fr); }
+  .reihe.zwei { grid-template-columns: 1fr 420px; }
+  .reihe.halb { grid-template-columns: 1fr 1fr; }
+
+  .karte {
+    background: var(--karte); border: 1px solid var(--rand); border-radius: 16px;
+    padding: 20px 24px; min-height: 0; display: flex; flex-direction: column;
+  }
+  .karte > h2 {
+    font-size: 16px; letter-spacing: 0.09em; color: var(--leise);
+    font-weight: 600; flex: none;
+  }
+  .kachel em {
+    display: block; font-style: normal; font-size: 58px; font-weight: 700;
+    line-height: 1.15; margin-top: 4px;
+  }
+  .kachel svg { width: 100%; height: 52px; display: block; margin-top: auto; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th {
+    text-align: left; font-size: 15px; letter-spacing: 0.07em;
+    color: var(--leise); font-weight: 600; padding-bottom: 10px;
+  }
+  td { padding: 16px 0; border-top: 1px solid var(--rand); font-size: 23px; vertical-align: middle; }
+  td.leise { color: var(--leise); font-size: 20px; }
+  td.rechts { text-align: right; font-variant-numeric: tabular-nums; }
+  [data-ein] { opacity: 0; }
+
+  .balken { width: 150px; height: 9px; border-radius: 5px; background: #262d36; overflow: hidden; }
+  .balken i { display: block; height: 100%; width: 0; background: var(--gruen); border-radius: 5px; }
+  .balken.warn i { background: var(--bernstein); }
+  .chip {
+    display: inline-block; padding: 6px 16px; border-radius: 999px;
+    font-size: 16px; font-weight: 700; letter-spacing: 0.05em;
+    color: var(--gruen); background: var(--gruen-weich);
+  }
+  .chip.warn { color: var(--bernstein); background: var(--bernstein-weich); }
+  tr.aktiv td { background: rgba(52, 160, 106, 0.07); }
+
+  p.text { font-size: 21px; line-height: 1.55; color: #c4ccd4; margin-top: 12px; }
+
+  /* Der Agent arbeitet */
+  .agent { margin-top: auto; border-top: 1px solid var(--rand); padding-top: 20px; opacity: 0; }
+  .lauf { display: flex; align-items: center; gap: 14px; }
+  .spinner { width: 28px; height: 28px; flex: none; }
+  .spinner circle { fill: none; stroke-width: 3.4; }
+  .spinner .bahn { stroke: #2a323b; }
+  .spinner .arc { stroke: var(--gruen); stroke-linecap: round; stroke-dasharray: 46 84; }
+  .lauf b { font-size: 20px; }
+  .schritte { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .schritt { display: flex; align-items: center; gap: 11px; font-size: 19px; color: var(--leise); opacity: 0.35; }
+  .schritt svg { width: 20px; height: 20px; flex: none; stroke: var(--gruen); fill: none; stroke-width: 2.4; opacity: 0; }
+  .fortschritt { margin-top: 18px; height: 8px; border-radius: 5px; background: #262d36; overflow: hidden; }
+  .fortschritt i { display: block; height: 100%; width: 0; background: var(--gruen); border-radius: 5px; }
+
+  /* Nachricht an den Kunden */
+  .brief h3 { font-size: 28px; font-weight: 700; }
+  .posten { margin-top: 16px; }
+  .posten div {
+    display: flex; justify-content: space-between; padding: 15px 0;
+    border-top: 1px solid var(--rand); font-size: 22px;
+  }
+  .werte > div { padding: 16px 0; border-bottom: 1px solid var(--rand); }
+  .werte b { display: block; font-size: 15px; letter-spacing: 0.08em; color: var(--leise); font-weight: 600; }
+  .werte em { font-style: normal; display: block; font-size: 24px; margin-top: 3px; }
+  .geste { margin-top: auto; padding-top: 20px; }
+  .geste u { text-decoration: none; display: block; font-size: 15px; letter-spacing: 0.08em; color: var(--leise); }
+  .geste strong { display: block; font-size: 44px; font-weight: 700; color: var(--gruen); margin-top: 2px; }
+  .warten {
+    margin-top: 16px; display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px; border-radius: 13px;
+    border: 1.5px solid var(--gruen); color: var(--gruen); font-weight: 700; font-size: 20px;
+  }
+
+  /* Zeitleiste der tatsaechlich gegangenen Schritte */
+  .spur { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .spur div {
+    display: grid; grid-template-columns: 96px 1fr 90px; gap: 14px; align-items: center;
+    padding: 13px 0; border-top: 1px solid var(--rand); font-size: 21px;
+  }
+  .spur div span:first-child { color: var(--leise); font-variant-numeric: tabular-nums; font-size: 19px; }
+  .spur div span:last-child { color: var(--leise); text-align: right; font-variant-numeric: tabular-nums; font-size: 19px; }
+
+  /* Regelwerk-Vergleich */
+  .regeln { font-size: 19px; line-height: 1.75; }
+  .regeln div { padding: 3px 10px; border-radius: 6px; }
+  .regeln div.weg { color: #d98a8a; background: rgba(200, 80, 80, 0.12); text-decoration: line-through; }
+  .regeln div.neu { color: #8fd6ac; background: rgba(52, 160, 106, 0.14); }
+
+  /* Gespraech */
+  .chat { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+  .blase { max-width: 78%; padding: 14px 18px; border-radius: 16px; font-size: 20px; line-height: 1.45; }
+  .blase b { display: block; font-size: 14px; letter-spacing: 0.07em; color: var(--leise); margin-bottom: 5px; }
+  .blase.a { background: #1d242c; border-bottom-left-radius: 5px; }
+  .blase.b { background: rgba(52, 160, 106, 0.14); align-self: flex-end; border-bottom-right-radius: 5px; }
+
+  /* Kapazitaetsvergleich */
+  .paar { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+  .paar > div { display: grid; grid-template-columns: 210px 1fr; gap: 14px; align-items: center; font-size: 19px; }
+  .paar .stapel { display: flex; flex-direction: column; gap: 5px; }
+  .paar .stapel i { display: block; height: 11px; border-radius: 4px; width: 0; }
+  .paar .stapel i.mensch { background: #4b5a68; }
+  .paar .stapel i.agent { background: var(--gruen); }
+</style>
+
+<script>
+  // ── Ablauf-Engine ────────────────────────────────────────────────────────
+  // Alles Bewegte haengt an Datenattributen; die Engine kennt nur fuenf
+  // Verhaltensweisen und wendet sie auf jede Station gleich an.
+  const spanne = (t, a, b) => Math.max(0, Math.min(1, (t - a) / (b - a)))
+  const weich = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2)
+  const zahl = (v) => v.toLocaleString('en-US')
+
+  function setT(t) {
+    const wurzel = document.querySelector('section.zeigen')
+    if (!wurzel) return
+
+    // 1. Zahlen laufen hoch
+    wurzel.querySelectorAll('[data-zahl]').forEach((el) => {
+      const ziel = Number(el.dataset.zahl)
+      const von = Number(el.dataset.von || 0.15), bis = Number(el.dataset.bis || 1.35)
+      const p = weich(spanne(t, von, bis))
+      el.textContent = (el.dataset.praefix || '') + zahl(Math.round(ziel * p)) + (el.dataset.suffix || '')
+    })
+
+    // 2. Kurven zeichnen sich
+    wurzel.querySelectorAll('[data-kurve]').forEach((el) => {
+      if (!el.dataset.laenge) {
+        const l = el.getTotalLength()
+        el.style.strokeDasharray = l
+        el.dataset.laenge = l
+      }
+      const p = weich(spanne(t, Number(el.dataset.von || 0.2), Number(el.dataset.bis || 1.4)))
+      el.style.strokeDashoffset = el.dataset.laenge * (1 - p)
+    })
+
+    // 3. Elemente erscheinen versetzt
+    const gruppen = {}
+    wurzel.querySelectorAll('[data-ein]').forEach((el) => {
+      const g = el.dataset.gruppe || 'a'
+      gruppen[g] = (gruppen[g] || 0)
+      const n = gruppen[g]++
+      const von = Number(el.dataset.ein) + n * 0.13
+      el.style.opacity = weich(spanne(t, von, von + 0.5))
+    })
+
+    // 4. Balken fuellen sich
+    wurzel.querySelectorAll('[data-w]').forEach((el, n) => {
+      const von = Number(el.dataset.von || 1.0) + n * 0.09
+      el.style.width = `${Number(el.dataset.w) * weich(spanne(t, von, von + 0.7))}%`
+    })
+
+    // 5. Der Agent arbeitet
+    wurzel.querySelectorAll('.agent').forEach((ag) => {
+      const von = Number(ag.dataset.von), bis = Number(ag.dataset.bis)
+      ag.style.opacity = weich(spanne(t, von - 0.4, von))
+      const arc = ag.querySelector('.arc')
+      if (arc) arc.setAttribute('transform', `rotate(${(t * 300) % 360} 21 21)`)
+      const s = [...ag.querySelectorAll('.schritt')]
+      s.forEach((el, n) => {
+        const a = von + (bis - von) * (n / s.length)
+        const b = von + (bis - von) * ((n + 1) / s.length)
+        const fertig = t >= b
+        el.style.opacity = t >= a ? (fertig ? 1 : 0.75) : 0.35
+        el.style.color = fertig ? '#c4ccd4' : ''
+        el.querySelector('svg').style.opacity = fertig ? 1 : 0
+      })
+      const f = ag.querySelector('.fortschritt i')
+      if (f) f.style.width = `${weich(spanne(t, von, bis)) * 100}%`
+      const b = ag.querySelector('.lauf b')
+      if (b && b.dataset.fertig) b.textContent = t >= bis ? b.dataset.fertig : b.dataset.text
+      const sp = ag.querySelector('.spinner')
+      if (sp) sp.style.opacity = t >= bis ? 0.25 : 1
+      const zeile = ag.dataset.zeile && wurzel.querySelector(ag.dataset.zeile)
+      if (zeile) zeile.classList.toggle('aktiv', t > von && t < bis + 0.3)
+    })
+
+    // 6. Ansichtswechsel — von selbst, nicht durch einen Klick
+    const sichten = [...wurzel.querySelectorAll('.sicht')]
+    if (sichten.length > 1) {
+      const w = Number(wurzel.dataset.wechsel || 4.6)
+      const p = weich(spanne(t, w, w + 0.7))
+      sichten[0].style.opacity = 1 - p
+      sichten[1].style.opacity = p
+    }
+
+    // 7. Der Vorschlag wartet sichtbar auf ihre Entscheidung
+    wurzel.querySelectorAll('.warten').forEach((el) => {
+      const von = Number(el.dataset.von || 5.3)
+      el.style.opacity = t > von ? 0.72 + 0.28 * (0.5 + 0.5 * Math.sin((t - von) * 3.2)) : 0
+    })
+  }
+  window.setT = setT
+</script>
+
+<section data-station="s1">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Prevention overview</h1><span>Complaints Management &middot; overnight</span></div><div class="reihe kpi"><div class="karte kachel"><h2>PATTERNS DETECTED</h2><em data-zahl="128" data-suffix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#34a06a" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div><div class="karte kachel"><h2>RESOLVED OVERNIGHT</h2><em data-zahl="96" data-suffix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#34a06a" stroke-width="2.6" d="M2 34 L28 38 L54 27 L80 31 L106 20 L132 24 L158 15 L184 19 L210 10 L238 14"/></svg></div><div class="karte kachel"><h2>NEEDS YOUR JUDGEMENT</h2><em data-zahl="3" data-suffix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#d29a3c" stroke-width="2.6" d="M2 26 L28 29 L54 22 L80 32 L106 24 L132 34 L158 27 L184 37 L210 30 L238 38"/></svg></div></div><div class="reihe zwei"><div class="karte"><h2>DETECTED PATTERNS</h2><table><tr><th>PATTERN</th><th>ROOT CAUSE</th><th>CONFIDENCE</th><th>STATUS</th></tr><tr data-ein="0.85" data-gruppe="l"><td>Recurring fee dispute</td><td class="leise">Fee applied after account closure</td><td><div class="balken"><i data-w="94" data-von="1.1"></i></div></td><td><span class="chip">RESOLVED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Failed direct debit</td><td class="leise">Insufficient funds at collection</td><td><div class="balken"><i data-w="91" data-von="1.1"></i></div></td><td><span class="chip">RESOLVED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Duplicate charge</td><td class="leise">Retry logic triggered twice</td><td><div class="balken"><i data-w="87" data-von="1.1"></i></div></td><td><span class="chip">RESOLVED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Standing order rejected</td><td class="leise">Mandate expired at counterparty</td><td><div class="balken"><i data-w="89" data-von="1.1"></i></div></td><td><span class="chip">RESOLVED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Card auth retry</td><td class="leise">Issuer timeout</td><td><div class="balken warn"><i data-w="64" data-von="1.1"></i></div></td><td><span class="chip warn">ESCALATED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Fee reversal delayed</td><td class="leise">Batch cut-off missed twice</td><td><div class="balken warn"><i data-w="58" data-von="1.1"></i></div></td><td><span class="chip warn">ESCALATED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Address change loop</td><td class="leise">Conflicting records in two systems</td><td><div class="balken warn"><i data-w="51" data-von="1.1"></i></div></td><td><span class="chip warn">ESCALATED</span></td></tr></table></div><div class="karte"><h2>ASSISTANT</h2><p class="text">I resolved 96 patterns overnight with high confidence.</p><p class="text">Three fell below the confidence threshold and are waiting for your judgement.</p><div class="agent" data-von="2.0" data-bis="4.3" data-zeile="tr[data-ein]"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Preparing case for review" data-fertig="Ready for your review">Preparing case for review</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Retrieving account history</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Checking fairness and cost to serve</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Drafting customer message</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s2">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Recurring fee dispute</h1><span>Case CR-2026-7319 &middot; prepared by agent</span></div><div class="reihe zwei"><div class="karte brief licht"><h3>We fixed a recurring fee error on your account</h3><p class="text">Hi Daniel,</p><p class="text">we detected an error that caused a recurring fee to be charged on your account. We have already corrected it and refunded the charges listed below.</p><div class="posten"><div data-ein="0.6" data-gruppe="p"><span>Service fee &ndash; March</span><span>850 EUR</span></div><div data-ein="0.6" data-gruppe="p"><span>Service fee &ndash; April</span><span>800 EUR</span></div><div data-ein="0.6" data-gruppe="p"><span>Service fee &ndash; May</span><span>800 EUR</span></div></div></div><div class="karte werte"><div data-ein="1.0" data-gruppe="w"><b>RELATIONSHIP VALUE</b><em>High</em></div><div data-ein="1.0" data-gruppe="w"><b>PREVIOUS SERVICE EXPERIENCE</b><em>Positive</em></div><div data-ein="1.0" data-gruppe="w"><b>FAIRNESS CHECK</b><em>Passed</em></div><div data-ein="1.0" data-gruppe="w"><b>COST TO SERVE</b><em>Low</em></div><div class="geste"><u>PROPOSED GESTURE</u><strong>2,450 EUR</strong><span class="warten" data-von="2.6">Waiting for your approval</span></div></div></div></div></div></section>
+
+<section data-station="s3">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Authority request</h1><span>Case AR-2026-0448 &middot; prepared by agent</span></div><div class="reihe zwei"><div class="karte"><h2>REQUEST</h2><div style="display:flex;gap:44px;margin-top:14px;font-size:22px"><div><b style="display:block;font-size:15px;letter-spacing:.08em;color:var(--leise)">CASE</b>AR-2026-0448</div><div><b style="display:block;font-size:15px;letter-spacing:.08em;color:var(--leise)">AUTHORITY</b>Public prosecutor</div><div><b style="display:block;font-size:15px;letter-spacing:.08em;color:var(--leise)">DEADLINE</b>3 d 07 h</div></div><div class="balken" style="width:100%;margin-top:16px"><i data-w="72" data-von="0.5"></i></div><h2 style="margin-top:26px">EVIDENCE ASSEMBLED</h2><div data-ein="0.7" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Customer records</span><span style="color:var(--leise);font-size:18px">09:11</span></div><div data-ein="0.7" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Transaction context</span><span style="color:var(--leise);font-size:18px">09:16</span></div><div data-ein="0.7" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Legal basis</span><span style="color:var(--leise);font-size:18px">09:19</span></div><div data-ein="0.7" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Prior disclosures</span><span style="color:var(--leise);font-size:18px">09:22</span></div></div><div class="karte"><h2>DRAFT RESPONSE</h2><p class="text" data-ein="1.5" data-gruppe="d">We acknowledge receipt of your request dated 12 May 2026 concerning case AR-2026-0448.</p><p class="text" data-ein="1.5" data-gruppe="d">Please find attached the responsive information, gathered in accordance with the legal basis specified in your request.</p><p class="text" data-ein="1.5" data-gruppe="d">Let us know if you require any further information.</p><div class="agent" data-von="2.2" data-bis="4.4"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Assembling response" data-fertig="Ready for your review">Assembling response</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Matching legal basis</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Selecting records in scope</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Drafting cover letter</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s4">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Daily operating review</h1><span>Overnight &middot; all domains</span></div><div class="reihe zwei"><div class="karte"><h2>DECISIONS HANDLED OVERNIGHT</h2><em class="kachel" style="font-size:88px;font-weight:700;display:block;margin:6px 0 10px" data-zahl="1582">0</em><div style="flex:1;min-height:0"><svg viewBox="0 0 240 52" preserveAspectRatio="none" style="width:100%;height:100%"><path data-kurve data-von="0.3" data-bis="1.8" fill="none" stroke="#5b8def" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div></div><div class="karte"><h2>AGENT FLEET</h2><table><tr><th>AGENT</th><th>CALIBRATION</th><th>STATUS</th></tr><tr data-ein="0.9" data-gruppe="f"><td>Credit evaluator</td><td><div class="balken"><i data-w="96" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Fraud detector</td><td><div class="balken"><i data-w="94" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Limit manager</td><td><div class="balken"><i data-w="91" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Collections advisor</td><td><div class="balken"><i data-w="88" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Document analyst</td><td><div class="balken warn"><i data-w="63" data-von="1.2"></i></div></td><td><span class="chip warn">ATTENTION</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Payment matcher</td><td><div class="balken"><i data-w="93" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr></table><div class="agent" data-von="2.4" data-bis="4.6"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Reviewing exception rate" data-fertig="One agent needs your attention">Reviewing exception rate</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Comparing to last seven days</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Isolating drift</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Ranking by impact</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s5">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Execution trace</h1><span>Garnishment GARN-2026-0157</span></div><div class="reihe zwei"><div class="karte"><h2>ROUTE &mdash; ASSEMBLED AT RUN TIME</h2><svg class="route" viewBox="0 0 720 170"><path class="kante" data-kurve data-von="0.3" data-bis="0.9" d="M78 46 L188 46"/><path class="kante" data-kurve data-von="0.7" data-bis="1.3" d="M252 46 L360 46"/><path class="kante" data-kurve data-von="1.1" data-bis="1.7" d="M390 64 C390 92 96 88 78 108"/><path class="kante" data-kurve data-von="1.5" data-bis="2.1" d="M78 118 L188 118"/><path class="kante" data-kurve data-von="1.9" data-bis="2.5" d="M252 118 L528 118"/><g class="knoten" data-ein="0.2"><circle cx="60" cy="46" r="15"/><text x="34" y="24">Claim</text></g><g class="knoten" data-ein="0.5"><circle cx="220" cy="46" r="15"/><text x="176" y="24">Debtor search</text></g><g class="knoten" data-ein="0.9"><circle cx="390" cy="46" r="15"/><text x="336" y="24">Employment</text></g><g class="knoten" data-ein="1.3"><circle cx="60" cy="118" r="15"/><text x="30" y="152">Exemption</text></g><g class="knoten" data-ein="1.7"><circle cx="220" cy="118" r="15"/><text x="184" y="152">Order</text></g><g class="knoten" data-ein="2.1"><circle cx="560" cy="118" r="15" style="stroke:#d29a3c"/><text x="500" y="152">Acknowledged</text></g></svg><div class="spur"><div data-ein="0.7" data-gruppe="s"><span>09:02</span><span>Case opened</span><span>00:15</span></div><div data-ein="0.7" data-gruppe="s"><span>09:04</span><span>Claim received</span><span>00:12</span></div><div data-ein="0.7" data-gruppe="s"><span>09:11</span><span>Debtor search</span><span>01:35</span></div><div data-ein="0.7" data-gruppe="s"><span>09:14</span><span>Employment verified</span><span>00:08</span></div><div data-ein="0.7" data-gruppe="s"><span>09:22</span><span>Exemption calculated</span><span>00:06</span></div><div data-ein="0.7" data-gruppe="s"><span>09:29</span><span>Order sent to employer</span><span>00:07</span></div><div data-ein="0.7" data-gruppe="s"><span>10:05</span><span>Acknowledgement received</span><span>00:04</span></div><div data-ein="0.7" data-gruppe="s"><span>11:02</span><span>Case closed</span><span>00:10</span></div></div></div><div class="karte"><h2>EXEMPTION CALCULATION</h2><div class="posten" style="margin-top:6px"><div data-ein="1.1" data-gruppe="e"><span>Monthly net income</span><span>3,450 EUR</span></div><div data-ein="1.1" data-gruppe="e"><span>Basic personal allowance</span><span>&minus; 1,410 EUR</span></div><div data-ein="1.1" data-gruppe="e"><span>Per dependent (2)</span><span>&minus; 1,060 EUR</span></div><div data-ein="1.1" data-gruppe="e"><span>Work-related costs</span><span>&minus; 320 EUR</span></div></div><div class="geste"><u>ATTACHABLE AMOUNT</u><strong>660 EUR</strong></div><div class="agent" data-von="2.6" data-bis="4.6"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Comparing with documented process" data-fertig="Two deviations, both compliant">Comparing with documented process</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Replaying documented path</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Matching against actual steps</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Checking guardrails</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s6">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Garnishment decision logic</h1><span><span class="versionspille">v4.2 in force</span> &nbsp;&rarr;&nbsp; <span class="versionspille">v4.3 proposed</span></span></div><div class="reihe halb"><div class="karte"><h2>VERSION 4.2 &mdash; IN FORCE</h2><div class="regeln" style="margin-top:12px"><div class="weg" data-ein="0.8" data-gruppe="r">1. Do not garnish if debt is under 100 EUR</div><div class="weg" data-ein="0.8" data-gruppe="r">2. Maximum garnishment is 25% of disposable income</div><div class="" data-ein="0.8" data-gruppe="r">3. Always protect 900 EUR of disposable income</div><div class="" data-ein="0.8" data-gruppe="r">4. Retrieve dependants from the case file</div><div class="" data-ein="0.8" data-gruppe="r">5. Apply standard priority order of debts</div></div></div><div class="karte"><h2>VERSION 4.3 &mdash; PROPOSED</h2><div class="regeln" style="margin-top:12px"><div class="neu" data-ein="0.8" data-gruppe="r">1. Do not garnish if debt is under 150 EUR</div><div class="neu" data-ein="0.8" data-gruppe="r">2. Maximum garnishment is 30% of disposable income</div><div class="neu" data-ein="0.8" data-gruppe="r">3. Always protect 1,000 EUR of disposable income</div><div class="neu" data-ein="0.8" data-gruppe="r">4. Retrieve dependants from the population register</div><div class="" data-ein="0.8" data-gruppe="r">5. Apply standard priority order of debts</div><div class="neu" data-ein="0.8" data-gruppe="r">6. Round final amount to the nearest euro</div></div><div class="agent" data-von="2.6" data-bis="4.8"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Running policy tests" data-fertig="All tests passed &mdash; ready to certify">Running policy tests</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Unit tests 128/128</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Regression tests 96/96</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Policy scenarios 24/24</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s7">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Collection recovery workout</h1><span>Case CR-2026-1180</span></div><div class="reihe zwei"><div class="karte"><h2>RECOMMENDED RESTRUCTURING</h2><div style="display:flex;gap:52px;margin-top:12px;align-items:baseline"><em class="kachel" style="font-size:70px;font-weight:700" data-zahl="342" data-suffix=" EUR">0</em><div style="color:var(--leise);font-size:21px">per month &middot; 48 instalments</div></div><div style="flex:1;min-height:0;margin-top:10px"><svg viewBox="0 0 240 52" preserveAspectRatio="none" style="width:100%;height:100%"><path data-kurve data-von="0.4" data-bis="2.0" fill="none" stroke="#2fa397" stroke-width="2.6" d="M2 34 L28 38 L54 27 L80 31 L106 20 L132 24 L158 15 L184 19 L210 10 L238 14"/></svg></div></div><div class="karte"><h2>CONTROL EVIDENCE</h2><div class="ring"><svg viewBox="0 0 120 120"><circle class="bahn" cx="60" cy="60" r="50"/><circle class="wert" cx="60" cy="60" r="50" data-kurve data-von="0.5" data-bis="2.2"/></svg><b><span style="font-size:34px;color:var(--gruen)" data-zahl="4" data-suffix=" / 4">0</span>controls satisfied<span>tested inside the decision, not after it</span></b></div><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Risk appetite</span><span style="color:var(--leise);font-size:18px">Within limits</span></div><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Affordability</span><span style="color:var(--leise);font-size:18px">Sustainable</span></div><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Conduct obligations</span><span style="color:var(--leise);font-size:18px">Met</span></div><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Forbearance rules</span><span style="color:var(--leise);font-size:18px">Compliant</span></div><div class="agent" data-von="2.6" data-bis="4.6"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Checking against controls" data-fertig="All four controls satisfied">Checking against controls</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Reading risk appetite</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Testing affordability</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Applying forbearance rules</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s8">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Authority exchange</h1><span>Live &middot; tax compliance request</span></div><div class="reihe zwei"><div class="karte licht"><h2>LIVE EXCHANGE</h2><div class="chat"><div class="blase a" data-ein="0.6" data-gruppe="c"><b>AUTHORITY</b>We are requesting account data related to tax compliance.</div><div class="blase b" data-ein="0.6" data-gruppe="c"><b>AGENT</b>Understood. Should this include all account types, open and closed?</div><div class="blase a" data-ein="0.6" data-gruppe="c"><b>AUTHORITY</b>Yes, please include all account types, including closed accounts.</div><div class="blase b" data-ein="0.6" data-gruppe="c"><b>AGENT</b>Noted. Over what time period should the data be provided?</div><div class="blase a" data-ein="0.6" data-gruppe="c"><b>AUTHORITY</b>Please provide data for the last 24 months.</div><div class="blase b" data-ein="0.6" data-gruppe="c"><b>AGENT</b>Thank you. Should this be limited to EU-resident account holders?</div></div></div><div class="karte"><h2>EXTRACTED BY AGENT</h2><div class="werte" style="margin-top:6px"><div data-ein="1.4" data-gruppe="x"><b>REQUEST TYPE</b><em>Tax compliance</em></div><div data-ein="1.4" data-gruppe="x"><b>ACCOUNT REFERENCE</b><em>EU-resident holders</em></div><div data-ein="1.4" data-gruppe="x"><b>LEGAL BASIS</b><em>Directive 2011/16/EU</em></div><div data-ein="1.4" data-gruppe="x"><b>SCOPE</b><em>All types, last 24 months</em></div><div data-ein="1.4" data-gruppe="x"><b>DEADLINE</b><em>7 days from receipt</em></div></div><div class="agent" data-von="3.0" data-bis="5.2"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Assembling response" data-fertig="Response ready for your review">Assembling response</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Reading the exchange</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Selecting records in scope</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Preparing the package</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s9">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><div class="sicht"><div class="kopf"><h1>Workforce portfolio</h1><span>Complaints Management &middot; today</span></div><div class="reihe kpi" style="--n:2"><div class="karte kachel"><h2>SPECIALISTS</h2><em data-zahl="2">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none" style="width:100%;height:100%"><path data-kurve data-von="0.3" data-bis="1.6" fill="none" stroke="#e08a4c" stroke-width="2.6" d="M2 26 L28 29 L54 22 L80 32 L106 24 L132 34 L158 27 L184 37 L210 30 L238 38"/></svg></div><div class="karte kachel"><h2>AGENT INSTANCES</h2><em data-zahl="120">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none" style="width:100%;height:100%"><path data-kurve data-von="0.3" data-bis="1.6" fill="none" stroke="#e08a4c" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div></div><div class="reihe zwei"><div class="karte"><h2>OPERATIONAL UNITS</h2><table><tr><th>UNIT</th><th style="text-align:right">VOLUME</th><th style="text-align:right">QUALITY</th><th>STATUS</th></tr><tr data-ein="0.9" data-gruppe="u"><td>Customer onboarding</td><td class="rechts">1,348</td><td class="rechts">96%</td><td><span class="chip">ON TRACK</span></td></tr><tr data-ein="0.9" data-gruppe="u"><td>Account management</td><td class="rechts">2,312</td><td class="rechts">92%</td><td><span class="chip">ON TRACK</span></td></tr><tr data-ein="0.9" data-gruppe="u"><td>Claims processing</td><td class="rechts">1,876</td><td class="rechts">88%</td><td><span class="chip">ON TRACK</span></td></tr><tr data-ein="0.9" data-gruppe="u"><td>Billing and payments</td><td class="rechts">3,105</td><td class="rechts">95%</td><td><span class="chip">ON TRACK</span></td></tr><tr data-ein="0.9" data-gruppe="u"><td>Technical support</td><td class="rechts">1,241</td><td class="rechts">83%</td><td><span class="chip">ON TRACK</span></td></tr><tr data-ein="0.9" data-gruppe="u"><td>Retention and win-back</td><td class="rechts">676</td><td class="rechts">61%</td><td><span class="chip warn">UNDERPERFORMING</span></td></tr></table></div><div class="karte"><h2>HUMAN VS AGENT CAPACITY</h2><div class="paar"><div data-ein="1.2" data-gruppe="k"><span>Customer onboarding</span><div class="stapel"><i class="mensch" data-w="6" data-von="1.4"></i><i class="agent" data-w="66" data-von="1.5"></i></div></div><div data-ein="1.2" data-gruppe="k"><span>Account management</span><div class="stapel"><i class="mensch" data-w="6" data-von="1.4"></i><i class="agent" data-w="82" data-von="1.5"></i></div></div><div data-ein="1.2" data-gruppe="k"><span>Claims processing</span><div class="stapel"><i class="mensch" data-w="4" data-von="1.4"></i><i class="agent" data-w="60" data-von="1.5"></i></div></div><div data-ein="1.2" data-gruppe="k"><span>Billing and payments</span><div class="stapel"><i class="mensch" data-w="4" data-von="1.4"></i><i class="agent" data-w="72" data-von="1.5"></i></div></div><div data-ein="1.2" data-gruppe="k"><span>Technical support</span><div class="stapel"><i class="mensch" data-w="4" data-von="1.4"></i><i class="agent" data-w="50" data-von="1.5"></i></div></div><div data-ein="1.2" data-gruppe="k"><span>Retention and win-back</span><div class="stapel"><i class="mensch" data-w="6" data-von="1.4"></i><i class="agent" data-w="66" data-von="1.5"></i></div></div></div></div></div></div></div></section>
+
+<script>
+  // Welche Station gezeigt wird, sagt der Aufruf: ?s=s1.
+  // Uebergaenge werden NICHT hier gebaut, sondern in der Montage: dort werden
+  // zwei Bildfolgen ueberblendet. Eine Seite, die zwei Stationen gleichzeitig
+  // kennt, waere nur komplizierter und nicht besser.
+  addEventListener('DOMContentLoaded', () => {
+    const q = new URLSearchParams(location.search)
+    // Breite Sonderformate (Wandanzeige): der Inhalt bleibt derselbe, die
+    // Seite wird nur kompakter gesetzt, damit nichts unten anschneidet.
+    const kompakt = parseFloat(q.get('kompakt') || '')
+    if (kompakt) document.body.style.zoom = kompakt
+    // Breite Sonderformate layouten WIRKLICH breit: die Wurzel ist sonst auf
+    // 1600x1000 verdrahtet, und der Zoom skaliert nur, statt umzubrechen —
+    // auf der Wandanzeige blieb so die halbe Flaeche leer (Defekt 21).
+    const b = parseFloat(q.get('b') || ''), h = parseFloat(q.get('h') || '')
+    if (b && h) {
+      for (const el of [document.documentElement, document.body]) {
+        el.style.width = b + 'px'
+        el.style.height = h + 'px'
+      }
+      if (b > 2 * h) {
+        const st = document.createElement('style')
+        st.textContent = '.reihe.zwei { grid-template-columns: 1fr 620px; } '
+          + '.sicht { padding: 40px 56px; }'
+        document.head.appendChild(st)
+      }
+    }
+    const id = q.get('s') || 's1'
+    const el = document.querySelector(`section[data-station="${id}"]`)
+    if (el) el.classList.add('zeigen')
+    window.setT(0)
+  })
+</script>

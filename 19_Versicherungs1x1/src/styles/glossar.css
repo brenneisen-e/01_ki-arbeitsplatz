@@ -1,0 +1,106 @@
+/* ==========================================================================
+   glossar.css — Glossarseite, Hover-Card (Begriff) und Begriffs-Chips.
+   Gehört dem Agenten Suche/Glossar.
+   ========================================================================== */
+@layer components {
+  /* ---------------------------------------------------------- Glossarseite */
+  .glossar-kopf { margin-bottom: 20px; max-width: 1100px; }
+  .glossar-kopf .nebentext { max-width: 64ch; }
+  .glossar-filter { display: flex; flex-direction: column; gap: 12px; max-width: 1100px; }
+  .glossar-filter .eingabe-huelle { max-width: 640px; }
+  .glossar-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* A–Z-Leiste: sticky unter der Topbar, Trefffläche 30 × 30 px (≥ 24 px), eine Zeile ab 1280 px */
+  .glossar-az {
+    position: sticky; top: var(--topbar-hoehe); z-index: 5;
+    display: flex; flex-wrap: wrap; gap: 3px;
+    padding: 10px 0; margin-top: 12px; max-width: 1100px;
+    background: var(--flaeche); border-bottom: 1px solid var(--rand);
+  }
+  .glossar-az-knopf {
+    min-width: 30px; height: 30px; padding: 0 7px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--rand); border-radius: var(--radius-s);
+    background: var(--flaeche-karte); color: var(--text-2);
+    font-size: 13px; font-weight: 600; line-height: 1;
+    transition: background-color var(--bewegung), border-color var(--bewegung), color var(--bewegung);
+  }
+  .glossar-az-knopf:hover:not(:disabled) { border-color: var(--marke-rand); color: var(--marke); background: var(--marke-weich); }
+  .glossar-az-knopf[aria-pressed="true"] { background: var(--marke); border-color: var(--marke); color: #fff; }
+  .glossar-az-knopf:disabled { opacity: 0.4; background: transparent; }
+  .glossar-az-alle { padding: 0 10px; margin-right: 5px; }
+  /* „Alle“ ist der Grundzustand: gedrückt hell wie ein aktiver Chip, ein gewählter Buchstabe dagegen gefüllt */
+  .glossar-az-alle[aria-pressed="true"] { background: var(--marke-weich); border-color: var(--marke-rand); color: var(--marke); }
+  @media (max-width: 639.98px) { .glossar-az { position: static; } }
+
+  .glossar-stand { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; margin: 16px 0 0; font-size: 13px; color: var(--text-2); }
+  .glossar-hinweis { margin-top: 8px; }
+
+  /* Gruppen je Anfangsbuchstabe, Einträge als Definitionsliste */
+  /* Die Einträge blenden ihren Hintergrund 12 px über die Textspalte hinaus
+     (margin: 0 -12px). Damit dieser Überhang nicht aus Liste und Gruppe
+     herausragt — der Rauchtest maß 1112/1100 px —, tragen beide dieselbe
+     Polsterung und denselben Zug nach außen: die Textspalte bleibt 1100 px
+     breit und bündig zur Kopfzeile. */
+  .glossar-gruppe { max-width: 1124px; padding-inline: 12px; margin-inline: -12px; }
+  .glossar-buchstabe { font-size: 20px; font-weight: 600; color: var(--marke); margin: 28px 0 6px; letter-spacing: 0; }
+  .glossar-liste { margin: 0 -12px; padding: 0 12px; }
+  .glossar-eintrag {
+    display: grid; grid-template-columns: minmax(150px, 220px) minmax(0, 1fr); gap: 4px 24px;
+    padding: 16px 12px; margin: 0 -12px;
+    border-top: 1px solid var(--rand); border-radius: var(--radius-m);
+    scroll-margin-top: calc(var(--topbar-hoehe) + 68px);
+    transition: background-color var(--bewegung-lang), box-shadow var(--bewegung-lang);
+  }
+  .glossar-eintrag-hervor { background: var(--marke-weich); box-shadow: inset 3px 0 0 var(--marke); border-top-color: transparent; }
+  .glossar-begriff { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.4; overflow-wrap: anywhere; }
+  .glossar-definition { margin: 0; min-width: 0; }
+  .glossar-definition > p { font-size: 15px; line-height: 1.55; color: var(--text); max-width: var(--mass-text); }
+  .glossar-eintrag-fuss { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; margin-top: 10px; }
+  .glossar-eintrag-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .glossar-vorkommen { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+  .glossar-vorkommen-label { margin-right: 4px; }
+  .glossar-vorkommen a { color: var(--marke); font-weight: 400; }
+  .glossar-vorkommen-mehr {
+    margin-left: 4px; min-height: 24px; padding: 0 6px; border: 0; border-radius: 6px;
+    background: var(--neutral-100); color: var(--text-2); font-size: 12px; font-weight: 500;
+  }
+  .glossar-vorkommen-mehr:hover { background: var(--gruen-100); color: var(--marke); }
+  .glossar-kopieren { margin-left: auto; color: var(--text-3); }
+  .glossar-kopieren:hover { color: var(--text); }
+  /* Mit Maus: „Link kopieren“ erst beim Überfahren oder Fokus im Eintrag zeigen — 151 Knöpfe wären Rauschen; mit Touch immer sichtbar */
+  @media (hover: hover) and (pointer: fine) {
+    .glossar-kopieren { opacity: 0; transition: opacity var(--bewegung), color var(--bewegung); }
+    .glossar-eintrag:hover .glossar-kopieren, .glossar-eintrag:focus-within .glossar-kopieren,
+    .glossar-kopieren:focus-visible, .glossar-kopieren[data-kopiert="true"] { opacity: 1; }
+  }
+  .glossar mark { background: var(--gruen-100); color: inherit; }
+  @media (max-width: 767.98px) {
+    .glossar-eintrag { grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 14px 8px; margin: 0 -8px; }
+    .glossar-kopieren { margin-left: 0; }
+  }
+
+  /* ------------------------------------------------------------ Hover-Card */
+  .hoverkarte {
+    position: fixed; z-index: var(--z-popover);
+    width: min(360px, calc(100vw - 24px));
+    padding: 14px 16px 12px; border-radius: var(--radius-m);
+    background: var(--flaeche-erhoben); color: var(--text);
+    border: 1px solid var(--rand); box-shadow: var(--schatten-erhoben);
+    font-size: 14px; line-height: 1.5;
+    animation: einblenden 140ms var(--bewegung-kurve) both;
+  }
+  .hoverkarte:focus-visible { outline: none; }
+  .hoverkarte-kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .hoverkarte-begriff { font-size: 15px; font-weight: 600; color: var(--text); }
+  .hoverkarte-tags { font-size: 12px; color: var(--text-3); }
+  .hoverkarte-text { margin-top: 6px; color: var(--text-2); font-size: 14px; }
+  .hoverkarte-fuss { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .hoverkarte-vorkommen { font-size: 12px; color: var(--text-3); }
+  .begriff[aria-expanded="true"] { text-decoration-color: var(--marke); background: var(--marke-weich); }
+
+  /* ------------------------------------------------- Begriffe einer Einheit */
+  .begriffe-chips-titel { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 10px; letter-spacing: 0; }
+  .begriffe-chips-zahl { font-size: 12px; font-weight: 500; color: var(--text-3); font-variant-numeric: tabular-nums; }
+  .begriffe-chips-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+}

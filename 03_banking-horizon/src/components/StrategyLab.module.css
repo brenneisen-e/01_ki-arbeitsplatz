@@ -1,0 +1,666 @@
+/* StrategyLab.module.css
+ * Vollbild-Overlay-Stile für den Marktfolge-Strategy-Lab-Workshop.
+ * Verwendet ausschließlich Design-Tokens aus src/index.css.
+ */
+
+/* ─── Overlay + Backdrop ─────────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 16px 48px;
+  overflow-y: auto;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
+  z-index: 0;
+}
+
+/* ─── Haupt-Card ─────────────────────────────────────────────────────────── */
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Entrance-Opacity wird per GSAP gesetzt */
+  opacity: 0;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 36px 40px 28px;
+  border-bottom: 1px solid var(--border-soft);
+  background: linear-gradient(
+    135deg,
+    rgba(4, 106, 56, 0.1) 0%,
+    rgba(255, 255, 255, 0.01) 70%
+  );
+}
+
+.headerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  color: var(--ink-2);
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.closeButton:hover,
+.closeButton:focus-visible {
+  background: rgba(4, 106, 56, 0.2);
+  border-color: var(--accent);
+  color: #fff;
+  transform: scale(1.06);
+  outline: none;
+}
+
+/* ─── Stepper ────────────────────────────────────────────────────────────── */
+
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: 24px 40px 20px;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.stepper::-webkit-scrollbar {
+  display: none;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.stepBubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  border: 2px solid var(--border-soft);
+  background: var(--surface-1);
+  color: var(--ink-3);
+  flex-shrink: 0;
+  transition:
+    background var(--t-med) var(--ease-out),
+    border-color var(--t-med) var(--ease-out),
+    color var(--t-med) var(--ease-out);
+}
+
+.stepItem[data-active] .stepBubble {
+  border-color: var(--accent-bright);
+  background: rgba(134, 188, 37, 0.14);
+  color: var(--accent-bright);
+}
+
+.stepItem[data-done] .stepBubble {
+  border-color: var(--accent);
+  background: rgba(4, 106, 56, 0.22);
+  color: var(--accent-bright);
+}
+
+.stepLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  white-space: nowrap;
+  transition: color var(--t-med) var(--ease-out);
+}
+
+.stepItem[data-active] .stepLabel {
+  color: #fff;
+  font-weight: 600;
+}
+
+.stepItem[data-done] .stepLabel {
+  color: var(--ink-2);
+}
+
+.stepConnector {
+  width: 40px;
+  height: 2px;
+  background: var(--border-soft);
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin: 0 4px;
+  align-self: center;
+}
+
+/* ─── Schritt-Inhalt ─────────────────────────────────────────────────────── */
+
+.body {
+  flex: 1;
+  padding: 28px 40px 8px;
+  overflow-y: auto;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stepQuestion {
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin: 0;
+}
+
+/* ─── Schritt 1: Rollen-Karten ───────────────────────────────────────────── */
+
+.roleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 780px) {
+  .roleGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.roleCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 20px 18px;
+  background: var(--surface-1);
+  border: 1.5px solid var(--border-soft);
+  border-radius: var(--r-lg);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    background var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.roleCard:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+}
+
+.roleCard:focus-visible {
+  outline: none;
+  border-color: var(--accent-bright);
+}
+
+.roleCard[data-active] {
+  border-color: var(--accent);
+  background: linear-gradient(
+    145deg,
+    rgba(4, 106, 56, 0.18) 0%,
+    var(--surface-1) 80%
+  );
+  box-shadow:
+    0 0 0 1px rgba(4, 106, 56, 0.6),
+    0 8px 28px rgba(4, 106, 56, 0.22);
+  transform: translateY(-2px);
+}
+
+.roleTitle {
+  font-family: var(--font-heading);
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.008em;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.roleCard[data-active] .roleTitle {
+  color: var(--accent-bright);
+}
+
+.roleDesc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.roleCheck {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: var(--accent-bright);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+/* ─── Schritt 2 + 3: Capability-Listen ──────────────────────────────────── */
+
+.capabilityList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.capabilityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  transition: background var(--t-fast) var(--ease-out);
+}
+
+.capabilityRow:hover {
+  background: var(--surface-2);
+}
+
+.capabilityLabel {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+  min-width: 0;
+  flex: 1;
+}
+
+/* ─── Segmented Toggle ───────────────────────────────────────────────────── */
+
+.segmented {
+  display: inline-flex;
+  gap: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.segmentedOption {
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border-soft);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
+}
+
+.segmentedOption:last-child {
+  border-right: none;
+}
+
+.segmentedOption:hover {
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+.segmentedOption[data-active] {
+  background: var(--surface-3);
+  color: var(--seg-active-color, var(--accent-bright));
+  font-weight: 600;
+}
+
+/* ─── Zusammenfassung ────────────────────────────────────────────────────── */
+
+.summarySection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryHeading {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.summaryRoleCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(4, 106, 56, 0.16) 0%,
+    var(--surface-1) 80%
+  );
+  border: 1px solid rgba(4, 106, 56, 0.45);
+  border-radius: var(--r-md);
+}
+
+.summaryRoleTitle {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-bright);
+  letter-spacing: -0.008em;
+}
+
+.summaryRoleDesc {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+.summaryNone {
+  font-size: 14px;
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summaryGroupCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 16px 14px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+}
+
+.summaryGroupLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.summaryCapList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.summaryCapList li {
+  font-size: 13.5px;
+  color: var(--ink-2);
+  padding-left: 12px;
+  position: relative;
+}
+
+.summaryCapList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-strong);
+}
+
+.potenzialTable {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.potenzialRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+}
+
+.potenzialCap {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.potenzialBadge {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--badge-color, var(--ink-3));
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-xs);
+}
+
+/* ─── Footer-Navigation ──────────────────────────────────────────────────── */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 40px 32px;
+  border-top: 1px solid var(--border-soft);
+  margin-top: 16px;
+}
+
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: var(--r-md);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out),
+    opacity var(--t-fast) var(--ease-out);
+}
+
+.navButton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.navButton[data-variant='secondary'] {
+  background: var(--surface-1);
+  border-color: var(--border-soft);
+  color: var(--ink-2);
+}
+
+.navButton[data-variant='secondary']:hover,
+.navButton[data-variant='secondary']:focus-visible {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--ink);
+  outline: none;
+}
+
+.navButton[data-variant='primary'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.navButton[data-variant='primary']:hover,
+.navButton[data-variant='primary']:focus-visible {
+  background: #035a30;
+  border-color: #035a30;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* ─── Reset-Button (Zusammenfassung) ─────────────────────────────────────── */
+
+.resetButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 10px 20px;
+  border-radius: var(--r-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+  background: var(--surface-1);
+  border: 1.5px solid var(--border-soft);
+  cursor: pointer;
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+  margin-top: 8px;
+}
+
+.resetButton:hover,
+.resetButton:focus-visible {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: #fff;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 680px) {
+  .overlay {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .card {
+    border-radius: 0;
+    max-width: 100%;
+    min-height: 100dvh;
+  }
+
+  .header {
+    padding: 24px 20px 20px;
+  }
+
+  .stepper {
+    padding: 16px 20px 14px;
+  }
+
+  .body {
+    padding: 20px 20px 8px;
+  }
+
+  .footer {
+    padding: 18px 20px 28px;
+  }
+
+  .capabilityRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .segmentedOption {
+    padding: 6px 10px;
+  }
+}

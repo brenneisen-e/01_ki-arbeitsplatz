@@ -1,0 +1,251 @@
+/* FaktSlide: Zahlenfolie des Studien-Schritts auf der weißen Folie des
+   Readers. Vier große Kennzahlen tragen die Folie, Text ist Beiwerk. Farben
+   aus den Reader-Tokens (--ink, --accent), Größen für Beamer und Webcast. */
+
+.fakt {
+  --balken-grau: #a8a397;
+  width: 100%;
+  max-width: min(1400px, 96vw);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.2vw, 16px);
+}
+
+/* Datengrundlage als eine Kickerzeile, mehr Text braucht die Folie nicht. */
+.basis {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.85vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Vier Spalten, jede mit dünner Linie oben wie eine Tabellenkante. */
+.reihe {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 2.6vw, 44px);
+  align-items: start;
+}
+
+.zahl {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 0.55vw, 8px);
+  padding-top: clamp(10px, 1vw, 16px);
+  border-top: 3px solid var(--accent);
+}
+
+/* Kickerzeile: Icon in einer runden, leicht getönten Kachel, daneben das
+   Schlagwort; in der betonten Spalte beides in Akzentfarbe. */
+.kickerZeile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.85vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Die Zahl: sehr groß, proportionale Ziffern, die Einheit kleiner daneben. */
+.wert {
+  font-family: var(--font-heading);
+  font-size: clamp(52px, 5.1vw, 84px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.einheit {
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-left: 0.1em;
+  color: var(--ink-2);
+}
+
+.label {
+  font-size: clamp(14px, 1.1vw, 18px);
+  line-height: 1.3;
+  color: var(--ink-2);
+  max-width: 26ch;
+}
+
+/* Punktraster: 100 Punkte in fünf Reihen zu 20, jede Reihe 20 Prozent.
+   Gefüllt in Akzentfarbe, leere Punkte als heller Ton derselben Farbe. */
+.waffel {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 4px;
+  width: 100%;
+  max-width: 224px;
+  margin-top: clamp(4px, 0.5vw, 8px);
+}
+
+.punkt {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.punkt[data-voll] {
+  background: var(--accent);
+}
+
+/* Hantel unter der betonten Zahl: zwei Punkte auf einer Spur von 0 bis 100,
+   verbunden durch die Lücke, Werte in der Legende statt an den Punkten. */
+.hantel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: clamp(6px, 0.7vw, 12px);
+}
+
+.hantelLegende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: clamp(11.5px, 0.85vw, 13.5px);
+  line-height: 1.2;
+  color: var(--ink-3);
+}
+
+.legendeEintrag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.legendeEintrag[data-betont] {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.legendePunkt {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.legendeEintrag[data-betont] .legendePunkt {
+  background: var(--accent);
+}
+
+.hantelSpur {
+  position: relative;
+  display: block;
+  height: 14px;
+  margin: 0 7px;
+}
+
+.hantelSpur::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+.hantelLinie {
+  position: absolute;
+  top: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+  background: var(--ink-3);
+}
+
+.hantelPunkt {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--ink);
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.hantelPunkt[data-betont] {
+  background: var(--accent);
+}
+
+/* Folgerung: eine Zeile, kein Kasten, Kicker in Akzentfarbe davor. */
+.folgerung {
+  margin: 0;
+  padding-top: clamp(10px, 1vw, 16px);
+  border-top: 1px solid var(--border-strong);
+  font-family: var(--font-heading);
+  font-size: clamp(17px, 1.3vw, 21px);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.folgerungKicker {
+  display: inline-block;
+  margin-right: 14px;
+  vertical-align: 0.15em;
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 0.85vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.quelle {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.quelleLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.quelleLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1000px) {
+  .reihe {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .reihe {
+    grid-template-columns: 1fr;
+  }
+}

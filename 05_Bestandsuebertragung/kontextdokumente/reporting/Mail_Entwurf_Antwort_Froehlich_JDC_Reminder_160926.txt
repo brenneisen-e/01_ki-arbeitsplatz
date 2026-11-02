@@ -1,0 +1,23 @@
+Hallo Herr Fröhlich,
+
+vielen Dank für Ihre Nachricht und für Ihre Geduld. Es tut mir leid, dass ich mich erst jetzt melde. Sie hatten die Thematik zwischenzeitlich ja auch schon mit Martin Richarz besprochen, trotzdem möchte ich Ihre Fragen gern noch direkt beantworten.
+
+Zur Unterlage: Die Folie trägt das Datum vom Freitag, weil wir sie an diesem Tag erstellt haben. Versendet wurde sie erst am Dienstag, und kurz darauf habe ich sie an Sie und Herrn Reber-Lucht weitergegeben. Dass der Eindruck einer nachrangigen Information entstanden ist, bedauere ich, denn so war es nicht gemeint: Die Folie fasst die Auswertung zusammen, die seit dem 08.09. im Umlauf ist, und enthält keine neuen Sachverhalte.
+
+Zur Korrektur der Zahlen: Ich verstehe den Wunsch nach einer belastbaren Aufteilung gut. Eine rückwirkende Korrektur des Ausweises, getrennt nach Makler an Makler und AO an Makler, ist aus den vorliegenden Daten leider nicht möglich, weil der abgebende Vertriebskanal weder in der Mail noch im Postkorb hinterlegt ist. Die Bereinigung erfolgt stattdessen über die Bearbeitung: Erinnerungen schließen mit dem Hauptvorgang, technisch zurückgespielte Ausgangsmails werden ohne fachliche Prüfung geschlossen. Der Effekt wird in den kommenden Wochenwerten sichtbar. Eine Aufteilung nach Übertragungsrichtung lässt sich auch nachträglich nicht herstellen; belastbar ist die Sicht nach Sparte, die der Folie zugrunde liegt.
+
+Gern greife ich auch Ihre Punkte vom 08.09. noch auf:
+
+Punkt 3, zwei Gruppenpostfächer: Eine berechtigte Frage. Die Aufteilung ist historisch gewachsen; neben den beiden gibt es weitere Postfächer, etwa dkv@ergo.de. Für den Rückstand sind die Postfächer nach unserer Auswertung nicht das Problem, sondern was nach dem Eingang mit einer Mail geschieht, also ob sie als Vorgang eingesteuert wird.
+
+Punkt 4, Mehrfacherinnerungen: Ihre Beobachtung aus dem Fall Qualitypool trifft genau das Muster. Absender ist in allen Fällen JDC; ob dahinter Clark steht, lässt sich aus den Mails nicht erkennen. Von 4.211 erinnerten Verträgen wurden 1.280 mehrfach erinnert, einzelne bis zu acht Mal, der Versand läuft automatisiert. Ihren damaligen Ansatz, Erinnerungen zur Seite zu legen, haben wir übernommen: Die Regel ist inzwischen verschärft, Erinnerungen werden nicht mehr als Vorgang an das Eingangsmanagement weitergeleitet.
+
+Punkt 5, Bezug zum Ersteingang: Ihre Nachfrage war berechtigt, die erste Fassung war hier unscharf. Ich habe den Zeitraum deshalb bis zum 17.06. nach vorne gezogen. Von den erinnerten Verträgen mit erkennbarer Vertragsnummer haben 901 (24 Prozent) einen Ersteingang in diesem Zeitraum, 2.836 (76 Prozent) nicht; bei 474 Erinnerungen fehlt die Vertragsnummer. Ohne Ersteingang im Zeitraum heißt dabei nicht ohne Ursprungsauftrag, sondern dass er vor dem 17.06. liegt oder in einem anderen Ordner. Wo der Ersteingang im Zeitraum liegt, vergehen bis zur Erinnerung im Median 58 Tage.
+
+Punkt 6, Ihre Empfehlung: Wir haben zunächst den zweiten der beiden Wege gewählt, die verschärfte Regel aus Punkt 4. Auf JDC gehen wir derzeit nicht zu; sollte die Regel nicht ausreichen, greifen wir Ihren Vorschlag über den Vertrieb gern auf.
+
+Wenn es hilft, gehe ich die Auswertung gern einmal gemeinsam mit Ihnen durch.
+
+Beste Grüße
+
+Eike Brenneisen

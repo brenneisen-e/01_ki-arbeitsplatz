@@ -1,0 +1,451 @@
+/* css/stammdaten-extras.css - Stammdaten Extras (Tiere, Scores, Tab Divider) */
+/* Extracted from styles.css for modularity */
+
+/* ========================================
+   STAMMDATEN: Tiere Badges
+   ======================================== */
+.tier-unknown-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.tier-unknown-badge:hover {
+    background: #fde68a;
+    box-shadow: 0 2px 8px rgba(146, 64, 14, 0.15);
+}
+
+.tier-none-badge {
+    display: inline-flex;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 15px;
+    font-style: italic;
+}
+
+.tier-known-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* ========================================
+   HAUSTIER-EINGABEFORMULAR
+   ======================================== */
+.tier-edit-section {
+    margin-top: 8px;
+    width: 100%;
+}
+
+.tier-edit-row {
+    margin-top: 6px;
+}
+
+.tier-edit-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.tier-edit-input {
+    padding: 6px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 15px;
+    color: #1e293b;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tier-edit-input:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+select.tier-edit-input {
+    min-width: 140px;
+    cursor: pointer;
+}
+
+input.tier-edit-input {
+    width: 100px;
+}
+
+input.tier-edit-input[type="number"] {
+    width: 70px;
+}
+
+.tier-detail-fields {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tier-save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    background: #86b545;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.tier-save-btn:hover {
+    background: #769e3c;
+}
+
+/* Tier-Display (Badge-Ansicht nach Speichern) */
+.tier-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.tier-display-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    font-size: 15px;
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.tier-display-icon {
+    display: inline-flex;
+    align-items: center;
+    color: #2563eb;
+}
+
+.tier-display-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.tier-edit-pencil {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #fff;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.tier-edit-pencil:hover {
+    color: #2563eb;
+    border-color: #93c5fd;
+    background: #eff6ff;
+}
+
+/* ========================================
+   HAUSTIER: Hint Row + Confirm Button
+   ======================================== */
+.tier-hint-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tier-confirm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #86BC25;
+    border-radius: 50%;
+    background: #fff;
+    color: #86BC25;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.tier-confirm-btn:hover {
+    background: #86BC25;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(134, 188, 37, 0.3);
+    transform: scale(1.1);
+}
+
+/* ========================================
+   HAUSTIER: Popup
+   ======================================== */
+.tier-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+}
+
+.tier-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    width: 400px;
+    max-width: 90vw;
+    animation: tierPopupIn 0.2s ease-out;
+}
+
+@keyframes tierPopupIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.tier-popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tier-popup-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.tier-popup-title svg {
+    color: #86BC25;
+}
+
+.tier-popup-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 20px;
+    color: #64748b;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.tier-popup-close:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.tier-popup-body {
+    padding: 20px 22px;
+}
+
+.tier-popup-body .tier-edit-row + .tier-edit-row {
+    margin-top: 14px;
+}
+
+.tier-popup-body .tier-detail-fields {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tier-popup-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 22px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+    border-radius: 0 0 16px 16px;
+}
+
+.tier-popup-cancel {
+    padding: 8px 18px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.tier-popup-cancel:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+/* ========================================
+   STAMMDATEN: Score Bars (Risiko + Bonität)
+   ======================================== */
+.score-bar-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.score-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 120px;
+}
+
+.score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.score-bar-value {
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.score-bar-value small {
+    font-weight: 500;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* ========================================
+   RISIKOSCORE TOOLTIP
+   ======================================== */
+.risiko-tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    color: #94a3b8;
+    cursor: help;
+    position: relative;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.risiko-tooltip-trigger:hover .risiko-tooltip-content,
+.risiko-tooltip-trigger:focus .risiko-tooltip-content {
+    display: block;
+}
+
+.risiko-tooltip-content {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    min-width: 260px;
+    max-width: 340px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    z-index: 100;
+    white-space: normal;
+}
+
+.risiko-tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1e293b;
+}
+
+.risiko-tooltip-title {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+.risiko-tooltip-item {
+    padding: 2px 0;
+    font-size: 14px;
+}
+
+/* ========================================
+   SCHADENHISTORIE BADGES
+   ======================================== */
+.schaden-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.schaden-status-badge.reguliert {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.schaden-status-badge.offen {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.schaden-status-badge.abgelehnt {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* ========================================
+   TAB DIVIDER: Kunden | Potentiale getrennt
+   ======================================== */
+.agentur-tab-divider {
+    width: 1px;
+    background: rgba(255, 255, 255, 0.35);
+    margin: 4px 6px;
+    align-self: stretch;
+    min-height: 24px;
+}

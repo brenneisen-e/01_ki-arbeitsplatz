@@ -1,0 +1,625 @@
+/* ==========================================================================
+   STEUERBLOCK — der dunkle Steuer- und Summenblock links
+   --------------------------------------------------------------------------
+   Die Signatur der Anwendung: EINE dunkle Fläche je Ansicht, links, mit
+   Einstellungen oben und der Summe heute / Zielmodell darunter, gefolgt von
+   zwei Plaketten gleicher Bauart (eingeschwungen, Startjahr). Rechts bleibt
+   alles hell. Das Prinzip stammt aus dem alten Werkzeug, dessen Seitenleiste
+   Stammdaten, ein Mini-Säulenpaar und die Delta-Plakette trug.
+
+   Die Fläche ist Tiefgrün — der Gegenpol zum Burgund der Marke. Innerhalb
+   des Blocks werden die Rollen-Token umbelegt, damit die vorhandenen
+   Bauteile (Abzeichen, Knöpfe, Tooltip, Paarvergleich) ohne Sonderfälle
+   auf der dunklen Fläche funktionieren. Kontraste gegen #0f3b31:
+     Text        #ffffff  12,4:1
+     Text 2      #cfe0d8   9,1:1
+     Text 3      #a9c3b8   6,6:1
+     Positiv     #7fdcae   7,5:1   Negativ #f4998f  5,8:1   Warnung #e9bd5a  7,0:1
+     Säule heute #8d9a95   4,3:1   Säule Ziel #7fdcae  7,5:1  (Flächen, >= 3:1)
+
+   Aufbau von oben: Kopf → Mitte (Summe, Plaketten, Mini-Paar, Signale,
+   Einstellungen; scrollt, wenn das Höhenbudget nicht reicht) → Fuß.
+   Die Datei ist selbstständig: sie braucht aus index.css nur die Tokens.
+   ========================================================================== */
+
+.vg-buehne {
+  display: grid;
+  grid-template-columns: 336px minmax(0, 1fr);
+  gap: var(--vg-a7);
+  align-items: start;
+}
+
+.vg-steuerblock {
+  --sb-flaeche:   #0f3b31;
+  --sb-flaeche-2: #14483c;
+  --sb-rand:      rgb(255 255 255 / 0.10);
+  --sb-rand-2:    rgb(255 255 255 / 0.18);
+  --sb-text:      #ffffff;
+  --sb-text-2:    #cfe0d8;
+  --sb-text-3:    #a9c3b8;
+  --sb-positiv:   #7fdcae;
+  --sb-negativ:   #f4998f;
+  --sb-warnung:   #e9bd5a;
+  --sb-info:      #9cc9ee;
+  --sb-plakette:  rgb(255 255 255 / 0.05);   /* Ruhefläche der Plakette, Endwert des Pulses */
+  --sb-luft:      var(--vg-a6);              /* Abstand der Gruppen; wird bei knapper Höhe enger */
+
+  /* Rollen umbelegen — nur hier, für alles, was im Block steckt */
+  --vg-text:        var(--sb-text);
+  --vg-text-2:      var(--sb-text-2);
+  --vg-text-3:      var(--sb-text-2);
+  --vg-text-4:      var(--sb-text-3);
+  --vg-flaeche:     var(--sb-flaeche-2);
+  --vg-still:       var(--sb-flaeche-2);
+  --vg-grund:       var(--sb-flaeche);
+  --vg-rand:        var(--sb-rand);
+  --vg-rand-stark:  var(--sb-rand-2);
+  --vg-rand-hart:   rgb(255 255 255 / 0.28);
+  --vg-hover:       rgb(255 255 255 / 0.06);
+  --vg-aktiv:       rgb(255 255 255 / 0.1);
+  --vg-n50:         var(--sb-flaeche-2);
+  --vg-n100:        rgb(255 255 255 / 0.08);
+  --vg-n150:        rgb(255 255 255 / 0.12);
+  --vg-positiv:     var(--sb-positiv);
+  --vg-negativ:     var(--sb-negativ);
+  --vg-warnung:     var(--sb-warnung);
+  --vg-info:        var(--sb-info);
+  --vg-marke:       #ffffff;
+  --vg-marke-weich: rgb(255 255 255 / 0.10);
+  --vg-viz-heute:   #8d9a95;
+  --vg-viz-3:       #7fdcae;
+  /* Segmente des gestapelten Alt/Neu-Balkens — auf #0f3b31 geprüft:
+     Abschluss 7,3:1 · Folge 7,5:1 · Bonus 5,7:1 · Zuschüsse 5,1:1 (Flächen);
+     die Segmentwerte stehen in der Blockfarbe darauf mit denselben Werten. */
+  --sb-viz-abschluss:  #b7c8dc;
+  --sb-viz-folge:      #7fdcae;
+  --sb-viz-bonus:      #e0a557;
+  --sb-viz-zuschuesse: #9aa9a3;
+  --vg-viz-gitter:  rgb(255 255 255 / 0.08);
+  --vg-viz-achse:   rgb(255 255 255 / 0.22);
+  --vg-viz-band:    rgb(255 255 255 / 0.05);
+  --vg-neutral-flaeche: #6f8a82;
+  --vg-pille-text:  var(--sb-flaeche);       /* Delta-Marken hell, Schrift in Blockfarbe */
+  color-scheme: dark;
+
+  position: sticky;
+  /* --vg-d-kopf: Höhe eines klebenden Seitenkopfs darüber (Simulationskasten:
+     Szenarienleiste), sonst 0. */
+  top: calc(var(--vg-d-topbar) + var(--vg-d-kontext) + var(--vg-d-kopf, 0px) + var(--vg-a6));
+  /* Höhenbudget: der Block passt immer unter Topbar und Kontextleiste;
+     reicht es nicht, scrollt die Mitte, Kopf und Fuß bleiben stehen. */
+  max-height: calc(100dvh - var(--vg-d-topbar) - var(--vg-d-kontext) - var(--vg-d-kopf, 0px) - 2 * var(--vg-a6));
+  /* Die dunkle Spalte reicht immer bis zum unteren Rand der Sicht — auch
+     wenn ihr Inhalt kürzer ist (Akte, Lagebild auf hohen Bildschirmen). */
+  min-height: calc(100dvh - var(--vg-d-topbar) - var(--vg-d-kontext) - var(--vg-d-kopf, 0px) - 2 * var(--vg-a6));
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-luft);
+  padding: var(--vg-a7) var(--vg-a7) var(--vg-a5);
+  border-radius: var(--vg-r-xl);
+  background: var(--sb-flaeche);
+  color: var(--sb-text-2);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset;
+  view-transition-name: vg-steuerblock;
+}
+
+/* Im Dunkelmodus liegt die Seite selbst schon tief — der Block bleibt grün,
+   geht eine Stufe tiefer und bekommt eine Kante, damit er als Fläche liest. */
+:root[data-theme="dark"] .vg-steuerblock {
+  --sb-flaeche: #0b2e26;
+  --sb-flaeche-2: #103a31;
+  border: 1px solid rgb(255 255 255 / 0.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .vg-steuerblock {
+    --sb-flaeche: #0b2e26;
+    --sb-flaeche-2: #103a31;
+    border: 1px solid rgb(255 255 255 / 0.10);
+  }
+}
+
+/* ---- Kopf ----------------------------------------------------------------- */
+.vg-sb-kopf { display: grid; gap: var(--vg-a2); flex: none; }
+.vg-sb-oben {
+  font-size: var(--vg-fs-xs);
+  color: var(--sb-text-3);
+  letter-spacing: 0.01em;
+}
+.vg-sb-titel {
+  margin: 0;
+  font-size: var(--vg-fs-xl);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.014em;
+  color: var(--sb-text);
+  overflow-wrap: anywhere;
+}
+.vg-sb-unter {
+  font-size: var(--vg-fs-sm);
+  color: var(--sb-text-3);
+  line-height: var(--vg-zh-normal);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.vg-sb-marken { display: flex; flex-wrap: wrap; gap: var(--vg-a3); margin-top: var(--vg-a2); }
+
+/* ---- Mitte: scrollt nur, wenn das Höhenbudget nicht reicht ---------------- */
+.vg-sb-mitte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-luft);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.vg-sb-mitte:empty { display: none; }
+/* Scrollt die Mitte, bricht kein Abschnitt stumm ab: ein klebender Verlauf
+   in Blockfarbe blendet die untere Kante aus. Er ist ein eigenes Kind am
+   Ende der Liste (12 px hoch, frisst seinen Rasterabstand): am Ende des
+   Inhalts liegt er über leerer Fläche und ist unsichtbar; solange darunter
+   noch etwas steht, klebt er an der Scrollkante und verläuft den Text. */
+.vg-sb-mitte::after {
+  content: '';
+  position: sticky;
+  bottom: 0;
+  flex: none;
+  height: 12px;
+  margin-top: calc(-1 * var(--sb-luft));
+  background: linear-gradient(to bottom, transparent, var(--sb-flaeche));
+  pointer-events: none;
+}
+
+/* ---- Stammdaten: Label/Wert-Zeilen zwischen Marken und Summe -------------- */
+.vg-sb-stammdaten {
+  margin: 0;
+  display: grid;
+  gap: var(--vg-a1);
+  padding-top: var(--vg-a5);
+  border-top: 1px solid var(--sb-rand);
+}
+/* Das Label bleibt in natürlicher Breite (auto), der Wert bekommt den Rest
+   und darf auf zwei Zeilen umbrechen (Ansprechpartner mit Funktion). Eine
+   Prozent-Höchstbreite am Wert taugt hier nicht: in einer auto-Spalte
+   bezieht sie sich auf die schon geschrumpfte Zelle, der Wert kappt sich
+   dann selbst („16,34 M…“). */
+.vg-sb-stammdatum {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  /* start, nicht baseline: der zweizeilige Wert (-webkit-box) hat keine
+     brauchbare Grundlinie; gleiche Zeilenhöhe hält beide auf einer Linie */
+  align-items: start;
+  gap: var(--vg-a4);
+  /* 20 px je Zeile (Schrift 13 px, Zeilenhöhe 17): neun Stammdaten kosten
+     so 30 px weniger — der Stapelbalken bleibt bei 1000 px Höhe im Bild */
+  min-height: 20px;
+  font-size: var(--vg-fs-sm);
+  line-height: 1.3;
+}
+.vg-sb-stammdatum-label { color: var(--sb-text-3); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vg-sb-stammdatum-wert {
+  margin: 0;
+  min-width: 0;
+  color: var(--sb-text);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  line-height: 1.3;
+  /* zwei Zeilen, erst danach Ellipse */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+/* Zweite Zeile (Funktion des Ansprechpartners): eigene Zeile, gedämpft */
+.vg-sb-stammdatum-unter {
+  display: block;
+  font-family: var(--vg-schrift-text);
+  font-size: var(--vg-fs-xs);
+  color: var(--sb-text-3);
+}
+.vg-sb-stammdatum-wert[data-ton="positiv"] { color: var(--sb-positiv); }
+.vg-sb-stammdatum-wert[data-ton="negativ"] { color: var(--sb-negativ); }
+.vg-sb-stammdatum-wert[data-ton="warnung"] { color: var(--sb-warnung); }
+
+/* ---- Summe: heute, Zielmodell, zwei Plaketten ----------------------------- */
+.vg-sb-summe {
+  display: grid;
+  /* minmax(0, 1fr) statt implizitem auto: sonst wächst die Spalte auf die
+     max-content-Breite der Plakette und läuft bei 300 px aus dem Block. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--vg-a3);
+  padding-top: var(--vg-a5);
+  border-top: 1px solid var(--sb-rand);
+}
+.vg-sb-betraege { display: grid; gap: var(--vg-a3); min-width: 0; }
+/* Der Pfeil „heute → Zielmodell“ lebt nur im 1024-Band. Die Regel trägt den
+   Blockselektor, weil .vg-pfeil in index.css (später im Bündel) sonst mit
+   gleicher Spezifität display: inline-block durchsetzt. */
+.vg-steuerblock .vg-sb-pfeil { display: none; }
+.vg-sb-zeile {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--vg-a4);
+  min-width: 0;
+}
+.vg-sb-zeile-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  font-size: var(--vg-fs-sm);
+  color: var(--sb-text-3);
+}
+.vg-sb-zeile-label .vg-legende-marke { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+/* „Heute (Referenzzeitraum)“: der Zusatz steht klein dahinter und rückt in
+   eine zweite Zeile, wenn Label und Betrag sonst kollidieren. */
+.vg-sb-zeile-text { display: inline-flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--vg-a2); min-width: 0; }
+.vg-sb-zeile-zusatz { font-size: var(--vg-fs-xs); color: var(--sb-text-3); white-space: nowrap; }
+/* Marke „mit Zugeständnissen“ neben dem Zielmodell: Warnton, Schrift in
+   Blockfarbe (--vg-pille-text ist im Block die Fläche). */
+.vg-sb-zielmarke {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: var(--vg-fs-2xs);
+  font-weight: 500;
+  line-height: 1.5;
+  background: var(--vg-warnung);
+  color: var(--vg-pille-text, #ffffff);
+  white-space: nowrap;
+  cursor: help;
+}
+.vg-sb-zeitraum { font-size: var(--vg-fs-xs); color: var(--sb-text-3); margin-top: var(--vg-a1); }
+.vg-sb-zeile-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-lg);
+  font-weight: 500;
+  color: var(--sb-text);
+  white-space: nowrap;
+}
+
+/* Plakette: Label oben, Wert darunter — gleiche Bauart für beide Sichten.
+   Zweizeilig auf allen Breiten über 1024 px: bei 336 px Blockbreite tragen
+   256 px Innenbreite Label (fs-sm) + Betrag (fs-2xl) + Prozent nicht in
+   einer Zeile — das Label lief in den Betrag, das zweite Label brach um,
+   und die Plaketten wurden ungleich hoch. So haben beide immer zwei Zeilen. */
+.vg-sb-delta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: var(--vg-a4);
+  row-gap: 2px;
+  margin-top: var(--vg-a2);
+  padding: var(--vg-a4) var(--vg-a5);
+  border-radius: var(--vg-r-md);
+  background: var(--sb-plakette);
+  border: 1px solid var(--sb-rand);
+  min-width: 0;
+  transition: background-color var(--vg-normal) var(--vg-kurve-weich),
+              border-color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-sb-delta + .vg-sb-delta { margin-top: 0; }
+.vg-sb-delta[data-ton="positiv"] { border-color: color-mix(in srgb, var(--sb-positiv) 40%, transparent); }
+.vg-sb-delta[data-ton="negativ"] { border-color: color-mix(in srgb, var(--sb-negativ) 40%, transparent); }
+.vg-sb-delta[data-ton="warnung"] { border-color: color-mix(in srgb, var(--sb-warnung) 40%, transparent); }
+.vg-sb-delta-label {
+  font-size: var(--vg-fs-sm);
+  color: var(--sb-text-3);
+  min-width: 0;
+  /* Das Label bricht nie um; wird es zu lang, endet es mit Auslassung. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vg-sb-delta-wert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  column-gap: var(--vg-a3);
+  row-gap: 0;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xl);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--sb-text);
+  text-align: left;
+  min-width: 0;
+}
+.vg-sb-delta[data-ton="positiv"] .vg-sb-delta-wert { color: var(--sb-positiv); }
+.vg-sb-delta[data-ton="negativ"] .vg-sb-delta-wert { color: var(--sb-negativ); }
+.vg-sb-delta[data-ton="warnung"] .vg-sb-delta-wert { color: var(--sb-warnung); }
+.vg-sb-delta-betrag { white-space: nowrap; }
+.vg-sb-delta-prozent { font-size: var(--vg-fs-sm); font-weight: 400; color: var(--sb-text-3); white-space: nowrap; }
+
+/* Puls bei Tonwechsel: einmal aufhellen, in der Ruhefläche enden. Die
+   Keyframes gehören dem Block, damit die Datei ohne index.css auskommt. */
+@keyframes vg-sb-puls {
+  from { background-color: rgb(255 255 255 / 0.14); }
+  to   { background-color: var(--sb-plakette); }
+}
+.vg-sb-delta[data-neu] { animation: vg-sb-puls var(--vg-ruhig) var(--vg-kurve-aus) both; }
+
+/* ---- Mini-Säulenpaar --------------------------------------------------- */
+.vg-sb-paar { margin: var(--vg-a2) 0 0; }
+.vg-sb-paar .vg-diagramm { background: transparent; }
+/* Die Kategorietexte des Paardiagramms (Leben, Komp., …) stehen auf der
+   letzten Zeile des SVG und ragen 8 px darüber hinaus (overflow visible);
+   der Hinweis darunter braucht deshalb eigenen Abstand, sonst liegt er in
+   den Buchstaben. */
+.vg-sb-paar .vg-sb-zeitraum { margin-top: 14px; }
+
+/* ---- Gestapelter Alt/Neu-Balken (Akte) ----------------------------------- */
+.vg-sb-stapel { margin-top: 0; min-width: 0; }
+.vg-sb-stapel-diagramm { background: transparent; width: 100%; }
+/* Legende als Raster zwei mal zwei: bei 296 px Innenbreite tragen die vier
+   Einträge nicht in eine Zeile, und ein Umbruch nach drei ließ „Zuschüsse“
+   unter die Scrollkante rutschen. So sind immer alle vier zu sehen. */
+.vg-sb-stapel-legende {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--vg-a1) var(--vg-a4);
+  margin-top: var(--vg-a2);
+  font-size: var(--vg-fs-2xs);
+  line-height: 1.25;
+  color: var(--sb-text-3);
+}
+.vg-sb-stapel-eintrag { display: inline-flex; align-items: center; gap: var(--vg-a2); white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.vg-sb-stapel-marke { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+
+/* ---- Signale: Punkt · Label · Wert, kein Hinweistext ---------------------- */
+.vg-sb-signale {
+  display: grid;
+  gap: var(--vg-a3);
+  padding-top: var(--vg-a5);
+  border-top: 1px solid var(--sb-rand);
+}
+.vg-sb-signal {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--vg-a4);
+  font-size: var(--vg-fs-sm);
+  color: var(--sb-text-2);
+}
+.vg-sb-signal-punkt {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--vg-neutral-flaeche);
+  transition: background-color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-sb-signal[data-ton="positiv"] .vg-sb-signal-punkt { background: var(--sb-positiv); }
+.vg-sb-signal[data-ton="warnung"] .vg-sb-signal-punkt { background: var(--sb-warnung); }
+.vg-sb-signal[data-ton="negativ"] .vg-sb-signal-punkt { background: var(--sb-negativ); }
+.vg-sb-signal-label { min-width: 0; }
+.vg-sb-signal-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--sb-text);
+  white-space: nowrap;
+}
+
+/* ---- Einstellungen und Fuß --------------------------------------------- */
+.vg-sb-einstellungen {
+  display: grid;
+  gap: var(--vg-a4);
+  padding-top: var(--vg-a5);
+  border-top: 1px solid var(--sb-rand);
+}
+.vg-sb-fuss {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vg-a3);
+  padding-top: var(--vg-a5);
+  border-top: 1px solid var(--sb-rand);
+  flex: none;
+  margin-top: auto;
+}
+/* Knöpfe in natürlicher Breite; der Primärknopf steht immer zuletzt */
+.vg-sb-fuss > * { flex: 0 1 auto; }
+.vg-sb-fuss > .vg-btn-primaer { order: 1; }
+
+/* Knöpfe auf dunkler Fläche: Standardknopf als Glasfläche, Primärknopf hell */
+.vg-steuerblock .vg-btn {
+  background: rgb(255 255 255 / 0.06);
+  border-color: var(--sb-rand-2);
+  color: var(--sb-text);
+}
+.vg-steuerblock .vg-btn:hover { background: rgb(255 255 255 / 0.1); }
+.vg-steuerblock .vg-btn-primaer {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0f3b31;
+}
+.vg-steuerblock .vg-btn-primaer:hover { background: #e6f2ed; }
+.vg-steuerblock .vg-btn-still { background: transparent; border-color: transparent; color: var(--sb-text-2); }
+.vg-steuerblock .vg-badge { background: rgb(255 255 255 / 0.06); border-color: var(--sb-rand); color: var(--sb-text-2); }
+.vg-steuerblock .vg-badge[data-ton="info"]    { color: var(--sb-info); }
+.vg-steuerblock .vg-badge[data-ton="positiv"] { color: var(--sb-positiv); }
+.vg-steuerblock .vg-badge[data-ton="warnung"] { color: var(--sb-warnung); }
+.vg-steuerblock .vg-badge[data-ton="negativ"] { color: var(--sb-negativ); }
+.vg-steuerblock .vg-tooltip { background: var(--sb-flaeche-2); border-color: var(--sb-rand-2); color: var(--sb-text); }
+
+/* ---- Höhenbudget --------------------------------------------------------- */
+/* Beamer und flache Bildschirme (1280×720): Mini-Paar und Unterzeile weichen,
+   die Gruppen rücken enger — der Fußknopf bleibt ohne Scrollen erreichbar. */
+/* Flache, breite Bildschirme (bis 900 px Höhe, z. B. 2000 × 870): der Block
+   soll ohne inneres Scrollen bis zum Fuß passen — Kernaussage und Legende
+   des Stapelbalkens weichen, Luft und Stammdaten rücken enger. */
+@media (min-width: 1025px) and (max-height: 900px) {
+  .vg-steuerblock { --sb-luft: var(--vg-a3); padding-block: var(--vg-a5); }
+  .vg-sb-unter, .vg-sb-stapel, .vg-sb-paar { display: none; }
+  .vg-sb-stammdaten { font-size: var(--vg-fs-xs); }
+  .vg-sb-stammdatum { min-height: 0; line-height: 1.3; padding-block: 1px; }
+  .vg-sb-delta { padding-block: var(--vg-a3); }
+  .vg-sb-summe { padding-top: var(--vg-a4); }
+}
+
+@media (max-height: 800px) {
+  .vg-steuerblock { --sb-luft: var(--vg-a4); padding-block: var(--vg-a6); }
+  .vg-sb-paar, .vg-sb-stapel, .vg-sb-unter { display: none; }
+}
+
+/* ---- Responsivität ------------------------------------------------------- */
+/* ≤ 1280: Spalte 300 px, Beträge eine Stufe kleiner. Die Plakette ist
+   schon in der Grundregel zweizeilig (Label über Wert). */
+@media (max-width: 1280px) {
+  .vg-buehne { grid-template-columns: 300px minmax(0, 1fr); gap: var(--vg-a6); }
+  .vg-steuerblock { padding: var(--vg-a6); }
+  .vg-sb-zeile-wert { font-size: var(--vg-fs-md); }
+  /* Fußknöpfe füllen die Zeile: passen beide nebeneinander, teilen sie sich
+     die Breite; bricht einer um, steht jeder in voller Blockbreite statt
+     ausgefranst mit natürlicher Breite untereinander (Akte bei 1280). */
+  .vg-sb-fuss > * { flex: 1 1 auto; justify-content: center; }
+}
+
+/* ≤ 1024: der Block wird ein klebendes Band unter der Kontextleiste, höchstens
+   140 px, zwei Zeilen:
+     Zeile 1  Kopf (Titel, Marken inline) · heute → Zielmodell · Plakette 1
+     Zeile 2  Plakette 2 (klein) · Signale inline · Aktionen in natürlicher Breite
+   Einstellungen (Segment, Chips, Knöpfe) folgen als volle Zeile darunter.
+   Mini-Paar, Unterzeile und Oben-Zeile weichen. Mitte und Summe lösen sich
+   per display: contents auf, damit ihre Kinder direkt im Raster stehen. */
+@media (max-width: 1024px) {
+  .vg-buehne { grid-template-columns: minmax(0, 1fr); }
+  .vg-steuerblock {
+    position: sticky;
+    top: calc(var(--vg-d-topbar) + var(--vg-d-kontext) + var(--vg-d-kopf, 0px));
+    z-index: var(--vg-z-sticky);
+    /* min-height der Grundregel (volle Sichthöhe) schlägt max-height; ohne
+       diese Zeile stand das Band 640 px hoch über dem Inhalt. */
+    min-height: 0;
+    max-height: 140px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-auto-rows: auto;
+    align-items: center;
+    gap: var(--vg-a3) var(--vg-a6);
+    padding: var(--vg-a4) var(--vg-a6);
+    border-radius: 0 0 var(--vg-r-xl) var(--vg-r-xl);
+  }
+  .vg-sb-mitte, .vg-sb-summe { display: contents; }
+  .vg-sb-mitte::after { display: none; }
+  .vg-sb-oben, .vg-sb-unter, .vg-sb-paar, .vg-sb-stapel, .vg-sb-stammdaten, .vg-sb-zeitraum { display: none; }
+
+  /* Zeile 1 */
+  .vg-sb-kopf {
+    grid-row: 1; grid-column: 1;
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--vg-a2) var(--vg-a4);
+    min-width: 0;
+  }
+  .vg-sb-kopfzeile { display: contents; }
+  .vg-sb-titel { font-size: var(--vg-fs-lg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+  .vg-sb-marken { margin-top: 0; }
+  .vg-sb-betraege {
+    grid-row: 1; grid-column: 2;
+    display: flex; align-items: baseline; gap: var(--vg-a3);
+    padding: 0; border: 0;
+  }
+  .vg-steuerblock .vg-sb-pfeil { display: inline-block; align-self: center; }
+  .vg-sb-zeile { display: inline-flex; gap: var(--vg-a2); }
+  .vg-sb-zeile-text { display: none; }
+  .vg-sb-zeile-wert { font-size: var(--vg-fs-lg); }
+  /* Im Band sind die Plaketten einzeilig: Label links, Wert rechts */
+  .vg-sb-delta[data-rang="1"] {
+    grid-row: 1; grid-column: 3;
+    grid-template-columns: auto auto;
+    margin-top: 0;
+    padding: var(--vg-a2) var(--vg-a4);
+    justify-self: end;
+  }
+  .vg-sb-delta[data-rang="1"] .vg-sb-delta-wert { font-size: var(--vg-fs-xl); display: inline-flex; flex-wrap: nowrap; white-space: nowrap; }
+
+  /* Zeile 2 */
+  .vg-sb-delta[data-rang="2"] {
+    grid-row: 2; grid-column: 1;
+    grid-template-columns: auto auto;
+    margin-top: 0;
+    padding: var(--vg-a1) var(--vg-a4);
+    justify-self: start;
+  }
+  .vg-sb-delta[data-rang="2"] .vg-sb-delta-wert { font-size: var(--vg-fs-lg); display: inline-flex; flex-wrap: nowrap; white-space: nowrap; }
+  .vg-sb-signale {
+    grid-row: 2; grid-column: 2;
+    display: flex; flex-wrap: wrap; gap: var(--vg-a2) var(--vg-a6);
+    padding: 0; border: 0;
+  }
+  .vg-sb-signal { display: inline-flex; gap: var(--vg-a3); }
+  .vg-sb-fuss {
+    grid-row: 2; grid-column: 3;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    padding: 0; border: 0; margin-top: 0;
+  }
+  .vg-sb-fuss > * { flex: 0 0 auto; }
+  /* Aktionen als kleine Knöpfe — gleiche Maße wie .vg-btn-sm */
+  .vg-sb-fuss .vg-btn { height: var(--vg-d-ctl-sm); padding: 0 var(--vg-a4); font-size: var(--vg-fs-sm); gap: var(--vg-a2); border-radius: var(--vg-r-sm); }
+
+  /* Einstellungen: volle Zeile, Kinder nebeneinander */
+  .vg-sb-einstellungen {
+    grid-row: 3; grid-column: 1 / -1;
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--vg-a3) var(--vg-a4);
+    padding-top: var(--vg-a3);
+  }
+}
+
+/* Bewegung nur, wenn erwünscht: Puls und Farbwechsel enden sofort. */
+@media (prefers-reduced-motion: reduce) {
+  .vg-sb-delta[data-neu] { animation-duration: 1ms; }
+  .vg-sb-delta, .vg-sb-signal-punkt { transition-duration: 1ms; }
+}
+
+@media print {
+  .vg-steuerblock { position: static; max-height: none; background: #ffffff; color: #1f2329; border: 1px solid #cbd5e1; box-shadow: none; }
+  .vg-sb-mitte { overflow: visible; }
+  .vg-sb-mitte::after { display: none; }
+}
+
+/* ---- Breite Bildschirme (≥ 1800 px) ---------------------------------------- */
+/* Die Spalte wächst mit: 400 px Block, mehr Luft, größere Beträge. */
+@media (min-width: 1800px) {
+  .vg-buehne { grid-template-columns: 400px minmax(0, 1fr); gap: var(--vg-a8); }
+  /* Nur Breite und Luft wachsen — größere Schrift ließ die Akte bei
+     1000 px Höhe in der Mitte scrollen, die Signale standen halb verdeckt. */
+  .vg-steuerblock { padding: var(--vg-a8) var(--vg-a8) var(--vg-a7); }
+}
+
+/* ------------------------------------------------------------------------
+   Erklärung der Plaketten: Inhalt des Tooltips (liegt als Portal auf body,
+   erbt Farbe und Schriftgrad der Blase). Kopf, drei Rechenzeilen mit Wert
+   rechts, optional die Frage nach dem Vielfachen, dann Punkte.
+   ------------------------------------------------------------------------ */
+.vg-pl-tip { display: grid; gap: 7px; width: 336px; max-width: 100%; text-align: left; }
+.vg-pl-tip-kopf { display: grid; gap: 2px; }
+.vg-pl-tip-titel { font-size: var(--vg-fs-sm); font-weight: 600; }
+.vg-pl-tip-unter { opacity: .68; }
+.vg-pl-tip-zeilen {
+  display: grid; gap: 3px;
+  padding: 6px 0;
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+}
+.vg-pl-tip-zeile { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.vg-pl-tip-zeile > span { opacity: .82; }
+/* color: inherit, weil `strong, b` global auf --vg-text steht und auf der dunklen Blase verschwände. */
+.vg-pl-tip-zeile b { color: inherit; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.vg-pl-tip-zeile[data-summe] { margin-top: 2px; padding-top: 4px; border-top: 1px dashed color-mix(in srgb, currentColor 22%, transparent); }
+.vg-pl-tip-zeile[data-summe] > span { opacity: 1; }
+.vg-pl-tip-frage { font-weight: 600; }
+.vg-pl-tip-punkte { display: grid; gap: 3px; }
+.vg-pl-tip-punkt { position: relative; padding-left: 12px; }
+.vg-pl-tip-punkt::before {
+  content: ''; position: absolute; left: 1px; top: .55em;
+  width: 4px; height: 4px; border-radius: 50%;
+  background: currentColor; opacity: .55;
+}

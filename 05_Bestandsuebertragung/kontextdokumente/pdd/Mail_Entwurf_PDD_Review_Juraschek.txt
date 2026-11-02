@@ -1,0 +1,30 @@
+An:      Juraschek, Tanja  (Robotics Competence Center)
+Betreff: BÜ-Prüf-Bot Makler - erste PDD-Fassung Gesundheit und Komposit/Leben, Bitte um Review der Nomenklatur
+
+Hallo Tanja,
+
+wir haben die PDD für den Prüf-Bot der Makler-Bestandsübertragung nun initial erstellt - je eine
+Fassung für Gesundheit/KV und für Komposit/Leben. Beide Dokumente hängen an.
+
+Zum Stand: Es ist bewusst eine erste Fassung. Die Screenshots fehlen noch, und es ist gut möglich,
+dass einzelne Prozessschritte noch ergänzt oder feiner ausdifferenziert werden.
+
+Bevor wir weiter in die Tiefe gehen, möchten wir dich bitten, einmal grundsätzlich darüberzuschauen -
+weniger auf den fachlichen Inhalt, mehr auf Form und Nomenklatur:
+
+- Datenfelder: Schreibweise und Darstellung der Felder aus dem Datenpool
+- Variablen: Initialisierung, Benennung und spätere Verwendung
+- Prüflogik: WENN / DANN / SONST / Ende WENN, Vergleichsoperatoren, Schleifen
+- Business Exceptions: Merken der Gründe während der Prüfung, Setzen des BE-Flags und
+  Aussteuerung am Ende des Durchlaufs
+- Nutzung der Formatvorlagen des Templates (System, fachlicher Kontext, WENN DANN,
+  Business Exception)
+
+Falls wir an einer Stelle strukturell falsch abgebogen sind, gib uns dazu bitte einen Hinweis -
+oder wir gehen es in einem kurzen Termin gemeinsam durch, je nachdem was für dich einfacher ist.
+
+Sofern es grundsätzlich in die richtige Richtung geht, würden wir die PDD für Gesundheit als nächstes
+vollständig finalisieren: mit Screenshots, finaler Prozesslogik und den noch offenen Punkten.
+
+Beste Grüße
+Eike Brenneisen

@@ -1,0 +1,122 @@
+[
+ {
+  "de": "Die Detaillierung der einzelnen Schritte erfolgt im Kapitel „Schritt für Schritt-Beschreibung“.",
+  "art": "text"
+ },
+ {
+  "de": "Betriebsparameter / Operating parameters",
+  "art": "text"
+ },
+ {
+  "de": "Die hier aufgeführten Daten dienen der initialen Anlage auf der Betriebsplattform. Änderungen werden durch Changes oder Anpassungen des Fachbereichs durchgeführt und müssen deshalb in diesem Dokument nicht nachgehalten werden.",
+  "art": "text"
+ },
+ {
+  "de": "Datensicherheit / data protection",
+  "art": "text"
+ },
+ {
+  "de": "Welche datenschutzrechtlichen Rahmenbedigungen gelten.",
+  "art": "text"
+ },
+ {
+  "de": "Personenbezogene Daten",
+  "art": "text"
+ },
+ {
+  "de": "Werden in dem vom Roboter automatisierten Prozesse §203 StGB relevante Daten verarbeitet?\nAre data relevant to §203 StGB processed in the processes automated by the robot?",
+  "art": "text"
+ },
+ {
+  "de": "Ja. Der Prozess betrifft Verträge der privaten Krankenversicherung; die Zuordnung einer Person zu einem KV-Vertrag unterliegt dem Schutz des § 203 StGB. Der Roboter liest ausschließlich Stammdaten, Vertragsstatus und Vermittlerdaten – keine Diagnosen, Leistungs-, Tarif- oder Risikoprüfungsdaten.",
+  "art": "text"
+ },
+ {
+  "de": "Sind Daten, die vom Roboter bearbeitet werden besonders schutzwürdig gemäß Artikel 9+10 DsGVo\nAre data processed by the robot particularly worthy of protection according to Article 9+10 DsGVo",
+  "art": "text"
+ },
+ {
+  "de": "Ja. Die Zugehörigkeit zu einem Krankenversicherungsvertrag lässt einen Rückschluss auf Gesundheitsdaten im Sinne des Art. 9 DSGVO zu. Gesundheitsdaten selbst werden nicht gelesen und nicht in Notiz oder Report übernommen.",
+  "art": "text"
+ },
+ {
+  "de": "Welche Dokumente/Daten, die vom Roboter als Eingabe bzw. Ausgabe verarbeitet werden sind gemäß der Informationsklassifikation nicht C2 (interner Gebrauch)?\nWhich documents/data processed by the robot as input or output are not C2 according to the information classification (internal use)?",
+  "art": "text"
+ },
+ {
+  "de": "Die Vorgangsdaten im Datenpool sowie die Bildschirminhalte aus IS011, VA230, OB726 und GH040 enthalten Personendaten und sind als C3 (vertraulich) einzustufen. Die Reports des Roboters enthalten ausschließlich C2-Daten (Ordnungsbegriff, Status, Tags).",
+  "art": "text"
+ },
+ {
+  "de": "Welche besonderen Maßnahmen zur Verhinderung von Verlust oder Beschädigung vertraulicher Informationen werden im automatisierten Prozess abweichend von der manuellen Bearbeitung umgesetzt?\nWhich measures to mitigate loss or manipulation of confidential information have been implemented in the automated process?",
+  "art": "text"
+ },
+ {
+  "de": "Die Verarbeitung erfolgt vollständig innerhalb der ITERGO-Infrastruktur; es findet keine Ablage außerhalb von Postkorb, Notiz und Datenpool statt. Die Screenshots in diesem PDD enthalten keine echten Personendaten. Reports enthalten nur die Vorgang-Lfd-Nr, Status und Tags – keine Klarnamen, Geburtsdaten oder Anschriften. Der Prüf-Bot versendet keine E-Mails; die E-Mail-Adresse des Vermittlers wird nur in die Notiz übernommen, Adressen der Domäne ergo.de werden dabei durch die Absenderadresse aus dem Datenpool ersetzt und andernfalls als Prüfnotiz gemeldet.",
+  "art": "text"
+ },
+ {
+  "de": "Fachliche Ansprechpartner im Betrieb",
+  "art": "text"
+ },
+ {
+  "de": "Zuständig für",
+  "art": "text"
+ },
+ {
+  "de": "Name / Verteiler",
+  "art": "text"
+ },
+ {
+  "de": "Weiterleitungsempfänger für E-Mails, die an den Bot geschrieben werden",
+  "art": "text"
+ },
+ {
+  "de": "<Gruppenpostfach Bestandsübertragung Gesundheit (KV) – durch Fachbereich zu benennen>",
+  "art": "text"
+ },
+ {
+  "de": "Abstimmung für Fall-Back-Szenario",
+  "art": "text"
+ },
+ {
+  "de": "<Name Teamleitung – durch Fachbereich zu benennen>",
+  "art": "text"
+ },
+ {
+  "de": "Betriebsinformationsempfänger (z.B. bei Störungen / Releases)",
+  "art": "text"
+ },
+ {
+  "de": "<Verteiler Betrieb BÜ Gesundheit (KV) – durch Fachbereich zu benennen>",
+  "art": "text"
+ },
+ {
+  "de": "Beantragung von fachlichen Changes und Fehlermeldung",
+  "art": "text"
+ },
+ {
+  "de": "<Name fachlicher Process Owner – durch Fachbereich zu benennen>",
+  "art": "text"
+ },
+ {
+  "de": "Name der Verteilerliste für die Reports",
+  "art": "text"
+ },
+ {
+  "de": "<Verteiler Reporting BÜ Gesundheit (KV) – durch Fachbereich zu benennen>",
+  "art": "text"
+ },
+ {
+  "de": "Fallback-Szenario",
+  "art": "text"
+ },
+ {
+  "de": "Die Roboter können nach Absprache während der allgemeinen ITERGO Systemzeiten (ca. 06:00-20:00 Uhr) zum Einsatz kommen. Überwachung und Entstörung findet üblicherweise montags bis freitags zwischen 08-16:00 Uhr statt. Um den dauerhaften Betrieb der Roboter sicherzustellen, behalten wir uns vor ein regelmäßiges Wartungsfenster, nach Absprache, einzuführen.",
+  "art": "text"
+ },
+ {
+  "de": "Fällt der Prüf-Bot aus, bleiben die Vorgänge unverändert im Themenpostkorb liegen; es gehen keine Vorgänge verloren, da der Roboter ausschließlich lesend auf Postkorb und Datenpool zugreift und den Vorgang erst am Prozessende weiterleitet oder ablegt.",
+  "art": "text"
+ }
+]

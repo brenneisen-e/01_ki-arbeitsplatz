@@ -1,0 +1,406 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Banking Operations 2030 — Bildschirme (v08)</title>
+<style>
+  /* ── Ein Designsystem fuer alle Bildschirme ──────────────────────────────
+     Jede Station ist eine <section data-station>. Sichtbar ist die, die der
+     Aufruf ueber ?s=… verlangt. So haben zwoelf Bildschirme zwangslaeufig
+     dieselbe Schrift, dieselben Karten und dieselben Farben — bei zwoelf
+     einzeln erzeugten Bildern war genau das nie der Fall.
+
+     Der Ablauf haengt allein an setT(t). Kein Timer, kein Zufall: derselbe
+     Zeitpunkt liefert immer dasselbe Bild, sonst waere die Aufnahme nicht
+     wiederholbar. Kein Mauszeiger und kein Klick — das System arbeitet
+     sichtbar von selbst, sie schaut zu und entscheidet. */
+  :root {
+    --grund: #101317;
+    --karte: #141a2b;
+    --rand: #242b48;
+    --schrift: #ecf4fc;
+    --leise: #93a3bb;
+    --gruen: #34a6dc;
+    --gruen-weich: rgba(52, 166, 220, 0.16);
+    --bernstein: #d29a3c;
+    --bernstein-weich: rgba(210, 154, 60, 0.16);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body {
+    background: var(--grund); color: var(--schrift);
+    font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif;
+    font-size: 24px; display: flex;
+  }
+  section[data-station] { display: none; flex: 1; min-width: 0; }
+
+  section[data-station="s3"] { --gruen: #34a6dc; --gruen-weich: rgba(52, 166, 220, 0.16); }
+  section[data-station="s4"] { --gruen: #cdebf6; --gruen-weich: rgba(205, 235, 246, 0.16); }
+  section[data-station="s5"] { --gruen: #34a6dc; --gruen-weich: rgba(52, 166, 220, 0.16); }
+  section[data-station="s6"] { --gruen: #34a6dc; --gruen-weich: rgba(52, 166, 220, 0.15); }
+  section[data-station="s7"] { --gruen: #34a6dc; --gruen-weich: rgba(52, 166, 220, 0.15); }
+  section[data-station="s9"] { --gruen: #cdebf6; --gruen-weich: rgba(205, 235, 246, 0.16); }
+
+  .karte.licht { background: #edf1f7; border-color: #d3dbe8; color: #16184e; }
+  .karte.licht h3 { color: #16184e; }
+  .karte.licht .text { color: #3d4666; }
+  .karte.licht .posten div { border-color: #d3dbe8; }
+  .karte.licht > h2 { color: #6f7a95; }
+  .karte.licht .blase.a { background: #ffffff; border: 1px solid #d3dbe8; color: #262c33; }
+  .karte.licht .blase.b { background: var(--gruen-weich); color: #16184e; }
+  .karte.licht .blase b { color: #6f7a95; }
+
+  section[data-station="s6"] .regeln {
+    font-family: 'JetBrains Mono', 'Liberation Mono', monospace;
+    font-size: 17.5px; line-height: 1.9;
+  }
+  .versionspille {
+    display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 16px;
+    font-weight: 700; letter-spacing: 0.05em; background: var(--gruen-weich); color: var(--gruen);
+  }
+
+  .ring { display: flex; align-items: center; gap: 20px; margin: 14px 0 6px; }
+  .ring svg { width: 108px; height: 108px; flex: none; transform: rotate(-90deg); }
+  .ring .bahn { fill: none; stroke: #252c4a; stroke-width: 9; }
+  .ring .wert { fill: none; stroke: var(--gruen); stroke-width: 9; stroke-linecap: round; }
+  .ring b { font-size: 24px; line-height: 1.3; }
+  .ring span { display: block; font-size: 17px; color: var(--leise); font-weight: 400; }
+
+  .route { width: 100%; height: 170px; margin-top: 12px; flex: none; }
+  .route .kante { fill: none; stroke: var(--gruen); stroke-width: 2.4; }
+  .route .knoten circle { fill: #141a2b; stroke: var(--gruen); stroke-width: 2.4; }
+  .route .knoten text { fill: #c3cde0; font-size: 13.5px; }
+  section.zeigen { display: flex; }
+
+  .rail {
+    width: 84px; flex: none; border-right: 1px solid var(--rand);
+    padding: 26px 0; display: flex; flex-direction: column; align-items: center; gap: 24px;
+  }
+  .rail svg { width: 28px; height: 28px; stroke: var(--leise); fill: none; stroke-width: 1.7; }
+  .rail i { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 13px; }
+  .rail i.an { background: var(--gruen-weich); }
+  .rail i.an svg { stroke: var(--gruen); }
+
+  .buehne { flex: 1; min-width: 0; position: relative; }
+  .sicht {
+    position: absolute; inset: 0; padding: 36px 40px;
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .sicht[data-nr="1"] { opacity: 0; }
+
+  .kopf { display: flex; align-items: baseline; gap: 16px; flex: none; }
+  h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.01em; }
+  .kopf span { font-size: 20px; color: var(--leise); }
+
+  .reihe { display: grid; gap: 18px; flex: 1; min-height: 0; }
+  .reihe.kpi { flex: none; grid-template-columns: repeat(var(--n, 3), 1fr); }
+  .reihe.zwei { grid-template-columns: 1fr 420px; }
+  .reihe.halb { grid-template-columns: 1fr 1fr; }
+
+  .karte {
+    background: var(--karte); border: 1px solid var(--rand); border-radius: 16px;
+    padding: 20px 24px; min-height: 0; display: flex; flex-direction: column;
+  }
+  .karte > h2 {
+    font-size: 16px; letter-spacing: 0.09em; color: var(--leise);
+    font-weight: 600; flex: none;
+  }
+  .kachel em {
+    display: block; font-style: normal; font-size: 58px; font-weight: 700;
+    line-height: 1.15; margin-top: 4px;
+  }
+  .kachel svg { width: 100%; height: 52px; display: block; margin-top: auto; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th {
+    text-align: left; font-size: 15px; letter-spacing: 0.07em;
+    color: var(--leise); font-weight: 600; padding-bottom: 10px;
+  }
+  td { padding: 16px 0; border-top: 1px solid var(--rand); font-size: 23px; vertical-align: middle; }
+  td.leise { color: var(--leise); font-size: 20px; }
+  td.rechts { text-align: right; font-variant-numeric: tabular-nums; }
+  [data-ein] { opacity: 0; }
+
+  .balken { width: 150px; height: 9px; border-radius: 5px; background: #252c4a; overflow: hidden; }
+  .balken i { display: block; height: 100%; width: 0; background: var(--gruen); border-radius: 5px; }
+  .balken.warn i { background: var(--bernstein); }
+  .chip {
+    display: inline-block; padding: 6px 16px; border-radius: 999px;
+    font-size: 16px; font-weight: 700; letter-spacing: 0.05em;
+    color: var(--gruen); background: var(--gruen-weich);
+  }
+  .chip.warn { color: var(--bernstein); background: var(--bernstein-weich); }
+  tr.aktiv td { background: rgba(52, 166, 220, 0.07); }
+
+  p.text { font-size: 21px; line-height: 1.55; color: #c3cde0; margin-top: 12px; }
+
+  /* Der Agent arbeitet */
+  .agent { margin-top: auto; border-top: 1px solid var(--rand); padding-top: 20px; opacity: 0; }
+  .lauf { display: flex; align-items: center; gap: 14px; }
+  .spinner { width: 28px; height: 28px; flex: none; }
+  .spinner circle { fill: none; stroke-width: 3.4; }
+  .spinner .bahn { stroke: #2a3150; }
+  .spinner .arc { stroke: var(--gruen); stroke-linecap: round; stroke-dasharray: 46 84; }
+  .lauf b { font-size: 20px; }
+  .schritte { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .schritt { display: flex; align-items: center; gap: 11px; font-size: 19px; color: var(--leise); opacity: 0.35; }
+  .schritt svg { width: 20px; height: 20px; flex: none; stroke: var(--gruen); fill: none; stroke-width: 2.4; opacity: 0; }
+  .fortschritt { margin-top: 18px; height: 8px; border-radius: 5px; background: #252c4a; overflow: hidden; }
+  .fortschritt i { display: block; height: 100%; width: 0; background: var(--gruen); border-radius: 5px; }
+
+  /* Nachricht an den Kunden */
+  .brief h3 { font-size: 28px; font-weight: 700; }
+  .posten { margin-top: 16px; }
+  .posten div {
+    display: flex; justify-content: space-between; padding: 15px 0;
+    border-top: 1px solid var(--rand); font-size: 22px;
+  }
+  .werte > div { padding: 16px 0; border-bottom: 1px solid var(--rand); }
+  .werte b { display: block; font-size: 15px; letter-spacing: 0.08em; color: var(--leise); font-weight: 600; }
+  .werte em { font-style: normal; display: block; font-size: 24px; margin-top: 3px; }
+  .geste { margin-top: auto; padding-top: 20px; }
+  .geste u { text-decoration: none; display: block; font-size: 15px; letter-spacing: 0.08em; color: var(--leise); }
+  .geste strong { display: block; font-size: 44px; font-weight: 700; color: var(--gruen); margin-top: 2px; }
+  .warten {
+    margin-top: 16px; display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px; border-radius: 13px;
+    border: 1.5px solid var(--gruen); color: var(--gruen); font-weight: 700; font-size: 20px;
+  }
+
+  /* Zeitleiste der tatsaechlich gegangenen Schritte */
+  .spur { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .spur div {
+    display: grid; grid-template-columns: 96px 1fr 90px; gap: 14px; align-items: center;
+    padding: 13px 0; border-top: 1px solid var(--rand); font-size: 21px;
+  }
+  .spur div span:first-child { color: var(--leise); font-variant-numeric: tabular-nums; font-size: 19px; }
+  .spur div span:last-child { color: var(--leise); text-align: right; font-variant-numeric: tabular-nums; font-size: 19px; }
+
+  /* Regelwerk-Vergleich */
+  .regeln { font-size: 19px; line-height: 1.75; }
+  .regeln div { padding: 3px 10px; border-radius: 6px; }
+  .regeln div.weg { color: #d98a8a; background: rgba(200, 80, 80, 0.12); text-decoration: line-through; }
+  .regeln div.neu { color: #9fd3ef; background: rgba(52, 166, 220, 0.14); }
+
+  /* Gespraech */
+  .chat { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+  .blase { max-width: 78%; padding: 14px 18px; border-radius: 16px; font-size: 20px; line-height: 1.45; }
+  .blase b { display: block; font-size: 14px; letter-spacing: 0.07em; color: var(--leise); margin-bottom: 5px; }
+  .blase.a { background: #1b2238; border-bottom-left-radius: 5px; }
+  .blase.b { background: rgba(52, 166, 220, 0.14); align-self: flex-end; border-bottom-right-radius: 5px; }
+
+  /* Kapazitaetsvergleich */
+  .paar { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+  .paar > div { display: grid; grid-template-columns: 210px 1fr; gap: 14px; align-items: center; font-size: 19px; }
+  .paar .stapel { display: flex; flex-direction: column; gap: 5px; }
+  .paar .stapel i { display: block; height: 11px; border-radius: 4px; width: 0; }
+  .paar .stapel i.mensch { background: #4a5878; }
+  .paar .stapel i.agent { background: var(--gruen); }
+  /* Die Bildmarke sitzt auf der Buehne, nicht in der Sicht: die Sichten
+     blenden ueber, die Marke bleibt stehen. */
+  .marke-db { position: absolute; top: 34px; right: 40px; width: 46px; height: 46px; z-index: 5;
+    border-radius: 9px; object-fit: contain; }
+</style>
+
+<script>
+  // ── Ablauf-Engine ────────────────────────────────────────────────────────
+  // Alles Bewegte haengt an Datenattributen; die Engine kennt nur fuenf
+  // Verhaltensweisen und wendet sie auf jede Station gleich an.
+  const spanne = (t, a, b) => Math.max(0, Math.min(1, (t - a) / (b - a)))
+  const weich = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2)
+  const zahl = (v) => v.toLocaleString('en-US')
+
+  function setT(t) {
+    const wurzel = document.querySelector('section.zeigen')
+    if (!wurzel) return
+
+    // 1. Zahlen laufen hoch
+    wurzel.querySelectorAll('[data-zahl]').forEach((el) => {
+      const ziel = Number(el.dataset.zahl)
+      const von = Number(el.dataset.von || 0.15), bis = Number(el.dataset.bis || 1.35)
+      const p = weich(spanne(t, von, bis))
+      el.textContent = (el.dataset.praefix || '') + zahl(Math.round(ziel * p)) + (el.dataset.suffix || '')
+    })
+
+    // 2. Kurven zeichnen sich
+    wurzel.querySelectorAll('[data-kurve]').forEach((el) => {
+      if (!el.dataset.laenge) {
+        const l = el.getTotalLength()
+        el.style.strokeDasharray = l
+        el.dataset.laenge = l
+      }
+      const p = weich(spanne(t, Number(el.dataset.von || 0.2), Number(el.dataset.bis || 1.4)))
+      el.style.strokeDashoffset = el.dataset.laenge * (1 - p)
+    })
+
+    // 3. Elemente erscheinen versetzt
+    const gruppen = {}
+    wurzel.querySelectorAll('[data-ein]').forEach((el) => {
+      const g = el.dataset.gruppe || 'a'
+      gruppen[g] = (gruppen[g] || 0)
+      const n = gruppen[g]++
+      const von = Number(el.dataset.ein) + n * 0.13
+      el.style.opacity = weich(spanne(t, von, von + 0.5))
+    })
+
+    // 4. Balken fuellen sich
+    wurzel.querySelectorAll('[data-w]').forEach((el, n) => {
+      const von = Number(el.dataset.von || 1.0) + n * 0.09
+      el.style.width = `${Number(el.dataset.w) * weich(spanne(t, von, von + 0.7))}%`
+    })
+
+    // 5. Der Agent arbeitet
+    wurzel.querySelectorAll('.agent').forEach((ag) => {
+      const von = Number(ag.dataset.von), bis = Number(ag.dataset.bis)
+      ag.style.opacity = weich(spanne(t, von - 0.4, von))
+      const arc = ag.querySelector('.arc')
+      if (arc) arc.setAttribute('transform', `rotate(${(t * 300) % 360} 21 21)`)
+      const s = [...ag.querySelectorAll('.schritt')]
+      s.forEach((el, n) => {
+        const a = von + (bis - von) * (n / s.length)
+        const b = von + (bis - von) * ((n + 1) / s.length)
+        const fertig = t >= b
+        el.style.opacity = t >= a ? (fertig ? 1 : 0.75) : 0.35
+        el.style.color = fertig ? '#c3cde0' : ''
+        el.querySelector('svg').style.opacity = fertig ? 1 : 0
+      })
+      const f = ag.querySelector('.fortschritt i')
+      if (f) f.style.width = `${weich(spanne(t, von, bis)) * 100}%`
+      const b = ag.querySelector('.lauf b')
+      if (b && b.dataset.fertig) b.textContent = t >= bis ? b.dataset.fertig : b.dataset.text
+      const sp = ag.querySelector('.spinner')
+      if (sp) sp.style.opacity = t >= bis ? 0.25 : 1
+      const zeile = ag.dataset.zeile && wurzel.querySelector(ag.dataset.zeile)
+      if (zeile) zeile.classList.toggle('aktiv', t > von && t < bis + 0.3)
+    })
+
+    // 6. Ansichtswechsel — von selbst, nicht durch einen Klick
+    const sichten = [...wurzel.querySelectorAll('.sicht')]
+    if (sichten.length > 1) {
+      const w = Number(wurzel.dataset.wechsel || 4.6)
+      const p = weich(spanne(t, w, w + 0.7))
+      sichten[0].style.opacity = 1 - p
+      sichten[1].style.opacity = p
+    }
+
+    // 7. Der Vorschlag wartet sichtbar auf ihre Entscheidung
+    wurzel.querySelectorAll('.warten').forEach((el) => {
+      const von = Number(el.dataset.von || 5.3)
+      el.style.opacity = t > von ? 0.72 + 0.28 * (0.5 + 0.5 * Math.sin((t - von) * 3.2)) : 0
+    })
+  }
+  window.setT = setT
+</script>
+
+<section data-station="s1">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><div class="kopf"><h1>Prevention overview</h1><span>Complaints Management &middot; overnight</span></div><div class="reihe kpi" style="--n:4"><div class="karte kachel"><h2>CASES RESOLVED OVERNIGHT</h2><em data-zahl="370" data-suffix="" data-praefix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#34a6dc" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div><div class="karte kachel"><h2>PATTERNS DETECTED</h2><em data-zahl="7" data-suffix="" data-praefix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#34a6dc" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div><div class="karte kachel"><h2>RESOLVED AT ROOT CAUSE</h2><em data-zahl="4" data-suffix="" data-praefix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#34a6dc" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div><div class="karte kachel"><h2>NEEDS YOUR JUDGEMENT</h2><em data-zahl="3" data-suffix="" data-praefix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#d29a3c" stroke-width="2.6" d="M2 26 L28 29 L54 22 L80 32 L106 24 L132 34 L158 27 L184 37 L210 30 L238 38"/></svg></div></div><div class="reihe zwei"><div class="karte"><h2>ALL SEVEN PATTERNS OF THE NIGHT</h2><table><tr><th>PATTERN</th><th>ROOT CAUSE</th><th>CONFIDENCE</th><th>STATUS</th></tr><tr data-ein="0.85" data-gruppe="l"><td>Garnishment exemption underpaid</td><td class="leise">Dependants read from case file, not population register</td><td><div class="balken warn"><i data-w="58" data-von="1.1"></i></div></td><td><span class="chip warn">ESCALATED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Recurring fee dispute</td><td class="leise">Fee applied after account closure</td><td><div class="balken"><i data-w="94" data-von="1.1"></i></div></td><td><span class="chip">RESOLVED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Failed direct debit</td><td class="leise">Insufficient funds at collection</td><td><div class="balken"><i data-w="91" data-von="1.1"></i></div></td><td><span class="chip">RESOLVED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Duplicate charge</td><td class="leise">Retry logic triggered twice</td><td><div class="balken"><i data-w="87" data-von="1.1"></i></div></td><td><span class="chip">RESOLVED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Standing order rejected</td><td class="leise">Mandate expired at counterparty</td><td><div class="balken"><i data-w="89" data-von="1.1"></i></div></td><td><span class="chip">RESOLVED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Fee reversal delayed</td><td class="leise">Batch cut-off missed twice</td><td><div class="balken warn"><i data-w="61" data-von="1.1"></i></div></td><td><span class="chip warn">ESCALATED</span></td></tr><tr data-ein="0.85" data-gruppe="l"><td>Address change loop</td><td class="leise">Conflicting records in two systems</td><td><div class="balken warn"><i data-w="54" data-von="1.1"></i></div></td><td><span class="chip warn">ESCALATED</span></td></tr></table></div><div class="karte"><h2>ASSISTANT</h2><p class="text">Seven patterns detected. Four I resolved at the root cause overnight; 370 cases closed without you.</p><p class="text">Three fell below the confidence threshold. They are the three your briefing named at 07:00 — first in line is the garnishment exemption pattern.</p><p class="text">Contact avoidance for the resolved four: <b>98.6 %</b>.</p><div class="agent" data-von="2.0" data-bis="4.3" data-zeile="tr[data-ein]"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Preparing the three for review" data-fertig="Ready for your review">Preparing the three for review</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Grouping affected cases</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Checking fairness and cost to serve</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Drafting the 09:00 briefing</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s2">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><div class="kopf"><h1>Remedies awaiting approval</h1><span>370 customers &middot; prepared overnight by agent</span></div><div class="reihe zwei"><div class="karte"><h2>NINE OF 370 &mdash; ONE LINE PER CUSTOMER</h2><table style="table-layout:fixed"><colgroup><col style="width:150px"><col><col style="width:330px"><col style="width:110px"></colgroup><tr><th>CUSTOMER</th><th>WHAT HAPPENED</th><th>AGENT PROPOSAL</th><th style="text-align:right">GESTURE</th></tr><tr data-ein="0.7" data-gruppe="r"><td>Daniel R.</td><td class="leise">Service fee charged after account model change</td><td>Fee refunded + cinema voucher</td><td class="rechts">18 EUR</td></tr><tr data-ein="0.7" data-gruppe="r"><td>Aylin K.</td><td class="leise">Direct debit failed three times in a row</td><td>Return fees waived</td><td class="rechts">25 EUR</td></tr><tr data-ein="0.7" data-gruppe="r"><td>Marek P.</td><td class="leise">Card charged twice on the same purchase</td><td>Duplicate reversed + goodwill credit</td><td class="rechts">12 EUR</td></tr><tr data-ein="0.7" data-gruppe="r"><td>Sofia L.</td><td class="leise">Standing order rejected, rent paid late</td><td>Apology credit, no late fee</td><td class="rechts">25 EUR</td></tr><tr data-ein="0.7" data-gruppe="r"><td>Jonas W.</td><td class="leise">Overdraft interest caused by a delayed bank process</td><td>Interest reversed</td><td class="rechts">9 EUR</td></tr><tr data-ein="0.7" data-gruppe="r"><td>Nadia B.</td><td class="leise">Statement fee on a closed savings account</td><td>Free private banking consultation</td><td class="rechts">in kind</td></tr><tr data-ein="0.7" data-gruppe="r"><td>Tomas H.</td><td class="leise">Not served &mdash; arrived just after the branch closed</td><td>Fuel voucher for the wasted drive</td><td class="rechts">in kind</td></tr><tr data-ein="0.7" data-gruppe="r"><td>Elif D.</td><td class="leise">Transfer delayed over a weekend</td><td>Value date corrected</td><td class="rechts">2 EUR</td></tr><tr data-ein="0.7" data-gruppe="r"><td>Bernd S.</td><td class="leise">Notification not delivered before the charge</td><td>Charge reversed</td><td class="rechts">14 EUR</td></tr></table></div><div class="karte"><h2>PRICED PER CUSTOMER</h2><div class="werte" style="margin-top:6px"><div data-ein="1.0" data-gruppe="w"><b>RELATIONSHIP VALUE</b><em>Weighted per customer</em></div><div data-ein="1.0" data-gruppe="w"><b>PREVIOUS SERVICE EXPERIENCE</b><em>Weighted per customer</em></div><div data-ein="1.0" data-gruppe="w"><b>FAIRNESS CHECK</b><em>370 of 370 passed</em></div><div data-ein="1.0" data-gruppe="w"><b>RANGE PER CASE</b><em>2 to 25 EUR &middot; two in kind</em></div></div><h2 style="margin-top:auto;padding-top:24px">AGAINST TODAY&rsquo;S GOODWILL BUDGET</h2><div class="balken" style="width:100%;margin-top:12px;height:14px"><i data-w="82" data-von="1.6"></i></div><div style="display:flex;justify-content:space-between;margin-top:10px;font-size:19px;color:var(--leise)"><span>2,450 EUR proposed</span><span>3,000 EUR planned for today</span></div><div class="geste"><u>TOTAL FOR ALL 370 CUSTOMERS</u><strong data-zahl="2450" data-suffix=" EUR" data-von="1.2" data-bis="2.4">0</strong><span class="warten" data-von="3.2">Waiting for your approval</span></div></div></div></div></div></section>
+<section data-station="s3">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><div class="kopf"><h1>Escalated pattern 1 of 3</h1><span>Garnishment exemption underpaid &middot; held back for your judgement</span></div><div class="reihe zwei"><div class="karte"><h2>PATTERN</h2><div style="display:flex;gap:44px;margin-top:14px;font-size:22px"><div><b style="display:block;font-size:15px;letter-spacing:.08em;color:var(--leise)">CASES AFFECTED</b>34</div><div><b style="display:block;font-size:15px;letter-spacing:.08em;color:var(--leise)">CONFIDENCE</b>58 %</div><div><b style="display:block;font-size:15px;letter-spacing:.08em;color:var(--leise)">FIRST SEEN</b>11 days ago</div></div><div class="balken warn" style="width:100%;margin-top:16px"><i data-w="58" data-von="0.5"></i></div><p class="text">Exemptions came out too low because dependants were taken from the case file. The population register holds a newer record for 34 debtors.</p><h2 style="margin-top:22px">EVIDENCE ASSEMBLED &mdash; NOTHING SEARCHED FOR</h2><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Affected garnishment cases</span><span style="color:var(--leise);font-size:18px">06:41</span></div><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Exemption calculations replayed</span><span style="color:var(--leise);font-size:18px">06:44</span></div><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Legal basis &sect; 850c ZPO</span><span style="color:var(--leise);font-size:18px">06:47</span></div><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Comparable prior decisions</span><span style="color:var(--leise);font-size:18px">06:52</span></div><div data-ein="0.9" data-gruppe="h" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Data-sharing constraints</span><span style="color:var(--leise);font-size:18px">06:55</span></div></div><div class="karte"><h2>WHAT THE AGENT DOES NOT KNOW</h2><p class="text" data-ein="1.4" data-gruppe="d">Whether the register lookup is permitted for cases already served &mdash; policy is silent.</p><p class="text" data-ein="1.4" data-gruppe="d">Whether corrections should be applied retroactively to the 34 cases, or only going forward.</p><p class="text" data-ein="1.4" data-gruppe="d">Both questions are decisions, not lookups. That is why this pattern is on your screen and not in the resolved four.</p><div class="agent" data-von="2.2" data-bis="4.4"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Preparing the 09:00 briefing" data-fertig="Briefing ready &mdash; team meeting 09:00">Preparing the 09:00 briefing</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Ranking the three escalated patterns</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Drafting the decision options</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Inviting the agent roles concerned</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s4">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><style>section[data-station="s4"] td, section[data-station="s4"] th{padding-top:8px;padding-bottom:8px}</style><div style="height:60px"></div><div class="kopf"><h1>Daily operating review</h1><span>Topic: garnishment exemption pattern &middot; 370 cases handled overnight</span></div><div class="reihe" style="grid-template-columns:1fr 1fr"><div class="karte"><h2>THE PATTERN SHE BRINGS IN &mdash; HELD BACK AT 08:15</h2><div style="display:flex;gap:34px;margin-top:10px;align-items:baseline"><em class="kachel" style="font-size:74px;font-weight:700" data-zahl="34">0</em><div style="color:var(--leise);font-size:21px">garnishment cases with an under-calculated exemption</div></div><p class="text">Root cause: dependants read from the case file. The population register holds a newer record for all 34.</p><div class="posten" style="margin-top:14px"><div data-ein="0.7" data-gruppe="a"><span>Exemption as calculated</span><span>660 EUR attachable</span></div><div data-ein="0.7" data-gruppe="a"><span>Exemption with the register</span><span>130 EUR attachable</span></div><div data-ein="0.7" data-gruppe="a"><span>Difference per case</span><span>530 EUR too much</span></div></div></div><div class="karte"><h2>WHAT THIS ROOM DECIDES</h2><div data-ein="0.8" data-gruppe="d" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Who owns the fix</span><span style="color:var(--leise);font-size:18px">Exemption calculator</span></div><div data-ein="0.8" data-gruppe="d" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--bernstein);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Retroactive or forward only</span><span style="color:var(--leise);font-size:18px">open &mdash; 11:15</span></div><div data-ein="0.8" data-gruppe="d" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--bernstein);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Register lookup permitted</span><span style="color:var(--leise);font-size:18px">open &mdash; 11:15</span></div><h2 style="margin-top:22px">CAPACITY OF THE FLEET</h2><div class="paar" style="margin-top:8px"><div data-ein="1.2" data-gruppe="k"><span>Today<span style="display:block;font-size:16px;color:var(--leise)">78 % of the fleet, 5 % human</span></span><div class="stapel"><i class="mensch" data-w="5" data-von="1.4"></i><i class="agent" data-w="78" data-von="1.5"></i></div></div><div data-ein="1.2" data-gruppe="k"><span>After the fix<span style="display:block;font-size:16px;color:var(--leise)">52 % of the fleet, 5 % human</span></span><div class="stapel"><i class="mensch" data-w="5" data-von="1.4"></i><i class="agent" data-w="52" data-von="1.5"></i></div></div></div><p class="text" style="margin-top:auto">Freed capacity becomes two new agent roles &mdash; reviewed at 16:00.</p></div><div class="karte" style="grid-column:1/-1"><h2>AGENT ROLES OF THIS UNIT</h2><table style="table-layout:fixed"><colgroup><col><col style="width:120px"><col style="width:170px"><col style="width:170px"></colgroup><tr><th>ROLE</th><th style="text-align:right;padding-right:18px">OVERNIGHT</th><th>CALIBRATION</th><th>STATUS</th></tr><tr data-ein="0.9" data-gruppe="f"><td>Garnishment processor</td><td class="rechts" style="padding-right:18px">1,284</td><td><div class="balken"><i data-w="96" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Complaint preventer</td><td class="rechts" style="padding-right:18px">1,846</td><td><div class="balken"><i data-w="94" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Remedy pricer</td><td class="rechts" style="padding-right:18px">370</td><td><div class="balken"><i data-w="93" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Evidence assembler</td><td class="rechts" style="padding-right:18px">742</td><td><div class="balken"><i data-w="91" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Exemption calculator</td><td class="rechts" style="padding-right:18px">934</td><td><div class="balken warn"><i data-w="58" data-von="1.2"></i></div></td><td><span class="chip warn">ON THE AGENDA</span></td></tr><tr data-ein="0.9" data-gruppe="f"><td>Regulatory responder</td><td class="rechts" style="padding-right:18px">310</td><td><div class="balken"><i data-w="92" data-von="1.2"></i></div></td><td><span class="chip">HEALTHY</span></td></tr></table></div></div></div></div></section>
+<section data-station="s5">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><div class="kopf"><h1>The route the agent found</h1><span>Garnishment GARN-2026-0157 &middot; on the phone: T. Brandt, Second Line</span></div><div class="reihe zwei"><div class="karte"><h2>ROUTE &mdash; ASSEMBLED AT RUN TIME</h2><svg class="route" viewBox="0 0 720 170"><path class="kante" data-kurve data-von="0.3" data-bis="0.9" d="M78 46 L188 46"/><path class="kante" data-kurve data-von="0.7" data-bis="1.3" d="M252 46 L360 46"/><path class="kante" data-kurve data-von="1.1" data-bis="1.7" d="M390 64 C390 92 96 88 78 108"/><path class="kante" data-kurve data-von="1.5" data-bis="2.1" d="M78 118 L188 118"/><path class="kante" data-kurve data-von="1.9" data-bis="2.5" d="M252 118 L528 118"/><g class="knoten" data-ein="0.2"><circle cx="60" cy="46" r="15"/><text x="34" y="24">Claim</text></g><g class="knoten" data-ein="0.5"><circle cx="220" cy="46" r="15"/><text x="176" y="24">Debtor search</text></g><g class="knoten" data-ein="0.9"><circle cx="390" cy="46" r="15" style="stroke:#d29a3c"/><text x="330" y="24">Register lookup</text></g><g class="knoten" data-ein="1.3"><circle cx="60" cy="118" r="15"/><text x="30" y="152">Exemption</text></g><g class="knoten" data-ein="1.7"><circle cx="220" cy="118" r="15"/><text x="184" y="152">Order</text></g><g class="knoten" data-ein="2.1"><circle cx="560" cy="118" r="15"/><text x="500" y="152">Acknowledged</text></g></svg><div class="spur"><div data-ein="0.7" data-gruppe="s"><span>09:02</span><span>Case opened</span><span>00:15</span></div><div data-ein="0.7" data-gruppe="s"><span>09:04</span><span>Claim received</span><span>00:12</span></div><div data-ein="0.7" data-gruppe="s"><span>09:11</span><span>Debtor search</span><span>01:35</span></div><div data-ein="0.7" data-gruppe="s"><span>09:14</span><span>Employment verified</span><span>00:08</span></div><div data-ein="0.7" data-gruppe="s"><span>09:18</span><span>Population register queried &mdash; not in the documented flow</span><span>00:09</span></div><div data-ein="0.7" data-gruppe="s"><span>09:22</span><span>Exemption recalculated</span><span>00:06</span></div><div data-ein="0.7" data-gruppe="s"><span>09:29</span><span>Order sent to employer</span><span>00:07</span></div><div data-ein="0.7" data-gruppe="s"><span>10:05</span><span>Acknowledgement received</span><span>00:04</span></div></div></div><div class="karte"><h2>EXEMPTION &mdash; BEFORE AND AFTER THE LOOKUP</h2><div class="posten" style="margin-top:6px"><div data-ein="1.1" data-gruppe="e"><span>Monthly net income</span><span>3,450 EUR</span></div><div data-ein="1.1" data-gruppe="e"><span>Basic personal allowance</span><span>&minus; 1,410 EUR</span></div><div data-ein="1.1" data-gruppe="e" style="color:var(--leise);text-decoration:line-through"><span>Dependants, case file (2)</span><span>&minus; 1,060 EUR</span></div><div data-ein="1.1" data-gruppe="e" style="color:#9fd3ef"><span>Dependants, register (3)</span><span>&minus; 1,590 EUR</span></div><div data-ein="1.1" data-gruppe="e"><span>Work-related costs</span><span>&minus; 320 EUR</span></div></div><div class="geste"><u>ATTACHABLE AMOUNT &mdash; CORRECTED</u><strong data-zahl="130" data-suffix=" EUR" data-von="1.4" data-bis="2.6">0</strong><span style="display:block;font-size:19px;color:var(--leise);margin-top:6px">was 660 EUR under the documented flow</span></div><p class="text" data-ein="2.2" style="margin-top:14px">On the call: <b>T. Brandt, Second Line</b> &mdash; he joins you at the shared desk at 11:15.</p><div class="agent" data-von="2.6" data-bis="4.6"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Comparing with the documented process" data-fertig="Two deviations, both compliant &mdash; propose as logic v4.3">Comparing with the documented process</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Replaying the documented path</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Matching against the actual steps</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Checking guardrails</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s6">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><div class="kopf"><h1>Garnishment logic &mdash; being edited</h1><span>Second and third line checking live &middot; no handover, no queue</span></div><div class="reihe zwei"><div class="karte"><h2>YOUR EDIT IN PROGRESS</h2><div class="regeln" style="margin-top:12px"><div data-ein="0.6" data-gruppe="r">1. Do not garnish if debt is under 150 EUR</div><div data-ein="0.6" data-gruppe="r">2. Maximum garnishment is 30% of disposable income</div><div data-ein="0.6" data-gruppe="r">3. Always protect 1,000 EUR of disposable income</div><div class="weg" data-ein="0.6" data-gruppe="r">4. Retrieve dependants from the case file</div><div class="neu" data-ein="0.6" data-gruppe="r">4. Retrieve dependants from the population register</div><div data-ein="0.6" data-gruppe="r">5. Apply standard priority order of debts</div><div class="neu" data-ein="0.6" data-gruppe="r">6. Round final amount to the nearest euro</div></div><p class="text">This is the route from 10:30, written as a rule. Every keystroke is being tested while you type.</p><div class="ring"><svg viewBox="0 0 120 120"><circle class="bahn" cx="60" cy="60" r="50"/><circle class="wert" cx="60" cy="60" r="50" data-kurve data-von="0.5" data-bis="2.4"/></svg><b><span style="font-size:34px;color:var(--gruen)" data-zahl="5" data-suffix=" / 6">0</span>controls cleared as you type<span>one is a decision, not a check</span></b></div></div><div class="karte"><h2>SECOND AND THIRD LINE &mdash; LIVE</h2><div data-ein="0.9" data-gruppe="c" style="display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--rand);font-size:20px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Maximum garnishment rate<span style="display:block;font-size:16px;color:var(--leise);letter-spacing:.04em">2nd line &middot; Risk</span></span><span style="color:var(--gruen);font-size:18px">Within appetite</span></div><div data-ein="0.9" data-gruppe="c" style="display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--rand);font-size:20px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Protected minimum income<span style="display:block;font-size:16px;color:var(--leise);letter-spacing:.04em">2nd line &middot; Risk</span></span><span style="color:var(--gruen);font-size:18px">Raised &mdash; passes</span></div><div data-ein="0.9" data-gruppe="c" style="display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--rand);font-size:20px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">&sect; 850c ZPO exemption table<span style="display:block;font-size:16px;color:var(--leise);letter-spacing:.04em">2nd line &middot; Compliance</span></span><span style="color:var(--gruen);font-size:18px">Conforms</span></div><div data-ein="0.9" data-gruppe="c" style="display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--rand);font-size:20px"><span style="color:var(--bernstein);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Retroactive correction of 34 cases<span style="display:block;font-size:16px;color:var(--leise);letter-spacing:.04em">2nd line &middot; Conduct</span></span><span style="color:var(--bernstein);font-size:18px">Needs your decision</span></div><div data-ein="0.9" data-gruppe="c" style="display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--rand);font-size:20px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Register lookup logged and traceable<span style="display:block;font-size:16px;color:var(--leise);letter-spacing:.04em">3rd line &middot; Audit</span></span><span style="color:var(--gruen);font-size:18px">Evidence complete</span></div><div data-ein="0.9" data-gruppe="c" style="display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--rand);font-size:20px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Rollback path to v4.2<span style="display:block;font-size:16px;color:var(--leise);letter-spacing:.04em">3rd line &middot; Audit</span></span><span style="color:var(--gruen);font-size:18px">Available</span></div><div class="agent" data-von="2.8" data-bis="4.8"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Testing the draft against policy" data-fertig="Five cleared &mdash; one needs your decision">Testing the draft against policy</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Reading risk appetite</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Replaying 34 affected cases</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Writing the control evidence</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s7">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><div class="kopf"><h1>Garnishment decision logic</h1><span><span class="versionspille">v4.2 in force</span> &nbsp;&rarr;&nbsp; <span class="versionspille">v4.3 ready to certify</span></span></div><div class="reihe zwei"><div class="karte"><h2>WHAT CHANGES WITH VERSION 4.3</h2><div class="regeln" style="margin-top:12px"><div data-ein="0.7" data-gruppe="r">1. Do not garnish if debt is under 150 EUR</div><div data-ein="0.7" data-gruppe="r">2. Maximum garnishment is 30% of disposable income</div><div data-ein="0.7" data-gruppe="r">3. Always protect 1,000 EUR of disposable income</div><div class="weg" data-ein="0.7" data-gruppe="r">4. Retrieve dependants from the case file</div><div class="neu" data-ein="0.7" data-gruppe="r">4. Retrieve dependants from the population register</div><div data-ein="0.7" data-gruppe="r">5. Apply standard priority order of debts</div><div class="neu" data-ein="0.7" data-gruppe="r">6. Round final amount to the nearest euro</div></div><p class="text">One rule changed. It governs every garnishment order every agent in the fleet will process from the moment you certify.</p><h2 style="margin-top:auto;padding-top:22px">WHAT THE ONE RULE DOES TO THE 34 CASES</h2><div class="posten" style="margin-top:4px"><div data-ein="1.5" data-gruppe="w"><span>Attachable amount under v4.2</span><span>660 EUR</span></div><div data-ein="1.5" data-gruppe="w"><span>Attachable amount under v4.3</span><span style="color:#9fd3ef">130 EUR</span></div><div data-ein="1.5" data-gruppe="w"><span>Returned to the 34 debtors</span><span>18,020 EUR</span></div></div></div><div class="karte"><h2>WHAT YOU ARE CERTIFYING</h2><div data-ein="0.9" data-gruppe="t" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Unit tests 128 / 128</span><span style="color:var(--leise);font-size:18px">Passed</span></div><div data-ein="0.9" data-gruppe="t" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Regression tests 96 / 96</span><span style="color:var(--leise);font-size:18px">Passed</span></div><div data-ein="0.9" data-gruppe="t" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Policy scenarios 24 / 24</span><span style="color:var(--leise);font-size:18px">Passed</span></div><div data-ein="0.9" data-gruppe="t" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Real-time control evidence from 11:15</span><span style="color:var(--leise);font-size:18px">Attached</span></div><div data-ein="0.9" data-gruppe="t" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Retroactive correction of 34 cases</span><span style="color:var(--leise);font-size:18px">Approved by you</span></div><div data-ein="0.9" data-gruppe="t" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Rollback to v4.2</span><span style="color:var(--leise);font-size:18px">One click</span></div><div class="geste"><u>DECISIONS PER YEAR UNDER THIS LOGIC</u><strong data-zahl="184000" data-von="1.4" data-bis="2.8">0</strong><span style="display:block;font-size:19px;color:var(--leise);margin-top:6px">none of them individually signed &mdash; 0.4 s each instead of 20 min</span><span class="warten" data-von="3.4">Waiting for your certification</span></div></div></div></div></div></section>
+<section data-station="s8">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><div class="kopf"><h1>Regulatory agent</h1><span>Tax authority request &middot; arrived by post, scanned 14:52</span></div><div class="reihe zwei"><div class="karte licht"><h2>REQUEST &mdash; VERIFIED</h2><div style="display:flex;gap:16px;align-items:flex-start;margin-top:14px"><div style="width:120px;height:160px;flex:none;background:#fff;border:1px solid #d3dbe8;border-radius:6px;padding:10px 9px;font-size:7px;line-height:1.5;color:#7f8aa3"><div style="height:9px;width:56%;background:#b9c4d6;margin-bottom:7px"></div><div style="height:4px;width:88%;background:#d9e1ec;margin-bottom:4px"></div><div style="height:4px;width:80%;background:#d9e1ec;margin-bottom:4px"></div><div style="height:4px;width:90%;background:#d9e1ec;margin-bottom:4px"></div><div style="height:4px;width:62%;background:#d9e1ec;margin-bottom:12px"></div><div style="height:4px;width:84%;background:#d9e1ec;margin-bottom:4px"></div><div style="height:4px;width:76%;background:#d9e1ec;margin-bottom:4px"></div><div style="height:4px;width:88%;background:#d9e1ec;margin-bottom:22px"></div><div style="height:22px;width:52px;border:1.5px solid #9aa7bd;border-radius:50%;transform:rotate(-8deg)"></div></div><div style="flex:1;font-size:19px;line-height:1.6;color:#3d4666"><div style="font-size:22px;color:#16184e;font-weight:700">Finanzamt Frankfurt am Main III</div><div style="margin-top:6px">Letter of 21 August 2026 &middot; ref. 045/2026/StA-7712</div><div style="margin-top:14px;display:flex;align-items:center;gap:9px;color:#0069b1;font-weight:700"><svg viewBox="0 0 24 24" style="width:19px;height:19px;stroke:#0069b1;fill:none;stroke-width:2.6;flex:none"><path d="M4 12.5l5 5L20 7"/></svg>Sender authenticated</div><div style="margin-top:7px;display:flex;align-items:center;gap:9px;color:#0069b1;font-weight:700"><svg viewBox="0 0 24 24" style="width:19px;height:19px;stroke:#0069b1;fill:none;stroke-width:2.6;flex:none"><path d="M4 12.5l5 5L20 7"/></svg>Legitimate interest established</div><div style="margin-top:12px;font-size:17px;color:#6f7a95">Same route applies to the verified digital channel &mdash; letter today, interface tomorrow.</div></div></div><div class="chat" style="margin-top:20px"><div class="blase a" data-ein="0.8" data-gruppe="c"><b>REGULATORY AGENT</b>I read the letter. They want account data for 11 named holders, 24 months, including closed accounts. Legal basis checks out &mdash; Directive 2011/16/EU, &sect; 93 AO.</div><div class="blase a" data-ein="0.8" data-gruppe="c"><b>REGULATORY AGENT</b>Two questions before I draft: do we disclose the two accounts held jointly with non-named persons, and do we include the flagged account under investigation?</div><div class="blase b" data-ein="0.8" data-gruppe="c"><b>MARA</b>Joint accounts yes, with the co-holder redacted. Leave the flagged one out and say why.</div><div class="blase a" data-ein="0.8" data-gruppe="c"><b>REGULATORY AGENT</b>Understood. Drafting now &mdash; ready for your review at 17:30.</div></div></div><div class="karte"><h2>WHAT THE AGENT WILL DO, AND BY WHEN</h2><div data-ein="0.9" data-gruppe="m" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Scope confirmed with the authority</span><span style="color:var(--leise);font-size:18px">15:10</span></div><div data-ein="0.9" data-gruppe="m" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--gruen);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Records selected across four systems</span><span style="color:var(--leise);font-size:18px">15:25</span></div><div data-ein="0.9" data-gruppe="m" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--bernstein);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Draft ready for your review</span><span style="color:var(--leise);font-size:18px">today 17:30</span></div><div data-ein="0.9" data-gruppe="m" style="display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--rand);font-size:21px"><span style="color:var(--bernstein);display:flex"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg></span><span style="flex:1">Submission to the authority</span><span style="color:var(--leise);font-size:18px">27 Aug, 3 days early</span></div><h2 style="margin-top:24px">WHO HAS TO SIGN &mdash; DERIVED BY THE AGENT</h2><div class="posten" style="margin-top:4px"><div data-ein="1.3" data-gruppe="a"><span>J. Kramer &middot; Finance Controlling</span><span style="color:var(--gruen)">confirmed 3 h ago</span></div><div data-ein="1.3" data-gruppe="a"><span>A. Waldmann &middot; Legal</span><span style="color:var(--gruen)">confirmed 1 h ago</span></div><div data-ein="1.3" data-gruppe="a"><span>S. Ott &middot; Data Protection</span><span style="color:var(--gruen)">confirmed 40 min ago</span></div><div data-ein="1.3" data-gruppe="a"><span>Mara V. &middot; Operations</span><span style="color:var(--bernstein)">with you now</span></div></div><div class="agent" data-von="2.6" data-bis="4.8"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Working the request" data-fertig="Two questions for you, then I draft">Working the request</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Reading the scanned letter</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Deriving the approval chain</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Collecting sign-off in parallel</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<section data-station="s9">  <div class="rail">
+    <i class="an"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15V9m4 6V6m4 9v-4"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></i>
+    <i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg></i>
+  </div>
+<div class="buehne"><img class="marke-db" src="db_logo.png" alt="Deutsche Bank"><div class="sicht"><div class="kopf"><h1>Workforce portfolio</h1><span>Two specialists, 120 agent instances &middot; today</span></div><div class="reihe kpi" style="--n:4"><div class="karte kachel"><h2>AGENT INSTANCES</h2><em data-zahl="120" data-suffix="" data-praefix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#cdebf6" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div><div class="karte kachel"><h2>WITH NO OPEN WORK</h2><em data-zahl="2" data-suffix="" data-praefix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#d29a3c" stroke-width="2.6" d="M2 26 L28 29 L54 22 L80 32 L106 24 L132 34 L158 27 L184 37 L210 30 L238 38"/></svg></div><div class="karte kachel"><h2>PATTERNS CLOSED TODAY</h2><em data-zahl="4" data-suffix="" data-praefix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#cdebf6" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div><div class="karte kachel"><h2>CONTACT AVOIDANCE</h2><em data-zahl="98" data-suffix=".6 %" data-praefix="">0</em><svg viewBox="0 0 240 52" preserveAspectRatio="none"><path data-kurve data-von="0.2" data-bis="1.4" fill="none" stroke="#cdebf6" stroke-width="2.6" d="M2 40 L28 34 L54 37 L80 25 L106 29 L132 18 L158 22 L184 12 L210 16 L238 8"/></svg></div></div><div class="reihe zwei"><div class="karte"><h2>UTILISATION BY AGENT ROLE</h2><div class="paar"><div data-ein="1.0" data-gruppe="k"><span>Garnishment processor<span style="display:block;font-size:16px;color:var(--leise)">88 % utilised &middot; 1,284 cases</span></span><div class="stapel"><i class="agent" data-w="88" data-von="1.3" style=""></i></div></div><div data-ein="1.0" data-gruppe="k"><span>Complaint preventer<span style="display:block;font-size:16px;color:var(--leise)">74 % utilised &middot; 1,846 cases</span></span><div class="stapel"><i class="agent" data-w="74" data-von="1.3" style=""></i></div></div><div data-ein="1.0" data-gruppe="k"><span>Evidence assembler<span style="display:block;font-size:16px;color:var(--leise)">66 % utilised &middot; 742 packs</span></span><div class="stapel"><i class="agent" data-w="66" data-von="1.3" style=""></i></div></div><div data-ein="1.0" data-gruppe="k"><span>Regulatory responder<span style="display:block;font-size:16px;color:var(--leise)">41 % utilised &middot; 310 requests</span></span><div class="stapel"><i class="agent" data-w="41" data-von="1.3" style=""></i></div></div><div data-ein="1.0" data-gruppe="k"><span>Remedy pricer<span style="display:block;font-size:16px;color:var(--leise)">0 % utilised &middot; no open work since 08:10</span></span><div class="stapel"><i class="agent" data-w="2" data-von="1.3" style="background:var(--bernstein)"></i></div></div><div data-ein="1.0" data-gruppe="k"><span>Duplicate-charge detector<span style="display:block;font-size:16px;color:var(--leise)">0 % utilised &middot; root cause closed at 08:00</span></span><div class="stapel"><i class="agent" data-w="2" data-von="1.3" style="background:var(--bernstein)"></i></div></div></div><h2 style="margin-top:auto;padding-top:24px">THE DAY IN THREE NUMBERS</h2><div class="posten" style="margin-top:4px"><div data-ein="1.6" data-gruppe="n"><span>Patterns detected / resolved / judged</span><span>7 / 4 / 3</span></div><div data-ein="1.6" data-gruppe="n"><span>Cases resolved overnight</span><span>370</span></div><div data-ein="1.6" data-gruppe="n"><span>Customers made whole</span><span>370 &middot; 2,450 EUR</span></div></div></div><div class="karte"><h2>WHAT TO DO WITH THE IDLE TWO</h2><p class="text">Two agent roles ran out of work today &mdash; not because demand fell, but because this morning’s fixes removed the cause.</p><div class="posten" style="margin-top:6px"><div data-ein="1.4" data-gruppe="i"><span>Remedy pricer</span><span>retask to exemption review</span></div><div data-ein="1.4" data-gruppe="i"><span>Duplicate-charge detector</span><span>retire, keep the monitor</span></div></div><div class="agent" data-von="2.8" data-bis="4.8"><div class="lauf"><svg class="spinner" viewBox="0 0 42 42"><circle class="bahn" cx="21" cy="21" r="17"/><circle class="arc" cx="21" cy="21" r="17"/></svg><b data-text="Rebalancing the fleet" data-fertig="Two proposals for tomorrow">Rebalancing the fleet</b></div><div class="schritte"><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Reading utilisation over seven days</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Matching skills to open demand</div><div class="schritt"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 7"/></svg>Costing the retirement</div></div><div class="fortschritt"><i></i></div></div></div></div></div></div></section>
+<script>
+  // Welche Station gezeigt wird, sagt der Aufruf: ?s=s1.
+  // Uebergaenge werden NICHT hier gebaut, sondern in der Montage: dort werden
+  // zwei Bildfolgen ueberblendet. Eine Seite, die zwei Stationen gleichzeitig
+  // kennt, waere nur komplizierter und nicht besser.
+  addEventListener('DOMContentLoaded', () => {
+    const q = new URLSearchParams(location.search)
+    // Breite Sonderformate (Wandanzeige): der Inhalt bleibt derselbe, die
+    // Seite wird nur kompakter gesetzt, damit nichts unten anschneidet.
+    const kompakt = parseFloat(q.get('kompakt') || '')
+    if (kompakt) document.body.style.zoom = kompakt
+    // Breite Sonderformate layouten WIRKLICH breit: die Wurzel ist sonst auf
+    // 1600x1000 verdrahtet, und der Zoom skaliert nur, statt umzubrechen —
+    // auf der Wandanzeige blieb so die halbe Flaeche leer (Defekt 21).
+    const b = parseFloat(q.get('b') || ''), h = parseFloat(q.get('h') || '')
+    if (b && h) {
+      for (const el of [document.documentElement, document.body]) {
+        el.style.width = b + 'px'
+        el.style.height = h + 'px'
+      }
+      if (b > 2 * h) {
+        const st = document.createElement('style')
+        st.textContent = '.reihe.zwei { grid-template-columns: 1fr 620px; } '
+          + '.sicht { padding: 40px 56px; }'
+        document.head.appendChild(st)
+      }
+    }
+    const id = q.get('s') || 's1'
+    const el = document.querySelector(`section[data-station="${id}"]`)
+    if (el) el.classList.add('zeigen')
+    window.setT(0)
+  })
+</script>

@@ -1,0 +1,1074 @@
+/**
+ * CustomerApplicationView -- Customer-facing credit application form.
+ * This is the "Kundenperspektive" pre-stage where customers submit their
+ * own credit applications before they appear on the internal dashboard.
+ *
+ * Includes demo document upload with simulated AI extraction.
+ */
+
+import { useState, useCallback, useRef, useMemo } from 'react';
+import {
+  Building2,
+  Banknote,
+  Send,
+  ChevronDown,
+  AlertCircle,
+  CheckCircle2,
+  UserCircle,
+  Phone,
+  Mail,
+  Upload,
+  FileText,
+  Sparkles,
+  Loader2,
+  Download,
+  X,
+  Eye,
+} from 'lucide-react';
+import { useApp } from '../../context/AppContext';
+import KreditrahmenVorschlag from '../shared/KreditrahmenVorschlag';
+import {
+  generateBilanzPdf,
+  generateGuvPdf,
+  generateBwaPdf,
+  DEMO_EXTRACTION_RESULT,
+} from '../../utils/demoPdfGenerator';
+import { MockPdfPreviewModal } from '../shared/MockPdfPreview';
+import KiSourceHint from '../shared/KiSourceHint';
+
+// Label mit optionalem KI-Quelle-Badge daneben — öffnet bei Klick
+// das Vorschaufenster und zeigt, aus welchem Dokument der Wert extrahiert wurde
+function LabelWithSource({ htmlFor, children, showHint, sourceCompany, field, value, sourceDoc = 'handelsregister' }) {
+  return (
+    <div className="flex items-center gap-2 mb-1">
+      <label className="text-xs font-medium font-body text-text-secondary" htmlFor={htmlFor}>
+        {children}
+      </label>
+      {showHint && value && (
+        <KiSourceHint
+          document={sourceDoc}
+          field={field}
+          value={value}
+          company={sourceCompany}
+        />
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const RECHTSFORMEN = [
+  'GmbH', 'GmbH & Co. KG', 'AG', 'UG', 'OHG', 'KG',
+  'Einzelunternehmen', 'eG', 'GbR',
+];
+
+const KREDITARTEN = [
+  'Investitionskredit', 'Betriebsmittelkredit', 'Kontokorrentlinie',
+  'Avalkredit', 'Immobilienfinanzierung',
+];
+
+const VERWENDUNG_KATEGORIEN = [
+  'Maschine/Anlage', 'Immobilie', 'Betriebsmittel',
+  'Akquisition', 'Umschuldung', 'Sonstiges',
+];
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const fmt = new Intl.NumberFormat('de-DE');
+const fmtCurrency = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 });
+
+function formatDE(v) {
+  if (v === '' || v === null || v === undefined) return '';
+  const n = typeof v === 'string' ? parseInt(v, 10) : v;
+  return isNaN(n) ? '' : fmt.format(n);
+}
+
+function parseDE(str) {
+  const raw = String(str).replace(/[^\d]/g, '');
+  return raw ? parseInt(raw, 10) : '';
+}
+
+// Bonitätsdaten des Demo-Kunden, die mit dem Antrag übergeben werden und in
+// die Einschätzung des möglichen Kreditbetrags eingehen
+const kundenBonitaet = (ort) => ({
+  bestehende_verbindlichkeiten: [
+    {
+      glaeubiger: 'Sparkasse ' + (ort || 'Köln'),
+      art: 'Investitionsdarlehen',
+      ursprung: 800000,
+      restschuld: 320000,
+      rate: 9500,
+      zins: 3.8,
+      ende: '2028-03-31',
+      sicherheit: 'Grundschuld erstrangig',
+    },
+    {
+      glaeubiger: 'Commerzbank AG',
+      art: 'Kontokorrent',
+      ursprung: 500000,
+      restschuld: 180000,
+      rate: 0,
+      zins: 7.5,
+      ende: '2025-12-31',
+      sicherheit: 'keine',
+    },
+  ],
+  schufa: { gf1: 96.2, gf2: 94.8 },
+  creditreform_index: 245,
+  konto: {
+    auslastung_avg: 58,
+    ueberziehungen_12m: 1,
+    ruecklastschriften_12m: 0,
+    pfaendungen: false,
+    umsatztrend: 'steigend',
+  },
+});
+
+// Demo-Upload: Jahresabschluss zuerst, dann die Legitimationsunterlagen.
+// Die id verweist auf das Mock-Dokument in MockPdfPreview.
+const DEMO_UPLOADS = [
+  { id: 'jahresabschluss', label: 'Bilanz 2021–2023', filename: 'Jahresabschluss_Bilanz_2021-2023.pdf', size: 356_200 },
+  { id: 'guv', label: 'GuV 2021–2023', filename: 'Jahresabschluss_GuV_2021-2023.pdf', size: 214_800 },
+  { id: 'bwa', label: 'BWA 12/2023', filename: 'BWA_Dezember_2023.pdf', size: 128_400 },
+  { id: 'handelsregister', label: 'Handelsregisterauszug', filename: 'Handelsregisterauszug_HRB_12345.pdf', size: 184_320 },
+  { id: 'gesellschaftsvertrag', label: 'Gesellschaftsvertrag', filename: 'Gesellschaftsvertrag_URNr_512_2008.pdf', size: 412_000 },
+  { id: 'gesellschafterliste', label: 'Gesellschafterliste', filename: 'Gesellschafterliste_2026.pdf', size: 62_400 },
+  { id: 'ausweis', label: 'Ausweiskopie GF', filename: 'Ausweiskopie_GF_Mueller.pdf', size: 98_700 },
+  { id: 'gewerbe', label: 'Gewerbeanmeldung', filename: 'Gewerbeanmeldung_Stadt.pdf', size: 145_500 },
+];
+
+// ---------------------------------------------------------------------------
+// Reusable tiny components
+// ---------------------------------------------------------------------------
+
+const inputCls =
+  'w-full px-3 py-2 border border-border rounded-lg bg-surface-card text-sm font-body text-text-primary ' +
+  'focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 ' +
+  'placeholder:text-text-muted disabled:bg-gray-50 disabled:text-text-muted';
+
+const selectCls =
+  'w-full px-3 py-2 border border-border rounded-lg text-sm font-body text-text-primary appearance-none bg-surface-card ' +
+  'focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20';
+
+const labelCls =
+  'block text-xs font-medium text-text-secondary mb-1 font-body';
+
+function Label({ children, htmlFor }) {
+  return <label className={labelCls} htmlFor={htmlFor}>{children}</label>;
+}
+
+function SectionCard({ icon: Icon, title, badge, children }) {
+  return (
+    <div className="bg-surface-card border border-border rounded-xl">
+      <div className="flex items-center gap-3 px-5 py-3.5 border-b border-border">
+        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-surface-inset text-amber-600">
+          <Icon size={15} strokeWidth={1.75} />
+        </div>
+        <h3 className="text-sm font-headline font-semibold text-text-primary">
+          {title}
+        </h3>
+        {badge && (
+          <span className="ml-auto text-[11px] font-medium px-2 py-0.5 rounded-md bg-[var(--tint-success)] text-emerald-700">
+            {badge}
+          </span>
+        )}
+      </div>
+      <div className="p-5">{children}</div>
+    </div>
+  );
+}
+
+function EuroInput({ value, onChange, placeholder = '0', id }) {
+  const [focused, setFocused] = useState(false);
+  const display = focused ? (value === '' ? '' : String(value)) : formatDE(value);
+  return (
+    <div className="relative">
+      <input
+        id={id}
+        type="text"
+        inputMode="numeric"
+        value={display}
+        onChange={(e) => onChange(parseDE(e.target.value))}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        placeholder={placeholder}
+        className={inputCls + ' pr-8 font-mono'}
+      />
+      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm pointer-events-none" aria-hidden="true">&euro;</span>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// AI Extraction Steps (simulated)
+// ---------------------------------------------------------------------------
+
+const EXTRACTION_STEPS = [
+  'Dokumente werden gelesen...',
+  'Bilanzpositionen werden extrahiert...',
+  'GuV-Daten werden analysiert...',
+  'Kennzahlen werden berechnet...',
+  'Unternehmensdaten werden zugeordnet...',
+  'Antrag wird vorbefüllt...',
+];
+
+// ---------------------------------------------------------------------------
+// Main Component
+// ---------------------------------------------------------------------------
+
+export default function CustomerApplicationView() {
+  const { dispatch, navigate } = useApp();
+
+  // Form state
+  const [firma, setFirma] = useState('');
+  const [rechtsform, setRechtsform] = useState('GmbH');
+  const [branche, setBranche] = useState('');
+  const [gruendung, setGruendung] = useState('');
+  const [strasse, setStrasse] = useState('');
+  const [plz, setPlz] = useState('');
+  const [ort, setOrt] = useState('');
+  const [mitarbeiter, setMitarbeiter] = useState('');
+
+  // Contact person
+  const [ansprechpartner, setAnsprechpartner] = useState('');
+  const [telefon, setTelefon] = useState('');
+  const [email, setEmail] = useState('');
+  const [position, setPosition] = useState('');
+
+  // Loan request
+  const [kreditArt, setKreditArt] = useState('Investitionskredit');
+  const [betrag, setBetrag] = useState('');
+  const [laufzeit, setLaufzeit] = useState('');
+  const [verwendungKategorie, setVerwendungKategorie] = useState('Maschine/Anlage');
+  const [verwendung, setVerwendung] = useState('');
+  const [sicherheiten, setSicherheiten] = useState('');
+
+  // Document upload state
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [extracting, setExtracting] = useState(false);
+  const [extractionStep, setExtractionStep] = useState(0);
+  const [extractionDone, setExtractionDone] = useState(false);
+  const [extractedSummary, setExtractedSummary] = useState(null);
+  const fileInputRef = useRef(null);
+
+  // UI state
+  const [validationErrors, setValidationErrors] = useState([]);
+  const [showErrors, setShowErrors] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const isFieldError = (fieldName) => showErrors && validationErrors.some(e => e.field === fieldName);
+
+  // Preview modal state (for clicking on uploaded mock docs)
+  const [previewDocId, setPreviewDocId] = useState(null);
+
+  // Für KI-Quelle-Vorschau & Mock-PDFs: ein reichhaltiges Company-Objekt aus
+  // den aktuellen Formularwerten + DEMO_EXTRACTION_RESULT bauen. Die selbe
+  // Datenbasis wird beim Absenden ins globale State übertragen — dadurch
+  // sind die Zahlen in den Mock-PDFs, KI-Quelle-Badges und später im
+  // Bearbeiter-Flow (§18 KWG, Rating, Bilanz) identisch.
+  const kundenCompany = useMemo(() => {
+    const fin = DEMO_EXTRACTION_RESULT.financialSummary;
+    const umsatz23 = fin.umsatz2023 || 12500000;
+    const umsatz22 = fin.umsatz2022 || Math.round(umsatz23 * 0.94);
+    const umsatz21 = fin.umsatz2021 || Math.round(umsatz23 * 0.82);
+    const bilanzsumme23 = fin.bilanzsumme2023 || Math.round(umsatz23 * 0.41);
+    const eigenkapital23 = fin.eigenkapital2023 || Math.round(bilanzsumme23 * 0.32);
+    const jue23 = fin.jahresueberschuss2023 || Math.round(umsatz23 * 0.039);
+
+    const bilanzJahr = (umsatz, bilanz, ek, jue) => ({
+      immateriell: Math.round(bilanz * 0.03),
+      sachanlagen: Math.round(bilanz * 0.45),
+      finanzanlagen: Math.round(bilanz * 0.02),
+      vorraete: Math.round(bilanz * 0.18),
+      forderungen: Math.round(bilanz * 0.22),
+      liquide: Math.round(bilanz * 0.10),
+      eigenkapital: ek,
+      rueckstellungen: Math.round(bilanz * 0.06),
+      verb_kurz: Math.round(bilanz * 0.32),
+      verb_lang: Math.round((bilanz - ek) * 0.42),
+      umsatz,
+      materialaufwand: Math.round(umsatz * 0.38),
+      personalaufwand: Math.round(umsatz * 0.34),
+      abschreibungen: Math.round(umsatz * 0.035),
+      sonstige_aufwendungen: Math.round(umsatz * 0.14),
+      zinsaufwand: Math.round(umsatz * 0.008),
+      steuern: Math.round(jue * 0.32),
+      jahresueberschuss: jue,
+      sonstige_ertraege: Math.round(umsatz * 0.01),
+    });
+
+    return {
+      firma: firma || DEMO_EXTRACTION_RESULT.firma,
+      rechtsform: rechtsform || DEMO_EXTRACTION_RESULT.rechtsform,
+      hrb: 'HRB 67890',
+      amtsgericht: ort || DEMO_EXTRACTION_RESULT.ort,
+      gruendung: gruendung ? parseInt(gruendung, 10) : parseInt(DEMO_EXTRACTION_RESULT.gruendung, 10),
+      adresse: {
+        strasse: strasse || DEMO_EXTRACTION_RESULT.strasse,
+        plz: plz || DEMO_EXTRACTION_RESULT.plz,
+        ort: ort || DEMO_EXTRACTION_RESULT.ort,
+      },
+      branche: branche || DEMO_EXTRACTION_RESULT.branche,
+      stammkapital: 500000,
+      gf: [
+        {
+          name: ansprechpartner || DEMO_EXTRACTION_RESULT.ansprechpartner,
+          geb: '1965-08-17',
+          funktion: 'GF/Gesellschafter',
+          anteil: 65,
+        },
+        { name: 'Andrea Müller', geb: '1970-04-23', funktion: 'Gesellschafter', anteil: 35 },
+      ],
+      mitarbeiter: mitarbeiter ? parseInt(mitarbeiter, 10) : parseInt(DEMO_EXTRACTION_RESULT.mitarbeiter, 10),
+      ust_id: 'DE 298 765 431',
+      bilanz: {
+        2023: bilanzJahr(umsatz23, bilanzsumme23, eigenkapital23, jue23),
+        2022: bilanzJahr(umsatz22, Math.round(bilanzsumme23 * 0.93), Math.round(eigenkapital23 * 0.88), Math.round(jue23 * 0.82)),
+        2021: bilanzJahr(umsatz21, Math.round(bilanzsumme23 * 0.84), Math.round(eigenkapital23 * 0.74), Math.round(jue23 * 0.65)),
+      },
+    };
+  }, [firma, rechtsform, branche, gruendung, strasse, plz, ort, mitarbeiter, ansprechpartner]);
+
+  // Simulate uploading a mock document — fügt Datei zur Upload-Liste hinzu,
+  // triggert den KI-Extraktions-Ablauf (wie bei echtem Upload) und füllt
+  // damit die Stammdatenfelder sowie die KI-Quelle-Badges automatisch.
+  const handleMockUpload = useCallback((doc) => {
+    const fake = {
+      name: doc.filename,
+      size: doc.size,
+      type: 'application/pdf',
+      uploadedAt: new Date(),
+      mockDocId: doc.id,
+    };
+    setUploadedFiles(prev => {
+      if (prev.some(f => f.mockDocId === doc.id)) return prev;
+      return [...prev, fake];
+    });
+  }, []);
+
+  // Handle file upload (demo: accepts any file, simulates AI extraction)
+  const handleFileUpload = useCallback((e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    const newFiles = files.map(f => ({
+      name: f.name,
+      size: f.size,
+      type: f.type,
+      uploadedAt: new Date(),
+    }));
+    setUploadedFiles(prev => [...prev, ...newFiles]);
+    // Reset the input so the same file can be re-uploaded
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }, []);
+
+  const removeFile = useCallback((idx) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== idx));
+  }, []);
+
+  // Simulated AI extraction
+  const runExtraction = useCallback(() => {
+    setExtracting(true);
+    setExtractionStep(0);
+    setExtractionDone(false);
+
+    // Simulate step-by-step extraction with delays
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      setExtractionStep(step);
+      if (step >= EXTRACTION_STEPS.length) {
+        clearInterval(interval);
+        // Apply demo extraction result
+        const d = DEMO_EXTRACTION_RESULT;
+        setFirma(d.firma);
+        setRechtsform(d.rechtsform);
+        setBranche(d.branche);
+        setGruendung(d.gruendung);
+        setStrasse(d.strasse);
+        setPlz(d.plz);
+        setOrt(d.ort);
+        setMitarbeiter(d.mitarbeiter);
+        setAnsprechpartner(d.ansprechpartner);
+        setPosition(d.position);
+        setEmail(d.email);
+        setTelefon(d.telefon);
+        setKreditArt(d.kreditArt);
+        setVerwendungKategorie(d.verwendungKategorie);
+        setVerwendung(d.verwendung);
+        setSicherheiten(d.sicherheiten);
+        setExtractedSummary(d.financialSummary);
+        setExtracting(false);
+        setExtractionDone(true);
+      }
+    }, 600);
+  }, []);
+
+  const validateForm = useCallback(() => {
+    const errors = [];
+    if (!firma.trim()) errors.push({ field: 'firma', label: 'Firmenname' });
+    if (!branche.trim()) errors.push({ field: 'branche', label: 'Branche' });
+    if (!ansprechpartner.trim()) errors.push({ field: 'ansprechpartner', label: 'Ansprechpartner' });
+    if (!email.trim()) errors.push({ field: 'email', label: 'E-Mail' });
+    if (!kreditArt) errors.push({ field: 'kreditArt', label: 'Kreditart' });
+    const b = typeof betrag === 'number' ? betrag : parseInt(betrag, 10) || 0;
+    if (!b) errors.push({ field: 'betrag', label: 'Kreditbetrag' });
+    if (!laufzeit) errors.push({ field: 'laufzeit', label: 'Gewünschte Laufzeit' });
+    if (!verwendung.trim()) errors.push({ field: 'verwendung', label: 'Verwendungszweck' });
+    return errors;
+  }, [firma, branche, ansprechpartner, email, kreditArt, betrag, laufzeit, verwendung]);
+
+  const handleSubmit = useCallback(() => {
+    const errors = validateForm();
+    if (errors.length > 0) {
+      setValidationErrors(errors);
+      setShowErrors(true);
+      const firstField = errors[0].field;
+      const el = document.getElementById(firstField);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.focus();
+      }
+      return;
+    }
+
+    setShowErrors(false);
+    setValidationErrors([]);
+
+    const newId = `CRED-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`;
+    const betragNum = typeof betrag === 'number' ? betrag : parseInt(betrag, 10) || 0;
+    const umsatz23 = kundenCompany.bilanz[2023].umsatz;
+
+    // kundenCompany ist die Quelle der Wahrheit für Stammdaten & Bilanz —
+    // identisch zu dem, was in den Mock-PDF-Vorschauen angezeigt wird.
+    // Hier kommen noch Credit-spezifische Ergänzungen dazu.
+    const richCompany = {
+      ...kundenCompany,
+      id: newId,
+      wz_code: branche.toLowerCase().includes('maschinen') ? '28.41' : '70.22',
+      steuer_id: 'DE' + Math.floor(Math.random() * 900000000 + 100000000),
+      hauptbank: true,
+      gf: kundenCompany.gf.map((g) => ({
+        ...g,
+        seit: kundenCompany.gruendung,
+        erfahrung: new Date().getFullYear() - (kundenCompany.gruendung || 1998) + 5,
+      })),
+      ansprechpartner: { name: ansprechpartner, telefon, email, position },
+      kredit: {
+        art: kreditArt,
+        betrag: betragNum,
+        laufzeit: parseInt(laufzeit, 10) || 84,
+        tilgungsfrei: 6,
+        verwendung,
+        verwendungKategorie,
+        auszahlung: new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+      },
+      sicherheiten: [
+        {
+          art: 'Grundschuld (Gewerbeimmobilie)',
+          bezeichnung: `Grundschuld auf Betriebsgelände ${ort || 'Köln'}`,
+          wert: Math.round(betragNum * 1.2),
+          vorlasten: Math.round(betragNum * 0.15),
+          rang: 1,
+          bewertung: 'Verkehrswertgutachten',
+          datum: new Date().toISOString().slice(0, 10),
+        },
+        {
+          art: 'Sicherungsübereignung',
+          bezeichnung: 'Zu finanzierende Maschine (CNC-Bearbeitungszentrum)',
+          wert: Math.round(betragNum * 0.85),
+          vorlasten: 0,
+          rang: 1,
+          bewertung: 'Anschaffungswert',
+          datum: new Date().toISOString().slice(0, 10),
+        },
+        {
+          art: 'Globalzession (Forderungen)',
+          bezeichnung: 'Abtretung Kundenforderungen',
+          wert: Math.round(umsatz23 * 0.08),
+          vorlasten: 0,
+          rang: 1,
+          bewertung: 'Buchwert',
+          datum: new Date().toISOString().slice(0, 10),
+        },
+      ],
+      ...kundenBonitaet(ort),
+      uploadedDocuments: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type, uploadedAt: f.uploadedAt?.toISOString?.() || new Date().toISOString() })),
+      sicherheiten_vorerfassung: sicherheiten,
+      status: 'eingegangen',
+    };
+
+    dispatch({ type: 'ADD_CUSTOMER_APPLICATION', company: richCompany });
+
+    setSubmitted(true);
+  }, [validateForm, firma, rechtsform, branche, gruendung, strasse, plz, ort,
+      mitarbeiter, ansprechpartner, telefon, email, position, kreditArt,
+      betrag, laufzeit, verwendung, verwendungKategorie, sicherheiten, dispatch]);
+
+  // Success screen after submission
+  if (submitted) {
+    return (
+      <div className="max-w-2xl mx-auto py-20">
+        <div className="bg-surface-card border border-border rounded-xl p-10 text-center space-y-5">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
+              <CheckCircle2 size={36} strokeWidth={1.5} className="text-emerald-600" />
+            </div>
+          </div>
+          <h2 className="text-xl font-headline font-bold text-text-primary">
+            Kreditantrag erfolgreich eingereicht!
+          </h2>
+          <p className="text-sm text-text-secondary font-body max-w-md mx-auto">
+            Vielen Dank für Ihren Kreditantrag. Unser Kreditteam wird Ihren Antrag
+            prüfen und sich in Kürze bei Ihnen melden.
+          </p>
+          <div className="flex items-center justify-center gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => {
+                setSubmitted(false);
+                setExtractionDone(false);
+                setExtractedSummary(null);
+                setUploadedFiles([]);
+                setFirma(''); setBranche(''); setGruendung(''); setStrasse(''); setPlz('');
+                setOrt(''); setMitarbeiter(''); setAnsprechpartner(''); setTelefon('');
+                setEmail(''); setPosition(''); setBetrag(''); setLaufzeit('');
+                setVerwendung(''); setSicherheiten('');
+              }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 border border-border text-text-primary rounded-lg text-sm font-semibold hover:bg-surface transition-colors"
+            >
+              Neuen Antrag stellen
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('dashboard')}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-light transition-colors"
+            >
+              Zum Dashboard (Intern)
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full space-y-6 pb-12">
+      {/* Page header */}
+      <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-600 text-white shrink-0">
+          <Send size={20} strokeWidth={1.75} />
+        </div>
+        <div>
+          <h2 className="text-lg font-headline font-semibold text-text-primary">
+            Kreditantrag stellen
+          </h2>
+          <p className="text-xs text-text-muted font-body">
+            Kundenperspektive – Stellen Sie hier Ihren Kreditantrag. Pflichtfelder sind mit * markiert.
+          </p>
+        </div>
+      </div>
+
+      {/* Info banner */}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+        <AlertCircle size={18} className="text-amber-600 mt-0.5 shrink-0" />
+        <div>
+          <p className="text-sm font-semibold text-amber-800">Hinweis</p>
+          <p className="text-xs text-amber-700 mt-0.5">
+            Laden Sie Ihre Jahresabschlüsse (Bilanz, GuV, BWA) hoch – unsere KI füllt den Antrag automatisch für Sie aus.
+            Nach Einreichung wird Ihr Antrag von unserem Kreditteam geprüft.
+          </p>
+        </div>
+      </div>
+
+      {/* Validation errors banner */}
+      {showErrors && validationErrors.length > 0 && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+          <AlertCircle size={18} className="text-danger mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-danger">Bitte füllen Sie alle Pflichtfelder aus:</p>
+            <p className="text-xs text-red-600 mt-1">{validationErrors.map(e => e.label).join(', ')}</p>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* DOCUMENT UPLOAD SECTION                                            */}
+      {/* ================================================================== */}
+      <SectionCard icon={Upload} title="Dokumente hochladen" badge={extractionDone ? 'KI-Analyse abgeschlossen' : null}>
+        {/* Demo documents download */}
+        <div className="bg-surface border border-border rounded-xl p-4 mb-5">
+          <div className="flex items-start gap-3">
+            <div className="w-7 h-7 rounded-lg bg-[var(--tint-info)] flex items-center justify-center shrink-0">
+              <Eye size={15} strokeWidth={1.75} className="text-blue-700" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-text-primary">Demo-Dokumente herunterladen</p>
+              <p className="text-xs text-text-secondary mt-0.5 mb-3">
+                Laden Sie die Beispieldokumente der Müller Maschinenbau GmbH herunter, um die KI-Analyse zu testen.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={generateBilanzPdf}
+                  className="inline-flex items-center gap-1.5 px-3 h-8 bg-surface-card border border-border text-text-primary rounded-lg text-xs font-medium hover:border-primary-light hover:text-primary transition-colors"
+                >
+                  <Download size={12} /> Bilanz 2021–2023
+                </button>
+                <button
+                  type="button"
+                  onClick={generateGuvPdf}
+                  className="inline-flex items-center gap-1.5 px-3 h-8 bg-surface-card border border-border text-text-primary rounded-lg text-xs font-medium hover:border-primary-light hover:text-primary transition-colors"
+                >
+                  <Download size={12} /> GuV 2021–2023
+                </button>
+                <button
+                  type="button"
+                  onClick={generateBwaPdf}
+                  className="inline-flex items-center gap-1.5 px-3 h-8 bg-surface-card border border-border text-text-primary rounded-lg text-xs font-medium hover:border-primary-light hover:text-primary transition-colors"
+                >
+                  <Download size={12} /> BWA 12/2023
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Demo-Upload — Mock-Dokumente mit einem Klick "hochladen" */}
+        <div className="bg-surface border border-border rounded-xl p-4 mb-5">
+          <div className="flex items-start gap-3">
+            <div className="w-7 h-7 rounded-lg bg-[var(--tint-ki)] flex items-center justify-center shrink-0">
+              <Upload size={15} strokeWidth={1.75} className="text-[var(--ki)]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-text-primary">
+                Demo-Upload: Dokumente simuliert hochladen
+              </p>
+              <p className="text-xs text-text-secondary mt-0.5 mb-3">
+                Jahresabschluss (Bilanz, GuV), BWA und Legitimationsunterlagen einzeln oder alle auf einmal hochladen –
+                so, als hätte der Kunde echte PDFs eingereicht. Danach füllt die KI-Analyse den Antrag aus. Ein Klick auf
+                einen hochgeladenen Eintrag zeigt das Dokument.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => DEMO_UPLOADS.forEach(handleMockUpload)}
+                  disabled={DEMO_UPLOADS.every((d) => uploadedFiles.some((f) => f.mockDocId === d.id))}
+                  className="inline-flex items-center gap-1.5 px-4 h-8 bg-amber-600 text-white rounded-lg text-xs font-medium hover:bg-amber-700 disabled:opacity-50 transition-colors"
+                >
+                  <Upload size={13} strokeWidth={2} />
+                  Alle Unterlagen hochladen
+                </button>
+                {DEMO_UPLOADS.map(doc => (
+                  <button
+                    key={doc.id}
+                    type="button"
+                    onClick={() => handleMockUpload(doc)}
+                    className="inline-flex items-center gap-1.5 px-3 h-8 bg-surface-card border border-border text-text-primary rounded-lg text-xs font-medium hover:border-[var(--ki)] hover:text-[var(--ki)] transition-colors"
+                  >
+                    <Upload size={12} strokeWidth={2} />
+                    {doc.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Upload area */}
+        <div
+          className="border-2 border-dashed border-border-strong rounded-xl p-6 text-center cursor-pointer hover:border-amber-400 hover:bg-amber-50/40 transition-colors"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept=".pdf,.xlsx,.xls,.csv,.doc,.docx"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <Upload size={28} strokeWidth={1.5} className="text-text-muted mx-auto mb-2" />
+          <p className="text-sm text-text-secondary font-body">
+            Dokumente hierhin ziehen oder <span className="text-amber-600 font-semibold">durchsuchen</span>
+          </p>
+          <p className="text-xs text-text-muted mt-1">
+            PDF, Excel, Word – Bilanz, GuV, BWA, Jahresabschluss
+          </p>
+        </div>
+
+        {/* Uploaded files list */}
+        {uploadedFiles.length > 0 && (
+          <div className="mt-4 space-y-2">
+            {uploadedFiles.map((file, idx) => {
+              const isMock = !!file.mockDocId;
+              return (
+                <div
+                  key={idx}
+                  className={`flex items-center gap-3 bg-surface rounded-lg px-4 py-2.5 border border-border ${isMock ? 'cursor-pointer hover:border-violet-300 hover:bg-violet-50/40' : ''}`}
+                  onClick={isMock ? () => setPreviewDocId(file.mockDocId) : undefined}
+                  title={isMock ? 'Mock-PDF ansehen' : undefined}
+                >
+                  <FileText size={16} className={isMock ? 'text-violet-600 shrink-0' : 'text-amber-600 shrink-0'} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-body text-text-primary truncate">{file.name}</p>
+                    <p className="text-xs text-text-muted">
+                      {Math.round(file.size / 1024).toLocaleString('de-DE')} KB
+                      {isMock && <span className="ml-2 text-violet-600 font-semibold">· Demo-Upload · klicken für Vorschau</span>}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); removeFile(idx); }}
+                    className="p-1 text-text-muted hover:text-danger transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* AI extraction button + progress */}
+        {uploadedFiles.length > 0 && !extractionDone && (
+          <div className="mt-4">
+            {extracting ? (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <Loader2 size={20} className="text-amber-600 animate-spin" />
+                  <p className="text-sm font-semibold text-amber-800">KI analysiert Ihre Dokumente...</p>
+                </div>
+                <div className="space-y-2">
+                  {EXTRACTION_STEPS.map((step, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      {idx < extractionStep ? (
+                        <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
+                      ) : idx === extractionStep ? (
+                        <Loader2 size={14} className="text-amber-600 animate-spin shrink-0" />
+                      ) : (
+                        <div className="w-3.5 h-3.5 rounded-full border border-gray-300 shrink-0" />
+                      )}
+                      <span className={`text-xs font-body ${idx < extractionStep ? 'text-emerald-700' : idx === extractionStep ? 'text-amber-800 font-semibold' : 'text-text-muted'}`}>
+                        {step}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={runExtraction}
+                className="w-full inline-flex items-center justify-center gap-2 px-5 h-11 bg-amber-600 text-white rounded-[10px] text-sm font-medium hover:bg-amber-700 transition-colors"
+              >
+                <Sparkles size={18} />
+                KI-Analyse starten – Antrag automatisch ausfüllen
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Extraction result summary */}
+        {extractionDone && extractedSummary && (
+          <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <CheckCircle2 size={16} className="text-emerald-600" />
+              <p className="text-sm font-semibold text-emerald-800">Daten erfolgreich extrahiert</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { label: 'Umsatz 2023', value: fmtCurrency.format(extractedSummary.umsatz2023) },
+                { label: 'Jahresüberschuss', value: fmtCurrency.format(extractedSummary.jahresueberschuss2023) },
+                { label: 'EK-Quote', value: extractedSummary.eigenkapitalquote },
+                { label: 'Umsatzrendite', value: extractedSummary.umsatzrendite },
+              ].map((item) => (
+                <div key={item.label} className="bg-white rounded-md p-2.5 border border-emerald-100">
+                  <p className="text-[11px] text-text-muted uppercase tracking-wider">{item.label}</p>
+                  <p className="text-sm font-mono font-semibold text-text-primary mt-0.5">{item.value}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-emerald-700 mt-3">
+              Alle Felder wurden vorbefüllt. Bitte prüfen Sie die Daten und passen Sie bei Bedarf an.
+            </p>
+          </div>
+        )}
+      </SectionCard>
+
+      {/* ================================================================== */}
+      {/* SECTION: Unternehmensdaten                                         */}
+      {/* ================================================================== */}
+      <SectionCard icon={Building2} title="Unternehmensdaten" badge={extractionDone ? 'Vorbefüllt' : null}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-1">
+            <LabelWithSource htmlFor="firma" showHint={extractionDone} sourceCompany={kundenCompany} field="firma" value={firma} sourceDoc="handelsregister">
+              Firmenname *
+            </LabelWithSource>
+            <input
+              id="firma"
+              type="text"
+              value={firma}
+              onChange={(e) => setFirma(e.target.value)}
+              placeholder="Mustermann GmbH"
+              className={inputCls + (isFieldError('firma') ? ' border-danger ring-2 ring-danger/20' : '')}
+            />
+          </div>
+          <div>
+            <LabelWithSource htmlFor="rechtsform" showHint={extractionDone} sourceCompany={kundenCompany} field="rechtsform" value={rechtsform} sourceDoc="handelsregister">
+              Rechtsform
+            </LabelWithSource>
+            <div className="relative">
+              <select id="rechtsform" value={rechtsform} onChange={(e) => setRechtsform(e.target.value)} className={selectCls}>
+                {RECHTSFORMEN.map((r) => <option key={r} value={r}>{r}</option>)}
+              </select>
+              <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted" />
+            </div>
+          </div>
+          <div>
+            <LabelWithSource htmlFor="branche" showHint={extractionDone} sourceCompany={kundenCompany} field="branche" value={branche} sourceDoc="handelsregister">
+              Branche *
+            </LabelWithSource>
+            <input
+              id="branche"
+              type="text"
+              value={branche}
+              onChange={(e) => setBranche(e.target.value)}
+              placeholder="z.B. Maschinenbau"
+              className={inputCls + (isFieldError('branche') ? ' border-danger ring-2 ring-danger/20' : '')}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div>
+            <LabelWithSource htmlFor="gruendung" showHint={extractionDone} sourceCompany={kundenCompany} field="gruendung" value={gruendung} sourceDoc="handelsregister">
+              Gründungsjahr
+            </LabelWithSource>
+            <input
+              id="gruendung"
+              type="number"
+              value={gruendung}
+              onChange={(e) => setGruendung(e.target.value)}
+              placeholder="2010"
+              min="1800"
+              max="2026"
+              className={inputCls + ' font-mono'}
+            />
+          </div>
+          <div>
+            <Label htmlFor="mitarbeiter">Mitarbeiterzahl</Label>
+            <input
+              id="mitarbeiter"
+              type="number"
+              value={mitarbeiter}
+              onChange={(e) => setMitarbeiter(e.target.value)}
+              placeholder="50"
+              min="0"
+              className={inputCls + ' font-mono'}
+            />
+          </div>
+          <div>
+            <LabelWithSource htmlFor="ort" showHint={extractionDone} sourceCompany={kundenCompany} field="ort" value={ort} sourceDoc="handelsregister">
+              Standort
+            </LabelWithSource>
+            <input
+              id="ort"
+              type="text"
+              value={ort}
+              onChange={(e) => setOrt(e.target.value)}
+              placeholder="z.B. Köln"
+              className={inputCls}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <Label htmlFor="strasse">Straße</Label>
+            <input
+              id="strasse"
+              type="text"
+              value={strasse}
+              onChange={(e) => setStrasse(e.target.value)}
+              placeholder="Industriestr. 42"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <Label htmlFor="plz">PLZ</Label>
+            <input
+              id="plz"
+              type="text"
+              value={plz}
+              onChange={(e) => setPlz(e.target.value)}
+              placeholder="50667"
+              maxLength={5}
+              className={inputCls + ' font-mono'}
+            />
+          </div>
+        </div>
+      </SectionCard>
+
+      {/* SECTION: Ansprechpartner */}
+      <SectionCard icon={UserCircle} title="Ansprechpartner" badge={extractionDone ? 'Vorbefüllt' : null}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="ansprechpartner">Name *</Label>
+            <input
+              id="ansprechpartner"
+              type="text"
+              value={ansprechpartner}
+              onChange={(e) => setAnsprechpartner(e.target.value)}
+              placeholder="Max Mustermann"
+              className={inputCls + (isFieldError('ansprechpartner') ? ' border-danger ring-2 ring-danger/20' : '')}
+            />
+          </div>
+          <div>
+            <Label htmlFor="position">Position / Funktion</Label>
+            <input
+              id="position"
+              type="text"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              placeholder="Geschäftsführer"
+              className={inputCls}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <Label htmlFor="email">E-Mail *</Label>
+            <div className="relative">
+              <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="max@mustermann.de"
+                className={inputCls + ' pl-9' + (isFieldError('email') ? ' border-danger ring-2 ring-danger/20' : '')}
+              />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="telefon">Telefon</Label>
+            <div className="relative">
+              <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input
+                id="telefon"
+                type="tel"
+                value={telefon}
+                onChange={(e) => setTelefon(e.target.value)}
+                placeholder="+49 221 1234567"
+                className={inputCls + ' pl-9'}
+              />
+            </div>
+          </div>
+        </div>
+      </SectionCard>
+
+      {/* SECTION: Kreditwunsch */}
+      <SectionCard icon={Banknote} title="Kreditwunsch" badge={extractionDone ? 'Vorbefüllt' : null}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <Label htmlFor="kreditArt">Kreditart *</Label>
+            <div className="relative">
+              <select id="kreditArt" value={kreditArt} onChange={(e) => setKreditArt(e.target.value)} className={selectCls}>
+                {KREDITARTEN.map((k) => <option key={k} value={k}>{k}</option>)}
+              </select>
+              <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted" />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="betrag">Gewünschter Kreditbetrag *</Label>
+            <EuroInput id="betrag" value={betrag} onChange={setBetrag} />
+          </div>
+          <div>
+            <Label htmlFor="laufzeit">Gewünschte Laufzeit (Monate) *</Label>
+            <input
+              id="laufzeit"
+              type="number"
+              value={laufzeit}
+              onChange={(e) => setLaufzeit(e.target.value)}
+              placeholder="60"
+              min="1"
+              className={inputCls + ' font-mono' + (isFieldError('laufzeit') ? ' border-danger ring-2 ring-danger/20' : '')}
+            />
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <KreditrahmenVorschlag
+            company={extractionDone ? { ...kundenCompany, ...kundenBonitaet(ort) } : null}
+            betrag={betrag}
+            laufzeit={laufzeit}
+            verbindlichkeiten={extractionDone ? kundenBonitaet(ort).bestehende_verbindlichkeiten : []}
+            onUebernehmen={(max) => setBetrag(max)}
+            onLaufzeit={(monate) => setLaufzeit(String(monate))}
+            perspektive="kunde"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
+          <div>
+            <Label htmlFor="verwendungKategorie">Verwendungskategorie</Label>
+            <div className="relative">
+              <select id="verwendungKategorie" value={verwendungKategorie} onChange={(e) => setVerwendungKategorie(e.target.value)} className={selectCls}>
+                {VERWENDUNG_KATEGORIEN.map((k) => <option key={k} value={k}>{k}</option>)}
+              </select>
+              <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted" />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <Label htmlFor="verwendung">Verwendungszweck *</Label>
+          <textarea
+            id="verwendung"
+            value={verwendung}
+            onChange={(e) => setVerwendung(e.target.value)}
+            placeholder="Beschreiben Sie, wofür der Kredit verwendet werden soll..."
+            rows={3}
+            className={inputCls + ' resize-y' + (isFieldError('verwendung') ? ' border-danger ring-2 ring-danger/20' : '')}
+          />
+        </div>
+
+        <div className="mt-4">
+          <Label htmlFor="sicherheiten">Vorhandene Sicherheiten (optional)</Label>
+          <textarea
+            id="sicherheiten"
+            value={sicherheiten}
+            onChange={(e) => setSicherheiten(e.target.value)}
+            placeholder="z.B. Grundschuld auf Betriebsgelände, Maschinen, Bürgschaften..."
+            rows={2}
+            className={inputCls + ' resize-y'}
+          />
+        </div>
+      </SectionCard>
+
+      {/* Submit button */}
+      <button
+        type="button"
+        onClick={handleSubmit}
+        className="w-full inline-flex items-center justify-center gap-2 px-6 h-12 rounded-[10px] text-base font-medium font-body bg-amber-600 text-white hover:bg-amber-700 active:bg-amber-800 transition-colors duration-150"
+      >
+        <Send size={20} />
+        Kreditantrag einreichen
+      </button>
+
+      {/* Vorschau-Modal für Mock-Dokumente (Handelsregister, Gesellschaftsvertrag …). */}
+      {previewDocId && (
+        <MockPdfPreviewModal
+          documentId={previewDocId}
+          company={kundenCompany}
+          onClose={() => setPreviewDocId(null)}
+        />
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,152 @@
+[
+ {
+  "de": "Tätigkeit",
+  "en": "Activity",
+  "art": "text"
+ },
+ {
+  "de": "<zu ergänzen>",
+  "en": "<to be completed>",
+  "art": "text"
+ },
+ {
+  "de": "Betrieb Gesundheit / Krankenversicherung",
+  "en": "Operations Health / Health Insurance",
+  "art": "text"
+ },
+ {
+  "de": "Sichtung des Postkorbvorgangs, Prüfung der eingereichten Unterlagen (Maklervollmacht, Untervollmacht), Abgleich des Versicherungsnehmers in IS011 und Prüfung des Vertrags in VA230.",
+  "en": "Review of the mailbox case, check of the submitted documents (broker power of attorney, sub-power of attorney), reconciliation of the policyholder in IS011 and check of the contract in VA230.",
+  "art": "text"
+ },
+ {
+  "de": "Prüfung des abgebenden Bestandsinhabers und des übernehmenden Vermittlers in OB726 und GH040, Erstellung der Notiz für den 72-Stunden-BOT bzw. Übergabe an die manuelle Nachbearbeitung.",
+  "en": "Check of the transferring portfolio holder and the acquiring intermediary in OB726 and GH040, creation of the note for the 72-Stunden-BOT or handover to manual follow-up processing.",
+  "art": "text"
+ },
+ {
+  "de": "Welche Arbeitsgruppe führt welche Tätigkeit im automatisierten Prozess aus?",
+  "en": "Which working group performs which activity in the automated process?",
+  "art": "text"
+ },
+ {
+  "de": "veränderte Tätigkeit",
+  "en": "changed activity",
+  "art": "text"
+ },
+ {
+  "de": "Die formale Vorprüfung (Ausschlusskriterien aus dem KI-Deckblatt, Versicherungsnehmer, abgebender Bestandsinhaber, übernehmender Vermittler, Vertragsstatus) wird durch den Prüf-Bot durchgeführt. Manuell bleiben nur die Vorgänge mit Befund.",
+  "en": "The formal preliminary check (exclusion criteria from the AI cover sheet, policyholder, transferring portfolio holder, acquiring intermediary, contract status) is performed by the Prüf-Bot. Only the cases with findings remain manual.",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitung der Vorgänge mit Business Exception oder Prüfnotiz im Themenpostkorb „HSB4K MV“ auf Basis des Bearbeitungshinweises des Prüf-Bots.",
+  "en": "Processing of the cases with a business exception or check note in the topic mailbox „HSB4K MV“ on the basis of the Prüf-Bot's processing note.",
+  "art": "text"
+ },
+ {
+  "de": "Prozessautomatisierung",
+  "en": "Process automation",
+  "art": "text"
+ },
+ {
+  "de": "Ziel der Prozessautomatisierung",
+  "en": "Objective of the process automation",
+  "art": "text"
+ },
+ {
+  "de": "Der Eingang von Bestandsübertragungen (BÜ) wird heute vollständig manuell vorgeprüft. Je Vorgang muss die Sachbearbeitung die Versicherungsscheinnummer bereinigen und den Vertrag in VA230 aufrufen, die Stammdaten des Versicherungsnehmers in IS100 gegen die Vorgangsdaten abgleichen sowie den übernehmenden Vermittler in OB726 und dessen Anbindung in GH040 prüfen. Das sind fünf bis sieben Systemwechsel je Vorgang, bevor überhaupt entschieden werden kann, ob der Vorgang bearbeitbar ist. Ein erheblicher Teil der Vorgänge wird nach dieser Prüfung abgelehnt oder ausgesteuert – der Prüfaufwand fällt also auch für Vorgänge an, die den Prozess gar nicht durchlaufen.",
+  "en": "Today, incoming portfolio transfers (BÜ) are pre-checked entirely by hand. For each case, case handling has to clean up the policy number and call up the contract in VA230, reconcile the policyholder's master data in IS100 against the case data, and check the acquiring intermediary in OB726 and its affiliation in GH040. That is five to seven system switches per case before it can even be decided whether the case can be processed at all. A considerable share of the cases is rejected or routed out after this check – so the checking effort is also incurred for cases that never go through the process.",
+  "art": "text"
+ },
+ {
+  "de": "Ziel der Automatisierung ist es, diese rein formale, regelbasierte Vorprüfung vollständig durch einen Roboter durchführen zu lassen:",
+  "en": "The objective of the automation is to have this purely formal, rule-based preliminary check performed entirely by a robot:",
+  "art": "text"
+ },
+ {
+  "de": "Der Prüf-Bot sammelt zunächst alle Prüfergebnisse ein, bewertet sie anschließend anhand der definierten Prüfkriterien (Business Exceptions und Prüfnotizen) und entscheidet erst danach über Ablehnung, Aussteuerung oder Weitergabe. Dadurch sinkt die Zahl der ausgesteuerten Geschäftsvorfälle gegenüber einer Prüfung mit sofortigem Abbruch beim ersten Fehler deutlich.",
+  "en": "The Prüf-Bot first collects all check results, then evaluates them against the defined check criteria (business exceptions and check notes) and only then decides on rejection, routing out or handover. This significantly reduces the number of routed-out business transactions compared with a check that aborts immediately at the first error.",
+  "art": "text"
+ },
+ {
+  "de": "Vorgänge ohne Befund werden mit einer vollständig bestückten Notiz an den 72-Stunden-BOT übergeben, der die Weitergabe an den nachgelagerten BÜ-BOT steuert. Die Sachbearbeitung bearbeitet nur noch die Vorgänge mit Befund; sie erhält dazu den Bearbeitungshinweis des Prüf-Bots ohne Liegezeit.",
+  "en": "Cases without findings are handed over with a fully populated note to the 72-Stunden-BOT, which controls the handover to the downstream BÜ-BOT. Case handling now only processes the cases with findings; for these it receives the Prüf-Bot's processing note without any idle time.",
+  "art": "text"
+ },
+ {
+  "de": "Kurze Prozessbeschreibung um einen Überblick zu erhalten",
+  "en": "Short process description to provide an overview",
+  "art": "text"
+ },
+ {
+  "de": "Der Prüf-Bot bearbeitet je Lauf einen BÜ-Vorgang aus dem Themenpostkorb. Zu jedem Vorgang liegen die Vorgangsdaten im Datenpool in den Feldern BUE_* vor. Wie der Datenpool befüllt wird, ist nicht Gegenstand dieses PDD.",
+  "en": "The Prüf-Bot processes one BÜ case from the topic mailbox per run. For each case, the case data are available in the data pool in the fields BUE_*. How the data pool is populated is not the subject of this PDD.",
+  "art": "text"
+ },
+ {
+  "de": "Die Gliederung folgt der Prozessbeschreibung:",
+  "en": "The structure follows the process description:",
+  "art": "text"
+ },
+ {
+  "de": "Start – Vorgang aus dem Themenpostkorb übernehmen: Postkorbvorgang öffnen, <Vorgang-Lfd-Nr> und <Vorgang-VNR> lesen, die Felder BUE_* aus dem Datenpool übernehmen, die Variablen für das BE-Handling initialisieren.",
+  "en": "Start – take over the case from the topic mailbox: open the mailbox case, read <Vorgang-Lfd-Nr> and <Vorgang-VNR>, take over the fields BUE_* from the data pool, initialise the variables for BE handling.",
+  "art": "text"
+ },
+ {
+  "de": "Vorprüfung – Business Exceptions aus dem KI-Deckblatt: beim Mehrfachagenten der BÜ-Wunsch und der auf ihn ausgestellte Betreuungswunsch, beim Makler die Unterschrift des Versicherungsnehmers auf der Maklervollmacht; unvollständige Unterlagen führen nicht zum Ausschluss, sondern zu einer Prüfnotiz in <Fehlerliste>. Geprüft wird ausschließlich gegen das KI-Deckblatt, ohne Hostzugriff. Eine Prüfung der Klassifikation entfällt: Der Prüf-Bot wird nur durch Vorgänge ausgelöst, die als Bestandsübertragung in den Themenpostkorb gestellt wurden.",
+  "en": "Preliminary check – business exceptions from the AI cover sheet: for a multiple agent (MFA), the transfer request and the support request (Betreuungswunsch) made out to it; for a broker, the policyholder's signature on the broker power of attorney; incomplete documents do not lead to exclusion but to a check note in <Fehlerliste>. The check is made exclusively against the AI cover sheet, without host access. There is no check of the classification: the Prüf-Bot is only triggered by cases that were placed in the topic mailbox as a portfolio transfer.",
+  "art": "text"
+ },
+ {
+  "de": "I. Kunde (VN) – Partnerprüfung über IS011: Kundennummer des Versicherungsnehmers über die Versicherungsnummer, Matchcodesuche mit den Angaben aus dem Auftrag, Abgleich der Kundennummern; Geburtsdatum als Gegenprobe, wenn der Auftrag eines nennt.",
+  "en": "I. Customer (VN) – partner check via IS011: the policyholder's customer number via the policy number, match code search with the details from the order, comparison of the customer numbers; date of birth as a cross-check if the order states one.",
+  "art": "text"
+ },
+ {
+  "de": "II. Abgebender Bestandsinhaber: Agentur-Nr. aus VA230, PNR über OB726, Anbindungsstatus in GH040.",
+  "en": "II. Transferring portfolio holder: agency no. from VA230, PNR via OB726, affiliation status in GH040.",
+  "art": "text"
+ },
+ {
+  "de": "III. Übernehmender Makler – Agenturnummer und Vermittler-Nr. (PNR): Einstieg in OB726 über die Agenturnummer, PNR, Name und Klassifizierung, Anbindungsprüfung in GH040, E-Mail-Adresse über Sonderliste, OB726 und Datenpool.",
+  "en": "III. Acquiring broker – agency number and intermediary number (PNR): entry into OB726 via the agency number, PNR, name and classification, affiliation check in GH040, e-mail address via Sonderliste, OB726 and data pool.",
+  "art": "text"
+ },
+ {
+  "de": "IV. Vertrag: Vertragsstatus in VA230.",
+  "en": "IV. Contract: contract status in VA230.",
+  "art": "text"
+ },
+ {
+  "de": "V. Test auf Fehlerliste: Ist <Fehlerliste> gefüllt, wird die BE „Nachprüfung erforderlich“ gesetzt.",
+  "en": "V. Test for error list: if <Fehlerliste> is populated, the BE „Nachprüfung erforderlich“ is set.",
+  "art": "text"
+ },
+ {
+  "de": "VI. Abschluss ohne Befund: Telefonnotiz Feld für Feld bestücken und den Vorgang an den 72-Stunden-BOT übergeben. Eine Prüfung des Vertriebskanals des Bestandsinhabers findet im Prüf-Bot nicht statt; der 72-Stunden-BOT erkennt AO-Bestandsinhaber selbst, wahrt die Frist und leitet alle übrigen Vorgänge direkt an den BÜ-BOT weiter.",
+  "en": "VI. Completion without findings: populate the telephone note field by field and hand the case over to the 72-Stunden-BOT. The Prüf-Bot does not check the portfolio holder's sales channel; the 72-Stunden-BOT itself recognises AO portfolio holders, observes the deadline and forwards all other cases directly to the BÜ-BOT.",
+  "art": "text"
+ },
+ {
+  "de": "VII. Abschluss mit Befund – BE-Handling: Bearbeitungshinweis mit <BE-Klassifikation>, <Fehlerliste> und allen im Auftrag genannten Versicherungsnummern; Weiterleitung an den Themenpostkorb „HSB4K MV“.",
+  "en": "VII. Completion with findings – BE handling: processing note with <BE-Klassifikation>, <Fehlerliste> and all policy numbers stated in the order; forwarding to the topic mailbox „HSB4K MV“.",
+  "art": "text"
+ },
+ {
+  "de": "SIPOC",
+  "en": "SIPOC",
+  "art": "text"
+ },
+ {
+  "de": "(S=Supplier, I=Input, P=Process, O=Output, C=Customer)",
+  "en": "(S=Supplier, I=Input, P=Process, O=Output, C=Customer)",
+  "art": "text"
+ },
+ {
+  "de": "Prozessdiagramm / Ablaufdiagramm",
+  "en": "Process diagram / flow chart",
+  "art": "text"
+ }
+]

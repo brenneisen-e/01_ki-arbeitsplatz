@@ -1,0 +1,294 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #000;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 7, 9, 0.92);
+}
+
+/* Die Bühne füllt das ganze Fenster (und im echten Vollbild den Bildschirm). */
+.panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-deep);
+  overflow: hidden;
+  transform-origin: center center;
+}
+
+/* Unsichtbarer Streifen an der oberen Kante über dem iframe: holt die
+   Steuerpille zurück, weil Mausbewegungen im iframe die Seite nicht erreichen. */
+.hotzone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 14px;
+  z-index: 3;
+}
+
+.steuerung {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(92vw, 720px);
+  padding: 6px 8px 6px 16px;
+  border-radius: 999px;
+  background: rgba(6, 7, 9, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--ink);
+  transform: translate(-50%, -160%);
+  opacity: 0;
+  transition: transform 0.28s var(--ease-out), opacity 0.28s var(--ease-out);
+}
+
+.steuerung[data-sichtbar] {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.steuerungTitel {
+  min-width: 0;
+  margin-right: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.esc {
+  margin-left: 2px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.iconLink,
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--ink);
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out);
+}
+
+.iconLink:hover,
+.closeBtn:hover {
+  border-color: var(--accent-bright);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.viewport {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+
+.iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  border: 0;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.viewport[data-geladen] .iframe {
+  opacity: 1;
+}
+
+/* Ladehinweis, solange das Dokument der Demo noch nicht steht. */
+.lade {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.spin {
+  animation: stageSpin 0.8s linear infinite;
+}
+
+@keyframes stageSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px;
+  text-align: center;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--accent-tint), transparent 55%),
+    var(--bg-deep);
+}
+
+.phIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  color: var(--accent-bright);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+}
+
+.phTitle {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.phText {
+  max-width: 52ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.phText code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border-radius: var(--r-xs);
+  padding: 1px 6px;
+}
+
+/* Art „video": Videodatei auf schwarzem Grund, ganz sichtbar (contain). */
+.videoBuehne {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  outline: none;
+}
+
+/* Art „extern": Standbild aus dem Video, Klick öffnet es in neuem Tab. */
+.extern {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.externBild {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: filter var(--t-med) var(--ease-out);
+}
+
+.extern:hover .externBild,
+.extern:focus-visible .externBild {
+  filter: brightness(0.72);
+}
+
+.externMitte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 26px 30px 22px;
+  border-radius: 22px;
+  background: rgba(6, 7, 9, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.externPlay {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 78px;
+  height: 78px;
+  padding-left: 5px;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--accent);
+  box-shadow: 0 0 0 8px var(--accent-tint);
+  transition: transform var(--t-med) var(--ease-out), box-shadow var(--t-med) var(--ease-out);
+}
+
+.extern:hover .externPlay,
+.extern:focus-visible .externPlay {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 12px var(--accent-glow);
+}
+
+.externLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.externHinweis {
+  max-width: 46ch;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}

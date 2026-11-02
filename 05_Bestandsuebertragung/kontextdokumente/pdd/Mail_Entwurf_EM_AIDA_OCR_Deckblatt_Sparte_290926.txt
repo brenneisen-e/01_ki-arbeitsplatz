@@ -1,0 +1,78 @@
+An: Stöhnken, Dennis (EYCK); von Wirtz, Markus; Gröning; Roth, Bastian (EYC1HH); Holthusen, Jan Steffen (EYCHH)
+Cc: Amend, Dirk (HSB4K); Schwarz, Stefan (DSTPB); Koch, Marcus (ODPBD)
+Betreff: Makler BÜ meets KI | AIDA OCR: Mails mit KI-Deckblatt in die Sparte, nicht in die BÜ-Postkörbe
+
+Hallo zusammen,
+
+für den Pilot „Makler BÜ meets KI“ brauchen wir eine Anpassung der AIDA OCR im Eingangsmanagement.
+
+Wie es künftig laufen wird
+Celonis wird künftig die eingehenden Maklermails aus den Postfächern bestandsuebertragung@ergo.de und maklerauftraege@ergo.de übernehmen und jede Mail klassifizieren.
+
+- Bestandsübertragungen wird Celonis selbst über EMWS als Postkorbvorgang eröffnen – für Komposit/Leben mit GeVo 108 „Bestandsübertragung“, für KV mit Dokumenttyp 02015 „Maklervollmacht“. Diese Mails werden nicht mehr an kwad@ergo.de gehen.
+- An KWAD wird Celonis nur die Vorgänge umleiten, die nicht als BÜ-Vorgang klassifiziert werden, zum Beispiel VN-Wechsel, WEG-Wechsel, Kündigung eines Versicherungsvertrags, Verkürzung der Kündigungsfrist, sonstige Fachthemen oder nicht zuordenbare Anliegen.
+
+Folgt aus einem solchen Anliegen eine Bestandsübertragung, dann erst nach der Bearbeitung in der Sparte.
+
+Woran Sie diese Mails erkennen werden
+- An jeder dieser Mails wird das KI-Deckblatt „Makler BÜ – KI Deckblatt“ hängen; die aktuelle Vorlage (Version 1.6) liegt bei.
+- Im Kopf des Deckblatts steht der Hinweis auf den Pilot „Makler BÜ meets KI“.
+- Im Abschnitt „Klassifikation & Vorgang“ stehen das Fachthema (Feld „Klassifikation“) und ob eine Bestandsübertragung folgt (Feld „BÜ-Wunsch vorhanden“).
+- Die Mail selbst trägt einen Hinweistext mit dem Fachthema im Klartext, zum Beispiel: „VN-Wechsel mit anschließender Bestandsübertragung. Bitte gemäß Zuständigkeit in der Sparte eröffnen, zusätzlich GeVo Bestandsübertragung als Zusatzwunsch; die Bestandsübertragung wird erst nach dem VN-Wechsel bearbeitet.“
+
+Ausprägungen des Feldes „Klassifikation“
+Das Feld wird künftig folgende Ausprägungen erhalten (wie in der Aufstellung vom 23.09.). Über KWAD kommen nur die Wege B und C:
+
+Weg A – Celonis eröffnet den Postkorbvorgang über EMWS.
+Weg B – Die Mail geht an KWAD; die Sparte bearbeitet zuerst, die BÜ folgt.
+Weg C – Die Mail geht an KWAD; es folgt keine BÜ.
+
+- BÜ-Vorgang
+  Wann: Bestandsübertragung mit Maklervollmacht (Makler) oder Betreuungswunsch (Mehrfachagent); auch mit Anforderung von Unterlagen
+  BÜ-Wunsch vorhanden = ja / nein → Weg A: nicht beteiligt – Celonis eröffnet über EMWS, keine Mail an KWAD
+- Kündigung Maklervollmacht
+  Wann: Makler oder Kunde kündigt Vollmacht oder Mandat; fachlich eine BÜ in den Freibestand
+  BÜ-Wunsch vorhanden = ja → Weg A: nicht beteiligt – Celonis eröffnet über EMWS, keine Mail an KWAD
+- VN-Wechsel
+  Wann: Wechsel oder Änderung des Versicherungsnehmers
+  BÜ-Wunsch vorhanden = ja → Weg B: Eröffnung in der Sparte; GeVo Bestandsübertragung nur als Zusatzwunsch, bearbeitet erst nach der Sparte
+  BÜ-Wunsch vorhanden = nein → Weg C: nur Sparte, kein GeVo Bestandsübertragung
+- WEG-Wechsel
+  Wann: Wechsel der Wohnungseigentümergemeinschaft (nur Wohngebäude); Behandlung wie VN-Wechsel
+  BÜ-Wunsch vorhanden = ja → Weg B: Eröffnung in der Sparte; GeVo Bestandsübertragung nur als Zusatzwunsch, bearbeitet erst nach der Sparte
+  BÜ-Wunsch vorhanden = nein → Weg C: nur Sparte, kein GeVo Bestandsübertragung
+- Kündigung Versicherungsvertrag
+  Wann: Kündigung eines Vertrags, auch unterjährig oder wegen Beitragsanpassung; nicht: Kündigung der Maklervollmacht
+  BÜ-Wunsch vorhanden = ja → Weg B: Eröffnung in der Sparte; GeVo Bestandsübertragung nur als Zusatzwunsch, bearbeitet erst nach der Sparte
+  BÜ-Wunsch vorhanden = nein → Weg C: nur Sparte, kein GeVo Bestandsübertragung
+- Verkürzung Kündigungsfrist
+  Wann: Bitte um Verkürzung der Kündigungsfrist auf einen Termin
+  BÜ-Wunsch vorhanden = ja → Weg B: Eröffnung in der Sparte; GeVo Bestandsübertragung nur als Zusatzwunsch, bearbeitet erst nach der Sparte
+  BÜ-Wunsch vorhanden = nein → Weg C: nur Sparte, kein GeVo Bestandsübertragung
+- Sonstige Fachthemen
+  Wann: Jedes andere erkennbare Sparten-Anliegen: Anfrage oder Rücksprache, Antrag oder Vertragsänderung (z. B. Adressänderung mit oder ohne Maklervollmacht), Schadenmeldung, Vertragstrennung, Beitragsfreistellung
+  BÜ-Wunsch vorhanden = ja → Weg B: Eröffnung in der Sparte; GeVo Bestandsübertragung nur als Zusatzwunsch, bearbeitet erst nach der Sparte
+  BÜ-Wunsch vorhanden = nein → Weg C: nur Sparte, kein GeVo Bestandsübertragung
+- Nicht-Standard
+  Wann: Anliegen nicht erkennbar oder nicht zuordenbar; das Eingangsmanagement klassifiziert selbst
+  BÜ-Wunsch vorhanden = ja → Weg B: Eröffnung in der Sparte; GeVo Bestandsübertragung nur als Zusatzwunsch, bearbeitet erst nach der Sparte
+  BÜ-Wunsch vorhanden = nein → Weg C: nur Sparte, kein GeVo Bestandsübertragung
+- Kein-Makler-Vorgang
+  Wann: Absender ist kein Vermittler oder es fehlt jeder Vermittlerbezug
+  BÜ-Wunsch vorhanden = nein → Weg C: nur Sparte, kein GeVo Bestandsübertragung
+
+Unsere Bitte
+Damit das ab dem Start greift, bitten wir Sie, die AIDA OCR so anzupassen:
+
+- Hängt das KI-Deckblatt an einer Mail, ist der Vorgang in keinem Fall als Bestandsübertragung einzustufen.
+- Diese Vorgänge bitte nicht in die BÜ-Postkörbe HSB4 K bzw. ODPP1 D indizieren, sondern in die zuständige Sparte. Steht „BÜ-Wunsch vorhanden“ auf „ja“ (Weg B), den GeVo Bestandsübertragung nur als Zusatzwunsch in der Sparte mitgeben.
+- Dafür die BÜ-Priorisierung bzw. die Indizierung nach HSB4 K für Mails mit KI-Deckblatt so zurückstufen, dass sie nicht mehr bei uns landen – auch dann, wenn eine Maklervollmacht anhängt.
+
+Hintergrund: Diese Vorgänge müssen zuerst in der Sparte bearbeitet werden. Landen sie als Bestandsübertragung in HSB4 K oder ODPP1 D, laufen sie in die falsche Bearbeitung und müssen umgehängt werden.
+
+Bitte geben Sie mir kurz Rückmeldung, ob sich das so umsetzen lässt und ab wann die Anpassung greifen kann.
+
+Beste Grüße
+Eike Brenneisen
+
+Anlage: ERGO_Makler_BUE_KI_Deckblatt_V1.6.docx

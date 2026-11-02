@@ -1,0 +1,27 @@
+Hallo Herr Reber-Lucht,
+
+wir haben die Auswertung abgeschlossen. Vorweg das Ergebnis zu Ihrer Frage: Eine getrennte Zahl für Makler an Makler und AO an Makler können wir derzeit nicht belastbar bilden. Der abgebende Makler ist aus einer Mail nicht ermittelbar; er ergibt sich erst aus der Agenturnummer des Vertrags im Bestandssystem. In den 2.837 JDC-Erinnerungen ab KW33 ist eine Agenturnummer nur in 69 Fällen überhaupt erkennbar, das sind 2 Prozent. Eine Quote auf dieser Basis wäre nicht tragfähig. Nachziehen lässt sich die Zuordnung auch nicht über den Postkorb, da dieser nur sehr begrenzte Reportingmöglichkeiten bietet. Bekannt ist jeweils nur die übernehmende Seite, bei den JDC-Erinnerungen also ein Maklerpool. Welcher Vertriebskanal abgibt, steht weder in der Mail noch im Postkorb.
+
+Was wir belastbar sagen können
+
+Die Erinnerungen lassen sich sauber nach Sparte zuordnen, und genau dort liegt der Unterschied in der Rückstandswirkung:
+
+- 2.837 JDC-Erinnerungen ab KW33, davon 1.350 Kranken (48 Prozent), 886 Komposit (31 Prozent), 72 Leben (3 Prozent) und 529 ohne erkennbare Sparte (19 Prozent).
+- In KV erzeugt jeder Posteingang einen eigenen Vorgang. Dort ist die Erinnerung sicher als zusätzlicher Rückstand gezählt worden.
+- In Komposit und Leben laufen weitere Poststücke in den bestehenden Verbund. Dort entsteht in der Regel kein zusätzlicher Rückstand.
+
+Für die Betrachtung der HS-Rückstände haben wir deshalb bewusst nur die KV-Erinnerungen als rückstandswirksam angesetzt, also rund 1.350 Fälle.
+
+Zweiter Effekt: technische Fehlermails
+
+Hinzu kommen 1.732 Ausgangsmails zu bereits abgeschlossenen Vorgängen, die technisch erneut in das Eingangsmanagement geleitet wurden. 1.577 davon stammen aus dem Postfach bestandsuebertragungen@ergo.de, 263 sind Ablehnungsschreiben. Das Fehlerbild ist dabei nicht auf ein Postfach begrenzt: Auch in maklerauftraege@ergo.de sind Ausgangsmails erneut eingesteuert worden, dort allerdings nur rund 170 und damit in deutlich geringerem Umfang. Nach unserer Einschätzung wurden davon rund 800 erneut als Vorgang eingestellt; eine exakte Abgrenzung ist nachträglich nicht möglich. Betroffen sind abgeschlossene Vorgänge aus dem gesamten Bearbeitungsspektrum, also Mischvorgänge über beide Übertragungsrichtungen hinweg. Eine Zuordnung zu Makler an Makler oder AO an Makler lässt sich daraus nicht ableiten.
+
+Einordnung
+
+Beide Effekte wirken auf beide Übertragungsrichtungen. Eine überwiegende Zuordnung zu einer der beiden wäre mit den vorliegenden Daten nicht belegbar; entsprechend sind auch die Rückstände im Bereich Makler an Makler betroffen. In Summe enthalten die Brutto-Rückstände rund 2.000 technisch verursachte Mehrzählungen. Der HS-Bruttorückstand von 11.495 Vorgängen in KW37 entspricht damit einem tatsächlich zu bearbeitenden Bestand von etwa 9.500 Vorgängen. Die Bereinigung ist fachlich wenig aufwendig, bindet kurzfristig aber operative Kapazität. Wir erwarten eine spürbare Reduktion in den Folgewochen. Die Übersicht dazu hängt an.
+
+Wenn eine trennscharfe Aufteilung nach Makler an Makler und AO an Makler benötigt wird, ginge das nur über einen Abgleich der betroffenen Vertragsnummern mit dem Bestandssystem, um je Vertrag den Vertriebskanal der abgebenden Agentur zu ermitteln. Das können wir aufsetzen; sagen Sie mir bitte, ob der Aufwand dafür gerechtfertigt ist.
+
+Beste Grüße
+
+Eike Brenneisen

@@ -1,0 +1,57 @@
+[
+ {
+  "de": "Den bestehenden Postkorbvorgang mit der Telefonnotiz an den 72-Stunden-BOT weiterleiten (Themenpostkorb „HSB4 K 72 - Erstinformation“, Postkorb-Nr. TBD).",
+  "en": "Forward the existing mailbox case with the telephone note to the 72-Stunden-BOT (topic mailbox „HSB4 K 72 - Erstinformation“, mailbox no. TBD).",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „HSB4 K MV Gesundheit Posteingang“ (Postkorb-Nr. TBD) weiterleiten",
+  "en": "Forward the case to the topic mailbox „HSB4 K MV Gesundheit Posteingang“ (mailbox no. TBD)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_SPARTE> = „KR“ und <VA230-VersArt> = „FK“",
+  "en": "<BUE_SPARTE> = „KR“ and <VA230-VersArt> = „FK“",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-AGT-Inh-Vertriebskanal> in (2200, 2215, 2271, 2281, 2300, 2301, 2302, 2400) – Makler- und Kooperationsvertrieb",
+  "en": "<OB726-AGT-Inh-Vertriebskanal> in (2200, 2215, 2271, 2281, 2300, 2301, 2302, 2400) – broker and cooperation sales",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-VersArt> = „FK“",
+  "en": "<VA230-VersArt> = „FK“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei Komposit und Leben entscheidet der Vertriebskanal des abgebenden Bestandsinhabers aus OB726 (Kapitel II): die Kanäle des Makler- und Kooperationsvertriebs (2200, 2215, 2271, 2281, 2300, 2301, 2302, 2400; 2720 noch zu bestätigen) führen nach „ODPP1 D - Ma/Ma Bestandsübertragungen“, alle übrigen Kanäle gehören zur AO (z. B. 2050, 2100, 2111, 2130, 2151, 2800) und führen nach „HSB4 K KO Komposit / Leben Posteingang“ (K. Rypa, 25.09.2026). Ist der Bestandsinhaber nicht ermittelbar oder endet die Prüfung vor Kapitel II, geht der Vorgang nach HSB4 K KO (Vorschlag, durch den Fachbereich zu bestätigen).",
+  "en": "Note: For Komposit (P&C) and Leben (life), the sales channel of the transferring portfolio holder from OB726 (chapter II) decides: the channels of the broker and cooperation sales (2200, 2215, 2271, 2281, 2300, 2301, 2302, 2400; 2720 still to be confirmed) lead to „ODPP1 D - Ma/Ma Bestandsübertragungen“, all other channels belong to the AO (e.g. 2050, 2100, 2111, 2130, 2151, 2800) and lead to „HSB4 K KO Komposit / Leben Posteingang“ (K. Rypa, 25.09.2026). If the portfolio holder cannot be determined or the check ends before chapter II, the case goes to HSB4 K KO (proposal, to be confirmed by the business department).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Einen KR-Flottenvertrag erkennt der Bot in VA230 (VAF230 „Anzeige steuerrelevanter Daten“) am Feld „Sparte/Vers.Art“: die Versicherungsart „FK“ steht für einen Flottenvertrag, „KR“ für einen normalen KR-Vertrag (K. Rypa, 25.09.2026, siehe Screenshot). Jeder Vertrag unter einem Mantel wird als BE ausgesteuert, nicht nur der Mantel selbst. Die Sparte kommt aus dem Datenpoolfeld <BUE_SPARTE>; nennt der Auftrag mehrere Nummern, gilt das Kürzel an der Position der <Vorgang-VNR>.",
+  "en": "Note: The bot recognises a KR fleet contract in VA230 (VAF230 „Anzeige steuerrelevanter Daten“) by the field „Sparte/Vers.Art“: the insurance type „FK“ stands for a fleet contract, „KR“ for a normal KR contract (K. Rypa, 25.09.2026, see screenshot). Every contract under an umbrella contract is routed out as a BE, not only the umbrella contract itself. The line of business comes from the data pool field <BUE_SPARTE>; if the order names several numbers, the code at the position of <Vorgang-VNR> applies.",
+  "art": "text"
+ },
+ {
+  "de": "Lese das Feld „Sparte/Vers.Art“ aus und speichere den mittleren Wert (Versicherungsart, z. B. „KFZ / FK / J“ → „FK“) als <VA230-VersArt>.",
+  "en": "Read the field „Sparte/Vers.Art“ and store the middle value (insurance type, e.g. „KFZ / FK / J“ → „FK“) as <VA230-VersArt>.",
+  "art": "text"
+ },
+ {
+  "de": "Lese das Feld „Vertriebskanal“ aus und speichere die vierstellige Nummer als <OB726-AGT-Inh-Vertriebskanal> (steuert im Kapitel „VII. Abschluss mit Befund“ das Routing nach ODPP1 D oder HSB4 K KO).",
+  "en": "Read the field „Vertriebskanal“ and store the four-digit number as <OB726-AGT-Inh-Vertriebskanal> (controls the routing to ODPP1 D or HSB4 K KO in chapter „VII. Abschluss mit Befund“).",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „HSB4 K KO Komposit / Leben Posteingang“ (Postkorb-Nr. TBD) weiterleiten",
+  "en": "Forward the case to the topic mailbox „HSB4 K KO Komposit / Leben Posteingang“ (mailbox no. TBD)",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „ODPP1 D - Ma/Ma Bestandsübertragungen“ (Postkorb-Nr. TBD) weiterleiten",
+  "en": "Forward the case to the topic mailbox „ODPP1 D - Ma/Ma Bestandsübertragungen“ (mailbox no. TBD)",
+  "art": "text"
+ }
+]

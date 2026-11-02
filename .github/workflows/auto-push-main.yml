@@ -1,0 +1,57 @@
+name: Auto Push to Main
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+# Verhindert, dass zwei gleichzeitige Laeufe denselben main-Merge rennen.
+concurrency:
+  group: auto-push-main
+  cancel-in-progress: false
+
+jobs:
+  push-to-main:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Den gepushten Branch in main MERGEN statt main per Force-Push zu
+      # ueberschreiben. So verdraengen parallele Branches sich nicht mehr
+      # gegenseitig; bei echten Konflikten schlaegt der Lauf hoerbar fehl,
+      # statt Arbeit stillschweigend zu verlieren.
+      - name: Merge pushed branch into main
+        run: |
+          set -euo pipefail
+          git fetch origin main:main
+          git checkout main
+          # Bereits enthalten? Dann ist nichts zu tun.
+          if git merge-base --is-ancestor "$GITHUB_SHA" HEAD; then
+            echo "main enthaelt ${GITHUB_SHA} bereits - nichts zu tun."
+            exit 0
+          fi
+          git merge --no-ff "$GITHUB_SHA" \
+            -m "Auto-merge ${GITHUB_REF_NAME} into main (${GITHUB_SHA})"
+
+          # Cloudflare Pages lehnt jedes Deployment ab, in dem eine Datei
+          # groesser als 25 MiB ist - dann geht KEINE Aenderung mehr live.
+          # Deshalb hier laut scheitern, bevor main die Datei bekommt.
+          zu_gross=$(git ls-tree -r -l HEAD | awk '$4 > 26214400 { print $5 " (" $4 " Bytes)" }')
+          if [ -n "$zu_gross" ]; then
+            echo "::error::Dateien ueber 25 MiB - Cloudflare Pages wuerde das Deployment ablehnen:"
+            echo "$zu_gross"
+            exit 1
+          fi
+
+          git push origin main

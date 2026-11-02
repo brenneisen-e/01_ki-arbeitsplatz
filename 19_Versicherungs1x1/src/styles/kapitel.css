@@ -1,0 +1,268 @@
+/* ==========================================================================
+   kapitel.css — Kapitelseite: Kopf mit Kennzahlen, Tab-Leiste der
+   Lerneinheiten, Einheitenkopf, „Auf dieser Seite“, Kurz gesagt / Lernziele,
+   Tiefenmarken, Block-Hervorhebung, Quellen, Fuß mit Navigation.
+   Gehört dem Agenten Kapitel. Breiten über Container-Abfragen (die Inhalts-
+   spalte hängt von Sidebar und rechter Leiste ab), die rechte Leiste selbst
+   am Fenster (≥ 1440 px, Brief §3).
+   ========================================================================== */
+@layer components {
+  .kapitel-seite {
+    padding: 24px var(--seitenrand) 64px;
+    container-type: inline-size;
+    container-name: seite;
+  }
+
+  /* ------------------------------------------------------------- Kopf */
+  .kapitel-kopf { margin-bottom: 20px; }
+  .kapitel-kopf h1 { margin-top: 6px; max-width: 24ch; }
+  .kapitel-untertitel { margin-top: 6px; font-size: 17px; line-height: 1.5; color: var(--text-2); max-width: 64ch; }
+  .kapitel-meta {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px;
+    margin-top: 12px; font-size: 13px; color: var(--text-2);
+  }
+  .kapitel-meta > span { display: inline-flex; align-items: center; gap: 6px; }
+  .kapitel-meta .lucide { color: var(--text-3); }
+
+  .kapitel-kennzahlen {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 20px 0 28px;
+  }
+  .kennzahl-kachel {
+    display: flex; flex-direction: column; gap: 4px; min-width: 0;
+    padding: 16px 18px;
+    background: var(--flaeche-karte); border: 1px solid var(--rand);
+    border-radius: var(--radius-m); box-shadow: var(--schatten-karte);
+  }
+  .kennzahl-kachel-gross { grid-column: 1 / -1; padding: 18px 20px; }
+  .kennzahl-kachel-wert {
+    display: flex; align-items: baseline; gap: 5px; flex-wrap: wrap;
+    font-size: 28px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1;
+    color: var(--text); font-variant-numeric: tabular-nums;
+  }
+  .kennzahl-kachel-wert small { font-size: 14px; font-weight: 500; color: var(--text-2); letter-spacing: 0; }
+  .kennzahl-kachel-gross .kennzahl-kachel-wert { font-size: 48px; }
+  .kennzahl-kachel-gross .kennzahl-kachel-wert small { font-size: 17px; }
+  .kennzahl-kachel-label { font-size: 13px; line-height: 1.4; color: var(--text-2); }
+  .kennzahl-kachel-gross .kennzahl-kachel-label { font-size: 14px; }
+  .kennzahl-kachel-trend {
+    display: inline-flex; align-items: center; gap: 5px; margin-top: 4px;
+    font-size: 13px; font-weight: 500; color: var(--text-2);
+  }
+  .kennzahl-kachel-trend[data-ton="erfolg"] { color: var(--erfolg); }
+  .kennzahl-kachel-trend[data-ton="fehler"] { color: var(--fehler); }
+  @container seite (max-width: 479px) {
+    .kapitel-kennzahlen { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .kennzahl-kachel:not(.kennzahl-kachel-gross) { flex-direction: row; align-items: center; gap: 12px; padding: 12px 16px; }
+    .kennzahl-kachel:not(.kennzahl-kachel-gross) .kennzahl-kachel-wert { font-size: 22px; flex: 0 0 auto; }
+    .kennzahl-kachel:not(.kennzahl-kachel-gross) .kennzahl-kachel-label { flex: 1; min-width: 0; }
+    .kennzahl-kachel-gross .kennzahl-kachel-wert { font-size: 40px; }
+  }
+  @container seite (min-width: 720px) {
+    .kapitel-kennzahlen { grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); }
+    .kapitel-kennzahlen[data-hero="false"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .kennzahl-kachel-gross { grid-column: auto; }
+  }
+
+  /* ------------------------------------------------- Tab-Leiste Einheiten */
+  .einheiten-leiste { position: relative; margin-bottom: 24px; }
+  .einheiten-leiste::before, .einheiten-leiste::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 36px; z-index: 1;
+    pointer-events: none; opacity: 0; transition: opacity var(--bewegung);
+  }
+  .einheiten-leiste::before { left: 0; background: linear-gradient(90deg, var(--flaeche) 25%, transparent); }
+  .einheiten-leiste::after { right: 0; background: linear-gradient(270deg, var(--flaeche) 25%, transparent); }
+  .einheiten-leiste[data-links="true"]::before { opacity: 1; }
+  .einheiten-leiste[data-rechts="true"]::after { opacity: 1; }
+  .einheiten-rollen {
+    overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+    scrollbar-width: thin; scrollbar-color: var(--neutral-300) transparent;
+  }
+  .einheiten-rollen::-webkit-scrollbar { height: 6px; }
+  .einheiten-tabs { display: flex; gap: 2px; min-width: max-content; border-bottom: 1px solid var(--rand); padding: 0 2px; }
+  .einheiten-tab {
+    position: relative; display: inline-flex; align-items: center; gap: 8px;
+    min-height: 40px; padding: 8px 12px; margin-bottom: -1px;
+    border-radius: 6px 6px 0 0; border-bottom: 2px solid transparent;
+    color: var(--text-2); font-size: 14px; font-weight: 500; line-height: 1.2;
+    white-space: nowrap; text-decoration: none;
+    transition: color var(--bewegung), background-color var(--bewegung), border-color var(--bewegung);
+  }
+  .einheiten-tab:hover { color: var(--text); background: var(--neutral-100); text-decoration: none; }
+  .einheiten-tab[aria-selected="true"] { color: var(--marke); font-weight: 600; border-bottom-color: var(--marke); }
+  .einheiten-tab:focus-visible { outline-offset: -2px; border-radius: 6px; }
+  .einheiten-punkt { width: 6px; height: 6px; border-radius: 50%; background: var(--neutral-300); flex-shrink: 0; }
+  .einheiten-punkt[data-gelesen="true"] { background: var(--marke); }
+
+  /* ----------------------------------------------------- Raster + Leiste */
+  .kapitel-raster { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; align-items: start; }
+  .einheit { min-width: 0; container-type: inline-size; container-name: einheit; }
+  .einheit-leiste { display: none; }
+  @media (min-width: 1440px) {
+    .kapitel-raster { grid-template-columns: minmax(0, 1fr) var(--leiste-breite); }
+    .einheit-leiste {
+      display: block; position: sticky; top: calc(var(--topbar-hoehe) + 24px);
+      max-height: calc(100vh - var(--topbar-hoehe) - 48px);
+      overflow-y: auto; overscroll-behavior: contain;
+      padding: 4px 0 4px 4px; margin-left: -4px;
+      scrollbar-width: thin; scrollbar-color: var(--neutral-300) transparent;
+    }
+    .adsseite-kompakt { display: none; }
+  }
+  .einheit-leiste-fuss {
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--rand);
+    display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: var(--text-2);
+  }
+  .einheit-leiste-zeit { display: inline-flex; align-items: center; gap: 6px; }
+  .einheit-leiste-zeit .lucide { color: var(--text-3); }
+
+  /* ------------------------------------------------------ Einheitenkopf */
+  .einheit-kopf {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px 24px; flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .einheit-kopf-text { min-width: 0; flex: 1 1 320px; }
+  .einheit-untertitel { margin-top: 6px; font-size: 16px; line-height: 1.5; color: var(--text-2); max-width: var(--mass-text); }
+  .einheit-meta {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px;
+    margin-top: 10px; font-size: 13px; color: var(--text-3);
+  }
+  .einheit-meta > span { display: inline-flex; align-items: center; gap: 5px; }
+  .tiefenwahl { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; flex: 0 0 auto; }
+  .tiefenwahl-hinweis { font-size: 12px; color: var(--text-3); }
+  @container einheit (min-width: 640px) { .tiefenwahl { align-items: flex-end; } }
+
+  /* ------------------------------------------------- Kurz gesagt, Ziele */
+  .einheit-einstieg { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin: 0 0 28px; max-width: 960px; }
+  @container einheit (min-width: 720px) {
+    .einheit-einstieg[data-zwei="true"] { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+  }
+  .kurzgesagt, .lernziele { padding: 16px 18px; border-radius: var(--radius-m); min-width: 0; }
+  .kurzgesagt { background: var(--marke-weich); border: 1px solid var(--marke-rand); }
+  .lernziele { background: var(--flaeche-karte); border: 1px solid var(--rand); box-shadow: var(--schatten-karte); }
+  .kurzgesagt-titel, .lernziele-titel {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3;
+  }
+  .kurzgesagt-titel { color: var(--marke); }
+  .lernziele-titel { color: var(--text-2); }
+  .kurzgesagt ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; line-height: 1.5; color: var(--text); }
+  .kurzgesagt li::marker { color: var(--marke); }
+  .lernziele ul { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 1.5; color: var(--text-2); }
+  .lernziele li { display: flex; gap: 8px; }
+  .lernziele li .lucide { color: var(--marke); margin-top: 3px; }
+
+  /* ------------------------------------------------ Tiefenmarken, Blöcke */
+  .tiefen-abschnitt + .tiefen-abschnitt { margin-top: 12px; }
+  .tiefen-trenner {
+    display: flex; align-items: center; gap: 10px;
+    margin: 32px 0 20px; font-size: 13px; font-weight: 600; color: var(--text-2);
+  }
+  .tiefen-trenner[data-erste="true"] { margin-top: 0; }
+  .tiefen-trenner::after { content: ''; flex: 1; height: 1px; background: var(--rand); }
+  .tiefen-trenner .meta { font-weight: 500; }
+  .tiefen-punkt { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--tiefe-farbe, var(--marke)); }
+  .kapitel-skelett { display: flex; flex-direction: column; gap: 12px; max-width: var(--mass-text); }
+
+  /* Block-Deeplink: Rand in Markenfarbe, 1,2 s (statisch bei reduced motion) */
+  [data-block][data-hervor] {
+    border-radius: var(--radius-m);
+    box-shadow: 0 0 0 6px var(--gruen-50), 0 0 0 8px var(--gruen-300);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-block][data-hervor] { animation: block-hervor 1200ms var(--bewegung-kurve) both; }
+  }
+  @keyframes block-hervor {
+    0%, 40% { box-shadow: 0 0 0 6px var(--gruen-50), 0 0 0 8px var(--gruen-300); }
+    100% { box-shadow: 0 0 0 6px transparent, 0 0 0 8px transparent; }
+  }
+
+  /* -------------------------------------------------- Auf dieser Seite */
+  .adsseite-titel {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-3); margin-bottom: 10px; line-height: 1.3;
+  }
+  .adsseite-gruppe + .adsseite-gruppe { margin-top: 12px; }
+  .adsseite-gruppe-kopf { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--text-2); margin-bottom: 4px; }
+  .adsseite-liste { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--rand); }
+  .adsseite-link {
+    display: block; padding: 5px 10px 5px 12px; margin-left: -1px;
+    border-left: 2px solid transparent; border-radius: 0 6px 6px 0;
+    font-size: 13px; line-height: 1.4; color: var(--text-2); text-decoration: none;
+    transition: color var(--bewegung), border-color var(--bewegung), background-color var(--bewegung);
+  }
+  .adsseite-link:hover { color: var(--text); background: var(--neutral-100); text-decoration: none; }
+  .adsseite-link[aria-current="location"] { color: var(--marke); border-left-color: var(--marke); font-weight: 600; }
+  .adsseite-einblenden {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 3px 8px; margin-left: 2px;
+    border: 1px dashed var(--rand-stark); border-radius: 6px; background: transparent;
+    font-size: 12.5px; font-weight: 500; color: var(--text-2); text-align: left;
+    transition: color var(--bewegung), border-color var(--bewegung), background-color var(--bewegung);
+  }
+  .adsseite-einblenden:hover { color: var(--marke); border-color: var(--marke-rand); background: var(--marke-weich); }
+  .adsseite-leer { font-size: 13px; color: var(--text-3); }
+
+  .adsseite-kompakt { margin-bottom: 20px; border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--flaeche-karte); }
+  .adsseite-kompakt-knopf {
+    display: flex; width: 100%; align-items: center; gap: 8px;
+    min-height: 42px; padding: 8px 14px; border: 0; background: transparent; border-radius: var(--radius-m);
+    text-align: left; font-size: 14px; font-weight: 500; color: var(--text);
+  }
+  .adsseite-kompakt-knopf:hover { background: var(--neutral-50); }
+  .adsseite-kompakt-knopf .chip-zahl { flex: 1; }
+  .adsseite-kompakt-knopf .adsseite-kompakt-pfeil { color: var(--text-3); }
+  .adsseite-kompakt-knopf[aria-expanded="true"] { border-radius: 12px 12px 0 0; border-bottom: 1px solid var(--rand); }
+  .adsseite-kompakt-inhalt { padding: 12px 14px 14px; }
+
+  /* ------------------------------------------------------------ Begriffe */
+  .einheit-begriffe { margin-top: 36px; }
+  .einheit-begriffe:empty { display: none; }
+
+  /* ------------------------------------------------------------- Quellen */
+  .quellen { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--rand); }
+  .quellen h3 { display: flex; align-items: center; gap: 8px; font-size: 14px; letter-spacing: 0; color: var(--text-2); }
+  .quellen h3 .lucide { color: var(--text-3); }
+  .quellen ol { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; line-height: 1.45; color: var(--text-2); max-width: var(--mass-text); }
+  .quelle { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; }
+  .quelle-nummer { font-size: 12px; font-weight: 600; color: var(--text-3); text-align: right; padding-top: 1px; font-variant-numeric: tabular-nums; }
+  .quelle-text { min-width: 0; overflow-wrap: anywhere; }
+  .quelle a { display: inline-flex; align-items: baseline; gap: 4px; color: var(--text-2); text-decoration: underline; text-decoration-color: var(--neutral-300); text-underline-offset: 3px; }
+  .quelle a:hover { color: var(--marke); text-decoration-color: var(--marke); }
+  .quelle a .lucide { align-self: center; color: var(--text-3); }
+  .quelle-ohne { margin-left: 6px; font-size: 12px; color: var(--text-3); }
+
+  /* ---------------------------------------------------------------- Fuß */
+  .einheit-fuss { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--rand); display: flex; flex-direction: column; gap: 24px; }
+  .einheit-fuss-gelesen { display: flex; }
+  .gelesen-stand { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 14px; color: var(--text-2); }
+  .gelesen-stand .lucide { color: var(--erfolg); }
+  .gelesen-stand-klein { font-size: 13px; gap: 6px; }
+
+  .kapitel-abschluss {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap;
+    padding: 16px 18px; border: 1px solid var(--gruen-200); background: var(--gruen-50); border-radius: var(--radius-m);
+  }
+  .kapitel-abschluss-text { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+  .kapitel-abschluss-text .lucide { color: var(--erfolg); margin-top: 2px; }
+  .kapitel-abschluss-text strong { display: block; font-size: 15px; }
+  .kapitel-abschluss-unter { display: block; font-size: 13px; color: var(--text-2); margin-top: 2px; }
+  .kapitel-abschluss-aktionen { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .einheiten-nav-huelle { display: flex; flex-direction: column; gap: 20px; }
+  .einheiten-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @container einheit (max-width: 559px) { .einheiten-nav { grid-template-columns: minmax(0, 1fr); } .einheiten-nav-leer { display: none; } }
+  .einheiten-nav-karte {
+    display: flex; flex-direction: column; gap: 4px; min-width: 0; min-height: 84px;
+    padding: 14px 16px; border: 1px solid var(--rand); border-radius: var(--radius-m);
+    background: var(--flaeche-karte); box-shadow: var(--schatten-karte); color: var(--text); text-decoration: none;
+    transition: border-color var(--bewegung), background-color var(--bewegung), transform var(--bewegung);
+  }
+  .einheiten-nav-karte:hover { border-color: var(--marke-rand); background: var(--marke-weich); text-decoration: none; }
+  .einheiten-nav-karte[data-richtung="weiter"] { text-align: right; align-items: flex-end; }
+  .einheiten-nav-richtung { display: inline-flex; align-items: center; gap: 2px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-3); }
+  .einheiten-nav-titel { font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--text); }
+  .einheiten-nav-kapitel { font-size: 13px; color: var(--text-2); }
+  .einheiten-nav-kapitel[data-wechsel="true"] { color: var(--marke); font-weight: 500; }
+  .einheit-fuss-aktionen { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+}

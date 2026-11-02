@@ -1,0 +1,1767 @@
+{
+ "teil": "teil2",
+ "folien": "23-47",
+ "agent": "Agent 12",
+ "konventionen": {
+  "position": "Bei Lerneinheiten „nach:<einheitId>“. Bei Blöcken „ende“, „anfang“ oder „nach:<index>“ (0-basierter Index innerhalb der angegebenen Tiefe, Stand public/data/chapters.json version 2.0).",
+  "quellen": "Quellentext „Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie <n>“; citeMap liefert dafür „Quelle ohne Link“. Die Nummern in v1x1-cite-num sind je Lerneinheit fortlaufend gesetzt, werden von citeMap.js aber ohnehin neu berechnet.",
+  "format": "Deutsche Formate mit geschützten Leerzeichen (z. B., § 84, 20,2 %, 500 Mrd. €), Halbgeviertstrich, „…“, Minuszeichen U+2212. Geprüft gegen scripts/daten-pruefung.mjs."
+ },
+ "neueKapitel": [
+  {
+   "id": "kundengruppen",
+   "title": "Kundengruppen",
+   "subtitle": "Privat, Gewerbe, Industrie – drei Kundengruppen, drei Geschäftslogiken",
+   "icon": "users",
+   "position": "nach:02-marktteilnehmer",
+   "positionHinweis": "Anzeigenummer 04 gemäß ZIELSTRUKTUR.md, zwischen 02-marktteilnehmer und 03-produktlandschaft.",
+   "heroStat": {
+    "value": 3,
+    "unit": "",
+    "label": "Kundengruppen mit klar unterschiedlichen Anforderungen an Individualisierung und Beratung"
+   },
+   "heroStatHinweis": "Die Folien 24–27 enthalten keine Kennzahlen. Der heroStat nennt deshalb nur die Zahl der Kundengruppen aus der Kernaussage von Folie 24; quickStats fehlen bewusst (siehe Bericht).",
+   "quiz": [
+    {
+     "question": "Welche zwei Achsen ordnen die drei Kundengruppen im Versicherungsgeschäft?",
+     "options": [
+      "Schadenquote und Kostenquote des jeweiligen Segments",
+      "Individualisierungsgrad des Produkts und Beratungsintensität",
+      "Digitalisierungsgrad des Vertriebs und Dichte der aufsichtsrechtlichen Vorgaben",
+      "Beitragsvolumen und durchschnittliche Vertragslaufzeit"
+     ],
+     "correct": 1,
+     "explanation": "Die Landkarte der Kundengruppen spannt sich zwischen dem Individualisierungsgrad des Produkts oder der Lösung und der Beratungsintensität auf. Beide Größen steigen gemeinsam.",
+     "einheitId": "ueberblick"
+    },
+    {
+     "question": "Welche Kundengruppe ist das einzige B2C-Segment?",
+     "options": [
+      "Gewerbekunden, also kleine und mittlere Unternehmen sowie Selbstständige",
+      "Industriekunden, also Großunternehmen und Konzerne",
+      "Privatkunden, also Einzelkunden und Privathaushalte"
+     ],
+     "correct": 2,
+     "explanation": "Nur das Privatkundengeschäft mit Einzelkunden und Privathaushalten ist B2C. Gewerbe- und Industriekunden sind B2B-Segmente.",
+     "einheitId": "ueberblick"
+    },
+    {
+     "question": "Worauf beruht die Profitabilität im Privatkundengeschäft?",
+     "options": [
+      "Auf hohen Stückzahlen, Skaleneffekten und standardisiertem Pricing",
+      "Auf wenigen großvolumigen Verträgen mit individueller Risikoprüfung",
+      "Auf Servicegebühren für die laufende Betreuung der Verträge",
+      "Auf einer Beteiligung am Underwriting-Ergebnis des Risikoträgers"
+     ],
+     "correct": 0,
+     "explanation": "Das Privatkundengeschäft ist ein Effizienzgeschäft: hohe Stückzahlen bei niedriger Marge je Vertrag, getragen von Skaleneffekten, effizienten digitalen Prozessen und standardisiertem Pricing.",
+     "einheitId": "privatkunden"
+    },
+    {
+     "question": "Über welche Kanäle läuft der Privatkundenvertrieb überwiegend?",
+     "options": [
+      "Über spezialisierte Makler und Direktbeziehungen mit Ausschreibungen",
+      "Ausschließlich über den Bankvertrieb und bestehende Kundenbeziehungen",
+      "Über Assekuradeure mit eigenem Underwriting für Nischenrisiken",
+      "Über skalierbare Kanäle, Direktvertrieb und digitale Plattformen"
+     ],
+     "correct": 3,
+     "explanation": "Der Privatkundenvertrieb nutzt skalierbare Kanäle: Ausschließlichkeitsorganisation, Makler, Direktvertrieb und zunehmend digitale Plattformen, etwa den Online-Abschluss einer Kfz-Versicherung.",
+     "einheitId": "privatkunden"
+    },
+    {
+     "question": "Welche Größen fließen in die Prämienkalkulation im Gewerbesegment ein?",
+     "options": [
+      "Ausschließlich die gesetzlich vorgeschriebene Mindestdeckungssumme",
+      "Wohnfläche und Gebäudewert des Betriebsgrundstücks",
+      "Branche, Betriebsgröße, Risikoprofil und Schadenhistorie",
+      "Allein die Zahl der Beschäftigten des Unternehmens"
+     ],
+     "correct": 2,
+     "explanation": "Die gewerbliche Prämienkalkulation ist deutlich komplexer als im B2C-Geschäft: Sie berücksichtigt Branche, Betriebsgröße, Risikoprofil und Schadenhistorie.",
+     "einheitId": "gewerbekunden"
+    },
+    {
+     "question": "Wie ist die Produktlogik im Gewerbesegment am besten beschrieben?",
+     "options": [
+      "Ausschließlich standardisierte Massenprodukte ohne jede Anpassung",
+      "Teilstandardisiert mit branchenspezifischen Bausteinen",
+      "Vollständig individuell strukturierte internationale Programme"
+     ],
+     "correct": 1,
+     "explanation": "Gewerbeprodukte sind teilstandardisiert: Standardpolicen werden gezielt um branchenspezifische Bausteine und modulare Erweiterungen ergänzt.",
+     "einheitId": "gewerbekunden"
+    },
+    {
+     "question": "Was kennzeichnet die Ertragslogik im Industriesegment?",
+     "options": [
+      "Provisionen aus dem Vertrieb standardisierter Reise- und Geräteversicherungen",
+      "Viele Verträge mit jeweils niedriger Marge je Vertrag",
+      "Wenige großvolumige Verträge mit hoher einzelvertraglicher Bedeutung",
+      "Erträge überwiegend aus Zusatzbausteinen einer Grundpolice"
+     ],
+     "correct": 2,
+     "explanation": "Im Industriegeschäft tragen wenige, großvolumige Verträge das Ergebnis. Profitabilität erfordert deshalb exzellentes Underwriting und aktives Portfoliomanagement.",
+     "einheitId": "industriekunden"
+    },
+    {
+     "question": "Wie sind Lösungen für Industriekunden typischerweise strukturiert?",
+     "options": [
+      "Als umfassende Programme, z. B. international mit lokalen Policen",
+      "Als Standardpolice mit optionalen Zusatzbausteinen",
+      "Als jährlich neu ausgeschriebener Direktvertrag ohne laufende Betreuung",
+      "Als Gruppenvertrag über den Arbeitgeber der Beschäftigten"
+     ],
+     "correct": 0,
+     "explanation": "Industrielösungen gehen über einfache Produkte hinaus: Sie sind maßgeschneidert und häufig als umfassende Programme strukturiert, etwa international mit lokalen Policen und zentraler Steuerung.",
+     "einheitId": "industriekunden"
+    }
+   ],
+   "subChapters": [
+    {
+     "id": "ueberblick",
+     "title": "Überblick",
+     "icon": "layout",
+     "subtitle": "Zwei Achsen ordnen das Geschäft: Individualisierung und Beratungsintensität",
+     "kurzgesagt": [
+      "Das Versicherungsgeschäft ordnet sich entlang zweier Achsen: dem Individualisierungsgrad des Produkts oder der Lösung und der Beratungsintensität.",
+      "Privatkunden stehen für standardisiertes Massengeschäft, Gewerbekunden für teilstandardisierte Lösungen mit moderater Beratung, Industriekunden für hoch individuelle Lösungen mit sehr hoher Beratungsintensität.",
+      "Beide Achsen steigen gemeinsam: Mit der Komplexität des Risikos wachsen Beratungsbedarf und Individualisierung – Privat ist B2C, Gewerbe und Industrie sind B2B."
+     ],
+     "lernziele": [
+      "die drei Kundengruppen entlang von Individualisierungsgrad und Beratungsintensität einordnen",
+      "Bedarf, Vertragsgrößen, Vertriebsweg, Betreuungsmodell und typische Produkte der drei Gruppen gegenüberstellen",
+      "begründen, warum die Kundengruppe auch die Produktwelt und das Underwriting ordnet"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Zwei Achsen, drei Kundengruppen",
+       "content": "Das Versicherungsgeschäft lässt sich entlang von zwei Achsen ordnen: dem <strong>Individualisierungsgrad</strong> des Produkts oder der Lösung und der <strong>Beratungsintensität</strong>. Am unteren Ende stehen <strong>Privatkunden</strong>, also Einzelkunden und Privathaushalte, mit stark standardisiertem Massengeschäft, geringer Beratungsintensität und dem Fokus auf Skalierung und Effizienz. In der Mitte folgen <strong>Gewerbekunden</strong>, also kleine und mittlere Unternehmen sowie Selbstständige, mit teilstandardisierten Lösungen, moderatem Beratungsbedarf und einer Balance aus Effizienz und Anpassung. Am oberen Ende adressieren <strong>Industriekunden</strong>, Großunternehmen und Konzerne, hoch individuell strukturierte Lösungen bei sehr hoher Beratungsintensität und maßgeschneiderter Risikodeckung. Beide Achsen steigen gemeinsam: Mit der Komplexität wachsen Beratungsbedarf und Individualisierung.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 24</span></span>"
+      },
+      {
+       "type": "callout",
+       "variant": "info",
+       "title": "B2C und B2B in einer Landkarte",
+       "text": "Nur das Privatkundengeschäft ist B2C-Geschäft, Gewerbe- und Industriekunden sind B2B-Geschäft. Die drei Gruppen unterscheiden sich deshalb systematisch in vier Dimensionen: Bedarfsprofil, Produktlogik, Ertragslogik und Vertrieb."
+      },
+      {
+       "type": "comparisonTable",
+       "title": "Kundengruppen im Vergleich",
+       "columns": [
+        "Merkmal",
+        "Privatkunden",
+        "Gewerbekunden",
+        "Industriekunden"
+       ],
+       "rows": [
+        [
+         "Kundenkreis",
+         "Einzelkunden und Privathaushalte (B2C)",
+         "KMU und Selbstständige (B2B)",
+         "Großunternehmen und Konzerne (B2B)"
+        ],
+        [
+         "Bedarf",
+         "Alltags- und Existenzrisiken, weitgehend standardisiert",
+         "Betriebliche Risiken entlang zentraler Geschäftstätigkeiten, heterogener",
+         "Komplexe, oft globale Risiken entlang gesamter Wertschöpfungsketten"
+        ],
+        [
+         "Produktlogik",
+         "Standardisiert und modular, Individualisierung nur begrenzt",
+         "Teilstandardisiert mit branchenspezifischen Bausteinen",
+         "Maßgeschneidert, häufig als umfassendes Programm strukturiert"
+        ],
+        [
+         "Vertragsgrößen",
+         "Hohe Stückzahlen, niedrige Marge je Vertrag",
+         "Höhere Margen als im Privatsegment",
+         "Wenige großvolumige Verträge mit hoher einzelvertraglicher Bedeutung"
+        ],
+        [
+         "Vertriebsweg",
+         "Skalierbare Kanäle: AO, Makler, Direktvertrieb, digitale Plattformen",
+         "Vor allem Makler und Vermittler",
+         "Spezialisierte Makler und Direktbeziehungen"
+        ],
+        [
+         "Betreuungsmodell",
+         "Geringe bis moderate Beratung, wachsender Self-Service",
+         "Moderate bis hohe Beratung, persönliche Betreuung zentral",
+         "Sehr hohe Beratungsintensität, Ausschreibungen und Verhandlungen"
+        ],
+        [
+         "Typische Produkte",
+         "Haftpflicht, Hausrat, Kfz, Altersvorsorge",
+         "Haftpflicht, Sach, Betriebsunterbrechung",
+         "Produkthaftpflicht, internationale Programme, Spezialrisiken"
+        ],
+        [
+         "Ertragshebel",
+         "Skaleneffekte, effiziente digitale Prozesse, standardisiertes Pricing",
+         "Underwriting und aktives Pricing je Branche und Schadenhistorie",
+         "Exzellentes Underwriting und aktives Portfoliomanagement"
+        ]
+       ]
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Sparten und Kundensegmente als Ordnungsraster",
+       "content": "Die Kundengruppe ist mehr als ein Vertriebsbegriff. In der Praxis organisieren Versicherer ihr Geschäft und ihre Tarifwelt typischerweise entlang von <strong>Sparten und Kundensegmenten</strong>, z. B. Komposit Privat, Gewerbe und Industrie oder Leben Privat und Gewerbe. Wer ein Produkt oder ein Projekt verortet, fragt deshalb immer beides ab: Welche Risikoart wird abgesichert, und für welche Zielkundengruppe?<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 29</span></span>"
+      },
+      {
+       "type": "paragraph",
+       "title": "Drei Betriebsmodelle, nicht drei Produktlisten",
+       "content": "Hinter den drei Gruppen stehen drei unterschiedliche Betriebsmodelle. Das Privatkundengeschäft ist ein <strong>volumengetriebenes Effizienzgeschäft</strong>. Das Gewerbesegment verlangt die <strong>Balance zwischen Skalierung und risikobasierter Differenzierung</strong>. Das Industriesegment bewegt sich hin zu <strong>maßgeschneidertem Underwriting und intensivem Beziehungsmanagement</strong>. Produkte, Preise, Kanäle und Betreuung folgen dieser Logik – nicht umgekehrt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 25–27</span></span>"
+      }
+     ],
+     "level3": []
+    },
+    {
+     "id": "privatkunden",
+     "title": "Privatkunden",
+     "icon": "home",
+     "subtitle": "Standardisiertes Massengeschäft: Bedarf, Produkte, Ertragslogik, Vertrieb",
+     "kurzgesagt": [
+      "Privatkunden sichern primär Alltags- und Existenzrisiken ab, etwa Haftpflichtschäden, Krankheitskosten oder die Altersvorsorge.",
+      "Die Produkte sind überwiegend standardisiert und modular aufgebaut; individualisiert wird nur in begrenztem Umfang.",
+      "Das Geschäft lebt von hohen Stückzahlen bei vergleichsweise niedrigen Margen pro Vertrag, also von Skaleneffekten, effizienten digitalen Prozessen und standardisiertem Pricing."
+     ],
+     "lernziele": [
+      "das Bedarfsprofil von Privatkunden mit typischen Produktbeispielen belegen",
+      "erklären, warum das Privatkundengeschäft über Skaleneffekte und nicht über die Marge je Vertrag funktioniert",
+      "die skalierbaren Vertriebskanäle des Privatkundensegments benennen"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Volumengetriebenes Effizienzgeschäft",
+       "content": "Privatkunden sichern primär Alltags- und Existenzrisiken ab, z. B. Haftpflichtschäden, Krankheitskosten oder die Altersvorsorge. Die Bedürfnisse sind weitgehend standardisiert und stark auf einfache, verständliche Absicherungslösungen ausgerichtet. Entsprechend basiert das Geschäft auf <strong>hohen Stückzahlen bei vergleichsweise niedrigen Margen pro Vertrag</strong>: Profitabilität wird primär durch Skaleneffekte, effiziente (digitale) Prozesse und standardisiertes Pricing sichergestellt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 25</span></span>"
+      },
+      {
+       "type": "infoKachelGrid",
+       "title": "Privatkunden in vier Dimensionen",
+       "items": [
+        {
+         "icon": "shield",
+         "title": "Bedarfsprofil",
+         "description": "Alltags- und Existenzrisiken: Haftpflichtschäden, Krankheitskosten, Altersvorsorge. Die Bedürfnisse sind weitgehend standardisiert."
+        },
+        {
+         "icon": "package",
+         "title": "Produktlogik",
+         "description": "Standardisierte, modulare Produkte wie Haftpflicht, Hausrat oder Kfz mit Zusatzbausteinen, z. B. Fahrraddiebstahl oder Elementarschäden."
+        },
+        {
+         "icon": "coins",
+         "title": "Ertragslogik",
+         "description": "Hohe Stückzahlen bei niedriger Marge je Vertrag. Skaleneffekte, digitale Prozesse und standardisiertes Pricing sichern die Profitabilität."
+        },
+        {
+         "icon": "network",
+         "title": "Vertrieb",
+         "description": "Skalierbare Kanäle: AO, Makler, Direktvertrieb und digitale Plattformen. Beratung gering bis moderat, Self-Service wächst."
+        }
+       ]
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Standardisierung mit Zusatzbausteinen",
+       "content": "Individualisierung erfolgt im Privatsegment nur in begrenztem Umfang: Auf einer standardisierten Grundpolice sitzen optionale Bausteine wie Fahrraddiebstahlschutz oder Elementarschäden. Die Beratungsintensität ist eher gering bis moderat, mit wachsender Bedeutung von <strong>Self-Service</strong> – der Online-Abschluss einer Kfz-Versicherung ist der Regelfall dieses Musters.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 25</span></span> Wie weit der digitale Abschluss trägt, zeigt die Vertriebswegestatistik: Im Kfz-Neugeschäft 2024 erreichte der Direktvertrieb 20,2 %, in der Lebensversicherung dagegen nur 2,4 %.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">GDV-Vertriebswegestatistik 2024</span></span>"
+      }
+     ],
+     "level3": [
+      {
+       "type": "paragraph",
+       "title": "Wo die Marge im Privatgeschäft entsteht",
+       "content": "Weil die Marge je Vertrag niedrig ist, entscheidet im Privatkundengeschäft die Kostenseite: Aufwand je Police, Automatisierungsgrad und Vertriebskosten je Kanal. Standardisiertes Pricing ist dabei Voraussetzung für Skalierung, denn es hält den Aufwand je Vertrag klein, während Skaleneffekte und effiziente digitale Prozesse die Profitabilität tragen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 25</span></span>"
+      }
+     ]
+    },
+    {
+     "id": "gewerbekunden",
+     "title": "Gewerbekunden",
+     "icon": "building",
+     "subtitle": "Teilstandardisierte Lösungen zwischen Skalierung und Differenzierung",
+     "kurzgesagt": [
+      "Gewerbekunden, also KMU und Selbstständige, sichern betriebliche Risiken entlang zentraler Geschäftstätigkeiten ab, etwa Haftpflicht-, Sach- oder Betriebsunterbrechungsrisiken.",
+      "Die Produkte sind teilstandardisiert: Standardpolicen werden gezielt um branchenspezifische Bausteine ergänzt, die Prämienkalkulation berücksichtigt Branche, Betriebsgröße, Risikoprofil und Schadenhistorie.",
+      "Die Margen sind höher als im Privatsegment, erfordern aber stärkeres Underwriting und aktives Pricing."
+     ],
+     "lernziele": [
+      "typische betriebliche Risiken des Gewerbesegments mit Beispielen benennen",
+      "die Balance zwischen Skalierung und risikobasierter Differenzierung erklären",
+      "die Größen der gewerblichen Prämienkalkulation aufzählen"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Balance aus Skalierung und Differenzierung",
+       "content": "Gewerbekunden sichern betriebliche Risiken entlang zentraler Geschäftstätigkeiten ab, z. B. Haftpflicht-, Sach- oder Betriebsunterbrechungsrisiken wie den Ausfall einer Produktionsmaschine. Die Anforderungen sind heterogener als im Privatsegment, bleiben jedoch weitgehend standardisierbar. Das Geschäft balanciert Skaleneffekte mit <strong>risikobasierter Differenzierung</strong>: Die Margen sind höher als im Privatsegment, erfordern jedoch stärkeres Underwriting und aktives Pricing, z. B. je nach Branche oder Schadenhistorie.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 26</span></span>"
+      },
+      {
+       "type": "infoKachelGrid",
+       "title": "Gewerbekunden in vier Dimensionen",
+       "items": [
+        {
+         "icon": "shield",
+         "title": "Bedarfsprofil",
+         "description": "Betriebliche Risiken entlang zentraler Geschäftstätigkeiten: Haftpflicht, Sach, Betriebsunterbrechung, z. B. Ausfall einer Produktionsmaschine."
+        },
+        {
+         "icon": "package",
+         "title": "Produktlogik",
+         "description": "Teilstandardisiert mit branchenspezifischen Anpassungen und modularen Erweiterungen. Standardpolicen werden gezielt ergänzt."
+        },
+        {
+         "icon": "coins",
+         "title": "Ertragslogik",
+         "description": "Skaleneffekte und risikobasierte Differenzierung zugleich. Höhere Margen als im Privatsegment, dafür stärkeres Underwriting und aktives Pricing."
+        },
+        {
+         "icon": "network",
+         "title": "Vertrieb",
+         "description": "Primär Makler und Vermittler mit moderater bis hoher Beratungsintensität. Persönliche Beratung ist zentral, etwa beim Handwerksbetrieb."
+        }
+       ]
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Prämienkalkulation nach Branche und Schadenhistorie",
+       "content": "Die Produkte sind teilstandardisiert: Standardpolicen werden gezielt um branchenspezifische Bausteine ergänzt. Die Prämienkalkulation ist deutlich komplexer als im B2C-Geschäft und berücksichtigt <strong>Branche, Betriebsgröße, Risikoprofil und Schadenhistorie</strong>. Vertrieblich dominieren Makler und Vermittler mit moderater bis hoher Beratungsintensität; persönliche Beratung ist zentral, etwa bei der Absicherung eines Handwerksbetriebs oder eines kleinen Produktionsunternehmens.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 26</span></span>"
+      }
+     ],
+     "level3": [
+      {
+       "type": "paragraph",
+       "title": "Underwriting als Margenhebel",
+       "content": "Im Gewerbesegment liegt die Aufgabe darin, beides gleichzeitig zu leisten: Standardisierung hält die Kosten niedrig, risikobasiertes Underwriting und aktives Pricing sichern den Ertrag. Wächst die Komplexität der Risiken, ohne dass die Differenzierung mitwächst, geht die höhere Marge des Segments verloren.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 26</span></span>"
+      }
+     ]
+    },
+    {
+     "id": "industriekunden",
+     "title": "Industriekunden",
+     "icon": "building-2",
+     "subtitle": "Maßgeschneidertes Underwriting und intensives Beziehungsmanagement",
+     "kurzgesagt": [
+      "Industriekunden adressieren komplexe, oft globale Risiken entlang gesamter Wertschöpfungsketten, etwa Haftungsrisiken bei Produktrückrufen oder Ausfälle globaler Lieferketten.",
+      "Die Lösungen sind maßgeschneidert und häufig als umfassende Programme strukturiert, z. B. internationale Versicherungslösungen mit lokalen Policen und zentraler Steuerung.",
+      "Das Geschäft basiert auf wenigen, großvolumigen Verträgen mit hoher einzelvertraglicher Bedeutung und verlangt exzellentes Underwriting und aktives Portfoliomanagement."
+     ],
+     "lernziele": [
+      "die Risikolage von Industriekunden entlang der Wertschöpfungskette beschreiben",
+      "erklären, was ein Versicherungsprogramm von einem Einzelprodukt unterscheidet",
+      "die Anforderungen an Underwriting und Portfoliomanagement im Industriegeschäft begründen"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Maßgeschneidertes Underwriting",
+       "content": "Industriekunden adressieren komplexe, oft globale Risiken entlang gesamter Wertschöpfungsketten, z. B. Haftungsrisiken bei Produktrückrufen oder Ausfälle globaler Lieferketten. Die Anforderungen sind hochindividuell und risikogetrieben. Das Geschäft basiert auf <strong>wenigen, großvolumigen Verträgen mit hoher einzelvertraglicher Bedeutung</strong>; Profitabilität erfordert exzellentes Underwriting und aktives Portfoliomanagement, z. B. bei Großrisiken oder Naturkatastrophen-Exposure.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 27</span></span>"
+      },
+      {
+       "type": "infoKachelGrid",
+       "title": "Industriekunden in vier Dimensionen",
+       "items": [
+        {
+         "icon": "shield",
+         "title": "Bedarfsprofil",
+         "description": "Komplexe, oft globale Risiken entlang gesamter Wertschöpfungsketten: Haftungsrisiken bei Produktrückrufen, Ausfälle globaler Lieferketten."
+        },
+        {
+         "icon": "package",
+         "title": "Produktlogik",
+         "description": "Maßgeschneiderte Lösungen, häufig als umfassende Programme strukturiert, z. B. international mit lokalen Policen und zentraler Steuerung."
+        },
+        {
+         "icon": "coins",
+         "title": "Ertragslogik",
+         "description": "Wenige großvolumige Verträge mit hoher einzelvertraglicher Bedeutung. Profitabilität über exzellentes Underwriting und aktives Portfoliomanagement."
+        },
+        {
+         "icon": "network",
+         "title": "Vertrieb",
+         "description": "Spezialisierte Makler und Direktbeziehungen mit sehr hoher Beratungsintensität. Ausschreibungen und Verhandlungen sind typisch."
+        }
+       ]
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Programme statt Produkte",
+       "content": "Die Lösungen für Industriekunden gehen über einfache Produkte hinaus: Sie sind maßgeschneidert und häufig als umfassende <strong>Programme</strong> strukturiert, z. B. internationale Versicherungslösungen mit lokalen Policen und zentraler Steuerung. Der Vertrieb läuft über spezialisierte Makler und Direktbeziehungen mit sehr hoher Beratungsintensität; Ausschreibungen und Verhandlungen sind typisch, etwa bei der Absicherung eines DAX-Konzerns.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 27</span></span>"
+      }
+     ],
+     "level3": [
+      {
+       "type": "paragraph",
+       "title": "Einzelvertrag mit Portfoliowirkung",
+       "content": "Weil wenige Verträge das Ergebnis tragen, hat jeder Einzelvertrag Portfoliowirkung: Großrisiken und Naturkatastrophen-Exposure müssen im Zusammenhang gesteuert werden, nicht Police für Police. Deshalb verschiebt sich die Arbeit im Industriesegment vom Produktverkauf zum Risikodialog – intensives Beziehungsmanagement gehört zum Geschäftsmodell.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 27</span></span>"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "erweiterungen": [
+  {
+   "kapitelId": "03-produktlandschaft",
+   "neueEinheiten": [
+    {
+     "id": "financial-lines",
+     "title": "Financial Lines",
+     "icon": "scale",
+     "subtitle": "Reine Vermögensschäden: D&O, Cyber, Vermögensschadenhaftpflicht, Crime",
+     "position": "nach:gewerbe",
+     "kurzgesagt": [
+      "Financial Lines sichern gegen reine Vermögensschäden ab und decken damit Schäden ohne vorherigen Sach- oder Personenschaden.",
+      "Zentrale Produkte sind die D&O-Versicherung für Managerhaftung, die Cyberversicherung, die Vermögensschadenhaftpflicht für Beratungsfehler und die Crime-Versicherung gegen Betrug und Veruntreuung.",
+      "Die Risiken sind spezialisiert und schwer prognostizierbar; das Geschäft läuft überwiegend über Makler und Assekuradeure."
+     ],
+     "lernziele": [
+      "Financial Lines von der klassischen Haftpflichtversicherung abgrenzen",
+      "die vier zentralen Produkte der Financial Lines mit Zweck und Mechanik beschreiben",
+      "erklären, warum Financial Lines vor allem über Makler und Assekuradeure vertrieben werden"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Reine Vermögensschäden als eigene Kategorie",
+       "content": "<strong>Financial Lines</strong> sichern gegen reine Vermögensschäden ab und adressieren spezialisierte Risiken wie Managemententscheidungen, Cyberangriffe und Beratungsfehler. Der Unterschied zur klassischen Haftpflicht ist grundlegend: Dort geht es um (physische) Schadensersatzansprüche Dritter, hier um rein finanzielle Risiken und die Managementhaftung. Gedeckt werden Vermögensschäden <strong>ohne vorherigen Sach- oder Personenschaden</strong>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 32–33</span></span>"
+      },
+      {
+       "type": "comparisonTable",
+       "title": "Financial Lines im Vergleich",
+       "columns": [
+        "Merkmal",
+        "D&O (Managerhaftung)",
+        "Cyberversicherung",
+        "Vermögensschadenhaftpflicht"
+       ],
+       "rows": [
+        [
+         "Zweck",
+         "Absicherung von Führungskräften gegen persönliche Haftung für Fehlentscheidungen, z. B. Fehlinvestitionen",
+         "Absicherung finanzieller Folgen von Cyberangriffen, z. B. Datenverlust oder Systemausfall",
+         "Absicherung von Schäden durch Beratungs- oder Dienstleistungsfehler, z. B. falsche Steuerberatung"
+        ],
+        [
+         "Mechanik",
+         "Deckung von Vermögensschäden ohne vorherigen Sach- oder Personenschaden",
+         "Kombination aus Schadenersatz, Eigenschäden und Serviceleistungen, z. B. Incident Response",
+         "Deckung rein finanzieller Schäden gegenüber Kunden"
+        ],
+        [
+         "Leistung",
+         "Übernahme von Schadensersatzforderungen und Rechtsverteidigungskosten",
+         "Kosten für Wiederherstellung, Forensik, Betriebsunterbrechung und Haftung",
+         "Schadenersatzansprüche bei beruflichen Fehlern"
+        ],
+        [
+         "Besonderheit",
+         "Hohe Relevanz für die Managementebene, oft komplexe und großvolumige Schäden",
+         "Stark wachsender Markt mit hoher Dynamik und schwer prognostizierbaren Risiken",
+         "Besonders relevant für beratende und wissensbasierte Berufe"
+        ]
+       ]
+      },
+      {
+       "type": "callout",
+       "variant": "info",
+       "title": "Crime und Vertrauensschaden",
+       "text": "Zu den Financial Lines zählt auch die <strong>Crime- oder Vertrauensschadenversicherung</strong>: Sie sichert Schäden durch Betrug oder Veruntreuung ab, z. B. durch Mitarbeitende oder externe Täter.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 33</span></span>"
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Vermögensschadenhaftpflicht und Errors & Omissions",
+       "content": "Die <strong>Vermögensschadenhaftpflicht</strong> – häufig auch Errors & Omissions (E&O) genannt – deckt rein finanzielle Schäden gegenüber Kunden, die aus Beratungs- oder Dienstleistungsfehlern entstehen, etwa einer falschen Steuerberatung. Sie ist besonders relevant für beratende und wissensbasierte Berufe Für mehrere beratende Berufe ist eine solche Berufshaftpflicht gesetzlich vorgeschrieben; den Katalog der Pflichtversicherungen führt die Lerneinheit Gewerbeversicherungen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 33</span></span>"
+      },
+      {
+       "type": "paragraph",
+       "title": "Cyber als Wachstumsfeld der Financial Lines",
+       "content": "Die <strong>Cyberversicherung</strong> kombiniert Schadenersatz, Eigenschäden und Serviceleistungen, z. B. Incident Response, und übernimmt Kosten für Wiederherstellung, Forensik, Betriebsunterbrechung und Haftung. Sie gilt als stark wachsender Markt mit hoher Dynamik und schwer prognostizierbaren Risiken. Deckungskomponenten, Musterbedingungen und deutsche Marktzahlen behandelt die Lerneinheit Gewerbeversicherungen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 33</span></span>"
+      }
+     ],
+     "level3": [
+      {
+       "type": "paragraph",
+       "title": "Warum Financial Lines Makler- und Assekuradeursgeschäft sind",
+       "content": "Financial Lines gelten als besonders geeignet für den <strong>Maklerkanal</strong>: Sie sind komplex und beratungsintensiv, und Makler wählen Produkte aus dem Angebot verschiedener Versicherer aus. Spezialisierte Risiken wie Cyber oder Spezialhaftpflicht zeichnen zudem häufig <strong>Assekuradeure</strong> mit eigenem Underwriting – oft Lösungen, die klassische Versicherer nicht standardmäßig anbieten.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 39 und 43</span></span>"
+      }
+     ]
+    },
+    {
+     "id": "spezialrisiken",
+     "title": "Spezialrisiken",
+     "icon": "globe",
+     "subtitle": "Transport, Energie, Luftfahrt und Kredit: Deckungen für seltene Risiken",
+     "position": "nach:financial-lines",
+     "kurzgesagt": [
+      "Spezialrisikenversicherungen adressieren komplexe, seltene und oft global vernetzte Risiken, die standardisierte Versicherungen nicht abdecken können.",
+      "Zentrale Deckungen sind Transport, Energie und Industrie, Luftfahrt sowie die Kreditversicherung gegen Zahlungsausfall von Geschäftspartnern.",
+      "Gemeinsam sind ihnen individuell strukturierte Deckungen, technisches Underwriting und sehr hohe Schadensummen je Einzelereignis."
+     ],
+     "lernziele": [
+      "die zentralen Spezialrisikendeckungen mit ihrem Zweck benennen",
+      "erklären, warum Spezialrisiken individuelles und technisches Underwriting verlangen",
+      "die Kreditversicherung als Instrument der Liquiditätssteuerung im B2B-Geschäft einordnen"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Deckungen für komplexe und seltene Risiken",
+       "content": "<strong>Spezialrisikenversicherungen</strong> adressieren komplexe, seltene und oft global vernetzte Risiken, die durch standardisierte Versicherungen nicht abgedeckt werden können. Die Transportversicherung sichert Waren während Transport und Lagerung, die Energie- und Industrieversicherung komplexe Anlagen wie Kraftwerke oder Offshore-Windparks, die Luftfahrtversicherung Flugzeuge und den Luftfahrtbetrieb. Gemeinsam ist ihnen ein individuell strukturiertes, technisches Underwriting bei sehr hohen Schadensummen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 35</span></span>"
+      },
+      {
+       "type": "comparisonTable",
+       "title": "Spezialrisiken im Vergleich",
+       "columns": [
+        "Merkmal",
+        "Transportversicherung",
+        "Energie-/Industrieversicherung",
+        "Luftfahrtversicherung"
+       ],
+       "rows": [
+        [
+         "Zweck",
+         "Absicherung von Waren während Transport und Lagerung, z. B. in internationalen Lieferketten",
+         "Absicherung komplexer Anlagen, z. B. Kraftwerke oder Offshore-Windparks",
+         "Absicherung von Flugzeugen und Luftfahrtbetrieb, z. B. von Fluggesellschaften"
+        ],
+        [
+         "Mechanik",
+         "Deckung entlang der gesamten Transportstrecke",
+         "Individuell strukturierte Deckungen je Projekt",
+         "Kombination aus Sach-, Haftpflicht- und Spezialdeckungen"
+        ],
+        [
+         "Leistung",
+         "Ersatz bei Verlust, Beschädigung oder Verzögerung",
+         "Schutz vor Schäden an Infrastruktur und vor Betriebsunterbrechung",
+         "Deckung von Schäden an Fluggeräten sowie von Haftungsrisiken"
+        ],
+        [
+         "Besonderheit",
+         "Stark international geprägt mit vielfältigen Risikoquellen",
+         "Sehr hohe Schadensummen und technisches Underwriting",
+         "Globalisierte Risiken mit sehr hohen Einzelereignissen"
+        ]
+       ]
+      },
+      {
+       "type": "callout",
+       "variant": "info",
+       "title": "Kreditversicherung",
+       "text": "Die <strong>Kreditversicherung</strong> sichert gegen den Zahlungsausfall von Geschäftspartnern ab und ist damit wichtig für die Liquiditätssteuerung im B2B-Geschäft.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 35</span></span>"
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Wer Spezialrisiken zeichnet",
+       "content": "Spezialrisiken sind überwiegend Industriegeschäft: Die Risiken sind hochindividuell, oft global vernetzt und werden je Projekt strukturiert. Entsprechend läuft der Zugang über spezialisierte Makler und Direktbeziehungen. Ein Teil des Geschäfts wird von <strong>Assekuradeuren</strong> gezeichnet, die im Auftrag von Versicherern eigenes Underwriting für Nischen- und Spezialrisiken betreiben.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 27, 35 und 43</span></span>"
+      }
+     ],
+     "level3": []
+    }
+   ],
+   "neueBloecke": [
+    {
+     "einheitId": "ueberblick",
+     "tiefe": 1,
+     "position": "nach:1",
+     "positionHinweis": "hinter das bestehende infoKachelGrid „Produktkategorien im Überblick“, vor den decisionTree",
+     "block": {
+      "type": "paragraph",
+      "title": "Risikoart und Zielkundengruppe: das Ordnungsraster der Produktwelt",
+      "content": "Versicherungsprodukte lassen sich entlang zentraler <strong>Risiko- und Bedarfsarten</strong> strukturieren. Konkrete Produkttypen entstehen aus der Kombination von Risikoart (Was wird abgesichert?) und Zielkundengruppe (Für wen?): Haftung × Privatkundensegment ergibt die Privathaftpflicht, Sachwerte × Gewerbekundensegment die Inhaltsversicherung. Erst danach wird über Umfang, Limits und Zusatzbausteine der konkrete Absicherungsbedarf gedeckt. In der Praxis organisieren Versicherer ihr Geschäft und ihre Tarifwelt allerdings typischerweise entlang von Sparten und Kundensegmenten, z. B. Komposit Privat, Gewerbe und Industrie oder Leben Privat und Gewerbe.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 29</span></span>"
+     }
+    },
+    {
+     "einheitId": "ueberblick",
+     "tiefe": 1,
+     "position": "nach:2",
+     "positionHinweis": "unmittelbar hinter den neuen Absatz zum Ordnungsraster",
+     "block": {
+      "type": "infoKachelGrid",
+      "title": "Sechs Risikoarten und ihre Produkte",
+      "items": [
+       {
+        "icon": "heart",
+        "title": "Person",
+        "description": "Leben, Gesundheit und Pflege: Renten-, Risikolebens- und private Krankenversicherung sowie Pflege- und Zusatzversicherungen."
+       },
+       {
+        "icon": "home",
+        "title": "Sachwerte",
+        "description": "Hausrat, Gebäude und Kfz: Schutz materieller Vermögenswerte entlang konkreter Nutzungsszenarien."
+       },
+       {
+        "icon": "shield",
+        "title": "Haftung",
+        "description": "Privat-, Berufs- und Produkthaftung: Absicherung gegen physische Schadensersatzansprüche Dritter."
+       },
+       {
+        "icon": "scale",
+        "title": "Financial Lines",
+        "description": "Managerhaftung, Cyber und Crime: Absicherung rein finanzieller Risiken und der Managementhaftung."
+       },
+       {
+        "icon": "activity",
+        "title": "Einkommen",
+        "description": "Berufsunfähigkeit und Krankentagegeld: Schutz vor Einkommensausfall bei Krankheit oder Invalidität."
+       },
+       {
+        "icon": "globe",
+        "title": "Spezialrisiken",
+        "description": "Transport, Luftfahrt und Energie: spezialisierte Deckungen für komplexe und seltene Risiken."
+       }
+      ]
+     }
+    },
+    {
+     "einheitId": "leben-rente",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Personenversicherung: Vorsorge, Risikoschutz, Gesundheit",
+      "content": "Die Produkte der <strong>Personenversicherung</strong> sichern Leben, Gesundheit und Vorsorge ab und unterscheiden sich fundamental in ihrer Zielsetzung: Die Rentenversicherung dient dem langfristigen Vermögensaufbau und der Altersvorsorge, die Risikolebensversicherung der Absicherung von Hinterbliebenen im Todesfall, die private Krankenversicherung der Übernahme von Gesundheitskosten. Pflegeversicherungen und Zusatzversicherungen ergänzen das Bild. Gesundheit und Pflege behandelt die Lerneinheit Krankenversicherung.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 30</span></span>"
+     }
+    },
+    {
+     "einheitId": "leben-rente",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "comparisonTable",
+      "title": "Rentenversicherung und Risikolebensversicherung: Zweck, Mechanik, Besonderheit",
+      "columns": [
+       "Merkmal",
+       "Rentenversicherung",
+       "Risikolebensversicherung"
+      ],
+      "rows": [
+       [
+        "Zweck",
+        "Langfristiger Vermögensaufbau und Altersvorsorge, z. B. monatliche Rente",
+        "Absicherung von Hinterbliebenen im Todesfall, z. B. Absicherung eines Immobilienkredits"
+       ],
+       [
+        "Mechanik",
+        "Ansparphase, Kapitalanlage, danach lebenslange oder befristete Rentenzahlung",
+        "Auszahlung einer festgelegten Versicherungssumme bei Tod während der Laufzeit"
+       ],
+       [
+        "Bauform",
+        "Klassisch mit Garantie oder fondsgebunden mit höheren Renditechancen",
+        "Reines Risikoprodukt ohne Sparanteil und dadurch günstige Prämien"
+       ],
+       [
+        "Besonderheit",
+        "Stark abhängig von Kapitalmarkt und Zinsniveau, z. B. von Garantiezinsen",
+        "Höhe der Auszahlung typischerweise gekoppelt an finanzielle Verpflichtungen"
+       ],
+       [
+        "Einordnung",
+        "Bestandteil der privaten Altersvorsorge (3. Säule) neben gesetzlicher und betrieblicher Vorsorge",
+        "Ergänzt die Vorsorge um den reinen Todesfallschutz"
+       ]
+      ]
+     }
+    },
+    {
+     "einheitId": "kv",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Gesundheit und Pflege in der Personenversicherung",
+      "content": "Die <strong>private Krankenversicherung</strong> übernimmt Gesundheitskosten auf Basis individueller Tarife und ist damit die Alternative zur gesetzlichen Krankenversicherung: Risikobasierte Prämien und Alterungsrückstellungen stabilisieren den Beitrag im Alter, der Leistungsumfang hängt vom Tarif ab, z. B. Chefarztbehandlung, Einzelzimmer oder Zahnleistungen. Alter, Gesundheitszustand und Leistungsniveau beeinflussen die Beiträge stark. Die <strong>Pflegeversicherung</strong> deckt Kosten im Pflegefall, die über die gesetzlichen Leistungen hinausgehen, etwa im Pflegeheim oder in der ambulanten Pflege, und reduziert hohe Eigenanteile im Alter. <strong>Zusatzversicherungen</strong> ergänzen die gesetzliche Krankenversicherung um zusätzliche Leistungen wie Zahnzusatz oder stationäre Leistungen und werten das Leistungsniveau bei moderaten Mehrkosten auf.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 30</span></span>"
+     }
+    },
+    {
+     "einheitId": "sach",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Sachversicherung: Gebäude, Besitz und Mobilität",
+      "content": "<strong>Sachversicherungen</strong> sichern materielle Vermögenswerte entlang konkreter Nutzungsszenarien: Die Kfz-Versicherung deckt Schäden im Straßenverkehr, die Wohngebäudeversicherung Schäden am Gebäude inklusive fester Bestandteile, die Hausratversicherung das bewegliche Eigentum im Haushalt. Die Privathaftpflicht folgt einer anderen Logik: Sie prüft die Haftung – der sogenannte <strong>passive Rechtsschutz</strong> – und zahlt berechtigte Ansprüche an Dritte; gedeckt sind Personen-, Sach- und Vermögensschäden gegenüber Dritten. Als standardisiertes Massenprodukt hat sie hohe Relevanz für existenzielle Risiken.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 31–32</span></span>"
+     }
+    },
+    {
+     "einheitId": "sach",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "comparisonTable",
+      "title": "Kfz, Wohngebäude und Hausrat im Vergleich",
+      "columns": [
+       "Merkmal",
+       "Kfz-Versicherung",
+       "Wohngebäudeversicherung",
+       "Hausratversicherung"
+      ],
+      "rows": [
+       [
+        "Zweck",
+        "Absicherung von Schäden im Straßenverkehr, z. B. Unfall oder Diebstahl",
+        "Absicherung von Schäden am Gebäude, z. B. durch Feuer, Sturm oder Leitungswasser",
+        "Absicherung des beweglichen Eigentums im Haushalt, z. B. Möbel oder Elektronik"
+       ],
+       [
+        "Mechanik",
+        "Kombination aus gesetzlich vorgeschriebener Haftpflicht und optionaler Teil- oder Vollkasko",
+        "Versicherung des Gebäudewerts inklusive fester Bestandteile, z. B. Dach und Wände",
+        "Pauschale Versicherungssumme auf Basis von Wohnfläche oder Wert"
+       ],
+       [
+        "Leistung",
+        "Übernahme von Personen-, Sach- und eigenen Fahrzeugschäden je nach Deckung",
+        "Wiederaufbau oder Reparatur nach Schadenereignissen",
+        "Ersatz bei Schäden durch Einbruch, Feuer oder Naturereignisse"
+       ],
+       [
+        "Besonderheit",
+        "Stark preis- und wettbewerbsgetrieben, hohe Frequenz an Schadenfällen",
+        "Relevanz von Elementarrisiken, z. B. Überschwemmung, und steigende Schäden durch Klimawandel",
+        "Stark standardisiertes Produkt mit geringen individuellen Anpassungen"
+       ]
+      ]
+     }
+    },
+    {
+     "einheitId": "gewerbe",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Haftpflicht von privat bis industriell",
+      "content": "<strong>Haftpflichtversicherungen</strong> sichern gegen Ansprüche Dritter ab und unterscheiden sich je nach Kontext fundamental. Im Privatsegment ist die Haftpflicht ein standardisiertes Massenprodukt. In Betrieb und Beruf tritt eine individuelle Risikobewertung je Branche und Tätigkeit hinzu. In der Industrie wird die Produkthaftpflicht in komplexe, oft internationale Haftpflichtprogramme integriert, mit Deckung entlang der Wertschöpfungskette inklusive Rückrufkosten. Die <strong>Umwelthaftpflicht</strong> ergänzt das Bild für Industrie- und Produktionsunternehmen: Sie deckt Schäden durch Umwelteinwirkungen, z. B. die Verunreinigung von Boden oder Gewässern.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 32</span></span>"
+     }
+    },
+    {
+     "einheitId": "gewerbe",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "comparisonTable",
+      "title": "Haftpflichtprodukte im Vergleich",
+      "columns": [
+       "Merkmal",
+       "Privathaftpflicht",
+       "Betriebs-/Berufshaftpflicht",
+       "Produkthaftpflicht (Industrie)"
+      ],
+      "rows": [
+       [
+        "Zweck",
+        "Absicherung von Schadensersatzansprüchen im Alltag, z. B. beschädigtes Eigentum Dritter",
+        "Absicherung von Haftungsrisiken aus beruflicher oder gewerblicher Tätigkeit, z. B. Fehler bei Dienstleistung oder Produktion",
+        "Absicherung von Schäden durch fehlerhafte Produkte, z. B. Rückruf oder Schadenfälle beim Endkunden"
+       ],
+       [
+        "Mechanik",
+        "Prüfung der Haftung (passiver Rechtsschutz) und Zahlung berechtigter Ansprüche an Dritte",
+        "Individuelle Risikobewertung je Branche und Tätigkeit",
+        "Integration in komplexe Haftpflichtprogramme, oft international"
+       ],
+       [
+        "Leistung",
+        "Deckung von Personen-, Sach- und Vermögensschäden gegenüber Dritten",
+        "Übernahme von Schäden gegenüber Kunden oder Dritten durch betriebliche Tätigkeit",
+        "Deckung von Schäden entlang der Wertschöpfungskette inklusive Rückrufkosten"
+       ],
+       [
+        "Besonderheit",
+        "Standardisiertes Massenprodukt mit hoher Relevanz für existenzielle Risiken",
+        "Stärkere Differenzierung nach Branche und Risikoprofil als im Privatsegment",
+        "Hohe Schadenpotenziale und starke Individualisierung je Produkt und Markt"
+       ]
+      ]
+     }
+    },
+    {
+     "einheitId": "gewerbe",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Inhaltsversicherung: Hausrat für Unternehmen",
+      "content": "Die <strong>Inhaltsversicherung</strong> ist das gewerbliche Gegenstück zur Hausratversicherung: Sie sichert Betriebsinventar wie Maschinen und Waren gegen Schäden wie Feuer oder Einbruch ab und entspricht funktional der Hausratversicherung für Unternehmen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 31</span></span>"
+     }
+    },
+    {
+     "einheitId": "bu",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Einkommensversicherungen als Produktkategorie",
+      "content": "<strong>Einkommensversicherungen</strong> stabilisieren die finanzielle Existenz, indem sie Einkommensausfälle bei Krankheit oder Invalidität absichern. Die Berufsunfähigkeitsversicherung deckt den langfristigen Fall über eine monatliche Rente bis zum Renteneintritt, die Krankentagegeldversicherung den kurzfristigen über eine tägliche Zahlung ab einem definierten Zeitpunkt, die Grundfähigkeitsversicherung den Verlust grundlegender Fähigkeiten wie Sehen oder Gehen. Die Schwere-Krankheiten-Versicherung (<strong>Dread-Disease</strong>) zahlt einmalig bei Diagnose definierter schwerer Krankheiten und zielt auf kurzfristige finanzielle Stabilisierung.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 34</span></span>"
+     }
+    },
+    {
+     "einheitId": "bu",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "comparisonTable",
+      "title": "Einkommensversicherungen: Zweck, Mechanik, Leistung",
+      "columns": [
+       "Merkmal",
+       "Berufsunfähigkeit",
+       "Krankentagegeld",
+       "Grundfähigkeiten"
+      ],
+      "rows": [
+       [
+        "Zweck",
+        "Langfristige Absicherung bei dauerhafter Einschränkung der Arbeitsfähigkeit",
+        "Absicherung kurzfristiger Einkommensausfälle durch Krankheit, z. B. bei längerer Arbeitsunfähigkeit",
+        "Absicherung bei Verlust grundlegender Fähigkeiten, z. B. Sehen oder Gehen"
+       ],
+       [
+        "Mechanik",
+        "Monatliche Rentenzahlung bei Berufsunfähigkeit",
+        "Tägliche Zahlung ab einem definierten Zeitpunkt",
+        "Auszahlung einer Rente bei definierten Funktionseinschränkungen"
+       ],
+       [
+        "Leistung",
+        "Einkommensersatz bis zum Renteneintritt",
+        "Überbrückung von Einkommenslücken während der Krankheit",
+        "Ergänzung oder Alternative zur Berufsunfähigkeitsversicherung"
+       ],
+       [
+        "Besonderheit",
+        "Stark risikobasiertes Produkt mit hoher Relevanz für die existenzielle Absicherung",
+        "Besonders relevant für Selbstständige ohne gesetzliche Absicherung",
+        "Einfacher verständlich, aber eingeschränkter Leistungsumfang"
+       ]
+      ]
+     }
+    }
+   ],
+   "neueQuizfragen": [
+    {
+     "question": "Aus welchen zwei Angaben entsteht ein konkreter Produkttyp?",
+     "options": [
+      "Aus Risikoart und Zielkundengruppe",
+      "Aus Prämienhöhe und Vertragslaufzeit",
+      "Aus Schadenquote und Kostenquote des Bestands",
+      "Aus Vertriebsweg und Provisionsmodell"
+     ],
+     "correct": 0,
+     "explanation": "Produkttypen entstehen aus der Kombination von Risikoart (Was wird abgesichert?) und Zielkundengruppe (Für wen?), etwa Haftung und Privatkundensegment zur Privathaftpflicht.",
+     "einheitId": "ueberblick"
+    },
+    {
+     "question": "Was kennzeichnet die Financial Lines?",
+     "options": [
+      "Sie decken ausschließlich Sachschäden an Gebäuden und deren festen Bestandteilen ab",
+      "Sie sichern reine Vermögensschäden ohne vorherigen Sach- oder Personenschaden ab",
+      "Sie sind gesetzlich vorgeschriebene Pflichtversicherungen für alle Kfz-Halter",
+      "Sie leisten nur bei Personenschäden Dritter im privaten Alltag"
+     ],
+     "correct": 1,
+     "explanation": "Financial Lines sichern rein finanzielle Risiken und die Managementhaftung ab. Gedeckt werden Vermögensschäden, ohne dass zuvor ein Sach- oder Personenschaden eingetreten sein muss.",
+     "einheitId": "financial-lines"
+    },
+    {
+     "question": "Welches Produkt gehört nicht zu den Financial Lines?",
+     "options": [
+      "D&O-Versicherung für Vorstände und Geschäftsführer",
+      "Cyberversicherung für finanzielle Folgen von Angriffen",
+      "Wohngebäudeversicherung für Feuer- und Sturmschäden",
+      "Vermögensschadenhaftpflicht für Beratungsfehler"
+     ],
+     "correct": 2,
+     "explanation": "Zu den Financial Lines zählen D&O, Cyber, Vermögensschadenhaftpflicht und Crime. Die Wohngebäudeversicherung ist eine Sachversicherung.",
+     "einheitId": "financial-lines"
+    },
+    {
+     "question": "Wofür ist die Kreditversicherung wichtig?",
+     "options": [
+      "Für die Absicherung von Immobilienkrediten im Todesfall",
+      "Für die Finanzierung von Offshore-Windparks und Kraftwerken",
+      "Für die Rückdeckung von Pensionszusagen an Organmitglieder",
+      "Für die Liquiditätssteuerung im B2B-Geschäft"
+     ],
+     "correct": 3,
+     "explanation": "Die Kreditversicherung sichert gegen den Zahlungsausfall von Geschäftspartnern ab und ist damit ein Instrument der Liquiditätssteuerung im Geschäft zwischen Unternehmen.",
+     "einheitId": "spezialrisiken"
+    },
+    {
+     "question": "Welche Deckung sichert kurzfristige Einkommensausfälle durch Krankheit ab?",
+     "options": [
+      "Die Berufsunfähigkeitsversicherung mit monatlicher Rente",
+      "Die Krankentagegeldversicherung",
+      "Die Grundfähigkeitsversicherung bei Funktionsverlusten",
+      "Die Schwere-Krankheiten-Versicherung mit Einmalzahlung"
+     ],
+     "correct": 1,
+     "explanation": "Die Krankentagegeldversicherung zahlt ab einem definierten Zeitpunkt täglich und überbrückt Einkommenslücken während der Krankheit. Sie ist besonders für Selbstständige relevant.",
+     "einheitId": "bu"
+    },
+    {
+     "question": "Was bezeichnet der passive Rechtsschutz der Privathaftpflicht?",
+     "options": [
+      "Die Übernahme der Anwaltskosten des Versicherungsnehmers in Strafverfahren",
+      "Den Verzicht des Versicherers auf Regressansprüche gegen den Kunden",
+      "Die Prüfung der Haftung und die Zahlung berechtigter Ansprüche Dritter",
+      "Die Deckung eigener Sachschäden des Versicherungsnehmers am Hausrat"
+     ],
+     "correct": 2,
+     "explanation": "Die Privathaftpflicht prüft zunächst die Haftung und zahlt dann berechtigte Ansprüche an Dritte. Diese Prüfung wird als passiver Rechtsschutz bezeichnet.",
+     "einheitId": "sach"
+    }
+   ]
+  },
+  {
+   "kapitelId": "04-vertriebswege",
+   "neueEinheiten": [
+    {
+     "id": "embedded",
+     "title": "Embedded Insurance",
+     "icon": "package",
+     "subtitle": "Versicherung im Kaufmoment: Partner-Plattformen, Geräteschutz, Reise",
+     "position": "nach:bancassurance",
+     "kurzgesagt": [
+      "Embedded Insurance integriert Versicherungen nahtlos in andere Produkte oder Dienstleistungen, etwa beim Kauf eines Autos oder einer Reise.",
+      "Der Zugang läuft über Partner-Plattformen oder Händler; geeignet sind einfache, kontextbezogene Produkte wie Reiseversicherungen, Geräteschutz oder Garantieverlängerungen.",
+      "Vergütet wird über Provisionen oder Revenue-Sharing mit den Partnern, wodurch bestehende Vertriebskanäle und Kundenschnittstellen skalierbar genutzt werden."
+     ],
+     "lernziele": [
+      "Embedded Insurance als Vertriebsweg von Direkt/Digital und Bankvertrieb abgrenzen",
+      "die Ertragslogik und die Partnerabhängigkeit des Kanals erklären",
+      "typische Produkte der situativen Absicherung im Kaufmoment benennen"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Versicherung im Kaufmoment",
+       "content": "<strong>Embedded Insurance</strong> integriert Versicherungen nahtlos in andere Produkte oder Dienstleistungen, z. B. beim Kauf eines Autos oder einer Reise. Der Zugang erfolgt über Partner-Plattformen oder Händler, nicht über eigene Kanäle des Versicherers. Geeignet sind vor allem einfache, kontextbezogene Produkte wie Reiseversicherungen, Geräteschutz oder Garantieverlängerungen; der Fokus liegt auf der <strong>situativen Absicherung im Kaufmoment</strong>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 42</span></span>"
+      },
+      {
+       "type": "infoKachelGrid",
+       "title": "Embedded Insurance in vier Dimensionen",
+       "items": [
+        {
+         "icon": "users",
+         "title": "Rolle und Kundenzugang",
+         "description": "Versicherung wird in andere Produkte oder Dienstleistungen integriert. Der Zugang läuft über Partner-Plattformen oder Händler."
+        },
+        {
+         "icon": "package",
+         "title": "Produktfit",
+         "description": "Einfache, kontextbezogene Produkte: Reiseversicherungen, Geräteschutz, Garantieverlängerungen. Situative Absicherung im Kaufmoment."
+        },
+        {
+         "icon": "coins",
+         "title": "Ertragslogik",
+         "description": "Provisionen oder Revenue-Sharing mit Partnern. Hohe Skalierbarkeit durch Nutzung bestehender Vertriebskanäle und Kundenschnittstellen."
+        },
+        {
+         "icon": "scale",
+         "title": "Stärken und Grenzen",
+         "description": "Direkter Zugang im relevanten Moment und hohe Abschlussquoten, dafür Abhängigkeit von starken Partnern und begrenzte Produktkomplexität."
+        }
+       ]
+      },
+      {
+       "type": "paragraph",
+       "title": "Der Markt in Deutschland",
+       "content": "ERGO kooperiert seit August 2024 mit O2 Telefónica für Mobility- und Reiseversicherungen, simplesurance (Allianz Partners) ist in über 30 Ländern aktiv, Tesla bietet über Helvetia eine Anschlussgarantie an. Die Kundenakzeptanz ist noch verhalten: Laut Nordlight Research stehen 33 % positiv, 28 % ablehnend und 39 % neutral gegenüber. Das globale Marktpotenzial wird auf bis zu <strong>512 Mrd. USD bis 2033</strong> geschätzt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Nordlight Research / Allied Market Research</span></span>"
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Chancen und Abhängigkeiten",
+       "content": "Vergütet wird über Provisionen oder <strong>Revenue-Sharing</strong> mit den Partnern; die Skalierbarkeit ist hoch, weil bestehende Vertriebskanäle und Kundenschnittstellen genutzt werden. Stärken sind der direkte Zugang zum Kunden im relevanten Moment und hohe Abschlussquoten durch die Integration in Kaufprozesse. Die Grenzen liegen in der Abhängigkeit von starken Partnern und in der begrenzten Produktkomplexität.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 42</span></span>"
+      },
+      {
+       "type": "paragraph",
+       "title": "Embedded als Antwort auf veränderte Kundenerwartungen",
+       "content": "Der Trend hängt an den Kundenerwartungen: Kunden erwarten Erlebnisse wie im Onlinehandel, während Versicherungsprodukte oft als zu komplex und intransparent gelten. Treiber sind der demografische Wandel, branchenübergreifende Erwartungen (<strong>Liquid Expectations</strong>) und Vergleichsportale. Für Versicherer folgt daraus der Zwang zu nahtlosen digitalen Erlebnissen, zu hybrider Beratung („Bionic Agent“) und zur Integration von Policen in fremde Kaufprozesse.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 45</span></span>"
+      }
+     ],
+     "level3": [
+      {
+       "type": "paragraph",
+       "title": "Abgrenzung zu Direkt/Digital und Bankvertrieb",
+       "content": "Alle drei Kanäle verzichten auf die klassische Vermittlerberatung, unterscheiden sich aber im Zugang: Direkt/Digital führt den Kunden auf die eigene Plattform oder in das Callcenter des Versicherers, der Bankvertrieb nutzt die bestehende Kundenbeziehung der Bank, Embedded Insurance den Kaufprozess eines Partners. Entsprechend verschieden ist die Ertragslogik: eigener Kanal ohne Vermittlerprovision, Provision an die Bank, Provision oder Revenue-Sharing an den Plattformpartner.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 40–42</span></span>"
+      }
+     ]
+    },
+    {
+     "id": "assekuradeure",
+     "title": "Assekuradeure",
+     "icon": "target",
+     "subtitle": "Eigenes Underwriting im Auftrag des Risikoträgers, oft für Nischenrisiken",
+     "position": "nach:embedded",
+     "kurzgesagt": [
+      "Assekuradeure sind spezialisierte Anbieter, die im Auftrag von Versicherern Risiken zeichnen und oft den Vertrieb steuern.",
+      "Sie sind häufig auf Nischen oder komplexe Risiken fokussiert, etwa Cyber, Spezialhaftpflicht oder industrielle Nischenrisiken.",
+      "Vergütet werden sie über Gebühren und eine Beteiligung am Underwriting-Ergebnis; Vertrieb und Risikobewertung liegen damit in einer Einheit."
+     ],
+     "lernziele": [
+      "die Rolle des Assekuradeurs zwischen Makler und Risikoträger beschreiben",
+      "erklären, warum Assekuradeure vor allem Nischen- und Spezialrisiken zeichnen",
+      "Stärken und Grenzen des Modells gegenüberstellen"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Eigenes Underwriting im Auftrag des Risikoträgers",
+       "content": "<strong>Assekuradeure</strong> sind spezialisierte Anbieter, die im Auftrag von Versicherern Risiken zeichnen und oft den Vertrieb steuern. Häufig sind sie auf Nischen oder komplexe Risiken fokussiert – Cyber, Spezialhaftpflicht oder industrielle Nischenrisiken – und bieten damit Lösungen an, die klassische Versicherer nicht standardmäßig führen. Vertrieb und Risikobewertung fallen in einer Einheit zusammen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 43</span></span>"
+      },
+      {
+       "type": "infoKachelGrid",
+       "title": "Assekuradeure in vier Dimensionen",
+       "items": [
+        {
+         "icon": "users",
+         "title": "Rolle und Kundenzugang",
+         "description": "Spezialisierte Anbieter, die im Auftrag von Versicherern Risiken zeichnen und oft den Vertrieb steuern. Fokus auf Nischen und komplexe Risiken."
+        },
+        {
+         "icon": "package",
+         "title": "Produktfit",
+         "description": "Spezialisierte und komplexe Risiken wie Cyber, Spezialhaftpflicht oder industrielle Nischenrisiken, die sonst kaum angeboten werden."
+        },
+        {
+         "icon": "coins",
+         "title": "Ertragslogik",
+         "description": "Vergütung über Gebühren und Beteiligung am Underwriting-Ergebnis. Vertrieb und Risikobewertung liegen in einer Einheit."
+        },
+        {
+         "icon": "scale",
+         "title": "Stärken und Grenzen",
+         "description": "Tiefes Spezial-Know-how und Zugang zu schwer versicherbaren Risiken, dafür begrenzte Skalierung und Abhängigkeit von Risikoträgern."
+        }
+       ]
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Vergütung am Underwriting-Ergebnis",
+       "content": "Vergütet werden Assekuradeure über Gebühren und eine <strong>Beteiligung am Underwriting-Ergebnis</strong>. Stärken des Modells sind tiefes Spezial-Know-how, hohe Flexibilität und der Zugang zu schwer versicherbaren Risiken. Grenzen sind die begrenzte Skalierung und die Abhängigkeit von Risikoträgern, also den Versicherern, die die Kapazität stellen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 43</span></span>"
+      }
+     ],
+     "level3": [
+      {
+       "type": "paragraph",
+       "title": "Abgrenzung zu Makler und Versicherer",
+       "content": "Der Makler berät den Kunden und wählt passende Produkte aus dem Angebot verschiedener Versicherer aus, zeichnet aber keine Risiken. Der Assekuradeur zeichnet im Auftrag eines Versicherers, gestaltet Bedingungen und setzt Prämien fest, trägt das Risiko jedoch nicht selbst – Risikoträger bleibt der Versicherer. Diese Rolle entspricht im internationalen Sprachgebrauch weitgehend dem Managing General Agent (MGA).<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 39 und 43</span></span>"
+      }
+     ]
+    }
+   ],
+   "neueBloecke": [
+    {
+     "einheitId": "ueberblick",
+     "tiefe": 1,
+     "position": "nach:2",
+     "positionHinweis": "hinter die drei einleitenden Absätze, vor die GDV-Tabelle",
+     "block": {
+      "type": "paragraph",
+      "title": "Kanäle, Produkte und Zielgruppen sind verzahnt",
+      "content": "Der Versicherungsvertrieb ist historisch gewachsen, stark reguliert und äußerst vielfältig: Die Kanäle bedienen unterschiedliche Kundengruppen und Produktarten <strong>parallel</strong>, nicht nacheinander. Für Versicherer ist deshalb entscheidend, dass Produkte, Zielgruppen und Vertriebskanäle eng verzahnt sind – erfolgreiche Strategien müssen kanalübergreifend gedacht werden. Neben der Ausschließlichkeitsorganisation, dem Makler, dem Bankvertrieb und Direkt/Digital gehören dazu auch <strong>Embedded Insurance</strong> und <strong>Assekuradeure</strong>, die beide eigene Lerneinheiten haben.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 37</span></span>"
+     }
+    },
+    {
+     "einheitId": "ueberblick",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "comparisonTable",
+      "title": "Vertriebswege im Vergleich: Rolle, Produktfit, Ertragslogik",
+      "columns": [
+       "Vertriebsweg",
+       "Rolle und Kundenzugang",
+       "Produktfit",
+       "Ertragslogik"
+      ],
+      "rows": [
+       [
+        "Ausschließlichkeitsorganisation (AO)",
+        "Eigene, gebundene Vertriebsmannschaft eines Versicherers mit direktem Kundenzugang, vor allem im Privat- und teilweise Gewerbesegment",
+        "Standardisierte bis moderat komplexe Produkte, z. B. Kfz, Hausrat, Haftpflicht, Vorsorge",
+        "Fixkostenintensiv, dafür hohe Steuerbarkeit und direkte Margenabschöpfung"
+       ],
+       [
+        "Makler",
+        "Unabhängige Vermittler, die Kunden beraten und Produkte verschiedener Versicherer auswählen, insbesondere bei Gewerbe- und Industriekunden",
+        "Komplexe und beratungsintensive Produkte, z. B. Gewerbeversicherungen, Industrieprogramme, Financial Lines",
+        "Provisionen der Versicherer, teils Servicegebühren; geringere Fixkosten, geringere Steuerbarkeit"
+       ],
+       [
+        "Bankvertrieb (Bancassurance)",
+        "Vertrieb über Banken, die bestehende Kundenbeziehungen nutzen und Versicherungen in Beratung und Finanzprodukte integrieren",
+        "Standardisierte, leicht erklärbare Produkte, z. B. Vorsorge, Restschuldversicherung, Absicherung rund um Kredite",
+        "Provisionen für die Vermittlung plus indirekte Erträge durch stärkere Kundenbindung"
+       ],
+       [
+        "Direkt/Digital",
+        "Direkter Vertrieb ohne Intermediäre über Online-Plattformen oder Callcenter, Abschluss durch die Kunden selbst",
+        "Standardisierte, einfach verständliche Produkte, z. B. Kfz, Hausrat, Reise",
+        "Geringe Vertriebskosten durch Wegfall von Provisionen und physischer Infrastruktur"
+       ],
+       [
+        "Embedded Insurance",
+        "Integration in andere Produkte und Dienstleistungen; Zugang über Partner-Plattformen oder Händler",
+        "Einfache, kontextbezogene Produkte, z. B. Reise, Geräteschutz, Garantieverlängerung",
+        "Provisionen oder Revenue-Sharing mit Partnern, hohe Skalierbarkeit über fremde Kanäle"
+       ],
+       [
+        "Assekuradeure",
+        "Spezialisierte Anbieter, die im Auftrag von Versicherern Risiken zeichnen und oft den Vertrieb steuern",
+        "Spezialisierte und komplexe Risiken, z. B. Cyber, Spezialhaftpflicht, industrielle Nischenrisiken",
+        "Gebühren und Beteiligung am Underwriting-Ergebnis"
+       ]
+      ]
+     }
+    },
+    {
+     "einheitId": "ausschliesslichkeit",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Fixkosten gegen Steuerbarkeit",
+      "content": "Die Ausschließlichkeitsorganisation ist ein <strong>fixkostenintensives Modell</strong>, weil Personal und Filialstruktur Kosten binden. Dafür bietet sie hohe Steuerbarkeit und direkte Margenabschöpfung, mit Fokus auf Cross-Selling und Kundenbindung über mehrere Produkte hinweg. Beim Produktfit ist die AO besonders stark bei standardisierten bis moderat komplexen Produkten, z. B. Kfz-, Hausrat-, Haftpflicht- oder Vorsorgeprodukten: Der Vergleich zwischen Anbietern ist limitiert, dafür kommt die integrierte Produktpalette eines Versicherers aus einer Hand. Stärken sind hohe Kundennähe und Vertrauensaufbau sowie die gute Steuerbarkeit von Vertrieb und Marke; Grenzen sind die begrenzte Produktunabhängigkeit und die höheren Kosten im Vergleich zu digitalen Kanälen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 38</span></span>"
+     }
+    },
+    {
+     "einheitId": "makler",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Produktfit und Ertragslogik des Maklerkanals",
+      "content": "Makler werden primär über <strong>Provisionen der Versicherer</strong> vergütet, teilweise ergänzt durch Servicegebühren. Für Versicherer bedeutet das geringere Fixkosten, aber auch geringere Steuerbarkeit des Vertriebs. Der Produktfit liegt bei komplexen und beratungsintensiven Produkten – Gewerbeversicherungen, Industrieprogramme oder Financial Lines –, im Privatkundensegment bei erklärungsbedürftigen Produkten wie der Vorsorge. Stärken sind die hohe Kundenorientierung mit Vergleichsmöglichkeit über mehrere Anbieter und der Zugang zu komplexen, margenstärkeren Geschäftsfeldern; Grenzen sind die geringere Steuerbarkeit mit Abhängigkeit vom Makler und der höhere Wettbewerbsdruck durch Vergleichbarkeit.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 39</span></span>"
+     }
+    },
+    {
+     "einheitId": "bancassurance",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Produktfit und Ertragslogik des Bankvertriebs",
+      "content": "Der Bankvertrieb integriert Versicherungen direkt in Beratungsgespräche und Finanzprodukte und nutzt dafür bestehende Kundenbeziehungen; der Fokus liegt primär auf Privatkunden. Geeignet sind standardisierte und leicht erklärbare Produkte, z. B. Vorsorgeprodukte, Restschuldversicherungen oder einfache Absicherungslösungen im Zusammenhang mit Krediten und Geldanlagen. Vergütet wird über Provisionen für die Vermittlung, hinzu kommen indirekte Erträge durch stärkere Kundenbindung; die Nutzung bestehender Infrastruktur senkt die Vertriebskosten im Vergleich zu einer eigenen Organisation. Grenzen sind die begrenzte Beratungstiefe für komplexe Versicherungsprodukte und die Abhängigkeit von der Partnerschaft zwischen Bank und Versicherer.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 40</span></span>"
+     }
+    },
+    {
+     "einheitId": "direkt-online",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Ertragslogik des Direktkanals",
+      "content": "Direkt und digital heißt Vertrieb ohne Intermediäre, meist über Online-Plattformen oder Callcenter: Kunden schließen die Produkte eigenständig ab, zunehmend unterstützt durch digitale Werkzeuge und Self-Service. Daraus folgt die Ertragslogik: geringe Vertriebskosten durch den Wegfall von Provisionen und physischer Infrastruktur, Fokus auf Skaleneffekte, automatisierte Prozesse und datengetriebenes Pricing. Geeignet ist der Kanal für standardisierte, einfach verständliche Produkte wie Kfz-, Hausrat- oder Reiseversicherungen, weniger für komplexe oder beratungsintensive Lösungen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 41</span></span>"
+     }
+    }
+   ],
+   "ersetzteBloecke": [
+    {
+     "einheitId": "direkt-online",
+     "tiefe": 1,
+     "index": 3,
+     "indexBezug": "public/data/chapters.json, version 2.0 (Absatz mit dem Titel „Embedded Insurance“)",
+     "grund": "Der Absatz war bisher der einzige Ort für Embedded Insurance im Kapitel. Mit der neuen Lerneinheit „embedded“ (Deck-Folie 42) wandern seine Marktbeispiele, Zahlen und die Quelle „Nordlight Research / Allied Market Research“ dorthin (Block „Der Markt in Deutschland“). Bleibt der Absatz unverändert, stehen dieselben Zahlen zweimal im Kapitel.",
+     "block": {
+      "type": "paragraph",
+      "title": "Embedded Insurance",
+      "content": "<strong>Embedded Insurance</strong> – die Integration von Versicherungen in Kaufprozesse – ist der jüngste Vertriebsweg. Vom Direktkanal grenzt er sich dadurch ab, dass der Zugang nicht über eigene Plattformen des Versicherers läuft, sondern über Partner-Plattformen oder Händler. Marktbeispiele, Kundenakzeptanz und Marktpotenzial behandelt die Lerneinheit Embedded Insurance.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 42</span></span>"
+     }
+    }
+   ],
+   "neueQuizfragen": [
+    {
+     "question": "Welche zwei Vertriebswege ergänzen die vier klassischen Kanäle AO, Makler, Bankvertrieb und Direkt/Digital?",
+     "options": [
+      "Rückversicherer und Versicherungspools",
+      "Embedded Insurance und Assekuradeure",
+      "Honorarberater und Versicherungsberater",
+      "Vergleichsportale und Tippgeber ohne Erlaubnis"
+     ],
+     "correct": 1,
+     "explanation": "Die Landkarte der Vertriebskanäle führt neben AO, Makler, Bankvertrieb und Direkt/Digital auch Embedded Insurance und Assekuradeure als eigenständige Wege.",
+     "einheitId": "ueberblick"
+    },
+    {
+     "question": "Wie wird Embedded Insurance typischerweise vergütet?",
+     "options": [
+      "Über Honorare, die der Endkunde direkt zahlt",
+      "Über Bestandspflegegelder des Versicherers an die eigene Mannschaft",
+      "Über Provisionen oder Revenue-Sharing mit dem Partner",
+      "Über eine Beteiligung am Underwriting-Ergebnis des Risikoträgers"
+     ],
+     "correct": 2,
+     "explanation": "Embedded Insurance wird über Provisionen oder Revenue-Sharing mit den Partnern vergütet. Die Skalierbarkeit entsteht aus der Nutzung bestehender Vertriebskanäle und Kundenschnittstellen.",
+     "einheitId": "embedded"
+    },
+    {
+     "question": "Was unterscheidet einen Assekuradeur vom Makler?",
+     "options": [
+      "Er zeichnet Risiken im Auftrag eines Versicherers",
+      "Er berät ausschließlich Privatkunden im Massengeschäft",
+      "Er ist gebundener Handelsvertreter nach § 84 HGB",
+      "Er trägt das versicherungstechnische Risiko vollständig selbst"
+     ],
+     "correct": 0,
+     "explanation": "Assekuradeure zeichnen Risiken im Auftrag von Versicherern und steuern oft den Vertrieb. Risikoträger bleibt der Versicherer; der Makler dagegen berät und vermittelt, zeichnet aber nicht.",
+     "einheitId": "assekuradeure"
+    },
+    {
+     "question": "Für welche Produkte gilt der Maklerkanal als besonders geeignet?",
+     "options": [
+      "Ausschließlich für Restschuldversicherungen rund um Kredite",
+      "Für standardisierte Reise- und Geräteversicherungen im Kaufprozess",
+      "Nur für die Produkte eines einzigen Versicherers",
+      "Für komplexe, beratungsintensive Produkte wie Financial Lines"
+     ],
+     "correct": 3,
+     "explanation": "Makler sind auf komplexe und beratungsintensive Produkte ausgerichtet: Gewerbeversicherungen, Industrieprogramme und Financial Lines, im Privatsegment erklärungsbedürftige Vorsorgeprodukte.",
+     "einheitId": "makler"
+    }
+   ]
+  },
+  {
+   "kapitelId": "08-zukunftsthemen",
+   "neueEinheiten": [
+    {
+     "id": "altersvorsorge-reform",
+     "title": "Altersvorsorge-Reform",
+     "icon": "banknote",
+     "subtitle": "AVRG: Standarddepot, wegfallende Garantien und neue Wettbewerber",
+     "position": "nach:ma-konsolidierung",
+     "kurzgesagt": [
+      "Das Altersvorsorge-Reformgesetz (AVRG) ersetzt ab Januar 2027 die Riester-Welt durch kapitalmarktorientierte Standarddepots mit Kostendeckel und Altersvorsorgeverträge.",
+      "Beitragsgarantien werden reduziert oder entfallen vollständig, wodurch Aktien- und ETF-basierte Lösungen deutlich attraktiver werden.",
+      "Banken, Broker und Asset Manager positionieren sich als Anbieter geförderter Altersvorsorgeprodukte und treten damit direkt in Wettbewerb zu Lebensversicherern."
+     ],
+     "lernziele": [
+      "die Kernelemente des Altersvorsorge-Reformgesetzes benennen",
+      "erklären, warum das AVRG den Wettbewerb um die geförderte private Altersvorsorge öffnet",
+      "die erwarteten Folgen für Bestände, Margen und Produktangebot der Lebensversicherer einordnen"
+     ],
+     "level1": [
+      {
+       "type": "paragraph",
+       "title": "Was das AVRG ändert",
+       "content": "Das <strong>Altersvorsorge-Reformgesetz (AVRG)</strong> ersetzt ab Januar 2027 die Riester-Welt durch kapitalmarktorientierte <strong>Standarddepots mit Kostendeckel</strong> und durch Altersvorsorgeverträge. Beitragsgarantien werden reduziert oder entfallen vollständig, wodurch Aktien- und ETF-basierte Lösungen deutlich attraktiver werden. Banken, Broker und Asset Manager positionieren sich zunehmend als Anbieter geförderter Altersvorsorgeprodukte und treten direkt in Wettbewerb zu Lebensversicherern. Der Wettbewerb verschiebt sich damit weiter von klassischen Versicherungsprodukten zu integrierten Vorsorge- und Investmentökosystemen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 46</span></span>"
+      },
+      {
+       "type": "infoKachelGrid",
+       "title": "Vier Verschiebungen im Markt der geförderten Vorsorge",
+       "items": [
+        {
+         "icon": "file-text",
+         "title": "Standarddepot mit Kostendeckel",
+         "description": "Das AVRG ersetzt ab Januar 2027 die Riester-Welt durch kapitalmarktorientierte Standarddepots mit Kostendeckel und Altersvorsorgeverträge."
+        },
+        {
+         "icon": "trending-up",
+         "title": "Garantien entfallen",
+         "description": "Beitragsgarantien werden reduziert oder entfallen vollständig. Aktien- und ETF-basierte Lösungen werden dadurch deutlich attraktiver."
+        },
+        {
+         "icon": "users",
+         "title": "Neue Wettbewerber",
+         "description": "Banken, Broker und Asset Manager positionieren sich als Anbieter geförderter Altersvorsorgeprodukte und konkurrieren direkt mit Lebensversicherern."
+        },
+        {
+         "icon": "globe",
+         "title": "Vom Produkt zum Ökosystem",
+         "description": "Der Wettbewerb verschiebt sich von klassischen Versicherungsprodukten zu integrierten Vorsorge- und Investmentökosystemen."
+        }
+       ]
+      },
+      {
+       "type": "callout",
+       "variant": "wichtig",
+       "title": "Standarddepot als Vertriebsvoraussetzung",
+       "text": "Lebensversicherungsbestände geraten unter zusätzlichen Wachstums- und Margendruck. Wer geförderte Produkte vertreiben will, muss ein günstiges <strong>Standarddepot</strong> anbieten. Chancen liegen bei Aktien- oder ETF-basierten Depots.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 46</span></span>"
+      }
+     ],
+     "level2": [
+      {
+       "type": "paragraph",
+       "title": "Vermögen verlagern sich von der Lebensversicherung zum Depot",
+       "content": "Die Verschiebung läuft schon vor dem AVRG: Die Zahl der kapitalbildenden Versicherungsverträge sinkt über zehn Jahre mit einer jährlichen Rate von <strong>−1,1 %</strong>, die Zahl der Investment-Depots wächst mit <strong>+4,5 %</strong> pro Jahr, seit 2020 sogar mit <strong>+8 %</strong>. Das AVRG dürfte den Trend zugunsten kapitalmarktnaher Sparformen zusätzlich verstärken.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 47</span></span>"
+      },
+      {
+       "type": "paragraph",
+       "title": "Was Analysen für die nächsten zehn Jahre erwarten",
+       "content": "Analysen von Monitor Deloitte erwarten in zehn Jahren ein Marktvolumen (Assets under Management) für geförderte Produkte der privaten Altersvorsorge von <strong>300 bis 500 Mrd. €</strong> bei weiter rückläufigen Lebensversicherungsportfolien sowie ein Gebührenpotenzial im Asset Management von <strong>2 bis 7 Mrd. €</strong> pro Jahr. Wie stark zwischen Lebensversicherung und Depotlösung tatsächlich umgedeckt wird, hängt von der Positionierung und dem Produktangebot der anderen Versicherer sowie von Banken und Asset Managern ab – und davon, ob der Vertrieb die Nutzenvorteile traditioneller Riesterverträge platzieren kann.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 47</span></span>"
+      },
+      {
+       "type": "paragraph",
+       "title": "Neue Wettbewerber am Rand des Marktes",
+       "content": "Als neue Anbieter treten Neobroker und Direktbanken auf, etwa Trade Republic, Scalable Capital, N26, Smartbroker+ oder justTRADE. Investment-Depots gewinnen Marktanteile, während kapitalbildende Versicherungsverträge kontinuierlich zurückgehen. Die Verzahnung zwischen Versicherern, Asset Managern und Banken wird damit erfolgskritisch.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 47</span></span>"
+      }
+     ],
+     "level3": [
+      {
+       "type": "paragraph",
+       "title": "Wo Lebensversicherer Handlungsspielraum haben",
+       "content": "Aus den Marktverschiebungen folgen drei Implikationen für Lebensversicherer: Das AVRG disruptiert die private Altersvorsorge und verpflichtet zum günstigen Standarddepot. Es entstehen <strong>First-Mover-Vorteile</strong> für jene, die zügig eine optimale Lösung in der neuen geförderten Altersvorsorge bereitstellen. Und die <strong>Verzahnung</strong> zwischen Versicherer, Asset Managern und Banken wird erfolgskritisch. Neben Bestands- und Margenabrieb können bei richtiger Positionierung also auch Chancen entstehen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 46–47</span></span>"
+      }
+     ]
+    }
+   ],
+   "neueBloecke": [
+    {
+     "einheitId": "ma-konsolidierung",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Vier Kräfte unter einem Dach",
+      "content": "Der deutsche Versicherungsmarkt steht unter <strong>Veränderungsdruck aus vier Richtungen</strong>: Marktkonzentration der Versicherer, Maklerkonsolidierung, veränderte Kundenerwartungen mit Embedded Insurance und die Modernisierung der IT. Die Trends hängen zusammen: Sättigung und starre Kosten treffen auf Investitionsbedarf in die IT-Erneuerung, während Kapitalvorgaben und fehlende Nachfolge die kleineren Marktteilnehmer auf beiden Seiten – Versicherer und Vermittler – unter Druck setzen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 45</span></span>"
+     }
+    },
+    {
+     "einheitId": "ma-konsolidierung",
+     "tiefe": 1,
+     "position": "ende",
+     "block": {
+      "type": "table",
+      "title": "Markttrends: Herausforderung, Treiber, Wirkung",
+      "headers": [
+       "Trend",
+       "Herausforderung",
+       "Haupttreiber",
+       "Wirkung auf das Geschäft"
+      ],
+      "rows": [
+       [
+        "Marktkonzentration der Versicherer",
+        "Sättigung und starre Kosten: kaum organisches Wachstum in Kernmärkten bei hohen, wenig flexiblen Kostenstrukturen",
+        "Immense Kosten für IT-Erneuerung und strenge Kapitalvorgaben erhöhen den Druck auf kleinere Anbieter",
+        "Mehr M&A-Aktivität, Bestandsabwicklungen (Run-off), Margendruck, Konsolidierung von Marktanteilen"
+       ],
+       [
+        "Maklerkonsolidierung",
+        "Fehlende Nachfolge und demografischer Druck: die Maklergeneration geht in Rente und findet keine Nachfolger",
+        "Private-Equity-Firmen nutzen die Chance und kaufen Einzelmakler aggressiv auf",
+        "Riesige Vertriebskonglomerate entstehen, die Versicherern niedrigere Margen, also höhere Provisionen, und harte IT-Standards diktieren"
+       ],
+       [
+        "Omnichannel und Embedded Insurance",
+        "Kunden erwarten Erlebnisse wie im Onlinehandel; Versicherungsprodukte sind oft zu komplex und intransparent",
+        "Demografischer Wandel, branchenübergreifende Erwartungen (Liquid Expectations), Vergleichsportale",
+        "Zwang zu nahtlosen digitalen Erlebnissen, hybrider Beratung (Bionic Agent) und Integration von Policen in fremde Kaufprozesse"
+       ],
+       [
+        "IT-Modernisierung und Digitalisierung",
+        "Veraltete Kernsysteme, zum Teil aus den 1980er-Jahren, blockieren Innovationen und treiben über manuelle, fehleranfällige Prozesse die Betriebskosten",
+        "Schnelle Marktreife von generativer KI und Datenanalytik trifft auf eine Branche, der die Sachbearbeiter für manuelle Prozesse wegbrechen",
+        "Dunkelverarbeitung: Vollautomatisierung von Kernprozessen, z. B. Schadenabwicklung im Hintergrund, Cloud-Migration und deutliche Senkung der Betriebskosten"
+       ]
+      ],
+      "sortable": false
+     }
+    },
+    {
+     "einheitId": "insurtechs-plattformen",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Liquid Expectations: Erwartungen aus anderen Branchen",
+      "content": "Der Druck auf die Kundenschnittstelle kommt nicht aus der Versicherungsbranche selbst: Kunden erwarten Erlebnisse wie im Onlinehandel, während Versicherungsprodukte oft als zu komplex und intransparent gelten. Treiber sind der demografische Wandel, branchenübergreifende Erwartungen (<strong>Liquid Expectations</strong>) und die Vergleichsportale. Daraus folgt ein dreifacher Anspruch: nahtlose digitale Erlebnisse, hybride Beratung („Bionic Agent“) und die Integration von Policen in fremde Kaufprozesse.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 45</span></span>"
+     }
+    },
+    {
+     "einheitId": "ki-automation",
+     "tiefe": 2,
+     "position": "ende",
+     "block": {
+      "type": "paragraph",
+      "title": "Veraltete Kernsysteme treiben die Betriebskosten",
+      "content": "Der größte Hemmschuh der Automatisierung ist die Altlast: Veraltete Kernsysteme, zum Teil aus den 1980er-Jahren, blockieren Innovationen und treiben über manuelle, fehleranfällige Prozesse die Betriebskosten. Gleichzeitig trifft die schnelle Marktreife von generativer KI und Datenanalytik auf eine Branche, der die Sachbearbeiter für manuelle Prozesse wegbrechen. Die angestrebte Wirkung heißt <strong>Dunkelverarbeitung</strong>: Vollautomatisierung von Kernprozessen, etwa der Schadenabwicklung im Hintergrund, verbunden mit Cloud-Migration und einer deutlichen Senkung der Betriebskosten.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 45</span></span>"
+     }
+    }
+   ],
+   "chartData": {
+    "trendRadar": {
+     "items": [
+      {
+       "label": "Maklerkonsolidierung",
+       "ring": 0,
+       "segment": 1,
+       "description": "Fehlende Nachfolge trifft Private-Equity-Kapital: Einzelmakler werden aufgekauft, Konglomerate entstehen."
+      },
+      {
+       "label": "Marktkonzentration und Run-off",
+       "ring": 0,
+       "segment": 4,
+       "description": "Kosten der IT-Erneuerung und strenge Kapitalvorgaben treffen kleinere Anbieter: mehr M&A, mehr Run-off."
+      },
+      {
+       "label": "Kernsystem-Modernisierung",
+       "ring": 0,
+       "segment": 0,
+       "description": "Veraltete Kernsysteme blockieren Innovationen und treiben die Kosten. Ziel: Dunkelverarbeitung und Cloud."
+      },
+      {
+       "label": "Geförderte Altersvorsorge (AVRG)",
+       "ring": 1,
+       "segment": 2,
+       "description": "Ab Januar 2027 ersetzen Standarddepots die Riester-Welt; Banken und Asset Manager treten in den Wettbewerb."
+      },
+      {
+       "label": "Hybride Beratung (Bionic Agent)",
+       "ring": 1,
+       "segment": 1,
+       "description": "Erwartungen aus anderen Branchen erzwingen nahtlose Prozesse und Beratung mit digitalen Werkzeugen."
+      }
+     ]
+    }
+   },
+   "chartDataAnweisung": "chapters[08-zukunftsthemen].chartData.trendRadar.items: die fünf Einträge an die bestehenden 14 anhängen (dann 19). „rings“ und „segments“ bleiben unverändert; Ring- und Segmentzuordnung ist redaktionell (siehe Bericht).",
+   "neueQuizfragen": [
+    {
+     "question": "Was ersetzt das Altersvorsorge-Reformgesetz (AVRG) ab Januar 2027?",
+     "options": [
+      "Die betriebliche Altersvorsorge über Direktversicherung und Pensionskasse",
+      "Die Riester-Welt durch Standarddepots und Altersvorsorgeverträge",
+      "Die gesetzliche Rentenversicherung als erste Säule",
+      "Die Rürup-Rente für selbstständig Tätige"
+     ],
+     "correct": 1,
+     "explanation": "Das AVRG ersetzt ab Januar 2027 die Riester-Welt durch kapitalmarktorientierte Standarddepots mit Kostendeckel und durch Altersvorsorgeverträge.",
+     "einheitId": "altersvorsorge-reform"
+    },
+    {
+     "question": "Welches Marktvolumen erwarten Analysen in zehn Jahren für geförderte Produkte der privaten Altersvorsorge?",
+     "options": [
+      "30 bis 50 Mrd. €",
+      "100 bis 200 Mrd. €",
+      "300 bis 500 Mrd. €",
+      "1 bis 2 Bio. €"
+     ],
+     "correct": 2,
+     "explanation": "Erwartet werden 300 bis 500 Mrd. € Assets under Management bei weiter rückläufigen Lebensversicherungsportfolien sowie ein Gebührenpotenzial von 2 bis 7 Mrd. € pro Jahr.",
+     "einheitId": "altersvorsorge-reform"
+    },
+    {
+     "question": "Welcher Treiber steht hinter der Maklerkonsolidierung?",
+     "options": [
+      "Ein Provisionsverbot der EU für die Vermittlung von Versicherungen",
+      "Fehlende Nachfolge und Aufkäufe durch Private-Equity-Firmen",
+      "Die Pflicht zum Angebot eines günstigen Standarddepots",
+      "Neue Eigenmittelvorgaben für Vermittlerbetriebe"
+     ],
+     "correct": 1,
+     "explanation": "Die Maklergeneration geht in Rente und findet keine Nachfolger, während Private-Equity-Firmen Einzelmakler aufkaufen. So entstehen große Vertriebskonglomerate.",
+     "einheitId": "ma-konsolidierung"
+    }
+   ]
+  }
+ ],
+ "glossar": [
+  {
+   "term": "Altersvorsorge-Reformgesetz (AVRG)",
+   "definition": "Reform der geförderten privaten Altersvorsorge: ersetzt ab Januar 2027 die Riester-Welt durch kapitalmarktorientierte Standarddepots mit Kostendeckel.",
+   "tags": [
+    "Regulatorik",
+    "Zukunft"
+   ],
+   "slug": "altersvorsorge-reformgesetz-avrg"
+  },
+  {
+   "term": "Assekuradeur",
+   "definition": "Anbieter, der im Auftrag von Versicherern Risiken zeichnet, Bedingungen gestaltet, Prämien festsetzt und oft den Vertrieb steuert. Vergütung über Gebühren und Beteiligung am Underwriting-Ergebnis; Risikoträger bleibt der Versicherer.",
+   "tags": [
+    "Markt",
+    "Vertrieb"
+   ],
+   "slug": "assekuradeur",
+   "art": "verbesserung",
+   "bestehendeDefinition": "Unternehmen, das im Auftrag von Versicherungsgesellschaften Risiken zeichnet, Bedingungen gestaltet und Prämien festsetzt – ähnlich einem MGA.",
+   "grund": "Deck-Folie 43 ergänzt die Ertragslogik (Gebühren und Beteiligung am Underwriting-Ergebnis), die Vertriebssteuerung und die Klarstellung, dass der Assekuradeur das Risiko nicht selbst trägt. Der MGA-Verweis kann entfallen, weil er in der Lerneinheit „assekuradeure“ (level3) erklärt wird."
+  },
+  {
+   "term": "Bionic Agent",
+   "definition": "Schlagwort für hybride Beratung: persönliche Beratung, die durch digitale Werkzeuge und Daten unterstützt wird.",
+   "tags": [
+    "Vertrieb",
+    "Zukunft"
+   ],
+   "slug": "bionic-agent"
+  },
+  {
+   "term": "Crime-Versicherung (Vertrauensschaden)",
+   "definition": "Absicherung von Schäden durch Betrug oder Veruntreuung, etwa durch Mitarbeitende oder externe Täter. Teil der Financial Lines.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "crime-versicherung-vertrauensschaden"
+  },
+  {
+   "term": "Cyberversicherung",
+   "definition": "Deckung der finanziellen Folgen von Cyberangriffen: Schadenersatz, Eigenschäden und Serviceleistungen wie Incident Response, Forensik und Wiederherstellung.",
+   "tags": [
+    "Produkte",
+    "Zukunft"
+   ],
+   "slug": "cyberversicherung"
+  },
+  {
+   "term": "Dread-Disease-Versicherung",
+   "definition": "Einmalzahlung bei Diagnose definierter schwerer Krankheiten, etwa Krebs. Zielt auf kurzfristige finanzielle Stabilisierung, nicht auf laufenden Einkommensersatz.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "dread-disease-versicherung"
+  },
+  {
+   "term": "Dunkelverarbeitung",
+   "definition": "Vollautomatisierte Abwicklung von Kernprozessen ohne manuellen Eingriff, etwa der Schadenabwicklung im Hintergrund. Ziel der IT-Modernisierung.",
+   "tags": [
+    "Zukunft"
+   ],
+   "slug": "dunkelverarbeitung"
+  },
+  {
+   "term": "Einkommensversicherung",
+   "definition": "Sammelbegriff für Deckungen gegen Einkommensausfall bei Krankheit oder Invalidität: Berufsunfähigkeit, Krankentagegeld, Grundfähigkeiten und Dread-Disease.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "einkommensversicherung"
+  },
+  {
+   "term": "Financial Lines",
+   "definition": "Sammelbegriff für Deckungen reiner Vermögensschäden: D&O, Cyber, Vermögensschadenhaftpflicht und Crime. Ein Sach- oder Personenschaden muss nicht vorausgehen.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "financial-lines"
+  },
+  {
+   "term": "Gewerbeversicherung",
+   "definition": "Versicherungsgeschäft mit KMU und Selbstständigen: teilstandardisierte Produkte mit branchenspezifischen Bausteinen, kalkuliert nach Branche, Betriebsgröße und Schadenhistorie.",
+   "tags": [
+    "Produkte",
+    "Markt"
+   ],
+   "slug": "gewerbeversicherung"
+  },
+  {
+   "term": "Grundfähigkeitsversicherung",
+   "definition": "Rentenzahlung bei Verlust definierter Grundfähigkeiten wie Sehen oder Gehen. Einfacher verständlich als die BU, dafür mit eingeschränktem Leistungsumfang.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "grundfaehigkeitsversicherung"
+  },
+  {
+   "term": "Industrieversicherung",
+   "definition": "Versicherungsgeschäft mit Großunternehmen und Konzernen: maßgeschneiderte Programme für komplexe, oft globale Risiken mit hoher einzelvertraglicher Bedeutung.",
+   "tags": [
+    "Produkte",
+    "Markt"
+   ],
+   "slug": "industrieversicherung"
+  },
+  {
+   "term": "Inhaltsversicherung",
+   "definition": "Gewerbliche Absicherung des Betriebsinventars, etwa Maschinen und Waren, gegen Schäden wie Feuer oder Einbruch. Funktional die Hausratversicherung für Unternehmen.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "inhaltsversicherung"
+  },
+  {
+   "term": "Kreditversicherung",
+   "definition": "Absicherung gegen den Zahlungsausfall von Geschäftspartnern. Wichtiges Instrument der Liquiditätssteuerung im Geschäft zwischen Unternehmen.",
+   "tags": [
+    "Produkte",
+    "Finanzen"
+   ],
+   "slug": "kreditversicherung"
+  },
+  {
+   "term": "Liquid Expectations",
+   "definition": "Branchenübergreifende Kundenerwartungen: Erlebnisse aus anderen Branchen, etwa dem Onlinehandel, werden zum Maßstab für den Versicherungsvertrieb.",
+   "tags": [
+    "Markt",
+    "Zukunft"
+   ],
+   "slug": "liquid-expectations"
+  },
+  {
+   "term": "Luftfahrtversicherung",
+   "definition": "Absicherung von Flugzeugen und Luftfahrtbetrieb als Kombination aus Sach-, Haftpflicht- und Spezialdeckungen. Globalisierte Risiken mit sehr hohen Einzelereignissen.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "luftfahrtversicherung"
+  },
+  {
+   "term": "Passiver Rechtsschutz",
+   "definition": "Prüfung der Haftung durch den Haftpflichtversicherer: Berechtigte Ansprüche Dritter werden gezahlt, unberechtigte nicht. Die Prüfung selbst ist Teil der Leistung.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "passiver-rechtsschutz"
+  },
+  {
+   "term": "Personenversicherung",
+   "definition": "Sammelbegriff für Deckungen rund um Leben, Gesundheit und Vorsorge: Renten-, Risikolebens- und private Krankenversicherung sowie Pflege- und Zusatzversicherungen.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "personenversicherung"
+  },
+  {
+   "term": "Pflegezusatzversicherung",
+   "definition": "Private Absicherung der Kosten im Pflegefall, die über die gesetzlichen Leistungen hinausgehen, etwa im Pflegeheim oder in der ambulanten Pflege.",
+   "tags": [
+    "Produkte",
+    "PKV"
+   ],
+   "slug": "pflegezusatzversicherung"
+  },
+  {
+   "term": "Produkthaftpflicht",
+   "definition": "Deckung von Schäden durch fehlerhafte Produkte, etwa Rückrufe oder Schadenfälle beim Endkunden. In der Industrie Teil komplexer, oft internationaler Haftpflichtprogramme.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "produkthaftpflicht"
+  },
+  {
+   "term": "Sachversicherung",
+   "definition": "Sammelbegriff für Deckungen materieller Vermögenswerte entlang konkreter Nutzungsszenarien: Kfz, Wohngebäude, Hausrat und gewerbliche Inhaltsversicherung.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "sachversicherung"
+  },
+  {
+   "term": "Spezialrisikenversicherung",
+   "definition": "Deckungen für komplexe, seltene und global vernetzte Risiken, die standardisierte Produkte nicht abdecken: Transport, Energie und Industrie, Luftfahrt, Kredit.",
+   "tags": [
+    "Produkte",
+    "Markt"
+   ],
+   "slug": "spezialrisikenversicherung"
+  },
+  {
+   "term": "Standarddepot",
+   "definition": "Kapitalmarktorientiertes Vorsorgedepot mit Kostendeckel aus dem AVRG. Wer geförderte Altersvorsorgeprodukte vertreiben will, muss ein günstiges Standarddepot anbieten.",
+   "tags": [
+    "Produkte",
+    "Zukunft"
+   ],
+   "slug": "standarddepot"
+  },
+  {
+   "term": "Transportversicherung",
+   "definition": "Deckung von Waren während Transport und Lagerung entlang der gesamten Transportstrecke; ersetzt bei Verlust, Beschädigung oder Verzögerung.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "transportversicherung"
+  },
+  {
+   "term": "Umwelthaftpflicht",
+   "definition": "Deckung von Schäden durch Umwelteinwirkungen, etwa die Verunreinigung von Boden oder Gewässern. Besonders relevant für Industrie- und Produktionsunternehmen.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "umwelthaftpflicht"
+  },
+  {
+   "term": "Vermögensschadenhaftpflicht",
+   "definition": "Deckung rein finanzieller Schäden gegenüber Kunden aus Beratungs- oder Dienstleistungsfehlern; häufig auch Errors & Omissions (E&O) genannt.",
+   "tags": [
+    "Produkte"
+   ],
+   "slug": "vermoegensschadenhaftpflicht"
+  }
+ ],
+ "grafikbedarf": [
+  {
+   "typ": "vorhanden: comparisonTable",
+   "folie": 24,
+   "verwendet": "kundengruppen/ueberblick.level1",
+   "hinweis": "Die Positionierungsmatrix der Folie (Individualisierungsgrad × Beratungsintensität) ist als Vergleichstabelle plus Absatz abgebildet. Ein eigener Blocktyp „positionierungsMatrix“ wäre die treuere Grafik, steht aber nicht unter den sieben zugelassenen neuen Typen."
+  },
+  {
+   "typ": "vorhanden: infoKachelGrid",
+   "folie": 29,
+   "verwendet": "03-produktlandschaft/ueberblick.level1",
+   "hinweis": "Der Halbkreis der sechs Risikoarten ist als Sechser-Kachelraster abgebildet; die Reihenfolge Person, Sachwerte, Haftung, Financial Lines, Einkommen, Spezialrisiken folgt dem Uhrzeigersinn der Folie."
+  },
+  {
+   "typ": "vorhanden: comparisonTable",
+   "folien": "30-35",
+   "verwendet": "03-produktlandschaft (5 Tabellen)",
+   "hinweis": "Die Dreispalter der Produktfolien sind als Vergleichstabellen mit den Zeilen Zweck, Mechanik, Leistung und Besonderheit abgebildet."
+  },
+  {
+   "typ": "vorhanden: comparisonTable",
+   "folien": "37-43",
+   "verwendet": "04-vertriebswege/ueberblick.level1",
+   "hinweis": "Der Kanal-Halbkreis der Folie 37 und die vier Dimensionen der Folien 38–43 sind zu einer Tabelle mit sechs Zeilen zusammengeführt; die beiden neuen Einheiten tragen zusätzlich je ein Vierer-Kachelraster."
+  },
+  {
+   "typ": "vorhanden: table",
+   "folie": 45,
+   "verwendet": "08-zukunftsthemen/ma-konsolidierung.level1",
+   "hinweis": "Das 4×4-Raster der Trendfolie ist als Tabelle abgebildet (Trend, Herausforderung, Haupttreiber, Wirkung)."
+  },
+  {
+   "typ": "vorhanden: trendRadar (chartData)",
+   "folie": 45,
+   "verwendet": "08-zukunftsthemen.chartData.trendRadar",
+   "hinweis": "Fünf neue Items ergänzen das bestehende Radar; Ring- und Segmentzuordnung ist redaktionell gesetzt."
+  },
+  {
+   "typ": "NICHT abgebildet: Liniendiagramm",
+   "folie": 47,
+   "verwendet": "-",
+   "hinweis": "Die Zeitreihe „Anzahl Investment-Depots gegen Anzahl Versicherungsverträge 2013–2025+“ ist nicht als chartLine erfasst: Die Achse ist mit „In m€“ beschriftet, die Reihen zählen aber Verträge und Depots, und absolute Werte sind nur aus der Grafik abzuschätzen. Übernommen sind stattdessen die ausgewiesenen Wachstumsraten (−1,1 %, +4,5 %, seit 2020 +8 %). Sollte der Datensatz beschaffbar sein, ist ein chartLine in „altersvorsorge-reform“ level2 die passende Stelle."
+  },
+  {
+   "typ": "NICHT abgebildet: Positionierungsgrafik",
+   "folie": 46,
+   "verwendet": "-",
+   "hinweis": "Die Blasengrafik zu Neugeschäft und Bestand (Garantieprodukt, AV-Depot, Standardprodukt) trägt nur Achsenrichtungen und die Platzhalter A, B und ein Fragezeichen, keine Werte. Sie ist als Aussage in den Absätzen aufgelöst statt als Grafik erfasst."
+  }
+ ],
+ "offeneFragen": [
+  "kundengruppen: Die Folien 24–27 enthalten keine einzige Kennzahl. Der heroStat nennt deshalb nur die Zahl der Kundengruppen (3), quickStats fehlen. Belastbare Kandidaten wären GDV-Zahlen zur Zahl der Privathaushalte, der Unternehmen nach Größenklassen und dem gewerblichen Prämienvolumen – die stehen aber weder im Deck noch im bestehenden JSON.",
+  "Folie 39 listet „Begrenzte Produktunabhängigkeit“ mit Häkchen unter den Stärken des Maklers, während dieselbe Zeile auf Folie 38 mit Minuszeichen als Grenze der AO steht. Beim Makler ist das offensichtlich ein Übertragungsfehler der Folie (gemeint ist die hohe Produktunabhängigkeit). Der Punkt ist deshalb im Maklerabsatz weggelassen und nicht stillschweigend umgedeutet.",
+  "Folie 47 nennt eine „Fähigkeit SI-Vertrieb“; die Abkürzung SI ist im Deck nicht aufgelöst. Der Absatz spricht deshalb allgemein von „dem Vertrieb“.",
+  "Folie 47 beschriftet die y-Achse mit „In m€“, die Reihen heißen aber „Anzahl Investment-Depots“ und „Anzahl Versicherungsverträge“. Einheit und Reihenbezeichnung widersprechen sich; absolute Werte wurden deshalb nicht übernommen.",
+  "„Embedded Insurance“ steht nach dieser Einarbeitung an drei Stellen: neue Lerneinheit 04-vertriebswege/embedded (Vertriebsweg), 03-produktlandschaft/innovativ (Produktinnovation) und 08-zukunftsthemen/insurtechs-plattformen (Plattformökonomie). Vorschlag: Der Vertriebsweg führt die Kanal- und Ertragslogik, „innovativ“ und „insurtechs-plattformen“ verweisen darauf; eine Zusammenführung sollte der integrierende Agent entscheiden.",
+  "03-produktlandschaft/gewerbe behandelt D&O und Cyber bereits ausführlich (Claims-made, Pflicht-Selbstbehalt, GDV-Musterbedingungen, Marktzahlen). Die neue Einheit „financial-lines“ trägt bewusst nur die Kategorienlogik und verweist für die Details dorthin. Wer die Produktwelt später strenger nach Kategorien ordnet, kann die D&O- und Cyber-Blöcke aus „gewerbe“ nachziehen.",
+  "Das Deck nennt die Kanäle auf Folie 37 sechsfach (AO, Makler, Bankvertrieb, Direkt/Digital, Embedded Insurance, Assekuradeure), das bestehende Kapitel 04 spricht im ersten Absatz von „sieben Vertriebskanälen“ (mit Mehrfachagenten und Strukturvertrieben). Beide Zählungen bleiben unverändert stehen; der Absatztitel „Die sieben Vertriebskanäle“ sollte aber geprüft werden, sobald die neue Vergleichstabelle mit sechs Zeilen daneben steht.",
+  "03-produktlandschaft/leben-rente nennt die Riester-Reform („Riester-Rente vor grundlegender Reform“), ohne das AVRG und den Starttermin Januar 2027 zu kennen. Empfehlung: einen Satz mit Verweis auf die neue Einheit 08-zukunftsthemen/altersvorsorge-reform ergänzen (nicht Teil dieser Lieferung, weil der Absatz inhaltlich zu Kapitel 03 gehört und dort ein anderer Agent arbeitet).",
+  "Am Rande aufgefallen, außerhalb meines Folienabschnitts: Kapitel 03 führt in den quickStats „600 Mio. € Cyber-Prämien“, im Text der Einheit „gewerbe“ dagegen „330 Mio. € (GDV, 2024)“. Die beiden Zahlen widersprechen sich.",
+  "Glossar: „Embedded Insurance“, „Assekuradeur“, „D&O-Versicherung“, „Betriebsunterbrechungsversicherung (BU/BUV)“, „Bancassurance“, „Haftpflichtversicherung“, „Managing General Agent (MGA)“ und „Krankentagegeld“ bestehen bereits und sind nicht erneut geliefert. Für „Assekuradeur“ liegt eine als Verbesserung markierte Fassung vor."
+ ]
+}

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lebenslauf - Max Berger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1e4d91;
+            --green: #4aaa48;
+            --dark: #1a1a2e;
+            --light: #fafafa;
+            --gray: #4a4a5a;
+            --gray-light: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            flex-wrap: wrap;
+        }
+
+        .controls label {
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .controls input[type="color"] {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .download-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+            background: var(--green);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .download-btn .icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .preview-container {
+            background: #c0c0c0;
+            padding: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* CV Page */
+        .cv-page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            display: grid;
+            grid-template-columns: 1fr 75mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .icon {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 40px;
+        }
+
+        .main h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: var(--dark);
+        }
+
+        .main .subtitle {
+            color: var(--green);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--green);
+        }
+
+        .summary {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--gray);
+        }
+
+        .exp-item {
+            margin-bottom: 18px;
+        }
+
+        .exp-item .role {
+            font-weight: 600;
+        }
+
+        .exp-item .meta {
+            font-size: 0.8rem;
+            color: var(--green);
+            margin: 2px 0 5px;
+        }
+
+        .exp-item .desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--blue);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .photo {
+            width: 180px;
+            height: 180px;
+            min-width: 180px;
+            min-height: 180px;
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+        
+        .photo-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .photo-placeholder {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px dashed rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            gap: 8px;
+            transition: all 0.3s;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .photo-placeholder:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.8);
+        }
+
+        .sidebar-section {
+            margin-bottom: 18px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .skill-item {
+            font-size: 0.7rem;
+            padding: 2px 0;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+
+        .skill-with-icon {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .skill-with-icon .icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .reference-item {
+            font-size: 0.7rem;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .reference-item .ref-name {
+            font-weight: 600;
+        }
+
+        .reference-item .ref-title {
+            opacity: 0.8;
+        }
+
+        .reference-item .ref-email {
+            opacity: 0.7;
+            font-size: 0.65rem;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .header, .controls {
+                display: none !important;
+            }
+            .preview-container {
+                padding: 0;
+                background: none;
+            }
+            .cv-page {
+                box-shadow: none;
+            }
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>CV Builder</h1>
+        </div>
+
+        <div class="controls">
+            <label for="sidebarColor">Sidebar:</label>
+            <input type="color" id="sidebarColor" value="#1e4d91">
+            <label for="accentColor">Akzente:</label>
+            <input type="color" id="accentColor" value="#4aaa48">
+            <button class="download-btn" onclick="downloadPDF()">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Als PDF herunterladen
+            </button>
+        </div>
+
+        <div class="preview-container">
+            <div class="cv-page" id="cvPage">
+                <div class="main">
+                    <h1 class="cv-name">Max Berger</h1>
+                    <div class="subtitle">VERSICHERUNGSFACHMANN (IHK) · AGENTURLEITER</div>
+
+                    <div class="section">
+                        <h2>Profil</h2>
+                        <p class="summary">Versicherungsvertriebsprofi mit 8 Jahren in der Allianz Ausschließlichkeitsorganisation. Führung eines 3-köpfigen Teams, Bestandsvolumen 2,4 Mio €. Bereit für den nächsten Karriereschritt in der Agenturleitung.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>Berufserfahrung</h2>
+
+                        <div class="exp-item">
+                            <div class="role">Agenturleiter (stellv.) &amp; Teamleiter</div>
+                            <div class="meta">Allianz Generalvertretung Düsseldorf | 2021 – heute</div>
+                            <div class="desc">Leitung eines 3-köpfigen Vertriebsteams. Bestandsmanagement (2,4 Mio €). Neukundenakquise und Beratung in Komposit, Leben und Kranken.</div>
+                        </div>
+
+                        <div class="exp-item">
+                            <div class="role">Versicherungsfachmann im Außendienst</div>
+                            <div class="meta">Allianz Generalvertretung Düsseldorf | 2018 – 2021</div>
+                            <div class="desc">Eigenverantwortliche Betreuung von 800+ Privat- und Gewerbekunden. Systematische Bedarfsanalysen und Bestandspflege. Regelmäßiges Übertreffen der Vertriebsziele (Ø 115% Zielerreichung).</div>
+                        </div>
+
+                        <div class="exp-item">
+                            <div class="role">Trainee Versicherungsvertrieb</div>
+                            <div class="meta">Allianz AG, Bereich AO NRW | 2016 – 2018</div>
+                            <div class="desc">18-monatiges Trainee-Programm mit Stationen in Kundenservice, Schadensbearbeitung und Vertrieb. Abschluss IHK-Sachkundeprüfung Versicherungsfachmann §34d.</div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2>Ausbildung</h2>
+
+                        <div class="exp-item">
+                            <div class="role">Bachelor of Arts, Betriebswirtschaftslehre</div>
+                            <div class="meta">Heinrich-Heine-Universität Düsseldorf, 2016</div>
+                            <div class="desc">Schwerpunkt: Marketing &amp; Vertrieb | Abschluss: 2,1<br>Thesis: „Digitalisierung im Versicherungsvertrieb – Chancen und Herausforderungen für den Außendienst"</div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="sidebar">
+                    <div class="photo-container cv-photo-wrapper">
+                        <img class="photo cv-photo" id="cvPhoto" src="" alt="Max Berger" style="display: none;">
+                        <div class="photo-placeholder" id="photoPlaceholder" onclick="document.getElementById('photoInput').click()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path></svg>
+                            <span>Foto wählen</span>
+                        </div>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+
+                    <div class="sidebar-section">
+                        <h3>Kontakt</h3>
+                        <div class="contact-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            0176 4432 8891
+                        </div>
+                        <div class="contact-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            max.berger&#64;email.de
+                        </div>
+                        <div class="contact-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            40225 Düsseldorf
+                        </div>
+                        <div class="contact-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            linkedin.com/in/maxberger
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Fachkompetenz</h3>
+                        <div class="skill-item">Kundenakquise &amp; Neugeschäft</div>
+                        <div class="skill-item">Bestandsmanagement</div>
+                        <div class="skill-item">Cross-Selling &amp; Upselling</div>
+                        <div class="skill-item">Vertriebssteuerung &amp; KPIs</div>
+                        <div class="skill-item">Teamführung &amp; Coaching</div>
+                        <div class="skill-item">Beratung Komposit/Leben/Kranken</div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Zertifizierungen</h3>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span>IHK Versicherungsfachmann (§34d)</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span>BWL Bachelor (DQR 6)</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span>IDD Weiterbildung 2024</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Sprachen</h3>
+                        <div class="skill-item">Deutsch (Muttersprache)</div>
+                        <div class="skill-item">Englisch (Verhandlungssicher)</div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Highlights</h3>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span>Führung 3 Vertriebsmitarbeiter</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 5a8 8 0 0 0-12 7 8 8 0 0 0 12 7"></path><line x1="4" y1="10" x2="16" y2="10"></line><line x1="4" y1="14" x2="16" y2="14"></line></svg>
+                            <span>Bestandsvolumen 2,4 Mio €</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            <span>Ø 115% Zielerreichung</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Referenzen</h3>
+                        <div class="reference-item">
+                            <div class="ref-name">Stefan Hoffmann</div>
+                            <div class="ref-title">Agenturleiter, Allianz Düsseldorf</div>
+                            <div class="ref-email">s.hoffmann&#64;allianz-duesseldorf.de</div>
+                        </div>
+                        <div class="reference-item">
+                            <div class="ref-name">Dr. Petra Winkler</div>
+                            <div class="ref-title">Vertriebsdirektorin NRW, Allianz</div>
+                            <div class="ref-email">petra.winkler&#64;allianz.de</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Photo as base64
+        const photoData = "";
+        
+        // When loaded inside an iframe, hide controls and show CV directly
+        if (window.self !== window.top) {
+            document.querySelector('.header').style.display = 'none';
+            document.querySelector('.controls').style.display = 'none';
+            const container = document.querySelector('.preview-container');
+            container.style.background = 'none';
+            container.style.padding = '0';
+            const page = document.querySelector('.cv-page');
+            page.style.width = '100%';
+            page.style.height = 'auto';
+            page.style.boxShadow = 'none';
+            document.body.style.background = 'white';
+            document.body.style.padding = '0';
+        }
+
+        // Photo file input handler
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('cvPhoto');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('photoPlaceholder').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Color pickers
+        document.getElementById('sidebarColor').addEventListener('input', (e) => {
+            document.querySelector('.sidebar').style.background = e.target.value;
+        });
+        
+        document.getElementById('accentColor').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--green', e.target.value);
+            document.querySelector('.download-btn').style.background = e.target.value;
+        });
+
+        // PDF Download
+        async function downloadPDF() {
+            const btn = document.querySelector('.download-btn');
+            btn.textContent = 'Wird erstellt...';
+            btn.disabled = true;
+
+            if (!window.html2canvas) {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+            }
+            if (!window.jspdf) {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+            }
+
+            const element = document.getElementById('cvPage');
+
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 3,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    width: element.scrollWidth,
+                    height: element.scrollHeight
+                });
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+                pdf.save('Lebenslauf_Max_Berger.pdf');
+            } catch (error) {
+                console.error('PDF Error:', error);
+                alert('PDF-Erstellung fehlgeschlagen.');
+            }
+
+            btn.innerHTML = '<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Als PDF herunterladen';
+            btn.disabled = false;
+        }
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+    </script>
+</body>
+</html>

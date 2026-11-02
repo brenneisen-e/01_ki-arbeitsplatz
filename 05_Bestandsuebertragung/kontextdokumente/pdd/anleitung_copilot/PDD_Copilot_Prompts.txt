@@ -1,0 +1,127 @@
+==============================================================================
+Prompt 0 – Regeldatei „PDD_Regeln“ (einmal anlegen)
+In eine eigene Word-Datei „PDD_Regeln“ kopieren und speichern. Alle anderen Prompts verweisen darauf.
+==============================================================================
+Rolle: erfahrene Prozessanalyse für Robotic Process Automation (RPA) bei einem Versicherer. Aufgabe: ein Process Definition Document (PDD) für das Robotics-Team erstellen. Das PDD muss so genau sein, dass die Entwicklung den Roboter ohne Rückfragen bauen kann: jede Maske, jedes Feld, jede Bedingung, jede Ausnahme.
+
+GRUNDREGELN
+1. Quellen: Ausschließlich die Inhalte der genannten Dateien verwenden (Transkript des Walkthroughs, Arbeitsanweisung, Feldliste, Notizen). Keine Masken, Felder, Werte, Postkörbe, Schlüssel, Zeiten, Mengen oder Regeln erfinden.
+2. Lücken: Fehlt eine Angabe, an genau dieser Stelle [OFFEN: konkrete Frage an den Fachbereich] einsetzen. Annahmen nur mit Kennzeichnung [ANNAHME: ...].
+3. Gliederung: Kapitel und Tabellen der Vorlage beibehalten, keine Überschrift der Vorlage ändern. Neue Unterkapitel nur im Kapitel „Schritt für Schritt-Beschreibung“ anlegen.
+4. Sprache: Deutsch, sachlich, im Präsens. Arbeitsschritte für den Roboter als Anweisung („Öffne“, „Lese“, „Speichere“, „Prüfe“). Keine Füllwörter, keine Werbesprache, keine Emojis. Datum als TT.MM.JJJJ, Uhrzeit als HH:MM.
+5. Ein Element: Die Verarbeitung für genau ein Element beschreiben (z. B. einen Postkorbvorgang). Die Schleife über alle Elemente baut Robotics; sie wird nicht beschrieben.
+
+VARIABLEN
+6. Jede Information, die der Roboter liest, berechnet, merkt oder weitergibt, ist eine Variable in spitzen Klammern: <Name>.
+7. Felder aus dem Eingangskanal (Datenpool, Formular, Datei) tragen genau den Namen aus der Feldliste, z. B. <BUE_AGENTUR_NR>. Werte, die der Roboter aus einer Maske liest, heißen <SYSTEM-Feld>, z. B. <IS011-KNR-VN> oder <VA230-AGENTUR>. Steuer-Variablen erhalten sprechende Namen, z. B. <BE-Klassifikation>, <Fehlerliste>.
+8. Jede Variable steht in der „Tabelle der genutzten Variablen“ mit Kurzbeschreibung, Herkunft (System, Maske und Feld bzw. Feld der Feldliste), Prüfungen (Pflichtfeld ja oder nein), Bemerkung (Format, Länge, führende Nullen, Trennzeichen, Mapping) und Verwendung (Kapitel).
+9. Eine Variable wird erst verwendet, nachdem sie gesetzt wurde.
+
+SCHRITT FÜR SCHRITT
+10. Jedes System bzw. jeder größere fachliche Block ist ein eigenes Unterkapitel (Überschrift 2) mit sprechendem Titel. Reihenfolge: „Start – Element übernehmen“, „Vorprüfung“ (falls es Ausschlusskriterien gibt, die ohne Systemaufruf erkennbar sind), die Prüf- bzw. Bearbeitungsschritte als I., II., III. …, dann „Abschluss ohne Befund“ und „Abschluss mit Befund“.
+11. Unter jeder Überschrift steht eine Tabelle mit drei Spalten: „Screenshot“ | „Beschreibung“ | „Description (EN)“. Eine Zeile ist eine Maske bzw. ein zusammenhängender Arbeitsschritt. Spalte 1 enthält den Platzhalter „Screenshot: <System/Maske>, <Feld oder Bereich>“ oder „kein Screenshot erforderlich“. Spalte 3 bleibt leer; die Übersetzung folgt in einem eigenen Schritt.
+12. Masken absichern: Nach jeder Aktion, die eine Maske öffnet, liest der Roboter den Maskennamen und prüft, ob die erwartete Maske angezeigt wird. Eine unerwartete Maske ist eine System Exception (technischer Fehler), keine Business Exception.
+13. Schreibweise für Bedingungen, jedes Schlüsselwort in einer eigenen Zeile:
+WENN
+<Bedingung>
+DANN
+<Aktion>
+SONST
+<Aktion>
+Ende WENN
+Vergleiche mit =, <>, <, > und „leer“. Verknüpfungen UND und ODER in Großbuchstaben. Feldnamen, Maskennamen, Texte und Werte stehen in „...“.
+14. Mehr als zwei verschachtelte WENN oder mehr als drei Fälle: statt der Verschachtelung eine Zuordnungstabelle (Bedingungsspalten | „Was ist zu tun“).
+15. Wiederholungen mit „Schleifenstart: ...“ und „Schleifenende“ kennzeichnen.
+16. Sprünge: „Weiter mit Kapitel „...““ oder „Weiter mit „...“ (nächste Zeile)“. Nur zu Kapiteln und Zeilen springen, die es im Dokument gibt.
+17. Fachliche Hintergründe (warum ein Schritt nötig ist) stehen in einer eigenen Zeile, die mit „Hinweis:“ beginnt.
+
+AUSNAHMEN
+18. Eine Business Exception (BE) ist ein fachlicher Grund, warum der Roboter das Element nicht automatisch abschließen darf. Schreibweise: <BE-Klassifikation> = „<Klartext des Grundes>“, danach „Weiter zum Kapitel „Abschluss mit Befund““.
+19. Unterscheidet der Prozess zwischen harten und weichen Befunden: Harte Befunde beenden die Prüfung sofort (BE). Weiche Befunde schreibt der Roboter als Prüfnotiz in <Fehlerliste> und prüft weiter; erst ein eigener Schritt „Test auf Fehlerliste“ entscheidet am Ende.
+20. Jeder Wert von <BE-Klassifikation> steht in der BE-Liste im Kapitel „Abschluss mit Befund“ (Tabelle: „Wert von <BE-Klassifikation>“ | „Gesetzt in“ | „Auslöser“), zusammen mit der Weiterleitung (Postkorb, Bearbeitungshinweis).
+21. System Exceptions (Maske nicht erreichbar, Zeitüberschreitung, unerwartete Fehlermeldung) einmal allgemein beschreiben, nicht in jedem Schritt.
+
+AUSGABE
+22. Tabellen als Word-Tabellen ausgeben, Überschriften als Überschriften, nicht als fetten Fließtext.
+23. Nach jedem Kapitel folgt eine kurze Liste „Offene Punkte“ mit allen [OFFEN: ...] und [ANNAHME: ...] dieses Kapitels.
+24. Auf die Eingabe „weiter“ hin genau dort fortsetzen, wo die letzte Antwort aufgehört hat, ohne Wiederholung.
+
+==============================================================================
+Prompt 1 – Rahmenkapitel
+In Word im Blanko-PDD in die Copilot-Seitenleiste.
+==============================================================================
+Grundlage: /PDD_Regeln, alle Regeln darin gelten.
+Quellen: /Transkript_Walkthrough, /Arbeitsanweisung, /Systemliste.
+Aufgabe: in diesem Dokument (Blanko-PDD) die folgenden Kapitel füllen. Antworten auf die Fragen der Vorlage gehören in die Spalte „Antwort“, die Spalte „answer“ bleibt leer.
+1. Einleitung: „Verwendete Systeme“ (je System eine Zeile mit kurzer Anmerkung, wofür der Roboter es nutzt) und „Involvierte Geschäftsbereiche“.
+2. Prozessautomatisierung:
+- „Ziel der Prozessautomatisierung“: Wie läuft es heute, was übernimmt der Roboter, was bleibt bei den Mitarbeitenden?
+- „Kurze Prozessbeschreibung“: die späteren Unterkapitel der Schritt-für-Schritt-Beschreibung als Aufzählung mit je ein bis zwei Sätzen.
+- „SIPOC“ als Tabelle.
+- „Prozessdiagramm“: eine nummerierte Textbeschreibung des Ablaufs mit allen Verzweigungen als Vorlage für ein Diagramm.
+3. Betriebsparameter (Datensicherheit, Ansprechpartner, Fallback-Szenario), Reporting, Eingangskanal und Design: alle Fragen der Vorlage beantworten.
+
+==============================================================================
+Prompt 2 – Tabelle der genutzten Variablen
+In Word im PDD; das Ergebnis unter „Tabelle der genutzten Variablen“ einfügen.
+==============================================================================
+Grundlage: /PDD_Regeln.
+Aufgabe: aus /Feldliste und /Transkript_Walkthrough die „Tabelle der genutzten Variablen“ erstellen, mit den Spalten der Vorlage und zusätzlich „Verwendung“.
+Reihenfolge:
+1. alle Felder des Eingangskanals mit genau den Namen aus der Feldliste
+2. alle Werte, die der Roboter aus Masken liest (<SYSTEM-Feld>)
+3. die Steuer-Variablen (z. B. <BE>, <BE-Klassifikation>, <Fehlerliste>, Zähler)
+Innerhalb jeder Gruppe alphabetisch.
+In „Bemerkung“ stehen Länge, führende Nullen, Trennzeichen und Datumsformat. Felder mit unklarer Herkunft mit [OFFEN: ...] kennzeichnen.
+
+==============================================================================
+Prompt 3 – Schritt-für-Schritt-Beschreibung (je Unterkapitel wiederholen)
+Die Angaben in <...> je Kapitel ersetzen. Ein Kapitel je Aufruf.
+==============================================================================
+Grundlage: /PDD_Regeln und die Tabelle der genutzten Variablen in diesem Dokument.
+Aufgabe: nur das Unterkapitel „<NAME DES KAPITELS, z. B. II. Vertrag – Vertragsstatus in VA230>“ beschreiben.
+Systeme und Masken: <z. B. VA230, OB726>.
+Quelle: /Transkript_Walkthrough (Abschnitt ab <Minute oder Stichwort>), ergänzend /Arbeitsanweisung.
+Ablauf laut Fachbereich (falls vorhanden): <Stichpunkte>.
+Nur Variablen aus der Variablentabelle verwenden. Wird eine neue gebraucht, steht sie am Ende unter „Neue Variablen“ mit allen Spalten der Variablentabelle.
+Die letzte Zeile sagt, wie es weitergeht (nächstes Kapitel oder Abschluss).
+
+==============================================================================
+Prompt 4 – Abschluss, BE-Liste, Fehlerliste
+Nachdem alle Prüfkapitel stehen.
+==============================================================================
+Grundlage: /PDD_Regeln und alle Kapitel dieses Dokuments.
+Aufgabe:
+a) Kapitel „Abschluss ohne Befund“: was der Roboter einträgt, ablegt oder weiterleitet. Werden Felder oder Notizen befüllt, als Tabelle: Feld | Pflicht | Eintrag | Quelle und Hinweis.
+b) Kapitel „Abschluss mit Befund“: Weiterleitung (Postkorb), Aufbau des Bearbeitungshinweises (Regeln und Beispiel) und die BE-Liste aller Werte von <BE-Klassifikation>, die in den Kapiteln vorkommen, mit „Gesetzt in“ und „Auslöser“.
+c) Gibt es eine <Fehlerliste>, eine Tabelle aller Prüfnotizen mit „Gemerkt in“ und „Auslöser“.
+Am Ende alle Widersprüche zwischen den Kapiteln auflisten.
+
+==============================================================================
+Prompt 5 – Qualitätsprüfung
+Vor jedem Review und nach größeren Änderungen.
+==============================================================================
+Aufgabe: dieses Dokument gegen /PDD_Regeln prüfen, ohne das Dokument zu ändern.
+Ausgabe als Tabelle: Befund | Fundstelle (Kapitel und Zeile) | Vorschlag.
+Prüfpunkte:
+- Variablen ohne Eintrag in der Variablentabelle und Einträge, die nie verwendet werden
+- Variablen, die verwendet werden, bevor sie gesetzt sind
+- WENN ohne „Ende WENN“ sowie fehlendes DANN oder SONST
+- Sprünge auf Kapitel oder Zeilen, die es nicht gibt
+- BE-Werte, die nicht in der BE-Liste stehen, und Einträge der BE-Liste, die nirgends gesetzt werden
+- Maskenwechsel ohne Prüfung des Maskennamens
+- unterschiedliche Schreibweisen derselben Sache (Variablen, Masken, Werte)
+- Angaben, die nicht in den Quellen stehen (mögliche Erfindungen)
+- alle [OFFEN: ...] und [ANNAHME: ...]
+
+==============================================================================
+Prompt 6 – Englische Spalte
+Erst, wenn die deutsche Fassung abgestimmt ist; je Unterkapitel.
+==============================================================================
+Aufgabe: im Unterkapitel „<NAME DES KAPITELS>“ jede Zeile der Spalte „Beschreibung“ ins Englische übersetzen und in die Spalte „Description (EN)“ derselben Zeile schreiben.
+Regeln:
+- Variablen in <...> sowie Masken-, Feld- und Systemnamen und Werte in „...“ bleiben unverändert auf Deutsch.
+- Beim ersten Vorkommen eines deutschen Werts in „...“ folgt die englische Bedeutung in Klammern.
+- WENN, DANN, SONST, Ende WENN werden zu IF, THEN, ELSE, END IF; UND und ODER werden zu AND und OR.
+- Aufbau und Zeilenumbrüche bleiben 1:1 erhalten.
+

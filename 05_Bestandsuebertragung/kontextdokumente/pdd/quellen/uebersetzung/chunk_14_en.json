@@ -1,0 +1,207 @@
+[
+ {
+  "de": "Apella Aktiengesellschaft",
+  "en": "Apella Aktiengesellschaft",
+  "art": "text"
+ },
+ {
+  "de": "600021389 / 818468",
+  "en": "600021389 / 818468",
+  "art": "text"
+ },
+ {
+  "de": "bestandsuebertragung@apella.de",
+  "en": "bestandsuebertragung@apella.de",
+  "art": "text"
+ },
+ {
+  "de": "Fonds Finanz GmbH",
+  "en": "Fonds Finanz GmbH",
+  "art": "text"
+ },
+ {
+  "de": "600042497 / 811781",
+  "en": "600042497 / 811781",
+  "art": "text"
+ },
+ {
+  "de": "immer <BUE_MAKLER_EMAIL> (leben@fondsfinanz.de oder sach@fondsfinanz.de, je nach Sparte)",
+  "en": "always <BUE_MAKLER_EMAIL> (leben@fondsfinanz.de or sach@fondsfinanz.de, depending on the line of business)",
+  "art": "text"
+ },
+ {
+  "de": "IV. Vertrag – Vertragsstatus in VA230",
+  "en": "IV. Contract – contract status in VA230",
+  "art": "text"
+ },
+ {
+  "de": "Vertragsstatus prüfen (VA230)",
+  "en": "Check contract status (VA230)",
+  "art": "text"
+ },
+ {
+  "de": "Lese das gelb markierte Feld „Status“ aus und speichere als <VA230-Status>.",
+  "en": "Read the field „Status“ highlighted in yellow and store as <VA230-Status>.",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-Status> <> „aktuell“",
+  "en": "<VA230-Status> <> „aktuell“ (current)",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „<Klassifikation für nicht aktuelle Verträge – durch Fachbereich festzulegen>“",
+  "en": "<BE-Klassifikation> = „<Klassifikation für nicht aktuelle Verträge – durch Fachbereich festzulegen>“ (classification for non-current contracts – to be defined by the business department)",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „V. Test auf Fehlerliste“",
+  "en": "Continue with chapter „V. Test auf Fehlerliste“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die <Vorgang-VNR> stammt aus dem VDB-Abruf durch Celonis und ist damit eine echte Nummer; ob ein Vertrag existiert, wird nicht eigens geprüft. Der Postkorbvorgang startet je Sparte den passenden Prüf-Bot; damit steht die Sparte fest und mit ihr die Notizvariante.",
+  "en": "Note: The <Vorgang-VNR> originates from the VDB retrieval by Celonis and is therefore a genuine number; whether a contract exists is not checked separately. The mailbox case starts the appropriate Prüf-Bot for each line of business; the line of business is thus fixed, and with it the note variant.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Rahmenverträge und Verträge im Mahnverfahren werden wie alle anderen Verträge geprüft. Flotten und Flottenverträge mit führendem Mantel betreffen nur Komposit (KR).",
+  "en": "Note: Framework contracts and contracts in the dunning procedure are checked like all other contracts. Fleets and fleet contracts with a leading umbrella contract concern Komposit (KR, P&C) only.",
+  "art": "text"
+ },
+ {
+  "de": "V. Test auf Fehlerliste",
+  "en": "V. Test for error list",
+  "art": "text"
+ },
+ {
+  "de": "Fehlerliste auswerten",
+  "en": "Evaluate error list",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Alle Einzelprüfungen sind durchlaufen. Abweichungen aus den Einzelprüfungen wurden als Prüfnotizen in <Fehlerliste> gesammelt.",
+  "en": "Note: All individual checks have been completed. Deviations from the individual checks have been collected as check notes in <Fehlerliste>.",
+  "art": "text"
+ },
+ {
+  "de": "<Fehlerliste> <> leer",
+  "en": "<Fehlerliste> <> empty",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Nachprüfung erforderlich“",
+  "en": "<BE-Klassifikation> = „Nachprüfung erforderlich“ (re-check required)",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „VI. Abschluss ohne Befund“",
+  "en": "Continue with chapter „VI. Abschluss ohne Befund“",
+  "art": "text"
+ },
+ {
+  "de": "VI. Abschluss ohne Befund – Notiz bestücken und an den 72-Stunden-BOT übergeben",
+  "en": "VI. Completion without findings – populate note and hand over to the 72-Stunden-BOT",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz bestücken",
+  "en": "Populate telephone note",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Es wurde keine Business Exception festgestellt und die Fehlerliste ist leer. Der Bot legt die Telefonnotiz an und bestückt sie Feld für Feld nach der folgenden Tabelle; danach wird der Vorgang mit der Notiz an den 72-Stunden-BOT übergeben.",
+  "en": "Note: No business exception was identified and the error list is empty. The bot creates the telephone note and populates it field by field according to the following table; the case is then handed over with the note to the 72-Stunden-BOT.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Prüfung des Vertriebskanals des abgebenden Bestandsinhabers erfolgt im Prüf-Bot nicht. Der 72-Stunden-BOT prüft selbst, ob der Bestandsinhaber der AO zugeordnet ist, gibt in diesem Fall die 72-Stunden-Information aus und leitet alle übrigen Vorgänge ohne Wartezeit an den BÜ-BOT weiter.",
+  "en": "Note: The Prüf-Bot does not check the sales channel of the transferring portfolio holder. The 72-Stunden-BOT itself checks whether the portfolio holder is assigned to the AO, issues the 72-hour information in that case and forwards all other cases to the BÜ-BOT without any waiting period.",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz anlegen: Vorlage BOT2011 (Krankenversicherung); der Feldumfang entspricht der Notizmaske 1515 ohne den Abschnitt „Folgearbeit für Komposit“. Ob die Vorlage bestückt oder eine Freitextnotiz mit gleichem Aufbau erzeugt wird, ist durch den Fachbereich zu bestätigen.",
+  "en": "Create telephone note: Vorlage BOT2011 (health insurance); the field scope corresponds to note mask 1515 without the section „Folgearbeit für Komposit“. Whether the template is populated or a free-text note with the same structure is generated is to be confirmed by the business department.",
+  "art": "text"
+ },
+ {
+  "de": "Alle Felder werden ohne weitere Prüfung aus den Variablen übernommen (Ausfüllhinweise in der Tabelle unten). Anschließend Telefonnotiz speichern.",
+  "en": "All fields are transferred from the variables without any further check (completion guidance in the table below). Then save the telephone note.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Notiz beauftragt immer eine Einzel-BÜ für die <Vorgang-VNR>, nie eine Gesamt-BÜ. Auch bei <BUE_UMFANG> = „Gesamt“ läuft jede Versicherungsnummer als eigener Vorgang mit eigener Notiz; die übrigen Nummern stehen nur nachrichtlich in der Notiz.",
+  "en": "Note: The note always orders an individual portfolio transfer for the <Vorgang-VNR>, never an entire portfolio transfer. Even with <BUE_UMFANG> = „Gesamt“, each policy number runs as a separate case with its own note; the remaining numbers appear in the note for information only.",
+  "art": "text"
+ },
+ {
+  "de": "Feld der Notizmaske",
+  "en": "Field of the note mask",
+  "art": "text"
+ },
+ {
+  "de": "Pflicht",
+  "en": "Mandatory",
+  "art": "text"
+ },
+ {
+  "de": "Eintrag",
+  "en": "Entry",
+  "art": "text"
+ },
+ {
+  "de": "Quelle und Hinweis",
+  "en": "Source and note",
+  "art": "text"
+ },
+ {
+  "de": "Eingangsdatum",
+  "en": "Eingangsdatum (receipt date)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_MV_EINGANGSDATUM>, sonst Eröffnungsdatum des Postkorbvorgangs; Format tt.mm.jjjj",
+  "en": "<BUE_MV_EINGANGSDATUM>, otherwise opening date of the mailbox case; Format tt.mm.jjjj",
+  "art": "text"
+ },
+ {
+  "de": "Maklername",
+  "en": "Maklername (broker name)",
+  "art": "text"
+ },
+ {
+  "de": "Feld „Name 1“ aus OB726 (Kapitel III)",
+  "en": "Field „Name 1“ from OB726 (chapter III)",
+  "art": "text"
+ },
+ {
+  "de": "Agenturnummer",
+  "en": "Agenturnummer (agency number)",
+  "art": "text"
+ },
+ {
+  "de": "bereinigte Agenturnummer aus dem Datenpool, nur Ziffern",
+  "en": "cleaned-up agency number from the data pool, digits only",
+  "art": "text"
+ },
+ {
+  "de": "Personalnummer",
+  "en": "Personalnummer (personnel number, PNR)",
+  "art": "text"
+ },
+ {
+  "de": "7-stellig ohne Präfix „P,“ (Kapitel III)",
+  "en": "7 digits without the prefix „P,“ (chapter III)",
+  "art": "text"
+ },
+ {
+  "de": "E-Mail aufnehmender Makler",
+  "en": "E-Mail aufnehmender Makler (e-mail of the acquiring broker)",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel III, Schritt „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“",
+  "en": "Chapter III, step „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“",
+  "art": "text"
+ }
+]

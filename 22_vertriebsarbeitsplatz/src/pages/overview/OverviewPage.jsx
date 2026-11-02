@@ -1,0 +1,93 @@
+import { Suspense, useMemo } from 'react';
+import { useMode } from '../../hooks/useMode';
+import useTranslation from '../../i18n/useTranslation';
+import GlobalHeader from '../../components/layout/GlobalHeader';
+import KPIGrid from '../../components/ui/KPIGrid';
+import { KundenDeutschlandkarteCompact } from '../../components/ui/KundenDeutschlandkarte';
+import { KUNDEN_BY_MODE, SHOWCASE_KUNDE_IDS } from '../../data';
+import UebersichtTab from './tabs/UebersichtTab';
+import lazyRetry from '../../utils/lazyRetry';
+
+const NeugeschaeftTab = lazyRetry(() => import('./tabs/NeugeschaeftTab'));
+const BestandTab = lazyRetry(() => import('./tabs/BestandTab'));
+const StornoTab = lazyRetry(() => import('./tabs/StornoTab'));
+const VerguetungTab = lazyRetry(() => import('./tabs/VerguetungTab'));
+const QualitaetTab = lazyRetry(() => import('./tabs/QualitaetTab'));
+const KundenTab = lazyRetry(() => import('./tabs/KundenTab'));
+const PotentialeTab = lazyRetry(() => import('./tabs/PotentialeTab'));
+const StammdatenOverviewTab = lazyRetry(() => import('./tabs/StammdatenOverviewTab'));
+const PipelineLeadsTab = lazyRetry(() => import('./tabs/PipelineLeadsTab'));
+const RevenueTab = lazyRetry(() => import('./tabs/RevenueTab'));
+
+const TAB_COMPONENTS = {
+  uebersicht: UebersichtTab,
+  stammdaten: StammdatenOverviewTab,
+  neugeschaeft: NeugeschaeftTab,
+  bestand: BestandTab,
+  storno: StornoTab,
+  verguetung: VerguetungTab,
+  ertraege: VerguetungTab,
+  qualitaet: QualitaetTab,
+  kunden: KundenTab,
+  potentiale: PotentialeTab,
+  mandatsliste: KundenTab,
+  pipeline: PipelineLeadsTab,
+  revenue: RevenueTab,
+  portfolio: BestandTab,
+  compliance: QualitaetTab,
+  reporting: VerguetungTab,
+};
+
+const TabFallback = (
+  <div className="flex items-center justify-center py-20">
+    <div className="w-8 h-8 border-2 border-(--border-medium) border-t-(--mode-primary) rounded-full animate-spin" />
+  </div>
+);
+
+export default function OverviewPage() {
+  const { config, activeTab, modeId, navigateTo } = useMode();
+  const { t } = useTranslation();
+  const TabComponent = TAB_COMPONENTS[activeTab] || UebersichtTab;
+
+  // Dynamische KPI-Werte: Mandate-Zahl aus echten Kundendaten berechnen
+  const kpiValues = useMemo(() => {
+    if (modeId !== 'vermoegensverwaltung') return config.kpiValues;
+    const kunden = KUNDEN_BY_MODE.vermoegensverwaltung || [];
+    const mandateCount = kunden.length;
+    const totalAum = kunden.reduce((sum, k) => sum + (k.aum || 0), 0);
+    return {
+      ...config.kpiValues,
+      mandate: { wert: mandateCount, trend: config.kpiValues.mandate?.trend ?? 0 },
+      aum: { wert: totalAum, trend: config.kpiValues.aum?.trend ?? 0 },
+    };
+  }, [modeId, config.kpiValues]);
+
+  return (
+    <div className="min-h-screen bg-(--bg-primary) overflow-hidden">
+      <GlobalHeader />
+      <div className="px-6 py-6 animate-fade-in">
+        {activeTab === 'uebersicht' && (
+          <KPIGrid
+            kpiConfig={config.kpiConfig}
+            kpiValues={kpiValues}
+            leadingSlot={
+              modeId === 'banking' ? (
+                <KundenDeutschlandkarteCompact
+                  kunden={(KUNDEN_BY_MODE.banking || []).filter(
+                    k => k.id !== SHOWCASE_KUNDE_IDS.banking
+                  )}
+                  totalCount={kpiValues.kundenzahl?.wert}
+                  title={t('kundenkarte')}
+                  onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
+                />
+              ) : null
+            }
+          />
+        )}
+        <Suspense fallback={TabFallback}>
+          <TabComponent />
+        </Suspense>
+      </div>
+    </div>
+  );
+}

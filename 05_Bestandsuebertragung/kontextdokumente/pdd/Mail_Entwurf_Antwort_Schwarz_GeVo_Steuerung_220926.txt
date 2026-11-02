@@ -1,0 +1,28 @@
+An: Schwarz, Stefan <Stefan.Schwarz@ergo.de>
+Cc: ebrenneisen@deloitte.de
+Betreff: AW: GeVo-Steuerung Makler BUE meets KI | 1 und 2: keine Unterlagen an KWAD
+
+Hallo Stefan,
+
+danke für die vier Fälle. Meine Antwort dazu:
+
+1 und 2: keine Unterlagen an KWAD
+
+In beiden Fällen eröffnet Celonis den Postkorbvorgang über EMWS — und zwar mitsamt Unterlagen: die E-Mail mit allen Anhängen, dem neuen KI-Deckblatt und dem Datenpool. Gehen dieselben Unterlagen zusätzlich an kwad@ergo.de, eröffnet das Eingangsmanagement einen zweiten Vorgang zum selben Sachverhalt — bei Gesundheit eine zweite Postkorberöffnung, bei Komposit und Leben einen Folgeschriftwechsel. Deshalb bei 1 und 2 keine Mail an KWAD.
+
+3: Datenpool bitte schreiben
+
+Hier entsteht ein BÜ-GeVo, nur zeitversetzt: erst nach der Abarbeitung in der Sparte wird er weitergeleitet. Damit wir nach dieser Weiterleitung den Prüf-Bot auch für diese Fälle einsetzen können, sollte Celonis den Datenpool bestücken — der Bot liest seine Vorgangsdaten ausschließlich von dort. Die Unterlagen gehen hier wie bisher an KWAD, weil das Eingangsmanagement eröffnet.
+
+Zwei Punkte dazu an dich: Wie schreibt ihr den Datensatz an einen Vorgang, den das Eingangsmanagement eröffnet? Und der BÜ-Teil braucht BUE_KLASSIFIKATION = „BÜ-Vorgang“. Steht dort die Klassifikation des Sparten-Anliegens, steuert der Bot den Vorgang in der Vorprüfung sofort mit der BE „Kein BÜ-Vorgang“ aus.
+
+4: kein Datenpool
+
+Kein BÜ-GeVo, direktes Routing in die Sparte. Der Prüf-Bot sieht den Vorgang nicht.
+
+Noch zu 2
+
+Laut Folie eröffnet Celonis bei 2 zusätzlich den GeVo „Anforderung von Unterlagen“. In der PDD setzt der Prüf-Bot die Anforderung über das Kennzeichen in der Telefonnotiz (aus BUE_ANF_UNTERLAGEN und BUE_ART_UNTERLAGEN). Wir sollten einen der beiden Wege festlegen, sonst wird doppelt angefordert.
+
+Beste Grüße
+Eike

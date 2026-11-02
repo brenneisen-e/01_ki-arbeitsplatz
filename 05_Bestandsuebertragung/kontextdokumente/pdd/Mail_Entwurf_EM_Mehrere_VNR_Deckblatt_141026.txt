@@ -1,0 +1,32 @@
+An: Stöhnken, Dennis (EYCK); von Wirtz, Markus; Gröning; Roth, Bastian (EYC1HH); Holthusen, Jan Steffen (EYCHH)
+Cc: Amend, Dirk (HSB4K); Schwarz, Stefan (DSTPB); Koch, Marcus (ODPBD)
+Betreff: Makler BÜ meets KI | Mehrere Versicherungsnummern: VNR/VNR_2 auf dem KI-Deckblatt
+
+Hallo zusammen,
+
+für den Pilot „Makler BÜ meets KI“ möchten wir Sie kurz informieren, wie künftig mit Anfragen umgegangen wird, die mehrere Versicherungsnummern betreffen.
+
+Was Celonis macht
+
+- Celonis eröffnet je Versicherungsnummer einen eigenen Postkorbvorgang mit eigenem KI-Deckblatt.
+- Die Felder „Versicherungsnummer“ (VNR) und „Versicherungsnummer 2“ (VNR_2) auf dem Deckblatt enthalten alle Versicherungsnummern, die zur Anfrage gehören. In jedem Vorgang steht die eigene VNR an erster Stelle, danach folgen die übrigen Nummern der Anfrage.
+- VNR_2 wird nur befüllt, wenn die Nummern nicht mehr in die 50 Zeichen von VNR passen.
+
+Beispiel: Ein Makler fragt zu 123 die gesamte Kundenverbindung an, zur Kundenverbindung gehören noch 124 und 125. Dann werden drei Vorgänge mit drei Deckblättern eröffnet:
+
+- Vorgang 123: VNR = 123; 124; 125
+- Vorgang 124: VNR = 124; 123; 125
+- Vorgang 125: VNR = 125; 123; 124
+
+Diese Vorgänge laufen automatisch durch und berühren das Eingangsmanagement nicht.
+
+Was das für das Eingangsmanagement bedeutet
+
+Bei Ihnen kommen nur die Mails an, bei denen Celonis das Deckblatt lediglich weitergibt und den Vorgang nicht automatisch eröffnet. Muss ein solcher Vorgang manuell klassifiziert werden, gilt dafür weiterhin nur die eine VNR an erster Stelle des Deckblatts. Die weiteren Nummern in VNR und VNR_2 sind nur ein Hinweis für die Nachbearbeitung in der Sparte. Für sie ist kein eigener Vorgang anzulegen, sonst entstehen Duplikate.
+
+Neu auf dem Deckblatt ist außerdem das Feld „Vertragsstatus“ im Abschnitt „Kunde & Vertrag“, direkt nach „Sparte“. Es dient nur der Information.
+
+Bitte geben Sie mir kurz Rückmeldung, ob das zu Ihrem heutigen Vorgehen passt oder ob es bei Ihnen Fälle gibt, in denen Sie mehrere Versicherungsnummern anders behandeln.
+
+Beste Grüße
+Eike Brenneisen

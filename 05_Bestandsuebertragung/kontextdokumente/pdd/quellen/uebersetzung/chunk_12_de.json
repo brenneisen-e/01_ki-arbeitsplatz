@@ -1,0 +1,166 @@
+[
+ {
+  "de": "Weiter zum Kapitel „II. Abgebender Bestandsinhaber“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Der Nachweis der Identität ist die Versicherungsnummer. Als einzige Gegenprobe bleibt das Geburtsdatum, und auch das nur, wenn der Auftrag eines nennt. Eine Plausibilitätsprüfung über Name, Vorname, Straße und PLZ findet nicht statt.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_KUNDE_GEBDAT> leer, liegt in der Regel eine juristische Person vor; die Gegenprobe entfällt dann.",
+  "art": "text"
+ },
+ {
+  "de": "II. Abgebender Bestandsinhaber",
+  "art": "text"
+ },
+ {
+  "de": "Agentur-Nr. des abgebenden Bestandsinhabers ermitteln (VA230)",
+  "art": "text"
+ },
+ {
+  "de": "VA230 mit <Vorgang-VNR> öffnen.",
+  "art": "text"
+ },
+ {
+  "de": "Lese das gelb markierte Feld hinter „Betreuung“ aus und speichere als <VA230-AGT-Inhaber>.",
+  "art": "text"
+ },
+ {
+  "de": "PNR des Bestandsinhabers lesen und Anbindung prüfen (OB726, GH040)",
+  "art": "text"
+ },
+ {
+  "de": "Öffne OB726 mit <VA230-AGT-Inhaber>.",
+  "art": "text"
+ },
+ {
+  "de": "Lese den Wert hinter „P“ und speichere nur den Zahlenanteil ohne das Präfix „P,“ als <OB726-AGT-Inh-PNR>; führende Nullen bleiben erhalten.",
+  "art": "text"
+ },
+ {
+  "de": "GH040 mit <OB726-AGT-Inh-PNR> öffnen.",
+  "art": "text"
+ },
+ {
+  "de": "Suche in der angezeigten Tabelle die Zeile „Status der Beschäftigung“ und lese den Wert hinter „=“ aus.",
+  "art": "text"
+ },
+ {
+  "de": "Wert hinter „=“ in der Zeile „Status der Beschäftigung“ <> „aktiv“",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Anbindung Bestandsinhaber nicht aktiv“ in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „III. Übernehmender Makler“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Drei Rollen sind zu unterscheiden: der Versicherungsnehmer (Kapitel I), der abgebende Bestandsinhaber aus VA230 (dieses Kapitel) und der übernehmende Vermittler aus dem Datenpool (Kapitel III).",
+  "art": "text"
+ },
+ {
+  "de": "III. Übernehmender Makler – Agenturnummer und Vermittler-Nr. (PNR)",
+  "art": "text"
+ },
+ {
+  "de": "Agentur-Nr. vorhanden",
+  "art": "text"
+ },
+ {
+  "de": "PNR vorhanden",
+  "art": "text"
+ },
+ {
+  "de": "Was ist zu tun",
+  "art": "text"
+ },
+ {
+  "de": "Ja",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; <OB726-PNR> = <BUE_VERMITTLER_NR>; Name und Klassifizierung prüfen; Anbindung in GH040 prüfen",
+  "art": "text"
+ },
+ {
+  "de": "Nein",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; PNR aus OB726 lesen; Name und Klassifizierung prüfen; Anbindung in GH040 prüfen",
+  "art": "text"
+ },
+ {
+  "de": "Harte BE „Agenturnummer nicht vorhanden“ bereits in der Vorprüfung – der Einstieg erfolgt immer über die Agenturnummer",
+  "art": "text"
+ },
+ {
+  "de": "Harte BE „Agenturnummer nicht vorhanden“ bereits in der Vorprüfung",
+  "art": "text"
+ },
+ {
+  "de": "Vermittler in OB726 aufrufen: PNR, Name und Klassifizierung",
+  "art": "text"
+ },
+ {
+  "de": "Öffne OB726 mit <BUE_AGENTUR_NR> (dass die Agenturnummer vorliegt, ist in der Vorprüfung sichergestellt).",
+  "art": "text"
+ },
+ {
+  "de": "Lese den Hinweistext der Maske.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweistext enthält „IS0042I“ (Agentur nicht vorhanden)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_NR> = leer",
+  "art": "text"
+ },
+ {
+  "de": "Lese den Wert hinter „P“ und speichere nur den Zahlenanteil ohne das Präfix „P,“ als <OB726-PNR>; 7-stellig, führende Nullen bleiben erhalten.",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-PNR> = <BUE_VERMITTLER_NR>",
+  "art": "text"
+ },
+ {
+  "de": "Format: <BUE_AGENTUR_NR> 7 bis 9 Ziffern ohne Präfix „A“; <OB726-PNR> nur Ziffern, 7-stellig. Ob das Feld hinter „P“ sauber ohne Präfix auslesbar ist, ist durch Robotics zu prüfen.",
+  "art": "text"
+ },
+ {
+  "de": "Lese das gelb markierte Feld hinter „Name 1“ aus und speichere als <OB726-Name>.",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-Name> enthält „INAKTIV“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Keine Zusammenarbeit“",
+  "art": "text"
+ },
+ {
+  "de": "Format: Ziffern, Buchstaben und Sonderzeichen, bis zu 60 Zeichen. <OB726-Name> wird in das Feld „Maklername“ der Notiz übernommen.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die OB726-Kopfzeile mit der Vermittler-Nr. („P,…“) aus. Die ganze Zeile ist ein Feld: Übernimm den Text hinter der Nummer (im Screenshot „Makler Industrie A“, Begriff „Makler“ gelb markiert) und speichere ihn als <OB726-Klassifizierung>.",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = „MFA“ UND <OB726-Klassifizierung> <> „Mehrfachagent“",
+  "art": "text"
+ },
+ {
+  "de": "ODER <BUE_VERMITTLER_TYP> = „Makler“ UND <OB726-Klassifizierung> = „Mehrfachagent“",
+  "art": "text"
+ }
+]

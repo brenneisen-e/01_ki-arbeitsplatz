@@ -1,0 +1,1277 @@
+.root {
+  /* Vollbild-Overlay: fixed statt absolute, damit der Reader garantiert den
+     ganzen Viewport füllt (die .stage ist ein zentrierender Flex-Container und
+     reichte nicht immer bis zum unteren Rand → beim dunklen Theme unsichtbar,
+     beim hellen als schwarzer Streifen sichtbar). */
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  z-index: 20;
+  /* Helles Reader-Theme (Variante A): Design-Tokens lokal auf hell überschreiben,
+     damit alle Karten/Texte/Ränder im Reader automatisch hell werden — passend
+     zum hellen Strukturbild, ohne jede Regel einzeln umzubauen. */
+  /* Magazin-/Papier-Palette (wie die Landing-Page): Creme-Flächen, dunkler
+     Print-Text, dünne Linien, KEINE Schatten. */
+  --ink: #1b1c1a;
+  --ink-2: #4c4e47;
+  --ink-3: #8a8c82;
+  --bg-1: #f7f4ec;
+  --bg-2: #efe9db;
+  --surface-1: #f7f4ec;
+  --surface-2: #efe9db;
+  --surface-3: #e6dfcd;
+  --border-soft: rgba(27, 28, 26, 0.14);
+  --border-strong: rgba(27, 28, 26, 0.24);
+  --glass: rgba(247, 244, 236, 0.88);
+  --glass-strong: rgba(247, 244, 236, 0.96);
+  --shadow-1: none;
+  --shadow-2: none;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  /* Mattiertes Glas in Creme: das gezoomte Haus scheint weich durch. */
+  background: rgba(245, 242, 234, 0.62);
+  backdrop-filter: blur(20px) saturate(118%);
+  -webkit-backdrop-filter: blur(20px) saturate(118%);
+  animation: fadeIn 0.5s var(--ease-out) both;
+}
+
+/* ── Top bar (back, chapter chip, step kicker) ── */
+.topbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  padding: 14px clamp(18px, 3vw, 44px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px 9px 12px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  transition: transform var(--t-fast) var(--ease-out), border-color var(--t-med) var(--ease-out);
+}
+
+.back:hover {
+  transform: translateX(-2px);
+  border-color: var(--accent);
+}
+
+.chapterChip {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 7px 14px 7px 7px;
+  border-radius: 14px;
+  background: var(--glass);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-1);
+}
+
+.chipNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(150deg, var(--accent-bright), var(--accent));
+}
+
+.chipText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.chipLabel {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.chipOrt {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.kicker {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* Stockwerk als quadratisches Bild sichern — gleiche Pillen-Optik wie
+   „Bearbeiten", steht direkt links davon. */
+.shotBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out);
+}
+
+.shotBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.shotBtn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+/* ── Bearbeitungs-Modus ── */
+.editToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out);
+}
+
+.editToggle:hover {
+  border-color: var(--accent);
+}
+
+.editToggle[data-on] {
+  background: var(--accent);
+  border-color: var(--accent-bright);
+  color: #fff;
+}
+
+.editToggle:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+/* ── Bewegtbild-Erprobung: Schalter „Videos aktivieren" (Optik wie der
+      Bearbeiten-Schalter) und klickbare Vergleichsbild-Hälften. ── */
+.videoToggle {
+  composes: editToggle;
+}
+
+.cmpVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Klickfläche über der ganzen Bildhälfte; der Badge übernimmt die Optik des
+   runden Verbinder-Kreises zwischen den Hälften. */
+.cmpPlayArea {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cmpPlayBadge {
+  display: grid;
+  place-items: center;
+  width: clamp(44px, 3.6vw, 56px);
+  height: clamp(44px, 3.6vw, 56px);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--t-med) var(--ease-out), opacity var(--t-med) var(--ease-out);
+}
+
+.cmpPlayArea:hover .cmpPlayBadge {
+  transform: scale(1.06);
+}
+
+/* Läuft der Clip, weicht der Badge klein in die Ecke und zeigt Pause. */
+.cmpPlayArea[data-playing] {
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 12px;
+}
+
+.cmpPlayArea[data-playing] .cmpPlayBadge {
+  width: 34px;
+  height: 34px;
+  opacity: 0.55;
+}
+
+.cmpPlayArea[data-playing]:hover .cmpPlayBadge {
+  opacity: 1;
+  transform: none;
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.editBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: var(--media-w);
+  margin: 0 auto 16px;
+  padding: 9px 15px;
+  border-radius: var(--r-md);
+  background: var(--accent-tint);
+  border: 1px solid var(--accent);
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+.editBannerText {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  color: var(--accent-bright);
+  letter-spacing: 0.04em;
+}
+
+.editSpacer {
+  flex: 1;
+}
+
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color var(--t-med) var(--ease-out);
+}
+
+.resetBtn:hover {
+  border-color: var(--accent);
+}
+
+.saveBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--t-med) var(--ease-out), opacity var(--t-med);
+}
+
+.saveBtn:hover {
+  background: var(--accent-bright, var(--accent));
+}
+
+.saveBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.saveHint {
+  font-size: 11.5px;
+  color: var(--ink-2, var(--ink));
+  opacity: 0.9;
+}
+
+/* Bild ersetzen (Upload) — Overlay oben links auf dem Bild im Bearbeiten-Modus */
+.imgUpload {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.imgUploadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background var(--t-med) var(--ease-out);
+}
+
+.imgUploadBtn:hover {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.imgUploadBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.imgUploadErr {
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: rgba(176, 32, 32, 0.9);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.editInput {
+  width: 100%;
+  font: inherit;
+  line-height: 1.5;
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 9px 11px;
+  resize: vertical;
+  field-sizing: content;
+  min-height: 2.6em;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 2px var(--accent-tint);
+}
+
+.titleInput {
+  display: block;
+  width: 100%;
+  max-width: var(--media-w);
+  margin: 0 auto 18px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(34px, calc(var(--media-w) * 0.027), 42px);
+  line-height: 1.16;
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 8px 12px;
+  resize: none;
+  field-sizing: content;
+  min-height: 1.4em;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 2px var(--accent-tint);
+}
+
+.editLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+}
+
+.boldHint {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+
+.editLeitfrage {
+  max-width: var(--media-w);
+  margin: 14px auto 0;
+  text-align: left;
+}
+
+/* Bild-Kommentar (Anzeige als Notiz über dem Bild) */
+.commentNote {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  z-index: 6;
+  max-width: 60%;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(11, 12, 15, 0.86);
+  border: 1px solid var(--accent);
+  box-shadow: var(--shadow-2);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+  backdrop-filter: blur(6px);
+  text-align: left;
+}
+
+.commentNoteIcon {
+  color: var(--accent-bright);
+  flex: none;
+  margin-top: 1px;
+}
+
+.commentEditor {
+  max-width: var(--media-w);
+  margin: 12px auto 0;
+  text-align: left;
+}
+
+/* ── Content: zentrierte Spalte, scrollt bei Bedarf ── */
+.content {
+  /* Alles passt OHNE Scrollen: die Bildbreite wird so begrenzt, dass die
+     16:9-Höhe in den verbleibenden Platz passt. Reserve ≈ 560px für Titel,
+     Management-Summary-Panel, Karten/Aktivitätsblock, Topbar, Pager und
+     Abstände. Bild UND Karten teilen sich diese Breite und bleiben dadurch
+     exakt untereinander ausgerichtet.
+     Sicherheitsnetz: `overflow-y: auto` zusammen mit `safe center` — passt
+     alles rein, wird zentriert (kein Scrollbalken); wird es doch mal höher
+     (z. B. aufgeklapptes Summary-Panel oder langer Aktivitätstext), rückt der
+     Inhalt an den Anfang und scrollt, statt unten abgeschnitten zu werden. */
+  --media-w: clamp(520px, calc((100vh - 520px) * 16 / 9), min(1560px, 95vw));
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  gap: clamp(10px, 1.1vw, 16px);
+  padding: clamp(14px, 1.8vw, 24px) clamp(18px, 3vw, 48px);
+  animation: fadeIn 0.45s var(--ease-out) both;
+}
+
+/* Kleine oder niedrige Viewports: dort lieber scrollen als Inhalt abschneiden. */
+@media (max-width: 1000px), (max-height: 680px) {
+  .content {
+    overflow-y: auto;
+    justify-content: flex-start;
+  }
+}
+
+/* Weiße Folien-Fläche: der Inhalt jedes Schritts liegt auf Weiß (lesbar,
+   Konsulting-Folie), das gezoomte Haus bleibt an den Rändern transparent
+   sichtbar. */
+.slide {
+  width: min(1560px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 1.1vw, 16px);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: clamp(18px, 2.2vw, 34px) clamp(20px, 2.6vw, 44px) clamp(22px, 2.6vw, 40px);
+}
+
+/* Action-Title im Konsulting-Folien-Stil: linksbündig, mit Hairline darunter. */
+.title {
+  width: 100%;
+  max-width: var(--media-w);
+  text-align: left;
+  /* Groesse folgt der Folienbreite (--media-w, aus der Fensterhoehe): auf
+     grossen Bildschirmen bis 42 px, bei 1080p die bisherigen 34 px. */
+  font-size: clamp(34px, calc(var(--media-w) * 0.027), 42px);
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  padding-bottom: clamp(8px, 0.9vw, 12px);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+/* Summary-Schritt: Titel läuft in Sektionsbreite (breiter als --media-w). */
+.title[data-wide] {
+  max-width: min(1640px, 96vw);
+}
+
+/* Studien-Schritt: kein 16:9-Bild, daher breiter als --media-w (wie .fakt). */
+.title[data-fakt] {
+  max-width: min(1240px, 96vw);
+}
+
+/* Trenner in „Management Summary | Kapitel" — dezent. */
+.titleSep {
+  color: var(--accent);
+  font-weight: 300;
+  opacity: 0.55;
+  margin: 0 2px;
+}
+
+.media {
+  position: relative;
+  width: 100%;
+  max-width: var(--media-w);
+}
+
+.imageInner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-2);
+  background: var(--bg-1);
+}
+
+/* Live-iframe auf der Bildschirmfläche im Aktivitäts-Foto: eine dauerhafte
+   Ebene des Readers (Kind von .root, Koordinaten aus dem Rahmen des Fotos),
+   auf den anderen Schritten unsichtbar geparkt. Bis die Demo geladen ist,
+   zeigt die Fläche den dunklen Bildschirm mit Ladehinweis statt Weiß. */
+.screen {
+  position: absolute;
+  z-index: 3;
+  overflow: hidden;
+  background: #0a0b0c;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 0 28px rgba(0, 0, 0, 0.5);
+}
+
+.screen[data-active] {
+  animation: fadeIn 0.45s var(--ease-out) both;
+}
+
+.screenIframe {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: 50% 50%;
+  border: 0;
+  background: transparent;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.screen[data-geladen] .screenIframe {
+  opacity: 1;
+}
+
+.screenLade {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  padding: 12px;
+}
+
+/* ── Gegenüberstellung Heute | 2030: geteilte Folie ──
+   Zwei Spalten in EINEM Raster: Wortmarke („Heute" / „2030" mit Zusatz
+   „Status quo" / „Zielbild"), Spalten-Überschrift, Bildhälfte, Text — jede
+   Zelle ist direkt im Raster platziert, damit Bildkanten und Texte beider
+   Spalten auf einer Höhe liegen, egal wie lang Überschrift oder Text sind.
+   Unter den Zellen liegt je Spalte eine getönte Fläche (.cmpBox) bis zur
+   Naht: links graphit für Heute, rechts grün für 2030; die Naht ist eine
+   grüne Linie, auf ihr sitzt der Pfeil-Badge. Das Heute-Bild ist stark
+   entsättigt, das 2030-Bild farbig — so ist auch ohne Lesen klar, was
+   Ausgangslage und was Zielbild ist. Das Quellbild enthält beide Szenen samt
+   eingebackenem Trennbalken; jede Spalte zeigt per Crop nur ihre äußeren
+   ~48 % (img-Breite 210 %), der Balken verschwindet. */
+.imageInner[data-compare] {
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+.compareMedia {
+  --heute: #4c4e47;
+  --heute-tint: #f1efe9;
+  --morgen: var(--accent);
+  --morgen-tint: #e9f3e4;
+  display: grid;
+  /* Mittlere Spalte ohne Breite: die Flächen stoßen an der Naht zusammen,
+     der Badge zentriert sich auf ihr. */
+  grid-template-columns: 1fr 0 1fr;
+  grid-template-rows: auto auto auto;
+  column-gap: 0;
+}
+
+/* Zellen: Spalte 1 = Heute, Spalte 3 = 2030; Zeilen Kopf / Bild / Text. */
+.cmpHead,
+.cmpImg,
+.cmpBody {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.cmpHead[data-quo],
+.cmpImg[data-quo],
+.cmpBody[data-quo] {
+  grid-column: 1;
+}
+
+.cmpHead[data-future],
+.cmpImg[data-future],
+.cmpBody[data-future] {
+  grid-column: 3;
+}
+
+.cmpHead {
+  grid-row: 1;
+}
+
+.cmpImg {
+  grid-row: 2;
+}
+
+.cmpBody {
+  grid-row: 3;
+}
+
+/* Getönte Fläche unter den drei Zellen einer Spalte. */
+.cmpBox {
+  grid-row: 1 / span 3;
+  z-index: 0;
+  background: var(--heute-tint);
+  border-radius: 8px 0 0 8px;
+}
+
+.cmpBox[data-quo] {
+  grid-column: 1;
+}
+
+.cmpBox[data-future] {
+  grid-column: 3;
+  background: var(--morgen-tint);
+  border-radius: 0 8px 8px 0;
+  /* Die Naht. */
+  box-shadow: inset 3px 0 0 var(--morgen);
+}
+
+.cmpHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 22px 12px;
+}
+
+/* Wortmarke der Spalte: „Heute" graphit, „2030" grün. */
+.cmpKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: clamp(30px, calc(var(--media-w) * 0.023), 36px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--heute);
+}
+
+.cmpHead[data-future] .cmpKicker {
+  color: var(--morgen);
+}
+
+.cmpKicker svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* Zusatz „Status quo" / „Zielbild". */
+.cmpSub {
+  margin-left: 12px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, calc(var(--media-w) * 0.0087), 13.5px);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.cmpTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(19px, calc(var(--media-w) * 0.0155), 24px);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.cmpImg {
+  margin: 0 22px;
+  /* Quadratischer Ausschnitt (vorher 8:9): die Bildhälften werden oben und
+     unten etwas enger beschnitten, damit die größeren Texte darunter auf
+     einer 1440-px-Höhe ohne Scrollen Platz haben. */
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  background: var(--bg-1);
+}
+
+.cmpImg img {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 210%;
+  height: auto;
+}
+
+.cmpImg[data-quo] img {
+  left: 0;
+}
+
+.cmpImg[data-future] img {
+  right: 0;
+}
+
+/* Heute tritt zurück: Bild und Clip stark entsättigt. */
+.cmpImg[data-quo] img,
+.cmpImg[data-quo] video {
+  filter: saturate(0.4) contrast(0.96);
+}
+
+/* Runder Verbinder-Badge auf der Naht (Heute -> 2030). */
+.cmpBadge {
+  grid-column: 2;
+  grid-row: 2;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cmpBadgeCircle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: clamp(38px, 3.2vw, 48px);
+  height: clamp(38px, 3.2vw, 48px);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+}
+
+.cmpBody {
+  padding: 14px 22px 22px;
+}
+
+/* Rechts der Naht: drei Pixel mehr, damit der Inhalt nicht an der Linie klebt. */
+.cmpHead[data-future],
+.cmpBody[data-future] {
+  padding-left: 25px;
+}
+
+.cmpImg[data-future] {
+  margin-left: 25px;
+}
+
+.cmpText {
+  margin: 0;
+  font-size: clamp(20px, calc(var(--media-w) * 0.0168), 26px);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.cmpText strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* (Die früheren Text-Karten unter dem Bild sind entfallen — Status-Quo-/
+   2030-Texte stehen jetzt direkt in den Vergleichsspalten, siehe .cmpBody.) */
+
+/* ── Aktivitäts-Schritt (Demo / Tool) ── */
+.activityBox {
+  width: 100%;
+  max-width: var(--media-w);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.compareTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+}
+
+.compareTag[data-accent] {
+  color: var(--accent-bright);
+  background: var(--accent-tint);
+  border-color: var(--accent);
+}
+
+.copy {
+  font-size: clamp(19px, calc(var(--media-w) * 0.0168), 26px);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.copy strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.ctaRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 4px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 15px;
+  color: #fff;
+  background: linear-gradient(150deg, var(--accent-bright), var(--accent));
+  box-shadow: 0 10px 26px var(--accent-glow);
+  transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-med) var(--ease-out);
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px var(--accent-glow);
+}
+
+/* ── Pager (Footer) ── */
+.pager {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 13px clamp(18px, 3vw, 44px);
+  border-top: 1px solid var(--border-soft);
+}
+
+.pagerBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out), opacity var(--t-med) var(--ease-out);
+}
+
+.pagerBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+
+.pagerBtn:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
+  transition: width var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out);
+}
+
+.dot[data-activity] {
+  border-radius: 3px;
+  transform: rotate(45deg);
+}
+
+.dot[data-active] {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+}
+
+.dot[data-active]:not([data-activity]) {
+  width: 24px;
+}
+
+/* ── Responsive: Spalten stapeln auf schmalen Viewports ── */
+@media (max-width: 760px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .kicker {
+    margin-left: 0;
+    order: 3;
+    width: 100%;
+  }
+  /* Schmal: die Spalten stehen untereinander — erst Heute, dann 2030. */
+  .compareMedia {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6, auto);
+  }
+  .cmpHead[data-future],
+  .cmpImg[data-future],
+  .cmpBody[data-future],
+  .cmpBox[data-future] {
+    grid-column: 1;
+  }
+  .cmpHead[data-future] {
+    grid-row: 4;
+  }
+  .cmpImg[data-future] {
+    grid-row: 5;
+  }
+  .cmpBody[data-future] {
+    grid-row: 6;
+  }
+  .cmpBox[data-future] {
+    grid-row: 4 / span 3;
+    border-radius: 0 0 8px 8px;
+    box-shadow: inset 0 3px 0 var(--morgen);
+  }
+  .cmpBox[data-quo] {
+    border-radius: 8px 8px 0 0;
+  }
+  .cmpBadge {
+    display: none;
+  }
+  .cmpHead[data-future],
+  .cmpBody[data-future] {
+    padding-left: 22px;
+  }
+  .cmpImg[data-future] {
+    margin-left: 22px;
+  }
+  .title {
+    font-size: clamp(20px, 6vw, 26px);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Management Summary & Business Case (aufklappbar je Kapitel) ─────────────── */
+.summaryPanel {
+  margin: 0 auto 14px;
+  max-width: 1100px;
+  width: 100%;
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  background: var(--accent-tint);
+  padding: 4px 16px;
+}
+.summaryToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+  padding: 8px 2px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent-bright);
+  user-select: none;
+}
+.summaryToggle::-webkit-details-marker { display: none; }
+.summaryToggle::after {
+  content: '';
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--accent-bright);
+  border-bottom: 2px solid var(--accent-bright);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.summaryPanel[open] .summaryToggle::after { transform: rotate(-135deg); }
+.summaryBody {
+  display: grid;
+  gap: 14px;
+  padding: 4px 2px 12px;
+}
+@media (min-width: 860px) {
+  .summaryBody { grid-template-columns: 1fr 1fr; }
+}
+.summaryBlockLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent-bright);
+  margin-bottom: 6px;
+}
+.summaryText {
+  margin: 0;
+  font-size: clamp(16px, 1.35vw, 21px);
+  line-height: 1.65;
+  color: var(--ink);
+}
+.summaryText strong { color: var(--ink); font-weight: 700; }
+
+/* ── Management-Summary-Kachel (letzter Schritt, nach der Live-Demo) ─────────── */
+.summaryStep {
+  width: 100%;
+  /* Bewusst breit, damit die Kernaussagen möglichst einzeilig stehen. */
+  max-width: min(1640px, 96vw);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2vw, 28px);
+}
+
+/* McKinsey-Style Bulletpoints (Vorstands-Sicht) mit SVG-Icon-Marker. */
+.summaryBullets {
+  list-style: none;
+  display: grid;
+  gap: clamp(10px, 1vw, 16px);
+}
+
+.summaryBullet {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Flacher Check-Marker in Akzentfarbe (bewusst KEIN Pfeil, kein Kreis-Chip). */
+.summaryBulletIcon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+}
+
+.summaryBulletText {
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.summaryBulletText strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.kpiSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kpiHeading {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(12px, 1.4vw, 20px);
+}
+
+/* Flache Folien-Sektion ohne Karten-Chrome (die Hairline liefert der
+   Action-Title darüber — keine doppelten Linien). */
+.summaryBlock {
+  padding: clamp(4px, 0.5vw, 8px) 0 0;
+}
+
+/* Flache Stat-Spalte: 3px-Akzent-Rule oben, sonst kein Chrome. */
+.kpiCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(10px, 1vw, 14px) 0 0;
+  border-top: 3px solid var(--accent);
+  transition:
+    background var(--t-med) var(--ease-out),
+    border-color var(--t-med) var(--ease-out);
+}
+
+.kpiCard:hover {
+  border-top-color: var(--accent-bright);
+}
+
+.kpiLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Ruhige, einheitliche Wertgröße — springt nicht mehr zwischen den Karten
+   und dominiert die Folie nicht. Die Spannen sind länger als die früheren
+   Punktwerte, deshalb skaliert die Größe mit der Spaltenbreite mit. */
+.kpiValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(18px, 1.65vw, 26px);
+  line-height: 1.05;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.kpiValue > svg {
+  color: var(--accent-bright);
+  flex: none;
+}
+
+.kpiInput {
+  width: 4.4em;
+  min-width: 0;
+  font: inherit;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: var(--accent);
+  text-align: left;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 2px 6px;
+}
+
+.kpiInput:focus {
+  outline: none;
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 2px var(--accent-tint);
+}
+
+.kpiHint {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.kpiFootnote {
+  margin: 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+/* Pager-Dot für die Summary-Kachel (abgerundetes Quadrat, nicht rotiert). */
+.dot[data-summary] {
+  border-radius: 4px;
+}
+
+/* Pager-Dot für den Studien-Schritt: Ring in Akzentfarbe. */
+.dot[data-fakt]:not([data-active]) {
+  background: transparent;
+  border-color: var(--accent);
+}
+
+@media (max-width: 1100px) {
+  .kpiRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .kpiRow {
+    grid-template-columns: 1fr;
+  }
+}

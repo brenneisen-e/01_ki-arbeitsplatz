@@ -1,0 +1,833 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   SCHRIFT: Uniform (Miller Type Foundry), selbst ausgeliefert, keine
+   Verbindung nach außen. Drei Schnitte: Regular 400 als Grundschrift (Light
+   war für Fließtext zu dünn), Medium 500 für font-medium, font-semibold,
+   font-bold und strong, Light 300 nur ausdrücklich über font-light.
+   Ein schwereres Gewicht gibt es nicht: Medium deckt 500 bis 900 ab, und
+   font-synthesis-weight: none verhindert ein vom Browser errechnetes Fett.
+   Uniform Tab liefert Ziffern gleicher Dickte für Kennzahlen und Tabellen
+   (nur Ziffern und Zahlenzeichen, Buchstaben fallen auf Uniform zurück),
+   siehe src/schrift/ANMERKUNG.md.
+   ========================================================================== */
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-light.woff2') format('woff2');
+             font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-regular.woff2') format('woff2');
+             font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-medium.woff2') format('woff2');
+             font-weight: 500 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-light.woff2') format('woff2');
+             font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-regular.woff2') format('woff2');
+             font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-medium.woff2') format('woff2');
+             font-weight: 500 900; font-style: normal; font-display: swap; }
+
+@theme {
+  --font-sans: 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Uniform Tab', 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  /* Gewichtsstufen der Utilities auf die Schnitte gelegt: Regular ist die
+     Grundschrift, alles ab font-medium ist Medium, der schwerste Schnitt. */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 500;
+  --font-weight-bold: 500;
+  --font-weight-extrabold: 500;
+  --font-weight-black: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COCKPIT 2026: helles, hochwertiges Designsystem des KI-Vertriebsarbeitsplatzes.
+
+   Weiße Flächen, warme Neutraltöne, hauchdünne Linien. Farbe steht nur für
+   Bedeutung: die Modusfarbe (Bordeaux, Oliv, Petrol) trägt Identität und
+   Aktion, Gold ist der sparsame Akzent für Kennzahlen, die Signalfarben
+   stehen für Status. Alle Farben laufen über Tokens (DESIGN_COCKPIT_2026.md).
+   Die Tailwind-Grautöne (slate, gray, zinc, neutral, stone) werden hier auf
+   dieselbe warme Neutralskala gelegt, damit die bestehenden Utility-Klassen
+   der Komponenten ohne Umbau in das Cockpit fallen.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* === MODUS-FARBEN (Default: Versicherung = Bordeaux) === */
+  --mode-primary: #6b1d2a;
+  --mode-primary-light: #8d2839;
+  --mode-primary-soft: rgba(141, 40, 57, 0.1);
+  --mode-gradient: linear-gradient(135deg, #2a0c11 0%, #5a1a26 45%, #7f2434 100%);
+  --mode-accent: #b8963e;
+  --mode-chart: #9c2f41;
+  --mode-pastel: rgba(141, 40, 57, 0.08);
+  --mode-row-hover: rgba(141, 40, 57, 0.07);
+
+  /* === FLÄCHEN: Weiß auf warmem Off-White === */
+  --bg-primary: #faf9f7;
+  --bg-inset: #f4f2ee;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fcfbf9;
+  --bg-elevated: #ffffff;
+  --bg-table-stripe: #faf9f7;
+  --bg-table-hover: #f4f2ee;
+
+  /* === TEXT: warmes Schwarz in drei Stufen === */
+  --text-primary: #1c1a17;
+  --text-secondary: #5c574f;
+  --text-tertiary: #8d877e;
+  --text-on-dark: #faf9f7;
+
+  /* === LINIEN: hauchdünn, warm === */
+  --border-light: #e9e6e0;
+  --border-medium: #d9d5cd;
+  --border-strong: #bdb7ad;
+  --border-focus: var(--mode-accent);
+
+  /* === SEMANTISCHE FARBEN (gedämpft, auf Weiß lesbar) === */
+  --color-success: #2f8f5b;
+  --color-warning: #b7791f;
+  --color-danger: #c23b3b;
+  --color-info: #2f6bb0;
+  --tint-success: rgba(47, 143, 91, 0.1);
+  --tint-warning: rgba(183, 121, 31, 0.12);
+  --tint-danger: rgba(194, 59, 59, 0.1);
+  --tint-info: rgba(47, 107, 176, 0.1);
+
+  --badge-kritisch: #c23b3b;
+  --badge-kritisch-bg: rgba(194, 59, 59, 0.1);
+  --badge-hoch: #b7791f;
+  --badge-hoch-bg: rgba(183, 121, 31, 0.12);
+  --badge-mittel: #2f6bb0;
+  --badge-mittel-bg: rgba(47, 107, 176, 0.1);
+  --badge-niedrig: #8d877e;
+  --badge-niedrig-bg: #f4f2ee;
+
+  /* === QUELLEN-FARBEN (OPT-19) === */
+  --quelle-finanztransaktion: #2f8f5b;
+  --quelle-bestand: #2f6bb0;
+  --quelle-kommunikation: #6d4fb3;
+  --quelle-wettbewerb: #b7791f;
+  --quelle-lebensereignis: #b8446f;
+  --quelle-markt: #8d877e;
+
+  /* === CHARTS === */
+  --chart-axis: #8d877e;
+  --chart-grid: rgba(28, 26, 23, 0.07);
+  --chart-line: var(--mode-chart);
+  --chart-area: color-mix(in oklab, var(--mode-chart) 12%, transparent);
+  --chart-accent: var(--mode-accent);
+
+  /* === KARTEN === */
+  --card-radius: 14px;
+  --card-shadow: 0 1px 2px rgba(28, 26, 23, 0.04), 0 6px 20px rgba(28, 26, 23, 0.05);
+  --card-shadow-hover: 0 2px 4px rgba(28, 26, 23, 0.05), 0 12px 32px rgba(28, 26, 23, 0.09);
+  --card-border: 1px solid var(--border-light);
+
+  /* === SPARTEN-FARBEN === */
+  --sparte-leben: #2f6bb0;
+  --sparte-kranken: #2f8f5b;
+  --sparte-schaden: #6d4fb3;
+  --sparte-kfz: #b7791f;
+
+  /* === TAILWIND-GRAUTÖNE auf die warme Neutralskala gelegt === */
+  --color-slate-50: #faf9f7;
+  --color-slate-100: #f4f2ee;
+  --color-slate-200: #e9e6e0;
+  --color-slate-300: #d9d5cd;
+  --color-slate-400: #a39d94;
+  --color-slate-500: #7d776e;
+  --color-slate-600: #5c574f;
+  --color-slate-700: #433f39;
+  --color-slate-800: #2c2925;
+  --color-slate-900: #1c1a17;
+  --color-slate-950: #121110;
+  --color-gray-50: #faf9f7;
+  --color-gray-100: #f4f2ee;
+  --color-gray-200: #e9e6e0;
+  --color-gray-300: #d9d5cd;
+  --color-gray-400: #a39d94;
+  --color-gray-500: #7d776e;
+  --color-gray-600: #5c574f;
+  --color-gray-700: #433f39;
+  --color-gray-800: #2c2925;
+  --color-gray-900: #1c1a17;
+  --color-gray-950: #121110;
+  --color-zinc-50: #faf9f7;
+  --color-zinc-100: #f4f2ee;
+  --color-zinc-200: #e9e6e0;
+  --color-zinc-300: #d9d5cd;
+  --color-zinc-400: #a39d94;
+  --color-zinc-500: #7d776e;
+  --color-zinc-600: #5c574f;
+  --color-zinc-700: #433f39;
+  --color-zinc-800: #2c2925;
+  --color-zinc-900: #1c1a17;
+  --color-zinc-950: #121110;
+  --color-neutral-50: #faf9f7;
+  --color-neutral-100: #f4f2ee;
+  --color-neutral-200: #e9e6e0;
+  --color-neutral-300: #d9d5cd;
+  --color-neutral-400: #a39d94;
+  --color-neutral-500: #7d776e;
+  --color-neutral-600: #5c574f;
+  --color-neutral-700: #433f39;
+  --color-neutral-800: #2c2925;
+  --color-neutral-900: #1c1a17;
+  --color-neutral-950: #121110;
+  --color-stone-50: #faf9f7;
+  --color-stone-100: #f4f2ee;
+  --color-stone-200: #e9e6e0;
+  --color-stone-300: #d9d5cd;
+  --color-stone-400: #a39d94;
+  --color-stone-500: #7d776e;
+  --color-stone-600: #5c574f;
+  --color-stone-700: #433f39;
+  --color-stone-800: #2c2925;
+  --color-stone-900: #1c1a17;
+  --color-stone-950: #121110;
+
+  /* === SIGNALFARBEN: gedämpfte, hochwertige Töne statt Neon-Tailwind.
+     Pastellstufen (50–200) bleiben zarte Flächen, 500–800 sind Text- und
+     Füllfarben. === */
+  --color-emerald-50: #eef7f1;
+  --color-emerald-100: #dcefe3;
+  --color-emerald-200: #b9dfc8;
+  --color-emerald-300: #8cc9a6;
+  --color-emerald-400: #56ad80;
+  --color-emerald-500: #3a9a67;
+  --color-emerald-600: #2f8f5b;
+  --color-emerald-700: #27704a;
+  --color-emerald-800: #1f5a3c;
+  --color-emerald-900: #184630;
+  --color-green-50: #eef7f1;
+  --color-green-100: #dcefe3;
+  --color-green-200: #b9dfc8;
+  --color-green-300: #8cc9a6;
+  --color-green-400: #56ad80;
+  --color-green-500: #3a9a67;
+  --color-green-600: #2f8f5b;
+  --color-green-700: #27704a;
+  --color-green-800: #1f5a3c;
+  --color-green-900: #184630;
+  --color-lime-50: #f3f6ea;
+  --color-lime-100: #e6ecd3;
+  --color-lime-200: #cdd9a8;
+  --color-lime-300: #adc077;
+  --color-lime-400: #8ea652;
+  --color-lime-500: #76903c;
+  --color-lime-600: #61753a;
+  --color-lime-700: #4d5d2f;
+  --color-lime-800: #3d4a26;
+  --color-lime-900: #30391e;
+  --color-teal-50: #ecf6f5;
+  --color-teal-100: #d6ece9;
+  --color-teal-200: #aedad4;
+  --color-teal-300: #7fc2ba;
+  --color-teal-400: #4fa79d;
+  --color-teal-500: #3a9188;
+  --color-teal-600: #2f7a72;
+  --color-teal-700: #27625c;
+  --color-teal-800: #204e4a;
+  --color-teal-900: #1a3d3a;
+  --color-cyan-50: #ecf6f5;
+  --color-cyan-100: #d6ece9;
+  --color-cyan-200: #aedad4;
+  --color-cyan-300: #7fc2ba;
+  --color-cyan-400: #4fa79d;
+  --color-cyan-500: #3a9188;
+  --color-cyan-600: #2f7a72;
+  --color-cyan-700: #27625c;
+  --color-cyan-800: #204e4a;
+  --color-cyan-900: #1a3d3a;
+  --color-amber-50: #fbf5ea;
+  --color-amber-100: #f6ead2;
+  --color-amber-200: #ecd6a4;
+  --color-amber-300: #e0bd6f;
+  --color-amber-400: #d1a243;
+  --color-amber-500: #c48c2b;
+  --color-amber-600: #b7791f;
+  --color-amber-700: #94611a;
+  --color-amber-800: #764e17;
+  --color-amber-900: #5d3e14;
+  --color-yellow-50: #fbf5ea;
+  --color-yellow-100: #f6ead2;
+  --color-yellow-200: #ecd6a4;
+  --color-yellow-300: #e0bd6f;
+  --color-yellow-400: #d1a243;
+  --color-yellow-500: #c48c2b;
+  --color-yellow-600: #b7791f;
+  --color-yellow-700: #94611a;
+  --color-yellow-800: #764e17;
+  --color-yellow-900: #5d3e14;
+  --color-orange-50: #fbf2ea;
+  --color-orange-100: #f6e3d2;
+  --color-orange-200: #ecc7a5;
+  --color-orange-300: #e0a672;
+  --color-orange-400: #d1854a;
+  --color-orange-500: #c26f33;
+  --color-orange-600: #ad5e2a;
+  --color-orange-700: #8c4c23;
+  --color-orange-800: #703d1d;
+  --color-orange-900: #593118;
+  --color-red-50: #faeeee;
+  --color-red-100: #f5dcdc;
+  --color-red-200: #ebb8b8;
+  --color-red-300: #de8f8f;
+  --color-red-400: #d16464;
+  --color-red-500: #c94b4b;
+  --color-red-600: #c23b3b;
+  --color-red-700: #9d2f2f;
+  --color-red-800: #7d2727;
+  --color-red-900: #622020;
+  --color-rose-50: #faeef2;
+  --color-rose-100: #f5dbe4;
+  --color-rose-200: #ebb6c9;
+  --color-rose-300: #dd8aa8;
+  --color-rose-400: #cc5f87;
+  --color-rose-500: #bf4a75;
+  --color-rose-600: #b8446f;
+  --color-rose-700: #94375a;
+  --color-rose-800: #762c48;
+  --color-rose-900: #5d2339;
+  --color-pink-50: #faeef2;
+  --color-pink-100: #f5dbe4;
+  --color-pink-200: #ebb6c9;
+  --color-pink-300: #dd8aa8;
+  --color-pink-400: #cc5f87;
+  --color-pink-500: #bf4a75;
+  --color-pink-600: #b8446f;
+  --color-pink-700: #94375a;
+  --color-pink-800: #762c48;
+  --color-pink-900: #5d2339;
+  --color-blue-50: #edf2f9;
+  --color-blue-100: #dae5f3;
+  --color-blue-200: #b5cbe7;
+  --color-blue-300: #88acd8;
+  --color-blue-400: #5a8cc8;
+  --color-blue-500: #3f78bb;
+  --color-blue-600: #2f6bb0;
+  --color-blue-700: #27568d;
+  --color-blue-800: #204570;
+  --color-blue-900: #1a3759;
+  --color-sky-50: #edf2f9;
+  --color-sky-100: #dae5f3;
+  --color-sky-200: #b5cbe7;
+  --color-sky-300: #88acd8;
+  --color-sky-400: #5a8cc8;
+  --color-sky-500: #3f78bb;
+  --color-sky-600: #2f6bb0;
+  --color-sky-700: #27568d;
+  --color-sky-800: #204570;
+  --color-sky-900: #1a3759;
+  --color-indigo-50: #f1eef8;
+  --color-indigo-100: #e2dcf1;
+  --color-indigo-200: #c5b9e3;
+  --color-indigo-300: #a493d3;
+  --color-indigo-400: #856ec2;
+  --color-indigo-500: #765cb9;
+  --color-indigo-600: #6d4fb3;
+  --color-indigo-700: #58408f;
+  --color-indigo-800: #463372;
+  --color-indigo-900: #37285a;
+  --color-violet-50: #f1eef8;
+  --color-violet-100: #e2dcf1;
+  --color-violet-200: #c5b9e3;
+  --color-violet-300: #a493d3;
+  --color-violet-400: #856ec2;
+  --color-violet-500: #765cb9;
+  --color-violet-600: #6d4fb3;
+  --color-violet-700: #58408f;
+  --color-violet-800: #463372;
+  --color-violet-900: #37285a;
+  --color-purple-50: #f1eef8;
+  --color-purple-100: #e2dcf1;
+  --color-purple-200: #c5b9e3;
+  --color-purple-300: #a493d3;
+  --color-purple-400: #856ec2;
+  --color-purple-500: #765cb9;
+  --color-purple-600: #6d4fb3;
+  --color-purple-700: #58408f;
+  --color-purple-800: #463372;
+  --color-purple-900: #37285a;
+  --color-fuchsia-50: #faeef2;
+  --color-fuchsia-100: #f5dbe4;
+  --color-fuchsia-200: #ebb6c9;
+  --color-fuchsia-300: #dd8aa8;
+  --color-fuchsia-400: #cc5f87;
+  --color-fuchsia-500: #bf4a75;
+  --color-fuchsia-600: #b8446f;
+  --color-fuchsia-700: #94375a;
+  --color-fuchsia-800: #762c48;
+  --color-fuchsia-900: #5d2339;
+}
+
+/* === MODUS-KLASSEN: Bordeaux (Versicherung), Oliv (Banking), Petrol (VV) === */
+[data-mode="versicherung"] {
+  --mode-primary: #6b1d2a;
+  --mode-primary-light: #8d2839;
+  --mode-primary-soft: rgba(141, 40, 57, 0.1);
+  --mode-gradient: linear-gradient(135deg, #2a0c11 0%, #5a1a26 45%, #7f2434 100%);
+  --mode-accent: #b8963e;
+  --mode-chart: #9c2f41;
+  --mode-pastel: rgba(141, 40, 57, 0.08);
+  --mode-row-hover: rgba(141, 40, 57, 0.07);
+}
+
+[data-mode="banking"] {
+  --mode-primary: #46552b;
+  --mode-primary-light: #61753a;
+  --mode-primary-soft: rgba(97, 117, 58, 0.12);
+  --mode-gradient: linear-gradient(135deg, #171d10 0%, #35451f 45%, #52683a 100%);
+  --mode-accent: #a8952f;
+  --mode-chart: #61753a;
+  --mode-pastel: rgba(97, 117, 58, 0.09);
+  --mode-row-hover: rgba(97, 117, 58, 0.08);
+}
+
+[data-mode="vermoegensverwaltung"] {
+  --mode-primary: #1d3a4c;
+  --mode-primary-light: #2d5670;
+  --mode-primary-soft: rgba(45, 86, 112, 0.12);
+  --mode-gradient: linear-gradient(135deg, #0c1a22 0%, #1a3344 45%, #2c526b 100%);
+  --mode-accent: #b8963e;
+  --mode-chart: #2d5670;
+  --mode-pastel: rgba(45, 86, 112, 0.09);
+  --mode-row-hover: rgba(45, 86, 112, 0.08);
+}
+
+/* === GLOBALE STILE === */
+/* WICHTIG: Kein * { margin/padding: 0 } hier!
+   Tailwind v4 hat seinen eigenen Reset in @layer base.
+   Un-layered CSS wuerde alle Tailwind-Utilities ueberschreiben. */
+
+@layer base {
+  html {
+    font-family: 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-weight: 400;
+    font-synthesis-weight: none;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Hervorhebung in Medium, dem schwersten Schnitt von Uniform */
+  strong, b {
+    font-weight: 500;
+  }
+
+  body {
+    min-width: 1024px;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--mode-primary-light);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--mode-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* === ANIMATIONEN === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes kpiReveal {
+  from { opacity: 0; transform: translateY(6px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@layer utilities {
+  /* Kennzahlen und Beträge: Uniform Tab, Ziffern gleicher Dickte */
+  .font-mono {
+    font-family: 'Uniform Tab', 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 300ms ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out forwards;
+  }
+
+  .kpi-value {
+    animation: kpiReveal 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 200ms ease-out forwards;
+  }
+
+  /* Cockpit-Flächen als Utilities für neue oder umgebaute Komponenten. */
+  .surface-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+  }
+  .surface-elevated {
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 12px 40px rgba(28, 26, 23, 0.14), 0 2px 6px rgba(28, 26, 23, 0.06);
+  }
+  .surface-inset {
+    background-color: var(--bg-inset);
+    border: 1px solid var(--border-light);
+  }
+  .text-accent {
+    color: var(--mode-accent);
+  }
+  .hairline {
+    border-color: var(--border-light);
+  }
+}
+
+/* === Card Styles === */
+.card-base {
+  background-color: var(--bg-card);
+  border-color: var(--border-light);
+  box-shadow: var(--card-shadow);
+}
+
+/* CSS Containment: Browser begrenzt Style-Recalculation + Repaint
+   auf die Card-Boundary. Hover in Card A invalidiert NICHT Card B.
+   https://developer.mozilla.org/en-US/docs/Web/CSS/contain */
+.card-base, .card-passthrough {
+  contain: layout paint;
+}
+/* Lebenszeitstrahl: Tooltips müssen über die Card-Boundary hinausragen
+   können, deshalb hier kein paint-Containment. Außerdem brauchen die
+   einzelnen Event-Dots Hover-Events, die sonst durch das `card-passthrough`
+   pointer-events: none gekillt würden. */
+.lebenszeitstrahl-card {
+  contain: none;
+  overflow: visible;
+  pointer-events: auto !important;
+}
+.lebenszeitstrahl-card * {
+  pointer-events: auto;
+}
+
+/* Kacheln mit Zeilen: NUR rows + buttons bekommen pointer-events */
+.card-passthrough {
+  pointer-events: none;
+}
+.card-passthrough table,
+.card-passthrough .card-hover,
+.card-passthrough .row-hover,
+.card-passthrough button,
+.card-passthrough a,
+.card-passthrough input,
+.card-passthrough [onclick],
+.card-passthrough [role="button"],
+.card-passthrough .pointer-events-auto {
+  pointer-events: auto;
+}
+
+/* === Hover: ruhiges Anheben statt Vollflächen-Invertierung ===
+   Karten heben sich auf Hover leicht ab (tieferer Schatten, Modus-Hairline);
+   Zeilen bekommen die zart getönte Modusfläche. Schriftfarben bleiben
+   stehen. `--_fg` bleibt als Vererbungskanal erhalten, wird aber nicht
+   mehr auf Weiß gestellt. */
+.card-hover {
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+.card-hover:hover {
+  background: var(--bg-card-hover) !important;
+  background-color: var(--bg-card-hover) !important;
+  background-image: none !important;
+  border-color: var(--mode-primary-light) !important;
+  box-shadow: var(--card-shadow-hover), 0 0 0 1px var(--mode-primary-soft);
+}
+.row-hover {
+  transition: background-color 140ms ease;
+}
+.row-hover:hover {
+  background-color: var(--mode-row-hover);
+}
+/* Zeilenlisten in Karten (Stammdaten: Persönliche Daten, Finanzübersicht):
+   jede Zeile hebt sich beim Überfahren ab, ob klickbar oder nicht. Die
+   Zeilen holen sich die Zeigerereignisse zurück, die .card-passthrough der
+   Karte nimmt, sonst käme der Hover bei reinen Textzeilen nie an. */
+.zeilen-hover > * {
+  pointer-events: auto;
+  border-radius: 6px;
+  padding-inline: 4px;
+  margin-inline: -4px;
+  transition: background-color 140ms ease;
+}
+.zeilen-hover > *:hover {
+  background-color: var(--mode-row-hover);
+}
+
+/* Badges + Icon-Box: auf Hover eine Spur kräftiger. */
+.row-hover:hover .rh-badge,
+.card-hover:hover .rh-badge {
+  border-color: var(--border-medium);
+}
+.card-hover:hover .kpi-icon-box,
+.card-hover:hover .metric-box {
+  background-color: var(--mode-primary-soft) !important;
+}
+/* Progress bars */
+.progress-track {
+  background-color: var(--bg-inset);
+}
+.progress-fill {
+  background-color: var(--mode-chart);
+}
+
+/* === Charts (recharts): Achsen, Gitter und Tooltips === */
+.recharts-cartesian-axis-tick text,
+.recharts-polar-angle-axis-tick text,
+.recharts-polar-radius-axis-tick text {
+  fill: var(--chart-axis) !important;
+  font-size: 11px;
+}
+.recharts-cartesian-axis-line,
+.recharts-cartesian-grid line,
+.recharts-polar-grid-angle line,
+.recharts-polar-grid-concentric polygon,
+.recharts-polar-grid-concentric circle {
+  stroke: var(--chart-grid) !important;
+}
+.recharts-tooltip-cursor {
+  fill: rgba(28, 26, 23, 0.04) !important;
+  stroke: var(--border-medium) !important;
+}
+.recharts-default-tooltip {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 10px;
+  color: var(--text-primary) !important;
+  box-shadow: 0 12px 32px rgba(28, 26, 23, 0.14);
+}
+.recharts-tooltip-label,
+.recharts-tooltip-item,
+.recharts-tooltip-item-name,
+.recharts-tooltip-item-value {
+  color: var(--text-primary) !important;
+}
+.recharts-legend-item-text {
+  color: var(--text-secondary) !important;
+}
+
+/* === Karten (Leaflet / MapLibre) === */
+.leaflet-container,
+.maplibregl-map {
+  background: var(--bg-inset);
+}
+.leaflet-control-zoom a,
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-light) !important;
+}
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: var(--text-tertiary) !important;
+}
+.leaflet-control-attribution a {
+  color: var(--text-secondary) !important;
+}
+
+/* Flash-Effekt für die Finanzübersicht-Karten,
+   wenn aus den Stammdaten auf Anlage-/Kreditvolumen geklickt wurde. */
+@keyframes kiaCardFlash {
+  0%   { box-shadow: 0 0 0 0 rgba(184, 150, 62, 0.0); transform: translateZ(0); }
+  20%  { box-shadow: 0 0 0 4px rgba(184, 150, 62, 0.55); }
+  40%  { box-shadow: 0 0 0 8px rgba(184, 150, 62, 0.0); }
+  60%  { box-shadow: 0 0 0 4px rgba(184, 150, 62, 0.55); }
+  100% { box-shadow: 0 0 0 8px rgba(184, 150, 62, 0.0); }
+}
+.kia-flash-card {
+  border-radius: 1rem;
+  animation: kiaCardFlash 1.6s ease-in-out 1;
+}
+
+/* "Brief verpacken & versenden"-Animation für das Anschreiben-Modal.
+   Phase 1 (0–55 %): Brief faltet sich zusammen (scaleY → 0) und schiebt
+   sich in den Umschlag. Phase 2 (55–100 %): Umschlag fliegt nach
+   oben/rechts mit leichter Drehung aus dem Bildschirm. */
+@keyframes kiaLetterFold {
+  0%   { transform: scaleY(1) translateY(0); opacity: 1; }
+  40%  { transform: scaleY(0.05) translateY(20%); opacity: 0.9; }
+  55%  { transform: scaleY(0.05) translateY(20%); opacity: 0; }
+  100% { transform: scaleY(0.05) translateY(20%); opacity: 0; }
+}
+@keyframes kiaEnvelopeFly {
+  0%   { transform: translate(-50%, 100%) rotate(-2deg) scale(0.85); opacity: 0; }
+  20%  { transform: translate(-50%, 0) rotate(0deg) scale(1); opacity: 1; }
+  55%  { transform: translate(-50%, 0) rotate(0deg) scale(1); opacity: 1; }
+  85%  { transform: translate(40%, -160%) rotate(18deg) scale(0.65); opacity: 1; }
+  100% { transform: translate(120%, -260%) rotate(28deg) scale(0.4); opacity: 0; }
+}
+@keyframes kiaEnvelopeSwoosh {
+  0%, 55% { opacity: 0; transform: translateX(-30%) scaleX(0); }
+  70%     { opacity: 0.8; transform: translateX(-10%) scaleX(1); }
+  100%    { opacity: 0; transform: translateX(60%) scaleX(0.4); }
+}
+.kia-letter-fold {
+  transform-origin: top center;
+  animation: kiaLetterFold 1.2s ease-in forwards;
+}
+.kia-envelope-fly {
+  position: absolute;
+  left: 50%;
+  bottom: 30%;
+  width: 96px;
+  height: 64px;
+  animation: kiaEnvelopeFly 1.4s ease-in forwards;
+  pointer-events: none;
+}
+.kia-envelope-swoosh {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 60%;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(184, 150, 62, 0.6), transparent);
+  transform-origin: left center;
+  animation: kiaEnvelopeSwoosh 1.4s ease-out forwards;
+  pointer-events: none;
+}
+
+/* ────────────────────────────────────────────────────────────
+   Info-Card Hover (Persoenliche Daten / Finanzuebersicht /
+   Aktivitaeten): statt Vollflächen-Invertierung eine zart getönte
+   Fläche im Akzentton des Blocks plus Hairline in derselben Farbe.
+   ──────────────────────────────────────────────────────────── */
+.info-card-invert {
+  transition: background-color 150ms ease, border-color 150ms ease,
+              box-shadow 150ms ease;
+}
+.info-card-invert-blue:hover    { background-color: var(--tint-info) !important; border-color: var(--color-info) !important; }
+.info-card-invert-emerald:hover { background-color: var(--tint-success) !important; border-color: var(--color-success) !important; }
+.info-card-invert-amber:hover   { background-color: var(--tint-warning) !important; border-color: var(--color-warning) !important; }
+
+/* ── Bildschirmaufnahme: pulsierender Cursor + Klick-Ripple ── */
+@keyframes recCursorPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: 0.85; }
+  50%      { transform: translate(-50%, -50%) scale(1.45); opacity: 0.45; }
+}
+@keyframes recCursorPulseInner {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
+  50%      { transform: translate(-50%, -50%) scale(0.85); opacity: 0.85; }
+}
+.rec-cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  width: 36px; height: 36px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(184, 150, 62, 0.55) 0%, rgba(184, 150, 62, 0) 70%);
+  box-shadow: 0 0 24px 4px rgba(184, 150, 62, 0.55);
+  animation: recCursorPulse 1.4s ease-in-out infinite;
+}
+.rec-cursor-inner {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  width: 12px; height: 12px;
+  border-radius: 9999px;
+  background: var(--mode-accent);
+  border: 2px solid white;
+  box-shadow: 0 0 8px rgba(184, 150, 62, 0.8);
+  animation: recCursorPulseInner 1.4s ease-in-out infinite;
+}
+@keyframes recRipple {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; }
+  80%  { opacity: 0.25; }
+  100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; }
+}
+@keyframes recRippleDot {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+}
+.rec-ripple {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99997;
+  width: 80px; height: 80px;
+  border-radius: 9999px;
+  border: 3px solid rgba(184, 150, 62, 0.85);
+  background: rgba(184, 150, 62, 0.12);
+  animation: recRipple 0.8s ease-out forwards;
+}
+.rec-ripple-dot {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99997;
+  width: 18px; height: 18px;
+  border-radius: 9999px;
+  background: var(--mode-accent);
+  animation: recRippleDot 0.6s ease-out forwards;
+}
+
+/* === Cockpit 2026: Ergänzungen der Kopfleiste und KPI-Kacheln === */
+/* Achsenbeschriftung der KPI-Sparklines bleibt bei 9 px (die globale
+   Chart-Regel oben setzt 11 px). */
+.kpi-sparkline .recharts-cartesian-axis-tick text {
+  font-size: 9px;
+}
+/* Helle Glas-Chips auf dem dunklen Modus-Verlauf der Kopfleiste. */
+.header-glass {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+button.header-glass:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.24);
+}

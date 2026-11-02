@@ -1,0 +1,116 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Banking Operations 2030 — Kundenkacheln (v08)</title>
+<!--
+  08:10 — die neun Kundenkacheln als eigene Ebene ueber dem Raum.
+
+  Bis v08 hat ein Python-Skript sie ins Bild gemalt. Damit war jede Aenderung
+  an Orten, Nachrichten oder Betraegen eine Aenderung am Code. Hier stehen sie
+  als HTML: derselbe Weg wie bei den Bildschirmen, austauschbar ohne dass ein
+  Bild neu entstehen muss.
+
+  Die Seite wird MIT DURCHSICHTIGEM HINTERGRUND aufgenommen und danach ueber
+  den Raum gelegt. Das Glas — der weichgezeichnete Raum hinter jeder Kachel —
+  entsteht weiter in Python: das kann eine HTML-Ebene nicht, sie kennt den
+  Hintergrund nicht.
+
+  Raster und Massen stimmen mit kacheln.rastermasse ueberein.
+-->
+<style>
+  :root {
+    /* Ende bei 74 % Bildhoehe: darunter liegt auf der Buehne das Markenband. */
+    --links: 50.5%; --oben: 13%; --breite: 46.5%; --hoehe: 61%; --luecke: 1.1%;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+  body { font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif; color: #fff; }
+
+  .titel {
+    position: absolute; left: var(--links); top: 8.6%;
+    font-size: 28px; font-weight: 700; letter-spacing: 0.01em;
+    color: rgba(255, 255, 255, 0.84); opacity: 0;
+  }
+  .titel::after {
+    content: ''; position: absolute; left: 0; top: 44px; width: 895px; height: 2px;
+    background: rgba(255, 255, 255, 0.27);
+  }
+
+  .raster {
+    position: absolute; left: var(--links); top: var(--oben);
+    width: var(--breite); height: var(--hoehe);
+    display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+    column-gap: calc(var(--luecke) * 1920 / 893); row-gap: calc(var(--luecke) * 1080 / 756);
+  }
+
+  .kachel {
+    position: relative; overflow: hidden; border-radius: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    opacity: 0; transform: translateY(10px);
+  }
+  .kachel img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0.93;
+  }
+  .fuss {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 12px 14px 13px;
+    background: linear-gradient(to top, rgba(8, 12, 10, 0.88), rgba(8, 12, 10, 0.62) 62%,
+                                rgba(8, 12, 10, 0));
+  }
+  .ort {
+    font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.62); margin-bottom: 3px;
+  }
+  .was { font-size: 21px; font-weight: 600; line-height: 1.2; }
+  .betrag { margin-top: 4px; font-size: 20px; font-weight: 700; color: #7fd6a2; }
+</style>
+
+<div class="titel">WHAT THE CUSTOMERS SEE</div>
+<div class="raster" id="raster"></div>
+
+<script>
+  // ── Die austauschbare Stelle ────────────────────────────────────────────────
+  // Ort, Nachricht und Betrag je Kachel. Dieselben neun Kunden, die um 08:05
+  // auf der Freigabeliste stehen — wer dort etwas aendert, aendert es hier mit.
+  const FAELLE = [
+    ['Kitchen table', 'Service fee corrected',       '18 EUR'],
+    ['On the tram',   'Return fees waived',          '25 EUR'],
+    ['Supermarket',   'Duplicate charge reversed',   '12 EUR'],
+    ['In the park',   'Rent-transfer fixed',         '25 EUR'],
+    ['Workshop',      'Overdraft interest reversed',  '9 EUR'],
+    ['Cafe',          'Private banking consultation', 'invitation'],
+    ['Car park',      'Fuel voucher issued',         'in kind'],
+    ['At home',       'Value date corrected',         '2 EUR'],
+    ['City street',   'Charge reversed',             '14 EUR'],
+  ]
+  // Die Kundenfotos liegen neben der Produktion; der Pfad kommt als ?fotos=.
+  const fotos = new URLSearchParams(location.search).get('fotos') || '../kunden'
+
+  const raster = document.getElementById('raster')
+  FAELLE.forEach(([ort, was, betrag], n) => {
+    const k = document.createElement('div')
+    k.className = 'kachel'
+    k.innerHTML = `<img src="${fotos}/k${n}.png" alt="">
+      <div class="fuss">
+        <div class="ort">${ort}</div>
+        <div class="was">${was}</div>
+        <div class="betrag">${betrag}</div>
+      </div>`
+    raster.appendChild(k)
+  })
+
+  const kacheln = [...document.querySelectorAll('.kachel')]
+  const titel = document.querySelector('.titel')
+  const DAUER = 6
+  window.setT = (sek) => {
+    const t = Math.max(0, Math.min(1, sek / DAUER))
+    titel.style.opacity = Math.min(1, t / 0.08)
+    kacheln.forEach((k, n) => {
+      const ab = 0.10 + n * 0.085
+      const f = Math.max(0, Math.min(1, (t - ab) / 0.07))
+      k.style.opacity = f
+      k.style.transform = `translateY(${(1 - f) * 10}px)`
+    })
+  }
+  window.setT(DAUER)
+</script>

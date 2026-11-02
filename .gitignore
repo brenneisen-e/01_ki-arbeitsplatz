@@ -1,0 +1,12 @@
+node_modules/
+package.json
+package-lock.json
+21_vertragsumstellung/scripts/.*.workflow.js
+
+# Prüf- und Sondenskripte der Agenten (Wegwerf), nie einchecken
+21_vertragsumstellung/scripts/_*_tmp.mjs
+21_vertragsumstellung/scripts/.*.mjs
+__pycache__/
+
+# LibreOffice-Sperrdateien
+.~lock.*#

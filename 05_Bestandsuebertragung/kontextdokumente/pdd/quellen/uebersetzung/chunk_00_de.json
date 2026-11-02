@@ -1,0 +1,122 @@
+[
+ {
+  "de": "Process Definition Document - PDD",
+  "art": "text"
+ },
+ {
+  "de": "Vorprüfung Bestandsübertragung (Prüf-Bot) – Gesundheit / Krankenversicherung (KV)",
+  "art": "text"
+ },
+ {
+  "de": "Fachprozess: Vorprüfung eingehender Bestandsübertragungen. Sparten im Bearbeitungsumfang: Krankenversicherung (KV) – Voll-, Zusatz- und Pflegeversicherung.",
+  "art": "text"
+ },
+ {
+  "de": "Eingeschränkte Verteilung",
+  "art": "text"
+ },
+ {
+  "de": "Dieses Dokument ist vertraulich, die enthaltenen Informationen sind schützenswert. Eine Weitergabe des Dokuments ist nur nach ausdrücklicher Zustimmung des Fachbereichs, der den Prozess besitzt, möglich.",
+  "art": "text"
+ },
+ {
+  "de": "Versionierung",
+  "art": "text"
+ },
+ {
+  "de": "Name\n(zuletzt geändert von)",
+  "art": "text"
+ },
+ {
+  "de": "Datum",
+  "art": "text"
+ },
+ {
+  "de": "Beschreibung der Änderung",
+  "art": "text"
+ },
+ {
+  "de": "Ggf. Change Nr.",
+  "art": "text"
+ },
+ {
+  "de": "<Name Process Owner>",
+  "art": "text"
+ },
+ {
+  "de": "24.08.2026",
+  "art": "text"
+ },
+ {
+  "de": "PDD – Reviewversion zur Prozessvalidierung",
+  "art": "text"
+ },
+ {
+  "de": "Im Rahmen der Erstellung müssen hier keine Versionen hinterlegt werden",
+  "art": "text"
+ },
+ {
+  "de": "E. Brenneisen",
+  "art": "text"
+ },
+ {
+  "de": "23.09.2026",
+  "art": "text"
+ },
+ {
+  "de": "v10: Kommentare der Reviewrunde vom 16. bis 22.09.2026 umgesetzt; Kundenprüfung über IS011 nach der Logik des Fachbereichs; Vorprüfung ohne Prüfung auf BUE_KLASSIFIKATION; E-Mail-Adresse des übernehmenden Vermittlers über Sonderliste, OB726 und Datenpool; Notiz als Ausfülltabelle; Ablaufdiagramm, Variablen- und Systemtabelle angeglichen; englische Fassung als eigenes Dokument.",
+  "art": "text"
+ },
+ {
+  "de": "Einleitung",
+  "art": "text"
+ },
+ {
+  "de": "Dieses Process Definition Document (PDD) beschreibt, wie der zu automatisierende Fachprozess durch einen Software-Roboter zu bearbeiten ist. Um eine optimale Darstellung und Wartbarkeit des Dokuments zu gewährleisten, wird das Dokument initial in Deutsch geschrieben und ins Englische übersetzt. Dieses Dokument gilt dann als Anforderungsdokument für die weiteren LifeCycle-Prozesse. Eine Umsetzung ist auch durch nicht-deutschsprachige Entwickler möglich.",
+  "art": "text"
+ },
+ {
+  "de": "Wichtig ist hierbei, dass Begriffe (z.B. Variablennamen und Label), die Bezug zur Fachlichkeit und Anwendungssystemen haben in Deutsch verbleiben. Der fachliche Kontext der Variablen kann im Kapitel „Welche Daten werden aus dem Eingangskanal verwendet“ ergänzt werden.",
+  "art": "text"
+ },
+ {
+  "de": "Es finden sich folgende Inhalte:",
+  "art": "text"
+ },
+ {
+  "de": "Der durch den Roboter zu bearbeitende Prozess wird grobgranular als Ablaufdiagramm (SIPOC) und in Textform beschrieben. Eine detaillierte Beschreibung des Ablaufs im Schritt-für-Schritt-Modus erfolgt im Kapitel „Schritt-für-Schritt-Beschreibung“. Das Dokument stellt damit die „Handlungsanweisung“ für den Roboter dar.",
+  "art": "text"
+ },
+ {
+  "de": "Als Teil der „Schritt-für-Schritt-Dokumentation“ können durch die Developer des Robotics Teams speziell gekennzeichnete Absätze zur Dokumentation technischer Details eingefügt werden. Dabei soll insbesondere dargestellt werden, ob und wie der Roboter technische Schnittstellen nutzt, die dem menschlichen Systemanwender nicht zur Verfügung stehen.",
+  "art": "text"
+ },
+ {
+  "de": "Relevante Informationen zum späteren Betrieb des Roboters werden in Kapitel „Betriebsparameter“ und „Design“ dokumentiert:",
+  "art": "text"
+ },
+ {
+  "de": "Wer darf dem Roboter Vorgänge zur Bearbeitung zuweisen?",
+  "art": "text"
+ },
+ {
+  "de": "Wer ist Ansprechpartner für Fragen, Reports und bei Störungen?",
+  "art": "text"
+ },
+ {
+  "de": "Wie sieht das Fallback-Szenario aus, sollte der Roboter einmal nicht laufen?",
+  "art": "text"
+ },
+ {
+  "de": "Die Verantwortung für Korrektheit, Vollständigkeit und Aktualität dieses Dokuments trägt der fachliche Process Owner, der auch für die korrekte Durchführung des Prozesses verantwortlich ist. Das Robotics Team ist verantwortlich für die korrekte Umsetzung des PDDs in einen lauffähigen Roboter sowie den technischen Betrieb und die Erstellung und Übermittlung der vereinbarten Reports über die Aktivitäten des Roboters.",
+  "art": "text"
+ },
+ {
+  "de": "Verwendete Systeme / relevant systems",
+  "art": "text"
+ },
+ {
+  "de": "Im manuellen Prozess werden folgende Systeme verwendet:",
+  "art": "text"
+ }
+]

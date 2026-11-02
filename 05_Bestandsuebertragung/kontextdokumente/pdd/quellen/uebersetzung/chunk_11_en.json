@@ -1,0 +1,207 @@
+[
+ {
+  "de": "Hinweis: Die Agenturnummer ist der Einstieg in OB726 und Pflichtfeld der Notiz; ohne sie ist der Vorgang nicht bearbeitbar. Die Prüfung steht deshalb hier in der Vorprüfung und nicht erst im Kapitel „III. Übernehmender Makler“.",
+  "en": "Note: The agency number is the entry point into OB726 and a mandatory field of the note; without it, the case cannot be processed. The check is therefore placed here in the preliminary check and not only later in chapter „III. Übernehmender Makler“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei jedem Ausschlusskriterium geht der Vorgang ohne weitere Prüfung in das Kapitel „VII. Abschluss mit Befund“.",
+  "en": "Note: For every exclusion criterion, the case goes to chapter „VII. Abschluss mit Befund“ without any further check.",
+  "art": "text"
+ },
+ {
+  "de": "I. Kunde (VN) – Partnerprüfung über IS011",
+  "en": "I. Customer (VN) – partner check via IS011",
+  "art": "text"
+ },
+ {
+  "de": "Kundennummer des Versicherungsnehmers über die Versicherungsnummer ermitteln (IS011)",
+  "en": "Determine the policyholder's customer number via the policy number (IS011)",
+  "art": "text"
+ },
+ {
+  "de": "IS011 öffnen, im Feld „ORDN-BEGR“ die <Vorgang-VNR> eingeben und Enter.",
+  "en": "Open IS011, enter the <Vorgang-VNR> in the field „ORDN-BEGR“ and press Enter.",
+  "art": "text"
+ },
+ {
+  "de": "Es öffnet sich die Maske IS011/VAF017 „Anzeigen Stammdaten“ mit dem Versicherungsnehmer des Vertrags.",
+  "en": "The mask IS011/VAF017 „Anzeigen Stammdaten“ opens with the policyholder of the contract.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die Nummer hinter „KD“ ohne Punkt und Prüfziffer (im Screenshot gelb markiert) und speichere als <IS011-KNR-VN>.",
+  "en": "Read the number after „KD“ without the dot and check digit (highlighted in yellow in the screenshot) and store as <IS011-KNR-VN>.",
+  "art": "text"
+ },
+ {
+  "de": "Lese das Feld „Geb.-Dat“ und speichere als <IS011-Gebdat>.",
+  "en": "Read the field „Geb.-Dat“ and store as <IS011-Gebdat>.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Versicherungsnummer ist der Nachweis der Identität: Der Partner, den IS011 zur <Vorgang-VNR> anzeigt, ist der Versicherungsnehmer des Vertrags. Die Matchcodesuche im nächsten Schritt prüft, ob die im Auftrag genannte Person dieselbe ist.",
+  "en": "Note: The policy number is the proof of identity: the partner that IS011 displays for the <Vorgang-VNR> is the policyholder of the contract. The match code search in the next step checks whether the person named in the order is the same person.",
+  "art": "text"
+ },
+ {
+  "de": "Matchcodesuche mit den Angaben aus dem Auftrag und Abgleich der Kundennummern (IS011)",
+  "en": "Match code search with the details from the order and comparison of the customer numbers (IS011)",
+  "art": "text"
+ },
+ {
+  "de": "Die Matchcodesuche prüft mit den Angaben aus dem Auftrag, ob die genannte Person der Versicherungsnehmer des Vertrags ist. Maßstab ist die Kundennummer <IS011-KNR-VN> aus dem vorigen Schritt.",
+  "en": "The match code search uses the details from the order to check whether the named person is the policyholder of the contract. The benchmark is the customer number <IS011-KNR-VN> from the previous step.",
+  "art": "text"
+ },
+ {
+  "de": "IS011 starten (Maske IS011/VAF121 „Match-Code-Suche Bestand“).",
+  "en": "Start IS011 (mask IS011/VAF121 „Match-Code-Suche Bestand“).",
+  "art": "text"
+ },
+ {
+  "de": "Matchcodesuche mit den Angaben aus dem Auftrag ausführen:",
+  "en": "Perform the match code search with the details from the order:",
+  "art": "text"
+ },
+ {
+  "de": "Zuname = <BUE_KUNDE_NACHNAME>",
+  "en": "Zuname (surname) = <BUE_KUNDE_NACHNAME>",
+  "art": "text"
+ },
+ {
+  "de": "PLZ/Ort = <BUE_KUNDE_PLZ>",
+  "en": "PLZ/Ort (postcode/town) = <BUE_KUNDE_PLZ>",
+  "art": "text"
+ },
+ {
+  "de": "Vorname = die ersten zwei Buchstaben von <BUE_KUNDE_VORNAME>",
+  "en": "Vorname (first name) = the first two letters of <BUE_KUNDE_VORNAME>",
+  "art": "text"
+ },
+ {
+  "de": "Straße = die ersten zwei Buchstaben von <BUE_KUNDE_STRASSE>",
+  "en": "Straße (street) = the first two letters of <BUE_KUNDE_STRASSE>",
+  "art": "text"
+ },
+ {
+  "de": "Geb-Dat = <BUE_KUNDE_GEBDAT>, aufgeteilt auf die drei Felder TT MM JJJJ (nur wenn <BUE_KUNDE_GEBDAT> <> leer)",
+  "en": "Geb-Dat (date of birth) = <BUE_KUNDE_GEBDAT>, split across the three fields TT MM JJJJ (only if <BUE_KUNDE_GEBDAT> <> empty)",
+  "art": "text"
+ },
+ {
+  "de": "Enter",
+  "en": "Enter",
+  "art": "text"
+ },
+ {
+  "de": "Lese den Maskennamen.",
+  "en": "Read the mask name.",
+  "art": "text"
+ },
+ {
+  "de": "Maskenname = „IS011/VAF121“ (Trefferliste)",
+  "en": "Mask name = „IS011/VAF121“ (hit list)",
+  "art": "text"
+ },
+ {
+  "de": "Trefferliste leer",
+  "en": "Hit list empty",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Kunde in IS011 nicht gefunden“",
+  "en": "<BE-Klassifikation> = „Kunde in IS011 nicht gefunden“ (customer not found in IS011)",
+  "art": "text"
+ },
+ {
+  "de": "Prüfe, ob <IS011-KNR-VN> in der Spalte „KNR“ der Trefferliste enthalten ist; solange „PF2=Folgeseite“ angeboten wird, mit PF2 blättern und die Prüfung wiederholen.",
+  "en": "Check whether <IS011-KNR-VN> is contained in the column „KNR“ of the hit list; as long as „PF2=Folgeseite“ is offered, page forward with PF2 and repeat the check.",
+  "art": "text"
+ },
+ {
+  "de": "<IS011-KNR-VN> in der Trefferliste enthalten",
+  "en": "<IS011-KNR-VN> contained in the hit list",
+  "art": "text"
+ },
+ {
+  "de": "Weiter mit „Geburtsdatum abgleichen“ (unten in diesem Schritt)",
+  "en": "Continue with „Geburtsdatum abgleichen“ (below in this step)",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Kunde ist nicht Versicherungsnehmer“",
+  "en": "<BE-Klassifikation> = „Kunde ist nicht Versicherungsnehmer“ (customer is not the policyholder)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Mehrfachtreffer sind unkritisch. Kunden treten im Partnersystem mehrfach auf, etwa mit alter und neuer Anschrift; es genügt, dass die Kundennummer des Versicherungsnehmers unter den Treffern ist.",
+  "en": "Note: Multiple hits are not critical. Customers appear more than once in the partner system, for example with an old and a new address; it is sufficient that the policyholder's customer number is among the hits.",
+  "art": "text"
+ },
+ {
+  "de": "Maskenname = „IS011/VAF017“ (genau ein Treffer, Anzeige Stammdaten)",
+  "en": "Mask name = „IS011/VAF017“ (exactly one hit, master data display)",
+  "art": "text"
+ },
+ {
+  "de": "Lese die Nummer hinter „KD“ ohne Punkt und Prüfziffer und speichere als <IS011-KNR>.",
+  "en": "Read the number after „KD“ without the dot and check digit and store as <IS011-KNR>.",
+  "art": "text"
+ },
+ {
+  "de": "<IS011-KNR> = <IS011-KNR-VN>",
+  "en": "<IS011-KNR> = <IS011-KNR-VN>",
+  "art": "text"
+ },
+ {
+  "de": "Maskenname = „IS011/VAF017“",
+  "en": "Mask name = „IS011/VAF017“",
+  "art": "text"
+ },
+ {
+  "de": "UND <IS011-KNR> <> <IS011-KNR-VN>",
+  "en": "AND <IS011-KNR> <> <IS011-KNR-VN>",
+  "art": "text"
+ },
+ {
+  "de": "Rufe im Scout-Service die Vertragsübersicht zu <IS011-KNR> auf und lese alle Versicherungsnummern (Spalte „VNR“).",
+  "en": "Call up the contract overview for <IS011-KNR> in the Scout-Service and read all policy numbers (column „VNR“).",
+  "art": "text"
+ },
+ {
+  "de": "<Vorgang-VNR> in der Liste enthalten",
+  "en": "<Vorgang-VNR> contained in the list",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Vertrag gehört nicht zum Kunden“",
+  "en": "<BE-Klassifikation> = „Vertrag gehört nicht zum Kunden“ (contract does not belong to the customer)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Führt die Matchcodesuche auf einen anderen Partner als den Versicherungsnehmer, liegt in jedem Fall eine Business Exception vor. Der Scout-Service bestimmt nur ihren Grund: Steht der Vertrag in der Vertragsübersicht des gefundenen Partners, ist er am Vertrag in einer anderen Rolle beteiligt; sonst gehört der Vertrag nicht zu der im Auftrag genannten Person.",
+  "en": "Note: If the match code search leads to a partner other than the policyholder, a business exception exists in any case. The Scout-Service only determines its reason: if the contract appears in the contract overview of the partner found, that partner is involved in the contract in a different role; otherwise the contract does not belong to the person named in the order.",
+  "art": "text"
+ },
+ {
+  "de": "Geburtsdatum abgleichen:",
+  "en": "Compare date of birth (Geburtsdatum abgleichen):",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_KUNDE_GEBDAT> <> leer",
+  "en": "<BUE_KUNDE_GEBDAT> <> empty",
+  "art": "text"
+ },
+ {
+  "de": "UND <IS011-Gebdat> <> <BUE_KUNDE_GEBDAT>",
+  "en": "AND <IS011-Gebdat> <> <BUE_KUNDE_GEBDAT>",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Geburtsdatum abweichend“ in <Fehlerliste>",
+  "en": "Record check note „Geburtsdatum abweichend“ in <Fehlerliste> (date of birth differs)",
+  "art": "text"
+ }
+]

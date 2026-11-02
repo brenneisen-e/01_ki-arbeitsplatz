@@ -1,0 +1,207 @@
+[
+ {
+  "de": "Weiter zum Kapitel „II. Abgebender Bestandsinhaber“",
+  "en": "Continue with chapter „II. Abgebender Bestandsinhaber“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Der Nachweis der Identität ist die Versicherungsnummer. Als einzige Gegenprobe bleibt das Geburtsdatum, und auch das nur, wenn der Auftrag eines nennt. Eine Plausibilitätsprüfung über Name, Vorname, Straße und PLZ findet nicht statt.",
+  "en": "Note: The proof of identity is the policy number. The only remaining cross-check is the date of birth, and even that only if the order states one. There is no plausibility check via surname, first name, street and postcode.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_KUNDE_GEBDAT> leer, liegt in der Regel eine juristische Person vor; die Gegenprobe entfällt dann.",
+  "en": "Note: If <BUE_KUNDE_GEBDAT> is empty, this usually indicates a legal entity; the cross-check is then omitted.",
+  "art": "text"
+ },
+ {
+  "de": "II. Abgebender Bestandsinhaber",
+  "en": "II. Transferring portfolio holder",
+  "art": "text"
+ },
+ {
+  "de": "Agentur-Nr. des abgebenden Bestandsinhabers ermitteln (VA230)",
+  "en": "Determine the agency no. of the transferring portfolio holder (VA230)",
+  "art": "text"
+ },
+ {
+  "de": "VA230 mit <Vorgang-VNR> öffnen.",
+  "en": "Open VA230 with <Vorgang-VNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Lese das gelb markierte Feld hinter „Betreuung“ aus und speichere als <VA230-AGT-Inhaber>.",
+  "en": "Read the field highlighted in yellow after „Betreuung“ and store as <VA230-AGT-Inhaber>.",
+  "art": "text"
+ },
+ {
+  "de": "PNR des Bestandsinhabers lesen und Anbindung prüfen (OB726, GH040)",
+  "en": "Read the portfolio holder's PNR and check the affiliation (OB726, GH040)",
+  "art": "text"
+ },
+ {
+  "de": "Öffne OB726 mit <VA230-AGT-Inhaber>.",
+  "en": "Open OB726 with <VA230-AGT-Inhaber>.",
+  "art": "text"
+ },
+ {
+  "de": "Lese den Wert hinter „P“ und speichere nur den Zahlenanteil ohne das Präfix „P,“ als <OB726-AGT-Inh-PNR>; führende Nullen bleiben erhalten.",
+  "en": "Read the value after „P“ and store only the numeric part without the prefix „P,“ as <OB726-AGT-Inh-PNR>; leading zeros are retained.",
+  "art": "text"
+ },
+ {
+  "de": "GH040 mit <OB726-AGT-Inh-PNR> öffnen.",
+  "en": "Open GH040 with <OB726-AGT-Inh-PNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Suche in der angezeigten Tabelle die Zeile „Status der Beschäftigung“ und lese den Wert hinter „=“ aus.",
+  "en": "In the displayed table, find the row „Status der Beschäftigung“ and read the value after „=“.",
+  "art": "text"
+ },
+ {
+  "de": "Wert hinter „=“ in der Zeile „Status der Beschäftigung“ <> „aktiv“",
+  "en": "Value after „=“ in the row „Status der Beschäftigung“ <> „aktiv“",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Anbindung Bestandsinhaber nicht aktiv“ in <Fehlerliste>",
+  "en": "Record check note „Anbindung Bestandsinhaber nicht aktiv“ in <Fehlerliste> (portfolio holder affiliation not active)",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „III. Übernehmender Makler“",
+  "en": "Continue with chapter „III. Übernehmender Makler“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Drei Rollen sind zu unterscheiden: der Versicherungsnehmer (Kapitel I), der abgebende Bestandsinhaber aus VA230 (dieses Kapitel) und der übernehmende Vermittler aus dem Datenpool (Kapitel III).",
+  "en": "Note: Three roles must be distinguished: the policyholder (chapter I), the transferring portfolio holder from VA230 (this chapter) and the acquiring intermediary from the data pool (chapter III).",
+  "art": "text"
+ },
+ {
+  "de": "III. Übernehmender Makler – Agenturnummer und Vermittler-Nr. (PNR)",
+  "en": "III. Acquiring broker – agency number and intermediary number (PNR)",
+  "art": "text"
+ },
+ {
+  "de": "Agentur-Nr. vorhanden",
+  "en": "Agency no. present",
+  "art": "text"
+ },
+ {
+  "de": "PNR vorhanden",
+  "en": "PNR present",
+  "art": "text"
+ },
+ {
+  "de": "Was ist zu tun",
+  "en": "What to do",
+  "art": "text"
+ },
+ {
+  "de": "Ja",
+  "en": "Yes",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; <OB726-PNR> = <BUE_VERMITTLER_NR>; Name und Klassifizierung prüfen; Anbindung in GH040 prüfen",
+  "en": "Open OB726 via <BUE_AGENTUR_NR>; <OB726-PNR> = <BUE_VERMITTLER_NR>; check name and classification; check affiliation in GH040",
+  "art": "text"
+ },
+ {
+  "de": "Nein",
+  "en": "No",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; PNR aus OB726 lesen; Name und Klassifizierung prüfen; Anbindung in GH040 prüfen",
+  "en": "Open OB726 via <BUE_AGENTUR_NR>; read PNR from OB726; check name and classification; check affiliation in GH040",
+  "art": "text"
+ },
+ {
+  "de": "Harte BE „Agenturnummer nicht vorhanden“ bereits in der Vorprüfung – der Einstieg erfolgt immer über die Agenturnummer",
+  "en": "Hard BE „Agenturnummer nicht vorhanden“ already in the preliminary check – entry is always via the agency number",
+  "art": "text"
+ },
+ {
+  "de": "Harte BE „Agenturnummer nicht vorhanden“ bereits in der Vorprüfung",
+  "en": "Hard BE „Agenturnummer nicht vorhanden“ already in the preliminary check",
+  "art": "text"
+ },
+ {
+  "de": "Vermittler in OB726 aufrufen: PNR, Name und Klassifizierung",
+  "en": "Call up the intermediary in OB726: PNR, name and classification",
+  "art": "text"
+ },
+ {
+  "de": "Öffne OB726 mit <BUE_AGENTUR_NR> (dass die Agenturnummer vorliegt, ist in der Vorprüfung sichergestellt).",
+  "en": "Open OB726 with <BUE_AGENTUR_NR> (the preliminary check ensures that the agency number is available).",
+  "art": "text"
+ },
+ {
+  "de": "Lese den Hinweistext der Maske.",
+  "en": "Read the message text of the mask.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweistext enthält „IS0042I“ (Agentur nicht vorhanden)",
+  "en": "Message text contains „IS0042I“ (agency does not exist)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_NR> = leer",
+  "en": "<BUE_VERMITTLER_NR> = empty",
+  "art": "text"
+ },
+ {
+  "de": "Lese den Wert hinter „P“ und speichere nur den Zahlenanteil ohne das Präfix „P,“ als <OB726-PNR>; 7-stellig, führende Nullen bleiben erhalten.",
+  "en": "Read the value after „P“ and store only the numeric part without the prefix „P,“ as <OB726-PNR>; 7 digits, leading zeros are retained.",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-PNR> = <BUE_VERMITTLER_NR>",
+  "en": "<OB726-PNR> = <BUE_VERMITTLER_NR>",
+  "art": "text"
+ },
+ {
+  "de": "Format: <BUE_AGENTUR_NR> 7 bis 9 Ziffern ohne Präfix „A“; <OB726-PNR> nur Ziffern, 7-stellig. Ob das Feld hinter „P“ sauber ohne Präfix auslesbar ist, ist durch Robotics zu prüfen.",
+  "en": "Format: <BUE_AGENTUR_NR> 7 to 9 digits without the prefix „A“; <OB726-PNR> digits only, 7 digits long. Whether the field after „P“ can be read cleanly without the prefix is to be checked by Robotics.",
+  "art": "text"
+ },
+ {
+  "de": "Lese das gelb markierte Feld hinter „Name 1“ aus und speichere als <OB726-Name>.",
+  "en": "Read the field highlighted in yellow after „Name 1“ and store as <OB726-Name>.",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-Name> enthält „INAKTIV“",
+  "en": "<OB726-Name> contains „INAKTIV“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Keine Zusammenarbeit“",
+  "en": "<BE-Klassifikation> = „Keine Zusammenarbeit“ (no cooperation)",
+  "art": "text"
+ },
+ {
+  "de": "Format: Ziffern, Buchstaben und Sonderzeichen, bis zu 60 Zeichen. <OB726-Name> wird in das Feld „Maklername“ der Notiz übernommen.",
+  "en": "Format: digits, letters and special characters, up to 60 characters. <OB726-Name> is transferred to the field „Maklername“ of the note.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die OB726-Kopfzeile mit der Vermittler-Nr. („P,…“) aus. Die ganze Zeile ist ein Feld: Übernimm den Text hinter der Nummer (im Screenshot „Makler Industrie A“, Begriff „Makler“ gelb markiert) und speichere ihn als <OB726-Klassifizierung>.",
+  "en": "Read the OB726 header line containing the intermediary number („P,…“). The whole line is one field: take the text after the number (in the screenshot „Makler Industrie A“, the term „Makler“ highlighted in yellow) and store it as <OB726-Klassifizierung>.",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = „MFA“ UND <OB726-Klassifizierung> <> „Mehrfachagent“",
+  "en": "<BUE_VERMITTLER_TYP> = „MFA“ AND <OB726-Klassifizierung> <> „Mehrfachagent“",
+  "art": "text"
+ },
+ {
+  "de": "ODER <BUE_VERMITTLER_TYP> = „Makler“ UND <OB726-Klassifizierung> = „Mehrfachagent“",
+  "en": "OR <BUE_VERMITTLER_TYP> = „Makler“ AND <OB726-Klassifizierung> = „Mehrfachagent“",
+  "art": "text"
+ }
+]

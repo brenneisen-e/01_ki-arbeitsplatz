@@ -1,0 +1,207 @@
+[
+ {
+  "de": "Merke Prüfnotiz „Vermittlertyp abweichend“ in <Fehlerliste>",
+  "en": "Record check note „Vermittlertyp abweichend“ in <Fehlerliste> (intermediary type differs)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer, greift keine der beiden Bedingungen; der Vorgang trägt aus der Vorprüfung bereits die Prüfnotiz „Vermittlertyp nicht angegeben“.",
+  "en": "Note: If <BUE_VERMITTLER_TYP> is empty, neither of the two conditions applies; the case already carries the check note „Vermittlertyp nicht angegeben“ from the preliminary check.",
+  "art": "text"
+ },
+ {
+  "de": "Anbindung des übernehmenden Vermittlers prüfen (GH040)",
+  "en": "Check the affiliation of the acquiring intermediary (GH040)",
+  "art": "text"
+ },
+ {
+  "de": "Öffne GH040 mit <OB726-PNR>.",
+  "en": "Open GH040 with <OB726-PNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Suche in der angezeigten Tabelle die Zeile „Status der Beschäftigung“ (Kennziffer, dahinter „=“ und der Wert, im Screenshot gelb markiert) und lese den Wert hinter „=“ aus. Der Wert wird nur für den folgenden Vergleich benötigt und nicht als Variable gespeichert.",
+  "en": "In the displayed table, find the line „Status der Beschäftigung“ (code number, followed by „=“ and the value, highlighted in yellow in the screenshot) and read the value after „=“. The value is only needed for the following comparison and is not stored as a variable.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Anbindungsprüfung steht am Ende der OB726-Schritte, damit OB726 nicht erneut aufgerufen werden muss.",
+  "en": "Note: The affiliation check is placed at the end of the OB726 steps so that OB726 does not have to be called again.",
+  "art": "text"
+ },
+ {
+  "de": "E-Mail-Adresse des übernehmenden Vermittlers ermitteln",
+  "en": "Determine the e-mail address of the acquiring intermediary",
+  "art": "text"
+ },
+ {
+  "de": "Die E-Mail-Adresse wird für das Notizfeld „E-Mail aufnehmender Makler“ benötigt. Sie wird in fester Reihenfolge bestimmt: Sonderliste TOP-Makler, sonst die in OB726 hinterlegte Adresse, bei fehlender oder interner Adresse die Absenderadresse aus dem Datenpool.",
+  "en": "The e-mail address is needed for the note field „E-Mail aufnehmender Makler“. It is determined in a fixed order: Sonderliste TOP-Makler, otherwise the address stored in OB726, and if that address is missing or internal, the sender address from the data pool.",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-PNR> oder <BUE_AGENTUR_NR> in der Sonderliste TOP-Makler enthalten (Tabelle unten)",
+  "en": "<OB726-PNR> or <BUE_AGENTUR_NR> contained in the Sonderliste TOP-Makler (table below)",
+  "art": "text"
+ },
+ {
+  "de": "Vermittler laut Sonderliste = „Fonds Finanz GmbH“",
+  "en": "Intermediary according to the Sonderliste = „Fonds Finanz GmbH“",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = <BUE_MAKLER_EMAIL>",
+  "en": "<Makler-Email> = <BUE_MAKLER_EMAIL>",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = Ausgangsadresse aus der Sonderliste",
+  "en": "<Makler-Email> = outgoing address from the Sonderliste",
+  "art": "text"
+ },
+ {
+  "de": "Lese in OB726 die hinterlegte E-Mail-Adresse des Vermittlers und speichere als <OB726-Email>.",
+  "en": "Read the intermediary's e-mail address stored in OB726 and store as <OB726-Email>.",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-Email> = leer",
+  "en": "<OB726-Email> = empty",
+  "art": "text"
+ },
+ {
+  "de": "ODER <OB726-Email> enthält „@ergo“",
+  "en": "OR <OB726-Email> contains „@ergo“",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = <OB726-Email>",
+  "en": "<Makler-Email> = <OB726-Email>",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = leer",
+  "en": "<Makler-Email> = empty",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „E-Mail-Adresse des Vermittlers fehlt“ in <Fehlerliste>",
+  "en": "Record check note „E-Mail-Adresse des Vermittlers fehlt“ in <Fehlerliste> (intermediary's e-mail address missing)",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> enthält „@ergo“",
+  "en": "<Makler-Email> contains „@ergo“",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Absender ist eine interne ERGO-Adresse“ in <Fehlerliste>",
+  "en": "Record check note „Absender ist eine interne ERGO-Adresse“ in <Fehlerliste> (sender is an internal ERGO address)",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „IV. Vertrag“",
+  "en": "Continue with chapter „IV. Vertrag“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Fonds Finanz nutzt je Sparte eine eigene Adresse (leben@fondsfinanz.de bzw. sach@fondsfinanz.de). Deshalb gilt dort immer die Absenderadresse aus dem Datenpool, mit der der Vorgang eingereicht wurde.",
+  "en": "Note: Fonds Finanz uses a separate address per line of business (leben@fondsfinanz.de or sach@fondsfinanz.de). For this reason, the sender address from the data pool with which the case was submitted always applies there.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Sonderliste gilt einmalig (Stand 23.09.2026, M. Abbas) und wird nicht laufend gepflegt. Ob die hinterlegte Adresse in OB726 oder in OB729 zu lesen ist, ist durch Robotics zu bestätigen.",
+  "en": "Note: The Sonderliste applies on a one-off basis (as at 23.09.2026, M. Abbas) and is not maintained on an ongoing basis. Whether the stored address is to be read in OB726 or in OB729 is to be confirmed by Robotics.",
+  "art": "text"
+ },
+ {
+  "de": "Vermittler (Sonderliste TOP-Makler)",
+  "en": "Intermediary (Sonderliste TOP-Makler)",
+  "art": "text"
+ },
+ {
+  "de": "Agenturnummer / PNR",
+  "en": "Agency number / PNR",
+  "art": "text"
+ },
+ {
+  "de": "Ausgangsadresse für die Bestandsübertragung",
+  "en": "Outgoing address for the portfolio transfer",
+  "art": "text"
+ },
+ {
+  "de": "Blau direkt GmbH",
+  "en": "Blau direkt GmbH",
+  "art": "text"
+ },
+ {
+  "de": "600020036 / 811809",
+  "en": "600020036 / 811809",
+  "art": "text"
+ },
+ {
+  "de": "provider-bue@blaudirekt.de",
+  "en": "provider-bue@blaudirekt.de",
+  "art": "text"
+ },
+ {
+  "de": "Dema AG",
+  "en": "Dema AG",
+  "art": "text"
+ },
+ {
+  "de": "600082061 / 823007",
+  "en": "600082061 / 823007",
+  "art": "text"
+ },
+ {
+  "de": "service@dema-makler.de",
+  "en": "service@dema-makler.de",
+  "art": "text"
+ },
+ {
+  "de": "Jung, DMS & Cie. Pool GmbH",
+  "en": "Jung, DMS & Cie. Pool GmbH",
+  "art": "text"
+ },
+ {
+  "de": "8903235 / 811774",
+  "en": "8903235 / 811774",
+  "art": "text"
+ },
+ {
+  "de": "bestandsuebertragung@jungdms.de",
+  "en": "bestandsuebertragung@jungdms.de",
+  "art": "text"
+ },
+ {
+  "de": "Jung, DMS & Cie. Pro GmbH",
+  "en": "Jung, DMS & Cie. Pro GmbH",
+  "art": "text"
+ },
+ {
+  "de": "8905060 / 891300",
+  "en": "8905060 / 891300",
+  "art": "text"
+ },
+ {
+  "de": "bestandsuebertragung-api@jungdms.de",
+  "en": "bestandsuebertragung-api@jungdms.de",
+  "art": "text"
+ },
+ {
+  "de": "Qualitypool GmbH",
+  "en": "Qualitypool GmbH",
+  "art": "text"
+ },
+ {
+  "de": "600020034 / 811801",
+  "en": "600020034 / 811801",
+  "art": "text"
+ },
+ {
+  "de": "dokumente@qualitypool.de",
+  "en": "dokumente@qualitypool.de",
+  "art": "text"
+ }
+]

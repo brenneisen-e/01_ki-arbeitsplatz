@@ -1,0 +1,54 @@
+/* ==========================================================================
+   Schublade — Ergänzungen zu Abschnitt 16.3 in index.css
+   Breite „verhandlung“ und die Leiste unter dem Titel. Die Grundregeln
+   (.vg-schublade, .vg-schublade-kopf, -koerper, -fuss) bleiben in index.css.
+   ========================================================================== */
+
+/* Breite „verhandlung“: so schmal, dass der Steuerblock (336 px) links
+   vollständig und ungedimmt stehen bleibt. Ab 1280 ist der Block 300 px,
+   ab 1024 ist die Schublade modal und füllt die ganze Breite.
+   Doppelter Selektor mit Absicht: main.jsx bündelt diese Datei vor
+   index.css, deren .vg-schublade { width: min(520px, 100vw) } bei gleicher
+   Spezifität sonst gewinnt. */
+.vg-schublade.vg-schublade-verhandlung {
+  width: min(720px, calc(100vw - 336px - 3 * var(--vg-a6)));
+}
+@media (max-width: 1280px) {
+  .vg-schublade.vg-schublade-verhandlung {
+    width: min(720px, calc(100vw - 300px - 3 * var(--vg-a6)));
+  }
+}
+@media (max-width: 1024px) {
+  .vg-schublade.vg-schublade-verhandlung { width: 100vw; }
+}
+
+/* Kopf mit Leiste: die Titelzeile bleibt, darunter eine zweite Zeile mit
+   Haarlinie. Der Kopf ist flex: none, der Körper scrollt — die Leiste
+   bleibt dadurch ohne position: sticky im Bild.
+   Doppelter Selektor aus demselben Grund wie oben: .vg-schublade-kopf in
+   index.css setzt align-items: flex-start, gap und padding und gewinnt
+   sonst — Kopfzeile und Leiste schrumpfen dann auf Inhaltsbreite, das X
+   steht mitten in der Schublade und die Haarlinie bricht ab. */
+.vg-schublade-kopf.vg-schublade-kopf-mit-leiste {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding-bottom: 0;
+}
+.vg-schublade-kopfzeile {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--vg-a5);
+  width: 100%;
+  min-width: 0;
+}
+/* Luft wie bei inneren Gruppen mit Haarlinie: 12 px über und unter der
+   Linie, 12 px unter der Leiste — darunter folgt der Körper mit seinen 16. */
+.vg-schublade-leiste {
+  margin-top: var(--vg-a5);
+  padding: var(--vg-a5) 0;
+  border-top: 1px solid var(--vg-rand);
+  width: 100%;
+  min-width: 0;
+}

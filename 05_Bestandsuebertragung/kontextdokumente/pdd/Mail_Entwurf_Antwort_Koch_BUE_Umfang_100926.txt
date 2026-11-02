@@ -1,0 +1,38 @@
+Hallo Marcus, hallo zusammen,
+
+vielen Dank für die schnellen Rückmeldungen. Wir haben das Thema „mehrere Versicherungsnummern in einer E-Mail“ heute im PDD-Touchpoint mit Robotics (Ute Gerhards) sowie Inge, Anika und Marco noch einmal durchgesprochen. Daraus ist ein Vorschlag entstanden, der die bisherige Anforderung an Celonis leicht verändern würde. Ich stelle ihn hier zur Diskussion; entschieden ist noch nichts.
+
+1. Was uns zu dem Vorschlag bringt
+
+Nach unserem Verständnis wird im manuellen Prozess heute für jede in der E-Mail genannte VNR ein eigener Vorgang angelegt. Eine Sammelprüfung über eine führende VNR erscheint uns fachlich schwierig: Ein Widerruf oder eine Kündigung kann nur einen der genannten Verträge betreffen und müsste dann zuerst in die Sparte. Der Prüf-Bot müsste deshalb jede VNR einzeln und vollständig prüfen. Die bisher vorgesehene Ausprägung „Mehrere“ mit Aussteuerung der weiteren VNR zur manuellen Bearbeitung würde diese Fälle wieder in den manuellen Prozess zurückführen.
+
+2. Vorschlag für das Zielbild
+
+- BUE_UMFANG würde nur noch zwei Ausprägungen kennen: „Einzel“ und „Gesamt“. Die Ausprägung „Mehrere“ würde entfallen.
+- Werden mehrere VNR genannt, würde Celonis je VNR einen eigenen Postkorbvorgang mit jeweils eigenem KI-Deckblatt eröffnen. Die Deckblätter wären inhaltlich identisch (gleiche E-Mail, gleicher Makler, gleicher Kunde), würden sich aber in der führenden VNR unterscheiden. Jeder dieser Vorgänge erhielte BUE_UMFANG = „Einzel“, liefe eigenständig durch den Prüf-Bot und würde bei positivem Ergebnis als Einzel-BÜ prozessiert.
+- Die Felder BUE_VNR und BUE_VNR_2 blieben wie geplant erhalten und würden in jedem dieser Vorgänge gefüllt: die führende VNR in BUE_VNR, die weiteren genannten VNR in BUE_VNR_2. So bliebe im Bearbeitungshinweis sichtbar, dass der Vorgang Teil eines Mehrfachauftrags ist.
+- Für die Ausprägung „Gesamt“ würde sich aus der Kombination von genannten VNR und der Formulierung „gesamte Kundenverbindung“ bzw. „alle weiteren Verträge“ Folgendes ergeben:
+- Eine VNR und gesamte Kundenverbindung: ein Vorgang an dieser VNR mit BUE_UMFANG = „Gesamt“.
+- Mehrere VNR und gesamte Kundenverbindung: je VNR ein eigener Vorgang, jeder mit BUE_UMFANG = „Gesamt“. So wird jede genannte VNR einzeln geprüft, und der Hinweis auf die gesamte Kundenverbindung geht in jedem Vorgang in die Notiz an den BÜ-Bot.
+- Mehrere VNR ohne eine Formulierung wie „alle weiteren Verträge“: je VNR ein eigener Vorgang, jeder mit BUE_UMFANG = „Einzel“.
+- Keine VNR, nur gesamte Kundenverbindung: wie von Marcus beschrieben Aussteuerung an KWAD.
+- In jedem Vorgang stünde die führende VNR in BUE_VNR und die weiteren genannten VNR in BUE_VNR_2, unabhängig vom Umfang. Zu klären wäre mit Robotics noch, wie der BÜ-Bot bei mehreren Vorgängen mit „Gesamt“ die Kundenverbindung nur einmal überträgt.
+
+3. Was sich dadurch an Stefans Verständnisfragen ändern würde
+
+- Frage 1 (nur E-Mail): unverändert.
+- Frage 2 (Belegung VNR-Felder bei Gesamt): würde sich ändern. Je Vorgang stünde die führende VNR in BUE_VNR, die weiteren genannten VNR in BUE_VNR_2, auch bei „Gesamt“.
+- Frage 3 (Eröffnung): Eine Reihenfolge Nicht-KV vor KV wäre nicht mehr nötig, weil je genannter VNR im jeweiligen Vertrag eröffnet würde.
+- Frage 4 (keine VNR, nur Kundenverbindung): unverändert, Aussteuerung an KWAD.
+
+4. Bitte um Rückmeldung
+
+- Fachbereich (Nuria, Marcus, Anika, Inge): Passt dieses Zielbild aus eurer Sicht, insbesondere die Vorgangseröffnung je VNR und die Kombinationen mit „gesamte Kundenverbindung“? Das war heute der Punkt, den wir im Fachkreis noch abschließend klären wollten.
+- Stefan: Wäre die Mehrfacheröffnung mit identischem Deckblatt und wechselnder führender VNR in Ausbaustufe 2 grundsätzlich umsetzbar, und was würde das für Aufwand und Zeitplan bedeuten? Sollte das nicht in die Ausbaustufe 2 passen, bliebe als Alternative das bisherige Design: ein Vorgang, alle VNR in BUE_VNR und BUE_VNR_2, Aussteuerung der weiteren VNR als Business Exception zur manuellen Bearbeitung.
+
+Sobald wir uns auf eine Variante geeinigt haben, passen wir PDD, Datenpool-Antrag und den Walkthrough entsprechend an.
+
+Zu Nurias Bitte um eine Auswertung, wie viele E-Mails das Wort „Kundenverbindung“ enthalten: Das nehmen wir mit und melden uns dazu separat.
+
+Viele Grüße
+Eike

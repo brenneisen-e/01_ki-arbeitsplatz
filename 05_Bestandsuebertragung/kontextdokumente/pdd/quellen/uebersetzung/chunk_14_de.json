@@ -1,0 +1,166 @@
+[
+ {
+  "de": "Apella Aktiengesellschaft",
+  "art": "text"
+ },
+ {
+  "de": "600021389 / 818468",
+  "art": "text"
+ },
+ {
+  "de": "bestandsuebertragung@apella.de",
+  "art": "text"
+ },
+ {
+  "de": "Fonds Finanz GmbH",
+  "art": "text"
+ },
+ {
+  "de": "600042497 / 811781",
+  "art": "text"
+ },
+ {
+  "de": "immer <BUE_MAKLER_EMAIL> (leben@fondsfinanz.de oder sach@fondsfinanz.de, je nach Sparte)",
+  "art": "text"
+ },
+ {
+  "de": "IV. Vertrag – Vertragsstatus in VA230",
+  "art": "text"
+ },
+ {
+  "de": "Vertragsstatus prüfen (VA230)",
+  "art": "text"
+ },
+ {
+  "de": "Lese das gelb markierte Feld „Status“ aus und speichere als <VA230-Status>.",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-Status> <> „aktuell“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „<Klassifikation für nicht aktuelle Verträge – durch Fachbereich festzulegen>“",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „V. Test auf Fehlerliste“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die <Vorgang-VNR> stammt aus dem VDB-Abruf durch Celonis und ist damit eine echte Nummer; ob ein Vertrag existiert, wird nicht eigens geprüft. Der Postkorbvorgang startet je Sparte den passenden Prüf-Bot; damit steht die Sparte fest und mit ihr die Notizvariante.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Rahmenverträge und Verträge im Mahnverfahren werden wie alle anderen Verträge geprüft. Flotten und Flottenverträge mit führendem Mantel betreffen nur Komposit (KR).",
+  "art": "text"
+ },
+ {
+  "de": "V. Test auf Fehlerliste",
+  "art": "text"
+ },
+ {
+  "de": "Fehlerliste auswerten",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Alle Einzelprüfungen sind durchlaufen. Abweichungen aus den Einzelprüfungen wurden als Prüfnotizen in <Fehlerliste> gesammelt.",
+  "art": "text"
+ },
+ {
+  "de": "<Fehlerliste> <> leer",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Nachprüfung erforderlich“",
+  "art": "text"
+ },
+ {
+  "de": "Weiter zum Kapitel „VI. Abschluss ohne Befund“",
+  "art": "text"
+ },
+ {
+  "de": "VI. Abschluss ohne Befund – Notiz bestücken und an den 72-Stunden-BOT übergeben",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz bestücken",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Es wurde keine Business Exception festgestellt und die Fehlerliste ist leer. Der Bot legt die Telefonnotiz an und bestückt sie Feld für Feld nach der folgenden Tabelle; danach wird der Vorgang mit der Notiz an den 72-Stunden-BOT übergeben.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Prüfung des Vertriebskanals des abgebenden Bestandsinhabers erfolgt im Prüf-Bot nicht. Der 72-Stunden-BOT prüft selbst, ob der Bestandsinhaber der AO zugeordnet ist, gibt in diesem Fall die 72-Stunden-Information aus und leitet alle übrigen Vorgänge ohne Wartezeit an den BÜ-BOT weiter.",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz anlegen: Vorlage BOT2011 (Krankenversicherung); der Feldumfang entspricht der Notizmaske 1515 ohne den Abschnitt „Folgearbeit für Komposit“. Ob die Vorlage bestückt oder eine Freitextnotiz mit gleichem Aufbau erzeugt wird, ist durch den Fachbereich zu bestätigen.",
+  "art": "text"
+ },
+ {
+  "de": "Alle Felder werden ohne weitere Prüfung aus den Variablen übernommen (Ausfüllhinweise in der Tabelle unten). Anschließend Telefonnotiz speichern.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Notiz beauftragt immer eine Einzel-BÜ für die <Vorgang-VNR>, nie eine Gesamt-BÜ. Auch bei <BUE_UMFANG> = „Gesamt“ läuft jede Versicherungsnummer als eigener Vorgang mit eigener Notiz; die übrigen Nummern stehen nur nachrichtlich in der Notiz.",
+  "art": "text"
+ },
+ {
+  "de": "Feld der Notizmaske",
+  "art": "text"
+ },
+ {
+  "de": "Pflicht",
+  "art": "text"
+ },
+ {
+  "de": "Eintrag",
+  "art": "text"
+ },
+ {
+  "de": "Quelle und Hinweis",
+  "art": "text"
+ },
+ {
+  "de": "Eingangsdatum",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_MV_EINGANGSDATUM>, sonst Eröffnungsdatum des Postkorbvorgangs; Format tt.mm.jjjj",
+  "art": "text"
+ },
+ {
+  "de": "Maklername",
+  "art": "text"
+ },
+ {
+  "de": "Feld „Name 1“ aus OB726 (Kapitel III)",
+  "art": "text"
+ },
+ {
+  "de": "Agenturnummer",
+  "art": "text"
+ },
+ {
+  "de": "bereinigte Agenturnummer aus dem Datenpool, nur Ziffern",
+  "art": "text"
+ },
+ {
+  "de": "Personalnummer",
+  "art": "text"
+ },
+ {
+  "de": "7-stellig ohne Präfix „P,“ (Kapitel III)",
+  "art": "text"
+ },
+ {
+  "de": "E-Mail aufnehmender Makler",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel III, Schritt „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“",
+  "art": "text"
+ }
+]

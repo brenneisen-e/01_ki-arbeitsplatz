@@ -1,0 +1,30 @@
+An: Marcus.Koch@ergo.de, Stefan.Schwarz@ergo.de
+Cc: Marco.Jeglorz.extern@ergo.de
+Betreff: AW: Makler BUE meets KI - EMMA -Liste zwecks Format - Abweichende Auspraegungen in Spalte D
+
+Hallo Marcus, hallo Stefan,
+
+gern. Wie heute Morgen abgestimmt, wird aus „Courtagefortzahler“ und „Kontaktgeber“ eine Business Exception. Damit ist die Liste kurz:
+
+Mit BE (so abgestimmt): nur drei Felder müssen bestückt sein
+Der Bot setzt beim Vermittlertyp „Courtagefortzahler“ oder „Kontaktgeber“ sofort die BE „Keine Bestandsübertragung möglich: <Typ>“ und gibt den Vorgang mit Bearbeitungshinweis an den Sachbearbeiter, der die Ablehnung versendet. Gebraucht werden dafür nur:
+- Vermittlertyp (BUE_VERMITTLER_TYP) – Auslöser der BE, Ausprägung ausgeschrieben
+- VNR (BUE_VNR, bei mehreren Nummern BUE_VNR_2) – für den Bearbeitungshinweis
+- Agentur-Nr (BUE_AGENTUR_NR) – Einstieg in OB726 für die Notiz
+Alle übrigen Felder dürfen wie beim MFA auf N/A stehen; Vollmacht, Unterschrift und Unterlagen werden nicht geprüft.
+
+Nur zur Einordnung: sollten die Typen doch wie Makler und MFA geprüft werden
+Dann bräuchte der Bot denselben Feldsatz wie für Makler bzw. MFA, weil er die komplette Prüfstrecke durchläuft (Kunde in IS011, Bestandsinhaber, Vermittler in OB726, Vertrag in VA230, Notiz):
+
+Feldgruppe im KI-Deckblatt | Felder | Wofür
+Vermittler | BUE_VERMITTLER_TYP, BUE_AGENTUR_NR, BUE_MAKLER_EMAIL, optional BUE_VERMITTLER_NR | Weiche Makler/MFA, Einstieg OB726, E-Mail für die Notiz
+Vollmacht / Wunsch | Makler: BUE_MV_UNTERSCHRIFT_KUNDE, BUE_PRUEFUNG_UNTERLAGEN, BUE_MV_EINGANGSDATUM; MFA: BUE_WUNSCH_VORHANDEN, BUE_MV_AUF_MAKLER | Ausschlusskriterien der Vorprüfung, Eingangsdatum der Notiz
+Kunde | BUE_KUNDE_NACHNAME, BUE_KUNDE_VORNAME, BUE_KUNDE_PLZ, BUE_KUNDE_STRASSE, optional BUE_KUNDE_GEBDAT | Matchcodesuche und Partnerprüfung in IS011
+Vertrag | BUE_VNR, BUE_VNR_2, BUE_UMFANG | Vertragsprüfung in VA230, Notiz und Bearbeitungshinweis
+Pool | BUE_POOL, BUE_UV_ERTEILT | Feld „Bearbeitung nach“ in der Notiz
+Komposit / Leben zusätzlich | BUE_SPARTE, BUE_ART_UNTERLAGEN | Mantelvertragsprüfung bei KR, Kennzeichen „Folgearbeit“ in der Notiz
+
+Zu den übrigen Punkten aus eurer Abstimmung: „leer“ und „Fremdversicherungsunternehmen“ behandelt der Bot wie „Makler“, also mit Prüfung der unterschriebenen Maklervollmacht. Die Schreibweise „Courtagefortzahler“ (ausgeschrieben) übernehme ich so in die PDD. Die BE ist in der aktuellen Fassung der PDD für KV und für Komposit / Leben bereits eingetragen.
+
+Viele Grüße
+Eike Brenneisen

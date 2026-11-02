@@ -1,0 +1,207 @@
+[
+ {
+  "de": "Bearbeitung nach",
+  "en": "Bearbeitung nach (processing according to)",
+  "art": "text"
+ },
+ {
+  "de": "„Untervollmacht fehlt“ oder „Mit BÜ-Wunsch“",
+  "en": "„Untervollmacht fehlt“ (sub-power of attorney missing) or „Mit BÜ-Wunsch“ (with transfer request)",
+  "art": "text"
+ },
+ {
+  "de": "Auswahl nach der Tabelle „Bearbeitung nach“ unten",
+  "en": "Selection according to the table „Bearbeitung nach“ below",
+  "art": "text"
+ },
+ {
+  "de": "Rahmenvertrag übertragbar / Rahmenvertrag nicht übertragbar",
+  "en": "Rahmenvertrag übertragbar / Rahmenvertrag nicht übertragbar (framework contract transferable / framework contract not transferable)",
+  "art": "text"
+ },
+ {
+  "de": "nicht setzen",
+  "en": "do not set",
+  "art": "text"
+ },
+ {
+  "de": "fachlich nicht geregelt; Rahmenverträge werden wie alle anderen Verträge behandelt",
+  "en": "no business rule defined; framework contracts are treated like all other contracts",
+  "art": "text"
+ },
+ {
+  "de": "Betroffene VNR",
+  "en": "Betroffene VNR (affected VNR)",
+  "art": "text"
+ },
+ {
+  "de": "„angegebene VNR beachten“",
+  "en": "„angegebene VNR beachten“ (observe the specified VNR)",
+  "art": "text"
+ },
+ {
+  "de": "immer Einzel-BÜ; „gesamte Kundenverbindung“ und „angegebene VNR nicht beachten“ werden nie gewählt",
+  "en": "always an individual portfolio transfer; „gesamte Kundenverbindung“ (entire customer relationship) and „angegebene VNR nicht beachten“ (disregard the specified VNR) are never selected",
+  "art": "text"
+ },
+ {
+  "de": "VNR",
+  "en": "VNR (policy number)",
+  "art": "text"
+ },
+ {
+  "de": "dahinter nachrichtlich die weiteren Nummern aus <BUE_VNR> und <BUE_VNR_2>, mit „;“ getrennt",
+  "en": "followed, for information only, by the further numbers from <BUE_VNR> and <BUE_VNR_2>, separated by „;“",
+  "art": "text"
+ },
+ {
+  "de": "Folgearbeit für Komposit (drei Kennzeichen)",
+  "en": "Folgearbeit für Komposit (follow-up work for Komposit/P&C; three indicators)",
+  "art": "text"
+ },
+ {
+  "de": "entfällt für die Krankenversicherung – die Anforderung von Unterlagen ist ein Thema von Komposit und Leben",
+  "en": "not applicable to health insurance – requesting documents is a matter for Komposit (P&C) and Leben (life)",
+  "art": "text"
+ },
+ {
+  "de": "Sonstiges: Dokumente für weitere VNR hochladen / eröffnen",
+  "en": "Sonstiges: Dokumente für weitere VNR hochladen / eröffnen (other: upload / open documents for further VNR)",
+  "art": "text"
+ },
+ {
+  "de": "fachlich nicht geregelt",
+  "en": "no business rule defined",
+  "art": "text"
+ },
+ {
+  "de": "Komposit / Leben / KV (Freitext)",
+  "en": "Komposit / Leben / KV (free text – P&C / life / health insurance)",
+  "art": "text"
+ },
+ {
+  "de": "„KV“",
+  "en": "„KV“ (health insurance)",
+  "art": "text"
+ },
+ {
+  "de": "nachrichtlich; bei <BUE_UMFANG> = „Gesamt“ zusätzlich „Auftrag: gesamte Kundenverbindung“",
+  "en": "for information only; if <BUE_UMFANG> = „Gesamt“ (entire), additionally „Auftrag: gesamte Kundenverbindung“ (order: entire customer relationship)",
+  "art": "text"
+ },
+ {
+  "de": "Laufende Nr. aus Vorgangsdatenbank",
+  "en": "Laufende Nr. aus Vorgangsdatenbank (sequential number from the case database)",
+  "art": "text"
+ },
+ {
+  "de": "mehrere Nummern werden nur mit „,“ getrennt",
+  "en": "several numbers are separated by „,“ only",
+  "art": "text"
+ },
+ {
+  "de": "Wert „Bearbeitung nach“",
+  "en": "Value „Bearbeitung nach“",
+  "art": "text"
+ },
+ {
+  "de": "Bedingung",
+  "en": "Condition",
+  "art": "text"
+ },
+ {
+  "de": "Untervollmacht fehlt",
+  "en": "Untervollmacht fehlt (sub-power of attorney missing)",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_POOL> <> leer UND <BUE_UV_ERTEILT> = „nein“ – Einreichung über einen Pool ohne erteilte Untervollmacht",
+  "en": "<BUE_POOL> <> empty AND <BUE_UV_ERTEILT> = „nein“ – submission via a pool without a granted sub-power of attorney",
+  "art": "text"
+ },
+ {
+  "de": "Mit BÜ-Wunsch",
+  "en": "Mit BÜ-Wunsch (with transfer request)",
+  "art": "text"
+ },
+ {
+  "de": "alle übrigen Fälle, auch beim Mehrfachagenten (<BUE_UV_ERTEILT> = N/A)",
+  "en": "all other cases, also for the multiple agent (<BUE_UV_ERTEILT> = N/A)",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang übergeben und abschließen",
+  "en": "Hand over and complete the case",
+  "art": "text"
+ },
+ {
+  "de": "Den bestehenden Postkorbvorgang mit der Telefonnotiz an den 72-Stunden-BOT weiterleiten (Postkorb des 72-Stunden-BOT: Postkorb-Nr. TBD).",
+  "en": "Forward the existing mailbox case with the telephone note to the 72-Stunden-BOT (mailbox of the 72-Stunden-BOT: Postkorb-Nr. TBD).",
+  "art": "text"
+ },
+ {
+  "de": "Verarbeitung beenden. Status „Completed“ wird nur gesetzt, wenn Telefonnotiz und Weiterleitung erfolgreich ausgeführt wurden.",
+  "en": "End processing. Status „Completed“ is only set if the telephone note and the forwarding have been executed successfully.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Es gilt Variante A (K. Rypa, 17.09.2026): Der bestehende Vorgang wird weitergeleitet, es wird kein neuer Vorgang eröffnet.",
+  "en": "Note: Variant A applies (K. Rypa, 17.09.2026): The existing case is forwarded; no new case is opened.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Zu klären ist noch (K. Rypa), ob jeder Vorgang an den 72-Stunden-BOT geht oder Vorgänge mit Makler als abgebendem Bestandsinhaber direkt an HSB4K GR (Makler auf Makler).",
+  "en": "Note: It remains to be clarified (K. Rypa) whether every case goes to the 72-Stunden-BOT or whether cases with a broker as the transferring portfolio holder go directly to HSB4K GR (broker to broker).",
+  "art": "text"
+ },
+ {
+  "de": "VII. Abschluss mit Befund – BE-Handling",
+  "en": "VII. Completion with findings – BE handling",
+  "art": "text"
+ },
+ {
+  "de": "Business Exception und Prüfnotizen zentral behandeln",
+  "en": "Handle business exception and check notes centrally",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Jede Business Exception wird an dieser Stelle einheitlich behandelt. <BE-Klassifikation> trägt den Grund der BE; <Fehlerliste> enthält die in den Einzelprüfungen gesammelten Prüfnotizen. Das Routing ist für harte Business Exceptions und für „Nachprüfung erforderlich“ identisch; es unterscheidet sich nur im Inhalt des Bearbeitungshinweises.",
+  "en": "Note: Every business exception is handled uniformly at this point. <BE-Klassifikation> carries the reason for the BE; <Fehlerliste> contains the check notes collected in the individual checks. The routing is identical for hard business exceptions and for „Nachprüfung erforderlich“ (re-check required); it differs only in the content of the processing note.",
+  "art": "text"
+ },
+ {
+  "de": "<BE> = „ja“ setzen",
+  "en": "Set <BE> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis füllen mit <BE-Klassifikation>, allen Prüfnotizen aus <Fehlerliste> (je Prüfnotiz eine Zeile) sowie <Vorgang-VNR>, <BUE_VNR> und <BUE_VNR_2>",
+  "en": "Fill the processing note with <BE-Klassifikation>, all check notes from <Fehlerliste> (one line per check note) as well as <Vorgang-VNR>, <BUE_VNR> and <BUE_VNR_2>",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis am Postkorbvorgang speichern (Notiz über ErgoNotiz, Vorlage 2011, siehe Screenshot)",
+  "en": "Save the processing note on the mailbox case (note via ErgoNotiz, Vorlage 2011, see screenshot)",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „HSB4K MV“ (HSB4 K MV Gesundheit Posteingang, Postkorb-Nr. TBD) weiterleiten",
+  "en": "Forward the case to the topic mailbox „HSB4K MV“ (HSB4 K MV Gesundheit Posteingang, Postkorb-Nr. TBD)",
+  "art": "text"
+ },
+ {
+  "de": "Report: <BE-Klassifikation> und <Fehlerliste> in das Reporting übernehmen (Status Referred)",
+  "en": "Report: transfer <BE-Klassifikation> and <Fehlerliste> into reporting (status Referred)",
+  "art": "text"
+ },
+ {
+  "de": "Verarbeitung dieses Vorgangs beenden, weiter mit dem nächsten Vorgang",
+  "en": "End processing of this case, continue with the next case",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Nennt der Auftrag mehrere Versicherungsnummern, wird zu jeder Nummer ein eigener Vorgang geprüft. Die vollständige Liste wird nachrichtlich in den Bearbeitungshinweis übernommen, damit die Sachbearbeitung den Zusammenhang der Vorgänge erkennt.",
+  "en": "Note: If the order names several policy numbers, a separate case is checked for each number. The complete list is included in the processing note for information only so that case handling can recognise the connection between the cases.",
+  "art": "text"
+ }
+]

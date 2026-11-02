@@ -1,0 +1,695 @@
+import { useState, useEffect, useRef } from 'react';
+import Card from '../../../components/ui/Card';
+import DataTable from '../../../components/ui/DataTable';
+import LogoImg from '../../../components/ui/LogoImg';
+import { formatEur, berechneAnlagevolumen, berechneKreditvolumen } from '../../../utils/formatters';
+import { CheckCircle, XCircle, Link2, Briefcase, PiggyBank, Shield, Home, TrendingUp, AlertTriangle, ChevronDown, Sparkles } from 'lucide-react';
+import useTranslation from '../../../i18n/useTranslation';
+import { useMode } from '../../../hooks/useMode';
+import VertraegeTab from './VertraegeTab';
+import { KIZusammenfassungInlay } from './StammdatenDetailTab';
+
+const TYP_EN = {
+  depot: 'Securities Account', depot2: 'Securities Account 2', depot_firma: 'Company Securities',
+  depot_privat: 'Private Securities', cash: 'Cash', festgeld: 'Fixed Deposit',
+  tagesgeld: 'Money Market', immobilien: 'Real Estate', immobilie: 'Real Estate',
+  gmbh: 'Company Ownership', lv: 'Life Insurance', bu: 'Disability Insurance',
+  du: 'Civil Service Disability', dno: 'D&O Insurance', haftpflicht: 'Liability Insurance',
+  hausrat: 'Household Insurance', kfz: 'Auto Insurance', kfz2: 'Auto Insurance 2',
+  kfz_fremd: 'Auto Insurance (External)', pkv: 'Private Health Insurance',
+  pkv_ehemann: 'Private Health (Spouse)', rlv: 'Term Life Insurance',
+  unfall: 'Accident Insurance', it_hp: 'IT Liability', praxis_hp: 'Practice Liability',
+  betriebshaftpflicht: 'Business Liability', kuenstlersozialkasse: 'Artist Social Fund',
+  rechtsschutz: 'Legal Protection', versicherung: 'Insurance',
+  wohngebaeude: 'Building Insurance', inhaltsversicherung: 'Contents Insurance',
+  baufinanzierung: 'Mortgage', bausparvertrag: 'Home Savings Plan',
+  business_konto: 'Business Account', geschaeftskonto: 'Business Account',
+  geschaeftskonto1: 'Business Account 1', geschaeftskonto2: 'Business Account 2',
+  geschaeftskonto3: 'Business Account 3', girokonto: 'Checking Account',
+  konsumkredit: 'Consumer Credit', konto: 'Account', kffw: 'KfW Loan',
+  privatkredit: 'Personal Loan', privat_konto: 'Private Account',
+  privatkonto: 'Private Account', praxiskonto: 'Practice Account',
+  smartfinanz: 'Smart Finance', sparkonto: 'Savings Account',
+  angel: 'Angel Investment', unternehmensbeteiligung: 'Business Participation',
+  telefon: 'Phone', visa: 'Visa', lebensversicherung: 'Life Insurance',
+};
+
+const INST_EN = { Eigene: 'Own', Privat: 'Private' };
+
+const DETAILS_EN = [
+  ['Gemischtes Mandat', 'Mixed Mandate'], ['Gemischte Fonds', 'Mixed Funds'],
+  ['Gemischtes Depot', 'Mixed Portfolio'], ['Festgeld/Tagesgeld', 'Fixed Deposit/Money Market'],
+  ['Gehaltseingang', 'Salary Deposit'], ['Ablauf', 'Maturity'],
+  ['Rückkaufswert', 'Surrender Value'], ['RKW', 'SV'],
+  ['Zuteilungsreif', 'Maturing'], ['ZINSBINDUNG', 'FIXED RATE PERIOD'],
+  ['Zinsbindung', 'Fixed Rate Period'], ['Privathaftpflicht', 'Personal Liability'],
+  ['Privatversicherung', 'Private Insurance'], ['Ehepaar', 'Couple'],
+  ['Familie', 'Family'], ['Notgroschen', 'Emergency Fund'],
+  ['Steuerrücklage', 'Tax Reserve'], ['Lohnkonto', 'Payroll Account'],
+  ['Renteneingang', 'Pension Deposit'], ['Hauptkonto', 'Main Account'],
+  ['Ansparphase', 'Savings Phase'], ['Firmenkonto', 'Company Account'],
+  ['Ausgewogen', 'Balanced'], ['Konservativ', 'Conservative'],
+  ['Konservativ-Ausgewogen', 'Conservative-Balanced'],
+  ['Defensiv', 'Defensive'], ['Wachstum', 'Growth'],
+  ['Zweitwagen Frau', 'Second Car (Spouse)'],
+  ['Dienstunfähigkeit', 'Civil Service Disability'],
+  ['Pflichtversichert', 'Statutory Insured'], ['Deckung', 'Coverage'],
+  ['Baujahr', 'Built'], ['Privat-Depot Aktien', 'Private Stock Portfolio'],
+  ['Privat-Girokonto', 'Private Checking Account'],
+  ['Betriebsmittel', 'Operating Funds'],
+  ['Studienkredit Rest', 'Student Loan Remaining'],
+  ['Inventar', 'Inventory'], ['Innenstadt', 'Downtown'],
+  ['Bahnhof', 'Station'], ['Rest', 'Remaining'],
+  ['bis', 'until'], ['mtl', '/mo'], ['Zins', 'Interest'], ['netto', 'net'],
+  ['EFH', 'Detached House'], ['MFH', 'Multi-Family'], ['Gewerbe', 'Commercial'],
+  ['Maschinenbau GmbH', 'Engineering GmbH'], ['Ferienwohnung', 'Vacation Apartment'],
+  ['CASH GEPARKT! Exit-Erlöse', 'CASH PARKED! Exit proceeds'],
+  ['Praxis-Konto', 'Practice Account'], ['Praxis-Immobilie', 'Practice Property'],
+  ['Privatkonto', 'Private Account'], ['Schwerpunkt', 'Focus'],
+  ['Ausschüttung', 'Distribution'], ['Co-Investment', 'Co-Investment'],
+  ['ESG-Filter', 'ESG Filter'], ['Tech-Fokus', 'Tech Focus'],
+];
+
+function translateDetails(details, lang) {
+  if (lang !== 'en' || !details) return details;
+  let s = details;
+  for (const [de, en] of DETAILS_EN) s = s.replaceAll(de, en);
+  return s;
+}
+
+// ─── Bewertung (score) for a Fremd-Versicherung ───────────────────────────
+// Deterministic 55–95 score based on kundeId + product + how many Leistungen
+// the tariff lists and whether a Deckungssumme is known. Used as demo score
+// in the "Absichern" table.
+function scoreVersicherung(kundeId, v) {
+  const seedStr = `${kundeId || ''}|${v.produkt || ''}|${v.institut || ''}`;
+  let h = 0;
+  for (let i = 0; i < seedStr.length; i++) h = (h * 31 + seedStr.charCodeAt(i)) >>> 0;
+  let score = 55 + (h % 30); // 55–84 baseline
+  if (Array.isArray(v.leistungen) && v.leistungen.length >= 2) score += 5;
+  if (v.deckungssumme) score += 4;
+  if (v.praemie && v.praemie > 1500) score -= 3; // high premium → worse value
+  return Math.max(40, Math.min(96, score));
+}
+
+function InsuranceScore({ score }) {
+  const color = score >= 85 ? { bg: 'bg-(--tint-success)', text: 'text-(--color-success)', bar: 'var(--color-success)' }
+             : score >= 70 ? { bg: 'bg-lime-50', text: 'text-lime-700', bar: 'var(--color-lime-600)' }
+             : score >= 55 ? { bg: 'bg-(--tint-warning)', text: 'text-(--color-warning)', bar: 'var(--color-warning)' }
+             : { bg: 'bg-(--tint-danger)', text: 'text-(--color-danger)', bar: 'var(--color-danger)' };
+  return (
+    <div className="inline-flex items-center gap-2">
+      <div className="w-16 h-1.5 rounded-full bg-(--border-light) overflow-hidden">
+        <div className="h-full rounded-full" style={{ width: `${score}%`, background: color.bar }} />
+      </div>
+      <span className={`rh-badge text-[11px] font-bold px-2 py-0.5 rounded-full ${color.bg} ${color.text}`}>{score}</span>
+    </div>
+  );
+}
+
+// ─── Deterministic consent dates (grant + expiry) per (kundeId, product) ───
+// Consents under PSD2/FIDA-Style are valid for 180 days. We derive a stable
+// seed from kunde.id + product type/institut so the same row always shows the
+// same dates and a subset of rows is "expiring soon" for demo purposes.
+function consentDates(kundeId, row) {
+  const seedStr = `${kundeId || ''}|${row.typ || ''}|${row.institut || ''}`;
+  let h = 0;
+  for (let i = 0; i < seedStr.length; i++) h = (h * 31 + seedStr.charCodeAt(i)) >>> 0;
+  // Grant date: 1–170 days ago
+  const daysAgo = 1 + (h % 170);
+  const grant = new Date();
+  grant.setDate(grant.getDate() - daysAgo);
+  // Expiry: 180 days after grant
+  const expiry = new Date(grant);
+  expiry.setDate(expiry.getDate() + 180);
+  const today = new Date();
+  const daysLeft = Math.round((expiry - today) / (1000 * 60 * 60 * 24));
+  const fmt = (d) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return { erteilt: fmt(grant), bis: fmt(expiry), daysLeft };
+}
+
+// ─── Generate extended Open Finance data from fremdProdukte ───
+function generateBedarfsfelder(kunde, modeId) {
+  const fremd = kunde.fremdProdukte || [];
+  const eigen = kunde.eigeneProdukte || [];
+
+  // Use explicit openFinance data if available, otherwise derive from fremdProdukte
+  if (kunde.openFinance) return kunde.openFinance;
+
+  const geldmarkt = [];
+  const kapitalmarkt = [];
+  const versicherungenFremd = [];
+  const finanzierungen = [];
+
+  fremd.forEach(p => {
+    const t = p.typ;
+    if (t === 'tagesgeld' || t === 'festgeld' || t === 'sparkonto') {
+      geldmarkt.push({
+        produkt: p.produktart || (t === 'tagesgeld' ? 'Tagesgeldkonto' : t === 'festgeld' ? 'Festgeld' : 'Sparkonto'),
+        institut: p.institut, volumen: p.volumen,
+        zinssatz: p.zinssatz || (t === 'tagesgeld' ? '2,0% p.a.' : t === 'festgeld' ? '3,0% p.a.' : '0,5% p.a.'),
+        laufzeit: p.laufzeit || (t === 'festgeld' ? 'bis 2027' : 'Flexibel'),
+      });
+    } else if (t === 'depot' || t === 'depot_privat' || t === 'depot_firma') {
+      // Parse details for sparrate
+      const sparMatch = (p.details || '').match(/(\d+)\s*\/?\s*(?:mtl|Mon)/i);
+      const sparrate = sparMatch ? `${sparMatch[1]}\u20ac/Mon.` : null;
+      kapitalmarkt.push({
+        produkt: p.fondName || p.produktart || 'Wertpapierdepot',
+        institut: p.institut, volumen: p.volumen,
+        sparrate: p.sparrate || sparrate,
+        performanceYtd: p.performanceYtd || null,
+        positionen: p.positionen || null,
+      });
+    } else if (['versicherung', 'kfz', 'kfz_fremd', 'hausrat', 'haftpflicht', 'rechtsschutz',
+                 'rlv', 'bu', 'du', 'pkv', 'pkv_ehemann', 'unfall', 'lebensversicherung',
+                 'praxis_hp', 'betriebshaftpflicht', 'inhaltsversicherung', 'wohngebaeude'].includes(t)) {
+      // Ohne Consent dürfen wir keine Vertragsdetails kennen — nur das
+      // Institut bleibt sichtbar, damit der Berater sieht, dass dort eine
+      // Versicherung liegt.
+      const hasConsent = !!p.consent;
+      versicherungenFremd.push({
+        produkt: p.produktart || p.typ.replace(/_/g, ' '),
+        institut: p.institut,
+        consent: hasConsent,
+        praemie: hasConsent && p.volumen > 0 && p.volumen < 10000 ? p.volumen : null,
+        deckungssumme: hasConsent ? (p.deckungssumme || null) : null,
+        tarifart: hasConsent ? (p.tarifart || null) : null,
+        leistungen: hasConsent ? (p.leistungen || null) : null,
+        selbstbehalt: hasConsent ? (p.selbstbehalt || null) : null,
+        kuendigungsfrist: hasConsent ? (p.kuendigungsfrist || null) : null,
+        details: hasConsent ? p.details : null,
+      });
+    } else if (['baufinanzierung', 'kredit', 'konsumkredit', 'privatkredit', 'kffw'].includes(t)) {
+      finanzierungen.push({
+        produkt: p.produktart || (t === 'baufinanzierung' ? 'Baufinanzierung' : t === 'kffw' ? 'KfW-Darlehen' : 'Ratenkredit'),
+        institut: p.institut, restschuld: p.volumen,
+        zinssatz: p.zinssatz || null,
+        rate: p.rate || null,
+        laufzeit: p.laufzeit || null,
+        absicherung: p.absicherung || null,
+        details: p.details,
+      });
+    }
+  });
+
+  return { geldmarkt, kapitalmarkt, versicherungenFremd, finanzierungen };
+}
+
+// ─── Section header with colored icon ───
+function BedarfsfeldHeader({ icon: Icon, title, source, count }) {
+  return (
+    <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center gap-2">
+        <div className="p-1.5 rounded-lg bg-(--mode-pastel)">
+          <Icon size={18} className="text-(--mode-primary)" strokeWidth={1.75} />
+        </div>
+        <h3 className="font-semibold text-(--text-primary)">
+          {title}
+          {count != null && <span className="text-(--text-tertiary) font-normal ml-1">({count})</span>}
+        </h3>
+      </div>
+      {source && <span className="text-xs text-(--text-tertiary)">{source}</span>}
+    </div>
+  );
+}
+
+// ─── Performance badge ───
+function PerfBadge({ value }) {
+  if (value == null) return <span className="text-(--text-tertiary)">–</span>;
+  const positive = typeof value === 'string' ? value.startsWith('+') : value > 0;
+  const display = typeof value === 'string' ? value : `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
+  return <span className={`font-mono font-semibold ${positive ? 'text-(--color-success)' : 'text-(--color-danger)'}`}>{display}</span>;
+}
+
+function GewinnBadge({ value }) {
+  if (value == null) return <span className="text-(--text-tertiary)">–</span>;
+  const positive = value > 0;
+  const prefix = positive ? '+' : (value < 0 ? '−' : '');
+  const abs = Math.abs(value);
+  return <span className={`font-mono font-semibold ${positive ? 'text-(--color-success)' : value < 0 ? 'text-(--color-danger)' : 'text-(--text-secondary)'}`}>{prefix}{formatEur(abs)}</span>;
+}
+
+const MONATE_DE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+function formatSeit(iso) {
+  if (!iso) return '';
+  const [y, m] = iso.split('-').map(Number);
+  if (!y || !m) return iso;
+  return `${MONATE_DE[m - 1]} ${y}`;
+}
+
+function KiDepotHinweis({ hinweis, depot }) {
+  const { t } = useTranslation();
+  return (
+    <div className="rounded-xl surface-inset p-4 border-l-[3px]" style={{ borderLeftColor: 'var(--quelle-kommunikation)' }}>
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'color-mix(in oklab, var(--quelle-kommunikation) 12%, transparent)' }}>
+          <Sparkles size={16} className="text-(--quelle-kommunikation)" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-(--quelle-kommunikation)">{t('kiHinweis')}</span>
+            {depot && (
+              <span className="text-[11px] text-(--text-tertiary)">· {depot}</span>
+            )}
+          </div>
+          <div className="text-sm font-semibold text-(--text-primary) mt-1">{hinweis.titel}</div>
+          <p className="text-sm text-(--text-secondary) leading-relaxed mt-1.5">{hinweis.text}</p>
+          {hinweis.empfehlung && (
+            <div className="mt-3 pt-3 border-t border-(--border-light)">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-(--quelle-kommunikation) mb-1">{t('empfehlungLabel')}</div>
+              <p className="text-sm text-(--text-primary) leading-relaxed">{hinweis.empfehlung}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function OpenFinanceTab({ kunde }) {
+  const { t, lang } = useTranslation();
+  const { config, modeId } = useMode();
+
+  // Highlight-Event: wenn von einem anderen Tab (z. B. Stammdaten) ein
+  // Klick auf "Anlagevolumen" / "Kreditvolumen" passiert, lassen wir die
+  // jeweils relevanten Bedarfsfeld-Karten kurz aufblinken.
+  const [flashKey, setFlashKey] = useState(null);
+  const sparenRef = useRef(null);
+  const finanzierenRef = useRef(null);
+  const absichernRef = useRef(null);
+  useEffect(() => {
+    const onFlash = (e) => {
+      const key = e?.detail?.key;
+      if (!key) return;
+      setFlashKey(key);
+      const target = key === 'kredit' ? finanzierenRef.current
+                   : key === 'absicherung' || key === 'kfz' ? absichernRef.current
+                   : sparenRef.current;
+      if (target && typeof target.scrollIntoView === 'function') {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      window.setTimeout(() => setFlashKey(null), 2200);
+    };
+    window.addEventListener('kia:highlight-finanzuebersicht', onFlash);
+    return () => window.removeEventListener('kia:highlight-finanzuebersicht', onFlash);
+  }, []);
+  const fremd = kunde.fremdProdukte || [];
+  const eigen = kunde.eigeneProdukte || [];
+  // Externe Verknüpfungen should list each company only once even if the
+  // customer holds several contracts (e.g. HUK KFZ + Hausrat + Haftpflicht
+  // counts as one HUK consent). Deduplicate by institut and treat the company
+  // as "consented" if any of its contracts has consent.
+  const fremdByInstitut = (() => {
+    const map = new Map();
+    fremd.forEach(f => {
+      const key = f.institut || '–';
+      const existing = map.get(key);
+      if (!existing) {
+        map.set(key, { ...f, consent: !!f.consent });
+      } else if (f.consent && !existing.consent) {
+        map.set(key, { ...existing, consent: true });
+      }
+    });
+    return Array.from(map.values());
+  })();
+  const consented = fremdByInstitut.filter(f => f.consent).length;
+  const total = fremdByInstitut.length;
+
+  const bf = generateBedarfsfelder(kunde, modeId);
+  const hasExtended = bf.geldmarkt?.length > 0 || bf.kapitalmarkt?.length > 0 || bf.versicherungenFremd?.length > 0 || bf.finanzierungen?.length > 0;
+
+  return (
+    <div className="space-y-4">
+      {/* Eigene Produkte (formerly the "Produkte" tab) – rendered at the top
+          of the Finanzübersicht so the whole financial picture is in one place. */}
+      {eigen.length > 0 && <VertraegeTab kunde={kunde} />}
+
+      {/* KI-Zusammenfassung – Fokus Finanzübersicht (Open Finance + Bestand) */}
+      <KIZusammenfassungInlay kunde={kunde} variant="finanzuebersicht" />
+
+      {/* Externe Verknuepfungen + FIDA Consent Status kombiniert */}
+      <Card hover={false}>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Link2 size={20} className="text-(--mode-accent)" strokeWidth={1.75} />
+            <h3 className="font-semibold text-(--text-primary)">{t('externeVerknuepfungen')}</h3>
+          </div>
+          <div className="flex items-center gap-4 text-xs">
+            <span className="flex items-center gap-1.5">
+              <span className="text-[11px] text-(--text-tertiary) uppercase tracking-wider">{t('gesamt')}</span>
+              <span className="font-mono font-semibold text-(--text-primary)">{total}</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle size={13} className="text-(--color-success)" />
+              <span className="text-[11px] text-(--text-tertiary) uppercase tracking-wider">{t('consentErteilt')}</span>
+              <span className="font-mono font-semibold text-(--color-success)">{consented}</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <XCircle size={13} className="text-(--color-warning)" />
+              <span className="text-[11px] text-(--text-tertiary) uppercase tracking-wider">{t('ausstehend')}</span>
+              <span className="font-mono font-semibold text-(--color-warning)">{total - consented}</span>
+            </span>
+          </div>
+        </div>
+        <DataTable
+          columns={[
+            { id: 'institut', label: lang === 'en' ? 'Company' : 'Unternehmen', render: (v) => (
+              <div className="flex items-center gap-2">
+                <LogoImg name={v} size={18} />
+                <span className="font-medium">{lang === 'en' ? (INST_EN[v] || v) : v}</span>
+              </div>
+            )},
+            { id: 'consentErteilt', label: lang === 'en' ? 'Consent granted' : 'Consent erteilt', render: (_, row) => {
+              if (!row.consent) return <span className="flex items-center gap-1 text-(--text-tertiary)"><XCircle size={14} /> {t('ausstehend')}</span>;
+              const d = consentDates(kunde.id, row).erteilt;
+              return <span className="flex items-center gap-1 text-(--color-success) font-mono"><CheckCircle size={14} /> {d}</span>;
+            }},
+            { id: 'consentBis', label: lang === 'en' ? 'Consent expires' : 'Läuft aus am', render: (_, row) => {
+              if (!row.consent) return <span className="text-(--text-tertiary)">–</span>;
+              const d = consentDates(kunde.id, row);
+              const isExpiring = d.daysLeft <= 30;
+              return <span className={`font-mono ${isExpiring ? 'text-(--color-warning) font-semibold' : 'text-(--text-secondary)'}`}>{d.bis}</span>;
+            }},
+          ]}
+          data={fremdByInstitut}
+        />
+      </Card>
+
+      {/* Gesamt-Anlagevolumen Summenzeile (über alle Assets, identisch zu
+          berechneAnlagevolumen → konsistent mit Stammdaten-Finanzübersicht) */}
+      {(() => {
+        const anlageGesamt = berechneAnlagevolumen(kunde);
+        const kreditGesamt = berechneKreditvolumen(kunde);
+        const netto = anlageGesamt - kreditGesamt;
+        if (anlageGesamt <= 0 && kreditGesamt <= 0) return null;
+        return (
+          <Card hover={false} padding={false} className="overflow-hidden">
+            <div className="grid grid-cols-3 divide-x divide-(--border-light)">
+              <div className="px-5 py-4">
+                <div className="text-[11px] uppercase tracking-wider text-(--text-tertiary) mb-1">{t('anlagevolumenGesamt')}</div>
+                <div className="font-mono text-[28px] leading-none font-semibold text-(--text-primary)">{formatEur(anlageGesamt)}</div>
+                <div className="text-xs text-(--text-tertiary) mt-1.5">{t('eigeneBestaendeDepots')}</div>
+              </div>
+              <div className="px-5 py-4">
+                <div className="text-[11px] uppercase tracking-wider text-(--text-tertiary) mb-1">{t('kreditvolumenGesamt')}</div>
+                <div className="font-mono text-[28px] leading-none font-semibold text-(--color-warning)">{formatEur(kreditGesamt)}</div>
+                <div className="text-xs text-(--text-tertiary) mt-1.5">{t('offeneFinanzierungenLabel')}</div>
+              </div>
+              <div className="px-5 py-4">
+                <div className="text-[11px] uppercase tracking-wider text-(--text-tertiary) mb-1">{t('nettoVermoegen')}</div>
+                <div className={`font-mono text-[28px] leading-none font-semibold ${netto >= 0 ? 'text-(--color-success)' : 'text-(--color-danger)'}`}>{formatEur(netto)}</div>
+                <div className="text-xs text-(--text-tertiary) mt-1.5">{t('anlagenMinusVerbindlichkeiten')}</div>
+              </div>
+            </div>
+          </Card>
+        );
+      })()}
+
+      {/* ═══ Bedarfsfeld: Sparen & Vorsorgen ═══ */}
+      {(bf.geldmarkt?.length > 0 || bf.kapitalmarkt?.length > 0) && (
+        <div ref={sparenRef} className={flashKey === 'anlage' ? 'kia-flash-card' : ''}>
+        <Card hover={false}>
+          <BedarfsfeldHeader
+            icon={PiggyBank}
+            title={t('sparenVorsorgen')}
+            count={(bf.geldmarkt?.length || 0) + (bf.kapitalmarkt?.flatMap(k => k.positionen || [k]).length || 0)}
+          />
+
+          {/* Geldmarkt */}
+          {bf.geldmarkt.length > 0 && (
+            <div className="mb-5">
+              <h4 className="text-[11px] font-semibold text-(--text-tertiary) uppercase tracking-wider mb-2">{t('geldmarkt')}</h4>
+              <div className="rounded-xl border border-(--border-light) overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-(--bg-inset)">
+                      <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('produkt')}</th>
+                      <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('anbieter')}</th>
+                      <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('volumen')}</th>
+                      <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('zinssatz')}</th>
+                      <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('laufzeit')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bf.geldmarkt.map((g, i) => (
+                      <tr key={i} className="border-t border-(--border-light) even:bg-(--bg-table-stripe) hover:bg-(--bg-table-hover) transition-colors">
+                        <td className="px-4 py-2.5 font-medium">{g.produkt}</td>
+                        <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={g.institut} size={18} />{g.institut}</div></td>
+                        <td className="px-4 py-2.5 text-right font-mono">{formatEur(g.volumen)}</td>
+                        <td className="px-4 py-2.5 text-right font-mono text-(--color-success)">{g.zinssatz}</td>
+                        <td className="px-4 py-2.5 text-(--text-secondary)">{g.laufzeit}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Kapitalmarkt */}
+          {bf.kapitalmarkt.length > 0 && (() => {
+            const allPositions = bf.kapitalmarkt.flatMap(k => k.positionen || [k]);
+            const anyEinkauf = allPositions.some(p => p.einkaufswert != null);
+            const anyGewinn = allPositions.some(p => p.gewinn != null);
+            const anySeit = allPositions.some(p => p.seit);
+            const anySparrate = allPositions.some(p => p.sparrate);
+            return (
+            <div>
+              <h4 className="text-[11px] font-semibold text-(--text-tertiary) uppercase tracking-wider mb-2">{t('kapitalmarkt')}</h4>
+              <div className="rounded-xl border border-(--border-light) overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-(--bg-inset)">
+                      <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('produkt')}</th>
+                      <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('anbieter')}</th>
+                      {anySeit && <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('gekauft')}</th>}
+                      {anyEinkauf && <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('oeEinkauf')}</th>}
+                      <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('aktuellerWert')}</th>
+                      {anyGewinn && <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('gewinnNichtReal')}</th>}
+                      {anySparrate && <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('sparrate')}</th>}
+                      <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('performance')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bf.kapitalmarkt.map((k, i) => {
+                      const rows = k.positionen ? k.positionen.map((pos, j) => ({ key: `${i}-${j}`, row: pos, parent: k })) : [{ key: `${i}`, row: k, parent: null }];
+                      return rows.map(({ key, row, parent }) => (
+                        <tr key={key} className="border-t border-(--border-light) even:bg-(--bg-table-stripe) hover:bg-(--bg-table-hover) transition-colors">
+                          <td className="px-4 py-2.5 font-medium"><div className="flex items-center gap-2"><LogoImg name={row.name || row.produkt} size={18} />{row.name || row.produkt}</div></td>
+                          <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={row.institut || parent?.institut} size={18} />{row.institut || parent?.institut}</div></td>
+                          {anySeit && <td className="px-4 py-2.5 text-(--text-secondary)">{row.seit ? formatSeit(row.seit) : <span className="text-(--text-tertiary)">–</span>}</td>}
+                          {anyEinkauf && <td className="px-4 py-2.5 text-right font-mono text-(--text-secondary)">{row.einkaufswert != null ? formatEur(row.einkaufswert) : <span className="text-(--text-tertiary)">–</span>}</td>}
+                          <td className="px-4 py-2.5 text-right font-mono">{formatEur(row.volumen)}</td>
+                          {anyGewinn && <td className="px-4 py-2.5 text-right"><GewinnBadge value={row.gewinn} /></td>}
+                          {anySparrate && <td className="px-4 py-2.5 text-right font-mono text-(--text-secondary)">{row.sparrate || '–'}</td>}
+                          <td className="px-4 py-2.5 text-right"><PerfBadge value={row.performanceYtd} /></td>
+                        </tr>
+                      ));
+                    })}
+                    {/* Summenzeile */}
+                    {allPositions.length > 1 && (() => {
+                      const totalVol = allPositions.reduce((s, p) => s + (p.volumen || 0), 0);
+                      const totalEinkauf = allPositions.reduce((s, p) => s + (p.einkaufswert || 0), 0);
+                      const totalGewinn = allPositions.reduce((s, p) => s + (p.gewinn || 0), 0);
+                      const gesamtPerf = totalEinkauf > 0 ? `+${((totalGewinn / totalEinkauf) * 100).toFixed(1).replace('.', ',')}%` : null;
+                      const colCount = 3 + (anySeit ? 1 : 0) + (anyEinkauf ? 1 : 0) + (anyGewinn ? 1 : 0) + (anySparrate ? 1 : 0);
+                      return (
+                        <tr className="border-t-2 border-(--border-medium) bg-(--bg-inset) font-semibold">
+                          <td className="px-4 py-2.5">{t('gesamtDepot')}</td>
+                          <td className="px-4 py-2.5"></td>
+                          {anySeit && <td className="px-4 py-2.5"></td>}
+                          {anyEinkauf && <td className="px-4 py-2.5 text-right font-mono">{totalEinkauf > 0 ? formatEur(totalEinkauf) : ''}</td>}
+                          <td className="px-4 py-2.5 text-right font-mono">{formatEur(totalVol)}</td>
+                          {anyGewinn && <td className="px-4 py-2.5 text-right"><GewinnBadge value={totalGewinn > 0 ? totalGewinn : null} /></td>}
+                          {anySparrate && <td className="px-4 py-2.5"></td>}
+                          <td className="px-4 py-2.5 text-right">{gesamtPerf ? <PerfBadge value={gesamtPerf} /> : ''}</td>
+                        </tr>
+                      );
+                    })()}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* KI-Hinweise zu den Depots (z. B. Konzentrationsrisiko) */}
+              {bf.kapitalmarkt.some(k => k.kiHinweis) && (
+                <div className="mt-3 space-y-2">
+                  {bf.kapitalmarkt.filter(k => k.kiHinweis).map((k, i) => (
+                    <KiDepotHinweis key={`ki-${i}`} hinweis={k.kiHinweis} depot={k.produkt} />
+                  ))}
+                </div>
+              )}
+            </div>
+            );
+          })()}
+        </Card>
+        </div>
+      )}
+
+      {/* ═══ Bedarfsfeld: Absichern (Fremd) ═══ */}
+      {bf.versicherungenFremd?.length > 0 && (
+        <div ref={absichernRef} className={(flashKey === 'absicherung' || flashKey === 'kfz') ? 'kia-flash-card' : ''}>
+        <Card hover={false}>
+          <BedarfsfeldHeader
+            icon={Shield}
+            title={t('absichern')}
+            source={t('wettbewerberVersicherungen')}
+            count={bf.versicherungenFremd.length}
+          />
+          <div className="rounded-xl border border-(--border-light) overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-(--bg-inset)">
+                  <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('versicherung')}</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('anbieter')}</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('details')}</th>
+                  {bf.versicherungenFremd.some(v => v.deckungssumme) && (
+                    <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('deckungssumme')}</th>
+                  )}
+                  {bf.versicherungenFremd.some(v => v.leistungen) && (
+                    <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('leistungen')}</th>
+                  )}
+                  <th className="px-4 py-2.5 text-center text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('bewertung')}</th>
+                  <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('praemie')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bf.versicherungenFremd.map((v, i) => (
+                  <tr key={i} className={`border-t border-(--border-light) transition-colors ${v.consent === false ? 'bg-(--tint-warning)' : 'even:bg-(--bg-table-stripe) hover:bg-(--bg-table-hover)'}`}>
+                    <td className="px-4 py-2.5 font-medium capitalize">
+                      {v.produkt}
+                      {v.consent === false && (
+                        <span className="ml-2 text-[10px] font-semibold uppercase tracking-wider text-(--color-warning) bg-(--tint-warning) px-1.5 py-0.5 rounded">{t('consentFehlt')}</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={v.institut} size={18} />{v.institut}</div></td>
+                    <td className="px-4 py-2.5 text-(--text-secondary)">{v.consent === false ? t('detailsGesperrt') : (translateDetails(v.details, lang) || '–')}</td>
+                    {bf.versicherungenFremd.some(x => x.deckungssumme) && (
+                      <td className="px-4 py-2.5 text-(--text-secondary) font-mono">{v.consent === false ? '•••' : (v.deckungssumme || '–')}</td>
+                    )}
+                    {bf.versicherungenFremd.some(x => x.leistungen) && (
+                      <td className="px-4 py-2.5">
+                        {v.consent === false ? (
+                          <span className="text-(--text-tertiary)">•••</span>
+                        ) : v.leistungen ? (
+                          <div className="flex flex-wrap gap-1">
+                            {v.leistungen.map((l, j) => (
+                              <span key={j} className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-(--bg-inset) border border-(--border-light) text-(--text-secondary)">{l}</span>
+                            ))}
+                          </div>
+                        ) : '–'}
+                      </td>
+                    )}
+                    <td className="px-4 py-2.5 text-center">
+                      {v.consent === false ? <span className="text-(--text-tertiary) text-xs">{t('keineDaten')}</span> : <InsuranceScore score={scoreVersicherung(kunde.id, v)} />}
+                    </td>
+                    <td className="px-4 py-2.5 text-right font-mono">{v.consent === false ? '•••' : (v.praemie ? `${formatEur(v.praemie)}/J.` : '–')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* KI-Hinweis zum Absichern-Bestand — fällt nur, wenn Fremd-
+              Policen bei mehreren Versicherern verteilt sind (klarer
+              Konsolidierungs-Lead) oder wenn schwache Bewertungen im
+              Bestand sind. */}
+          {(() => {
+            const inst = new Set((bf.versicherungenFremd || []).map(v => v.institut).filter(Boolean));
+            const schwache = (bf.versicherungenFremd || []).filter(v => {
+              const s = v.consent === false ? null : scoreVersicherung(kunde.id, v);
+              return typeof s === 'number' && s < 75;
+            });
+            const summePraemie = (bf.versicherungenFremd || []).reduce((s, v) => s + (v.praemie || 0), 0);
+            if (inst.size < 2 && schwache.length === 0) return null;
+            const isEn = lang === 'en';
+            const anbieterListe = Array.from(inst).join(', ');
+            const schwacheListe = schwache.map(v => `${v.produkt} (${v.institut})`).join(', ');
+            const hinweis = {
+              titel: inst.size >= 2
+                ? (isEn
+                    ? `Fragmented insurance portfolio: ${inst.size} providers, ${bf.versicherungenFremd.length} policies`
+                    : `Fragmentierter Versicherungsbestand: ${inst.size} Anbieter, ${bf.versicherungenFremd.length} Policen`)
+                : (isEn ? 'Poorly rated policies in the portfolio' : 'Schwach bewertete Policen im Bestand'),
+              text: inst.size >= 2
+                ? (isEn
+                    ? `The competitor policies are spread across ${inst.size} different providers (${anbieterListe}); combined current annual premium approx. ${formatEur(summePraemie)}. Multiple points of contact, duplicate administration and harder coordination in the event of a claim. On top of that, some tariffs are rated below the market average.`
+                    : `Die Wettbewerber-Policen liegen auf ${inst.size} verschiedenen Anbietern (${anbieterListe}) verteilt; aktuelle Jahresprämie zusammen ca. ${formatEur(summePraemie)}. Mehrere Ansprechpartner, doppelte Verwaltung und im Schadenfall abgestimmtes Vorgehen erschwert. Zusätzlich liegt die Bewertung einzelner Tarife unter dem Marktdurchschnitt.`)
+                : (isEn
+                    ? `At least one policy in the portfolio scores below 75. Affected: ${schwacheListe}. Price-performance optimization possible.`
+                    : `Mindestens eine Police im Bestand erreicht eine Bewertung < 75. Betroffen: ${schwacheListe}. Preis-Leistungs-Optimierung möglich.`),
+              empfehlung: isEn
+                ? 'Offer portfolio consolidation with a single primary insurer (bundle discount, one point of contact). Logged in the lead system as the potential "Insurance check: consolidate portfolio".'
+                : 'Bestandskonsolidierung bei einem Hausversicherer anbieten (Bündel-Rabatt, ein Ansprechpartner). Im Lead-System als Potenzial „Versicherungscheck: Bestand konsolidieren" hinterlegt.',
+            };
+            return (
+              <div className="mt-3">
+                <KiDepotHinweis hinweis={hinweis} depot={`${bf.versicherungenFremd.length} Fremd-Policen`} />
+              </div>
+            );
+          })()}
+        </Card>
+        </div>
+      )}
+
+      {/* ═══ Bedarfsfeld: Finanzieren ═══ */}
+      {bf.finanzierungen?.length > 0 && (
+        <div ref={finanzierenRef} className={flashKey === 'kredit' ? 'kia-flash-card' : ''}>
+        <Card hover={false}>
+          <BedarfsfeldHeader
+            icon={Home}
+            title={t('finanzieren')}
+            count={bf.finanzierungen.length}
+          />
+          <div className="rounded-xl border border-(--border-light) overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-(--bg-inset)">
+                  <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('typ.kredit')}</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('kreditgeber')}</th>
+                  <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('restschuld')}</th>
+                  <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('zinssatz')}</th>
+                  <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('rate')}</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider font-semibold text-(--text-tertiary)">{t('details')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bf.finanzierungen.map((f, i) => (
+                  <tr key={i} className="border-t border-(--border-light) even:bg-(--bg-table-stripe) hover:bg-(--bg-table-hover) transition-colors">
+                    <td className="px-4 py-2.5 font-medium">{f.produkt}</td>
+                    <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={f.institut} size={18} />{f.institut}</div></td>
+                    <td className="px-4 py-2.5 text-right font-mono">{formatEur(f.restschuld)}</td>
+                    <td className="px-4 py-2.5 text-right font-mono">{f.zinssatz || '–'}</td>
+                    <td className="px-4 py-2.5 text-right font-mono">{f.rate || '–'}</td>
+                    <td className="px-4 py-2.5 text-(--text-secondary)">{translateDetails(f.details, lang)}</td>
+                  </tr>
+                ))}
+                {bf.finanzierungen.length > 1 && (
+                  <tr className="border-t-2 border-(--border-medium) bg-(--bg-inset) font-semibold">
+                    <td className="px-4 py-2.5">{t('gesamtVerbindlichkeiten')}</td>
+                    <td className="px-4 py-2.5"></td>
+                    <td className="px-4 py-2.5 text-right font-mono">{formatEur(bf.finanzierungen.reduce((s, f) => s + (f.restschuld || 0), 0))}</td>
+                    <td className="px-4 py-2.5"></td>
+                    <td className="px-4 py-2.5"></td>
+                    <td className="px-4 py-2.5"></td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          {/* Warning for uninsured mortgage */}
+          {bf.finanzierungen.some(f => f.produkt === 'Baufinanzierung' && !f.absicherung) && (
+            <div className="flex items-center gap-2 mt-3 bg-(--tint-warning) border border-(--border-light) rounded-lg px-3 py-2">
+              <AlertTriangle size={16} className="text-(--color-warning) shrink-0" />
+              <span className="text-sm text-(--text-primary)">
+                <strong>{t('risikoBaufiTitel')}</strong> {t('risikoBaufiText')}
+              </span>
+            </div>
+          )}
+        </Card>
+        </div>
+      )}
+
+    </div>
+  );
+}

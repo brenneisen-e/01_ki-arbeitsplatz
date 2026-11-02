@@ -1,0 +1,35 @@
+Hallo Marcus, hallo Stefan,
+
+danke für die Rückmeldungen und die Beispielfälle. Zu den beiden offenen Punkten ein Vorschlag, der aus meiner Sicht die Zuständigkeitsfrage und die Frage nach der GeVo-Zählweise gemeinsam löst.
+
+1. Einsteuerung über KWAD statt über EWMS, aber mit Deckblatt
+
+Die besprochenen Fälle sollten wir wie von Marcus vorgeschlagen nicht über EWMS eröffnen, sondern über KWAD einsteuern. Die Indizierung erfolgt damit dort, wo die Zuständigkeit ohnehin bestimmt wird, und wir vermeiden den Umweg über einen GeVo, der anschließend wieder umgehängt werden müsste. Wichtig ist dabei, dass das KI-Deckblatt mitgeht. Nur dann kann das Eingangsmanagement auf der bereits vorhandenen Strukturierung aufsetzen, statt den Fall erneut zu bewerten.
+
+2. BUE_KLASSIFIKATION um fachliche Ausprägungen erweitern
+
+Statt im Mailtext auf eine GeVo-Nummer zu verweisen, deren Zählweise gerade nicht eindeutig ist, schlage ich vor, die Klassifikation im Deckblatt im Klartext auszuweisen. BUE_KLASSIFIKATION erhält dafür zusätzlich die Ausprägungen:
+
+- VN-Wechsel
+- WEG-Wechsel
+- Kündigung Versicherungsvertrag
+- Verkürzung Kündigungsfrist
+- Sonstige Fachthemen
+
+Damit erübrigt sich Marcus' Rückfrage, ob alte oder neue Zählweise gemeint ist: Im Deckblatt steht das Fachthema, nicht die Nummer. Für das Eingangsmanagement ist die Angabe unmittelbar verwertbar, und wir bleiben unabhängig von künftigen Änderungen an der GeVo-Systematik.
+
+3. Abstimmung mit dem Eingangsmanagement
+
+Für die Umsetzung brauchen wir drei Dinge vom Eingangsmanagement:
+
+- AIDA-OCR: Sie wird benötigt, damit das Deckblatt maschinell ausgelesen werden kann.
+- Eigene Betreffkennzeichnung: Die betroffenen Mails sollten wir über einen eindeutigen Betreff kennzeichnen, damit sie im Eingangsmanagement sofort als diese Sonderfälle erkennbar sind.
+- Verarbeitung: Das Eingangsmanagement liest das Deckblatt aus und folgt entweder unserer Klassifikation oder indiziert selbst. Entscheidend ist in beiden Fällen, dass kein GeVo Bestandsübertragung eröffnet wird, sondern der Vorgang gemäß Zuständigkeit in die Sparte geht. Ein Bestandsübertragungswunsch kann im Nachgang folgen.
+
+Zu deiner Frage, Stefan: Mit dem Eingangsmanagement bzw. EKS haben wir zu Form und Platzierung des Hinweises noch nicht gesprochen. Ich nehme den Vorschlag mit in die Abstimmung und melde mich mit dem Ergebnis, insbesondere zur konkreten Formulierung des Hinweistextes.
+
+Unberührt davon bleibt die Kündigung der Maklervollmacht. Sie läuft nach Marcus' Einordnung in den BÜ-Prozess; die nicht belegbaren Deckblattfelder werden dort analog zu den Mehrfachagenten mit „N/A“ gefüllt. Diese Ausprägung ist im Datenpool-Antrag bereits vorgesehen.
+
+Beste Grüße
+
+Eike

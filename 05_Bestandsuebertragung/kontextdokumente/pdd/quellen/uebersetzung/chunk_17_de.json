@@ -1,0 +1,150 @@
+[
+ {
+  "de": "Notation nach der Vorgabe des Templates. Drei Schreibweisen sind zu unterscheiden: <BUE_…> bezeichnet ein Eingangsfeld aus dem Datenpool, <…> einen vom Bot gelesenen oder gesetzten Wert, „…“ ohne Zusatz ein Feld auf der Hostmaske oder einen festen Wert. Variablen, die aus einer Hostanwendung gelesen werden, tragen die Anwendung im Namen. Damit ist in jedem Vergleich erkennbar, welche Quelle gegen welche geprüft wird: <IS011-Gebdat> <> <BUE_KUNDE_GEBDAT> vergleicht das in IS011 gelesene Geburtsdatum mit dem Feld aus dem Datenpool.",
+  "art": "text"
+ },
+ {
+  "de": "Lesehilfe zur Farblogik: Systeme stehen fett (OB726), Felder aus dem Datenpool dunkelblau (<BUE_VNR>), im Lauf erzeugte Variablen dunkelgrün (<Vorgang-VNR>), die <BE-Klassifikation> dunkelrot. Die Steuerwörter WENN / DANN / SONST / Ende WENN stehen türkis in der Formatvorlage „WENN DANN“ und sind wie Programmcode eingerückt. Querverweise auf andere Kapitel stehen fett und unterstrichen, Hinweise kursiv.",
+  "art": "text"
+ },
+ {
+  "de": "Initialisierung über „Lese … und speichere als <…>“, Zuweisung über „=“, Vergleich über „<>“.",
+  "art": "text"
+ },
+ {
+  "de": "Eine Business Exception wird über <BE-Klassifikation> gemeldet; sie beendet die Prüfung sofort und verzweigt in das Kapitel „VII. Abschluss mit Befund“. Sie kann in der Vorprüfung und in jedem späteren Schritt auftreten. Abweichungen aus den Einzelprüfungen werden mit „Merke Prüfnotiz … in <Fehlerliste>“ gesammelt, die Verarbeitung läuft weiter; am Ende der Prüfungen wird die Fehlerliste getestet. Wie mit einer BE umgegangen wird, steht nur im Kapitel „VII. Abschluss mit Befund“ und wird in den einzelnen Schritten nicht wiederholt.",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb Prüf-Bot Komposit / Leben – Postkorb-Nr. TBD, siehe Kapitel „Details zum Startereignis“) öffnen. GeVo 108 (Bestandsübertragung) bzw. 469.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Trennung nach Sparte erfolgt vor dem Prüf-Bot: KV-Vorgänge und Vorgänge aus Komposit und Leben liegen in getrennten Postkörben. Dieser Prüf-Bot bedient den Postkorb Komposit / Leben; die Notiz entspricht der Vorlage 1515.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Spartenweiche innerhalb des Prozesses ist deshalb nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt; bei KR steuert das Feld im Kapitel „IV. Vertrag“ die Prüfung auf Mantelvertrag.",
+  "art": "text"
+ },
+ {
+  "de": "UND <BUE_ANF_UNTERLAGEN> = „nein“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein anderer Wert als „Vollständig“ ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz „Unterlagen nicht vollständig“ in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“. Ist <BUE_ANF_UNTERLAGEN> = „ja“, entsteht keine Prüfnotiz; die Unterlagen werden über die Notiz angefordert.",
+  "art": "text"
+ },
+ {
+  "de": "IV. Vertrag – Vertragsstatus in VA230 und Mantelvertrag bei KR",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_SPARTE> = „KR“",
+  "art": "text"
+ },
+ {
+  "de": "Prüfe in VA230, ob der Vertrag einem Mantelvertrag (Flotte) zugeordnet ist, und speichere das Ergebnis als <VA230-Mantel>.",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-Mantel> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „KR Flottenvertrag“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Prüfung auf Mantelvertrag ist noch zu validieren – durch den Fachbereich (K. Rypa) sind das Feld in VA230 und die Ausprägung festzulegen, an der der Bot einen Flottenvertrag mit führendem Mantel erkennt.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Rahmenverträge und Verträge im Mahnverfahren werden wie alle anderen Verträge geprüft.",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz anlegen: Vorlage 1515 „Bestandsübertragung Robotics PB“.",
+  "art": "text"
+ },
+ {
+  "de": "Folgearbeit für Komposit – Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw.",
+  "art": "text"
+ },
+ {
+  "de": "setzen, wenn <Anforderung-Arten> die Art enthält",
+  "art": "text"
+ },
+ {
+  "de": "nur bei <BUE_ANF_UNTERLAGEN> = „ja“ (siehe „Anforderung von Unterlagen“ unten)",
+  "art": "text"
+ },
+ {
+  "de": "Folgearbeit für Komposit – Schadenaufstellung/Schadenrenta usw.",
+  "art": "text"
+ },
+ {
+  "de": "wie oben",
+  "art": "text"
+ },
+ {
+  "de": "Folgearbeit für Komposit – Sonstige Unterlagen",
+  "art": "text"
+ },
+ {
+  "de": "Sparte aus <BUE_SPARTE>",
+  "art": "text"
+ },
+ {
+  "de": "Anforderung von Unterlagen in der Notiz kennzeichnen",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Dieser Schritt steuert nicht die Prüfung, sondern die Folgearbeit. <BUE_ANF_UNTERLAGEN> sagt, ob der übernehmende Makler Unterlagen anfordert; <BUE_ART_UNTERLAGEN> nennt die Arten, mit Semikolon getrennt.",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_ANF_UNTERLAGEN> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "Zerlege <BUE_ART_UNTERLAGEN> am Semikolon und speichere die Arten als <Anforderung-Arten>.",
+  "art": "text"
+ },
+ {
+  "de": "Setze im Abschnitt „Folgearbeit für Komposit“ je enthaltener Art das Kennzeichen: „Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw.“, „Schadenaufstellung/Schadenrenta usw.“, „Sonstige Unterlagen“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Bestätigung der Bestandsübertragung ist keine Unterlagenart; sie erfolgt mit dem automatischen Vertragsspiegel. Eine Unterlagenart, die keinem Kennzeichen zuzuordnen ist, wird als „Sonstige Unterlagen“ gesetzt.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei <BUE_ANF_UNTERLAGEN> = „ja“ entsteht in der Vorprüfung keine Prüfnotiz zu unvollständigen Unterlagen; die Unterlagen werden über die Notiz angefordert. Ob Celonis zusätzlich einen eigenen GeVo „Anforderung von Unterlagen“ eröffnet, ist mit Celonis festzulegen, damit nicht doppelt angefordert wird.",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis am Postkorbvorgang speichern",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-AGT-Inhaber> ist einem Makler zugeordnet",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang in die Nachbearbeitung nach ODPB geben",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „HSB4K KO“ (Postkorb-Nr. TBD) weiterleiten",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei Komposit und Leben entscheidet der abgebende Bestandsinhaber: ein Makler führt nach ODPB, alle übrigen Fälle einschließlich eines nicht ermittelbaren Bestandsinhabers führen nach HSB4K KO.",
+  "art": "text"
+ },
+ {
+  "de": "KR Flottenvertrag",
+  "art": "wert"
+ }
+]

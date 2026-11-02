@@ -1,0 +1,19 @@
+Hallo Pierre, hallo zusammen,
+
+kurzer Zwischenstand zur Budgetfrage und eine Bitte, damit das Eingangsmanagement anlaufen kann.
+
+Offen ist derzeit allein die Finanzierung der Celonis-Ausbaustufe 2 mit 10 bis 15 PT. Die genaue Höhe bestätigt Herr Schwarz voraussichtlich heute; die Klärung läuft nach meinem Verständnis intern.
+
+Davon unabhängig wartet das Eingangsmanagement auf die formale Beauftragung, um die Datenpoolfelder zu beantragen. Mit den 75.000 EUR, die auf Maklerseite für das Thema zurückgestellt sind, ist dieser Aufwand gedeckt:
+
+[TABELLE]
+
+Der Mehraufwand des Eingangsmanagements umfasst 3 PT bereits gebuchte Leistung und 5 PT für die Anlage der Datenpoolfelder. Gegenüber der ursprünglichen Schätzung von 3 PT hat das Eingangsmanagement nach Sichtung aller Unterlagen auf 5 PT erhöht. Die Summe bleibt mit 71.828 EUR innerhalb der zurückgestellten 75.000 EUR; die 25.000 EUR aus HS für den Bot bleiben davon unberührt.
+
+Damit es auf Seiten des Eingangsmanagements weitergeht, bitte ich um die Clarity-ID und die Freigabe für das Staffing.
+
+Für eine Umsetzung in der kommenden Woche brauche ich die Rückmeldung kurzfristig, idealerweise bis Montagvormittag. Jede Verzögerung bei den Datenpoolfeldern verschiebt den Umsetzungsstart des Prüf-Bots im gleichen Maß.
+
+Beste Grüße
+
+Eike

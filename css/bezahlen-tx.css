@@ -1,0 +1,652 @@
+/* css/bezahlen-tx.css - Bezahlen Transactions Styles */
+/* Extracted from styles.css for modularity */
+
+/* ========================================
+   BEZAHLEN TRANSACTIONS
+   ======================================== */
+/* Bezahlen Content Padding */
+#bezahlenContent {
+    padding: 0 20px 20px;
+}
+
+.bezahlen-donut-container {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.bezahlen-donut-chart {
+    flex-shrink: 0;
+}
+
+.bezahlen-donut-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bezahlen-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: #334155;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.bezahlen-legend-item:hover {
+    background: #f1f5f9;
+}
+
+.bezahlen-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.bezahlen-legend-label {
+    flex: 1;
+}
+
+.bezahlen-legend-value {
+    font-weight: 700;
+}
+
+/* Bezahlen Akkordeon */
+.bezahlen-akkordeon {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bezahlen-kat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.bezahlen-kat-header:hover {
+    background: #f1f5f9;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.bezahlen-kat-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.bezahlen-kat-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: #1e293b;
+}
+
+.bezahlen-kat-amount {
+    font-weight: 700;
+    font-size: 14.5px;
+    color: #334155;
+}
+
+.bezahlen-kat-arrow {
+    transition: transform 0.2s;
+    color: #94a3b8;
+}
+
+.bezahlen-kat-arrow.open {
+    transform: rotate(180deg);
+}
+
+.bezahlen-kat-detail {
+    padding: 4px 16px 14px 38px;
+    display: none;
+}
+
+.bezahlen-kat-detail.open {
+    display: block;
+}
+
+.bezahlen-tx-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    margin: 3px 0;
+    border-radius: 8px;
+    border-bottom: none;
+    font-size: 15px;
+    color: #475569;
+    background: #ffffff;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+
+.bezahlen-tx-item:hover {
+    background: #f8fafc;
+}
+
+.bezahlen-tx-name {
+    flex: 1;
+    font-size: 15px;
+}
+
+.bezahlen-tx-amount {
+    font-weight: 600;
+    font-size: 15px;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.bezahlen-tx-badge {
+    font-size: 13px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.bezahlen-tx-badge.versichert {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.bezahlen-tx-badge.luecke {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.bezahlen-tx-badge.insight {
+    background: #fef2f2;
+    color: #dc2626;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 6px;
+}
+
+.bezahlen-tx-badge.tier-hint {
+    background: #fef9e7;
+    color: #92400e;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid #fcd34d;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bezahlen-tx-badge.tier-hint svg {
+    flex-shrink: 0;
+}
+
+.bezahlen-tx-badge.tier-marker {
+    background: #f8fafc;
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.bezahlen-tx-badge.bekannt {
+    background: #dcfce7;
+    color: #166534;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.bezahlen-tx-badge.bekannt:hover {
+    background: #bbf7d0;
+    box-shadow: 0 1px 4px rgba(22, 101, 52, 0.2);
+}
+
+.bezahlen-tx-badge.unbekannt {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* Akkordeon Icon */
+.bezahlen-kat-icon {
+    display: inline-flex;
+    align-items: center;
+    color: #64748b;
+}
+
+.bezahlen-kat-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Highlight-Animation für Vertrag in Tabelle */
+@keyframes highlightFade {
+    0% { background: #fef3c7; box-shadow: 0 0 0 2px #fbbf24; }
+    70% { background: #fef9e7; box-shadow: 0 0 0 1px #fcd34d; }
+    100% { background: transparent; box-shadow: none; }
+}
+
+.highlight-vertrag {
+    animation: highlightFade 4s ease-out;
+    background: #fef3c7 !important;
+    box-shadow: 0 0 0 2px #fbbf24;
+    border-radius: 8px;
+}
+
+.bezahlen-tx-datum {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-left: 10px;
+}
+
+.bezahlen-tx-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* Recurring Payment Cluster */
+.bezahlen-recurring-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #6366f1;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    padding: 2px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.bezahlen-recurring-badge:hover {
+    background: #e0e7ff;
+    border-color: #a5b4fc;
+    box-shadow: 0 1px 4px rgba(99, 102, 241, 0.15);
+}
+
+.bezahlen-recurring-badge.no-expand {
+    cursor: default;
+}
+
+.bezahlen-recurring-badge.no-expand:hover {
+    box-shadow: none;
+}
+
+.bezahlen-recurring-badge svg {
+    flex-shrink: 0;
+}
+
+.bezahlen-recurring-detail {
+    display: none;
+    margin: 0 0 6px 0;
+    padding: 10px 14px;
+    background: #f8faff;
+    border: 1px solid #e0e7ff;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.bezahlen-recurring-detail.open {
+    display: block;
+}
+
+.recurring-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #6366f1;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e0e7ff;
+}
+
+.recurring-detail-header svg {
+    flex-shrink: 0;
+    color: #6366f1;
+}
+
+.recurring-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #475569;
+}
+
+.recurring-history-item + .recurring-history-item {
+    border-top: 1px solid #f1f5f9;
+}
+
+.recurring-history-datum {
+    color: #94a3b8;
+}
+
+.recurring-history-amount {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Donut Variant Sub-Switcher */
+.donut-variant-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px 16px;
+    margin-bottom: 16px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.donut-variant-switcher .option-switcher-arrow {
+    font-size: 18px;
+    cursor: pointer;
+    color: #475569;
+    user-select: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.donut-variant-switcher .option-switcher-arrow:hover {
+    background: #e2e8f0;
+}
+
+.donut-variant-switcher .option-switcher-label {
+    font-weight: 600;
+    color: #334155;
+    min-width: 160px;
+    text-align: center;
+}
+
+/* Variant B: Kompakt zentriert */
+.bezahlen-donut-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.bezahlen-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.bezahlen-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border: 2px solid;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    background: white;
+}
+
+.bezahlen-chip:hover {
+    transform: translateY(-1px);
+    filter: brightness(0.95);
+}
+
+.bezahlen-chip strong {
+    margin-left: 2px;
+}
+
+/* Variant C: Side-by-Side */
+.bezahlen-side-by-side {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.bezahlen-side-donut {
+    flex-shrink: 0;
+    position: sticky;
+    top: 120px;
+}
+
+.bezahlen-side-akkordeon {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Variant D: Ring + Flat List */
+.bezahlen-ring-container {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.bezahlen-ring-chart {
+    flex-shrink: 0;
+}
+
+.bezahlen-flat-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bezahlen-flat-group {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.bezahlen-flat-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: #f8fafc;
+    font-size: 15px;
+    color: #334155;
+}
+
+.bezahlen-flat-group-header span {
+    flex: 1;
+}
+
+.bezahlen-flat-group-header strong {
+    color: #1e293b;
+}
+
+.bezahlen-flat-tx {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 14px 5px 34px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #475569;
+}
+
+/* Variant E: Mini-Karten Grid */
+.bezahlen-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.bezahlen-mini-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.bezahlen-mini-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.bezahlen-mini-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.bezahlen-mini-card-header:hover {
+    background: #f8fafc;
+}
+
+.bezahlen-mini-donut {
+    flex-shrink: 0;
+}
+
+.bezahlen-mini-info {
+    flex: 1;
+}
+
+.bezahlen-mini-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.bezahlen-mini-amount {
+    font-size: 15px;
+    font-weight: 700;
+    color: #334155;
+    margin-top: 2px;
+}
+
+/* Bezahlen Stacked Bar */
+.bezahlen-stacked-bar {
+    height: 32px;
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.bezahlen-bar-segment {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.bezahlen-bar-segment:hover {
+    opacity: 0.85;
+}
+
+/* Bezahlen Flat Cards */
+.bezahlen-flat-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bezahlen-flat-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    border-left: 4px solid;
+}
+
+.bezahlen-flat-card-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1e293b;
+}
+
+.bezahlen-flat-card-amount {
+    font-weight: 700;
+    font-size: 15px;
+    color: #334155;
+}
+
+.bezahlen-flat-card-pct {
+    font-size: 14px;
+    color: #94a3b8;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Bezahlen Category Grid */
+.bezahlen-grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.bezahlen-grid-card {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    text-align: center;
+}
+
+.bezahlen-grid-card-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.bezahlen-grid-card-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #475569;
+    margin-bottom: 4px;
+}
+
+.bezahlen-grid-card-amount {
+    font-weight: 700;
+    font-size: 18px;
+    color: #1e293b;
+}
+
+.bezahlen-grid-card-pct {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+

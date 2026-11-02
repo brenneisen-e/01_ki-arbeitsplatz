@@ -1,0 +1,122 @@
+[
+ {
+  "de": "Tätigkeit",
+  "art": "text"
+ },
+ {
+  "de": "<zu ergänzen>",
+  "art": "text"
+ },
+ {
+  "de": "Betrieb Gesundheit / Krankenversicherung",
+  "art": "text"
+ },
+ {
+  "de": "Sichtung des Postkorbvorgangs, Prüfung der eingereichten Unterlagen (Maklervollmacht, Untervollmacht), Abgleich des Versicherungsnehmers in IS011 und Prüfung des Vertrags in VA230.",
+  "art": "text"
+ },
+ {
+  "de": "Prüfung des abgebenden Bestandsinhabers und des übernehmenden Vermittlers in OB726 und GH040, Erstellung der Notiz für den 72-Stunden-BOT bzw. Übergabe an die manuelle Nachbearbeitung.",
+  "art": "text"
+ },
+ {
+  "de": "Welche Arbeitsgruppe führt welche Tätigkeit im automatisierten Prozess aus?",
+  "art": "text"
+ },
+ {
+  "de": "veränderte Tätigkeit",
+  "art": "text"
+ },
+ {
+  "de": "Die formale Vorprüfung (Ausschlusskriterien aus dem KI-Deckblatt, Versicherungsnehmer, abgebender Bestandsinhaber, übernehmender Vermittler, Vertragsstatus) wird durch den Prüf-Bot durchgeführt. Manuell bleiben nur die Vorgänge mit Befund.",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitung der Vorgänge mit Business Exception oder Prüfnotiz im Themenpostkorb „HSB4K MV“ auf Basis des Bearbeitungshinweises des Prüf-Bots.",
+  "art": "text"
+ },
+ {
+  "de": "Prozessautomatisierung",
+  "art": "text"
+ },
+ {
+  "de": "Ziel der Prozessautomatisierung",
+  "art": "text"
+ },
+ {
+  "de": "Der Eingang von Bestandsübertragungen (BÜ) wird heute vollständig manuell vorgeprüft. Je Vorgang muss die Sachbearbeitung die Versicherungsscheinnummer bereinigen und den Vertrag in VA230 aufrufen, die Stammdaten des Versicherungsnehmers in IS100 gegen die Vorgangsdaten abgleichen sowie den übernehmenden Vermittler in OB726 und dessen Anbindung in GH040 prüfen. Das sind fünf bis sieben Systemwechsel je Vorgang, bevor überhaupt entschieden werden kann, ob der Vorgang bearbeitbar ist. Ein erheblicher Teil der Vorgänge wird nach dieser Prüfung abgelehnt oder ausgesteuert – der Prüfaufwand fällt also auch für Vorgänge an, die den Prozess gar nicht durchlaufen.",
+  "art": "text"
+ },
+ {
+  "de": "Ziel der Automatisierung ist es, diese rein formale, regelbasierte Vorprüfung vollständig durch einen Roboter durchführen zu lassen:",
+  "art": "text"
+ },
+ {
+  "de": "Der Prüf-Bot sammelt zunächst alle Prüfergebnisse ein, bewertet sie anschließend anhand der definierten Prüfkriterien (Business Exceptions und Prüfnotizen) und entscheidet erst danach über Ablehnung, Aussteuerung oder Weitergabe. Dadurch sinkt die Zahl der ausgesteuerten Geschäftsvorfälle gegenüber einer Prüfung mit sofortigem Abbruch beim ersten Fehler deutlich.",
+  "art": "text"
+ },
+ {
+  "de": "Vorgänge ohne Befund werden mit einer vollständig bestückten Notiz an den 72-Stunden-BOT übergeben, der die Weitergabe an den nachgelagerten BÜ-BOT steuert. Die Sachbearbeitung bearbeitet nur noch die Vorgänge mit Befund; sie erhält dazu den Bearbeitungshinweis des Prüf-Bots ohne Liegezeit.",
+  "art": "text"
+ },
+ {
+  "de": "Kurze Prozessbeschreibung um einen Überblick zu erhalten",
+  "art": "text"
+ },
+ {
+  "de": "Der Prüf-Bot bearbeitet je Lauf einen BÜ-Vorgang aus dem Themenpostkorb. Zu jedem Vorgang liegen die Vorgangsdaten im Datenpool in den Feldern BUE_* vor. Wie der Datenpool befüllt wird, ist nicht Gegenstand dieses PDD.",
+  "art": "text"
+ },
+ {
+  "de": "Die Gliederung folgt der Prozessbeschreibung:",
+  "art": "text"
+ },
+ {
+  "de": "Start – Vorgang aus dem Themenpostkorb übernehmen: Postkorbvorgang öffnen, <Vorgang-Lfd-Nr> und <Vorgang-VNR> lesen, die Felder BUE_* aus dem Datenpool übernehmen, die Variablen für das BE-Handling initialisieren.",
+  "art": "text"
+ },
+ {
+  "de": "Vorprüfung – Business Exceptions aus dem KI-Deckblatt: beim Mehrfachagenten der BÜ-Wunsch und der auf ihn ausgestellte Betreuungswunsch, beim Makler die Unterschrift des Versicherungsnehmers auf der Maklervollmacht; unvollständige Unterlagen führen nicht zum Ausschluss, sondern zu einer Prüfnotiz in <Fehlerliste>. Geprüft wird ausschließlich gegen das KI-Deckblatt, ohne Hostzugriff. Eine Prüfung der Klassifikation entfällt: Der Prüf-Bot wird nur durch Vorgänge ausgelöst, die als Bestandsübertragung in den Themenpostkorb gestellt wurden.",
+  "art": "text"
+ },
+ {
+  "de": "I. Kunde (VN) – Partnerprüfung über IS011: Kundennummer des Versicherungsnehmers über die Versicherungsnummer, Matchcodesuche mit den Angaben aus dem Auftrag, Abgleich der Kundennummern; Geburtsdatum als Gegenprobe, wenn der Auftrag eines nennt.",
+  "art": "text"
+ },
+ {
+  "de": "II. Abgebender Bestandsinhaber: Agentur-Nr. aus VA230, PNR über OB726, Anbindungsstatus in GH040.",
+  "art": "text"
+ },
+ {
+  "de": "III. Übernehmender Makler – Agenturnummer und Vermittler-Nr. (PNR): Einstieg in OB726 über die Agenturnummer, PNR, Name und Klassifizierung, Anbindungsprüfung in GH040, E-Mail-Adresse über Sonderliste, OB726 und Datenpool.",
+  "art": "text"
+ },
+ {
+  "de": "IV. Vertrag: Vertragsstatus in VA230.",
+  "art": "text"
+ },
+ {
+  "de": "V. Test auf Fehlerliste: Ist <Fehlerliste> gefüllt, wird die BE „Nachprüfung erforderlich“ gesetzt.",
+  "art": "text"
+ },
+ {
+  "de": "VI. Abschluss ohne Befund: Telefonnotiz Feld für Feld bestücken und den Vorgang an den 72-Stunden-BOT übergeben. Eine Prüfung des Vertriebskanals des Bestandsinhabers findet im Prüf-Bot nicht statt; der 72-Stunden-BOT erkennt AO-Bestandsinhaber selbst, wahrt die Frist und leitet alle übrigen Vorgänge direkt an den BÜ-BOT weiter.",
+  "art": "text"
+ },
+ {
+  "de": "VII. Abschluss mit Befund – BE-Handling: Bearbeitungshinweis mit <BE-Klassifikation>, <Fehlerliste> und allen im Auftrag genannten Versicherungsnummern; Weiterleitung an den Themenpostkorb „HSB4K MV“.",
+  "art": "text"
+ },
+ {
+  "de": "SIPOC",
+  "art": "text"
+ },
+ {
+  "de": "(S=Supplier, I=Input, P=Process, O=Output, C=Customer)",
+  "art": "text"
+ },
+ {
+  "de": "Prozessdiagramm / Ablaufdiagramm",
+  "art": "text"
+ }
+]

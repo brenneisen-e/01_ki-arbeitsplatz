@@ -1,0 +1,122 @@
+[
+ {
+  "de": "System",
+  "art": "text"
+ },
+ {
+  "de": "Anmerkung / remark",
+  "art": "text"
+ },
+ {
+  "de": "Themenpostkorb (Eröffnung über die EMWS-Schnittstelle)",
+  "art": "text"
+ },
+ {
+  "de": "Eingangskanal des Prozesses. Celonis eröffnet je Versicherungsnummer einen Postkorbvorgang über die EMWS-Schnittstelle (E-Mail mit Anhängen, KI-Deckblatt, Datenpool). Der Roboter öffnet den Vorgang, liest das Eröffnungsdatum, legt die Notiz an und leitet den Vorgang weiter.",
+  "art": "text"
+ },
+ {
+  "de": "Datenpool",
+  "art": "text"
+ },
+ {
+  "de": "Einzige Datenquelle des Prüf-Bots für die Vorgangsdaten. Enthält die Felder BUE_* aus dem KI-Deckblatt. Wie die Felder befüllt werden, ist nicht Gegenstand dieses PDD.",
+  "art": "text"
+ },
+ {
+  "de": "VA230 – Vertragsauskunft",
+  "art": "text"
+ },
+ {
+  "de": "Auslesen des Vertragsstatus und der Agentur-Nr. (A…) des abgebenden Bestandsinhabers.",
+  "art": "text"
+ },
+ {
+  "de": "IS011 – Partnerauskunft",
+  "art": "text"
+ },
+ {
+  "de": "Kundennummer des Versicherungsnehmers über die Versicherungsnummer (Maske VAF017), Matchcodesuche mit den Angaben aus dem Auftrag (Maske VAF121) und Geburtsdatum des Versicherungsnehmers.",
+  "art": "text"
+ },
+ {
+  "de": "Scout-Service – Vertragsübersicht",
+  "art": "text"
+ },
+ {
+  "de": "Liefert zu einer Kundennummer alle Versicherungsnummern. Wird nur benötigt, wenn die Matchcodesuche einen anderen Partner als den Versicherungsnehmer findet, um den Grund der Business Exception zu bestimmen.",
+  "art": "text"
+ },
+ {
+  "de": "OB726 – Vermittlerauskunft",
+  "art": "text"
+ },
+ {
+  "de": "Auslesen von Vermittler-Nr. (PNR), Name und Klassifizierung (Makler, Mehrfachagent, Courtagefortzahler) des übernehmenden Vermittlers sowie der PNR des abgebenden Bestandsinhabers; hinterlegte E-Mail-Adresse des Vermittlers (Anwendung zu bestätigen, bisher OB729 vorgesehen).",
+  "art": "text"
+ },
+ {
+  "de": "GH040 – Anbindung Vermittler",
+  "art": "text"
+ },
+ {
+  "de": "Prüfung des Anbindungsstatus des übernehmenden Vermittlers und des abgebenden Bestandsinhabers über die Zeile „Status der Beschäftigung“ (Wert hinter „=“: aktiv / inaktiv).",
+  "art": "text"
+ },
+ {
+  "de": "Sonderliste TOP-Makler",
+  "art": "text"
+ },
+ {
+  "de": "Fest hinterlegte Liste der Vermittler mit eigener Ausgangsadresse für die Bestandsübertragung (Agenturnummer, PNR, E-Mail-Adresse; siehe Kapitel „III. Übernehmender Makler“). Die Liste gilt einmalig und wird nicht laufend gepflegt.",
+  "art": "text"
+ },
+ {
+  "de": "Notizanwendung Robotics (Vorlage BOT2011, Feldumfang wie Vorlage 1515)",
+  "art": "text"
+ },
+ {
+  "de": "Erstellung der Telefonnotiz für den nachgelagerten 72-Stunden-BOT und BÜ-BOT. Der Prüf-Bot bestückt die Notiz Feld für Feld (siehe Kapitel „VI. Abschluss ohne Befund“); die Weiterverarbeitung erfolgt asynchron.",
+  "art": "text"
+ },
+ {
+  "de": "72-Stunden-BOT",
+  "art": "text"
+ },
+ {
+  "de": "Nachgelagerter Bot, an den der Prüf-Bot alle Vorgänge ohne Befund übergibt. Er erkennt selbst, ob der abgebende Bestandsinhaber der Ausschließlichkeitsorganisation (AO) zugeordnet ist, wahrt in diesem Fall die 72-Stunden-Frist und gibt alle übrigen Vorgänge ohne Wartezeit an den BÜ-BOT weiter (spartenübergreifend).",
+  "art": "text"
+ },
+ {
+  "de": "Outlook (Bot-Postfach)",
+  "art": "text"
+ },
+ {
+  "de": "Standard-Postfach des Roboters für Betriebsinformationen und die Weiterleitung von Irrläufern. Der Prüf-Bot versendet keine Ablehnungen; Vorgänge mit Befund gehen mit Bearbeitungshinweis in die manuelle Bearbeitung.",
+  "art": "text"
+ },
+ {
+  "de": "Involvierte Geschäftsbereiche",
+  "art": "text"
+ },
+ {
+  "de": "Welche Arbeitsgruppe führt welche Tätigkeit im bestehenden manuellen Prozess aus?",
+  "art": "text"
+ },
+ {
+  "de": "Gruppe",
+  "art": "text"
+ },
+ {
+  "de": "Abteilung",
+  "art": "text"
+ },
+ {
+  "de": "Bereich",
+  "art": "text"
+ },
+ {
+  "de": "Standort",
+  "art": "text"
+ }
+]

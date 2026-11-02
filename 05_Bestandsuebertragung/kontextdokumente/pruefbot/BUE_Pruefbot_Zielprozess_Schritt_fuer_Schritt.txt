@@ -1,0 +1,67 @@
+BÜ-PRÜF-BOT — ZIELPROZESS SCHRITT FÜR SCHRITT (fachlich und technisch)
+
+KURZ-EINORDNUNG
+Der Prüf-Bot automatisiert die Prüfung von Bestandsübertragungs-Anfragen (BÜ) von Maklern. Im Zielprozess wird jede eingehende Mail über einen Celonis Action Workflow strukturiert und als Datensatz an Robotics übergeben; der Bot (Blue Prism) prüft sie regelbasiert gegen die relevanten Hostsysteme, bündelt das Ergebnis in einem digitalen Prüfdeckblatt und übergibt saubere Vorgänge an den bestehenden BÜ-Bot.
+
+Neu gegenüber heute: Die eingehende Mail wird an das neue Gruppenpostfach bustrukturierung@ergo.de umgeleitet, in dem ein Action Workflow von Celonis sie automatisch strukturiert (KI-Deckblatt je Vorgang plus Excel über alle Vorgänge) und an Robotics übergibt — anstelle der heutigen manuellen, unstrukturierten Indizierung.
+
+Lesehilfe: „Heute“ = aktueller Start (Freigabe durch den Sachbearbeiter). „Zielbild“ = spätere Ausbaustufe (Direktübergabe an den Roboter). Mit „(offen)“ markierte Punkte sind noch nicht final entschieden.
+
+======================================================================
+PHASE 1 — EINGANG UND UMLEITUNG AN DIE STRUKTURIERUNG
+Ziel: Die BÜ-Anfrage kommt herein und wird der automatischen Strukturierung zugeführt.
+
+  - Die BÜ-Anfrage geht wie bisher per Mail ein.  [System: Outlook]
+  - Die Mail wird an das neue Gruppenpostfach bustrukturierung@ergo.de umgeleitet, in dem ein Action Workflow von Celonis sitzt.  [System: Gruppenpostfach bustrukturierung@ergo.de, Celonis Action Workflow]
+
+======================================================================
+PHASE 2 — STRUKTURIERUNG DURCH DEN CELONIS ACTION WORKFLOW
+Ziel: Aus der Mail entsteht ein strukturierter, maschinenlesbarer Vorgang, der an Robotics übergeben wird.
+
+  - Der Action Workflow strukturiert die Mail (OCR der Dokumente) und reichert Partnerdaten an.  [System: Celonis, Image/Jadice (OCR), EMMA (PNR / Partnerdaten)]
+  - Er erzeugt zwei Artefakte: das KI-Deckblatt je Vorgang und eine Excel über alle Vorgänge. Das Deckblatt deckt bereits die Prüfschritte 1-5 ab (BÜ-Wunsch, MV formal und inhaltlich, Pool/Untervollmacht, Unterschriften).
+  - Weiche - BÜ-Wunsch vorhanden? Nein: kein BÜ-Vorgang (raus aus der Kette). Ja: die strukturierten Daten werden an Robotics übergeben.  [System: Übergabepunkt offen: ERGO Datapool, SharePoint oder anderes - Ansprechpartner Celonis: Stefan Schwarz]
+
+======================================================================
+PHASE 3 — PRÜF-BOT: EINZELPRÜFUNG UND DIGITALES PRÜFDECKBLATT (BLUE PRISM)
+Ziel: Jeder Vorgang wird vollständig und regelbasiert gegen die Hostsysteme geprüft.
+
+  - Der Bot holt den strukturierten Vorgang vom Übergabepunkt ab und übernimmt ihn - Umfang laut Wunsch: einzelne VNR oder die gesamte Kundenverbindung (dann ermittelt der Bot selbst alle VNRs/Verbünde und prüft jeden Vertrag).  [System: Blue Prism]
+  - Der Bot durchläuft die System-Prüfschritte 6-16 je Vertrag (u. a. Vertrag aktiv, Vertrags-Identität, Vermittler-Status, hinterlegte MV, Widerruf, weitere VNRs, Agenturnummer, Rahmenvertrag/Sperre, Provisionshaftung, Korrespondenzadresse).  [System: Scout, IS100, OB726/510/735/729, KV050, VA210/250, PDB, SV001, DiOrg/SAP]
+  - Schritt 9 (Untermakler im Vermittlerregister VVR) erfolgt manuell durch den Sachbearbeiter (Human-in-the-Loop), da Robots im VVR nicht zulässig sind.
+  - Der Bot erstellt das digitale Prüfdeckblatt: das Ergebnis ALLER Prüfungen (1-16) je Vertrag als eine einheitliche Entscheidungsgrundlage.
+
+======================================================================
+PHASE 4 — KRITERIEN-MATRIX UND COCKPIT (HUMAN-IN-THE-LOOP)
+Ziel: Automatische Entscheidung, wie mit dem Vorgang zu verfahren ist. Grundlage: eine fachlich definierte Matrix (HS / KBI / ODPB) stuft jedes Kriterium als hart, weich oder optional ein.
+
+  - Hartes Kriterium verletzt: automatische Absage mit Begründung an den Makler.
+  - Weiches Kriterium verletzt: der Vorgang wird geflaggt und manuell durch einen Menschen geprüft - geplant über ein Robotics Cockpit, in dem der Mitarbeiter vor dem Postkorb entscheidet: freigeben oder ablehnen (Cockpit = Idee; Machbarkeit durch das RCC zu prüfen).
+  - Alle Kriterien erfüllt oder nur optionale verletzt: positiver Vorgang.
+
+======================================================================
+PHASE 5 — POSTKORB ÜBER EMWS (ZWEI WEICHEN)
+Ziel: Für jeden Vorgang wird der Postkorbvorgang eröffnet und ergebnisabhängig behandelt.
+
+  - Der Postkorbvorgang wird über das EMWS eröffnet.  [System: EMWS]
+  - Abgelehnt: der Vorgang erhält ein Direktablagekennzeichen und wird direkt archiviert (keine weitere Bearbeitung, Ende).
+  - Positiv: der Postkorbvorgang wird mit ALLEN Prüfinformationen und einer Notiz eröffnet. Die Notiz dient der Beladung des bestehenden BÜ-Bots.
+
+======================================================================
+PHASE 6 — ÜBERGABE AN DEN BÜ-BOT (HEUTE VS. ZIELBILD)
+Ziel: Der positive Vorgang wird ausgeführt - heute mit Freigabe, im Zielbild direkt.
+
+  - Heute: Die Notiz wird als Entwurf für den Sachbearbeiter eingestellt, damit der Vorgang noch geprüft werden kann; der Sachbearbeiter prüft und gibt die Notiz frei (HITL).
+  - Zielbild: Richtig geprüfte Vorgänge werden über einen IKS-Prozess direkt an den Roboter übergeben - ohne manuelle Freigabe.
+  - Ausführung: der bestehende BÜ-Bot führt die Übertragung aus (1515 KOM/LEB bzw. BeMaS 2011 KV, inkl. 72h-Vorabinformation bei AO-Bestand); Abschluss: Bot-Ergebnis-QS (Schritt 18) und Maklerinformation über Contex.
+
+======================================================================
+HEUTE VS. ZIELBILD - AUF EINEN BLICK
+  - Heute: Der Bot prüft und bereitet vor; die Notiz geht als Entwurf an den Sachbearbeiter, der final freigibt. Der Mensch behält die Kontrolle.
+  - Zielbild: Sauber geprüfte Vorgänge laufen ohne manuelle Freigabe über einen IKS-Prozess direkt in den Roboter. Der Mensch greift nur noch bei geflaggten Fällen ein.
+
+OFFENE PUNKTE
+  - Übergabepunkt Celonis zu Robotics: ERGO Datapool, SharePoint oder anderes (Ansprechpartner: Stefan Schwarz).
+  - Robotics Cockpit (weiche Fälle) und Roboter-Notiz als Entwurf: technische Machbarkeit durch das Robotics Competence Center zu prüfen.
+  - Kriterien-Matrix (hart/weich/optional): fachliche Definition durch HS / KBI / ODPB.
+  - Zugriffsart auf die Hostsysteme (API vs. Oberfläche), Zielsystem der Notiz und Versandweg der Absage: im Rahmen der PDD-/ODD-Entwicklung zu klären.

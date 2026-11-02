@@ -1,0 +1,325 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// exportChaptersXlsx — Excel-Export der Kapitel/Hypothesen (Schriftart „Aptos").
+//
+// Erzeugt eine .xlsx mit:
+//   · einem Übersichts-Blatt: strukturierte Tabelle ALLER Hypothesen + Texte,
+//   · je Kapitel einem eigenen Blatt mit den Vergleichsbildern und den drei
+//     Hypothesen (Status Quo / 2030 / Leitfrage) sowie der Aktivität.
+//
+// Lokale Bearbeitungen (chapterEdits, localStorage) werden über die Basisdaten
+// gelegt, sodass die exportierte Datei den aktuellen Stand im Tool widerspiegelt.
+//
+// exceljs wird dynamisch importiert (eigener Chunk, nur beim Export geladen).
+// ─────────────────────────────────────────────────────────────────────────────
+
+import { getChapters } from './chapters'
+import { stripRich } from './richtext'
+import { commentKey, textKey, type EditField, type EditsData } from './chapterEdits'
+import type { Lang } from '../i18n/LanguageContext'
+
+type Worksheet = import('exceljs').Worksheet
+type Workbook = import('exceljs').Workbook
+
+const FONT = 'Aptos'
+const ACCENT = 'FF046A38' // EDEKA-/Deloitte-Grün
+const ACCENT_DARK = 'FF02502A'
+const WHITE = 'FFFFFFFF'
+const MUTED = 'FF6B7280'
+const NOTE_FILL = 'FFFFF7E0' // helles Gelb für leere Notiz-/Diskussionsfelder
+const IMG_W = 560
+const IMG_H = 315 // 16:9
+const IMG_ROWS = 17 // reservierte Zeilen unter der Überschrift für das Bild
+
+type CellOpts = {
+  size?: number
+  bold?: boolean
+  italic?: boolean
+  color?: string
+  fill?: string
+  align?: 'left' | 'center' | 'right'
+  valign?: 'top' | 'middle' | 'bottom'
+  wrap?: boolean
+}
+
+// **fett** → RichText-Runs; sonst Klartext. Schriftart immer Aptos.
+function toValue(text: string, base: { name: string; size: number; bold: boolean; color?: { argb: string } }) {
+  if (!text.includes('**')) return text
+  const segs = text.split(/(\*\*[^*]+\*\*)/g).filter((s) => s !== '')
+  return {
+    richText: segs.map((s) =>
+      s.startsWith('**') && s.endsWith('**')
+        ? { text: s.slice(2, -2), font: { ...base, bold: true } }
+        : { text: s, font: base },
+    ),
+  }
+}
+
+function setCell(ws: Worksheet, range: string, text: string, opts: CellOpts = {}): void {
+  const { size = 11, bold = false, italic = false, color, fill, align = 'left', valign = 'top', wrap = false } = opts
+  let addr = range
+  if (range.includes(':')) {
+    ws.mergeCells(range)
+    addr = range.split(':')[0] ?? range
+  }
+  const cell = ws.getCell(addr)
+  const base = { name: FONT, size, bold, ...(color ? { color: { argb: color } } : {}) }
+  cell.value = toValue(text, base)
+  cell.font = { ...base, italic }
+  cell.alignment = { vertical: valign, horizontal: align, wrapText: wrap }
+  if (fill) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fill } }
+}
+
+async function fetchImage(
+  src: string,
+): Promise<{ buffer: ArrayBuffer; extension: 'png' | 'jpeg' | 'gif' } | null> {
+  try {
+    const res = await fetch(encodeURI(src))
+    if (!res.ok) return null
+    const buffer = await res.arrayBuffer()
+    const lower = src.toLowerCase()
+    const extension = lower.endsWith('.jpg') || lower.endsWith('.jpeg') ? 'jpeg' : lower.endsWith('.gif') ? 'gif' : 'png'
+    return { buffer, extension }
+  } catch {
+    return null
+  }
+}
+
+function sheetName(kapitel: string, label: string): string {
+  const raw = `${kapitel} ${label}`.replace(/[\\/?*[\]:]/g, ' ').replace(/\s+/g, ' ').trim()
+  return raw.slice(0, 31)
+}
+
+/**
+ * Baut die Arbeitsmappe und löst den Download aus.
+ * @param lang  aktive Sprache (Texte werden in dieser Sprache exportiert)
+ * @param edits lokale Overrides (localStorage)
+ */
+export async function exportChaptersXlsx(lang: Lang, edits: EditsData): Promise<void> {
+  const ExcelJS = await import('exceljs')
+  const wb: Workbook = new ExcelJS.Workbook()
+  wb.creator = 'Banking Horizon 2030'
+  wb.created = new Date()
+
+  // Teaser-Kapitel (nur Einstiegsbühne, z. B. Produktraum) nicht exportieren —
+  // sie tragen keine Hypothesen im Tool und werden kundenspezifisch gestaltet.
+  const chapters = getChapters(lang).filter((c) => !c.teaserOnly)
+  const eff = (chapterId: string, step: number, field: EditField, base: string) =>
+    edits.texts[textKey(chapterId, step, lang, field)] ?? base
+
+  const LBL = {
+    de: {
+      overview: 'Übersicht',
+      colKapitel: 'Kapitel',
+      colNr: 'Nr.',
+      colTitel: 'Hypothese (Titel)',
+      colQuo: 'Status Quo (Heute)',
+      colFuture: '2030',
+      colLeitfrage: 'Leitfrage',
+      today: 'Heute · Status Quo',
+      future: '2030',
+      leitfrage: 'Leitfrage',
+      hypothesis: 'Hypothese',
+      activity: 'Aktivität & Absprung',
+      comment: 'Kommentar',
+      colBild: 'Bildanpassung (Notiz)',
+      bildLabel: 'Bildanpassung',
+      bildHint: 'Falls das Bild angepasst werden soll, hier notieren:',
+      demoHeading: 'Mögliche Demos (Diskussion)',
+      demoHint: 'Welche Demos / Live-Tools könnten dieses Kapitel ergänzen? Hier festhalten:',
+      missing: (f: string) => `[Bild fehlt: ${f}]`,
+      heading: 'Banking Horizon 2030 · Hypothesen',
+    },
+    en: {
+      overview: 'Overview',
+      colKapitel: 'Chapter',
+      colNr: 'No.',
+      colTitel: 'Hypothesis (title)',
+      colQuo: 'Status quo (today)',
+      colFuture: '2030',
+      colLeitfrage: 'Guiding question',
+      today: 'Today · status quo',
+      future: '2030',
+      leitfrage: 'Guiding question',
+      hypothesis: 'Hypothesis',
+      activity: 'Activity & hand-off',
+      comment: 'Comment',
+      colBild: 'Image change (note)',
+      bildLabel: 'Image change',
+      bildHint: 'If the image should be adjusted, note it here:',
+      demoHeading: 'Possible demos (discussion)',
+      demoHint: 'Which demos / live tools could complement this chapter? Capture here:',
+      missing: (f: string) => `[image missing: ${f}]`,
+      heading: 'Banking Horizon 2030 · hypotheses',
+    },
+    fr: {
+      overview: 'Vue d’ensemble',
+      colKapitel: 'Chapitre',
+      colNr: 'N°',
+      colTitel: 'Hypothèse (titre)',
+      colQuo: 'Statu quo (aujourd’hui)',
+      colFuture: 'En 2030',
+      colLeitfrage: 'Question clé',
+      today: 'Aujourd’hui · statu quo',
+      future: 'En 2030',
+      leitfrage: 'Question clé',
+      hypothesis: 'Hypothèse',
+      activity: 'Activité & accès à la démo',
+      comment: 'Commentaire',
+      colBild: 'Ajustement de l’image (note)',
+      bildLabel: 'Ajustement de l’image',
+      bildHint: 'Si l’image doit être ajustée, le noter ici :',
+      demoHeading: 'Démos possibles (discussion)',
+      demoHint: 'Quelles démos / quels outils live pourraient compléter ce chapitre ? À noter ici :',
+      missing: (f: string) => `[image manquante : ${f}]`,
+      heading: 'Banking Horizon 2030 · hypothèses',
+    },
+  }[lang]
+
+  // ── Übersichts-Blatt: strukturierte Tabelle aller Hypothesen ───────────────
+  const sum = wb.addWorksheet(LBL.overview, { views: [{ state: 'frozen', ySplit: 2 }] })
+  sum.columns = [
+    { width: 22 },
+    { width: 6 },
+    { width: 34 },
+    { width: 50 },
+    { width: 50 },
+    { width: 38 },
+    { width: 36 },
+  ]
+  setCell(sum, 'A1:G1', LBL.heading, { size: 15, bold: true })
+  sum.getRow(1).height = 22
+  const headers = [
+    LBL.colKapitel,
+    LBL.colNr,
+    LBL.colTitel,
+    LBL.colQuo,
+    LBL.colFuture,
+    LBL.colLeitfrage,
+    LBL.colBild,
+  ]
+  headers.forEach((h, i) => {
+    const col = String.fromCharCode(65 + i)
+    setCell(sum, `${col}2`, h, { size: 11, bold: true, color: WHITE, fill: ACCENT, valign: 'middle', wrap: true })
+  })
+  sum.getRow(2).height = 28
+  sum.autoFilter = 'A2:G2'
+
+  let sr = 3
+  for (const ch of chapters) {
+    for (let step = 0; step < ch.hypotheses.length; step++) {
+      const h = ch.hypotheses[step]
+      if (!h) continue
+      setCell(sum, `A${sr}`, `${ch.kapitel} · ${ch.label}`, { size: 11, wrap: true })
+      setCell(sum, `B${sr}`, String(step + 1), { size: 11, align: 'center' })
+      setCell(sum, `C${sr}`, eff(ch.id, step, 'title', h.title), { size: 11, bold: true, wrap: true })
+      setCell(sum, `D${sr}`, stripRich(eff(ch.id, step, 'statusQuo', h.statusQuo)), { size: 11, wrap: true })
+      setCell(sum, `E${sr}`, stripRich(eff(ch.id, step, 'in2030', h.in2030)), { size: 11, wrap: true })
+      setCell(sum, `F${sr}`, eff(ch.id, step, 'leitfrage', h.leitfrage ?? ''), { size: 11, wrap: true, italic: true })
+      // Leere Notiz-Spalte für gewünschte Bildanpassungen.
+      setCell(sum, `G${sr}`, '', { size: 11, wrap: true, fill: NOTE_FILL })
+      sum.getRow(sr).height = 96
+      sr++
+    }
+  }
+
+  // ── Je Kapitel ein Blatt mit Bildern + Hypothesen ──────────────────────────
+  for (const ch of chapters) {
+    const ws = wb.addWorksheet(sheetName(ch.kapitel, ch.label))
+    ws.getColumn(1).width = 22
+    for (let c = 2; c <= 9; c++) ws.getColumn(c).width = 12
+
+    let r = 1
+    setCell(ws, `A${r}:I${r}`, `${ch.kapitel} · ${ch.label}`, { size: 18, bold: true })
+    ws.getRow(r).height = 26
+    r++
+    setCell(ws, `A${r}:I${r}`, ch.ort, { size: 10, color: MUTED })
+    r += 2
+
+    const blocks: Array<{ heading: string; src: string; alt: string; comment: string; fill: string; rows: Array<[string, string, boolean]> }> = []
+    for (let step = 0; step < ch.hypotheses.length; step++) {
+      const h = ch.hypotheses[step]
+      if (!h) continue
+      blocks.push({
+        heading: `${LBL.hypothesis} ${step + 1}: ${eff(ch.id, step, 'title', h.title)}`,
+        src: h.image.src,
+        alt: h.image.alt,
+        comment: edits.comments[commentKey(ch.id, step)] ?? '',
+        fill: ACCENT,
+        rows: [
+          [LBL.today, stripRich(eff(ch.id, step, 'statusQuo', h.statusQuo)), false],
+          [LBL.future, stripRich(eff(ch.id, step, 'in2030', h.in2030)), false],
+          [LBL.leitfrage, eff(ch.id, step, 'leitfrage', h.leitfrage ?? ''), true],
+        ],
+      })
+    }
+    const activityStep = ch.hypotheses.length
+    blocks.push({
+      heading: `${LBL.activity}: ${eff(ch.id, activityStep, 'activityTitle', ch.activity.title)}`,
+      src: ch.activity.image.src,
+      alt: ch.activity.image.alt,
+      comment: edits.comments[commentKey(ch.id, activityStep)] ?? '',
+      fill: ACCENT_DARK,
+      rows: [['', stripRich(eff(ch.id, activityStep, 'activityText', ch.activity.text)), false]],
+    })
+
+    for (const b of blocks) {
+      setCell(ws, `A${r}:I${r}`, b.heading, { size: 13, bold: true, color: WHITE, fill: b.fill, valign: 'middle' })
+      ws.getRow(r).height = 22
+      r++
+
+      const imgTop = r
+      const img = await fetchImage(b.src)
+      if (img) {
+        const id = wb.addImage({ buffer: img.buffer, extension: img.extension })
+        ws.addImage(id, { tl: { col: 0.15, row: imgTop - 1 + 0.15 }, ext: { width: IMG_W, height: IMG_H } })
+      } else {
+        setCell(ws, `A${imgTop}:I${imgTop}`, LBL.missing(b.src.split('/').pop() ?? b.src), { size: 10, color: MUTED, italic: true })
+      }
+      r += IMG_ROWS
+
+      if (b.comment) {
+        setCell(ws, `A${r}:I${r}`, `${LBL.comment}: ${b.comment}`, { size: 10, italic: true, color: MUTED, wrap: true })
+        ws.getRow(r).height = 28
+        r++
+      }
+
+      // Leeres Notizfeld für gewünschte Bildanpassungen je Bild.
+      setCell(ws, `A${r}`, LBL.bildLabel, { size: 10, bold: true, valign: 'top' })
+      setCell(ws, `B${r}:I${r}`, '', { size: 11, wrap: true, fill: NOTE_FILL, valign: 'top' })
+      ws.getRow(r).height = 34
+      r++
+
+      for (const [label, text, italic] of b.rows) {
+        if (label) setCell(ws, `A${r}`, label, { size: 10, bold: true, color: label === LBL.future ? ACCENT : undefined, valign: 'top' })
+        setCell(ws, `B${r}:I${r}`, text, { size: 11, wrap: true, italic, valign: 'top' })
+        ws.getRow(r).height = Math.max(40, Math.min(150, 22 + text.length / 1.6))
+        r++
+      }
+      r++ // Abstand
+    }
+
+    // ── Diskussions-Zelle je Kapitel: mögliche Demos ─────────────────────────
+    setCell(ws, `A${r}:I${r}`, LBL.demoHeading, { size: 13, bold: true, color: WHITE, fill: ACCENT_DARK, valign: 'middle' })
+    ws.getRow(r).height = 22
+    r++
+    setCell(ws, `A${r}:I${r}`, LBL.demoHint, { size: 10, italic: true, color: MUTED, wrap: true })
+    ws.getRow(r).height = 22
+    r++
+    setCell(ws, `A${r}:I${r}`, '', { fill: NOTE_FILL })
+    ws.getRow(r).height = 130
+    r++
+  }
+
+  const buffer = await wb.xlsx.writeBuffer()
+  const blob = new Blob([buffer as ArrayBuffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `Banking-Horizon-2030_Hypothesen_${lang.toUpperCase()}.xlsx`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+}

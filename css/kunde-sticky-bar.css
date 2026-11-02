@@ -1,0 +1,389 @@
+/* css/kunde-sticky-bar.css - Kunde Sticky Bar (A-10) */
+/* Extracted from styles.css for modularity */
+
+/* ========================================
+   KUNDE STICKY BAR (A-10)
+   ======================================== */
+.kunde-sticky-bar {
+    position: sticky;
+    top: 68px;
+    z-index: 99;
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border-bottom: 2px solid #86BC25;
+    padding: 0;
+}
+
+.kunde-sticky-bar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kunde-sticky-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1e293b;
+}
+
+.kunde-sticky-bar-left svg {
+    color: #86BC25;
+}
+
+.kunde-sticky-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.kunde-sticky-kid {
+    font-size: 14px;
+    color: #64748b;
+    background: #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.kunde-sticky-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.kunde-sticky-kpi {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.kunde-sticky-kpi-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.kunde-sticky-kpi-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* NPS Style Switcher */
+.nps-style-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 8px 16px;
+    background: #1e293b;
+    border-radius: 10px;
+    user-select: none;
+}
+
+.nps-style-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.nps-style-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.nps-style-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    min-width: 220px;
+    text-align: center;
+}
+
+/* NPS Style 1: Fortschrittsbalken */
+.nps-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 100px;
+}
+
+.nps-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.nps-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+}
+
+.nps-bar-fill.promoter { background: #2d5016; }
+.nps-bar-fill.passive { background: #f59e0b; }
+.nps-bar-fill.detractor { background: #ef4444; }
+
+.nps-bar-value {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 16px;
+    color: #334155;
+}
+
+/* NPS Style 2: Pill Badge mit Label */
+.nps-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+.nps-pill.promoter { background: #2d5016; }
+.nps-pill.passive { background: #f59e0b; }
+.nps-pill.detractor { background: #ef4444; }
+
+.nps-pill-score {
+    font-weight: 800;
+}
+
+/* NPS Style 3: Sterne */
+.nps-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.nps-star {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.nps-star.filled { color: #f59e0b; }
+.nps-star.half { color: #f59e0b; opacity: 0.4; }
+.nps-star.empty { color: #e2e8f0; }
+
+/* NPS Style 4: Mini-Tacho */
+.nps-gauge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nps-gauge-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+}
+
+/* NPS Style 5: Emoji + Zahl */
+.nps-emoji {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.nps-emoji-face {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* Kundenliste Tab */
+.kundenliste-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.kundenliste-search input {
+    padding: 8px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    width: 280px;
+    transition: border-color 0.2s;
+}
+
+.kundenliste-search input:focus {
+    outline: none;
+    border-color: #86BC25;
+    box-shadow: 0 0 0 3px rgba(134, 188, 37, 0.15);
+}
+
+.kundenliste-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.kundenliste-table thead th {
+    background: #f8fafc;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.kundenliste-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 15px;
+    color: #334155;
+}
+
+.kundenliste-table tbody tr.clickable-row:hover {
+    background: #f0fdf4;
+    cursor: pointer;
+}
+
+.nps-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+}
+
+.nps-badge.promoter {
+    background: #2d5016;
+}
+
+.nps-badge.passive {
+    background: #f59e0b;
+}
+
+.nps-badge.detractor {
+    background: #ef4444;
+}
+
+/* NPS clickable badge in A-10 Stammdaten */
+.nps-clickable {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nps-clickable:hover {
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nps-detail-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    cursor: default;
+}
+
+.nps-detail-popup {
+    position: fixed;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    min-width: 320px;
+    z-index: 200;
+}
+
+/* NPS Survey Meta (inline next to stars) */
+.nps-survey-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #94a3b8;
+    margin-left: 12px;
+}
+
+.nps-survey-meta svg {
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.nps-detail-header {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.nps-detail-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.nps-detail-survey {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nps-survey-date {
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.nps-survey-kampagne {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.nps-detail-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nps-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.nps-detail-label {
+    font-size: 15px;
+    color: #475569;
+}
+

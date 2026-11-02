@@ -1,0 +1,283 @@
+/* ==========================================================================
+   basis.css — App-Shell (Topbar, Sidebar, Schublade, Breadcrumb,
+   Lesefortschritt) und Startseite. Gehört dem Fundament.
+   ========================================================================== */
+@layer components {
+  /* ---------------------------------------------------------------- Shell */
+  .app { min-height: 100vh; display: flex; flex-direction: column; }
+  .app-koerper {
+    flex: 1;
+    display: grid;
+    grid-template-columns: var(--sidebar-breite) minmax(0, 1fr);
+    align-items: start;
+  }
+  .app-inhalt { min-width: 0; min-height: calc(100vh - var(--topbar-hoehe)); outline: none; }
+  @media (max-width: 1023.98px) {
+    .app-koerper { grid-template-columns: minmax(0, 1fr); }
+    .sidebar-spalte { display: none; }
+  }
+
+  /* --------------------------------------------------------------- Topbar */
+  .topbar {
+    position: sticky; top: 0; z-index: var(--z-topbar);
+    height: var(--topbar-hoehe);
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 var(--seitenrand);
+    background: var(--flaeche-karte);
+    border-bottom: 1px solid var(--rand);
+  }
+  .topbar-links { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+  .topbar-rechts { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .topbar-trenner { width: 1px; height: 22px; background: var(--rand); margin: 0 6px; }
+
+  .marke { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; flex-shrink: 0; border-radius: 6px; }
+  .marke:hover { text-decoration: none; }
+  .marke-monogramm {
+    width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--marke); color: #fff;
+    font-size: 12.5px; font-weight: 600; letter-spacing: -0.02em;
+  }
+  .marke-wort { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
+  @media (max-width: 479.98px) { .marke-wort { display: none; } }
+
+  .topbar-suche {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 36px; padding: 0 8px 0 12px; min-width: 240px;
+    border: 1px solid var(--rand); border-radius: var(--radius-s);
+    background: var(--flaeche); color: var(--text-3);
+    font-size: 14px; text-align: left;
+    transition: border-color var(--bewegung), background-color var(--bewegung), color var(--bewegung);
+  }
+  .topbar-suche:hover { border-color: var(--rand-stark); background: var(--flaeche-karte); color: var(--text-2); }
+  /* Dieselbe Falle wie im Suchfeld der Startseite: „> span“ trifft auch die
+     Tastenkappen. Nur die Beschriftung dehnt sich. */
+  .topbar-suche > span:not(.kbd-reihe) { flex: 1 1 auto; min-width: 0; }
+  .topbar-suche .kbd-reihe { flex: 0 0 auto; margin-left: 8px; }
+  @media (max-width: 1279.98px) { .topbar-suche { min-width: 180px; } }
+  @media (max-width: 767.98px) {
+    .topbar-suche { min-width: 0; width: 36px; padding: 0; justify-content: center; }
+    .topbar-suche > span, .topbar-suche .kbd-reihe { display: none; }
+  }
+  .topbar-knopf { color: var(--text-2); }
+  @media (max-width: 899.98px) { .topbar-nur-breit { display: none !important; } }
+  @media (max-width: 599.98px) { .topbar-nur-mittel { display: none !important; } }
+  .topbar-fortschritt { display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; min-height: 36px; border-radius: var(--radius-s); color: var(--text-2); }
+  .topbar-fortschritt:hover { background: var(--neutral-100); }
+  .topbar-plattform { color: var(--text-2); }
+
+  /* ----------------------------------------------------------- Breadcrumb */
+  .brotkrumen { min-width: 0; }
+  .brotkrumen ol { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; min-width: 0; font-size: 14px; }
+  .brotkrumen li { display: inline-flex; align-items: center; gap: 4px; min-width: 0; color: var(--text-3); }
+  /* Schrumpfen darf nur die aktuelle Seite, und die nicht unter 8 Zeichen:
+     vorher schrumpften alle Glieder gleichmäßig, „Start“ stand als „Sta…“ da;
+     schrumpfte nur das letzte, fiel die Lerneinheit auf 12 px zusammen. */
+  .brotkrumen li { flex-shrink: 0; }
+  .brotkrumen li:last-child { flex-shrink: 1; min-width: 8ch; }
+  .brotkrumen-kurz { display: none; }
+  @media (max-width: 1439.98px) {
+    .brotkrumen-lang { display: none; }
+    .brotkrumen-kurz { display: inline; }
+  }
+  .brotkrumen a { color: var(--text-2); text-decoration: none; padding: 4px 6px; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+  .brotkrumen a:hover { background: var(--neutral-100); color: var(--text); }
+  .brotkrumen [aria-current="page"] { color: var(--text); font-weight: 500; padding: 4px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
+  .brotkrumen .lucide { color: var(--neutral-400); }
+  @media (max-width: 1279.98px) { .brotkrumen { display: none; } }
+
+  /* ------------------------------------------------------- Lesefortschritt */
+  .lesefortschritt {
+    position: fixed; top: var(--topbar-hoehe); left: 0; right: 0; height: 2px;
+    z-index: var(--z-topbar); pointer-events: none;
+  }
+  .lesefortschritt-balken {
+    height: 100%; width: 100%; background: var(--marke);
+    transform: scaleX(var(--lesefortschritt, 0)); transform-origin: 0 50%;
+    transition: transform 120ms linear;
+  }
+
+  /* -------------------------------------------------------------- Sidebar */
+  .sidebar-spalte {
+    position: sticky; top: var(--topbar-hoehe);
+    height: calc(100vh - var(--topbar-hoehe));
+    background: var(--flaeche); border-right: 1px solid var(--rand);
+  }
+  .sidebar { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+  .sidebar-filter { padding: 12px 12px 8px; }
+  .sidebar-nav { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 12px 12px; }
+  .sidebar-nav ul { list-style: none; margin: 0; padding: 0; }
+  .sidebar-fuss {
+    padding: 10px 12px 12px; border-top: 1px solid var(--rand);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .sidebar-stand { padding: 8px 12px 0; font-size: 12px; color: var(--text-3); }
+  .sidebar-gruppe { margin-top: 10px; padding: 0 12px 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+
+  .nav-eintrag {
+    position: relative;
+    display: flex; align-items: center; gap: 10px;
+    min-height: 36px; padding: 6px 10px 6px 12px;
+    border-radius: var(--radius-s);
+    color: var(--text-2); font-size: 14px; font-weight: 500; text-decoration: none; text-align: left;
+    width: 100%; background: transparent; border: 0;
+    transition: background-color var(--bewegung), color var(--bewegung);
+  }
+  .nav-eintrag:hover { background: var(--neutral-100); color: var(--text); text-decoration: none; }
+  .nav-eintrag[aria-current="page"], .nav-eintrag[aria-current="true"] {
+    background: var(--flaeche-karte); color: var(--marke); font-weight: 600;
+    box-shadow: 0 0 0 1px var(--rand), var(--schatten-karte);
+  }
+  .nav-eintrag[aria-current="page"]::before, .nav-eintrag[aria-current="true"]::before {
+    content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px;
+    border-radius: 0 3px 3px 0; background: var(--marke);
+  }
+  .nav-eintrag .lucide { color: var(--text-3); }
+  .nav-eintrag[aria-current] .lucide { color: var(--marke); }
+  .nav-nummer { width: 20px; flex-shrink: 0; font-size: 12px; font-weight: 600; color: var(--text-3); font-variant-numeric: tabular-nums; }
+  .nav-eintrag[aria-current] .nav-nummer { color: var(--marke); }
+  .nav-titel { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-ende { flex-shrink: 0; display: inline-flex; align-items: center; }
+
+  .nav-einheiten { margin: 2px 0 8px 21px; padding-left: 10px; border-left: 1px solid var(--rand); }
+  .nav-einheit { min-height: 32px; padding: 5px 8px 5px 10px; font-size: 13.5px; font-weight: 400; gap: 8px; }
+  .nav-einheit[aria-current="page"] { font-weight: 600; }
+  .nav-einheit[aria-current="page"]::before { left: -11px; }
+  .nav-punkt {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    background: var(--neutral-300);
+  }
+  .nav-punkt[data-gelesen="true"] { background: var(--marke); }
+  .nav-eintrag[aria-current] .nav-punkt[data-gelesen="true"] { background: var(--marke); }
+  .nav-leer { padding: 16px 12px; font-size: 13px; color: var(--text-3); }
+  .nav-eintrag mark { background: var(--gruen-100); color: inherit; }
+
+  /* ------------------------------------------------------------ Startseite */
+  .start-hero {
+    position: relative;
+    padding: 48px var(--seitenrand) 40px;
+    background:
+      radial-gradient(900px 420px at 12% -10%, var(--gruen-100) 0%, rgba(220, 239, 226, 0) 70%),
+      radial-gradient(600px 320px at 92% 10%, rgba(220, 239, 226, 0.65) 0%, rgba(220, 239, 226, 0) 70%),
+      var(--flaeche);
+    border-bottom: 1px solid var(--rand);
+  }
+  @media (max-width: 767.98px) { .start-hero { padding-top: 32px; padding-bottom: 28px; } }
+  .start-hero-innen { max-width: 880px; }
+  .start-hero h1 { font-size: 44px; margin: 10px 0 12px; }
+  @media (max-width: 767.98px) { .start-hero h1 { font-size: 32px; } }
+  .start-hero-unterzeile { font-size: 18px; line-height: 1.55; color: var(--text-2); max-width: 64ch; }
+  .start-suchfeld {
+    margin-top: 28px;
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; max-width: 640px; min-height: 52px; padding: 0 10px 0 16px;
+    border: 1px solid var(--rand-stark); border-radius: var(--radius-m);
+    background: var(--flaeche-karte); color: var(--text-3);
+    font-size: 16px; text-align: left;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(12, 75, 51, 0.06);
+    transition: border-color var(--bewegung), box-shadow var(--bewegung);
+  }
+  .start-suchfeld:hover, .start-suchfeld:focus-visible { border-color: var(--marke); box-shadow: 0 0 0 3px var(--gruen-100); }
+  /* Nur die Beschriftung dehnt sich — die Regel galt vorher für JEDEN Span im
+     Feld, also auch für die Tastenkappen: die nahmen 284 von 614 px ein und
+     die Beispiele standen als „Suchen: Combined Ratio, Solvency II, …“ da. */
+  .start-suchfeld-lang, .start-suchfeld-kurz { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .start-suchfeld .kbd-reihe { flex: 0 0 auto; }
+  .start-suchfeld-kurz { display: none; }
+  @media (max-width: 767.98px) {
+    .start-suchfeld-lang { display: none; }
+    .start-suchfeld-kurz { display: block; }
+  }
+  .start-suchfeld .lucide:first-child { color: var(--marke); }
+  .start-kennzahlen {
+    margin-top: 32px;
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px 20px;
+    max-width: 880px;
+  }
+  @media (max-width: 1023.98px) { .start-kennzahlen { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 479.98px) { .start-kennzahlen { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .start-kennzahl { display: flex; flex-direction: column; gap: 2px; padding-left: 12px; border-left: 2px solid var(--gruen-200); }
+  .start-kennzahl-wert { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1; color: var(--text); font-variant-numeric: tabular-nums; }
+  .start-kennzahl-label { font-size: 13px; color: var(--text-2); white-space: nowrap; }
+
+  .start-raster { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+  @media (max-width: 1279.98px) { .start-raster { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  @media (max-width: 1023.98px) { .start-raster { grid-template-columns: minmax(0, 1fr); } }
+
+  .weiter-karte { display: flex; flex-direction: column; gap: 14px; }
+  .weiter-karte-kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .weiter-titel { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin-top: 4px; }
+  .weiter-kapitel { font-size: 14px; color: var(--text-2); }
+  .weiter-fuss { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: auto; }
+  .weiter-meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); }
+
+  .stand-liste { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .stand-zeile { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--text-2); }
+  .stand-zeile strong { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; text-align: right; flex-shrink: 0; }
+  .stand-kopf { display: flex; align-items: center; gap: 14px; }
+  .stand-kopf-text { display: flex; flex-direction: column; }
+  .stand-kopf-wert { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stand-kopf-label { font-size: 13px; color: var(--text-2); }
+  .stand-luecken { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+
+  .lernpfad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 1279.98px) { .lernpfad { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 639.98px) { .lernpfad { grid-template-columns: minmax(0, 1fr); } }
+  .kapitel-karte { display: flex; flex-direction: column; gap: 12px; min-height: 172px; }
+  .kapitel-karte-kopf { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .kapitel-karte-symbol {
+    width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--marke-weich); color: var(--marke);
+  }
+  .kapitel-karte-nummer { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: var(--text-3); }
+  .kapitel-karte-titel { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin-top: 2px; color: var(--text); }
+  /* Kein Klemmen: die Karten stehen in einem Raster gleicher Höhe, ein auf
+     zwei Zeilen gekappter Untertitel verschluckte bei 1280 px eine dritte. */
+  .kapitel-karte-unter { font-size: 14px; color: var(--text-2); line-height: 1.5; }
+  .kapitel-karte-fuss { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--text-2); }
+
+  .begriff-karte { display: flex; flex-direction: column; gap: 10px; }
+  .begriff-karte-term { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .begriff-karte-definition { font-size: 15px; color: var(--text-2); line-height: 1.55; }
+  .begriff-karte-fuss { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; flex-wrap: wrap; }
+
+  .woche { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 1439.98px) { .woche { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 767.98px) { .woche { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 479.98px) { .woche { grid-template-columns: minmax(0, 1fr); } }
+  .woche-tag { display: flex; flex-direction: column; gap: 10px; padding: 16px; }
+  .woche-tag-kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .woche-tag-titel { font-size: 15px; font-weight: 600; }
+  .woche-tag-zeit { font-size: 12px; color: var(--text-3); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .woche-kapitel { font-size: 12px; font-weight: 600; color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 4px; }
+  .woche-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .woche-einheit {
+    display: flex; align-items: center; gap: 8px;
+    min-height: 28px; padding: 3px 6px; margin: 0 -6px; border-radius: 6px;
+    font-size: 13.5px; color: var(--text-2); text-decoration: none;
+  }
+  .woche-einheit:hover { background: var(--neutral-100); color: var(--text); text-decoration: none; }
+  .woche-einheit[data-gelesen="true"] { color: var(--text-3); }
+  .woche-einheit .lucide { color: var(--marke); }
+  .woche-einheit-titel { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .woche-einheit-zeit { font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+  .woche-rest { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--rand); font-size: 13px; color: var(--text-2); }
+
+  .start-fuss {
+    margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--rand);
+    display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between;
+    font-size: 13px; color: var(--text-3);
+  }
+
+  /* ------------------------------------------------------- Tastaturhilfe */
+  .tasten-tabelle { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tasten-tabelle td { padding: 8px 4px; border-bottom: 1px solid var(--rand); vertical-align: middle; }
+  .tasten-tabelle tr:last-child td { border-bottom: 0; }
+  .tasten-tabelle td:first-child { width: 150px; }
+  .tasten-tabelle .kbd-reihe { gap: 4px; }
+  .tasten-gruppe td { padding-top: 14px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); border-bottom: 0; }
+
+  /* ----------------------------------------------------- Ladezustand/Fehler */
+  .lade-skelett { padding: 32px var(--seitenrand); display: flex; flex-direction: column; gap: 14px; max-width: 880px; }
+}

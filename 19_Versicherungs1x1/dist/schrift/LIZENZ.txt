@@ -1,0 +1,21 @@
+Schriften in diesem Ordner
+==========================
+
+DM Sans (variable Schrift, Achsen opsz 9–40 und wght 100–1000, aufrecht und
+kursiv; Teilmengen latin und latin-ext)
+  Copyright 2014–2024 The DM Sans Project Authors
+  https://github.com/googlefonts/dm-fonts
+
+JetBrains Mono (variable Schrift, wght 100–800; Teilmengen latin und latin-ext)
+  Copyright 2020 The JetBrains Mono Project Authors
+  https://github.com/JetBrains/JetBrainsMono
+
+Beide Schriften stehen unter der SIL Open Font License, Version 1.1
+(https://openfontlicense.org). Die Dateien wurden am 18.09.2026 aus dem
+Google-Fonts-Dienst (fonts.gstatic.com) geladen und unverändert unter
+sprechenden Namen abgelegt. Die zugehörigen @font-face-Regeln stehen in
+src/styles/schrift.css.
+
+Die OFL erlaubt Nutzung, Einbettung und Weitergabe, auch kommerziell; die
+Schriften dürfen nicht für sich allein verkauft werden, und abgeleitete
+Fassungen müssen unter derselben Lizenz stehen.

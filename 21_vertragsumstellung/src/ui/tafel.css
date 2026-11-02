@@ -1,0 +1,521 @@
+/* ==========================================================================
+   TAFEL — dichte Kachel mit Kopfband
+   --------------------------------------------------------------------------
+   Eine Tafel ist eine .vg-karte mit einem 34-px-Kopfband und dichtem
+   Inhalt. Das Band trägt den Ton: Burgund heißt „hier wird bedient“
+   (Eingabe), Stahlblau „Abschluss“, Tiefgrün „Folge“, Grau „Sonstiges“;
+   Diagramm-Tafeln haben kein Band, nur eine Haarlinie.
+
+   Dazu die drei Tabellenformen der Tafelsprache:
+     .vg-vergleich   Sparte · Produkt · Bemessung · Alt · Neu · Differenz
+                     (Bemessung und Alt weichen in schmalen Tafeln)
+     .vg-staffel     eine Zeile je Bonusstufe mit Schwellen- und Satz-Eingabe
+     .vg-labelwert   Label/Wert-Liste (Stammdaten, Garantien), Label zweizeilig
+   und das Raster .vg-tafeln, in dem Tafeln stehen.
+
+   Die Datei kommt mit den Tokens aus index.css aus; sie definiert keine
+   Klasse, die dort schon liegt.
+   ========================================================================== */
+
+/* ---- Raster ---------------------------------------------------------------- */
+.vg-tafeln {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vg-a6);
+  align-items: start;
+  min-width: 0;
+}
+.vg-tafeln > [data-breit="2"] { grid-column: span 2; }
+@media (max-width: 1024px) {
+  .vg-tafeln { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vg-tafeln > [data-breit="2"] { grid-column: 1 / -1; }
+}
+
+/* ---- Tafel ----------------------------------------------------------------- */
+.vg-tafel {
+  --tafel-band: transparent;
+  --tafel-titel: var(--vg-text);
+  --tafel-zeile: 34px;
+  min-width: 0;
+}
+.vg-tafel[data-dicht] { --tafel-zeile: 28px; }
+
+.vg-tafel[data-ton="eingabe"]   { --tafel-band: var(--vg-marke-weich); --tafel-titel: var(--vg-marke); }
+.vg-tafel[data-ton="abschluss"] { --tafel-band: color-mix(in srgb, var(--vg-viz-1) 12%, var(--vg-flaeche)); }
+.vg-tafel[data-ton="folge"]     { --tafel-band: color-mix(in srgb, var(--vg-viz-3) 14%, var(--vg-flaeche)); }
+.vg-tafel[data-ton="sonst"]     { --tafel-band: var(--vg-n100); }
+:root[data-theme="dark"] .vg-tafel[data-ton="sonst"] { --tafel-band: rgb(255 255 255 / 0.06); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .vg-tafel[data-ton="sonst"] { --tafel-band: rgb(255 255 255 / 0.06); }
+}
+
+.vg-tafel-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a4);
+  min-height: 34px;
+  padding: 0 var(--vg-a5);
+  background: var(--tafel-band);
+  border-bottom: 1px solid var(--vg-rand);
+  border-radius: var(--vg-r-lg) var(--vg-r-lg) 0 0;
+  min-width: 0;
+}
+/* Ohne Band bleibt nur die Haarlinie — Diagramm-Tafeln */
+.vg-tafel[data-ton="neutral"] .vg-tafel-kopf { background: transparent; }
+
+.vg-tafel-titel {
+  margin: 0;
+  font-size: var(--vg-fs-md);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--tafel-titel);
+  letter-spacing: -0.01em;
+  /* Der Titel nimmt die freie Breite; Unterzeile und Aktionen stehen rechts.
+     Wird es eng, weicht zuerst die Unterzeile (ihr Schrumpfgewicht liegt
+     weit über dem des Titels, s. u.); der Titel kappt erst, wenn er allein
+     nicht passt. */
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a3);
+}
+.vg-tafel-zaehler {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 var(--vg-a3);
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-abzeichen-flaeche);
+  border: 1px solid var(--vg-rand);
+  color: var(--vg-text-3);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  font-weight: 400;
+  white-space: nowrap;
+}
+.vg-tafel-unter {
+  /* Schrumpfgewicht 1000: negative Breite geht praktisch ganz an die
+     Unterzeile, bis sie bei 0 steht — erst dann verliert der Titel Buchstaben
+     („Leb…“ neben einer fast vollen Unterzeile war die falsche Reihenfolge). */
+  flex: 0 1000 auto;
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.vg-tafel-aktionen {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  flex: none;
+}
+
+/* Aufklappbarer Kopf: derselbe Kopf als Knopf, Pfeil rechts */
+.vg-tafel-kopf-knopf {
+  width: 100%;
+  border: 0;
+  border-radius: var(--vg-r-lg) var(--vg-r-lg) 0 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.vg-tafel-kopf-knopf:hover { filter: brightness(0.98); }
+.vg-tafel-kopf-knopf:focus-visible { outline: 2px solid var(--vg-fokus); outline-offset: -2px; }
+.vg-tafel[data-zu] .vg-tafel-kopf { border-bottom-color: transparent; border-radius: var(--vg-r-lg); }
+.vg-tafel-pfeil {
+  flex: none;
+  color: var(--vg-text-4);
+  transition: transform var(--vg-normal) var(--vg-kurve);
+}
+.vg-tafel[data-zu] .vg-tafel-pfeil { transform: rotate(-90deg); }
+
+/* ---- Körper ---------------------------------------------------------------- */
+.vg-tafel-koerper {
+  padding: var(--vg-a4) var(--vg-a5);
+  min-width: 0;
+}
+/* Tabellen füllen den Körper bis an die Karte heran */
+.vg-tafel-koerper[data-buendig] { padding: 0; }
+.vg-tafel-koerper > .vg-tabelle-rahmen { border-radius: 0 0 var(--vg-r-lg) var(--vg-r-lg); }
+
+/* ---- Vergleichstabelle ------------------------------------------------------ */
+/* Der Rahmen ist Container: schmale Tafeln blenden weichende Spalten aus
+   (siehe Ende des Abschnitts) statt sie stumm hinter die Kante zu legen;
+   das waagerechte Scrollen bleibt das letzte Netz. */
+.vg-vergleich-rahmen { overflow-x: auto; min-width: 0; container-type: inline-size; }
+.vg-vergleich {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--vg-fs-sm);
+  color: var(--vg-text-2);
+}
+.vg-vergleich th,
+.vg-vergleich td {
+  height: var(--tafel-zeile, 34px);
+  padding: 0 var(--vg-a5);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+  min-width: 0;
+}
+.vg-vergleich thead th {
+  height: 28px;
+  font-size: var(--vg-fs-xs);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--vg-text-4);
+  border-bottom: 1px solid var(--vg-rand);
+  background: transparent;
+}
+.vg-vergleich tbody td { border-bottom: 1px solid var(--vg-rand); }
+.vg-vergleich tbody tr:last-child td { border-bottom-color: transparent; }
+.vg-vergleich tbody tr { transition: background-color var(--vg-sofort) linear; }
+.vg-vergleich tbody tr:hover { background: var(--vg-hover); }
+
+/* Spalten */
+.vg-vergleich th[data-num],
+.vg-vergleich td[data-num] {
+  text-align: right;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.01em;
+}
+.vg-vergleich td[data-spalte="sparte"] {
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-4);
+  width: 1%;
+}
+/* Produkt nimmt die freie Breite und kappt mit Ellipse (title trägt den
+   vollen Namen) — aber nie unter 96 px, damit ein Name lesbar bleibt. */
+.vg-vergleich td[data-spalte="produkt"] {
+  color: var(--vg-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 0;
+  min-width: 96px;
+  width: 100%;
+}
+.vg-vergleich td[data-spalte="bemessung"],
+.vg-vergleich td[data-spalte="alt"] { color: var(--vg-text-3); }
+.vg-vergleich th[data-spalte="neu"],
+.vg-vergleich td[data-spalte="neu"] {
+  background: color-mix(in srgb, var(--vg-viz-3) 8%, transparent);
+}
+.vg-vergleich td[data-spalte="neu"] { color: var(--vg-text); font-weight: 500; }
+.vg-vergleich td[data-spalte="differenz"] { color: var(--vg-text); }
+.vg-vergleich td[data-spalte="differenz"][data-ton="positiv"] { color: var(--vg-positiv); }
+.vg-vergleich td[data-spalte="differenz"][data-ton="negativ"] { color: var(--vg-negativ); }
+.vg-vergleich td[data-spalte="differenz"][data-ton="warnung"] { color: var(--vg-warnung); }
+.vg-vergleich td[data-spalte="differenz"][data-ton="neutral"] { color: var(--vg-text-4); }
+
+/* Zwischenkopf eines Abschnitts */
+.vg-vergleich tr.vg-vergleich-abschnitt th {
+  height: 26px;
+  padding-top: var(--vg-a3);
+  font-size: var(--vg-fs-2xs);
+  font-weight: 500;
+  color: var(--vg-text-4);
+  text-align: left;
+  border-bottom: 1px solid var(--vg-rand-stark);
+  background: transparent;
+}
+.vg-vergleich tbody tr.vg-vergleich-abschnitt:hover { background: transparent; }
+
+/* Summenzeile: Gewicht 500, Haarlinie darüber */
+.vg-vergleich tr.vg-vergleich-summe td {
+  font-weight: 500;
+  color: var(--vg-text);
+  border-top: 1px solid var(--vg-rand-hart);
+  border-bottom: 0;
+}
+.vg-vergleich tr.vg-vergleich-summe td[data-spalte="alt"],
+.vg-vergleich tr.vg-vergleich-summe td[data-spalte="bemessung"] { color: var(--vg-text-2); }
+.vg-vergleich tr.vg-vergleich-summe:hover { background: transparent; }
+
+/* Hervorgehobene Zeile: Markenkante links, keine Fläche */
+.vg-vergleich tr[data-hervor] td:first-child { box-shadow: inset 2px 0 0 0 var(--vg-viz-3); }
+.vg-vergleich tr[data-hervor] td[data-spalte="produkt"] { font-weight: 500; }
+
+/* Weichende Spalten (VergleichsTafel setzt data-weichend auf den Rahmen):
+   unter 360 px Tafelbreite entfällt die Bemessung, unter 300 px auch Alt —
+   Neu und Differenz bleiben immer. */
+@container (max-width: 360px) {
+  .vg-vergleich-rahmen[data-weichend~="bemessung"] [data-spalte="bemessung"] { display: none; }
+}
+@container (max-width: 300px) {
+  .vg-vergleich-rahmen[data-weichend~="alt"] [data-spalte="alt"] { display: none; }
+}
+
+/* ---- Staffeltabelle --------------------------------------------------------- */
+/* Feste Spaltenbreiten (colgroup aus Tafel.jsx), Zellpolster 6 px, ein
+   Rahmen mit waagerechtem Scrollen als letztes Netz: die Tabelle steht in
+   einer Drittel-Tafel (rund 390 px bei 1600, 300 px bei 1280). */
+.vg-staffel-rahmen { overflow-x: auto; min-width: 0; }
+.vg-staffel {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--vg-fs-sm);
+  color: var(--vg-text-2);
+}
+.vg-staffel th,
+.vg-staffel td {
+  height: var(--tafel-zeile, 34px);
+  padding: 0 var(--vg-a3);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vg-staffel th:first-child, .vg-staffel td:first-child { padding-left: var(--vg-a5); }
+.vg-staffel th:last-child, .vg-staffel td:last-child { padding-right: var(--vg-a5); }
+.vg-staffel thead th {
+  height: 28px;
+  font-size: var(--vg-fs-xs);
+  font-weight: 500;
+  color: var(--vg-text-4);
+  border-bottom: 1px solid var(--vg-rand);
+}
+.vg-staffel tbody td { border-bottom: 1px solid var(--vg-rand); }
+.vg-staffel tbody tr:last-child td { border-bottom-color: transparent; }
+.vg-staffel th[data-num], .vg-staffel td[data-num] {
+  text-align: right;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+.vg-staffel td[data-spalte="bereich"] { color: var(--vg-text); font-weight: 500; }
+.vg-staffel td[data-spalte="heute"] { color: var(--vg-text-3); }
+.vg-staffel td[data-spalte="schwelle"] { color: var(--vg-text-2); }
+.vg-staffel-leer { color: var(--vg-text-4); }
+/* Eingabezellen: kein senkrechtes Polster, die Eingabe füllt die Zeile */
+.vg-staffel td[data-spalte="neu"],
+.vg-staffel td[data-spalte="schwelle"] { padding-top: 2px; padding-bottom: 2px; overflow: visible; }
+.vg-staffel-neu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+}
+.vg-staffel-eingabe {
+  width: 48px;
+  height: 24px;
+  padding: 0 var(--vg-a2);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-sm);
+  background: var(--vg-flaeche);
+  color: var(--vg-text);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: var(--vg-fs-sm);
+  text-align: right;
+  transition: border-color var(--vg-schnell) var(--vg-kurve-weich),
+              box-shadow var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-staffel-eingabe:hover { border-color: var(--vg-rand-hart); }
+.vg-staffel-eingabe:focus { outline: none; border-color: var(--vg-fokus); box-shadow: 0 0 0 3px var(--vg-fokus-hof); }
+/* Geänderter Satz trägt Tiefgrün — dieselbe Tinte wie ein veränderter Regler */
+.vg-staffel tr[data-veraendert="true"] td[data-spalte="neu"] .vg-staffel-eingabe {
+  color: var(--vg-viz-3);
+  border-color: color-mix(in srgb, var(--vg-viz-3) 45%, var(--vg-rand-stark));
+}
+.vg-staffel-einheit { font-size: var(--vg-fs-xs); color: var(--vg-text-4); }
+/* Satz neu: Eingabe, daneben Prozentzeichen oder — bei Abweichung — das
+   Abzeichen; ohne Spalte „Satz heute“ darunter die Kleintextzeile
+   „heute 19,0 %“ (dann rund 40 px je Zeile, in jeder Zeile gleich). */
+.vg-staffel-satz {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  max-width: 100%;
+}
+.vg-staffel-unter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 12px;
+  line-height: 1;
+  font-size: var(--vg-fs-2xs);
+  color: var(--vg-text-4);
+  white-space: nowrap;
+}
+.vg-staffel-heute { font-family: var(--vg-schrift-zahl); font-variant-numeric: tabular-nums; }
+.vg-badge.vg-staffel-chip { height: 18px; font-size: var(--vg-fs-2xs); padding: 0 4px; flex: none; }
+.vg-staffel td[data-spalte="einheiten"] { color: var(--vg-text-3); }
+.vg-staffel td[data-spalte="einheiten"] .vg-pfeil { margin: 0 1px; }
+.vg-staffel td[data-spalte="einheiten"] .vg-staffel-neuwert { color: var(--vg-text); font-weight: 500; }
+.vg-staffel td[data-spalte="volumen"] { color: var(--vg-text); }
+
+/* ---- Label/Wert-Liste ------------------------------------------------------- */
+/* Label links (darf auf zwei Zeilen umbrechen), Wert rechts in einer Zeile;
+   keiner kappt auf Ellipse. Zeilen mit langem Wert stehen gestapelt: Label
+   klein darüber, Wert links darunter (data-gestapelt aus Tafel.jsx). */
+.vg-labelwert {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--vg-a4);
+  font-size: var(--vg-fs-sm);
+}
+.vg-labelwert-zeile { display: contents; }
+.vg-labelwert-label,
+.vg-labelwert-wert {
+  display: flex;
+  align-items: center;
+  min-height: var(--tafel-zeile, 34px);
+  padding: var(--vg-a1) 0;
+  border-bottom: 1px solid var(--vg-rand);
+  min-width: 0;
+}
+.vg-labelwert-zeile:last-child .vg-labelwert-label,
+.vg-labelwert-zeile:last-child .vg-labelwert-wert { border-bottom-color: transparent; }
+.vg-labelwert-label { gap: var(--vg-a1); color: var(--vg-text-3); line-height: 1.25; }
+.vg-labelwert-label > span {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+/* Die Kurzinfo steht direkt hinter dem Labeltext, ohne eigene Rasterspalte */
+.vg-labelwert-info { display: inline-flex; flex: none; }
+.vg-labelwert-wert {
+  justify-content: flex-end;
+  gap: var(--vg-a3);
+  text-align: right;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-weight: 500;
+  color: var(--vg-text);
+  white-space: nowrap;
+}
+.vg-labelwert-wert[data-ton="positiv"] { color: var(--vg-positiv); }
+.vg-labelwert-wert[data-ton="negativ"] { color: var(--vg-negativ); }
+.vg-labelwert-wert[data-ton="warnung"] { color: var(--vg-warnung); }
+.vg-labelwert-wert[data-ton="neutral"] { color: var(--vg-text-3); font-weight: 400; }
+.vg-labelwert-punkt { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--vg-neutral-flaeche); }
+.vg-labelwert-wert[data-ton="positiv"] .vg-labelwert-punkt { background: var(--vg-positiv); }
+.vg-labelwert-wert[data-ton="negativ"] .vg-labelwert-punkt { background: var(--vg-negativ); }
+.vg-labelwert-wert[data-ton="warnung"] .vg-labelwert-punkt { background: var(--vg-warnung); }
+
+/* Gestapelte Zeile: eine Rasterzelle über beide Spalten, Label klein und
+   gedämpft, Wert links darunter — der Wert bekommt die ganze Zeilenbreite */
+.vg-labelwert-zeile[data-gestapelt] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  grid-column: 1 / -1;
+  min-height: var(--tafel-zeile, 34px);
+  padding: var(--vg-a2) 0;
+  border-bottom: 1px solid var(--vg-rand);
+  min-width: 0;
+}
+.vg-labelwert-zeile[data-gestapelt]:last-child { border-bottom-color: transparent; }
+.vg-labelwert-zeile[data-gestapelt] .vg-labelwert-label,
+.vg-labelwert-zeile[data-gestapelt] .vg-labelwert-wert {
+  min-height: 0;
+  padding: 0;
+  border-bottom: 0;
+}
+.vg-labelwert-zeile[data-gestapelt] .vg-labelwert-label { font-size: var(--vg-fs-2xs); color: var(--vg-text-4); }
+.vg-labelwert-zeile[data-gestapelt] .vg-labelwert-wert {
+  justify-content: flex-start;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Responsivität ---------------------------------------------------------- */
+/* ≤ 1280: Tabellen eine Stufe kleiner, die Tafeln bleiben in ihren Spalten */
+@media (max-width: 1280px) {
+  .vg-vergleich, .vg-staffel, .vg-labelwert { font-size: var(--vg-fs-xs); }
+  .vg-vergleich th, .vg-vergleich td { padding: 0 var(--vg-a4); }
+  .vg-staffel th, .vg-staffel td { padding-left: var(--vg-a2); padding-right: var(--vg-a2); }
+  .vg-staffel th:first-child, .vg-staffel td:first-child { padding-left: var(--vg-a4); }
+  .vg-staffel th:last-child, .vg-staffel td:last-child { padding-right: var(--vg-a4); }
+  /* „4→3“ ohne Pfeilabstand */
+  .vg-staffel td[data-spalte="einheiten"] .vg-pfeil { margin: 0; width: 12px; mask-size: 12px auto; -webkit-mask-size: 12px auto; }
+  /* Abzeichen darf unter die Eingabe rutschen statt in die Nachbarspalte */
+  .vg-staffel-neu { flex-wrap: wrap; justify-content: flex-end; }
+}
+
+/* Bewegung nur, wenn erwünscht */
+@media (prefers-reduced-motion: reduce) {
+  .vg-tafel-pfeil, .vg-vergleich tbody tr, .vg-staffel-eingabe { transition-duration: 1ms; }
+}
+
+@media print {
+  .vg-tafel-kopf { background: transparent !important; }
+  .vg-vergleich td[data-spalte="neu"], .vg-vergleich th[data-spalte="neu"] { background: transparent; }
+}
+
+/* ---- Bestandsbalken (charts/stufen.jsx) ------------------------------------- */
+.vg-bestand { display: grid; gap: 2px; min-width: 0; }
+.vg-bestand-zeile {
+  display: grid;
+  /* Label so breit wie sein längster Eintrag („Versicherungskunden“), nie gekappt */
+  grid-template-columns: minmax(88px, max-content) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--vg-a4);
+  height: var(--zeile, 24px);
+  font-size: var(--vg-fs-sm);
+  min-width: 0;
+}
+.vg-bestand-label {
+  color: var(--vg-text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vg-bestand-bahn { position: relative; height: 10px; border-radius: var(--vg-r-xs); background: var(--vg-tief); overflow: hidden; }
+.vg-bestand-balken {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--vg-r-xs);
+  background: var(--vg-viz-1);
+  transition: width var(--vg-daten) var(--vg-kurve);
+}
+.vg-bestand-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-weight: 500;
+  color: var(--vg-text);
+  white-space: nowrap;
+  min-width: 84px;
+  text-align: right;
+}
+.vg-sparten { background: transparent; }
+@media (prefers-reduced-motion: reduce) {
+  .vg-bestand-balken { transition-duration: 1ms; }
+}
+
+/* ---- Breite Bildschirme (≥ 1800 px) ---------------------------------------- */
+/* Mehr Luft und eine Schriftstufe größer, damit die Tafeln die Breite nutzen
+   statt gestaucht zu wirken. Die dichte Form (Kasten-Regler) bleibt. */
+@media (min-width: 1800px) {
+  .vg-tafeln { gap: var(--vg-a7); }
+  .vg-tafel-kopf { min-height: 40px; }
+  .vg-tafel-koerper { padding-inline: var(--vg-a6); }
+  .vg-vergleich, .vg-labelwert, .vg-bestand-zeile { font-size: var(--vg-fs-md); }
+  .vg-vergleich tbody tr { min-height: 40px; }
+  .vg-vergleich th, .vg-vergleich td { padding-block: var(--vg-a3); }
+  .vg-labelwert-label, .vg-labelwert-wert { min-height: 34px; }
+  .vg-bestand-zeile { --zeile: 30px; }
+}

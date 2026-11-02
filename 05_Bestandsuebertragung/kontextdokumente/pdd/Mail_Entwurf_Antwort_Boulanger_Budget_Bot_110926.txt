@@ -1,0 +1,15 @@
+Hallo Pierre,
+
+der Bot ist nicht außen vor, im Gegenteil: Er ist in den 66.900 EUR der Kalkulation vom 10.06. enthalten und damit Teil der zugesagten 75.000 EUR. Die 25.000 EUR für den Bot waren ursprünglich über HS ausgewiesen; nach meinem aktuellen Verständnis läuft die Finanzierung inzwischen über ODP. Das ist eine Frage der internen Zuordnung und ändert an der Gesamtsumme nichts. Klemens, Martin, bitte kurz bestätigen oder korrigieren, falls ihr das anders seht.
+
+[TABELLE]
+
+Damit ist alles, was für die aktuelle Ausbaustufe einschließlich Bot nötig ist, innerhalb der zurückgestellten Mittel gedeckt. Über den Rahmen hinaus geht allein die Celonis-Ausbaustufe 2 mit 10 bis 15 PT. Sie kommt on top, ist noch nicht finanziert und genau der Punkt, der aktuell in Diskussion ist.
+
+Für den nächsten Schritt brauche ich eine kleine Freigabe innerhalb des gedeckten Teils: Der Kleinstdemand beim Eingangsmanagement über 5 PT für die Anlage der Datenpoolfelder muss gestafft und beauftragt werden. Diese Felder sind die Voraussetzung dafür, dass Celonis die Postkorbvorgänge eröffnen kann und der Bot anschließend wie geplant aufgebaut wird. Ohne sie steht die Kette und der Botaufbau verschiebt sich entsprechend.
+
+Ich bitte daher um die Clarity-ID und die Freigabe für das Staffing, idealerweise bis Montagvormittag.
+
+Beste Grüße
+
+Eike

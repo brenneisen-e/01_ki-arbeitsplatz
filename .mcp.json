@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "meshy": {
+      "command": "npx",
+      "args": ["-y", "meshy-ai-mcp-server"],
+      "env": {
+        "MESHY_API_KEY": "${MESHY_API_KEY}",
+        "MESHY_STREAM_TIMEOUT_MS": "600000"
+      }
+    }
+  }
+}

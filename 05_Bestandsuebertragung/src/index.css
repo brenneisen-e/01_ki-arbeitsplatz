@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@500;600&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* === MODUS-FARBEN (ERGO Bestandsübertragung) === */
+  --mode-primary: #8b1a2b;
+  --mode-primary-light: #c41230;
+  --mode-gradient: linear-gradient(135deg, #5a1018 0%, #8b1a2b 40%, #c41230 100%);
+  --mode-accent: #e8c547;
+  --mode-pastel: #fef2f2;
+
+  /* === NEUTRALE FARBEN === */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-table-stripe: #f8fafc;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-on-dark: #f8fafc;
+
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-focus: var(--mode-primary-light);
+
+  /* === SEMANTISCHE FARBEN === */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  /* === KARTEN === */
+  --card-radius: 12px;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --card-shadow-hover: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.06);
+  --card-border: 1px solid var(--border-light);
+}
+
+/* === GLOBALE STILE === */
+/* WICHTIG: Kein * { margin/padding: 0 } hier!
+   Tailwind v4 hat seinen eigenen Reset in @layer base.
+   Un-layered CSS würde alle Tailwind-Utilities überschreiben. */
+
+@layer base {
+  html {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* === KOPFLEISTE ===
+   Der Kopf ist in Bestandsübertragung, Provisionsreklamation,
+   Vertriebsarbeitsplatz und VST-Cockpit gleich groß (163 px). Diese App
+   rechnet mit 20 px Grundschrift; .kopf-px legt Abstands-, Schrift- und
+   Radius-Tokens im Kopf auf feste Pixel, damit dieselben Tailwind-Klassen
+   dieselben Maße ergeben wie bei 16 px. */
+.kopf-px {
+  --spacing: 4px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+}
+
+/* Glasflächen für Chips und Knöpfe auf dem dunklen Kopf, wie im
+   Vertriebsarbeitsplatz. */
+.header-glass {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+:is(button, a, label).header-glass:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* === ANIMATIONEN === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes kpiReveal {
+  from { opacity: 0; transform: translateY(6px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Präsentationsmodus der Prüfstrecke */
+@keyframes mailEingang {
+  from { opacity: 0; transform: translateY(-28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mailFluss {
+  0% { left: 0; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { left: calc(100% - 20px); opacity: 0; }
+}
+
+@keyframes pulseRing {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mode-primary-light) 40%, transparent); }
+  100% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--mode-primary-light) 0%, transparent); }
+}
+
+@layer utilities {
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-feature-settings: 'tnum';
+  }
+
+  /* Unterschrift in der Dokumentansicht der Anhaenge */
+  .font-signatur {
+    font-family: 'Caveat', 'Segoe Script', cursive;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 300ms ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out forwards;
+  }
+
+  .kpi-value {
+    animation: kpiReveal 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 200ms ease-out forwards;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-mail-eingang {
+    animation: mailEingang 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-mail-fluss {
+    animation: mailFluss 1800ms linear both;
+  }
+
+  .animate-pulse-ring {
+    animation: pulseRing 1200ms ease-out infinite;
+  }
+}
+
+/* Prozesskacheln auf der Prüfstrecke */
+.prozess-kachel:hover {
+  border-color: var(--mode-primary-light);
+}
+
+/* === Card Styles === */
+.card-base {
+  box-shadow: var(--card-shadow);
+  background-color: var(--bg-card);
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  contain: layout paint;
+}
+
+.card-base:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* === STATUS BADGES === */
+.status-unvollstaendig { background: #fff3cd; color: #856404; }
+.status-zu-validieren { background: #cce5ff; color: #004085; }
+.status-export-bereit { background: #d4edda; color: #155724; }
+.status-abgeschlossen { background: #d1e7dd; color: #0f5132; }
+.status-abgelehnt { background: #f8d7da; color: #721c24; }
+.status-wiedervorlage { background: #e2e3e5; color: #383d41; }

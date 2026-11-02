@@ -1,0 +1,712 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vh, 18px);
+  padding: clamp(12px, 3vw, 40px);
+
+  /* Papier-Palette (heller Print-Look auf dunklem Backdrop). */
+  --paper: #f7f4ec;
+  --paper-2: #efe9db;
+  --paper-edge: #e6dfcd;
+  --ink-print: #1b1c1a;
+  --ink-print-2: #4c4e47;
+  --ink-print-3: #8a8c82;
+  --rule: rgba(27, 28, 26, 0.12);
+}
+
+/* Backdrop: zeichnet das Strukturbild dahinter weich + dunkel. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 7, 9, 0.7);
+  backdrop-filter: blur(24px) saturate(118%);
+  -webkit-backdrop-filter: blur(24px) saturate(118%);
+}
+
+.closeBtn {
+  position: absolute;
+  top: clamp(12px, 2vw, 22px);
+  right: clamp(12px, 2vw, 22px);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--glass-strong);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out);
+}
+
+.closeBtn:hover {
+  border-color: var(--accent-bright);
+  background: var(--surface-2);
+}
+
+/* ── Edit-Werkzeuge (Vision/Business Case bearbeiten + speichern) ──────────── */
+.msTools {
+  position: absolute;
+  top: clamp(12px, 2vw, 22px);
+  left: clamp(12px, 2vw, 22px);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.msTool,
+.msSave {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out),
+    opacity var(--t-med) var(--ease-out);
+}
+
+.msTool {
+  background: var(--glass-strong);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+}
+
+.msTool:hover {
+  border-color: var(--accent-bright);
+}
+
+.msTool[data-on] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.msSave {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #fff;
+}
+
+.msSave:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.spin {
+  animation: msSpin 0.8s linear infinite;
+}
+
+@keyframes msSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Magazin-Shell (Buch + seitliche Navigation) ──────────────────────────── */
+.shell {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.6vw, 22px);
+  max-width: 100%;
+}
+
+.stage {
+  position: relative;
+  width: min(720px, 90vw);
+  height: min(80vh, 1000px);
+  perspective: 2400px;
+  flex: none;
+}
+
+/* ── Seite (Papier) ───────────────────────────────────────────────────────── */
+.page {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 2px 0 rgba(255, 255, 255, 0.5) inset;
+  overflow: hidden;
+}
+
+/* Gebundene Kante links (Spine-Schatten). */
+.page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 46px;
+  background: linear-gradient(90deg, rgba(27, 28, 26, 0.14), transparent);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.flip {
+  transform-origin: left center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  z-index: 2;
+}
+
+/* Lauf-Schatten während des Umblätterns. */
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0) 55%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 4.4vw, 52px) clamp(30px, 4.6vw, 56px);
+  padding-left: clamp(40px, 5.4vw, 66px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--paper-edge) transparent;
+}
+
+.content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--paper-edge);
+  border-radius: 999px;
+}
+
+/* ── Logo-Lockup ──────────────────────────────────────────────────────────── */
+.logoTile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  flex: none;
+}
+
+.logoImg {
+  display: block;
+  height: 30px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
+}
+
+.logoFallback {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #111;
+  line-height: 1;
+}
+
+.logoDot {
+  color: var(--accent-bright);
+}
+
+/* ── Cover ────────────────────────────────────────────────────────────────── */
+.coverPage {
+  justify-content: flex-start;
+  gap: clamp(16px, 2.4vh, 26px);
+}
+
+.coverTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.coverKicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  font-weight: 600;
+  text-align: right;
+}
+
+.coverHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 3px solid var(--accent);
+  padding-left: 16px;
+}
+
+.coverTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(34px, 5.4vw, 56px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  color: var(--ink-print);
+}
+
+.coverSubtitle {
+  font-size: clamp(15px, 1.5vw, 19px);
+  color: var(--ink-print-2);
+  line-height: 1.5;
+}
+
+.coverFigure {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28), inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.coverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.coverFoot {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-print-3);
+}
+
+/* ── Editorial / Übersicht ────────────────────────────────────────────────── */
+.overviewPage {
+  gap: clamp(16px, 2.2vh, 24px);
+}
+
+.sectionKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.lead {
+  font-size: clamp(17px, 1.55vw, 21px);
+  line-height: 1.66;
+  color: var(--ink-print-2);
+}
+
+.lead strong {
+  color: var(--ink-print);
+  font-weight: 650;
+}
+
+.tocBlock {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: clamp(14px, 2vh, 20px);
+  border-top: 1px solid var(--rule);
+}
+
+.tocTitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  color: var(--ink-print-3);
+}
+
+.toc {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 22px;
+}
+
+.tocItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tocNum {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  flex: none;
+  width: 22px;
+}
+
+.tocLabel {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-print);
+  flex: 1;
+  min-width: 0;
+}
+
+.tocArrow {
+  color: var(--ink-print-3);
+  flex: none;
+}
+
+/* ── Kapitel-Seite ────────────────────────────────────────────────────────── */
+.chapterPage {
+  gap: clamp(14px, 2vh, 20px);
+}
+
+.chapterFigure {
+  position: relative;
+  height: clamp(150px, 26vh, 240px);
+  border-radius: 8px;
+  overflow: hidden;
+  flex: none;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.chapterImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.chapterNum {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 0 10px 0 0;
+  background: linear-gradient(150deg, var(--accent-deep), var(--accent));
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.chapterHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chapterTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink-print);
+  line-height: 1.08;
+}
+
+.chapterOrt {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-print-3);
+}
+
+.chapterVision {
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: 1.62;
+  color: var(--ink-print-2);
+}
+
+.chapterVision strong {
+  color: var(--ink-print);
+  font-weight: 650;
+}
+
+/* Bearbeiten: Textfeld auf der hellen Magazin-Seite */
+.editArea {
+  width: 100%;
+  font: inherit;
+  font-size: clamp(14px, 1.15vw, 16.5px);
+  line-height: 1.55;
+  color: var(--ink-print, #1b1c1a);
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--rule, rgba(0, 0, 0, 0.18));
+  border-radius: 9px;
+  padding: 8px 10px;
+  resize: vertical;
+  field-sizing: content;
+}
+
+.editArea:focus {
+  outline: none;
+  border-color: var(--accent-bright, var(--accent));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* Business-Case-Block auf der Kapitelseite */
+.bcBlock {
+  margin-top: 12px;
+  padding-top: clamp(10px, 1.6vh, 16px);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bcLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.bcText {
+  font-size: clamp(13.5px, 1.1vw, 16px);
+  line-height: 1.55;
+  color: var(--ink-print-2);
+}
+
+.bcText strong {
+  color: var(--ink-print);
+  font-weight: 650;
+}
+
+.hypoBlock {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: clamp(12px, 1.8vh, 18px);
+  border-top: 1px solid var(--rule);
+}
+
+.hypoLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.hypoList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hypoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hypoTitle {
+  font-family: var(--font-heading);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink-print);
+  line-height: 1.25;
+}
+
+.hypoFuture {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-print-2);
+}
+
+.hypoTag {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent-deep);
+  vertical-align: 1px;
+}
+
+/* ── Schlussblatt ─────────────────────────────────────────────────────────── */
+.closingPage {
+  justify-content: center;
+  gap: clamp(14px, 2.2vh, 22px);
+  text-align: left;
+}
+
+.visionTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  color: var(--accent-deep);
+}
+
+.closingTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(26px, 3.4vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.06;
+  color: var(--ink-print);
+}
+
+.closingText {
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.64;
+  color: var(--ink-print-2);
+}
+
+.closingText strong {
+  color: var(--ink-print);
+  font-weight: 650;
+}
+
+.closingFoot {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-print-3);
+  padding-top: clamp(10px, 1.6vh, 16px);
+  border-top: 1px solid var(--rule);
+}
+
+.closingPage .logoTile {
+  margin-top: 6px;
+}
+
+/* ── Seitliche Navigation ─────────────────────────────────────────────────── */
+.nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--glass-strong);
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+  flex: none;
+  transition: border-color var(--t-med) var(--ease-out), background var(--t-med) var(--ease-out),
+    opacity var(--t-med) var(--ease-out), transform var(--t-med) var(--ease-out);
+}
+
+.nav:hover:not(:disabled) {
+  border-color: var(--accent-bright);
+  background: var(--surface-2);
+  transform: scale(1.06);
+}
+
+.nav:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+/* ── Pager (Zähler + Punkte) ──────────────────────────────────────────────── */
+.pager {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pageCount {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: none;
+  padding: 0;
+  transition: background var(--t-med) var(--ease-out), transform var(--t-med) var(--ease-out);
+}
+
+.dot:hover {
+  background: var(--ink-3);
+}
+
+.dotActive {
+  background: var(--accent-bright);
+  transform: scale(1.35);
+}
+
+/* ── Mobile / schmal ──────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .nav {
+    width: 42px;
+    height: 42px;
+  }
+  .stage {
+    width: 92vw;
+    height: 74vh;
+  }
+  .toc {
+    grid-template-columns: 1fr;
+  }
+  .pageCount {
+    display: none;
+  }
+}

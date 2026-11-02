@@ -1,0 +1,825 @@
+{
+  "teil": "teil1",
+  "folien": "1-22",
+  "neueKapitel": [
+    {
+      "id": "grundlagen",
+      "title": "Grundlagen: Risiko, Ausgleich, Prämie",
+      "subtitle": "Was Versicherung ist, wie der Risikoausgleich im Kollektiv und in der Zeit wirkt und wie daraus eine Prämie wird",
+      "icon": "shield",
+      "subChapters": [
+        {
+          "id": "definition",
+          "title": "Was Versicherung ist",
+          "icon": "shield-check",
+          "subtitle": "Die klassische Definition der Versicherung und ihre vier Bestandteile",
+          "kurzgesagt": [
+            "Versicherung deckt einen Geldbedarf, der im Einzelnen ungewiss, insgesamt aber schätzbar ist – getragen aus den Beiträgen vieler und ausgeglichen über die Vertragsdauer.",
+            "Die Definition zerfällt in vier Bestandteile: im Einzelnen ungewiss, insgesamt schätzbar, Risikoausgleich im Kollektiv und Risikoausgleich in der Zeit.",
+            "Für den Einzelnen ist das Risiko oft binär – kein Schaden oder finanzielle Schwierigkeiten bis zum Ruin –, erst das Kollektiv macht den Bedarf kalkulierbar und damit leistbar."
+          ],
+          "lernziele": [
+            "die Versicherungsdefinition in ihre vier Bestandteile zerlegen und jeden Bestandteil in eigenen Worten erklären",
+            "begründen, warum ein einzelnes Risiko ungewiss, eine Vielzahl gleichartiger Risiken aber schätzbar ist",
+            "die private Versicherung von der gesetzlichen Sozialversicherung und von vermögensbildenden Verträgen ohne Schadenfall abgrenzen"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Die Definition, auf der alles aufbaut",
+              "content": "Das ganze Geschäft steckt in einem einzigen Satz: <strong>„Versicherung ist die Deckung eines im Einzelnen ungewissen, aber insgesamt schätzbaren Geldbedarfs in der Zukunft auf der Grundlage eines Risikoausgleiches im Kollektiv und der Zeit.“</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 4–5</span></span> Der Satz klingt sperrig, enthält aber alles, was ein Versicherungsunternehmen ausmacht: ein ungewisses Einzelrisiko, eine berechenbare Gesamtheit, ein Kollektiv, das zusammenlegt, und eine Zeitachse, über die ausgeglichen wird. Wer die vier Bestandteile trennen kann, kann jedes Segment, jedes Produkt und jede Kennzahl der Branche daran entlang lesen."
+            },
+            {
+              "type": "infoKachelGrid",
+              "title": "Die vier Bestandteile der Definition",
+              "items": [
+                {
+                  "icon": "alert-circle",
+                  "title": "Im Einzelnen ungewiss",
+                  "description": "Für den Einzelnen ist unklar, ob und wann ein Schaden eintritt. Gerade bei größeren Schäden ist das Risiko oft binär: kein Schaden – oder finanzielle Schwierigkeiten bis zum Ruin."
+                },
+                {
+                  "icon": "bar-chart-3",
+                  "title": "Insgesamt schätzbar",
+                  "description": "Das einzelne Risiko bleibt ungewiss, den Gesamtbedarf berechnet der Versicherer mit statistischen Methoden und Wahrscheinlichkeiten – über viele Personen und viele Zeiträume hinweg."
+                },
+                {
+                  "icon": "users",
+                  "title": "Risikoausgleich im Kollektiv",
+                  "description": "Viele zahlen Beiträge, wenige beanspruchen Leistungen. So tragen viele Beitragszahler das individuelle Risiko gemeinsam, und für den Versicherer wird es leistbar."
+                },
+                {
+                  "icon": "clock",
+                  "title": "Risikoausgleich in der Zeit",
+                  "description": "Die Versicherung erstreckt sich über einen Zeitraum. Der Ausgleich wirkt auch über die Vertragsdauer: Die eigenen Beiträge finanzieren die späteren Schadenzahlungen mit."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "title": "Was die Definition für das Geschäft bedeutet",
+              "content": "Aus den vier Bestandteilen folgt das Geschäftsmodell. Weil das einzelne Risiko binär und existenzbedrohend ist, zahlen Kunden lieber einen kalkulierbaren Beitrag als einen möglichen Totalverlust zu tragen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 5</span></span> Weil sich gleichartige Risiken über viele Personen und Zeiträume statistisch abschätzen lassen, kann der Versicherer den Gesamtbedarf berechnen, obwohl er den einzelnen Schaden nicht kennt. Und weil viele zahlen, während wenige Leistungen beanspruchen, lässt sich der Bedarf aus dem Kollektiv decken. Der Ausgleich in der Zeit kommt hinzu: Er läuft nicht nur zwischen Personen, sondern über die Vertragsdauer hinweg, sodass eigene Beiträge die eigene Schadenzahlung mitfinanzieren."
+            },
+            {
+              "type": "callout",
+              "variant": "info",
+              "content": "Nicht jeder Versicherungsvertrag kennt einen Schadenfall: Bei vermögensbildenden Lebensversicherungen gibt es keinen „Schadenfall“ – die Auszahlung erfolgt am Ende der vereinbarten Zeitperiode.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 18</span></span> Der Geldbedarf in der Zukunft ist hier planmäßig, ungewiss bleibt nur, wer ihn wie lange hat."
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Ausgleich im Kollektiv und Ausgleich in der Zeit",
+              "content": "Die Definition nennt zwei Richtungen des Ausgleichs, und beide sind gleich wichtig. Im Kollektiv gleichen sich Risiken zwischen Personen aus: Viele zahlen Beiträge, wenige beanspruchen Leistungen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 5</span></span> In der Zeit gleichen sie sich innerhalb eines Vertragsverhältnisses aus, weil die Versicherung sich über einen Zeitraum erstreckt und die Beiträge früherer Jahre die Leistungen späterer Jahre mittragen. Wie stark die Zeitachse wirkt, unterscheidet die Marktsegmente: In der Lebensversicherung binden Verträge über mehrere Jahrzehnte Kapital, in der privaten Krankenversicherung prägen Alterungsrückstellungen die Kalkulation, in der Schaden-/Unfallversicherung werden Schäden vergleichsweise schnell reguliert.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 18, 20–21</span></span>"
+            },
+            {
+              "type": "paragraph",
+              "title": "Abgrenzung: Was in diesem Sinne keine Versicherung ist",
+              "content": "Nicht jedes System, das Risiken abdeckt, ist Versicherung im marktwirtschaftlichen Sinn. Die <strong>gesetzliche Sozialversicherung</strong> bildet umlagefinanzierte Systeme des Sozialrechts: Sie erbringt staatlich definierte Pflichtleistungen ohne marktbasierten Wettbewerb und setzt damit Rahmenbedingungen für die private Kranken- und Pflegeversicherung, statt selbst im Wettbewerb zu stehen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 11</span></span> Gesetzliche Versicherer gelten deshalb nicht als klassische Risikoträger – mit einer Einschränkung: Die Krankenkassen tragen das finanzielle Risiko durchaus, dürfen jedoch keine Gewinne erzielen, und im Insolvenzfall steht letztlich der Staat bzw. das Gesundheitssystem als Garant ein. Erst- und Rückversicherer dagegen sind vollwertige Risikoträger: Sie nehmen die Risiko- und Leistungsverpflichtung in die eigenen Bücher."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Die vier Bestandteile als Raster für die Projektarbeit",
+              "content": "Die Definition taugt als Prüfraster, wenn ein Segment, ein Produkt oder ein Bestand zu beurteilen ist. <strong>Ungewissheit:</strong> Wie binär ist das Einzelrisiko, wie hoch der mögliche Einzelschaden? <strong>Schätzbarkeit:</strong> Wie stabil ist die Datenbasis – in der Lebensversicherung gut, weshalb die kurzfristige Volatilität gering und die langfristigen Trends entscheidend sind; in der privaten Krankenversicherung planbar, aber mit strukturellen Kostensteigerungen; in Komposit volatil durch Naturereignisse und Inflation.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 18, 20–21</span></span> <strong>Kollektiv:</strong> Wie groß und wie homogen ist der Bestand, der den Ausgleich trägt? <strong>Zeit:</strong> Wie lange bindet der Vertrag Kapital und wie stark hängt das Ergebnis dadurch am Kapitalmarkt? Genau entlang dieser vier Fragen unterscheiden sich die Ertragslogiken der Segmente."
+            },
+            {
+              "type": "paragraph",
+              "title": "Warum die Grundlagen gerade jetzt zählen",
+              "content": "Die Versicherungsindustrie gilt mancherorts als verstaubt, ist aber in Bewegung wie wenige etablierte Märkte. Auf der Produktseite muss sie Innovationen anderer Industrien sowie makroökonomische und gesellschaftliche Verschiebungen mitdenken und zeitnah mit Versicherungsangeboten beantworten.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 3</span></span> Hinzu kommen kunden-, partner-, regulations- und technologiegetriebene Trends, die die eigenen Prozesse und das eigene Marktverständnis herausfordern: im vergangenen Jahrzehnt etwa die Etablierung des Direktvertriebskanals, die höhere Markttransparenz und Wettbewerbsintensität durch Vergleicher und die zunehmende Relevanz ergänzender Serviceleistungen, z. B. in Form von Apps, die über die reine Organisation des Versicherungsprodukts hinausgehen."
+            }
+          ]
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Wie lautet die klassische Definition der Versicherung?",
+          "options": [
+            "Die Absicherung eines sicher eintretenden Geldbedarfs durch planmäßiges Sparen über die gesamte Vertragsdauer hinweg",
+            "Die staatlich organisierte Umlage laufender Beiträge auf die Empfänger laufender Leistungen",
+            "Die Deckung eines im Einzelnen ungewissen, aber insgesamt schätzbaren Geldbedarfs in der Zukunft auf der Grundlage eines Risikoausgleiches im Kollektiv und der Zeit",
+            "Die Übernahme sämtlicher Risiken eines Kunden gegen einen fest vereinbarten Jahresbeitrag"
+          ],
+          "correct": 2,
+          "explanation": "Der Satz nennt vier Bestandteile: im Einzelnen ungewiss, insgesamt schätzbar, Risikoausgleich im Kollektiv und Risikoausgleich in der Zeit.",
+          "einheitId": "definition"
+        },
+        {
+          "question": "Was bedeutet der Definitionsteil „im Einzelnen ungewiss, aber insgesamt schätzbar“?",
+          "options": [
+            "Das einzelne Risiko bleibt ungewiss, der Gesamtbedarf lässt sich statistisch berechnen",
+            "Der Versicherer kennt den Schadenzeitpunkt jedes einzelnen Kunden, nicht aber die Höhe des jeweiligen Schadens",
+            "Die Schadenhöhe steht fest, nur die Zahl der Schäden schwankt von Jahr zu Jahr erheblich",
+            "Nur Großschäden sind kalkulierbar, Kleinschäden entziehen sich jeder Berechnung"
+          ],
+          "correct": 0,
+          "explanation": "Für den Einzelnen ist unklar, ob und wann ein Schaden eintritt. Über viele Personen und Zeiträume lässt sich der Gesamtbedarf mit statistischen Methoden und Wahrscheinlichkeiten abschätzen.",
+          "einheitId": "definition"
+        },
+        {
+          "question": "Was beschreibt der Risikoausgleich in der Zeit?",
+          "options": [
+            "Die Schäden eines Geschäftsjahres werden auf alle Sparten des Versicherers verteilt",
+            "Jüngere Beitragszahler finanzieren ausschließlich die Leistungen älterer Kunden",
+            "Der Versicherer verschiebt Gewinne planmäßig zwischen zwei Geschäftsjahren",
+            "Der Ausgleich wirkt über die Vertragsdauer hinweg"
+          ],
+          "correct": 3,
+          "explanation": "Die Versicherung erstreckt sich über einen Zeitraum: Die eigenen Beiträge finanzieren dem Versicherer die spätere Schadenzahlung mit. Der Ausgleich läuft also nicht nur zwischen Personen.",
+          "einheitId": "definition"
+        },
+        {
+          "question": "Warum gelten gesetzliche Sozialversicherungen nicht als Versicherer im marktwirtschaftlichen Sinn?",
+          "options": [
+            "Weil sie keine eigenen Beiträge erheben, sondern vollständig aus dem Bundeshaushalt finanziert werden",
+            "Weil sie ihre Risiken vollständig an Rückversicherer im Ausland weitergeben",
+            "Weil sie umlagefinanziert sind und Pflichtleistungen ohne marktbasierten Wettbewerb erbringen",
+            "Weil sie ausschließlich Sachleistungen erbringen und keine Geldleistungen auszahlen dürfen"
+          ],
+          "correct": 2,
+          "explanation": "Gesetzliche Versicherer bilden umlagefinanzierte Sozialversicherungssysteme des Sozialrechts mit staatlich definierten Pflichtleistungen. Die Krankenkassen tragen zwar das finanzielle Risiko, dürfen aber keine Gewinne erzielen.",
+          "einheitId": "definition"
+        }
+      ]
+    }
+  ],
+  "erweiterungen": [
+    {
+      "kapitelId": "01-marktueberblick",
+      "neueBloecke": [
+        {
+          "einheitId": "segmente",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Vier Segmente und fünf Unterscheidungsmerkmale",
+            "content": "Vier Segmente definieren den deutschen Versicherungsmarkt: Lebensversicherung, Krankenversicherung, Schaden-/Haftpflicht-/Unfall-/Kraftfahrtversicherung – häufig „Komposit“ oder „SHUK“ genannt – und Rückversicherung.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">22</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 17</span></span> Strukturell unterscheiden sich diese Segmente entlang von fünf Merkmalen: Risiko- und Schadenlogik, Kapitalintensität, Ertragsmechanik, Kundenzugang und Regulatorik. Die Beitragsstatistik der Branche zählt dagegen die drei Erstversicherungssegmente Leben, Schaden/Unfall und private Krankenversicherung; die Rückversicherung kommt als viertes Segment hinzu, weil sie eine eigene Risiko-, Kapital- und Ertragslogik hat, auch wenn sie formal eine eigene Sparte ist.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">23</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 22</span></span>"
+          }
+        },
+        {
+          "einheitId": "segmente",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "comparisonTable",
+            "title": "Die vier Marktsegmente im Strukturvergleich",
+            "columns": [
+              "Merkmal",
+              "Lebensversicherung",
+              "Private Krankenversicherung",
+              "Schaden/Unfall (SHUK)",
+              "Rückversicherung"
+            ],
+            "rows": [
+              [
+                "Leistungsversprechen",
+                "Absicherung von Lebensrisiken, langfristiger Vermögensaufbau und Altersvorsorge",
+                "Übernahme der Kosten medizinischer Leistungen, Absicherung finanzieller Risiken bei Krankheit und Pflegebedürftigkeit",
+                "Deckung konkreter Sach- und Haftpflichtrisiken im Alltag und in Unternehmen",
+                "Übernahme von Risiken der Erstversicherer zur Glättung von Schadenverläufen und Absicherung von Extremereignissen"
+              ],
+              [
+                "Typische Produkte",
+                "Rentenversicherung, betriebliche Altersvorsorge, Kapitallebensversicherung, Risikoleben, Berufs- und Erwerbsunfähigkeit",
+                "Private Vollversicherung, Zusatzversicherungen wie Zahn oder stationär, private Pflegezusatzversicherung",
+                "Kfz, Haftpflicht, Hausrat, Wohngebäude sowie Gewerbe- und Industrieversicherungen",
+                "Proportionale und nicht-proportionale Rückversicherungsverträge über alle Sparten hinweg"
+              ],
+              [
+                "Risikoprofil",
+                "Seltene, hochvolumige biometrische Ereignisse; gut kalkulierbar, kurzfristig wenig volatil, langfristige Trends entscheidend",
+                "Häufige, vergleichsweise kleine Leistungsfälle; gut planbar, aber mit strukturellen Kostensteigerungen",
+                "Hohe Frequenz, überwiegend mittlere Schadenhöhen, seltene Groß- und Katastrophenschäden; höhere Volatilität als Leben und Kranken",
+                "Niedrige Frequenz, sehr hohe Schadenvolumina; hohe Volatilität, Diversifikation und Portfolioeffekte zentral"
+              ],
+              [
+                "Kapitalbindung",
+                "Mehrere Jahrzehnte, hohe Kapitalbindung, Asset-Liability-Management zentral, abhängig von Zins und Kapitalmarkt",
+                "Moderat bis langfristig, geprägt von Alterungsrückstellungen, geringere Kapitalmarktabhängigkeit als in der Lebensversicherung",
+                "Überwiegend kurz- bis mittelfristig, Asset-Liability-Management weniger wichtig, Kapital für Volatilität und Risikopuffer",
+                "Kapitalintensiv, hohe Risikokapazitäten vorzuhalten, Kapitalsteuerung auf Portfolioebene"
+              ],
+              [
+                "Ertragslogik",
+                "Kapitalanlageerträge und Garantieversprechen, also das Spread-Geschäft; Zinsentwicklung als wichtigster Ergebnishebel",
+                "Risikoadäquate Prämienkalkulation sowie konsequentes Kosten- und Leistungsmanagement",
+                "Technisches Ergebnis (Combined Ratio) aus Pricing, Underwriting-Disziplin und Schadenmanagement",
+                "Risikoadäquates Pricing, strikte Portfoliosteuerung und aktive Nutzung von Diversifikationseffekten"
+              ]
+            ]
+          }
+        },
+        {
+          "einheitId": "segmente",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "callout",
+            "variant": "info",
+            "content": "Wenn vom Segment Krankenversicherung die Rede ist, ist die <strong>private Krankenversicherung</strong> gemeint.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">24</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 20</span></span> Die gesetzliche Krankenversicherung gehört zur gesetzlichen Sozialversicherung: umlagefinanziert, mit staatlich definierten Pflichtleistungen und ohne marktbasierten Wettbewerb.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">25</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 11</span></span>"
+          }
+        }
+      ],
+      "neueQuizfragen": [
+        {
+          "question": "Welche vier Segmente definieren den deutschen Versicherungsmarkt?",
+          "options": [
+            "Leben, Kranken, Schaden/Unfall und Rückversicherung",
+            "Leben, Kranken, Kfz und Gewerbe",
+            "Privatkunden, Gewerbe, Industrie und Rückversicherung",
+            "Leben, Schaden/Unfall, Kranken und gesetzliche Sozialversicherung"
+          ],
+          "correct": 0,
+          "explanation": "Neben Leben, Kranken und Schaden/Unfall (Komposit oder SHUK) zählt die Rückversicherung als viertes Segment: Sie ist formal eine eigene Sparte, gehört als Marktsegment aber fest zur Struktur.",
+          "einheitId": "segmente"
+        },
+        {
+          "question": "Welche Ertragslogik ist für die Schaden-/Unfallversicherung kennzeichnend?",
+          "options": [
+            "Kapitalanlageerträge und Garantieversprechen, also das sogenannte Spread-Geschäft mit dem Zins als Haupthebel",
+            "Die Umlage der Leistungen auf die Beitragszahler eines Jahres",
+            "Das technische Ergebnis aus Pricing, Underwriting-Disziplin und Schadenmanagement",
+            "Die Nutzung von Diversifikationseffekten über ein globales Portfolio"
+          ],
+          "correct": 2,
+          "explanation": "In Komposit entscheidet das technische Ergebnis, gemessen an der Combined Ratio. Das Spread-Geschäft ist die Ertragslogik der Lebensversicherung, die Diversifikation über ein globales Portfolio die der Rückversicherung.",
+          "einheitId": "segmente"
+        }
+      ]
+    },
+    {
+      "kapitelId": "02-marktteilnehmer",
+      "neueBloecke": [
+        {
+          "einheitId": "erstversicherer",
+          "tiefe": 1,
+          "position": "anfang",
+          "block": {
+            "type": "archetypenKarte",
+            "title": "Die Archetypen des Versicherungsmarktes",
+            "untertitel": "Erst- und Rückversicherer sind Risikoträger gegenüber den Endkunden; die gesetzliche Sozialversicherung ist kein Versicherer im marktwirtschaftlichen Sinn, InsurTechs unterstützen die Risikoträger.",
+            "spalten": [
+              {
+                "titel": "Privatwirtschaftlicher Versicherungsmarkt",
+                "hinweis": "Risikoträger",
+                "gruppen": [
+                  {
+                    "titel": "Rückversicherer",
+                    "rolle": "traeger",
+                    "text": "Versichern die Risiken der Erstversicherer, übernehmen Groß- und Katastrophenrisiken, unterstützen deren Pricing- und Modellierungsfähigkeit und stärken so nachhaltig die Risikotragfähigkeit und Stabilität des gesamten Marktes. Darüber hinaus übernehmen sie auch Risiken anderer Rückversicherer."
+                  },
+                  {
+                    "titel": "Erstversicherer, öffentlich",
+                    "rolle": "traeger",
+                    "text": "Agieren als regional verankerte Erstversicherer und bieten Privat- und Gewerbekunden Versicherungsschutz als vollwertige Risikoträger."
+                  },
+                  {
+                    "titel": "Erstversicherer, privat",
+                    "rolle": "traeger",
+                    "text": "Treten als breit aufgestellte Erstversicherer auf, sichern Endkunden über alle Sparten ab und bilden die größte Marktgruppe im Versicherungswesen."
+                  },
+                  {
+                    "titel": "InsurTechs",
+                    "rolle": "unterstuetzer",
+                    "text": "Unterstützen Versicherer mit digitalen Lösungen, modernisieren Prozesse wie Schaden, Vertrieb und Underwriting und ermöglichen Effizienzgewinne sowie neue Geschäftsmodelle."
+                  }
+                ]
+              },
+              {
+                "titel": "Gesetzliche Sozialversicherung",
+                "hinweis": "Keine klassischen Risikoträger",
+                "gruppen": [
+                  {
+                    "titel": "Gesetzliche Versicherer",
+                    "rolle": "kein-traeger",
+                    "text": "Bilden umlagefinanzierte Sozialversicherungssysteme des Sozialrechts, erbringen staatlich definierte Pflichtleistungen ohne marktbasierten Wettbewerb und setzen mit Vorgaben und Leistungsniveaus wichtige Rahmenbedingungen für die private Kranken- und Pflegeversicherung."
+                  }
+                ]
+              }
+            ],
+            "mitte": {
+              "titel": "Endkunden",
+              "text": "Privatpersonen, Unternehmen oder Organisationen schließen Versicherungsverträge direkt mit einem Erstversicherer ab. Sie zahlen Beiträge, um sich gegen bestimmte Risiken abzusichern, etwa Krankheit, Schaden, Haftpflicht oder Altersvorsorge."
+            },
+            "beziehungen": [
+              {
+                "von": "Erstversicherer, privat",
+                "nach": "Endkunden",
+                "art": "deckt"
+              },
+              {
+                "von": "Erstversicherer, öffentlich",
+                "nach": "Endkunden",
+                "art": "deckt"
+              },
+              {
+                "von": "Endkunden",
+                "nach": "Erstversicherer, privat",
+                "art": "zahlt"
+              },
+              {
+                "von": "Endkunden",
+                "nach": "Erstversicherer, öffentlich",
+                "art": "zahlt"
+              },
+              {
+                "von": "Gesetzliche Versicherer",
+                "nach": "Endkunden",
+                "art": "deckt"
+              },
+              {
+                "von": "Endkunden",
+                "nach": "Gesetzliche Versicherer",
+                "art": "zahlt"
+              },
+              {
+                "von": "InsurTechs",
+                "nach": "Erstversicherer, privat",
+                "art": "unterstuetzt"
+              },
+              {
+                "von": "InsurTechs",
+                "nach": "Erstversicherer, öffentlich",
+                "art": "unterstuetzt"
+              },
+              {
+                "von": "InsurTechs",
+                "nach": "Rückversicherer",
+                "art": "unterstuetzt"
+              },
+              {
+                "von": "InsurTechs",
+                "nach": "Endkunden",
+                "art": "unterstuetzt"
+              }
+            ],
+            "fussnote": "Die jeweiligen Krankenkassen tragen das finanzielle Risiko und agieren damit als Risikoträger, dürfen jedoch keine Gewinne erzielen; im Insolvenzfall fungiert letztlich der Staat bzw. das Gesundheitssystem als Garant. Quelle: Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 11."
+          }
+        },
+        {
+          "einheitId": "erstversicherer",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Volle Risiko- und Leistungsverpflichtung gegenüber den Endkunden",
+            "content": "Der Erstversicherungsmarkt umfasst alle Versicherungsunternehmen, die gegenüber den Endkunden die <strong>volle Risiko- und Leistungsverpflichtung</strong> übernehmen – diese Firmen sind das, was man klassisch als „Versicherer“ kennt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 10</span></span> Endkunden sind Privatpersonen, Unternehmen oder Organisationen; sie schließen den Vertrag direkt mit dem Erstversicherer und zahlen Beiträge, um sich gegen bestimmte Risiken abzusichern, etwa Krankheit, Schaden, Haftpflicht oder Altersvorsorge. Um die eigenen Risiken beherrschbar zu halten, geben Erstversicherer Teile dieser Risiken an Rückversicherer weiter – über diese Kette tragen Rückversicherer das originäre Risiko aus Verträgen mit echten Kunden mit, ohne selbst Vertragspartner des Endkunden zu sein."
+          }
+        },
+        {
+          "einheitId": "erstversicherer",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Private Versicherer: kommerzielles Modell unter Wettbewerbs- und Kostendruck",
+            "content": "Private Versicherer bilden die größte Marktgruppe im deutschen Erstversicherungsmarkt, dominieren weite Teile des Geschäfts über alle Sparten hinweg und stellen den Großteil der Beitragseinnahmen; geprägt wird die Gruppe von Marktführern wie der Allianz mit rund 17 % Marktanteil an der Spitze des Erstversicherungsmarkts.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 12</span></span> Sie operieren als voll kommerzielle Erstversicherer, nutzen kapitalmarktorientierte Geschäftsmodelle und bedienen alle wesentlichen Sparten von Leben über Kranken bis Komposit. Ihre Wertschöpfung entsteht aus skalierbaren Vertriebsstrukturen, differenziertem Pricing, effizienten Schadenprozessen und der Fähigkeit, große Bestände profitabel zu managen. Unter Druck stehen sie durch Konsolidierung, Modernisierungskosten und intensiven Wettbewerb: Digitalisierung, Automatisierung und kanalübergreifende Kundenerlebnisse müssen beschleunigt und gleichzeitig die Profitabilität in margenschwachen Sparten gesichert werden."
+          }
+        },
+        {
+          "einheitId": "sonstige",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Trägerprinzip und Regionalprinzip",
+            "content": "Die öffentlichen Versicherer bilden gemeinsam die zweitgrößte Versicherungsgruppe im deutschen Erstversicherungsmarkt und decken große Teile des regionalen Privat- und Gewerbegeschäfts ab; ihre Stärke sind besonders enge Kundenbeziehungen und eine hohe lokale Marktdurchdringung über die Verbindung zur Sparkassen-Finanzgruppe.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 13</span></span> Sie arbeiten nach dem öffentlich-rechtlichen Trägerprinzip – Eigentümer sind öffentliche Träger wie Sparkassenverbände oder Kommunen, weshalb langfristige Stabilität und regionale Verantwortung stärker im Fokus stehen als kurzfristige Gewinnmaximierung –, agieren operativ aber wie private Erstversicherer, bedienen alle Sparten und stützen sich auf das Regionalprinzip. Ihre Wertschöpfung entsteht aus breiten Beständen, risikoarmem Underwriting und der engen Verzahnung mit der Sparkassen-Finanzgruppe, die einen dichten und konstanten Kundenzugang ermöglicht. Zu bewältigen haben sie steigende IT-Modernisierungskosten, Effizienzsteigerungen, begrenzte Skaleneffekte zwischen den Regionen und die Transformation zu hybriden Vertriebsmodellen: Die regionale Struktur stabilisiert und limitiert gleichzeitig."
+          }
+        },
+        {
+          "einheitId": "sonstige",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "comparisonTable",
+            "title": "Private und öffentliche Erstversicherer im Vergleich",
+            "columns": [
+              "Merkmal",
+              "Private Versicherer",
+              "Öffentliche Versicherer"
+            ],
+            "rows": [
+              [
+                "Marktbedeutung",
+                "Größte Marktgruppe im Erstversicherungsmarkt, Großteil der Beitragseinnahmen",
+                "Zweitgrößte Versicherungsgruppe, stark im regionalen Privat- und Gewerbegeschäft"
+              ],
+              [
+                "Eigentum und Zielsetzung",
+                "Voll kommerziell und kapitalmarktorientiert",
+                "Öffentlich-rechtliches Trägerprinzip: Sparkassenverbände oder Kommunen als Eigentümer, Stabilität vor kurzfristiger Gewinnmaximierung"
+              ],
+              [
+                "Marktzugang",
+                "Breit aufgestellt über alle Sparten, Endkunden in ganz Deutschland",
+                "Regionalprinzip mit festem Geschäftsgebiet, traditionell starkes Agenturnetzwerk im Sparkassen-Vertrieb"
+              ],
+              [
+                "Wertschöpfung",
+                "Skalierbare Vertriebsstrukturen, differenziertes Pricing, effiziente Schadenprozesse, große Bestände profitabel managen",
+                "Breite Bestände, risikoarmes Underwriting, enge Verzahnung mit der Sparkassen-Finanzgruppe"
+              ],
+              [
+                "Herausforderungen",
+                "Konsolidierung, Modernisierungskosten, intensiver Wettbewerb, Profitabilität in margenschwachen Sparten",
+                "IT-Modernisierungskosten, Effizienz, begrenzte Skaleneffekte zwischen Regionen, hybride Vertriebsmodelle"
+              ]
+            ]
+          }
+        },
+        {
+          "einheitId": "sonstige",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "callout",
+            "variant": "info",
+            "content": "Öffentliche Versicherer sind nicht die Sozialversicherung: Sie gehören zum privatwirtschaftlichen Versicherungsmarkt und tragen als vollwertige Risikoträger die Risiken ihrer Kunden. Die gesetzliche Sozialversicherung dagegen bildet umlagefinanzierte Systeme des Sozialrechts mit staatlich definierten Pflichtleistungen ohne marktbasierten Wettbewerb.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 11</span></span>"
+          }
+        },
+        {
+          "einheitId": "rueckversicherer",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Stabilitätsanker für den gesamten Markt",
+            "content": "Der Rückversicherungsmarkt besteht aus Spezialunternehmen, die Erstversicherer versichern: Sie nehmen Teile der Risiken aus den Portfolios der Erstversicherer in ihre eigenen Bücher, sei es proportional als Quotenteilung oder als Deckung für Extremereignisse.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 10</span></span> Damit sind sie zentrale Stabilitätsanker der Versicherungswirtschaft: Sie entlasten Erstversicherer von Risiko, tragen zur Kapitalsteuerung bei und senken die Schadenvolatilität. Global relevanten Anbietern wie der Münchener Rück und der Hannover Rück kommt dabei besondere Bedeutung zu, weil sie die Marktmechanik mitprägen und Kapazitäten für Groß- und Katastrophenrisiken bereitstellen. Über ihre Pricing- und Modellierungsfähigkeit stärken Rückversicherer außerdem die Risikotragfähigkeit des gesamten Marktes.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 11 und 14</span></span>"
+          }
+        },
+        {
+          "einheitId": "rueckversicherer",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Zedent, Retrozedent und die Quellen der Wertschöpfung",
+            "content": "Rückversicherer treten in zwei Rollen auf. Sie übernehmen Risiken der Erstversicherer – der abgebende Erstversicherer ist der <strong>Zedent</strong> – und sie geben Risiken selbst weiter beziehungsweise übernehmen Risiken anderer Rückversicherer; in dieser zweiten Rolle heißen sie <strong>Retrozedent</strong>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 11</span></span> Ihr Geschäftsmodell umfasst proportionalen und nicht-proportionalen Risikotransfer sowie Beratung: Sie übernehmen definierte Anteile oder Spitzenlasten aus den Portfolios der Erstversicherer, kalkulieren die Risiken auf Basis hochentwickelter Modelle und erzielen Wert über Risikodiversifikation, Kapitalallokation und präzise Pricing-Expertise.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 14</span></span>"
+          }
+        },
+        {
+          "einheitId": "rueckversicherer",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Rückversicherung als eigenes Marktsegment",
+            "content": "Formal ist die Rückversicherung eine eigene Sparte, als Marktsegment gehört sie fest zur Struktur des Versicherungsmarktes.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 22</span></span> Ihr Risikoprofil ist von niedriger Frequenz, aber sehr hohen Schadenvolumina geprägt, vor allem bei Naturkatastrophen und Großschäden; die Volatilität ist hoch, Diversifikation und Portfolioeffekte sind zentral. Das Geschäft ist kapitalintensiv, weil hohe Risikokapazitäten vorgehalten werden müssen, und die Kapitalsteuerung erfolgt auf Portfolioebene. Ergebnisvolatilität wird bewusst in Kauf genommen und durch Kapitalmanagement ausgeglichen. Unter Druck geraten Rückversicherer durch steigende Naturgefahren, höhere Schadeninflation und enge Kapitalmärkte: Sie müssen Pricing-Modelle laufend anpassen, Kapazität effizient allokieren und Innovationen wie parametrische Deckungen, Cyber-Risiken und datengetriebene Tarifierung entwickeln.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 14</span></span>"
+          }
+        },
+        {
+          "einheitId": "insurtechs",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "InsurTechs unterstützen die Risikoträger",
+            "content": "In der Landkarte der Marktteilnehmer stehen InsurTechs nicht neben den Risikoträgern, sondern unter ihnen: Sie unterstützen Versicherer mit digitalen Lösungen, modernisieren Prozesse wie Schaden, Vertrieb und Underwriting und ermöglichen Effizienzgewinne sowie neue Geschäftsmodelle.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 11</span></span> Ihre Lösungen adressieren gezielt einzelne Wertschöpfungsstufen und beruhen auf Software-, Plattform- oder API-Ansätzen, die Effizienz, Geschwindigkeit und bessere Datenverarbeitung ermöglichen und traditionelle Prozesse spürbar entlasten. Betroffen sind nicht nur etablierte Versicherer, sondern auch Makler. Ihre Stärke ist die Geschwindigkeit in Entwicklung und Produktinnovation; ihre Aufgabe bleibt, Wachstum, Profitabilität und regulatorische Anforderungen in Einklang zu bringen und dabei Skalierung wie technologische Komplexität zu bewältigen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 15</span></span>"
+          }
+        },
+        {
+          "einheitId": "insurtechs",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "table",
+            "title": "Rollenmuster der InsurTechs",
+            "headers": [
+              "Rollenmuster",
+              "Geschäftsmodell",
+              "Verhältnis zum Risiko"
+            ],
+            "rows": [
+              [
+                "Digitaler Erstversicherer mit eigenem Buch",
+                "Vollfinanzierter Erstversicherer und Tech-Player: eigenes Versicherungsgeschäft auf einer hochautomatisierten IT-Plattform",
+                "Trägt eigenes Risiko"
+              ],
+              [
+                "Plattform als Insurance-as-a-Service",
+                "Stellt die eigene IT-Plattform samt modularem Produktbaukasten als White-Label-Lösung bereit, damit andere Versicherungsunternehmen schnell und skalierbar eigene Produkte auf den Markt bringen",
+                "Risiko bleibt beim Partnerunternehmen"
+              ],
+              [
+                "Reiner Tech-Player (B2B-Software)",
+                "Cloudbasierte Komplettlösung zur Vertrags- und Schadenverwaltung, die als modernes Betriebssystem IT-Altlasten ablöst",
+                "Kein Risikoträger"
+              ],
+              [
+                "Spezialist für einzelne Wertschöpfungsstufen",
+                "Technologiegestützte Lösungen für Vertrieb, Underwriting, Schaden und Prozessautomatisierung, per Software, Plattform oder API",
+                "Kein Risikoträger"
+              ]
+            ],
+            "sortable": false
+          }
+        },
+        {
+          "einheitId": "insurtechs",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "callout",
+            "variant": "info",
+            "content": "<strong>Dunkelverarbeitung</strong> meint einen sehr hohen Automatisierungsgrad: Standardvorgänge in der Vertragsverwaltung und im Schadenmanagement werden vollautomatisiert abgewickelt, ohne manuellen Eingriff.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 15</span></span>"
+          }
+        }
+      ],
+      "neueQuizfragen": [
+        {
+          "question": "Wer trägt gegenüber dem Endkunden die volle Risiko- und Leistungsverpflichtung?",
+          "options": [
+            "Der Erstversicherer",
+            "Der Rückversicherer",
+            "Das InsurTech, das die Police technisch abwickelt",
+            "Die gesetzliche Sozialversicherung"
+          ],
+          "correct": 0,
+          "explanation": "Der Erstversicherungsmarkt umfasst alle Unternehmen, die gegenüber den Endkunden die volle Risiko- und Leistungsverpflichtung übernehmen. Rückversicherer versichern die Erstversicherer, sind aber nicht Vertragspartner des Endkunden.",
+          "einheitId": "erstversicherer"
+        },
+        {
+          "question": "Was bezeichnet die Retrozession?",
+          "options": [
+            "Die Rückgabe einer Police durch den Kunden innerhalb der Widerrufsfrist",
+            "Die Rückzahlung überschüssiger Beiträge an den Erstversicherer",
+            "Die Rückabwicklung eines Schadenfalls nach einem erfolgreichen Regress",
+            "Die Weitergabe von Rückversicherungsrisiken an andere Rückversicherer"
+          ],
+          "correct": 3,
+          "explanation": "Rückversicherer übernehmen auch Risiken anderer Rückversicherer. Der abgebende Rückversicherer heißt Retrozedent, das Geschäft selbst Retrozession.",
+          "einheitId": "rueckversicherer"
+        },
+        {
+          "question": "Was kennzeichnet die öffentlichen Versicherer?",
+          "options": [
+            "Sie gehören zur gesetzlichen Sozialversicherung, sind umlagefinanziert und erbringen staatlich definierte Pflichtleistungen",
+            "Sie dürfen ausschließlich Gewerbekunden in ihrem Geschäftsgebiet versichern",
+            "Sie arbeiten nach dem öffentlich-rechtlichen Trägerprinzip und dem Regionalprinzip, sind aber vollwertige Risikoträger",
+            "Sie zeichnen nur Risiken, die kein privater Versicherer annehmen möchte"
+          ],
+          "correct": 2,
+          "explanation": "Öffentliche Versicherer stehen im Eigentum öffentlicher Träger wie Sparkassenverbänden oder Kommunen, agieren operativ aber wie private Erstversicherer und tragen die Risiken ihrer Kunden selbst.",
+          "einheitId": "sonstige"
+        },
+        {
+          "question": "Was ist mit „Insurance-as-a-Service“ gemeint?",
+          "options": [
+            "Ein Versicherer übernimmt den telefonischen Kundenservice und die Schadenbearbeitung eines anderen Versicherers vollständig",
+            "Ein Anbieter stellt anderen Versicherungsunternehmen seine Plattform samt Produktbaukasten als White-Label-Lösung bereit",
+            "Vermittler verkaufen Versicherungen ausschließlich über eine App",
+            "Ein Rückversicherer berät Erstversicherer beim Pricing komplexer Risiken"
+          ],
+          "correct": 1,
+          "explanation": "Ein digitaler Erstversicherer kann seine hochautomatisierte IT-Plattform inklusive modularem Produktbaukasten als White-Label-Lösung anbieten, damit andere Versicherungsunternehmen schnell und skalierbar eigene Produkte auf den Markt bringen.",
+          "einheitId": "insurtechs"
+        }
+      ]
+    },
+    {
+      "kapitelId": "03-produktlandschaft",
+      "neueBloecke": [
+        {
+          "einheitId": "leben-rente",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "infoKachelGrid",
+            "title": "Das Drei-Säulen-Modell der Altersvorsorge",
+            "items": [
+              {
+                "icon": "landmark",
+                "title": "Gesetzliche Vorsorge",
+                "description": "Gesetzliche Rentenversicherung als umlagefinanziertes System und verpflichtende Basisabsicherung im Alter."
+              },
+              {
+                "icon": "briefcase",
+                "title": "Betriebliche Vorsorge",
+                "description": "Arbeitgebergestützte Altersvorsorge mit kapitalgedeckter Finanzierung als freiwillige Ergänzung der gesetzlichen Rente."
+              },
+              {
+                "icon": "coins",
+                "title": "Private Vorsorge",
+                "description": "Renten-, Fonds- und Vorsorgelösungen mit individueller Produktwahl als freiwillige Ergänzung der gesetzlichen Rente."
+              }
+            ]
+          }
+        },
+        {
+          "einheitId": "leben-rente",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Die Rolle der Lebensversicherer in der Altersvorsorge",
+            "content": "Die Altersvorsorge in Deutschland ruht auf drei Säulen: gesetzliche, betriebliche und private Vorsorge. Lebensversicherer sind vor allem in der betrieblichen und der privaten Vorsorge aktiv und prägen diese beiden Säulen als zentrale Anbieter.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 19</span></span> Sie verbinden dabei langfristigen Vermögensaufbau und Altersvorsorge mit der Absicherung biometrischer Risiken – ihr Beitrag geht also über die Rentenversicherung hinaus."
+          }
+        },
+        {
+          "einheitId": "leben-rente",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Warum die Lebensversicherung ein kapitalmarktnahes Vorsorgegeschäft ist",
+            "content": "Das Risikoprofil der Lebensversicherung ist von seltenen, aber hochvolumigen Ereignissen geprägt, insbesondere von biometrischen Risiken wie Sterblichkeit, Langlebigkeit und Invalidität. Weil die Datenbasen stabil sind, sind diese Risiken gut kalkulierbar: Die kurzfristige Volatilität ist gering, entscheidend sind die langfristigen Trends.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">11</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 18</span></span> Bei den vermögensbildenden Versicherungen gibt es gar keinen „Schadenfall“; die Auszahlung erfolgt am Ende der vereinbarten Zeitperiode. Mit Laufzeiten von mehreren Jahrzehnten bindet das Geschäft entsprechend viel Kapital, weshalb Asset-Liability-Management – die Abstimmung von Kapitalanlagen und Versicherungsverpflichtungen über die gesamte Laufzeit – zentral ist und die Sparte stark von Zinsniveau und Kapitalmarktentwicklung abhängt. Die Profitabilität basiert primär auf Kapitalanlageerträgen und Garantieversprechen (Spread-Geschäft): Klassisches Underwriting spielt eine untergeordnete Rolle, wichtigster Ergebnishebel ist die Zinsentwicklung."
+          }
+        },
+        {
+          "einheitId": "kv",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Risiko, Kapital und Ertragslogik der privaten Krankenversicherung",
+            "content": "Das Geschäft der privaten Krankenversicherung ist durch häufige, vergleichsweise kleinere Schadens- bzw. Leistungsfälle geprägt, deren Entwicklung stark von medizinischem Fortschritt, demografischen Trends und Kosteninflation beeinflusst wird; die Risiken sind grundsätzlich gut planbar, unterliegen jedoch strukturellen Kostensteigerungen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">26</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 20</span></span> Die Kapitalbindung ist moderat bis langfristig und wird insbesondere durch die Alterungsrückstellungen geprägt – die Abhängigkeit vom Kapitalmarkt ist geringer als in der Lebensversicherung, bleibt für die Finanzierung langfristiger Verpflichtungen aber relevant. Die Ertragsmechanik beruht auf risikoadäquater Prämienkalkulation sowie konsequentem Kosten- und Leistungsmanagement: Kapitalanlageergebnisse tragen zum Ergebnis bei, sind anders als in der Lebensversicherung aber nicht der primäre Werttreiber der Sparte."
+          }
+        },
+        {
+          "einheitId": "sach",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "SHUK, Komposit, Schaden/Unfall: drei Namen für eine Sparte",
+            "content": "Die Schaden-/Unfallversicherung heißt im Markt auch <strong>Komposit</strong> oder <strong>SHUK</strong>; die Abkürzung steht für Schaden, Haftpflicht, Unfall und Kfz.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">27</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 17 und 21</span></span> Das Segment deckt konkrete Sach- und Haftpflichtrisiken im Alltag und in Unternehmen ab. Typische Produkte sind Kfz-, Haftpflicht-, Hausrat-, Wohngebäude- sowie Gewerbe- bzw. Industrieversicherungen."
+          }
+        },
+        {
+          "einheitId": "sach",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Warum Komposit ein Underwriting- und Pricing-Geschäft ist",
+            "content": "Das Risikoprofil der Sparte ist durch hohe Frequenz und überwiegend mittlere Schadenhöhen gekennzeichnet, ergänzt durch seltene Groß- und Katastrophenschäden; die Volatilität ist höher als in der Lebens- und der Krankenversicherung, insbesondere durch Naturereignisse und Inflationseinflüsse.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">28</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 21</span></span> Weil Schäden vergleichsweise schnell reguliert werden, ist die Kapitalbindung überwiegend kurz- bis mittelfristig: Asset-Liability-Management spielt eine geringere Rolle, die Kapitalanforderungen ergeben sich primär aus Volatilität und Risikopuffern. Die Profitabilität entscheidet sich deshalb am technischen Ergebnis, also an Pricing, Underwriting-Disziplin und Schadenmanagement. Neben einer möglichst akkuraten Risikoeinschätzung ist die Kontrolle der Verwaltungskosten zentral; die Kapitalanlage dient primär als ergänzender Ertragsbaustein."
+          }
+        }
+      ],
+      "neueQuizfragen": [
+        {
+          "question": "Welche Säulen der Altersvorsorge prägen die Lebensversicherer vor allem?",
+          "options": [
+            "Vor allem die gesetzliche Vorsorge",
+            "Ausschließlich die private Vorsorge",
+            "Alle drei Säulen der Altersvorsorge zu jeweils gleichen Teilen",
+            "Die betriebliche und die private Vorsorge"
+          ],
+          "correct": 3,
+          "explanation": "Lebensversicherer sind vor allem in der betrieblichen und privaten Vorsorge aktiv. Sie verbinden dort langfristigen Vermögensaufbau mit der Absicherung biometrischer Risiken.",
+          "einheitId": "leben-rente"
+        },
+        {
+          "question": "Wofür steht die Abkürzung SHUK?",
+          "options": [
+            "Sach, Haftung, Unfall, Kranken",
+            "Schaden, Haftpflicht, Umwelt, Kredit",
+            "Schaden, Haftpflicht, Unfall, Kfz",
+            "Sach, Haftpflicht, Unfall, Kapitalanlage"
+          ],
+          "correct": 2,
+          "explanation": "SHUK steht für Schaden, Haftpflicht, Unfall und Kfz und bezeichnet zusammen mit dem Begriff Komposit die Schaden-/Unfallversicherung.",
+          "einheitId": "sach"
+        },
+        {
+          "question": "Was prägt die Ertragsmechanik der privaten Krankenversicherung?",
+          "options": [
+            "Vor allem die Kapitalanlageergebnisse, wie in der Lebensversicherung auch",
+            "Risikoadäquate Prämienkalkulation sowie Kosten- und Leistungsmanagement",
+            "Der Ausgleich über die Beiträge der gesetzlich Versicherten",
+            "Die Rückversicherung von Großschäden im Gesundheitswesen"
+          ],
+          "correct": 1,
+          "explanation": "Die pKV lebt von risikoadäquater Prämienkalkulation und konsequentem Kosten- und Leistungsmanagement. Kapitalanlageergebnisse tragen bei, sind aber nicht der primäre Werttreiber der Sparte.",
+          "einheitId": "kv"
+        }
+      ]
+    }
+  ],
+  "glossar": [
+    {
+      "term": "Drei-Säulen-Modell (Altersvorsorge)",
+      "definition": "Gliederung der deutschen Altersvorsorge in gesetzliche, betriebliche und private Vorsorge; Lebensversicherer prägen vor allem die zweite und dritte Säule.",
+      "tags": [
+        "Produkte"
+      ],
+      "slug": "drei-saeulen-modell-altersvorsorge"
+    },
+    {
+      "term": "Dunkelverarbeitung",
+      "definition": "Vollautomatisierte Abwicklung von Standardvorgängen in Vertragsverwaltung und Schadenmanagement, ohne manuellen Eingriff.",
+      "tags": [
+        "Zukunft"
+      ],
+      "slug": "dunkelverarbeitung"
+    },
+    {
+      "term": "Gesetzliche Sozialversicherung",
+      "definition": "Umlagefinanzierte Pflichtsysteme des Sozialrechts mit staatlich definierten Leistungen; sie stehen nicht im marktbasierten Wettbewerb und gelten nicht als klassische Risikoträger.",
+      "tags": [
+        "Regulatorik",
+        "Markt"
+      ],
+      "slug": "gesetzliche-sozialversicherung"
+    },
+    {
+      "term": "Insurance-as-a-Service",
+      "definition": "Modell, bei dem ein Anbieter seine Versicherungsplattform samt Produktbaukasten anderen Versicherungsunternehmen als White-Label-Lösung bereitstellt.",
+      "tags": [
+        "Zukunft",
+        "Markt"
+      ],
+      "slug": "insurance-as-a-service"
+    },
+    {
+      "term": "Komposit",
+      "definition": "Marktüblicher Sammelbegriff für die Schaden-/Unfallversicherung: Sach- und Haftpflichtrisiken von Privat- und Firmenkunden, gleichbedeutend mit SHUK.",
+      "tags": [
+        "Produkte",
+        "Markt"
+      ],
+      "slug": "komposit"
+    },
+    {
+      "term": "Retrozession",
+      "definition": "Weitergabe von Rückversicherungsrisiken an andere Rückversicherer; der abgebende Rückversicherer heißt Retrozedent, der übernehmende Retrozessionär.",
+      "tags": [
+        "Markt",
+        "Finanzen"
+      ],
+      "slug": "retrozession"
+    },
+    {
+      "term": "Risikoausgleich im Kollektiv und in der Zeit",
+      "definition": "Grundprinzip der Versicherung: Viele zahlen Beiträge, wenige beanspruchen Leistungen, und der Ausgleich wirkt zusätzlich über die Vertragsdauer hinweg.",
+      "tags": [
+        "Markt",
+        "Finanzen"
+      ],
+      "slug": "risikoausgleich-im-kollektiv-und-in-der-zeit"
+    },
+    {
+      "term": "Risikoträger",
+      "definition": "Unternehmen, das die Risiko- und Leistungsverpflichtung aus Versicherungsverträgen in den eigenen Büchern trägt, also Erst- und Rückversicherer.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "risikotraeger"
+    },
+    {
+      "term": "Rückversicherung",
+      "definition": "Versicherung der Versicherer: Rückversicherer übernehmen Risiken aus den Portfolios der Erstversicherer, glätten Schadenverläufe und decken Extremereignisse.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "rueckversicherung"
+    },
+    {
+      "term": "SHUK",
+      "definition": "Kurzform für Schaden, Haftpflicht, Unfall und Kfz und damit für die Schaden-/Unfallversicherung; gleichbedeutend mit Komposit.",
+      "tags": [
+        "Produkte",
+        "Markt"
+      ],
+      "slug": "shuk"
+    },
+    {
+      "term": "Spread-Geschäft",
+      "definition": "Ertragslogik der Lebensversicherung: Der Gewinn entsteht aus dem Abstand zwischen Kapitalanlageertrag und garantierter Verzinsung der Verträge.",
+      "tags": [
+        "Finanzen",
+        "Produkte"
+      ],
+      "slug": "spread-geschaeft"
+    },
+    {
+      "term": "Umlagefinanzierung",
+      "definition": "Finanzierungsverfahren der gesetzlichen Sozialversicherung: Die laufenden Beiträge finanzieren unmittelbar die laufenden Leistungen, ohne Kapitaldeckung.",
+      "tags": [
+        "Regulatorik",
+        "Finanzen"
+      ],
+      "slug": "umlagefinanzierung"
+    },
+    {
+      "term": "Zedent",
+      "definition": "Versicherer, der Risiken an einen Rückversicherer abgibt; die Abgabe selbst heißt Zession, die übernehmende Seite Zessionär.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "zedent"
+    }
+  ],
+  "offeneFragen": [
+    "Kapitel „grundlagen“: heroStat und quickStats fehlen bewusst – die Folien 1–6 nennen keine belastbare Kennzahl für einen Kapitel-Hero. Agent 13 (Folien 49–56) sollte sie aus der Prämien- und Kollektivrechnung setzen.",
+    "Kapitel „grundlagen“: Dieses Paket liefert nur die Kapitelhülle und die Lerneinheit „definition“ plus vier Quizfragen. ZIELSTRUKTUR § 2 verlangt mindestens acht Fragen je neues Kapitel; Agent 13 muss mit seinen Lerneinheiten mindestens vier weitere ergänzen.",
+    "Urheber der Definition: Das Deck nennt auf den Folien 4–5 keine Quelle. Der Wortlaut ist die Definition der Versicherungsbetriebslehre nach Dieter Farny. Ob die App „nach Farny“ nennen soll, ist eine Redaktionsentscheidung – im Text steht die Zuschreibung deshalb nicht.",
+    "Folie 11 bezeichnet Rückversicherer in der Rolle, in der sie „auch Risiken anderer Rückversicherer übernehmen“, als „Retrozedent“. Fachsprachlich ist der Retrozedent der abgebende, der Retrozessionär der übernehmende Rückversicherer. Der Text nennt beide Rollen, das Glossar definiert beide Begriffe.",
+    "Widerspruch zur bestehenden Kachel „Die drei Versicherungssegmente“ in 01-marktueberblick/segmente: Das Deck (Folie 17) zählt vier Segmente inklusive Rückversicherung. Aufgelöst wurde nichts – der neue Absatz nennt beide Zählweisen und ihren Grund.",
+    "Folie 19 zeigt das Drei-Säulen-Modell (gesetzlich, betrieblich, privat). Der Wissenscheck von 03-produktlandschaft fragt bereits nach dem steuerlichen Drei-Schichten-Modell (Basis-, Zusatz-, private Vorsorge), zu dem es keinen Inhaltsblock gibt. Eine abgrenzende Zeile Säulen gegen Schichten wäre sinnvoll, steht aber nicht im Deck.",
+    "Die Beispielunternehmen der Steckbriefe (Folien 12–15) erscheinen dort überwiegend als Logos. Übernommen wurden nur die im Fließtext genannten Namen (Allianz, Münchener Rück, Hannover Rück); die InsurTech-Beispiele bleiben anonym als Rollenmuster beschrieben.",
+    "Der interne Hinweis „Out of scope für MD / Liegt bei Public, teilweise restricted“ (Folie 11) und die Monitor-Deloitte-Projektbezüge der Folien 2, 3 und 6 sind nicht übernommen."
+  ]
+}

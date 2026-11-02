@@ -1,0 +1,51 @@
+From: Eike Brenneisen <ebrenneisen@deloitte.de>
+To: Koch, Marcus (ODPBD) <Marcus.Koch@ergo.de>
+Cc: Jeglorz, Marco (HSB4K-EXTERN) <Marco.Jeglorz.extern@ergo.de>, Amend,
+ Dirk (HSB4K) <Dirk.Amend@ergo.de>, Lorusso,
+ Inge (HSB4K) <Inge.Lorusso@ergo.de>, =?utf-8?q?L=C3=BCtke?=,
+ Niels (HSB4K) <Niels.Luetke@ergo.de>, Mai,
+ Alexandra (HSB4K) <Alexandra.Mai@ergo.de>, Wesche,
+ Anika (HSB4K) <Anika.Wesche@ergo.de>, Rypa,
+ Kamil (MSUE1D) <Kamil.Rypa@ergo.de>, Schwarz,
+ Stefan (DSTPB) <Stefan.Schwarz@ergo.de>, Gerhards,
+ Ute (DTEA2D) <Ute.Gerhards@ergo.de>
+Subject: AW: Makler =?utf-8?q?B=C3=9C_meets_KI_=7C_Erweiterung_um_Pr=C3=BCfu?=
+ =?utf-8?q?ng?= und Anforderung von Unterlagen
+Date: Mon, 07 Sep 2026 10:30:00 +0200
+X-Unsent: 1
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============8679655578073615512=="
+
+--===============8679655578073615512==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Hallo Marcus, hallo zusammen,
+
+vielen Dank für die abgestimmte Aufstellung, den Prompt-Entwurf und die Musterbeispiele je Unterlagenart. Wir nehmen die Zeilen 14–18 in den Datenpool-Antrag und in die PDDs auf.
+
+Passend dazu hatten wir gerade noch einen Robotics-Termin zum Unterlagen-Bot. Dabei haben wir uns die Telefonnotiz „1515 – Bestandsübertragung Robotics PB“ angesehen, die der Bot heute schon bestückt. Daraus ergeben sich zwei Punkte für das KI-Deckblatt und den Datenpool:
+
+1. Unterlagenarten
+Die Notiz arbeitet im Abschnitt „Folgearbeit für Komposit“ bereits mit drei festen Kennzeichen: Police / Vertragsspiegel / Vertragsauszug / Ersatzrechnung usw., Schadenaufstellung / Schadenrenta usw. sowie Sonstige Unterlagen. Dazu kommen das Kennzeichen „Dokumente für weitere VNR hochladen / eröffnen“ und ein Freitextfeld „Komposit / Leben / KV“.
+Unser Vorschlag wäre deshalb, BUE_ART_UNTERLAGEN nicht als reinen Freitext zu führen, sondern mit festen Ausprägungen entlang dieser drei Gruppen, ergänzt um einen Freitext für die konkret angeforderte Unterlage. Dann kann der Prüf-Bot die Kennzeichen in der Notiz 1:1 setzen und die Details im Freitext mitgeben. Eure detaillierte Aufstellung der Unterlagenarten würden wir diesen drei Gruppen zuordnen.
+
+2. Betroffene VNR
+Die Notiz unterscheidet unter „Betroffene VNR“ zwischen „gesamte Kundenverbindung“, „angegebene VNR beachten“ und „angegebene VNR nicht beachten“. Im bisherigen Deckblatt gibt es dafür keine Ausprägung: Es wird nur die eine genannte VNR ausgelesen. Ob der Makler eine Einzel-BÜ für diesen Vertrag oder die Übertragung der gesamten Kundenverbindung wünscht, ist damit nicht erkennbar. Hier bräuchten wir ein zusätzliches Feld (Arbeitstitel BUE_UMFANG mit den Ausprägungen „Einzel-VNR“ und „gesamte Kundenverbindung“) und im Prompt die typischen Formulierungen, an denen die KI das festmacht.
+
+Könnt ihr prüfen, ob sich eure Aufstellung auf die drei Unterlagengruppen abbilden lässt bzw. welche Unterlagenart darüber hinaus ein eigenes Kennzeichen braucht, und für den Umfang der BÜ ebenfalls gängige Formulierungen aus den Makler-E-Mails zusammenstellen? Für Gesundheit/KV klären wir mit HSB4K, ob dieselbe Gruppierung ausreicht.
+
+Wir arbeiten die Zusatzwünsche jetzt in Datenpool-Antrag und PDD ein und kommen bei Rückfragen auf Kamil und dich zu.
+
+Viele Grüße
+Eike
+
+--===============8679655578073615512==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+
+<html><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#000"><p style="margin:0 0 12px 0">Hallo Marcus, hallo zusammen,</p><p style="margin:0 0 12px 0">vielen Dank für die abgestimmte Aufstellung, den Prompt-Entwurf und die Musterbeispiele je Unterlagenart. Wir nehmen die Zeilen 14–18 in den Datenpool-Antrag und in die PDDs auf.</p><p style="margin:0 0 12px 0">Passend dazu hatten wir gerade noch einen Robotics-Termin zum Unterlagen-Bot. Dabei haben wir uns die Telefonnotiz „1515 – Bestandsübertragung Robotics PB“ angesehen, die der Bot heute schon bestückt. Daraus ergeben sich zwei Punkte für das KI-Deckblatt und den Datenpool:</p><p style="margin:0 0 12px 0"><b>1. Unterlagenarten</b><br>Die Notiz arbeitet im Abschnitt „Folgearbeit für Komposit“ bereits mit drei festen Kennzeichen: Police / Vertragsspiegel / Vertragsauszug / Ersatzrechnung usw., Schadenaufstellung / Schadenrenta usw. sowie Sonstige Unterlagen. Dazu kommen das Kennzeichen „Dokumente für weitere VNR hochladen / eröffnen“ und ein Freitextfeld „Komposit / Leben / KV“.<br>Unser Vorschlag wäre deshalb, BUE_ART_UNTERLAGEN nicht als reinen Freitext zu führen, sondern mit festen Ausprägungen entlang dieser drei Gruppen, ergänzt um einen Freitext für die konkret angeforderte Unterlage. Dann kann der Prüf-Bot die Kennzeichen in der Notiz 1:1 setzen und die Details im Freitext mitgeben. Eure detaillierte Aufstellung der Unterlagenarten würden wir diesen drei Gruppen zuordnen.</p><p style="margin:0 0 12px 0"><b>2. Betroffene VNR</b><br>Die Notiz unterscheidet unter „Betroffene VNR“ zwischen „gesamte Kundenverbindung“, „angegebene VNR beachten“ und „angegebene VNR nicht beachten“. Im bisherigen Deckblatt gibt es dafür keine Ausprägung: Es wird nur die eine genannte VNR ausgelesen. Ob der Makler eine Einzel-BÜ für diesen Vertrag oder die Übertragung der gesamten Kundenverbindung wünscht, ist damit nicht erkennbar. Hier bräuchten wir ein zusätzliches Feld (Arbeitstitel BUE_UMFANG mit den Ausprägungen „Einzel-VNR“ und „gesamte Kundenverbindung“) und im Prompt die typischen Formulierungen, an denen die KI das festmacht.</p><p style="margin:0 0 12px 0">Könnt ihr prüfen, ob sich eure Aufstellung auf die drei Unterlagengruppen abbilden lässt bzw. welche Unterlagenart darüber hinaus ein eigenes Kennzeichen braucht, und für den Umfang der BÜ ebenfalls gängige Formulierungen aus den Makler-E-Mails zusammenstellen? Für Gesundheit/KV klären wir mit HSB4K, ob dieselbe Gruppierung ausreicht.</p><p style="margin:0 0 12px 0">Wir arbeiten die Zusatzwünsche jetzt in Datenpool-Antrag und PDD ein und kommen bei Rückfragen auf Kamil und dich zu.</p><p style="margin:0 0 12px 0">Viele Grüße<br>Eike</p></body></html>
+
+--===============8679655578073615512==--

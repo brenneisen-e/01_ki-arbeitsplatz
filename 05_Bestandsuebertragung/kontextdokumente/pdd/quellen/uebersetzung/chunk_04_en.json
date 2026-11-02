@@ -1,0 +1,152 @@
+[
+ {
+  "de": "Kurzfristiger Ausfall (bis zu einem Arbeitstag): Es ist keine Aktivität erforderlich. Der Roboter arbeitet die aufgelaufenen Vorgänge nach Wiederaufnahme des Betriebs in der Reihenfolge des Eingangsdatums nach.",
+  "en": "Short-term outage (up to one working day): No action is required. After operations resume, the robot processes the accumulated cases in order of receipt date.",
+  "art": "text"
+ },
+ {
+  "de": "Längerer Ausfall (mehr als ein Arbeitstag) oder Ausfall im Umfeld der 72-Stunden-Frist: Der Betriebsinformationsempfänger informiert die Sachbearbeitung. Die Vorgänge werden manuell nach dem bisherigen Verfahren vorgeprüft. Priorisiert werden Vorgänge, bei denen der abgebende Bestandsinhaber der AO zugeordnet ist, da hier die 72-Stunden-Frist läuft. Manuell bearbeitete Vorgänge werden im Postkorb als bearbeitet gekennzeichnet, damit der Roboter sie nach Wiederanlauf nicht erneut aufgreift.",
+  "en": "Longer outage (more than one working day) or outage close to the 72-hour deadline: The operations information recipient informs case handling. The cases are pre-checked manually according to the previous procedure. Priority is given to cases in which the transferring portfolio holder is assigned to the AO, because the 72-hour deadline is running there. Manually processed cases are marked as processed in the mailbox so that the robot does not pick them up again after restart.",
+  "art": "text"
+ },
+ {
+  "de": "Reporting",
+  "en": "Reporting",
+  "art": "text"
+ },
+ {
+  "de": "Allgemeines zum Reporting",
+  "en": "General information on reporting",
+  "art": "text"
+ },
+ {
+  "de": "Standardmäßig können folgende Reports in Excel erstellt werden",
+  "en": "By default, the following reports can be generated in Excel",
+  "art": "text"
+ },
+ {
+  "de": "Nach jedem Lauf (MQ-Report)",
+  "en": "After each run (MQ report)",
+  "art": "text"
+ },
+ {
+  "de": "Täglich (Daily Report)",
+  "en": "Daily (Daily Report)",
+  "art": "text"
+ },
+ {
+  "de": "Wöchentlich (Weekly-Report)",
+  "en": "Weekly (Weekly Report)",
+  "art": "text"
+ },
+ {
+  "de": "Monatlich (Monthly-Report)",
+  "en": "Monthly (Monthly Report)",
+  "art": "text"
+ },
+ {
+  "de": "Quartärlich (Quaterly-Report)",
+  "en": "Quarterly (Quarterly Report)",
+  "art": "text"
+ },
+ {
+  "de": "Auf Anforderung (OnDemand-Report)",
+  "en": "On request (OnDemand Report)",
+  "art": "text"
+ },
+ {
+  "de": "Welche Reports generiert werden, wird spätestens nach dem Go-Live festgelegt und kann jederzeit nachträglich gerändert werden",
+  "en": "Which reports are generated is defined no later than after go-live and can be changed at any time afterwards",
+  "art": "text"
+ },
+ {
+  "de": "Das Reporting ist noch nicht abschließend geklärt und wird derzeit nicht priorisiert.",
+  "en": "Reporting has not yet been finally clarified and is currently not prioritised.",
+  "art": "text"
+ },
+ {
+  "de": "Vorgesehen ist zunächst der Standardreport von Robotics. Welche Reports darüber hinaus erzeugt werden, wird nach dem Go-Live gemeinsam mit dem Robotics-Betrieb festgelegt.",
+  "en": "Initially, the standard Robotics report is planned. Which further reports are generated will be defined after go-live together with Robotics operations.",
+  "art": "text"
+ },
+ {
+  "de": "Die Standardreports sind inhaltlich gruppiert (die Gruppe basiert auf den Status-Haken in Blue-Prism) und bündeln verschiedene Stati",
+  "en": "The standard reports are grouped by content (the grouping is based on the status ticks in Blue-Prism) and bundle various statuses",
+  "art": "text"
+ },
+ {
+  "de": "Beschreibung",
+  "en": "Description",
+  "art": "text"
+ },
+ {
+  "de": "Status (wird während der Roboterverarbeitung gesetzt)",
+  "en": "Status (set during robot processing)",
+  "art": "text"
+ },
+ {
+  "de": "Verarbeitet",
+  "en": "Processed",
+  "art": "text"
+ },
+ {
+  "de": "Erfolgreich abgeschlossener Durchlauf ohne Exception",
+  "en": "Successfully completed run without exception",
+  "art": "text"
+ },
+ {
+  "de": "Completed",
+  "en": "Completed",
+  "art": "text"
+ },
+ {
+  "de": "Business Exceptiones",
+  "en": "Business Exceptions",
+  "art": "text"
+ },
+ {
+  "de": "Nicht erfolgreicher Abschluß/Abbruch mit Tag Business Exception",
+  "en": "Unsuccessful completion/abort with tag Business Exception",
+  "art": "text"
+ },
+ {
+  "de": "Referred",
+  "en": "Referred",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitung des Ordnungsbegriffes im Load2Queue abgelehnt",
+  "en": "Processing of the order key rejected in Load2Queue",
+  "art": "text"
+ },
+ {
+  "de": "Rejected",
+  "en": "Rejected",
+  "art": "text"
+ },
+ {
+  "de": "System Exceptions",
+  "en": "System Exceptions",
+  "art": "text"
+ },
+ {
+  "de": "Nicht erfolgreicher Abschluss/Abbruch wegen technischer Probleme und Weiterleitung",
+  "en": "Unsuccessful completion/abort due to technical problems and forwarding",
+  "art": "text"
+ },
+ {
+  "de": "Exception",
+  "en": "Exception",
+  "art": "text"
+ },
+ {
+  "de": "offen",
+  "en": "open",
+  "art": "text"
+ },
+ {
+  "de": "Ordnungsbegriffe wurden im Load2Queue eingelesen, jedoch noch nicht bearbeitet",
+  "en": "Order keys were loaded into Load2Queue but have not yet been processed",
+  "art": "text"
+ }
+]

@@ -1,0 +1,497 @@
+/* ==========================================================================
+   Versicherungs-1×1 — Design-Tokens, Basis-Typografie und gemeinsame Klassen
+   --------------------------------------------------------------------------
+   Reihenfolge: Tailwind, dann die Bereichsdateien (schrift, basis, kapitel,
+   bloecke, suche, glossar, quiz, umfang), dann Tokens und Basis.
+   Komponentenklassen liegen in @layer components, damit Tailwind-Utilities
+   sie im Einzelfall überschreiben können (<button class="knopf mt-4">).
+   ========================================================================== */
+@import "tailwindcss";
+@import "./styles/schrift.css";
+@import "./styles/basis.css";
+@import "./styles/kapitel.css";
+@import "./styles/bloecke.css";
+@import "./styles/suche.css";
+@import "./styles/glossar.css";
+@import "./styles/quiz.css";
+@import "./styles/umfang.css";
+
+/* --------------------------------------------------------------------------
+   Tokens (Brief §2). In Komponenten nur die semantischen Rollen verwenden.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Grün-Rampe */
+  --gruen-50: #f0f7f2;  --gruen-100: #dcefe2; --gruen-200: #b9dfc6;
+  --gruen-300: #8cc9a3; --gruen-400: #5fae7f; --gruen-500: #1f7a4d;
+  --gruen-600: #166a41; --gruen-700: #0C4B33; --gruen-800: #08382a;
+  --gruen-900: #062a1c;
+  /* Deloitte-Akzent: nur Marken, Ringe, Balken auf dunklem Grund — nie Text auf Weiß */
+  --akzent-lime: #86BC25;
+  /* Neutrale */
+  --neutral-0: #ffffff;  --neutral-50: #f8fafc;  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0; --neutral-300: #cbd5e1; --neutral-400: #94a3b8;
+  --neutral-500: #64748b; --neutral-600: #475569; --neutral-700: #334155;
+  --neutral-800: #1e293b; --neutral-900: #0f172a;
+
+  /* Semantische Rollen */
+  --marke: var(--gruen-700);
+  --marke-hover: var(--gruen-800);
+  --marke-weich: var(--gruen-50);
+  --marke-rand: var(--gruen-200);
+  --flaeche: var(--neutral-50);
+  --flaeche-karte: #ffffff;
+  --flaeche-erhoben: #ffffff;
+  --text: var(--neutral-900);
+  --text-2: var(--neutral-600);
+  --text-3: var(--neutral-500);
+  --rand: var(--neutral-200);
+  --rand-stark: var(--neutral-300);
+  --fokus: #2563eb;
+  --erfolg: #15803d;  --erfolg-weich: #f0fdf4;
+  --warnung: #b45309; --warnung-weich: #fffbeb;
+  --fehler: #b91c1c;  --fehler-weich: #fef2f2;
+  --info: #1d4ed8;    --info-weich: #eff6ff;
+  --tiefe-basis: var(--gruen-500);
+  --tiefe-vertiefung: #2a78d6;
+  --tiefe-experte: #4a3aa7;
+
+  /* Diagrammfarben (Reihenfolge ist Teil der Prüfung — nie umsortieren) */
+  --viz-1: #1f7a4d; --viz-2: #2a78d6; --viz-3: #eb6834;
+  --viz-4: #4a3aa7; --viz-5: #eda100; --viz-6: #e34948;
+  --viz-sequenz-100: #dcefe2; --viz-sequenz-200: #b9dfc6; --viz-sequenz-300: #8cc9a3;
+  --viz-sequenz-400: #5fae7f; --viz-sequenz-500: #3d9463; --viz-sequenz-600: #1f7a4d;
+  --viz-sequenz-700: #0C4B33;
+  --viz-gitter: var(--neutral-200);
+  --viz-achse: var(--neutral-500);
+
+  /* Schrift */
+  --schrift: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --schrift-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Maße */
+  --mass-text: 72ch;
+  --topbar-hoehe: 56px;
+  --sidebar-breite: 280px;
+  --leiste-breite: 240px;
+  --seitenrand: 24px;
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 16px;
+  --radius-pille: 999px;
+
+  /* Schatten: Karten leben vom Rand, nicht vom Schatten */
+  --schatten-karte: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --schatten-erhoben: 0 12px 40px rgba(15, 23, 42, 0.12);
+
+  /* Bewegung */
+  --bewegung-kurve: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --bewegung: 160ms var(--bewegung-kurve);
+  --bewegung-lang: 200ms var(--bewegung-kurve);
+
+  /* Stapelordnung */
+  --z-topbar: 40;
+  --z-schublade: 50;
+  --z-dialog: 60;
+  --z-popover: 70;
+  --z-tooltip: 80;
+}
+@media (min-width: 1280px) {
+  :root { --seitenrand: 32px; }
+}
+
+/* --------------------------------------------------------------------------
+   Basis-Typografie und globale Regeln
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    font-family: var(--schrift);
+    font-size: 16px;
+    line-height: 1.6;
+    font-optical-sizing: auto;
+    color: var(--text);
+    background-color: var(--flaeche);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-width: thin;
+    scrollbar-color: var(--neutral-300) transparent;
+  }
+  body {
+    min-height: 100vh;
+    background-color: var(--flaeche);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  #root { min-height: 100vh; }
+
+  h1, h2, h3, h4 {
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  h1 { font-size: 36px; letter-spacing: -0.01em; }
+  h2 { font-size: 28px; letter-spacing: -0.01em; }
+  h3 { font-size: 22px; letter-spacing: -0.01em; }
+  h4 { font-size: 18px; }
+  @media (max-width: 639px) {
+    h1 { font-size: 30px; }
+    h2 { font-size: 24px; }
+    h3 { font-size: 20px; }
+  }
+  p { text-wrap: pretty; }
+  strong, b { font-weight: 600; color: var(--text); }
+  a { color: var(--marke); text-decoration: none; text-underline-offset: 2px; }
+  a:hover { text-decoration: underline; }
+  button { font: inherit; color: inherit; }
+  button:not(:disabled) { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+  input, select, textarea { font: inherit; color: inherit; }
+  kbd, code, pre, samp { font-family: var(--schrift-mono); }
+  code { font-size: 0.9em; background: var(--neutral-100); padding: 1px 5px; border-radius: 4px; }
+  mark { background: var(--gruen-100); color: var(--text); border-radius: 2px; padding: 0 1px; }
+  table { font-variant-numeric: tabular-nums; }
+  svg.lucide { stroke-width: 1.75; flex-shrink: 0; }
+
+  /* Fokusring: überall gleich */
+  :focus-visible {
+    outline: 2px solid var(--fokus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Sprungziele landen unter der sticky Topbar */
+  [id] { scroll-margin-top: calc(var(--topbar-hoehe) + 16px); }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--neutral-300); border-radius: 4px; border: 2px solid transparent; background-clip: padding-box; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--neutral-400); background-clip: padding-box; }
+
+  ::selection { background: var(--gruen-200); color: var(--text); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Gemeinsame Klassen
+   -------------------------------------------------------------------------- */
+@layer components {
+  /* Hilfsklassen */
+  .tabular { font-variant-numeric: tabular-nums; }
+  .mass-text { max-width: var(--mass-text); }
+  .seite { padding: 28px var(--seitenrand) 56px; }
+  .meta { font-size: 12px; color: var(--text-3); }
+  .nebentext { font-size: 14px; color: var(--text-2); }
+  .ueberschrift-meta {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3);
+  }
+  .abschnitt { margin-top: 40px; }
+  .abschnitt-kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .abschnitt-kopf h2 { font-size: 22px; }
+
+  /* Seitenwechsel: eine sanfte Einblendung des Inhalts, nicht jeder Block */
+  .seiten-einblendung { animation: seiten-einblendung 180ms var(--bewegung-kurve) both; }
+  @keyframes seiten-einblendung {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Karte */
+  .karte {
+    background: var(--flaeche-karte);
+    border: 1px solid var(--rand);
+    border-radius: var(--radius-m);
+    box-shadow: var(--schatten-karte);
+    padding: 20px;
+    color: var(--text);
+  }
+  .karte-eng { padding: 16px; }
+  .karte-klickbar {
+    display: block; width: 100%; text-align: left; text-decoration: none;
+    transition: border-color var(--bewegung), transform var(--bewegung), box-shadow var(--bewegung);
+  }
+  .karte-klickbar:hover {
+    border-color: var(--marke-rand);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    text-decoration: none;
+  }
+  .karte-klickbar:active { transform: none; }
+  .karte-titel { font-size: 16px; font-weight: 600; color: var(--text); }
+  .karte-kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .karte-kopf h2, .karte-kopf h3 { font-size: 16px; font-weight: 600; letter-spacing: 0; }
+
+  /* Knöpfe */
+  .knopf {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 36px; padding: 0 14px;
+    border: 1px solid var(--rand); border-radius: var(--radius-s);
+    background: var(--flaeche-karte); color: var(--text);
+    font-size: 14px; font-weight: 500; line-height: 1.2; white-space: nowrap;
+    text-decoration: none; user-select: none;
+    transition: background-color var(--bewegung), border-color var(--bewegung), color var(--bewegung), box-shadow var(--bewegung);
+  }
+  .knopf:hover { background: var(--neutral-50); border-color: var(--rand-stark); text-decoration: none; }
+  .knopf:active { background: var(--neutral-100); }
+  .knopf:disabled, .knopf[aria-disabled="true"] { opacity: 0.5; pointer-events: none; }
+  .knopf-primaer { background: var(--marke); border-color: var(--marke); color: #fff; }
+  .knopf-primaer:hover { background: var(--marke-hover); border-color: var(--marke-hover); }
+  .knopf-primaer:active { background: var(--gruen-900); }
+  .knopf-still { background: transparent; border-color: transparent; color: var(--text-2); }
+  .knopf-still:hover { background: var(--neutral-100); border-color: transparent; color: var(--text); }
+  .knopf-weich { background: var(--marke-weich); border-color: transparent; color: var(--marke); }
+  .knopf-weich:hover { background: var(--gruen-100); border-color: transparent; }
+  .knopf-klein { min-height: 30px; padding: 0 10px; font-size: 13px; gap: 6px; }
+  .knopf-gross { min-height: 44px; padding: 0 20px; font-size: 15px; }
+  .knopf-symbol { padding: 0; width: 36px; }
+  .knopf-symbol.knopf-klein { width: 30px; }
+  .knopf-symbol.knopf-gross { width: 44px; }
+  .knopf-breit { width: 100%; }
+
+  /* Chip: filter- und begriffsartige Kleinteile, mindestens 28 px hoch */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 28px; padding: 0 10px;
+    border: 1px solid var(--rand); border-radius: var(--radius-s);
+    background: var(--flaeche-karte); color: var(--text-2);
+    font-size: 13px; font-weight: 500; line-height: 1; white-space: nowrap; text-decoration: none;
+    transition: background-color var(--bewegung), border-color var(--bewegung), color var(--bewegung);
+  }
+  .chip:hover { border-color: var(--marke-rand); color: var(--marke); background: var(--marke-weich); text-decoration: none; }
+  .chip-aktiv, .chip[aria-pressed="true"], .chip[aria-current="true"] {
+    background: var(--marke-weich); border-color: var(--marke-rand); color: var(--marke);
+  }
+  .chip:disabled { opacity: 0.45; }
+  .chip-zahl { font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+
+  /* Pille: kleine tonale Marke, nie interaktiv */
+  .pille {
+    display: inline-flex; align-items: center; gap: 5px;
+    min-height: 22px; padding: 0 9px;
+    border-radius: var(--radius-pille);
+    background: var(--neutral-100); color: var(--text-2);
+    font-size: 12px; font-weight: 600; line-height: 1; white-space: nowrap;
+  }
+  .pille[data-ton="marke"] { background: var(--marke-weich); color: var(--marke); }
+  .pille[data-ton="erfolg"] { background: var(--erfolg-weich); color: var(--erfolg); }
+  .pille[data-ton="warnung"] { background: var(--warnung-weich); color: var(--warnung); }
+  .pille[data-ton="fehler"] { background: var(--fehler-weich); color: var(--fehler); }
+  .pille[data-ton="info"] { background: var(--info-weich); color: var(--info); }
+  .pille[data-ton="basis"] { background: var(--gruen-50); color: var(--gruen-600); }
+  .pille[data-ton="vertiefung"] { background: #eaf2fc; color: #1f5fb0; }
+  .pille[data-ton="experte"] { background: #eeebf8; color: var(--tiefe-experte); }
+  .pille-punkt { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* Tastenkappe */
+  .kbd {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; padding: 0 5px;
+    border: 1px solid var(--rand-stark); border-bottom-width: 2px; border-radius: 5px;
+    background: var(--flaeche-karte); color: var(--text-2);
+    /* 12 px ist die untere Grenze des Briefs (§12) — auch auf der Tastenkappe */
+    font-family: var(--schrift-mono); font-size: 12px; font-weight: 500; line-height: 1;
+  }
+  .kbd-reihe { display: inline-flex; gap: 3px; align-items: center; }
+
+  /* Segmentschalter */
+  .segment {
+    display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; max-width: 100%;
+    background: var(--neutral-100); border-radius: var(--radius-s);
+  }
+  .segment-option {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 30px; padding: 0 12px;
+    border: 1px solid transparent; border-radius: 6px;
+    background: transparent; color: var(--text-2);
+    font-size: 13px; font-weight: 500; line-height: 1; white-space: nowrap;
+    transition: background-color var(--bewegung), color var(--bewegung), box-shadow var(--bewegung);
+  }
+  .segment-option:hover { color: var(--text); }
+  .segment-option[aria-checked="true"] {
+    background: var(--flaeche-karte); color: var(--text); border-color: var(--rand);
+    box-shadow: var(--schatten-karte);
+  }
+  .segment-option:disabled { opacity: 0.4; }
+  .segment-klein .segment-option { min-height: 26px; padding: 0 9px; font-size: 12px; }
+  .segment-punkt { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* Eingabe */
+  .eingabe-huelle { position: relative; display: flex; align-items: center; }
+  .eingabe-huelle > .lucide { position: absolute; left: 10px; color: var(--text-3); pointer-events: none; }
+  .eingabe {
+    width: 100%; min-height: 36px; padding: 0 12px;
+    border: 1px solid var(--rand); border-radius: var(--radius-s);
+    background: var(--flaeche-karte); color: var(--text);
+    font-size: 14px; line-height: 1.2;
+    transition: border-color var(--bewegung), box-shadow var(--bewegung);
+  }
+  .eingabe::placeholder { color: var(--text-3); }
+  .eingabe:hover { border-color: var(--rand-stark); }
+  .eingabe:focus { outline: none; border-color: var(--marke); box-shadow: 0 0 0 3px var(--gruen-100); }
+  .eingabe:focus-visible { outline: none; }
+  .eingabe-huelle > .lucide + .eingabe { padding-left: 34px; }
+  .eingabe-mit-loeschen { padding-right: 34px; }
+  .eingabe-loeschen {
+    position: absolute; right: 4px; width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 0; border-radius: 6px; background: transparent; color: var(--text-3);
+  }
+  .eingabe-loeschen:hover { background: var(--neutral-100); color: var(--text); }
+  .eingabe-gross { min-height: 44px; font-size: 15px; }
+  .feldname { display: block; font-size: 13px; font-weight: 500; color: var(--text-2); margin-bottom: 6px; }
+
+  /* Leerzustand */
+  .leerzustand {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 32px 20px; gap: 8px; color: var(--text-2);
+  }
+  .leerzustand-symbol {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--marke-weich); color: var(--marke); margin-bottom: 4px;
+  }
+  .leerzustand-titel { font-size: 16px; font-weight: 600; color: var(--text); }
+  .leerzustand-text { font-size: 14px; max-width: 44ch; }
+  .leerzustand-aktion { margin-top: 8px; }
+
+  /* Tooltip, Popover, Dialog, Schublade (Portale auf document.body) */
+  .tooltip-blase {
+    position: fixed; z-index: var(--z-tooltip);
+    max-width: min(320px, calc(100vw - 32px));
+    padding: 7px 10px; border-radius: var(--radius-s);
+    background: var(--neutral-800); color: #fff;
+    font-size: 12.5px; line-height: 1.45; font-weight: 500;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.18);
+    pointer-events: none;
+    animation: einblenden 120ms var(--bewegung-kurve) both;
+  }
+  .tooltip-blase strong, .tooltip-blase b { color: inherit; }
+  @keyframes einblenden { from { opacity: 0; } to { opacity: 1; } }
+
+  .popover-flaeche {
+    position: fixed; z-index: var(--z-popover);
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 14px 16px; border-radius: var(--radius-m);
+    background: var(--flaeche-erhoben); color: var(--text);
+    border: 1px solid var(--rand); box-shadow: var(--schatten-erhoben);
+    font-size: 14px; line-height: 1.5;
+    animation: einblenden 140ms var(--bewegung-kurve) both;
+  }
+
+  .schleier {
+    position: fixed; inset: 0; z-index: var(--z-dialog);
+    background: rgba(15, 23, 42, 0.42);
+    animation: einblenden 160ms var(--bewegung-kurve) both;
+  }
+  .dialog-huelle {
+    position: fixed; inset: 0; z-index: var(--z-dialog);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px 16px;
+  }
+  .dialog-huelle[data-ausrichtung="oben"] { align-items: flex-start; padding-top: min(12vh, 120px); }
+  .dialog-flaeche {
+    width: 100%; max-width: 560px; max-height: calc(100vh - 48px);
+    display: flex; flex-direction: column;
+    border-radius: var(--radius-l);
+    background: var(--flaeche-erhoben); color: var(--text);
+    border: 1px solid var(--rand); box-shadow: var(--schatten-erhoben);
+    animation: dialog-auf 180ms var(--bewegung-kurve) both;
+    overflow: hidden;
+  }
+  @keyframes dialog-auf {
+    from { opacity: 0; transform: translateY(6px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
+  .dialog-flaeche:focus-visible, .schublade-flaeche:focus-visible, .popover-flaeche:focus-visible { outline: none; }
+  .dialog-kopf {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 16px 20px 12px;
+  }
+  .dialog-kopf h2 { font-size: 18px; font-weight: 600; letter-spacing: 0; }
+  .dialog-beschreibung { font-size: 14px; color: var(--text-2); margin-top: 2px; }
+  .dialog-koerper { padding: 4px 20px 20px; overflow-y: auto; }
+  .dialog-fuss { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 20px 16px; border-top: 1px solid var(--rand); }
+
+  .schublade-flaeche {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: var(--z-schublade);
+    width: min(320px, 88vw);
+    display: flex; flex-direction: column;
+    background: var(--flaeche); border-right: 1px solid var(--rand);
+    box-shadow: var(--schatten-erhoben);
+    animation: schublade-auf 200ms var(--bewegung-kurve) both;
+  }
+  .schublade-schleier { z-index: calc(var(--z-schublade) - 1); }
+  @keyframes schublade-auf { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .schublade-kopf {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    height: var(--topbar-hoehe); padding: 0 12px 0 16px; border-bottom: 1px solid var(--rand);
+    background: var(--flaeche-karte);
+  }
+  .schublade-titel { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+  .schublade-koerper { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+  /* Fortschrittsring */
+  .fortschrittsring { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; }
+  .fortschrittsring svg { display: block; transform: rotate(-90deg); }
+  .fortschrittsring-spur { stroke: var(--neutral-200); fill: none; }
+  .fortschrittsring-wert { stroke: var(--marke); fill: none; stroke-linecap: round; transition: stroke-dashoffset 400ms var(--bewegung-kurve); }
+  .fortschrittsring[data-fertig="true"] .fortschrittsring-wert { stroke: var(--erfolg); }
+  .fortschrittsring-haken { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--erfolg); }
+  .fortschrittsring-huelle { position: relative; display: inline-block; line-height: 0; }
+  .fortschrittsring-zahl { font-size: 13px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; }
+  .fortschrittsring-gross .fortschrittsring-zahl { font-size: 14px; }
+  .fortschrittsring-xl { flex-shrink: 0; }
+  .fortschrittsring-mitte {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 600; letter-spacing: -0.01em; color: var(--text);
+    font-variant-numeric: tabular-nums; line-height: 1;
+  }
+
+  /* Skelett beim Laden */
+  .skelett {
+    position: relative; overflow: hidden; border-radius: 6px;
+    background: var(--neutral-100);
+  }
+  .skelett::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+    animation: skelett-lauf 1.4s ease-in-out infinite;
+  }
+  @keyframes skelett-lauf { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
+  /* Trennzeile mit Text, z. B. „Vertiefung“ */
+  .trennzeile { display: flex; align-items: center; gap: 12px; margin: 32px 0 20px; color: var(--text-2); font-size: 13px; font-weight: 600; }
+  .trennzeile::after { content: ''; flex: 1; height: 1px; background: var(--rand); }
+
+  /* Kennzahl-Kachel */
+  .kennzahl { display: flex; flex-direction: column; gap: 2px; }
+  .kennzahl-wert { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1; color: var(--text); font-variant-numeric: tabular-nums; }
+  .kennzahl-wert small { font-size: 15px; font-weight: 500; color: var(--text-2); margin-left: 4px; letter-spacing: 0; }
+  .kennzahl-label { font-size: 13px; color: var(--text-2); }
+  .kennzahl-gross .kennzahl-wert { font-size: 48px; }
+
+  /* Skip-Link */
+  .ueberspring-link {
+    position: fixed; top: 8px; left: 8px; z-index: 100;
+    transform: translateY(-200%);
+    padding: 10px 14px; border-radius: var(--radius-s);
+    background: var(--marke); color: #fff; font-weight: 600; font-size: 14px;
+    box-shadow: var(--schatten-erhoben);
+  }
+  .ueberspring-link:focus-visible { transform: none; outline-color: var(--fokus); text-decoration: none; }
+
+  /* Gepunkteter Glossarbegriff im Text */
+  .begriff {
+    color: inherit; text-decoration: underline dotted var(--neutral-400);
+    text-decoration-thickness: 1.5px; text-underline-offset: 3px;
+    cursor: help; border-radius: 2px;
+  }
+  .begriff:hover { text-decoration-color: var(--marke); background: var(--marke-weich); }
+}

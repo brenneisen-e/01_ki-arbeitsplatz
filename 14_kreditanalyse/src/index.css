@@ -1,0 +1,667 @@
+@import "tailwindcss";
+/* Der gebaute Stand in dist/ ist eingecheckt; ohne diese Zeile würde Tailwind
+   die Klassen des letzten Builds wieder aufnehmen. */
+@source not "../dist";
+
+/* ==========================================================================
+   SCHRIFT: Uniform (Miller Type Foundry) wie im Vertriebsarbeitsplatz,
+   selbst ausgeliefert, kein externer Schriftabruf. Regular 400 ist die
+   Grundschrift, Medium 500 trägt font-medium bis font-black und strong,
+   Light 300 nur ausdrücklich über font-light; font-synthesis-weight: none
+   verhindert ein vom Browser errechnetes Fett. Uniform Tab liefert Ziffern
+   gleicher Dickte für Kennzahlen und Tabellen (font-mono), siehe
+   src/schrift/ANMERKUNG.md.
+   ========================================================================== */
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-light.woff2') format('woff2');
+             font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-regular.woff2') format('woff2');
+             font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-medium.woff2') format('woff2');
+             font-weight: 500 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-light.woff2') format('woff2');
+             font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-regular.woff2') format('woff2');
+             font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-medium.woff2') format('woff2');
+             font-weight: 500 900; font-style: normal; font-display: swap; }
+
+/* ==========================================================================
+   COCKPIT 2026 (Banking): dasselbe helle Designsystem wie der
+   Vertriebsarbeitsplatz im Banking-Modus. Weiße Karten auf warmem
+   Off-White, hauchdünne Linien, wenig Farbe. Oliv trägt Identität und
+   Aktion (Kopfleiste, primäre Knöpfe, aktive Navigation), Gold ist der
+   sparsame Akzent für Kennzahlen und Fokus, die Signalfarben stehen für
+   Status. Die Tokens der Kreditanalyse (primary, accent, surface, border,
+   text-*) behalten ihre Namen und liegen auf der Cockpit-Palette, damit die
+   Komponenten ohne Umbau in das Cockpit fallen.
+   ========================================================================== */
+
+@theme {
+  --color-primary: #46552b;
+  --color-primary-light: #61753a;
+  --color-accent: #2f8f5b;
+  --color-accent-warm: #b7791f;
+  --color-accent-teal: #2f7a72;
+  --color-gold: #a8952f;
+  --color-danger: #c23b3b;
+  --color-surface: #faf9f7;
+  --color-surface-card: #ffffff;
+  --color-surface-inset: #f4f2ee;
+  --color-surface-dark: #1c1a17;
+  --color-border: #e9e6e0;
+  --color-border-strong: #d9d5cd;
+  --color-text-primary: #1c1a17;
+  --color-text-secondary: #5c574f;
+  --color-text-muted: #8d877e;
+
+  --font-sans: 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-headline: 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Uniform Tab', 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  /* Gewichtsstufen auf die Schnitte gelegt: alles ab font-medium ist Medium */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 500;
+  --font-weight-bold: 500;
+  --font-weight-extrabold: 500;
+  --font-weight-black: 500;
+
+  /* Karten mit 14 px Radius wie im Cockpit */
+  --radius-xl: 14px;
+  --radius-2xl: 18px;
+}
+
+:root {
+  /* === MODUS: Banking (Oliv) === */
+  --mode-primary: #46552b;
+  --mode-primary-light: #61753a;
+  --mode-primary-soft: rgba(97, 117, 58, 0.12);
+  --mode-gradient: linear-gradient(135deg, #171d10 0%, #35451f 45%, #52683a 100%);
+  --mode-accent: #a8952f;
+  --mode-chart: #61753a;
+  --mode-pastel: rgba(97, 117, 58, 0.09);
+  --mode-row-hover: rgba(97, 117, 58, 0.08);
+
+  /* === FLÄCHEN === */
+  --bg-primary: #faf9f7;
+  --bg-inset: #f4f2ee;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fcfbf9;
+  --bg-elevated: #ffffff;
+
+  /* === TEXT === */
+  --text-primary: #1c1a17;
+  --text-secondary: #5c574f;
+  --text-tertiary: #8d877e;
+  --text-on-dark: #faf9f7;
+
+  /* === LINIEN === */
+  --border-light: #e9e6e0;
+  --border-medium: #d9d5cd;
+  --border-strong: #bdb7ad;
+
+  /* === STATUS === */
+  --color-success: #2f8f5b;
+  --color-warning: #b7791f;
+  --color-info: #2f6bb0;
+  --tint-success: rgba(47, 143, 91, 0.1);
+  --tint-warning: rgba(183, 121, 31, 0.12);
+  --tint-danger: rgba(194, 59, 59, 0.1);
+  --tint-info: rgba(47, 107, 176, 0.1);
+  --ki: #6d4fb3;
+  --tint-ki: rgba(109, 79, 179, 0.1);
+
+  /* === CHARTS === */
+  --chart-axis: #8d877e;
+  --chart-grid: rgba(28, 26, 23, 0.07);
+  --chart-line: var(--mode-chart);
+  --chart-area: color-mix(in oklab, var(--mode-chart) 12%, transparent);
+
+  /* === KARTEN === */
+  --card-radius: 14px;
+  --card-shadow: 0 1px 2px rgba(28, 26, 23, 0.04), 0 6px 20px rgba(28, 26, 23, 0.05);
+  --card-shadow-hover: 0 2px 4px rgba(28, 26, 23, 0.05), 0 12px 32px rgba(28, 26, 23, 0.09);
+
+  /* === TAILWIND-GRAUTÖNE auf die warme Neutralskala gelegt === */
+  --color-slate-50: #faf9f7;
+  --color-slate-100: #f4f2ee;
+  --color-slate-200: #e9e6e0;
+  --color-slate-300: #d9d5cd;
+  --color-slate-400: #a39d94;
+  --color-slate-500: #7d776e;
+  --color-slate-600: #5c574f;
+  --color-slate-700: #433f39;
+  --color-slate-800: #2c2925;
+  --color-slate-900: #1c1a17;
+  --color-slate-950: #121110;
+  --color-gray-50: #faf9f7;
+  --color-gray-100: #f4f2ee;
+  --color-gray-200: #e9e6e0;
+  --color-gray-300: #d9d5cd;
+  --color-gray-400: #a39d94;
+  --color-gray-500: #7d776e;
+  --color-gray-600: #5c574f;
+  --color-gray-700: #433f39;
+  --color-gray-800: #2c2925;
+  --color-gray-900: #1c1a17;
+  --color-gray-950: #121110;
+  --color-zinc-50: #faf9f7;
+  --color-zinc-100: #f4f2ee;
+  --color-zinc-200: #e9e6e0;
+  --color-zinc-300: #d9d5cd;
+  --color-zinc-400: #a39d94;
+  --color-zinc-500: #7d776e;
+  --color-zinc-600: #5c574f;
+  --color-zinc-700: #433f39;
+  --color-zinc-800: #2c2925;
+  --color-zinc-900: #1c1a17;
+  --color-zinc-950: #121110;
+  --color-neutral-50: #faf9f7;
+  --color-neutral-100: #f4f2ee;
+  --color-neutral-200: #e9e6e0;
+  --color-neutral-300: #d9d5cd;
+  --color-neutral-400: #a39d94;
+  --color-neutral-500: #7d776e;
+  --color-neutral-600: #5c574f;
+  --color-neutral-700: #433f39;
+  --color-neutral-800: #2c2925;
+  --color-neutral-900: #1c1a17;
+  --color-neutral-950: #121110;
+  --color-stone-50: #faf9f7;
+  --color-stone-100: #f4f2ee;
+  --color-stone-200: #e9e6e0;
+  --color-stone-300: #d9d5cd;
+  --color-stone-400: #a39d94;
+  --color-stone-500: #7d776e;
+  --color-stone-600: #5c574f;
+  --color-stone-700: #433f39;
+  --color-stone-800: #2c2925;
+  --color-stone-900: #1c1a17;
+  --color-stone-950: #121110;
+
+  /* === SIGNALFARBEN: gedämpfte, hochwertige Töne statt Neon-Tailwind.
+     Pastellstufen (50–200) bleiben zarte Flächen, 500–800 sind Text- und
+     Füllfarben. === */
+  --color-emerald-50: #eef7f1;
+  --color-emerald-100: #dcefe3;
+  --color-emerald-200: #b9dfc8;
+  --color-emerald-300: #8cc9a6;
+  --color-emerald-400: #56ad80;
+  --color-emerald-500: #3a9a67;
+  --color-emerald-600: #2f8f5b;
+  --color-emerald-700: #27704a;
+  --color-emerald-800: #1f5a3c;
+  --color-emerald-900: #184630;
+  --color-green-50: #eef7f1;
+  --color-green-100: #dcefe3;
+  --color-green-200: #b9dfc8;
+  --color-green-300: #8cc9a6;
+  --color-green-400: #56ad80;
+  --color-green-500: #3a9a67;
+  --color-green-600: #2f8f5b;
+  --color-green-700: #27704a;
+  --color-green-800: #1f5a3c;
+  --color-green-900: #184630;
+  --color-lime-50: #f3f6ea;
+  --color-lime-100: #e6ecd3;
+  --color-lime-200: #cdd9a8;
+  --color-lime-300: #adc077;
+  --color-lime-400: #8ea652;
+  --color-lime-500: #76903c;
+  --color-lime-600: #61753a;
+  --color-lime-700: #4d5d2f;
+  --color-lime-800: #3d4a26;
+  --color-lime-900: #30391e;
+  --color-teal-50: #ecf6f5;
+  --color-teal-100: #d6ece9;
+  --color-teal-200: #aedad4;
+  --color-teal-300: #7fc2ba;
+  --color-teal-400: #4fa79d;
+  --color-teal-500: #3a9188;
+  --color-teal-600: #2f7a72;
+  --color-teal-700: #27625c;
+  --color-teal-800: #204e4a;
+  --color-teal-900: #1a3d3a;
+  --color-cyan-50: #ecf6f5;
+  --color-cyan-100: #d6ece9;
+  --color-cyan-200: #aedad4;
+  --color-cyan-300: #7fc2ba;
+  --color-cyan-400: #4fa79d;
+  --color-cyan-500: #3a9188;
+  --color-cyan-600: #2f7a72;
+  --color-cyan-700: #27625c;
+  --color-cyan-800: #204e4a;
+  --color-cyan-900: #1a3d3a;
+  --color-amber-50: #fbf5ea;
+  --color-amber-100: #f6ead2;
+  --color-amber-200: #ecd6a4;
+  --color-amber-300: #e0bd6f;
+  --color-amber-400: #d1a243;
+  --color-amber-500: #c48c2b;
+  --color-amber-600: #b7791f;
+  --color-amber-700: #94611a;
+  --color-amber-800: #764e17;
+  --color-amber-900: #5d3e14;
+  --color-yellow-50: #fbf5ea;
+  --color-yellow-100: #f6ead2;
+  --color-yellow-200: #ecd6a4;
+  --color-yellow-300: #e0bd6f;
+  --color-yellow-400: #d1a243;
+  --color-yellow-500: #c48c2b;
+  --color-yellow-600: #b7791f;
+  --color-yellow-700: #94611a;
+  --color-yellow-800: #764e17;
+  --color-yellow-900: #5d3e14;
+  --color-orange-50: #fbf2ea;
+  --color-orange-100: #f6e3d2;
+  --color-orange-200: #ecc7a5;
+  --color-orange-300: #e0a672;
+  --color-orange-400: #d1854a;
+  --color-orange-500: #c26f33;
+  --color-orange-600: #ad5e2a;
+  --color-orange-700: #8c4c23;
+  --color-orange-800: #703d1d;
+  --color-orange-900: #593118;
+  --color-red-50: #faeeee;
+  --color-red-100: #f5dcdc;
+  --color-red-200: #ebb8b8;
+  --color-red-300: #de8f8f;
+  --color-red-400: #d16464;
+  --color-red-500: #c94b4b;
+  --color-red-600: #c23b3b;
+  --color-red-700: #9d2f2f;
+  --color-red-800: #7d2727;
+  --color-red-900: #622020;
+  --color-rose-50: #faeef2;
+  --color-rose-100: #f5dbe4;
+  --color-rose-200: #ebb6c9;
+  --color-rose-300: #dd8aa8;
+  --color-rose-400: #cc5f87;
+  --color-rose-500: #bf4a75;
+  --color-rose-600: #b8446f;
+  --color-rose-700: #94375a;
+  --color-rose-800: #762c48;
+  --color-rose-900: #5d2339;
+  --color-pink-50: #faeef2;
+  --color-pink-100: #f5dbe4;
+  --color-pink-200: #ebb6c9;
+  --color-pink-300: #dd8aa8;
+  --color-pink-400: #cc5f87;
+  --color-pink-500: #bf4a75;
+  --color-pink-600: #b8446f;
+  --color-pink-700: #94375a;
+  --color-pink-800: #762c48;
+  --color-pink-900: #5d2339;
+  --color-blue-50: #edf2f9;
+  --color-blue-100: #dae5f3;
+  --color-blue-200: #b5cbe7;
+  --color-blue-300: #88acd8;
+  --color-blue-400: #5a8cc8;
+  --color-blue-500: #3f78bb;
+  --color-blue-600: #2f6bb0;
+  --color-blue-700: #27568d;
+  --color-blue-800: #204570;
+  --color-blue-900: #1a3759;
+  --color-sky-50: #edf2f9;
+  --color-sky-100: #dae5f3;
+  --color-sky-200: #b5cbe7;
+  --color-sky-300: #88acd8;
+  --color-sky-400: #5a8cc8;
+  --color-sky-500: #3f78bb;
+  --color-sky-600: #2f6bb0;
+  --color-sky-700: #27568d;
+  --color-sky-800: #204570;
+  --color-sky-900: #1a3759;
+  --color-indigo-50: #f1eef8;
+  --color-indigo-100: #e2dcf1;
+  --color-indigo-200: #c5b9e3;
+  --color-indigo-300: #a493d3;
+  --color-indigo-400: #856ec2;
+  --color-indigo-500: #765cb9;
+  --color-indigo-600: #6d4fb3;
+  --color-indigo-700: #58408f;
+  --color-indigo-800: #463372;
+  --color-indigo-900: #37285a;
+  --color-violet-50: #f1eef8;
+  --color-violet-100: #e2dcf1;
+  --color-violet-200: #c5b9e3;
+  --color-violet-300: #a493d3;
+  --color-violet-400: #856ec2;
+  --color-violet-500: #765cb9;
+  --color-violet-600: #6d4fb3;
+  --color-violet-700: #58408f;
+  --color-violet-800: #463372;
+  --color-violet-900: #37285a;
+  --color-purple-50: #f1eef8;
+  --color-purple-100: #e2dcf1;
+  --color-purple-200: #c5b9e3;
+  --color-purple-300: #a493d3;
+  --color-purple-400: #856ec2;
+  --color-purple-500: #765cb9;
+  --color-purple-600: #6d4fb3;
+  --color-purple-700: #58408f;
+  --color-purple-800: #463372;
+  --color-purple-900: #37285a;
+  --color-fuchsia-50: #faeef2;
+  --color-fuchsia-100: #f5dbe4;
+  --color-fuchsia-200: #ebb6c9;
+  --color-fuchsia-300: #dd8aa8;
+  --color-fuchsia-400: #cc5f87;
+  --color-fuchsia-500: #bf4a75;
+  --color-fuchsia-600: #b8446f;
+  --color-fuchsia-700: #94375a;
+  --color-fuchsia-800: #762c48;
+  --color-fuchsia-900: #5d2339;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-synthesis-weight: none;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+  }
+
+  /* Hervorhebung in Medium, dem schwersten Schnitt von Uniform */
+  strong, b {
+    font-weight: 500;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-headline);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  input, select, textarea, button {
+    font-family: var(--font-body);
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: var(--mode-primary-light);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--mode-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+@layer utilities {
+  /* Kennzahlen und Beträge: Uniform Tab, Ziffern gleicher Dickte */
+  .font-mono {
+    font-family: var(--font-mono) !important;
+  }
+
+  /* Cockpit-Flächen */
+  .surface-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+  }
+  .surface-elevated {
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 12px 40px rgba(28, 26, 23, 0.14), 0 2px 6px rgba(28, 26, 23, 0.06);
+  }
+  .surface-inset {
+    background-color: var(--bg-inset);
+    border: 1px solid var(--border-light);
+  }
+  .shadow-card {
+    box-shadow: var(--card-shadow);
+  }
+}
+
+/* In @layer components, damit Utilities (shadow-*, bg-*) weiter greifen */
+@layer components {
+  /* Karten der Ansichten: weiße Fläche mit Hairline bekommt den weichen
+     Cockpit-Schatten (Eingabefelder tragen rounded-md/-lg und bleiben flach). */
+  .bg-surface-card.rounded-xl,
+  .bg-surface-card.rounded-2xl,
+  .bg-white.rounded-xl.border,
+  .bg-white.rounded-2xl.border {
+    box-shadow: var(--card-shadow);
+  }
+  /* Karten in Karten bleiben flach, nur die Hairline trennt sie */
+  :is(.bg-surface-card, .bg-white):is(.rounded-xl, .rounded-2xl) :is(.bg-surface-card, .bg-white):is(.rounded-xl, .rounded-2xl) {
+    box-shadow: none;
+  }
+
+  /* Kopfleiste: dunkler Modus-Verlauf. Am Fenster ausgerichtet (fixed), damit
+     Markenfeld der Seitenleiste und Kopfzeile wie ein Band durchlaufen. */
+  .kopfleiste {
+    background: var(--mode-gradient);
+    background-attachment: fixed;
+    color: #ffffff;
+  }
+
+  /* Helle Glas-Chips auf dem dunklen Modus-Verlauf der Kopfleiste */
+  .header-glass {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+  button.header-glass:hover {
+    background-color: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.24);
+  }
+}
+
+/* === Charts (recharts): Achsen, Gitter und Tooltips im Cockpit-Ton === */
+.recharts-cartesian-axis-tick text,
+.recharts-polar-angle-axis-tick text,
+.recharts-polar-radius-axis-tick text {
+  fill: var(--chart-axis) !important;
+}
+.recharts-cartesian-grid line,
+.recharts-polar-grid-angle line,
+.recharts-polar-grid-concentric polygon,
+.recharts-polar-grid-concentric circle {
+  stroke: var(--chart-grid) !important;
+}
+.recharts-default-tooltip {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 10px;
+  color: var(--text-primary) !important;
+  box-shadow: 0 12px 32px rgba(28, 26, 23, 0.14);
+}
+.recharts-legend-item-text {
+  color: var(--text-secondary) !important;
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .contract-print {
+    font-size: 12pt;
+    line-height: 1.6;
+    max-width: 100%;
+    padding: 2rem;
+  }
+  .contract-print h2 { font-size: 16pt; margin-top: 1.5rem; }
+  .contract-print table { width: 100%; border-collapse: collapse; }
+  .contract-print td, .contract-print th { padding: 4px 8px; border: 1px solid var(--border-medium); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* AI message content formatting */
+.ai-message-content p { margin-bottom: 0.5rem; line-height: 1.5; }
+.ai-message-content p:last-child { margin-bottom: 0; }
+.ai-message-content strong { font-weight: 500; color: var(--color-text-primary); }
+.ai-message-content em { font-style: italic; color: var(--color-text-secondary); }
+.ai-message-content ul.ai-list { margin: 0.35rem 0; padding-left: 0.25rem; list-style: none; }
+.ai-message-content ul.ai-list li { position: relative; padding-left: 1rem; margin-bottom: 0.3rem; }
+.ai-message-content ul.ai-list li::before { content: "–"; position: absolute; left: 0; color: var(--color-text-muted); }
+.ai-message-content .ai-label { font-weight: 500; color: var(--color-text-primary); }
+
+/* Section heading */
+.ai-message-content .ai-heading {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  margin: 0.8rem 0 0.35rem 0;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+/* Numbered section */
+.ai-message-content .ai-section { margin: 0.65rem 0 0.65rem 0; }
+.ai-message-content .ai-section-title {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+.ai-message-content .ai-section-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+}
+.ai-message-content .ai-section-body { padding-left: 1.65rem; }
+
+/* Risk level cards */
+.ai-message-content .ai-risk {
+  margin: 0.55rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border-left: 3px solid;
+}
+.ai-message-content .ai-risk.risk-high { background: var(--tint-danger); border-color: var(--color-danger); }
+.ai-message-content .ai-risk.risk-mid { background: var(--tint-warning); border-color: var(--color-warning); }
+.ai-message-content .ai-risk.risk-low { background: var(--tint-success); border-color: var(--color-success); }
+.ai-message-content .ai-risk-title {
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.2rem;
+}
+.ai-message-content .risk-high .ai-risk-title { color: var(--color-red-700); }
+.ai-message-content .risk-mid .ai-risk-title { color: var(--color-amber-700); }
+.ai-message-content .risk-low .ai-risk-title { color: var(--color-emerald-700); }
+.ai-message-content .ai-risk-body p { margin-bottom: 0.25rem; font-size: 0.8rem; }
+.ai-message-content .ai-risk-body ul.ai-list { margin: 0; }
+
+/* Sources card */
+.ai-message-content .ai-sources {
+  margin-top: 0.8rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  background: var(--mode-pastel);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--border-light));
+}
+.ai-message-content .ai-sources-title {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.ai-message-content .ai-sources-title::before {
+  content: "§";
+  display: inline-block;
+  width: 0.95rem;
+  height: 0.95rem;
+  line-height: 0.95rem;
+  border-radius: 50%;
+  text-align: center;
+  background: var(--color-primary);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+.ai-message-content .ai-sources-body p { margin-bottom: 0.15rem; font-size: 0.78rem; }
+.ai-message-content .ai-sources-body ul.ai-list li { padding-left: 0.9rem; font-size: 0.78rem; }
+
+/* Tables */
+.ai-message-content .ai-table-wrap {
+  margin: 0.6rem 0;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  background: var(--bg-card);
+}
+.ai-message-content .ai-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+.ai-message-content .ai-table th {
+  background: var(--bg-inset);
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-headline);
+}
+.ai-message-content .ai-table td {
+  padding: 0.35rem 0.6rem;
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+}
+.ai-message-content .ai-table tbody tr:nth-child(even) td {
+  background: var(--color-surface);
+}
+
+/* Inline chart */
+.ai-message-content .ai-chart {
+  margin: 0.55rem 0;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--bg-primary);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--border-light));
+}

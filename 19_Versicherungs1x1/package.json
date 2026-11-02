@@ -1,0 +1,37 @@
+{
+  "name": "versicherungs-1x1",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "vorschau": "vite preview --port 4173 --host 127.0.0.1",
+    "importpruefung": "node scripts/importpruefung.mjs",
+    "daten-bereinigung": "node scripts/daten-bereinigung.mjs",
+    "daten-anreicherung": "node scripts/daten-anreicherung.mjs",
+    "daten-deck": "node scripts/daten-deck.mjs",
+    "daten-feinschliff": "node scripts/daten-feinschliff.mjs",
+    "daten-pruefung": "node scripts/daten-pruefung.mjs",
+    "umfang-pruefung": "node scripts/umfang-pruefung.mjs",
+    "rauchtest": "node scripts/rauchtest.mjs",
+    "browserpruefung": "node scripts/mit-vorschau.mjs node scripts/rauchtest.mjs :: node scripts/umfang-pruefung.mjs",
+    "bilderbogen": "node scripts/bilderbogen.mjs",
+    "pruefen": "npm run importpruefung && npm run daten-pruefung && npm run build && npm run browserpruefung"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "axe-core": "^4.13.0",
+    "playwright": "^1.63.0",
+    "tailwindcss": "^4.0.0",
+    "vite": "^6.3.0"
+  }
+}

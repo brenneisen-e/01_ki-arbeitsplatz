@@ -1,0 +1,781 @@
+/* ==========================================================================
+   bloecke.css — Inhaltsblöcke und Diagramme (Agent Blöcke).
+   Alle Klassen tragen das Präfix bl-, damit nichts mit den Übergangsstilen
+   (.uebergang …) oder Tailwind-Utilities zusammenfällt. Farben nur über
+   Tokens; Diagrammfarben --viz-1 … --viz-6 in fester Reihenfolge.
+   ========================================================================== */
+@layer components {
+  /* ---------------------------------------------------------------- Rahmen */
+  .bloecke { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+  .block { min-width: 0; border-radius: var(--radius-m); }
+  .block-hervor {
+    box-shadow: 0 0 0 2px var(--marke), 0 0 0 8px var(--marke-weich);
+    transition: box-shadow var(--bewegung-lang);
+  }
+  .bl-rahmen { min-width: 0; }
+  .bl-kopf { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .bl-titel { font-size: 18px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.3; margin: 0; color: var(--text); text-wrap: balance; }
+  .bl-nur-titel .bl-kopf { margin-bottom: 0; }
+  .bl-nur-titel .bl-titel { font-size: 20px; margin-top: 8px; }
+  .bl-aktionen { display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto; }
+  .bl-fuss { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 10px; font-size: 12px; color: var(--text-3); }
+  .bl-quellenzeile a { color: var(--text-2); display: inline-flex; align-items: center; gap: 3px; text-decoration: underline; text-decoration-color: var(--neutral-300); }
+  .bl-quellenzeile a:hover { color: var(--marke); text-decoration-color: currentColor; }
+
+  /* ---------------------------------------------------------------- Absatz */
+  .bl-prosa { font-size: 16px; line-height: 1.6; color: var(--text); }
+  .bl-prosa p + p { margin-top: 10px; }
+  .bl-liste { margin: 10px 0; padding-left: 22px; }
+  ul.bl-liste { list-style: disc; }
+  ol.bl-liste { list-style: decimal; }
+  .bl-liste li { margin: 4px 0; }
+  .bl-liste li::marker { color: var(--text-3); }
+  .bl-prosa code, .bl-hinweis code { white-space: pre-wrap; font-size: 0.875em; }
+
+  /* ---------------------------------------------------------------- Quelle */
+  .bl-quelle {
+    position: relative; display: inline-block; vertical-align: baseline;
+    margin: 0 1px 0 2px; padding: 0; border: 0; background: transparent;
+    color: var(--marke); font: inherit; line-height: 0; cursor: pointer; border-radius: 4px;
+  }
+  .bl-quelle::before { content: ''; position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; transform: translate(-50%, -50%); }
+  .bl-quelle sup {
+    display: inline-block; vertical-align: super; line-height: 1;
+    min-width: 16px; padding: 1px 4px; border-radius: 4px;
+    background: var(--marke-weich); color: var(--marke);
+    font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: center;
+    transition: background-color var(--bewegung), color var(--bewegung);
+  }
+  .bl-quelle:hover sup, .bl-quelle[aria-expanded="true"] sup { background: var(--marke); color: #fff; }
+  .popover-flaeche.bl-quelle-popover { max-width: min(320px, calc(100vw - 32px)); padding: 12px 14px; }
+  .bl-quelle-inhalt { outline: none; }
+  .bl-quelle-kopf { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+  .bl-quelle-nr { min-width: 22px; height: 22px; padding: 0 5px; border-radius: 6px; background: var(--marke); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; letter-spacing: 0; }
+  .bl-quelle-text { margin: 8px 0 0; font-size: 14px; font-weight: 500; line-height: 1.45; color: var(--text); }
+  .bl-quelle-satz { margin: 6px 0 0; font-size: 12.5px; line-height: 1.45; color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .bl-quelle-aktionen { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+  .bl-quelle-ohne { font-size: 12px; color: var(--text-3); padding: 0 4px; }
+
+  /* --------------------------------------------------------------- Hinweis */
+  .bl-hinweis {
+    display: flex; gap: 12px; max-width: calc(var(--mass-text) + 36px);
+    padding: 14px 16px; border-radius: var(--radius-m);
+    border: 1px solid var(--rand); border-left: 4px solid var(--hinweis-farbe);
+    background: var(--hinweis-grund); color: var(--text);
+  }
+  .bl-hinweis-info { --hinweis-farbe: var(--info); --hinweis-grund: var(--info-weich); }
+  .bl-hinweis-hinweis { --hinweis-farbe: var(--warnung); --hinweis-grund: var(--warnung-weich); }
+  .bl-hinweis-tipp { --hinweis-farbe: var(--erfolg); --hinweis-grund: var(--erfolg-weich); }
+  .bl-hinweis-wichtig { --hinweis-farbe: var(--fehler); --hinweis-grund: var(--fehler-weich); }
+  .bl-hinweis-symbol { color: var(--hinweis-farbe); flex-shrink: 0; margin-top: 2px; display: inline-flex; }
+  .bl-hinweis-koerper { min-width: 0; }
+  .bl-hinweis-titel { font-weight: 600; margin-bottom: 4px; }
+  .bl-hinweis-text { font-size: 15px; line-height: 1.55; }
+  .bl-hinweis-text code { background: rgba(255, 255, 255, 0.7); }
+
+  /* --------------------------------------------------------------- Tabelle */
+  .bl-tabelle-aussen { position: relative; min-width: 0; }
+  .bl-tabelle-aussen::before, .bl-tabelle-aussen::after {
+    content: ''; position: absolute; top: 1px; bottom: 1px; width: 36px; pointer-events: none; z-index: 2;
+    opacity: 0; transition: opacity var(--bewegung); border-radius: var(--radius-m);
+  }
+  .bl-tabelle-aussen::before { left: 1px; background: linear-gradient(90deg, rgba(15, 23, 42, 0.16), rgba(15, 23, 42, 0)); }
+  .bl-tabelle-aussen::after { right: 1px; background: linear-gradient(270deg, rgba(15, 23, 42, 0.16), rgba(15, 23, 42, 0)); }
+  .bl-tabelle-aussen[data-kante-links="true"]::before { opacity: 1; }
+  .bl-tabelle-aussen[data-kante-rechts="true"]::after { opacity: 1; }
+  /* position: relative, damit absolut positionierte sr-only-Spans der Sortierknöpfe im Scrollrahmen bleiben (sonst weiten sie das Dokument) */
+  .bl-tabelle-huelle { position: relative; overflow-x: visible; border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--flaeche-karte); }
+  .bl-tabelle-aussen[data-scrollt="true"] .bl-tabelle-huelle { overflow-x: auto; }
+  .bl-tabelle-eigen + .bl-tabelle-eigen { margin-top: 12px; }
+  .bl-tabelle {
+    width: auto; min-width: min(100%, 520px); max-width: 100%;
+    border-collapse: separate; border-spacing: 0;
+    font-size: 14px; line-height: 1.45; font-variant-numeric: tabular-nums;
+  }
+  .bl-tabelle th {
+    position: sticky; top: var(--topbar-hoehe); z-index: 1;
+    padding: 9px 12px; border-bottom: 1px solid var(--rand);
+    background: var(--neutral-50); color: var(--text-2);
+    font-size: 13px; font-weight: 600; text-align: left; vertical-align: bottom;
+  }
+  .bl-tabelle thead th:first-child { border-top-left-radius: var(--radius-m); }
+  .bl-tabelle thead th:last-child { border-top-right-radius: var(--radius-m); }
+  .bl-tabelle-aussen[data-scrollt="true"] .bl-tabelle th, .bl-tabelle-eigen .bl-tabelle th { position: static; }
+  .bl-tabelle tbody th { position: static; font-weight: 500; color: var(--text); background: transparent; font-size: 14px; }
+  .bl-tabelle td { padding: 9px 12px; border-bottom: 1px solid var(--rand); color: var(--text); vertical-align: top; }
+  .bl-tabelle tbody tr:last-child td, .bl-tabelle tbody tr:last-child th { border-bottom: 0; }
+  .bl-tabelle tbody tr:nth-child(even) td, .bl-tabelle tbody tr:nth-child(even) th { background: var(--neutral-50); }
+  .bl-tabelle tbody tr:hover td, .bl-tabelle tbody tr:hover th { background: var(--neutral-100); }
+  .bl-tabelle .bl-zahl { text-align: right; white-space: nowrap; }
+  .bl-tabelle th.bl-zahl .bl-sortier { justify-content: flex-end; width: 100%; }
+  .bl-tabelle td.bl-hervor, .bl-tabelle tbody tr:nth-child(even) td.bl-hervor, .bl-tabelle tbody tr:hover td.bl-hervor { background: var(--marke-weich); }
+  .bl-tabelle th.bl-hervor { background: var(--gruen-100); color: var(--marke); }
+  .bl-tabelle-klein { min-width: min(100%, 320px); }
+  .bl-tabelle-klein th, .bl-tabelle-klein td { padding: 7px 10px; font-size: 13px; }
+  .bl-sortier {
+    display: inline-flex; align-items: center; gap: 4px; min-height: 24px;
+    padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; border-radius: 4px; text-align: inherit;
+  }
+  .bl-sortier .lucide { color: var(--neutral-400); flex-shrink: 0; }
+  .bl-sortier:hover { color: var(--text); }
+  .bl-sortier[data-aktiv="true"] { color: var(--text); }
+  .bl-sortier[data-aktiv="true"] .lucide { color: var(--marke); }
+  .bl-status { display: inline-flex; align-items: flex-start; gap: 6px; }
+  .bl-status .lucide { flex-shrink: 0; margin-top: 3px; }
+  .bl-status-ja .lucide { color: var(--erfolg); }
+  .bl-status-nein .lucide { color: var(--fehler); }
+  .bl-status-teils .lucide { color: var(--warnung); }
+
+  /* --------------------------------------------------------------- Kacheln */
+  .bl-kacheln { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .bl-kachel {
+    display: flex; flex-direction: column; gap: 6px; min-width: 0;
+    padding: 16px; border: 1px solid var(--rand); border-radius: var(--radius-m);
+    background: var(--flaeche-karte); box-shadow: var(--schatten-karte);
+  }
+  .bl-kachel-symbol { width: 36px; height: 36px; border-radius: 10px; margin-bottom: 4px; display: inline-flex; align-items: center; justify-content: center; background: var(--marke-weich); color: var(--marke); }
+  .bl-kachel-titel { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0; line-height: 1.35; }
+  .bl-kachel-text { margin: 0; font-size: 14px; line-height: 1.5; color: var(--text-2); }
+  .bl-kachel-link { margin-top: auto; padding-top: 6px; display: inline-flex; align-items: center; gap: 3px; font-size: 13px; font-weight: 500; }
+
+  /* ------------------------------------------------------------ Zeitleiste */
+  .bl-zeitleiste-huelle { container-type: inline-size; }
+  .bl-zeitleiste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px 0; }
+  .bl-ereignis { position: relative; min-width: 0; padding: 20px 20px 0 0; }
+  .bl-ereignis::before { content: ''; position: absolute; left: 0; right: 0; top: 6px; height: 2px; background: var(--rand); }
+  .bl-ereignis-punkt { position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--typfarbe); box-shadow: 0 0 0 3px var(--flaeche); z-index: 1; }
+  .bl-ereignis-jahr { font-size: 14px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .bl-ereignis-titel { margin-top: 2px; font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--text); }
+  .bl-ereignis-text { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: var(--text-2); }
+  @container (max-width: 639px) {
+    .bl-zeitleiste { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .bl-ereignis { padding: 0 0 20px 26px; }
+    .bl-ereignis::before { left: 6px; right: auto; top: 8px; bottom: -8px; width: 2px; height: auto; }
+    .bl-ereignis:last-child::before { display: none; }
+    .bl-ereignis-punkt { top: 3px; }
+  }
+  .bl-legende { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--text-2); }
+  .bl-legende-text { display: block; font-size: 12px; color: var(--text-3); }
+  .bl-legende-eintrag { display: inline-flex; align-items: center; gap: 6px; }
+  .bl-legende-punkt { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+  .bl-legende-linie { width: 16px; height: 3px; border-radius: 2px; flex-shrink: 0; display: inline-block; }
+  .bl-legende-rechteck { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; display: inline-block; }
+  .bl-legende-wert { color: var(--text-2); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bl-legende-zusatz { color: var(--text-3); font-size: 12px; }
+
+  /* --------------------------------------------------------------- Heatmap */
+  .bl-heatmap-huelle { position: relative; overflow-x: auto; border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--flaeche-karte); }
+  .bl-heatmap { width: 100%; border-collapse: separate; border-spacing: 2px; padding: 6px; font-size: 13px; }
+  .bl-heatmap th { padding: 8px 10px; font-size: 12.5px; font-weight: 600; color: var(--text-2); text-align: center; vertical-align: bottom; }
+  .bl-heatmap th[scope="row"] { text-align: left; white-space: nowrap; vertical-align: middle; }
+  .bl-heatmap-zelle { min-width: 64px; padding: 10px 8px; border-radius: 6px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .bl-heatmap-leer { text-align: center; color: var(--text-3); }
+  .bl-heatmap tbody tr:hover th { color: var(--text); }
+  .bl-heatmap-legende { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+  .bl-heatmap-balken { display: flex; width: 140px; height: 10px; border-radius: 5px; overflow: hidden; }
+  .bl-heatmap-balken span { flex: 1; }
+
+  /* -------------------------------------------------------------- Pyramide */
+  .bl-pyramide { container-type: inline-size; display: flex; flex-direction: column; gap: 6px; }
+  .bl-pyramide-ebene {
+    width: var(--ebene-breite); margin: 0 auto; min-width: 0;
+    background: var(--ebene-tint); border: 1px solid var(--marke-rand); border-radius: var(--radius-s);
+    transition: width var(--bewegung-lang);
+  }
+  @container (max-width: 559px) { .bl-pyramide-ebene { width: 100%; } }
+  .bl-pyramide-kopf {
+    display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px;
+    padding: 10px 14px; border: 0; border-radius: var(--radius-s); background: transparent;
+    color: var(--text); font-size: 14px; font-weight: 600; text-align: left;
+  }
+  .bl-pyramide-kopf:hover { background: rgba(255, 255, 255, 0.45); }
+  .bl-pyramide-nr { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--marke); color: #fff; font-size: 12px; font-weight: 700; }
+  .bl-pyramide-label { flex: 1; min-width: 0; }
+  .bl-pyramide-zahl { font-size: 12px; font-weight: 500; color: var(--text-2); white-space: nowrap; }
+  .bl-pyramide-pfeil { color: var(--text-2); transition: transform var(--bewegung); }
+  .bl-pyramide-ebene[data-offen="true"] .bl-pyramide-pfeil { transform: rotate(180deg); }
+  .bl-pyramide-liste { margin: 0; padding: 0 16px 14px 46px; font-size: 14px; line-height: 1.5; color: var(--text); }
+  .bl-pyramide-liste li { list-style: disc; padding: 2px 0; }
+  .bl-pyramide-liste li::marker { color: var(--marke); }
+
+  /* ----------------------------------------------------------------- Kette */
+  .bl-kette { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px 16px; align-items: stretch; }
+  .bl-kette-glied { position: relative; display: flex; min-width: 0; }
+  .bl-kette-schritt {
+    flex: 1; min-width: 0; min-height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 8px; border: 1px solid var(--rand); border-radius: var(--radius-m);
+    background: var(--flaeche-karte); color: var(--text-2);
+    font-size: 13px; font-weight: 500; line-height: 1.3; text-align: center; hyphens: manual;
+    transition: border-color var(--bewegung), background-color var(--bewegung), color var(--bewegung);
+  }
+  .bl-kette-schritt:hover { border-color: var(--marke-rand); color: var(--text); }
+  .bl-kette-schritt[aria-selected="true"] { border-color: var(--marke); background: var(--marke-weich); color: var(--marke); box-shadow: inset 0 0 0 1px var(--marke); }
+  .bl-kette-nr { font-size: 12px; font-weight: 600; color: var(--text-3); }
+  .bl-kette-schritt[aria-selected="true"] .bl-kette-nr { color: var(--marke); }
+  .bl-kette-label { max-width: 100%; overflow-wrap: anywhere; }
+  .bl-kette-pfeil { position: absolute; right: -16px; top: 50%; transform: translateY(-50%); color: var(--neutral-400); pointer-events: none; }
+  .bl-kette-tafel {
+    margin-top: 12px; max-width: calc(var(--mass-text) + 40px);
+    padding: 16px 18px; border: 1px solid var(--marke-rand); border-left: 4px solid var(--marke); border-radius: var(--radius-m);
+    background: var(--flaeche-karte);
+  }
+  .bl-kette-tafel-kopf { display: flex; flex-direction: column; gap: 2px; margin-bottom: 6px; }
+  .bl-kette-tafel h4 { margin: 0; font-size: 16px; }
+  .bl-kette-tafel p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--text-2); }
+  @media (max-width: 639.98px) {
+    .bl-kette { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+    .bl-kette-schritt { flex-direction: row; justify-content: flex-start; min-height: 44px; text-align: left; padding: 10px 14px; }
+    .bl-kette-pfeil { right: auto; left: 50%; top: auto; bottom: -19px; transform: translateX(-50%) rotate(90deg); }
+  }
+
+  /* --------------------------------------------------------------- Rechner */
+  .bl-rechner {
+    display: flex; flex-direction: column; gap: 16px; max-width: 560px;
+    padding: 20px; border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--flaeche-karte);
+  }
+  .bl-rechner-formel { margin: 0; font-family: var(--schrift-mono); font-size: 12.5px; color: var(--text-2); }
+  .bl-rechner-eingaben { display: grid; gap: 14px 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .bl-regler { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .bl-regler-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 14px; }
+  .bl-regler-kopf label { color: var(--text-2); font-weight: 500; }
+  .bl-regler-wert { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bl-regler input[type="range"] { width: 100%; height: 24px; margin: 0; accent-color: var(--marke); cursor: pointer; }
+  .bl-regler-skala { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+  .bl-rechner-ergebnis {
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px;
+    padding: 18px; border-radius: var(--radius-m); border: 1px solid var(--ton-rand); background: var(--ton-grund);
+    transition: background-color var(--bewegung-lang), border-color var(--bewegung-lang);
+  }
+  .bl-rechner-ergebnis[data-ton="erfolg"] { --ton: var(--erfolg); --ton-grund: var(--erfolg-weich); --ton-rand: #bbf7d0; }
+  .bl-rechner-ergebnis[data-ton="warnung"] { --ton: var(--warnung); --ton-grund: var(--warnung-weich); --ton-rand: #fde68a; }
+  .bl-rechner-ergebnis[data-ton="fehler"] { --ton: var(--fehler); --ton-grund: var(--fehler-weich); --ton-rand: #fecaca; }
+  .bl-rechner-ergebnis-label { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ton); }
+  .bl-rechner-ergebnis-wert { font-size: 40px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1; color: var(--text); }
+  .bl-rechner-ergebnis-text { font-size: 14px; color: var(--text-2); }
+  .bl-feld { display: flex; flex-direction: column; min-width: 0; }
+  .bl-feld-huelle { position: relative; display: flex; align-items: center; }
+  .bl-feld-huelle .eingabe { padding-right: 56px; }
+  .bl-feld-einheit { position: absolute; right: 12px; font-size: 13px; color: var(--text-3); pointer-events: none; }
+  .bl-rechner-zeilen { margin: 0; border-top: 1px solid var(--rand); }
+  .bl-rechner-zeile { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--rand); font-size: 14px; }
+  .bl-rechner-zeile dt { display: flex; flex-direction: column; color: var(--text-2); }
+  .bl-rechner-hinweis { font-size: 12px; color: var(--text-3); }
+  .bl-rechner-zeile dd { margin: 0; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bl-rechner-zeile[data-hervor] { margin: 0 -12px; padding: 9px 12px; border-radius: var(--radius-s); background: var(--marke-weich); border-bottom-color: transparent; }
+  .bl-rechner-zeile[data-hervor] dt { color: var(--text); font-weight: 600; }
+  .bl-rechner-zeile[data-hervor] dd { color: var(--marke); font-size: 16px; }
+  .bl-rechner-zeile[data-summe] dt, .bl-rechner-zeile[data-summe] dd { font-weight: 600; color: var(--text); }
+
+  /* ------------------------------------------------------------------ Baum */
+  .bl-baum { max-width: 640px; }
+  .bl-baum-verlauf ol { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 13px; color: var(--text-3); }
+  .bl-baum-verlauf li { display: inline-flex; align-items: center; gap: 4px; }
+  .bl-baum-krume { min-height: 28px; padding: 3px 10px; border: 1px solid var(--rand); border-radius: var(--radius-pille); background: var(--flaeche-karte); color: var(--text-2); font-size: 13px; font-weight: 500; }
+  .bl-baum-krume:hover { border-color: var(--marke-rand); color: var(--marke); background: var(--marke-weich); }
+  .bl-baum-karte { padding: 20px; border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--flaeche-karte); }
+  .bl-baum-frage { margin: 0 0 14px; font-size: 18px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.3; }
+  .bl-baum-optionen { display: flex; flex-direction: column; gap: 8px; }
+  .bl-baum-option {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; min-height: 44px;
+    padding: 10px 14px; border: 1px solid var(--rand); border-radius: var(--radius-s); background: var(--flaeche-karte);
+    color: var(--text); font-size: 15px; font-weight: 500; text-align: left;
+    transition: border-color var(--bewegung), background-color var(--bewegung), color var(--bewegung);
+  }
+  .bl-baum-option .lucide { color: var(--neutral-400); flex-shrink: 0; }
+  .bl-baum-option:hover { border-color: var(--marke); background: var(--marke-weich); color: var(--marke); }
+  .bl-baum-option:hover .lucide { color: var(--marke); }
+  .bl-baum-fuss { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .bl-baum-ergebnis { border-color: var(--marke-rand); background: linear-gradient(180deg, var(--marke-weich), var(--flaeche-karte) 140px); }
+  .bl-baum-ergebnis-kopf { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .bl-baum-ergebnis-kopf .bl-baum-frage { margin: 0; }
+  .bl-baum-ergebnis-symbol { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--marke); color: #fff; }
+  .bl-baum-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+  .bl-baum-liste li { display: flex; gap: 8px; align-items: flex-start; }
+  .bl-baum-liste .lucide { color: var(--erfolg); margin-top: 4px; flex-shrink: 0; }
+  .bl-baum-notiz { margin: 12px 0 0; font-size: 14px; line-height: 1.5; color: var(--text-2); }
+
+  /* -------------------------------------------------------------- Diagramm */
+  .bl-diagramm {
+    margin: 0; padding: 14px 12px 8px; min-width: 0;
+    border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--flaeche-karte);
+  }
+  .bl-diagramm-einheit { font-size: 12px; color: var(--text-3); margin: 0 0 4px 4px; }
+  .bl-diagramm-flaeche { width: 100%; min-width: 0; }
+  .bl-diagramm-flaeche svg, .bl-diagramm-flaeche .recharts-wrapper { max-width: 100%; }
+  .bl-diagramm-donut { display: grid; grid-template-columns: auto minmax(180px, 1fr); gap: 12px 24px; align-items: center; }
+  @media (max-width: 639.98px) { .bl-diagramm-donut { grid-template-columns: minmax(0, 1fr); justify-items: center; } }
+  .bl-donut-huelle { position: relative; max-width: 100%; }
+  .bl-donut-mitte { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
+  .bl-donut-mitte-wert { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1; color: var(--text); }
+  .bl-donut-mitte-name { max-width: 120px; font-size: 12.5px; line-height: 1.3; color: var(--text-2); }
+  .bl-legende-donut { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: 14px; width: 100%; }
+  .bl-legende-donut li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 4px 6px; border-radius: 6px; }
+  .bl-legende-donut li[data-aktiv="true"] { background: var(--neutral-100); }
+  .bl-legende-name { min-width: 0; overflow-wrap: anywhere; }
+  .bl-tooltip {
+    min-width: 120px; max-width: 260px; padding: 8px 10px;
+    border: 1px solid var(--rand); border-radius: var(--radius-s); background: var(--flaeche-erhoben);
+    box-shadow: var(--schatten-erhoben); font-size: 12.5px; line-height: 1.4; color: var(--text); pointer-events: none;
+  }
+  .bl-tooltip-titel { font-weight: 600; color: var(--text-2); margin-bottom: 3px; }
+  .bl-tooltip-zeile { display: flex; align-items: center; gap: 8px; padding: 1px 0; }
+  .bl-tooltip-schluessel { display: inline-block; width: 12px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+  .bl-tooltip-schluessel[data-form="rechteck"] { width: 10px; height: 10px; border-radius: 3px; }
+  .bl-tooltip-wert { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+  .bl-tooltip-name { color: var(--text-2); }
+  .bl-schwebe-tooltip { position: absolute; z-index: 2; }
+
+  /* ---------------------------------------------------------------- Sankey */
+  .bl-fluss-huelle { position: relative; width: 100%; min-width: 0; }
+  .bl-fluss { display: block; max-width: 100%; overflow: visible; }
+  .bl-fluss-band { fill: none; stroke: var(--viz-1); stroke-opacity: 0.26; transition: stroke-opacity var(--bewegung); }
+  .bl-fluss-band[data-aktiv="true"] { stroke-opacity: 0.62; }
+  .bl-fluss-band[data-passiv="true"] { stroke-opacity: 0.1; }
+  .bl-fluss-knoten { outline: none; cursor: default; }
+  .bl-fluss-knoten rect { fill: var(--viz-1); transition: fill var(--bewegung); }
+  .bl-fluss-knoten[data-aktiv="true"] rect { fill: var(--marke); }
+  .bl-fluss-knoten:focus-visible rect { stroke: var(--fokus); stroke-width: 2px; }
+  .bl-fluss-label, .bl-fluss-wert, .bl-radar-text, .bl-radar-segment, .bl-radar-ringname, .bl-radar-nr, .bl-netz-label, .bl-netz-kantentext {
+    paint-order: stroke; stroke: var(--flaeche-karte); stroke-width: 3px; stroke-linejoin: round;
+  }
+  .bl-fluss-label { font-size: 12.5px; font-weight: 600; fill: var(--text); }
+  .bl-fluss-wert { font-size: 12px; font-weight: 500; fill: var(--text-2); }
+
+  /* ----------------------------------------------------------------- Radar */
+  .bl-radar { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; min-width: 0; }
+  .bl-radar-huelle { position: relative; max-width: 100%; }
+  .bl-radar-huelle svg { display: block; overflow: visible; }
+  .bl-radar-ring { fill: var(--ringfarbe); fill-opacity: 0.07; stroke: var(--ringfarbe); stroke-opacity: 0.55; stroke-width: 1px; }
+  .bl-radar-teiler { stroke: var(--rand-stark); stroke-width: 1px; }
+  .bl-radar-segment { font-size: 12px; font-weight: 600; fill: var(--text-2); }
+  .bl-radar-segmentkreis { fill: var(--neutral-100); stroke: var(--rand-stark); stroke-width: 1px; }
+  .bl-radar-segmentnr { font-size: 12px; font-weight: 700; fill: var(--text); }
+  .bl-radar-ringname { font-size: 12px; font-weight: 600; fill: var(--text-2); }
+  .bl-radar-punkt { outline: none; cursor: default; }
+  .bl-radar-punkt circle { fill: var(--punktfarbe); stroke: #fff; stroke-width: 2px; transition: r var(--bewegung); }
+  .bl-radar-punkt[data-aktiv="true"] circle { stroke: var(--text); }
+  .bl-radar-punkt:focus-visible circle { stroke: var(--fokus); stroke-width: 3px; }
+  .bl-radar-nr { font-size: 12px; font-weight: 700; fill: var(--text); }
+  .bl-radar-segmentlegende { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--text-2); width: 100%; }
+  .bl-radar-segmentlegende li { display: inline-flex; align-items: center; gap: 6px; }
+  .bl-radar-nr-pille { flex-shrink: 0; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; background: var(--neutral-100); color: var(--text); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .bl-radar-liste { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px 20px; width: 100%; margin-top: 4px; }
+  .bl-radar-gruppe h4 { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 14px; font-weight: 600; }
+  .bl-radar-gruppe ul { list-style: none; margin: 0; padding: 0; }
+  .bl-radar-gruppe li { display: flex; align-items: flex-start; gap: 8px; padding: 6px 8px; border-radius: 6px; font-size: 13.5px; line-height: 1.45; color: var(--text-2); transition: background-color var(--bewegung); }
+  .bl-radar-gruppe li strong { color: var(--text); }
+  .bl-radar-gruppe li[data-aktiv="true"] { background: var(--marke-weich); }
+
+  /* -------------------------------------------------------------- Netzwerk */
+  .bl-netz-huelle { position: relative; margin: 0 auto; }
+  .bl-netz { display: block; max-width: 100%; overflow: visible; }
+  .bl-netz-kante { stroke: var(--rand-stark); stroke-width: 1.5px; transition: stroke var(--bewegung), stroke-opacity var(--bewegung); }
+  .bl-netz-kante[data-aktiv="true"] { stroke: var(--text-2); stroke-width: 2px; }
+  .bl-netz-kante[data-passiv="true"] { stroke-opacity: 0.35; }
+  .bl-netz-kantentext { font-size: 12px; font-weight: 500; fill: var(--text-2); }
+  .bl-netz-knoten { outline: none; cursor: default; transition: opacity var(--bewegung); }
+  .bl-netz-knoten[data-passiv="true"] { opacity: 0.35; }
+  .bl-netz-knoten circle { fill: var(--knotenfarbe); stroke: #fff; stroke-width: 2px; transition: r var(--bewegung); }
+  .bl-netz-knoten[data-aktiv="true"] circle { stroke: var(--text); }
+  .bl-netz-knoten:focus-visible circle { stroke: var(--fokus); stroke-width: 3px; }
+  .bl-netz-label { font-size: 12.5px; font-weight: 600; fill: var(--text); }
+  .bl-netz-tabellen { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ======================================================================
+     Grafiken des Sektortrainings (Agent Grafiken)
+     archetypenKarte · stufenTabelle · morphologischerKasten · formelAufbau
+     simulationGrosseZahlen · risikokette · prozessKette
+     Farben nur über Tokens, Diagrammfarben --viz-*; kein eigener Rahmen um
+     den Block (den setzt ContentBlocks). Bewegung nur als CSS-Übergang,
+     damit prefers-reduced-motion global greift.
+     ====================================================================== */
+  /* Lesemaß: Fließtext in den Grafiken bleibt bei 65–75 Zeichen je Zeile
+     (Brief §1.10). Ohne diese Grenze liefen Untertitel, Fußnoten und die
+     Supportbänder der Prozesskette bei 1600 px auf 130 bis 165 Zeichen. */
+  .bl-grafik-untertitel {
+    margin: -4px 0 14px; max-width: var(--mass-text);
+    font-size: 14.5px; line-height: 1.5; color: var(--text-2);
+  }
+  .bl-grafik-fussnote { flex: 1 1 100%; margin: 0; max-width: var(--mass-text); font-size: 12px; line-height: 1.45; color: var(--text-3); }
+
+  /* ------------------------------------------------------- Archetypenkarte */
+  .bl-arch-huelle { min-width: 0; }
+  .bl-arch { display: flex; align-items: stretch; gap: 14px; min-width: 0; }
+  .bl-arch-spalte { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .bl-arch-spalte-titel {
+    margin: 0; padding-bottom: 6px; border-bottom: 2px solid var(--marke);
+    font-size: 15px; font-weight: 600; line-height: 1.3; text-align: center; color: var(--text);
+  }
+  .bl-arch-hinweis {
+    margin: 0; padding: 6px 10px; border-radius: var(--radius-s);
+    background: var(--neutral-200); color: var(--text);
+    font-size: 12.5px; font-weight: 600; line-height: 1.35; text-align: center;
+  }
+  .bl-arch-hinweis[data-stark="true"] { background: var(--marke); color: #fff; }
+  .bl-arch-kern { flex: 1 1 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; align-content: start; }
+  .bl-arch-gruppe {
+    min-width: 0; display: flex; flex-direction: column; gap: 6px;
+    padding: 10px 12px; border: 1px solid var(--rand); border-radius: var(--radius-s); background: var(--flaeche-karte);
+  }
+  .bl-arch-gruppe[data-rolle="traeger"] { background: var(--gruen-100); border-color: var(--marke-rand); }
+  .bl-arch-gruppe[data-rolle="kein-traeger"] { background: var(--neutral-100); border-color: var(--rand-stark); }
+  .bl-arch-gruppe[data-rolle="unterstuetzer"] { background: var(--gruen-50); border-color: var(--marke-rand); }
+  .bl-arch-gruppe-kopf { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .bl-arch-gruppe-titel { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3; letter-spacing: 0; }
+  .bl-arch-gruppe-text { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-2); }
+  .bl-arch-band { display: flex; flex-direction: column; gap: 2px; }
+  .bl-arch-band-pfeil { align-self: center; color: var(--marke); }
+  .bl-arch-mitte {
+    flex: 0 0 clamp(150px, 19%, 210px); min-width: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  }
+  .bl-arch-kreis { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .bl-arch-kreis-scheibe {
+    width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center; background: var(--marke); color: #fff;
+  }
+  .bl-arch-kreis-titel { font-size: 14px; font-weight: 600; line-height: 1.3; text-align: center; color: var(--text); }
+  /* Text der Mitte als eigene Zeile unter der Karte, auf Lesemaß */
+  .bl-arch-mitte-text {
+    margin: 16px 0 0; max-width: var(--mass-text); font-size: 13.5px; line-height: 1.55; color: var(--text-2);
+  }
+  .bl-arch-mitte-marke { font-weight: 600; color: var(--text); margin-right: 6px; }
+  .bl-arch-mitte-marke::after { content: ':'; }
+  .bl-arch-verbindungen { list-style: none; margin: 0; padding: 0; width: 100%; display: flex; flex-direction: column; gap: 4px; }
+  .bl-arch-verbindungen[data-seite="links"] { align-items: flex-start; }
+  .bl-arch-verbindungen[data-seite="rechts"] { align-items: flex-end; }
+  .bl-arch-verbindung { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: var(--text-2); }
+  .bl-arch-verbindungen[data-seite="rechts"] .bl-arch-verbindung { flex-direction: row-reverse; }
+  .bl-arch-verbindung .lucide { flex-shrink: 0; color: var(--marke); }
+  .bl-arch-liste { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px 20px; }
+  .bl-arch-liste-spalte { min-width: 0; }
+  .bl-arch-liste-titel {
+    margin: 0; padding-bottom: 5px; border-bottom: 2px solid var(--marke);
+    font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--text);
+  }
+  .bl-arch-liste-hinweis { margin: 8px 0 0; font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+  .bl-arch-liste-text { margin: 8px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--text-2); }
+  .bl-arch-liste-gruppen, .bl-arch-liste-beziehungen { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .bl-arch-liste-breit { grid-column: 1 / -1; }
+  .bl-arch-liste-breit .bl-arch-liste-beziehungen { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 6px 20px; }
+  .bl-arch-liste-beziehungen li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13.5px; color: var(--text-2); }
+  .bl-arch-liste-beziehungen .lucide { flex-shrink: 0; color: var(--text-3); }
+  .bl-arch-art { padding: 1px 8px; border-radius: var(--radius-pille); background: var(--marke-weich); color: var(--marke); font-size: 12px; font-weight: 600; }
+
+  /* --------------------------------------------------------- Stufentabelle */
+  .bl-stufen-huelle { container-type: inline-size; min-width: 0; }
+  .bl-stufen { width: 100%; max-width: calc(var(--mass-text) + 230px); border-collapse: collapse; font-size: 14px; }
+  .bl-stufen thead th {
+    padding: 0 12px 8px; border-bottom: 1px solid var(--rand); text-align: left;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3);
+  }
+  .bl-stufen-zeile > * { border-bottom: 1px solid var(--rand); vertical-align: top; }
+  .bl-stufen-zeichen {
+    width: 30px; padding: 10px 0; text-align: center;
+    font-family: var(--schrift-mono); font-size: 14px; font-weight: 700; color: var(--text-2);
+  }
+  .bl-stufen-text { padding: 10px 12px; text-align: left; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--text); }
+  .bl-stufen-bedeutung { padding: 10px 12px; color: var(--text-2); }
+  .bl-stufen-bedeutung-text { display: block; font-size: 13.5px; line-height: 1.5; }
+  .bl-stufen-formel { display: block; margin-top: 3px; font-family: var(--schrift-mono); font-size: 12px; line-height: 1.45; color: var(--text-3); }
+  .bl-stufen-zeile[data-art="posten"]:hover > * { background: var(--neutral-50); }
+  .bl-stufen-zeile[data-art="zwischensumme"] > * { background: var(--marke-weich); border-bottom-color: var(--marke-rand); }
+  .bl-stufen-zeile[data-art="zwischensumme"] .bl-stufen-zeichen { box-shadow: inset 3px 0 0 var(--marke); color: var(--marke); }
+  .bl-stufen-zeile[data-art="zwischensumme"] .bl-stufen-bedeutung { color: var(--text); }
+  .bl-stufen-zeile[data-art="endsumme"] > * { background: var(--marke); border-bottom-color: var(--marke); color: #fff; }
+  .bl-stufen-zeile[data-art="endsumme"] .bl-stufen-zeichen,
+  .bl-stufen-zeile[data-art="endsumme"] .bl-stufen-bedeutung,
+  .bl-stufen-zeile[data-art="endsumme"] .bl-stufen-formel,
+  .bl-stufen-zeile[data-art="endsumme"] strong,
+  .bl-stufen-zeile[data-art="endsumme"] b { color: #fff; }
+  .bl-stufen-zeile[data-art="endsumme"] .bl-stufen-formel { color: rgba(255, 255, 255, 0.82); }
+  .bl-stufen-zeile[data-art="endsumme"] code { background: rgba(255, 255, 255, 0.16); color: #fff; }
+  @container (max-width: 519px) {
+    .bl-stufen, .bl-stufen tbody { display: block; }
+    .bl-stufen thead { display: block; height: 1px; overflow: hidden; clip-path: inset(100%); }
+    .bl-stufen-zeile {
+      display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: start;
+      padding: 9px 10px; border-bottom: 1px solid var(--rand); border-radius: var(--radius-s);
+    }
+    .bl-stufen-zeile > * { border-bottom: 0; padding: 0; }
+    .bl-stufen-zeile > .bl-stufen-zeichen { grid-column: 1; grid-row: 1; width: auto; text-align: left; }
+    .bl-stufen-zeile > .bl-stufen-text { grid-column: 2; grid-row: 1; padding: 0 0 3px; }
+    .bl-stufen-zeile > .bl-stufen-bedeutung { grid-column: 2; grid-row: 2; }
+    .bl-stufen-zeile[data-art="zwischensumme"] { background: var(--marke-weich); border-left: 3px solid var(--marke); }
+    .bl-stufen-zeile[data-art="zwischensumme"] .bl-stufen-zeichen { box-shadow: none; }
+    .bl-stufen-zeile[data-art="endsumme"] { background: var(--marke); }
+  }
+
+  /* --------------------------------------------------- Morphologischer Kasten */
+  .bl-morph-huelle { container-type: inline-size; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  .bl-morph-beispiele { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .bl-morph-beispiele-name { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+  .bl-morph-beispiele-knoepfe { min-width: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  /* Beispieltitel dürfen lang sein: umbrechen statt den Block sprengen */
+  .bl-morph-beispiele-knoepfe .knopf {
+    max-width: 100%; height: auto; padding: 5px 10px;
+    white-space: normal; text-align: left; overflow-wrap: break-word;
+  }
+  .bl-morph { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 12px; }
+  .bl-morph-spalte { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .bl-morph-spalte-titel {
+    margin: 0; padding-bottom: 6px; border-bottom: 2px solid var(--marke);
+    font-size: 14px; font-weight: 600; line-height: 1.3; text-align: center; color: var(--text);
+  }
+  .bl-morph-spalte-hinweis { margin: 0; font-size: 12px; text-align: center; color: var(--text-3); }
+  .bl-morph-optionen { display: flex; flex-direction: column; gap: 6px; }
+  .bl-morph-felder { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .bl-morph-option {
+    width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 8px 10px; border: 1px solid var(--rand); border-radius: var(--radius-s);
+    background: var(--neutral-100); color: var(--text);
+    font: inherit; font-size: 13.5px; font-weight: 500; line-height: 1.3; text-align: center;
+    cursor: pointer; overflow-wrap: anywhere;
+    transition: background-color var(--bewegung), border-color var(--bewegung), color var(--bewegung);
+  }
+  .bl-morph-option .lucide { flex-shrink: 0; }
+  .bl-morph-option:hover { border-color: var(--marke-rand); background: var(--marke-weich); color: var(--marke); }
+  .bl-morph-option[aria-pressed="true"] { border-color: var(--marke); background: var(--marke); color: #fff; font-weight: 600; }
+  .bl-morph-option[aria-pressed="true"]:hover { background: var(--marke-hover); border-color: var(--marke-hover); color: #fff; }
+  .bl-morph-gruppe {
+    display: flex; align-items: stretch; gap: 6px; min-width: 0;
+    padding: 5px; border: 1px dashed var(--marke-rand); border-radius: var(--radius-s); background: var(--gruen-50);
+  }
+  .bl-morph-gruppe-name { flex: 0 0 auto; display: flex; align-items: center; padding: 0 4px; font-size: 12px; font-weight: 700; color: var(--marke); }
+  .bl-morph-projekt {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 16px 18px; border: 1px solid var(--marke-rand); border-left: 4px solid var(--marke);
+    border-radius: var(--radius-m); background: var(--flaeche-karte);
+  }
+  .bl-morph-projekt-kopf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .bl-morph-projekt-titel { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.3; }
+  .bl-morph-projekt-einordnung { margin: 0; font-size: 13px; color: var(--text-2); }
+  .bl-morph-projekt-teil { min-width: 0; }
+  .bl-morph-projekt-teil h5 { margin: 0 0 3px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+  .bl-morph-projekt-teil p { margin: 0; max-width: calc(var(--mass-text) + 20px); font-size: 14.5px; line-height: 1.55; color: var(--text); }
+  .bl-morph-projekt-teil ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .bl-morph-projekt-teil li {
+    max-width: calc(var(--mass-text) + 20px); display: flex; align-items: flex-start; gap: 8px;
+    font-size: 14px; line-height: 1.5; color: var(--text);
+  }
+  .bl-morph-projekt-teil li::before {
+    content: ''; flex-shrink: 0; width: 5px; height: 5px; margin-top: 8px; border-radius: 50%; background: var(--marke-rand);
+  }
+  .bl-morph-projekt-ergebnis { padding: 12px 14px; border-radius: var(--radius-s); background: var(--marke-weich); }
+  .bl-morph-projekt-ergebnis li::before { content: none; }
+  .bl-morph-projekt-ergebnis h5 { color: var(--marke); }
+  .bl-morph-projekt-ergebnis ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .bl-morph-projekt-ergebnis li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.5; color: var(--text); }
+  .bl-morph-projekt-ergebnis .lucide { flex-shrink: 0; margin-top: 3px; color: var(--marke); }
+  .bl-morph-einordnung {
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 12px 14px; border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--neutral-50);
+  }
+  .bl-morph-einordnung-leer { margin: 0; font-size: 13.5px; color: var(--text-3); }
+  .bl-morph-einordnung-zeile { margin: 0; font-size: 15px; line-height: 1.5; color: var(--text); }
+  .bl-morph-einordnung-treffer { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13.5px; color: var(--marke); }
+  .bl-morph-fuss { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* ----------------------------------------------------------- Formelaufbau */
+  .bl-formel-huelle { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  .bl-formel-reihe { min-width: 0; display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+  .bl-formel-tabs { display: contents; }
+  .bl-formel-zeichen {
+    display: inline-flex; align-items: center; flex-shrink: 0;
+    font-family: var(--schrift-mono); font-size: 18px; font-weight: 700; color: var(--text-3);
+  }
+  .bl-formel-glied {
+    flex: 1 1 130px; min-width: 0; min-height: 64px; display: flex; align-items: center; justify-content: center;
+    padding: 12px 14px; border: 1px solid var(--rand); border-radius: var(--radius-m);
+    background: var(--flaeche-karte); color: var(--text-2);
+    font: inherit; font-size: 14px; font-weight: 500; line-height: 1.3; text-align: center;
+    cursor: pointer; overflow-wrap: anywhere;
+    transition: border-color var(--bewegung), background-color var(--bewegung), color var(--bewegung);
+  }
+  .bl-formel-glied:hover { border-color: var(--marke-rand); color: var(--text); }
+  .bl-formel-glied[aria-selected="true"] {
+    border-color: var(--marke); background: var(--marke-weich); color: var(--marke);
+    box-shadow: inset 0 0 0 1px var(--marke); font-weight: 600;
+  }
+  .bl-formel-summe {
+    flex: 1 1 150px; min-width: 0; min-height: 64px; display: flex; align-items: center; justify-content: center;
+    padding: 12px 14px; border-radius: var(--radius-m); background: var(--marke); color: #fff;
+    font-size: 15px; font-weight: 600; line-height: 1.3; text-align: center; overflow-wrap: anywhere;
+  }
+  .bl-formel-tafel {
+    max-width: calc(var(--mass-text) + 40px);
+    padding: 16px 18px; border: 1px solid var(--marke-rand); border-left: 4px solid var(--marke);
+    border-radius: var(--radius-m); background: var(--flaeche-karte);
+  }
+  .bl-formel-tafel-kopf { display: flex; flex-direction: column; gap: 2px; margin-bottom: 6px; }
+  .bl-formel-tafel-kopf h4 { margin: 0; font-size: 16px; }
+  .bl-formel-tafel-text { margin: 0; max-width: var(--mass-text); font-size: 15px; line-height: 1.55; color: var(--text-2); }
+  .bl-formel-tafel-text + .bl-formel-tafel-text { margin-top: 8px; }
+  .bl-formel-tafel .bl-formel-beispiel { font-size: 14px; font-style: italic; }
+  .bl-formel-ergebniszeile {
+    max-width: calc(var(--mass-text) + 40px); display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 16px; border: 1px solid var(--marke-rand); border-radius: var(--radius-m); background: var(--marke-weich);
+  }
+  .bl-formel-zeichen-gross { font-size: 22px; color: var(--marke); }
+  .bl-formel-ergebniszeile-koerper { min-width: 0; }
+  .bl-formel-ergebniszeile-koerper h4 { margin: 0; font-size: 15px; color: var(--marke); }
+  .bl-formel-ergebniszeile-koerper p { margin: 2px 0 0; font-size: 14px; line-height: 1.5; color: var(--text-2); }
+  .bl-formel-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .bl-formel-liste li {
+    display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; align-items: start;
+    padding-bottom: 10px; border-bottom: 1px solid var(--rand);
+  }
+  .bl-formel-liste li:last-child { padding-bottom: 0; border-bottom: 0; }
+  .bl-formel-liste-zeichen { font-family: var(--schrift-mono); font-size: 16px; font-weight: 700; color: var(--text-3); }
+  .bl-formel-liste-koerper { min-width: 0; }
+  .bl-formel-liste-koerper h5 { margin: 0 0 2px; font-size: 15px; font-weight: 600; }
+  .bl-formel-liste-koerper p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--text-2); }
+  .bl-formel-liste-beispiel { font-style: italic; }
+
+  /* ------------------------------------------- Simulation großer Zahlen */
+  .bl-sim { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  .bl-sim-regler {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(205px, 1fr)); gap: 14px 22px;
+    padding: 16px 18px; border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--flaeche-karte);
+  }
+  .bl-sim-werte { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 10px; }
+  .bl-sim-wert { min-width: 0; padding: 12px 14px; border: 1px solid var(--rand); border-radius: var(--radius-m); background: var(--flaeche-karte); }
+  .bl-sim-wert[data-hervor] { border-color: var(--marke-rand); background: var(--marke-weich); }
+  .bl-sim-wert dt { display: flex; flex-direction: column; gap: 2px; font-size: 13px; font-weight: 500; color: var(--text-2); }
+  .bl-sim-formel { font-family: var(--schrift-mono); font-size: 12px; line-height: 1.4; color: var(--text-3); }
+  .bl-sim-wert dd {
+    margin: 6px 0 0; display: flex; flex-direction: column;
+    font-size: 22px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; color: var(--text);
+  }
+  .bl-sim-wert[data-hervor] dd { color: var(--marke); }
+  .bl-sim-wert-zusatz { font-size: 12.5px; font-weight: 500; letter-spacing: 0; color: var(--text-2); }
+  .bl-sim-merkzeile {
+    margin: 0; padding: 12px 14px; max-width: var(--mass-text); border-radius: var(--radius-m);
+    border-left: 4px solid var(--marke); background: var(--gruen-50);
+    font-size: 15px; line-height: 1.55; color: var(--text);
+  }
+  .bl-sim-warnung { margin: 0; font-size: 13px; line-height: 1.5; color: var(--warnung); }
+  .bl-sim-annahmen { margin: 0; font-size: 12px; line-height: 1.5; color: var(--text-3); }
+  .bl-sim-annahmen strong { color: var(--text-2); }
+  .bl-sim-erklaerung { margin: 0; padding-left: 20px; max-width: var(--mass-text); font-size: 14px; line-height: 1.55; color: var(--text-2); }
+  .bl-sim-erklaerung li { margin: 4px 0; list-style: disc; }
+  .bl-sim-erklaerung li::marker { color: var(--marke); }
+  .bl-sim-svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+  .bl-sim-gitter { stroke: var(--viz-gitter); stroke-width: 1px; }
+  .bl-sim-achse { stroke: var(--viz-achse); stroke-width: 1px; }
+  .bl-sim-band { fill: var(--viz-1); fill-opacity: 0.1; }
+  .bl-sim-kante { fill: none; stroke: var(--viz-1); stroke-width: 2px; stroke-linejoin: round; }
+  .bl-sim-erwartung { stroke: var(--viz-achse); stroke-width: 1px; }
+  .bl-sim-jetztlinie { stroke: var(--rand-stark); stroke-width: 1px; }
+  .bl-sim-punkt { fill: var(--viz-1); stroke: var(--flaeche-karte); stroke-width: 2px; }
+  .bl-sim-achsentext { font-size: 12px; fill: var(--text-3); font-variant-numeric: tabular-nums; }
+  .bl-sim-erwartungstext {
+    fill: var(--text-2); paint-order: stroke; stroke: var(--flaeche-karte); stroke-width: 3px; stroke-linejoin: round;
+  }
+  .bl-sim-achsenname { font-size: 12px; fill: var(--text-2); }
+  .bl-sim-marke {
+    font-size: 12px; font-weight: 700; fill: var(--text); font-variant-numeric: tabular-nums;
+    paint-order: stroke; stroke: var(--flaeche-karte); stroke-width: 3px; stroke-linejoin: round;
+  }
+  .bl-sim-jetzt { font-size: 12px; font-weight: 500; color: var(--marke); }
+  .bl-sim-tabelle { container-type: inline-size; }
+  .bl-sim-tabelle .bl-tabelle { min-width: 0; }
+  .bl-sim-tabelle .bl-tabelle th { white-space: normal; hyphens: manual; }
+  .bl-sim-tabelle tbody tr[data-jetzt] th, .bl-sim-tabelle tbody tr[data-jetzt] td { background: var(--marke-weich); }
+  @container (max-width: 430px) {
+    .bl-sim-tabelle .bl-tabelle th, .bl-sim-tabelle .bl-tabelle td { padding: 6px 7px; font-size: 12.5px; }
+  }
+
+  /* ------------------------------------------------------------ Risikokette */
+  .bl-risiko { container-type: inline-size; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .bl-risiko-stufe { display: flex; flex-direction: column; margin-left: min(calc(var(--versatz) * 38px), 20%); }
+  .bl-risiko-karte {
+    max-width: calc(var(--mass-text) + 20px);
+    padding: 14px 16px; border: 1px solid var(--rand); border-left: 4px solid var(--stufenfarbe, var(--marke));
+    border-radius: var(--radius-m); background: var(--flaeche-karte); box-shadow: var(--schatten-karte);
+  }
+  .bl-risiko-kopf { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .bl-risiko-nr {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .bl-risiko-titel { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.3; }
+  .bl-risiko-traegt { display: flex; align-items: flex-start; gap: 7px; margin: 0 0 6px; font-size: 13.5px; line-height: 1.5; color: var(--text); }
+  .bl-risiko-traegt .lucide { flex-shrink: 0; margin-top: 3px; color: var(--marke); }
+  .bl-risiko-marke { font-weight: 600; color: var(--text); }
+  .bl-risiko-text { margin: 0; max-width: var(--mass-text); font-size: 14.5px; line-height: 1.55; color: var(--text-2); }
+  .bl-risiko-beispiel {
+    margin: 8px 0 0; padding: 8px 10px; border-radius: var(--radius-s); background: var(--neutral-50);
+    font-size: 13.5px; line-height: 1.5; color: var(--text-2);
+  }
+  .bl-risiko-uebergang {
+    display: flex; align-items: center; gap: 7px; margin: 0; padding: 8px 0 8px 16px;
+    font-size: 12.5px; font-weight: 600; color: var(--marke);
+  }
+  .bl-risiko-uebergang .lucide { flex-shrink: 0; }
+  @container (max-width: 639px) { .bl-risiko-stufe { margin-left: 0; } }
+
+  /* ------------------------------------------------------------ Prozesskette */
+  .bl-prozess { container-type: inline-size; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  .bl-prozess-ueberschrift { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+  .bl-prozess-kette { min-width: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+  .bl-prozess-glied {
+    position: relative; flex: 1 1 138px; min-width: 0; min-height: 76px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    padding: 12px 12px 12px 24px; border: 0; background: none; color: var(--text);
+    font: inherit; font-size: 13px; font-weight: 500; line-height: 1.3; text-align: center;
+    cursor: pointer; overflow-wrap: break-word; hyphens: auto;
+  }
+  .bl-prozess-form {
+    position: absolute; inset: 0; z-index: 0; background: var(--gruen-100);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%);
+    transition: background-color var(--bewegung);
+  }
+  .bl-prozess-glied[data-erstes] .bl-prozess-form {
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
+  }
+  .bl-prozess-glied:hover .bl-prozess-form { background: var(--gruen-200); }
+  .bl-prozess-glied[aria-selected="true"] .bl-prozess-form { background: var(--marke); }
+  .bl-prozess-glied[aria-selected="true"] { color: #fff; font-weight: 600; }
+  .bl-prozess-nr, .bl-prozess-label { position: relative; z-index: 1; max-width: 100%; }
+  .bl-prozess-nr { font-size: 12px; font-weight: 700; color: var(--text-3); font-variant-numeric: tabular-nums; }
+  .bl-prozess-glied[aria-selected="true"] .bl-prozess-nr { color: rgba(255, 255, 255, 0.78); }
+  .bl-prozess-tafel {
+    padding: 16px 18px; border: 1px solid var(--marke-rand); border-left: 4px solid var(--marke);
+    border-radius: var(--radius-m); background: var(--flaeche-karte);
+  }
+  .bl-prozess-tafel-kopf { display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; }
+  .bl-prozess-tafel-kopf h4 { margin: 0; font-size: 17px; }
+  .bl-prozess-tafel-text { margin: 4px 0 0; max-width: calc(var(--mass-text) + 20px); font-size: 15px; line-height: 1.55; color: var(--text-2); }
+  .bl-prozess-spalten { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 16px 20px; }
+  .bl-prozess-spalte { min-width: 0; }
+  .bl-prozess-spalte h5 {
+    margin: 0 0 7px; padding-bottom: 4px; border-bottom: 1px solid var(--marke-rand);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--marke);
+  }
+  .bl-prozess-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .bl-prozess-liste li { display: flex; align-items: flex-start; gap: 7px; font-size: 13.5px; line-height: 1.5; color: var(--text-2); }
+  .bl-prozess-liste li strong { color: var(--text); }
+  .bl-prozess-liste .lucide { flex-shrink: 0; margin-top: 3px; color: var(--marke); }
+  .bl-prozess-kennzahlen { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+  /* Kennzahl: Name über dem Wert — der Wert ist in den Daten mal eine Zahl,
+     mal die Bedeutung der Kennzahl; gestapelt kollidiert nie etwas. */
+  .bl-prozess-kennzahlen > div { display: flex; flex-direction: column; gap: 1px; min-width: 0; padding-bottom: 6px; border-bottom: 1px solid var(--rand); }
+  .bl-prozess-kennzahlen dt { min-width: 0; font-size: 13.5px; font-weight: 600; line-height: 1.4; color: var(--text); }
+  .bl-prozess-kennzahlen dd { margin: 0; min-width: 0; font-size: 13px; line-height: 1.45; color: var(--text-2); font-variant-numeric: tabular-nums; }
+  .bl-prozess-support { display: flex; flex-direction: column; gap: 6px; }
+  .bl-prozess-baender { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .bl-prozess-band {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px;
+    padding: 9px 14px; border: 1px solid var(--marke-rand); border-radius: var(--radius-s); background: var(--gruen-50);
+  }
+  .bl-prozess-band-titel { font-size: 13.5px; font-weight: 600; color: var(--text); }
+  .bl-prozess-band-text { max-width: var(--mass-text); font-size: 13px; line-height: 1.5; color: var(--text-2); }
+  @container (max-width: 639px) {
+    .bl-prozess-kette { flex-direction: column; }
+    .bl-prozess-glied { flex: 1 1 auto; min-height: 58px; padding: 16px 14px 22px; }
+    .bl-prozess-form { clip-path: polygon(0 0, 50% 12px, 100% 0, 100% calc(100% - 14px), 50% 100%, 0 calc(100% - 14px)); }
+    .bl-prozess-glied[data-erstes] .bl-prozess-form { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), 50% 100%, 0 calc(100% - 14px)); }
+  }
+}

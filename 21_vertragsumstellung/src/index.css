@@ -1,0 +1,3463 @@
+/* ==========================================================================
+   VERGÜTUNGSWERK — VISUELLES DESIGNSYSTEM
+   --------------------------------------------------------------------------
+   Enterprise-Oberfläche für Makro-Simulation und Umstellungsverhandlung.
+   Anmutung: dicht, ruhig, technisch präzise. Keine Flächenverläufe, keine
+   Emojis, ausschließlich einfarbige Icons (currentColor).
+
+   Namensraum
+     --brand-50 … --brand-900   Markenskala, zur Laufzeit von MarkeProvider
+                                 gesetzt (White Label). Stufe 600 trägt
+                                 Schaltflächen und erreicht ≥ 4,5:1 gegen Weiß.
+     --brand-akzent             Zweitfarbe der Marke
+     --vg-*                     alle übrigen Token
+     .vg-*                      alle Komponentenklassen
+
+   Aufbau
+      1  Tailwind-Anbindung (@theme, dark-Variante)
+      2  Skalen: Marke, Neutral, Semantik, Datenvisualisierung
+      3  Maße: Abstand, Radius, Schatten, Typografie, Z-Index, Motion
+      4  Rollen-Token hell
+      5  Dark Mode ([data-theme] + prefers-color-scheme)
+      6  Dichte ([data-dichte="kompakt"])
+      7  Basis, Reset, Fokus
+      8  App-Shell: Topbar, Navigation, Kontextleiste, Inhalt
+      9  Karte / Panel
+     10  Kennzahl, Delta, Abzeichen, Ampel
+     11  Neutralitätswaage
+     12  Datentabelle
+     13  Regler
+     14  Segment, Reiter, Schritte
+     15  Schaltflächen
+     16  Eingaben, Suche, Schalter
+     17  Overlays: Tip, Popover, Schublade, Dialog
+     18  Balken, Meter, Streifen
+     19  Zustände: Skelett, Leer, Hinweis, Toast
+     20  Datenvisualisierung und recharts
+     21  Motion (Bühne, Einzeichnen, View Transitions)
+     22  Druck (A4-Handout)
+     23  Hilfsklassen
+     24  Leitband, Türen, Seitenkopf, Kachel
+     25  Schmale Breiten
+   ========================================================================== */
+
+/* Schrift wird selbst ausgeliefert: keine Verbindung nach außen.
+
+   Uniform (Miller Type Foundry) ist die Hausschrift — drei Schnitte,
+   Light 300 / Regular 400 / Medium 500. Mehr Gewichte gibt es nicht,
+   deshalb ist 500 in diesem Werkzeug das schwerste Gewicht; ein vom
+   Browser errechnetes Fett würde die Schrift verzerren.
+
+   Uniform hat proportionale Ziffern: die Eins ist rund 30 % schmaler als
+   die Null. In Geldspalten springt das Komma dadurch von Zeile zu Zeile.
+   Deshalb liegt daneben 'Uniform Tab' — dieselben Zeichnungen, aber alle
+   Ziffern auf eine Dickte gesetzt und mittig ausgerichtet (erzeugt aus den
+   Originalen, siehe schrift/ANMERKUNG.md). Sie enthält nur Ziffern und
+   Zahlenzeichen; alle Buchstaben fallen auf Uniform zurück, sodass gemischte
+   Angaben wie „65,7 Mio. EUR“ ihre normale Buchstabenlaufweite behalten. */
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-light.woff2') format('woff2');
+             font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-regular.woff2') format('woff2');
+             font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform'; src: url('./schrift/uniform-medium.woff2') format('woff2');
+             font-weight: 500 900; font-style: normal; font-display: swap; }
+
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-light.woff2') format('woff2');
+             font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-regular.woff2') format('woff2');
+             font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('./schrift/uniformtab-medium.woff2') format('woff2');
+             font-weight: 500 900; font-style: normal; font-display: swap; }
+
+@import "tailwindcss";
+
+/* ==========================================================================
+   1  TAILWIND-ANBINDUNG
+   ========================================================================== */
+
+/* Themenwahl gewinnt in beide Richtungen; die Systemeinstellung greift nur,
+   solange kein ausdrückliches [data-theme="light"] gesetzt ist. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) { @slot; }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) { @slot; }
+  }
+}
+
+@theme inline {
+  --font-sans: var(--vg-schrift-text);
+  --font-mono: var(--vg-schrift-code);
+
+  --color-flaeche: var(--vg-flaeche);
+  --color-grund: var(--vg-grund);
+  --color-still: var(--vg-still);
+  --color-tief: var(--vg-tief);
+  --color-text: var(--vg-text);
+  --color-text-2: var(--vg-text-2);
+  --color-text-3: var(--vg-text-3);
+  --color-rand: var(--vg-rand);
+  --color-rand-stark: var(--vg-rand-stark);
+  --color-marke: var(--vg-marke);
+  --color-positiv: var(--vg-positiv);
+  --color-negativ: var(--vg-negativ);
+  --color-warnung: var(--vg-warnung);
+  --color-info: var(--vg-info);
+
+  --radius-xs: var(--vg-r-xs);
+  --radius-sm: var(--vg-r-sm);
+  --radius-md: var(--vg-r-md);
+  --radius-lg: var(--vg-r-lg);
+  --radius-xl: var(--vg-r-xl);
+
+  --shadow-s1: var(--vg-s1);
+  --shadow-s2: var(--vg-s2);
+  --shadow-s3: var(--vg-s3);
+  --shadow-s4: var(--vg-s4);
+  --shadow-s5: var(--vg-s5);
+}
+
+/* ==========================================================================
+   2  SKALEN
+   Skalen sind modusunabhängig. Umgeschaltet werden nur die Rollen-Token.
+   ========================================================================== */
+
+:root {
+
+  /* ---- 2.1 Marke — Standardwerte für #1f3a5f.
+     MarkeProvider überschreibt --brand-50…900 zur Laufzeit. Kein Bauteil
+     verwendet je einen Marken-Hexwert direkt. ------------------------------ */
+  --brand-50:  #f9f3f5;
+  --brand-100: #f3e4e9;
+  --brand-200: #e9c6d1;
+  --brand-300: #dc9bae;   /* Marken-Ink im Dunkelmodus                        */
+  --brand-400: #d16183;
+  --brand-500: #a6264d;
+  --brand-600: #7d1d3a;   /* Burgund: Schaltflächen, Marken-Ink hell, 9,96:1  */
+  --brand-700: #65162e;
+  --brand-800: #4d1123;
+  --brand-900: #390c1a;
+  --brand-akzent: #1f6b58;
+  --brand-akzent-weich: #e6f2ed;
+
+  /* ---- 2.2 Neutral — kühles Schiefer, in OKLCH gleichmäßig gestuft ------- */
+  --vg-n0:    #ffffff;
+  --vg-n25:   #fcfcfd;
+  --vg-n50:   #f8f9fa;
+  --vg-n100:  #f1f3f5;
+  --vg-n150:  #e9ecef;
+  --vg-n200:  #dee2e6;
+  --vg-n300:  #ced4da;
+  --vg-n400:  #adb5bd;
+  --vg-n500:  #868e96;
+  --vg-n600:  #6b727a;
+  --vg-n700:  #4f555c;
+  --vg-n800:  #373b41;
+  --vg-n900:  #23262b;
+  --vg-n950:  #141619;
+  --vg-n1000: #0a0b0d;
+
+  /* ---- 2.3 Semantik ------------------------------------------------------
+     Textstufen sind gegen die jeweilige Fläche geprüft:
+     #15803d 5,02:1 · #b93434 5,83:1 · #b45309 5,02:1 · #1d6fbf 4,66:1 (hell)
+     #34d399 9,10:1 · #ec7f78 6,56:1 · #fbbf24 10,48:1 · #5196df 5,65:1 (dunkel) */
+  --vg-gruen-50: #f2faf6;   --vg-gruen-100: #daf0e4;  --vg-gruen-200: #b3e0c8;
+  --vg-gruen-500: #077449;  --vg-gruen-600: #055c3a;
+  --vg-gruen-hell: #4ec48e; --vg-gruen-tief: #06211a; --vg-gruen-kante: #0b4a30;
+
+  --vg-rot-50: #fdf4f3;     --vg-rot-100: #f9e0dd;    --vg-rot-200: #f0bab3;
+  --vg-rot-500: #b42318;    --vg-rot-600: #8f1b13;
+  --vg-rot-hell: #f08b80;   --vg-rot-tief: #26100e;   --vg-rot-kante: #55201b;
+
+  --vg-gelb-50: #fdf8f0;    --vg-gelb-100: #f8ecd6;   --vg-gelb-200: #eed6a6;
+  --vg-gelb-500: #a35b09;   --vg-gelb-600: #82480a;
+  --vg-gelb-hell: #e0a83c;  --vg-gelb-tief: #241a08;  --vg-gelb-kante: #4d3510;
+
+  --vg-blau-50: #f2f6fd;    --vg-blau-100: #dfe9fa;   --vg-blau-200: #bed3f4;
+  --vg-blau-500: #175cd3;   --vg-blau-600: #1149a8;
+  --vg-blau-hell: #7aa7ec;  --vg-blau-tief: #0b1526;  --vg-blau-kante: #1a3766;
+
+  /* ---- 2.4 Datenvisualisierung — validierte Kategorialpalette ------------
+     Feste Reihenfolge, nie zyklisch weitergedreht. Begründung und Messwerte
+     in Abschnitt 20. */
+  --vg-viz-1: #2f4a63;   /* Abschlussprovision Leben     Schiefer dunkel */
+  --vg-viz-2: #a3b6cb;   /* Abschlussprovision Komposit   Schiefer hell   */
+  --vg-viz-3: #1f6b58;   /* laufende Provision            Tiefgrün        */
+  --vg-viz-4: #7fc8ad;   /* Bestandsprovision Leben       Grün hell       */
+  --vg-viz-5: #2e8f78;   /* Bestandsprovision Komposit    Grün mittel     */
+  --vg-viz-6: #c08434;   /* Bonifikation                  Ocker           */
+  --vg-viz-7: #b9c1cb;   /* Zuschüsse und Restposten      Grau            */
+  --vg-viz-8: #66788c;   /* Reserve                                       */
+
+  /* Sequenziell (Magnitude): ein Farbton, hell → dunkel */
+  --vg-seq-1: #dde7f3;  --vg-seq-2: #b9cde3;  --vg-seq-3: #8fadcd;
+  --vg-seq-4: #6389b4;  --vg-seq-5: #416896;  --vg-seq-6: #274b73;
+  --vg-seq-7: #163150;
+
+  /* Divergierend (Gewinner ↔ Verlierer): zwei Pole, neutrale Mitte */
+  --vg-div-n3: #8f1b13;  --vg-div-n2: #c05043;  --vg-div-n1: #e29c92;
+  --vg-div-0:  #e9ecef;
+  --vg-div-p1: #86b8b4;  --vg-div-p2: #35867e;  --vg-div-p3: #0f5751;
+
+  /* Status — reserviert, nie als Serienfarbe */
+  --vg-status-gut: #12855c;
+  --vg-status-warnung: #c9942e;
+  --vg-status-ernst: #c47141;
+  --vg-status-kritisch: #b8443a;
+
+  /* ---- 2.5 Abstände (4px-Raster, dichteunabhängig) ---------------------- */
+  --vg-a1: 2px;   --vg-a2: 4px;   --vg-a3: 6px;   --vg-a4: 8px;
+  --vg-a5: 12px;  --vg-a6: 16px;  --vg-a7: 20px;  --vg-a8: 24px;
+  --vg-a9: 32px;  --vg-a10: 40px; --vg-a11: 48px; --vg-a12: 64px;
+  --vg-a13: 80px;
+
+  /* Ruhezonen zwischen Abschnitten — bewusst deutlich größer als der
+     Innenabstand der Karten, damit Gruppen als Gruppen lesbar werden. */
+  --vg-luft-abschnitt: var(--vg-a10);
+  --vg-luft-block: var(--vg-a8);
+
+  /* ---- 2.6 Radien — von MarkeProvider überschreibbar --------------------- */
+  --vg-r-xs: 4px;
+  --vg-r-sm: 6px;
+  --vg-r-md: 8px;
+  --vg-r-lg: 12px;
+  --vg-r-xl: 16px;
+  --vg-r-voll: 999px;
+
+  /* ---- 2.7 Schatten — fünf Stufen, bewusst flach ------------------------ */
+  --vg-schattenfarbe: 12 20 32;
+  --vg-s1: 0 1px 2px rgb(var(--vg-schattenfarbe) / 0.04);
+  --vg-s2: 0 1px 2px rgb(var(--vg-schattenfarbe) / 0.05),
+           0 2px 6px -2px rgb(var(--vg-schattenfarbe) / 0.05);
+  --vg-s3: 0 2px 4px -2px rgb(var(--vg-schattenfarbe) / 0.06),
+           0 8px 20px -6px rgb(var(--vg-schattenfarbe) / 0.08);
+  --vg-s4: 0 4px 8px -4px rgb(var(--vg-schattenfarbe) / 0.10),
+           0 16px 28px -10px rgb(var(--vg-schattenfarbe) / 0.14);
+  --vg-s5: 0 8px 16px -8px rgb(var(--vg-schattenfarbe) / 0.14),
+           0 32px 64px -20px rgb(var(--vg-schattenfarbe) / 0.22);
+
+  /* ---- 2.8 Typografie — fluid zwischen 1280px und 1920px Viewport ------- */
+  --vg-fs-2xs:  clamp(0.625rem,  0.607rem + 0.045vw, 0.6875rem);  /* 10 → 11 */
+  --vg-fs-xs:   clamp(0.6875rem, 0.669rem + 0.045vw, 0.75rem);    /* 11 → 12 */
+  --vg-fs-sm:   clamp(0.75rem,   0.732rem + 0.045vw, 0.8125rem);  /* 12 → 13 */
+  --vg-fs-md:   clamp(0.8125rem, 0.794rem + 0.045vw, 0.875rem);   /* 13 → 14 */
+  --vg-fs-lg:   clamp(0.875rem,  0.857rem + 0.045vw, 0.9375rem);  /* 14 → 15 */
+  --vg-fs-xl:   clamp(0.9375rem, 0.902rem + 0.089vw, 1.0625rem);  /* 15 → 17 */
+  --vg-fs-2xl:  clamp(1.125rem,  1.071rem + 0.134vw, 1.3125rem);  /* 18 → 21 */
+  --vg-fs-3xl:  clamp(1.375rem,  1.304rem + 0.179vw, 1.625rem);   /* 22 → 26 */
+  --vg-fs-4xl:  clamp(1.75rem,   1.607rem + 0.357vw, 2.25rem);    /* 28 → 36 */
+  --vg-fs-5xl:  clamp(2.25rem,   2.036rem + 0.536vw, 3rem);       /* 36 → 48 */
+
+  --vg-zh-eng: 1.15;
+  --vg-zh-knapp: 1.3;
+  --vg-zh-normal: 1.45;
+  --vg-zh-weit: 1.62;
+
+  --vg-sp-eng: -0.014em;
+  --vg-sp-weit: 0.02em;
+  --vg-sp-kapit: 0.06em;
+
+  /* ---- 2.9 Z-Index ------------------------------------------------------ */
+  --vg-z-basis: 0;
+  --vg-z-erhoben: 10;
+  --vg-z-sticky: 100;
+  --vg-z-kontext: 250;
+  --vg-z-topbar: 300;
+  --vg-z-schleier: 400;
+  --vg-z-schublade: 410;
+  --vg-z-dialog: 510;
+  --vg-z-popover: 600;
+  --vg-z-tip: 700;
+  --vg-z-toast: 800;
+
+  /* ---- 2.10 Motion ------------------------------------------------------ */
+  --vg-sofort: 60ms;
+  --vg-schnell: 120ms;
+  --vg-normal: 180ms;
+  --vg-ruhig: 260ms;
+  --vg-bahn: 340ms;
+  --vg-daten: 420ms;
+  --vg-einzug: 700ms;          /* Verteilung zieht aus der Nulllinie ein   */
+  --vg-zaehl: 900ms;           /* Leitzahl zählt einmalig hoch             */
+  --vg-staffel: 45ms;          /* je Säule oder Stufe beim Einzeichnen     */
+  --vg-staffel-kachel: 18ms;   /* je Kachel im Lagebild                    */
+
+  --vg-kurve:          cubic-bezier(0.2, 0, 0, 1);
+  --vg-kurve-ein:      cubic-bezier(0.05, 0.7, 0.1, 1);
+  --vg-kurve-aus:      cubic-bezier(0.3, 0, 0.8, 0.15);
+  --vg-kurve-weich:    cubic-bezier(0.4, 0, 0.2, 1);
+  --vg-kurve-praezise: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   3  ROLLEN-TOKEN — HELL
+   Kontraste gegen die Kartenfläche #ffffff:
+     --vg-text   17,50:1   Überschriften und Werte
+     --vg-text-2  7,32:1   Fließtext
+     --vg-text-3  4,94:1   Sekundärtext, Labels
+     --vg-text-4  3,50:1   Achsen und Metazeilen, nie unter 11px
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  --vg-grund:   var(--vg-n50);    /* Seitengrund                     */
+  --vg-flaeche: var(--vg-n0);     /* Karte, Tabelle, Chartfläche     */
+  --vg-still:   var(--vg-n25);    /* Tabellenkopf, Fußleiste         */
+  --vg-tief:    var(--vg-n150);   /* Bahn, Skelett, Füllung          */
+  --vg-invers:  var(--vg-n900);
+  --vg-abzeichen-flaeche: var(--vg-n50);   /* Abzeichen — Rolle, kein Skalenwert */
+
+  --vg-hover:  rgb(12 26 45 / 0.035);
+  --vg-aktiv:  rgb(12 26 45 / 0.06);
+  --vg-zebra:  rgb(12 26 45 / 0.018);
+  --vg-glas:   rgb(255 255 255 / 0.82);
+
+  --vg-text:   var(--vg-n950);
+  --vg-text-2: var(--vg-n700);
+  --vg-text-3: var(--vg-n700);   /* 7,08:1 auf Weiß */
+  --vg-text-4: var(--vg-n600);   /* 4,87:1 auf Weiß, 4,62:1 auf dem Grund */
+  --vg-text-invers: var(--vg-n0);
+  --vg-auf-marke: #ffffff;
+
+  --vg-rand:       rgb(16 22 32 / 0.075);
+  --vg-rand-stark: rgb(16 22 32 / 0.13);
+  --vg-rand-hart:  rgb(16 22 32 / 0.22);
+
+  --vg-marke:         var(--brand-600);
+  --vg-marke-flaeche: var(--brand-600);
+  --vg-marke-weich:   var(--brand-50);
+  --vg-marke-kante:   var(--brand-200);
+  --vg-marke-hover:   var(--brand-700);
+  --vg-fokus:         var(--brand-500);
+  --vg-fokus-hof:     color-mix(in srgb, var(--brand-500) 28%, transparent);
+
+  --vg-positiv:         var(--vg-gruen-500);
+  --vg-positiv-weich:   var(--vg-gruen-50);
+  --vg-positiv-kante:   var(--vg-gruen-200);
+  --vg-negativ:         var(--vg-rot-500);
+  --vg-negativ-weich:   var(--vg-rot-50);
+  --vg-negativ-kante:   var(--vg-rot-200);
+  --vg-warnung:         var(--vg-gelb-500);
+  --vg-warnung-weich:   var(--vg-gelb-50);
+  --vg-warnung-kante:   var(--vg-gelb-200);
+  --vg-info:            var(--vg-blau-500);
+  --vg-info-weich:      var(--vg-blau-50);
+  --vg-info-kante:      var(--vg-blau-200);
+  --vg-positiv-flaeche: #1f7a5a;
+  --vg-negativ-flaeche: #a8493d;
+  --vg-warnung-flaeche: #b3822f;
+  --vg-neutral-flaeche: var(--vg-n300);
+  /* Schrift auf den farbigen Delta-Marken des Paardiagramms: hell auf den 500er-Tönen */
+  --vg-pille-text:      #ffffff;
+  --vg-neutral:         var(--vg-n700);
+  --vg-neutral-weich:   var(--vg-n100);
+  --vg-neutral-kante:   var(--vg-n200);
+
+  --vg-viz-gitter: var(--vg-n150);
+  --vg-viz-achse:  var(--vg-n300);
+  --vg-viz-ist:    var(--vg-n500);   /* heutiges Modell: bewusst neutral */
+  --vg-viz-heute:  var(--vg-n500);   /* Säule „heute“ im Paarvergleich: ΔE 18 gegen Tiefgrün */
+  /* Zeitvergleich zweier Jahre derselben Wirklichkeit (Produktion Vorjahr
+     gegen Referenzzeitraum): Blau aus der sequenziellen Palette, damit Grau
+     „heute“ und Grün „Zielmodell“ vorbehalten bleiben. Die Sequenz kehrt
+     sich im Dunkelmodus um, der Referenzzeitraum bleibt der kräftigere Ton. */
+  --vg-viz-vorjahr:  var(--vg-seq-3);
+  --vg-viz-referenz: var(--vg-seq-6);
+  --vg-viz-band:   rgb(12 26 45 / 0.04);
+
+  /* Verträglichkeits-Aliase: kurze Zweitnamen, die in Bauteilen vorkommen. */
+  --vg-flaeche-2: var(--vg-still);
+  --vg-t-sm: var(--vg-fs-sm);
+  --vg-t-xs: var(--vg-fs-xs);
+  --vg-t-md: var(--vg-fs-md);
+  /* Schriftrollen — an EINER Stelle entschieden.
+     --vg-schrift-text  Fließtext, Beschriftung, Überschriften
+     --vg-schrift-zahl  jede Zahl, die in einer Spalte stehen können muss
+     --vg-schrift-code  echte Monospace, ausschließlich für <code> */
+  --vg-schrift-text: 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --vg-schrift-zahl: 'Uniform Tab', 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --vg-schrift-code: ui-monospace, 'SF Mono', 'Consolas', monospace;
+  --vg-mono: var(--vg-schrift-zahl);
+}
+
+/* ==========================================================================
+   4  DARK MODE — vollständige Rollenumkehr
+   Die Skalen bleiben; nur Rollen werden neu belegt. Die Datenserien bekommen
+   eigene, gegen #121a25 geprüfte Stufen derselben acht Farbfamilien.
+   ========================================================================== */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --vg-grund:   var(--vg-n1000);
+  --vg-flaeche: var(--vg-n950);
+  --vg-still:   #182231;
+  --vg-tief:    var(--vg-n900);
+  --vg-invers:  var(--vg-n50);
+  --vg-abzeichen-flaeche: rgb(255 255 255 / 0.06);
+
+  --vg-hover: rgb(255 255 255 / 0.045);
+  --vg-aktiv: rgb(255 255 255 / 0.08);
+  --vg-zebra: rgb(255 255 255 / 0.022);
+  --vg-glas:  rgb(18 26 37 / 0.85);
+
+  --vg-text:   var(--vg-n50);
+  --vg-text-2: var(--vg-n300);
+  --vg-text-3: var(--vg-n300);   /* 10,7:1 auf dem dunklen Grund */
+  --vg-text-4: var(--vg-n400);   /* 8,74:1 auf dem Grund, 7,61:1 auf der Karte */
+  --vg-text-invers: var(--vg-n950);
+
+  --vg-rand:       #232e3e;
+  --vg-rand-stark: #2c3849;
+  --vg-rand-hart:  var(--vg-n800);
+
+  --vg-marke:         var(--brand-300);
+  --vg-marke-flaeche: var(--brand-500);
+  --vg-marke-weich:   color-mix(in srgb, var(--brand-500) 16%, var(--vg-n950));
+  --vg-marke-kante:   color-mix(in srgb, var(--brand-400) 40%, transparent);
+  --vg-marke-hover:   var(--brand-400);
+  --vg-fokus:         var(--brand-300);
+  --vg-fokus-hof:     color-mix(in srgb, var(--brand-300) 34%, transparent);
+
+  --vg-pille-text:    var(--vg-n950);   /* dunkle Schrift auf den hellen Tönen */
+
+  --vg-positiv:       var(--vg-gruen-hell);
+  --vg-positiv-weich: var(--vg-gruen-tief);
+  --vg-positiv-kante: var(--vg-gruen-kante);
+  --vg-negativ:       var(--vg-rot-hell);
+  --vg-negativ-weich: var(--vg-rot-tief);
+  --vg-negativ-kante: var(--vg-rot-kante);
+  --vg-warnung:       var(--vg-gelb-hell);
+  --vg-warnung-weich: var(--vg-gelb-tief);
+  --vg-warnung-kante: var(--vg-gelb-kante);
+  --vg-info:          var(--vg-blau-hell);
+  --vg-info-weich:    var(--vg-blau-tief);
+  --vg-info-kante:    var(--vg-blau-kante);
+  --vg-neutral:       var(--vg-n300);
+  --vg-neutral-weich: var(--vg-n900);
+  --vg-neutral-kante: var(--vg-n800);
+
+  --vg-schattenfarbe: 0 0 0;
+  --vg-s1: 0 1px 1px -0.5px rgb(0 0 0 / 0.4);
+  --vg-s2: 0 1px 2px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --vg-s3: 0 2px 4px -2px rgb(0 0 0 / 0.5), 0 6px 12px -4px rgb(0 0 0 / 0.45);
+  --vg-s4: 0 4px 8px -4px rgb(0 0 0 / 0.55), 0 16px 28px -10px rgb(0 0 0 / 0.55);
+  --vg-s5: 0 8px 16px -8px rgb(0 0 0 / 0.6), 0 32px 64px -20px rgb(0 0 0 / 0.65);
+
+  --vg-viz-1: #b7c8dc;
+  --vg-viz-2: #57708c;
+  --vg-viz-3: #5fc9a1;
+  --vg-viz-4: #2a7a62;
+  --vg-viz-5: #a6e3cc;
+  --vg-viz-6: #e0a557;
+  --vg-viz-7: #5f6570;
+  --vg-viz-8: #94a3b5;
+
+  --vg-seq-1: #163150;  --vg-seq-2: #274b73;  --vg-seq-3: #416896;
+  --vg-seq-4: #6389b4;  --vg-seq-5: #8fadcd;  --vg-seq-6: #b9cde3;
+  --vg-seq-7: #dde7f3;
+
+  --vg-div-n3: #f08b80;  --vg-div-n2: #d1655a;  --vg-div-n1: #9d4038;
+  --vg-div-0:  #33383f;
+  --vg-div-p1: #2b7f8c;  --vg-div-p2: #3fa89b;  --vg-div-p3: #6fc9c6;
+
+  --vg-viz-gitter: #202935;
+  --vg-viz-achse:  #343e4c;
+  --vg-viz-ist:    var(--vg-n500);
+  --vg-viz-band:   rgb(255 255 255 / 0.035);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --vg-grund:   var(--vg-n1000);
+    --vg-flaeche: var(--vg-n950);
+    --vg-still:   #182231;
+    --vg-tief:    var(--vg-n900);
+    --vg-invers:  var(--vg-n50);
+    --vg-abzeichen-flaeche: rgb(255 255 255 / 0.06);
+
+    --vg-hover: rgb(255 255 255 / 0.045);
+    --vg-aktiv: rgb(255 255 255 / 0.08);
+    --vg-zebra: rgb(255 255 255 / 0.022);
+    --vg-glas:  rgb(18 26 37 / 0.85);
+
+    --vg-text:   var(--vg-n50);
+    --vg-text-2: var(--vg-n300);
+    --vg-text-3: var(--vg-n300);
+    --vg-text-4: var(--vg-n400);
+    --vg-text-invers: var(--vg-n950);
+
+    --vg-rand:       #232e3e;
+    --vg-rand-stark: #2c3849;
+    --vg-rand-hart:  var(--vg-n800);
+
+    --vg-marke:         var(--brand-300);
+    --vg-marke-flaeche: var(--brand-500);
+    --vg-marke-weich:   color-mix(in srgb, var(--brand-500) 16%, var(--vg-n950));
+    --vg-marke-kante:   color-mix(in srgb, var(--brand-400) 40%, transparent);
+    --vg-marke-hover:   var(--brand-400);
+    --vg-fokus:         var(--brand-300);
+    --vg-fokus-hof:     color-mix(in srgb, var(--brand-300) 34%, transparent);
+
+    --vg-pille-text:    var(--vg-n950);   /* dunkle Schrift auf den hellen Tönen */
+
+    --vg-positiv:       var(--vg-gruen-hell);
+    --vg-positiv-weich: var(--vg-gruen-tief);
+    --vg-positiv-kante: var(--vg-gruen-kante);
+    --vg-negativ:       var(--vg-rot-hell);
+    --vg-negativ-weich: var(--vg-rot-tief);
+    --vg-negativ-kante: var(--vg-rot-kante);
+    --vg-warnung:       var(--vg-gelb-hell);
+    --vg-warnung-weich: var(--vg-gelb-tief);
+    --vg-warnung-kante: var(--vg-gelb-kante);
+    --vg-info:          var(--vg-blau-hell);
+    --vg-info-weich:    var(--vg-blau-tief);
+    --vg-info-kante:    var(--vg-blau-kante);
+    --vg-neutral:       var(--vg-n300);
+    --vg-neutral-weich: var(--vg-n900);
+    --vg-neutral-kante: var(--vg-n800);
+
+    --vg-schattenfarbe: 0 0 0;
+    --vg-s1: 0 1px 1px -0.5px rgb(0 0 0 / 0.4);
+    --vg-s2: 0 1px 2px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+    --vg-s3: 0 2px 4px -2px rgb(0 0 0 / 0.5), 0 6px 12px -4px rgb(0 0 0 / 0.45);
+    --vg-s4: 0 4px 8px -4px rgb(0 0 0 / 0.55), 0 16px 28px -10px rgb(0 0 0 / 0.55);
+    --vg-s5: 0 8px 16px -8px rgb(0 0 0 / 0.6), 0 32px 64px -20px rgb(0 0 0 / 0.65);
+
+    --vg-viz-1: #b7c8dc;
+    --vg-viz-2: #57708c;
+    --vg-viz-3: #5fc9a1;
+    --vg-viz-4: #2a7a62;
+    --vg-viz-5: #a6e3cc;
+    --vg-viz-6: #e0a557;
+    --vg-viz-7: #5f6570;
+    --vg-viz-8: #94a3b5;
+
+    --vg-seq-1: #163150;  --vg-seq-2: #274b73;  --vg-seq-3: #416896;
+    --vg-seq-4: #6389b4;  --vg-seq-5: #8fadcd;  --vg-seq-6: #b9cde3;
+    --vg-seq-7: #dde7f3;
+
+    --vg-div-n3: #f08b80;  --vg-div-n2: #d1655a;  --vg-div-n1: #9d4038;
+    --vg-div-0:  #33383f;
+    --vg-div-p1: #2b7f8c;  --vg-div-p2: #3fa89b;  --vg-div-p3: #6fc9c6;
+
+    --vg-viz-gitter: #202935;
+    --vg-viz-achse:  #343e4c;
+    --vg-viz-ist:    var(--vg-n500);
+    --vg-viz-heute:  var(--vg-n600);   /* dunkel: ΔE 21 gegen Petrol, 3,2:1 auf dem Grund */
+    --vg-viz-band:   rgb(255 255 255 / 0.035);
+  }
+}
+
+/* ==========================================================================
+   5  DICHTE
+   Standard = „normal“ (Präsentation und Verhandlung).
+   [data-dichte="kompakt"] = Analysebetrieb, Bloomberg-Nähe.
+   Umgeschaltet werden nur Höhen, Innenabstände und Zeilenhöhen — nie die
+   Abstands-Skala und nie die Größe der Kennzahlen selbst.
+   ========================================================================== */
+
+:root {
+  --vg-d-topbar: 52px;
+  --vg-d-kontext: 40px;
+  --vg-d-inhalt-pad: var(--vg-a7);
+  --vg-d-raster-luft: var(--vg-a6);
+  --vg-d-karte-pad: var(--vg-a7);
+  --vg-d-karte-kopf: var(--vg-a5) var(--vg-a7);
+  --vg-d-kpi-pad: var(--vg-a6);
+  --vg-d-kpi-wert: var(--vg-fs-3xl);
+  --vg-d-zeile: 34px;
+  --vg-d-zelle-y: 7px;
+  --vg-d-zelle-x: var(--vg-a5);
+  --vg-d-ctl: 32px;
+  --vg-d-ctl-sm: 26px;
+  --vg-d-ctl-lg: 38px;
+  --vg-d-ctl-pad: var(--vg-a5);
+  --vg-d-regler-luft: var(--vg-a5);
+}
+
+:root[data-dichte="kompakt"] {
+  --vg-d-topbar: 44px;
+  --vg-d-kontext: 34px;
+  --vg-d-inhalt-pad: var(--vg-a5);
+  --vg-d-raster-luft: var(--vg-a4);
+  --vg-d-karte-pad: var(--vg-a5);
+  --vg-d-karte-kopf: var(--vg-a3) var(--vg-a5);
+  --vg-d-kpi-pad: var(--vg-a5);
+  --vg-d-kpi-wert: var(--vg-fs-2xl);
+  --vg-d-zeile: 26px;
+  --vg-d-zelle-y: 3px;
+  --vg-d-zelle-x: var(--vg-a4);
+  --vg-d-ctl: 26px;
+  --vg-d-ctl-sm: 22px;
+  --vg-d-ctl-lg: 32px;
+  --vg-d-ctl-pad: var(--vg-a4);
+  --vg-d-regler-luft: var(--vg-a3);
+}
+
+/* ==========================================================================
+   6  BASIS / RESET / FOKUS
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--vg-grund);
+  color: var(--vg-text-2);
+  font-family: var(--vg-schrift-text);
+  font-size: var(--vg-fs-md);
+  line-height: var(--vg-zh-normal);
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+code, kbd, samp, pre { font-family: var(--vg-schrift-code); font-size: .92em; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  color: var(--vg-text);
+  font-weight: 500;
+  line-height: var(--vg-zh-knapp);
+  letter-spacing: var(--vg-sp-eng);
+}
+h1 { font-size: var(--vg-fs-2xl); }
+h2 { font-size: var(--vg-fs-xl); }
+h3 { font-size: var(--vg-fs-lg); }
+h4, h5, h6 { font-size: var(--vg-fs-md); }
+
+p { margin: 0 0 var(--vg-a5); }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--vg-marke);
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 2px;
+  transition: color var(--vg-schnell) var(--vg-kurve-weich);
+}
+a:hover { text-decoration-color: currentColor; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+svg { display: block; flex: none; }
+img { max-width: 100%; }
+strong, b { font-weight: 500; color: var(--vg-text); }
+hr { border: 0; }
+
+/* Zahlen tragen überall Tabellenziffern. */
+.vg-mono, .vg-zahl {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  letter-spacing: -0.012em;
+}
+.vg-zahl { color: var(--vg-text); font-weight: 500; }
+
+/* Ein einziger Fokusring, überall gleich. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--vg-fokus);
+  outline-offset: 2px;
+  border-radius: var(--vg-r-sm);
+}
+:where(button, a):focus:not(:focus-visible) { outline: none; }
+
+::selection { background: var(--vg-marke-weich); color: var(--vg-marke); }
+
+.vg-scroll, .vg-inhalt, .vg-tabelle-rahmen, .vg-schublade-koerper {
+  scrollbar-width: thin;
+  scrollbar-color: var(--vg-n400) transparent;
+}
+.vg-scroll::-webkit-scrollbar,
+.vg-inhalt::-webkit-scrollbar,
+.vg-tabelle-rahmen::-webkit-scrollbar,
+.vg-schublade-koerper::-webkit-scrollbar { width: 10px; height: 10px; }
+.vg-scroll::-webkit-scrollbar-thumb,
+.vg-inhalt::-webkit-scrollbar-thumb,
+.vg-tabelle-rahmen::-webkit-scrollbar-thumb,
+.vg-schublade-koerper::-webkit-scrollbar-thumb {
+  background: var(--vg-n300);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: var(--vg-r-voll);
+}
+.vg-scroll::-webkit-scrollbar-thumb:hover,
+.vg-inhalt::-webkit-scrollbar-thumb:hover,
+.vg-tabelle-rahmen::-webkit-scrollbar-thumb:hover { background: var(--vg-n400); background-clip: content-box; }
+
+/* ==========================================================================
+   7  APP-SHELL
+   Aufbau:  .vg-app > .vg-topbar + .vg-kontextleiste + main.vg-inhalt
+   ========================================================================== */
+
+.vg-app {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--vg-grund);
+  /* Sicherung: ein zu breites Kind weitet nie das Dokument auf. */
+  overflow-x: clip;
+}
+
+/* ---- 7.1 Topbar ---------------------------------------------------------- */
+.vg-topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--vg-z-topbar);
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a5);
+  height: var(--vg-d-topbar);
+  padding: 0 var(--vg-a6);
+  /* Undurchsichtig, nicht milchig: unter der Leiste laufen beim Scrollen
+     Kennzahlen durch, und halbtransparente Leisten machen daraus Matsch. */
+  background: var(--vg-flaeche);
+  border-bottom: 1px solid var(--vg-rand);
+}
+
+.vg-topbar-marke {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a4);
+  min-width: 0;
+  flex: none;
+  padding-right: var(--vg-a5);
+  border-right: 1px solid var(--vg-rand);
+}
+.vg-topbar-marke-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.vg-topbar-produkt {
+  font-size: var(--vg-fs-lg);
+  font-weight: 500;
+  color: var(--vg-text);
+  letter-spacing: var(--vg-sp-eng);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vg-topbar-mandant {
+  font-size: var(--vg-fs-2xs);
+  color: var(--vg-text-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:root[data-dichte="kompakt"] .vg-topbar-mandant { display: none; }
+
+/* Hauptnavigation in der Topbar */
+.vg-nav { display: flex; align-items: center; gap: 2px; flex: none; min-width: 0; }
+.vg-nav-eintrag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  height: 28px;
+  padding: 0 var(--vg-a4);
+  border: 0;
+  border-radius: var(--vg-r-sm);
+  background: none;
+  color: var(--vg-text-3);
+  font-size: var(--vg-fs-md);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color var(--vg-schnell) var(--vg-kurve-weich),
+              color var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-nav-eintrag:hover { background: var(--vg-hover); color: var(--vg-text); }
+.vg-nav-eintrag[aria-current="page"] {
+  background: var(--vg-marke-weich);
+  color: var(--vg-marke);
+  font-weight: 500;
+}
+
+.vg-topbar-mitte { display: flex; align-items: center; gap: var(--vg-a4); flex: 1 1 auto; min-width: 0; }
+.vg-topbar-rechts { display: flex; align-items: center; gap: var(--vg-a2); flex: none; }
+
+/* Tastenkürzel-Chip */
+.vg-taste {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 5px;
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-xs);
+  background: var(--vg-still);
+  color: var(--vg-text-4);
+  font-family: var(--vg-schrift-zahl);
+  font-size: 10px;
+  line-height: 1;
+}
+
+/* Auswahlliste im Topbar-Popover */
+.vg-palette-gruppe {
+  padding: var(--vg-a3) var(--vg-a4) var(--vg-a2);
+  font-size: var(--vg-fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--vg-sp-kapit);
+  text-transform: uppercase;
+  color: var(--vg-text-4);
+}
+.vg-palette-eintrag {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a4);
+  width: 100%;
+  padding: var(--vg-a3) var(--vg-a4);
+  border: 0;
+  border-radius: var(--vg-r-md);
+  background: none;
+  color: var(--vg-text-2);
+  font-size: var(--vg-fs-md);
+  text-align: left;
+  transition: background-color var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-palette-eintrag:hover { background: var(--vg-hover); color: var(--vg-text); }
+.vg-palette-eintrag[aria-current="true"] { background: var(--vg-marke-weich); }
+
+/* ---- 7.2 Kontextleiste --------------------------------------------------
+   Läuft in jedem Screenshot mit und erklärt den Zustand: Pfad, Fassung,
+   Wertungsjahr, Budgetampel, Verhandlungsrisiko. */
+.vg-kontextleiste {
+  position: sticky;
+  top: var(--vg-d-topbar);
+  z-index: var(--vg-z-kontext);
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a5);
+  height: var(--vg-d-kontext);
+  padding: 0 var(--vg-a6);
+  background: var(--vg-still);
+  border-bottom: 1px solid var(--vg-rand);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.vg-kontextleiste::-webkit-scrollbar { display: none; }
+.vg-kontextleiste > * { flex: none; }
+.vg-kontextleiste > .vg-fuellen { flex: 1 1 auto; }
+
+/* ---- 7.3 Inhalt ---------------------------------------------------------- */
+.vg-inhalt {
+  min-width: 0;
+  padding: var(--vg-d-inhalt-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vg-d-raster-luft);
+}
+
+/* Raster — Seiten nutzen die volle Breite, kein max-width mit mx-auto */
+.vg-raster { display: grid; gap: var(--vg-d-raster-luft); }
+.vg-raster-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vg-raster-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.vg-raster-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.vg-raster-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.vg-raster-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.vg-raster-auto { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+/* Kacheln des Lagebilds: 5/4/3 Spalten bei 1600/1280/1024; große Häuser
+   nehmen zwei Fächer, dense füllt die Lücken dahinter auf. */
+.vg-raster-kacheln {
+  display: grid;
+  gap: var(--vg-d-raster-luft);
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-flow: dense;
+}
+/* Arbeitsansicht: links Wirkung im Blick, rechts die Reglertafel */
+.vg-raster-arbeit { grid-template-columns: 360px minmax(0, 1fr); align-items: start; }
+.vg-raster-akte { grid-template-columns: minmax(0, 1fr) 340px; align-items: start; }
+
+@media (max-width: 1500px) {
+  .vg-raster-5, .vg-raster-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1280px) {
+  .vg-raster-3, .vg-raster-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vg-raster-arbeit, .vg-raster-akte { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 880px) {
+  .vg-raster-2, .vg-raster-3, .vg-raster-4, .vg-raster-5, .vg-raster-6 { grid-template-columns: minmax(0, 1fr); }
+  .vg-topbar { flex-wrap: wrap; height: auto; padding-block: var(--vg-a3); }
+  .vg-kontextleiste { position: static; }
+}
+
+/* ==========================================================================
+   8  KARTE / PANEL — drei Varianten
+     .vg-karte              Standard: Fläche, Hairline, Schatten 1
+     .vg-karte.vg-karte-still    ohne Schatten, ruhiger Grund (dichte Raster)
+     .vg-karte.vg-karte-erhoben  Leitpanel: Schatten 3, stärkere Kante
+     .vg-karte.vg-karte-akzent   Markenkante oben (die eine Kernaussage)
+   ========================================================================== */
+
+.vg-karte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand);
+  border-radius: var(--vg-r-lg);
+  contain: layout paint style;
+  transition: box-shadow var(--vg-normal) var(--vg-kurve),
+              border-color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-karte-still { background: var(--vg-still); border-color: transparent; }
+.vg-karte-erhoben { box-shadow: var(--vg-s3); border-color: var(--vg-rand-stark); }
+.vg-karte-akzent { border-color: var(--vg-marke-kante); }
+.vg-karte-akzent::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  border-radius: var(--vg-r-lg) var(--vg-r-lg) 0 0;
+  background: var(--vg-marke-flaeche);
+}
+
+.vg-karte-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vg-a5);
+  padding: var(--vg-d-karte-kopf);
+  padding-bottom: var(--vg-a2);
+}
+.vg-karte-akzent > .vg-karte-kopf { padding-top: calc(var(--vg-a5) + 2px); }
+.vg-karte-kopf-titel { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.vg-karte-titel {
+  margin: 0;
+  font-size: var(--vg-fs-lg);
+  font-weight: 500;
+  color: var(--vg-text);
+  letter-spacing: -0.014em;
+  line-height: var(--vg-zh-knapp);
+}
+.vg-karte-unter {
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-4);
+  line-height: var(--vg-zh-normal);
+}
+.vg-karte-koerper { padding: var(--vg-d-karte-pad); min-width: 0; }
+.vg-karte-koerper-eng { padding: var(--vg-a4); min-width: 0; }
+.vg-karte-fuss {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vg-a4);
+  padding: var(--vg-a4) var(--vg-d-karte-pad);
+  border-top: 1px solid var(--vg-rand);
+  border-radius: 0 0 var(--vg-r-lg) var(--vg-r-lg);
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-4);
+}
+
+/* Merksatz — die eine Zeile, die die Grafik darüber in Worte fasst.
+   Sie ist das Rückgrat der Verhandlungsargumentation. */
+.vg-merkzeile {
+  font-size: var(--vg-fs-sm);
+  line-height: var(--vg-zh-weit);
+  color: var(--vg-text-3);
+  max-width: 78ch;
+}
+.vg-merkzeile strong { color: var(--vg-text); font-weight: 500; }
+
+/* ==========================================================================
+   9  KENNZAHL, DELTA, ABZEICHEN, AMPEL
+   Semantik läuft über data-ton="neutral|positiv|negativ|warnung|info|marke".
+   Farbe verstärkt die Aussage, sie trägt sie nie allein: Vorzeichen, Icon
+   und Text stehen immer daneben.
+   ========================================================================== */
+
+.vg-kpi {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vg-a2);
+  min-width: 0;
+  padding: var(--vg-d-kpi-pad);
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand);
+  border-radius: var(--vg-r-lg);
+  box-shadow: var(--vg-s1);
+  overflow: hidden;
+  contain: layout paint style;
+}
+/* In einer Karte steckt die Kachel bereits auf einer Fläche — dann keine
+   zweite Kante, kein zweiter Schatten. */
+.vg-karte .vg-kpi,
+.vg-karte-koerper .vg-kpi,
+.vg-karte-koerper-eng .vg-kpi {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+}
+/* Direkt in der Karte liegend braucht die Kachel wieder ihren Innenabstand. */
+.vg-karte > .vg-kpi { padding: var(--vg-d-kpi-pad); }
+.vg-karte .vg-kpi + .vg-kpi { padding-top: var(--vg-a5); }
+.vg-karte-koerper .vg-raster > .vg-kpi { padding: var(--vg-a2) 0; }
+
+.vg-kpi-hervor { background: var(--vg-marke-weich); border-color: var(--vg-marke-kante); }
+.vg-karte .vg-kpi-hervor,
+.vg-karte-koerper .vg-raster > .vg-kpi-hervor {
+  padding: var(--vg-a4);
+  border-radius: var(--vg-r-md);
+}
+
+.vg-kpi-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a2);
+  margin-bottom: 2px;
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--vg-text-3);
+  line-height: var(--vg-zh-knapp);
+}
+.vg-kpi-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: var(--vg-d-kpi-wert);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  color: var(--vg-text);
+  white-space: nowrap;
+  margin-top: 1px;
+}
+.vg-kpi-wert-gross { font-size: var(--vg-fs-4xl); font-weight: 500; letter-spacing: -0.032em; }
+.vg-kpi-fuss {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  flex-wrap: wrap;
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-4);
+}
+
+/* Tonkante — 2px, nie farbige Vollflächen */
+.vg-kpi[data-ton]:not([data-ton="neutral"])::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+}
+.vg-kpi[data-ton="positiv"]::before { background: var(--vg-positiv); }
+.vg-kpi[data-ton="negativ"]::before { background: var(--vg-negativ); }
+.vg-kpi[data-ton="warnung"]::before { background: var(--vg-warnung); }
+.vg-kpi[data-ton="info"]::before    { background: var(--vg-info); }
+.vg-kpi[data-ton="marke"]::before   { background: var(--vg-marke-flaeche); }
+.vg-kpi[data-ton="positiv"] .vg-kpi-wert { color: var(--vg-positiv); }
+.vg-kpi[data-ton="negativ"] .vg-kpi-wert { color: var(--vg-negativ); }
+
+/* ---- 9.1 Delta-Chip ------------------------------------------------------ */
+.vg-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a2);
+  color: var(--vg-text-3);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.vg-delta[data-ton="positiv"] { color: var(--vg-positiv); }
+.vg-delta[data-ton="negativ"] { color: var(--vg-negativ); }
+.vg-delta[data-ton="warnung"] { color: var(--vg-warnung); }
+.vg-delta-gross { font-size: var(--vg-fs-lg); font-weight: 500; }
+
+/* ---- 9.2 Abzeichen — sechs Semantikvarianten über data-ton --------------- */
+.vg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a2);
+  height: 20px;
+  max-width: 100%;
+  padding: 0 var(--vg-a3);
+  height: 22px;
+  border: 1px solid var(--vg-rand);
+  border-radius: var(--vg-r-sm);
+  background: var(--vg-abzeichen-flaeche);
+  color: var(--vg-text-2);
+  font-size: var(--vg-fs-xs);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+/* Der Ton sitzt im Punkt und in der Schrift, nie in der Fläche. */
+.vg-badge[data-ton]:not([data-ton="neutral"])::before {
+  content: '';
+  width: 6px; height: 6px; flex: none;
+  border-radius: 50%;
+  background: currentColor;
+  margin-right: 1px;
+}
+.vg-badge[data-ton="info"]    { color: var(--vg-info); }
+.vg-badge[data-ton="positiv"] { color: var(--vg-positiv); }
+.vg-badge[data-ton="warnung"] { color: var(--vg-warnung); }
+.vg-badge[data-ton="negativ"] { color: var(--vg-negativ); }
+.vg-badge[data-ton="marke"]   { color: var(--vg-marke); }
+.vg-badge[data-ton="akzent"]  { color: var(--brand-akzent); }
+.vg-badge .vg-punkt { display: none; }
+
+/* ---- 9.3 Ampel ----------------------------------------------------------- */
+.vg-ampel-punkt {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--vg-n400);
+}
+.vg-ampel-gewinner   { background: var(--vg-status-gut);      color: var(--vg-status-gut); }
+.vg-ampel-neutral    { background: var(--vg-n400);            color: var(--vg-n400); }
+.vg-ampel-beobachten { background: var(--vg-status-warnung);  color: var(--vg-status-warnung); }
+.vg-ampel-kritisch   { background: var(--vg-status-kritisch); color: var(--vg-status-kritisch); }
+
+/* ==========================================================================
+   10  NEUTRALITÄTSWAAGE
+   Das visuelle Leitmotiv: bleibt die Gesamtvergütung unverändert?
+   Grünes Band bis ±1,5 %, gelb bis ±4 %, darüber rot.
+   ========================================================================== */
+
+.vg-waage { display: flex; flex-direction: column; gap: var(--vg-a4); min-width: 0; }
+
+.vg-waage-band {
+  position: relative;
+  height: 10px;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-tief);
+  overflow: hidden;
+}
+.vg-waage-band-kompakt { height: 6px; }
+
+.vg-waage-zone {
+  position: absolute;
+  top: 0; bottom: 0;
+  background: color-mix(in srgb, var(--vg-positiv) 20%, transparent);
+}
+.vg-waage-mitte {
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--vg-n400);
+}
+.vg-waage-nadel {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 3px;
+  translate: -50% 0;
+  border-radius: 2px;
+  background: var(--vg-text-3);
+  transition: left var(--vg-daten) var(--vg-kurve), background-color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-waage-nadel[data-ton="positiv"] { background: var(--vg-positiv); }
+.vg-waage-nadel[data-ton="warnung"] { background: var(--vg-warnung); }
+.vg-waage-nadel[data-ton="negativ"] { background: var(--vg-negativ); }
+
+.vg-waage-skala {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  color: var(--vg-text-4);
+}
+
+/* Kompaktfassung in der Topbar */
+.vg-waage-kompakt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a4);
+  height: var(--vg-d-ctl);
+  padding: 0 var(--vg-a4);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-md);
+  background: var(--vg-flaeche);
+  transition: border-color var(--vg-schnell) var(--vg-kurve-weich),
+              box-shadow var(--vg-schnell) var(--vg-kurve);
+}
+.vg-waage-kompakt:hover { border-color: var(--vg-rand-hart); box-shadow: var(--vg-s2); }
+.vg-waage-kompakt-band { display: block; width: 128px; flex: none; }
+:root[data-dichte="kompakt"] .vg-waage-kompakt-band { width: 92px; }
+
+/* Kompaktanzeige in der Topbar: drei Zahlen, ein Zustandspunkt, keine Fläche. */
+.vg-waage-kompakt-punkt {
+  width: 7px; height: 7px; flex: none;
+  border-radius: 50%;
+  background: var(--vg-neutral-flaeche);
+}
+.vg-waage-kompakt-punkt[data-ton="positiv"] { background: var(--vg-positiv); }
+.vg-waage-kompakt-punkt[data-ton="warnung"] { background: var(--vg-warnung); }
+.vg-waage-kompakt-punkt[data-ton="negativ"] { background: var(--vg-negativ); }
+
+.vg-waage-kompakt-wert {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding-left: var(--vg-a4);
+  border-left: 1px solid var(--vg-rand);
+  white-space: nowrap;
+}
+.vg-waage-kompakt-wert[data-erste] { padding-left: var(--vg-a1); border-left: 0; }
+.vg-waage-kompakt-zahl {
+  font-family: var(--vg-schrift-zahl);
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.012em;
+  color: var(--vg-text-2);
+}
+.vg-waage-kompakt-wert[data-ton="negativ"] .vg-waage-kompakt-zahl { color: var(--vg-negativ); }
+.vg-waage-kompakt-wert[data-ton="warnung"] .vg-waage-kompakt-zahl { color: var(--vg-warnung); }
+.vg-waage-kompakt-marke { font-size: var(--vg-fs-2xs); color: var(--vg-text-4); }
+
+/* ==========================================================================
+   11  DATENTABELLE
+   Aufbau:  .vg-tabelle-rahmen > table.vg-tabelle
+   Marker:  th/td[data-num] rechtsbündig mit Tabellenziffern
+            th.vg-sortierbar, tr[data-klickbar], tr[aria-selected]
+            td.vg-erste-spalte, .vg-tabelle-eng, .vg-tabelle-rahmen-hoch
+   ========================================================================== */
+
+.vg-tabelle-rahmen {
+  position: relative;
+  overflow: auto;
+  border-radius: var(--vg-r-lg);
+  background: var(--vg-flaeche);
+}
+.vg-tabelle-rahmen-hoch { max-height: 520px; }
+.vg-karte-koerper > .vg-tabelle-rahmen,
+.vg-karte > .vg-tabelle-rahmen { border-radius: 0 0 var(--vg-r-lg) var(--vg-r-lg); }
+
+.vg-tabelle {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--vg-fs-sm);
+  color: var(--vg-text-2);
+}
+
+.vg-tabelle thead th {
+  position: sticky;
+  top: 0;
+  z-index: var(--vg-z-sticky);
+  padding: var(--vg-a4) var(--vg-d-zelle-x);
+  background: var(--vg-still);
+  color: var(--vg-text-3);
+  font-size: var(--vg-fs-xs);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: bottom;
+  box-shadow: inset 0 -1px 0 0 var(--vg-rand-stark);
+}
+.vg-tabelle thead th[data-num] { text-align: right; }
+.vg-tabelle th.vg-sortierbar {
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--vg-schnell) var(--vg-kurve-weich), background-color var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-tabelle th.vg-sortierbar:hover { color: var(--vg-text); background: var(--vg-aktiv); }
+.vg-tabelle th.vg-sortierbar:focus-visible { outline-offset: -2px; }
+
+.vg-tabelle tbody td {
+  height: var(--vg-d-zeile);
+  padding: var(--vg-d-zelle-y) var(--vg-d-zelle-x);
+  border-bottom: 1px solid var(--vg-rand);
+  vertical-align: middle;
+}
+/* Zeilentrennung nur über die Haarlinie — kein Zebra, kein zweites Muster. */
+.vg-tabelle tbody tr { transition: background-color var(--vg-sofort) linear; }
+.vg-tabelle tbody tr:hover { background: var(--vg-hover); }
+.vg-tabelle tbody tr[data-klickbar] { cursor: pointer; }
+.vg-tabelle tbody tr[data-klickbar]:focus-visible { outline: 2px solid var(--vg-fokus); outline-offset: -2px; }
+.vg-tabelle tbody tr[aria-selected="true"] { background: var(--vg-marke-weich); }
+.vg-tabelle tbody tr[aria-selected="true"] td:first-child { box-shadow: inset 2px 0 0 0 var(--vg-marke-flaeche); }
+
+/* Bedienelemente in Zellen behalten ihre Inhaltsbreite. Ein Select mit
+   width: 100 % meldet der Spalte eine Mindestbreite von null und wird bei
+   knapper Tabelle auf zwei Buchstaben gestaucht (Fassungen bei 1024 px:
+   „Ir“ statt „In Verhandlung“). Mit der Inhaltsbreite als Untergrenze
+   scrollt .vg-tabelle-rahmen stattdessen. Bewusst nicht min-width:
+   max-content auf der ganzen Tabelle — die Prosa-Spalten der Grundlagen
+   („Beschreibung“, „Wirkung“) sollen weiter umbrechen. */
+.vg-tabelle td select.vg-feld { min-width: max-content; }
+
+/* Fassungstabelle unter 1100 px: die Spalte „Regler“ (Zähler der Abweichungen)
+   weicht, damit der Fassungsname lesbar bleibt und die Aktionen im Bild sind. */
+@media (max-width: 1100px) {
+  .vg-tabelle-fassungen th:nth-child(4),
+  .vg-tabelle-fassungen td:nth-child(4) { display: none; }
+}
+
+/* Numerische Spalten */
+.vg-tabelle td[data-num] {
+  text-align: right;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text);
+  white-space: nowrap;
+  letter-spacing: -0.015em;
+}
+
+/* Erste Spalte: Bezeichner, klebt beim Querscrollen */
+.vg-tabelle td.vg-erste-spalte {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--vg-flaeche);
+  color: var(--vg-text);
+  font-weight: 500;
+  box-shadow: 1px 0 0 0 var(--vg-rand);
+}
+.vg-tabelle tbody tr:hover td.vg-erste-spalte { background: color-mix(in srgb, var(--vg-flaeche) 96%, var(--vg-text)); }
+.vg-tabelle tbody tr[aria-selected="true"] td.vg-erste-spalte { background: var(--vg-marke-weich); }
+.vg-tabelle thead th:first-child { z-index: calc(var(--vg-z-sticky) + 2); }
+
+/* Fuß- und Summenzeilen */
+.vg-tabelle tfoot td {
+  position: sticky;
+  bottom: 0;
+  padding: var(--vg-a4) var(--vg-d-zelle-x);
+  background: var(--vg-still);
+  color: var(--vg-text);
+  font-weight: 500;
+  box-shadow: inset 0 1px 0 0 var(--vg-rand-hart);
+}
+.vg-tabelle tfoot td[data-num] {
+  text-align: right;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Gruppen-Zwischenüberschrift im Körper */
+.vg-tabelle tbody tr.vg-gruppe td {
+  height: 26px;
+  background: var(--vg-flaeche);
+  font-size: var(--vg-fs-2xs);
+  font-weight: 500;
+  color: var(--vg-text-4);
+  border-bottom: 1px solid var(--vg-rand-stark);
+  padding-top: var(--vg-a4);
+}
+/* Spaltengruppen HEUTE | ZIELMODELL | DELTA */
+.vg-tabelle .vg-grenze { border-left: 1px solid var(--vg-rand-stark); }
+.vg-tabelle thead th.vg-gruppe-ist   { background: var(--vg-still); text-align: center; }
+.vg-tabelle thead th.vg-gruppe-ziel  { background: var(--vg-marke-weich); color: var(--vg-marke); text-align: center; }
+.vg-tabelle thead th.vg-gruppe-delta { background: var(--vg-tief); text-align: center; }
+
+.vg-tabelle-eng { font-size: var(--vg-fs-xs); }
+.vg-tabelle-eng tbody td { height: 26px; padding-block: 2px; }
+.vg-tabelle-eng thead th { padding-block: var(--vg-a2); }
+
+/* Lagebild-Tabelle: 44-px-Zeilen mit Unterzeile, Kopf in Kleinschreibung */
+.vg-tabelle-lage tbody td { height: 44px; padding-block: var(--vg-a2); }
+.vg-tabelle-lage thead th {
+  font-size: var(--vg-fs-xs);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.vg-tabelle-lage .vg-weg { width: 140px; }
+
+/* ==========================================================================
+   12  REGLER — ein Instrument, ein Bezug: heute
+   Aufbau:
+     .vg-regler[data-veraendert]
+       .vg-regler-kopf        Name + Abweichungs-Abzeichen
+       .vg-regler-werkzeuge   Wert (tippbar), Neutralstellen, Zurücksetzen
+       .vg-regler-bahn[data-zieht]
+         ::before             Grundbahn 4 px
+         .vg-regler-basis     Kerbe „heute“ [data-label="heute 33 ‰"]
+         .vg-regler-abweichung  Stück von der Kerbe zum Knopf (left/width in %)
+         .vg-regler-knopf     sichtbarer Knopf [data-wert="30,0 ‰"], left in %
+         input[type=range]    unsichtbar, liegt obenauf, trägt Bedienung
+       .vg-regler-hinweis     nur in der Schublade
+   Zeilenhöhe 58 px: Kopfzeile 22 + Bahn 24 + 2 × 6 Luft. Bewegt sich nur
+   bei programmatischem Wechsel (Szenario, Zurücksetzen): Knopf und
+   Abweichungsstück gleiten 340 ms; während des Ziehens folgt beides der
+   Hand ohne Übergang.
+   ========================================================================== */
+
+.vg-regler {
+  --fuellung: 0%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0 var(--vg-a4);
+  padding: var(--vg-a3) var(--vg-a5);
+  border-radius: var(--vg-r-md);
+  transition: background-color var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-regler:hover { background: var(--vg-hover); }
+.vg-regler:focus-within { background: var(--vg-hover); }
+
+.vg-regler-kopf {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  min-width: 0;
+  height: 22px;
+}
+.vg-regler-name {
+  font-size: var(--vg-fs-md);
+  font-weight: 500;
+  color: var(--vg-text-2);
+  border-bottom: 1px dashed transparent;
+  cursor: help;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vg-regler:hover .vg-regler-name { border-bottom-color: var(--vg-rand-hart); }
+.vg-regler[data-veraendert="true"] .vg-regler-name { color: var(--vg-text); font-weight: 500; }
+.vg-regler-kopf .vg-badge { height: 20px; }
+
+.vg-regler-werkzeuge {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a2);
+  flex: none;
+  height: 22px;
+}
+.vg-regler-werkzeuge > .vg-btn-sm { height: 22px; }
+.vg-regler-werkzeuge > .vg-btn-symbol.vg-btn-sm { width: 22px; }
+
+.vg-regler-wert {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-lg);
+  font-weight: 500;
+  color: var(--vg-text);
+  min-width: 62px;
+  justify-content: flex-end;
+  border-radius: var(--vg-r-xs);
+  transition: color var(--vg-schnell) var(--vg-kurve-weich);
+}
+/* Der Wert trägt Tiefgrün, wenn er von heute abweicht — dieselbe Tinte wie
+   Knopf und Abweichungsstück. Burgund bleibt der Bedienung vorbehalten. */
+.vg-regler[data-veraendert="true"] .vg-regler-wert { color: var(--vg-viz-3); }
+.vg-regler-einheit { font-size: var(--vg-fs-xs); font-weight: 500; color: var(--vg-text-4); }
+
+.vg-regler-eingabe {
+  width: 76px;
+  height: 22px;
+  padding: 0 var(--vg-a3);
+  border: 1px solid var(--vg-fokus);
+  border-radius: var(--vg-r-sm);
+  background: var(--vg-flaeche);
+  color: var(--vg-text);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-md);
+  text-align: right;
+  outline: none;
+  box-shadow: 0 0 0 3px var(--vg-fokus-hof);
+}
+
+/* ---- Bahn ---------------------------------------------------------------- */
+.vg-regler-bahn {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 24px;
+  width: 100%;
+}
+.vg-regler-bahn::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 4px;
+  translate: 0 -50%;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-tief);
+}
+
+/* Abweichungsstück: von der Kerbe „heute“ bis zum Knopf */
+.vg-regler-abweichung {
+  position: absolute;
+  top: 50%;
+  height: 4px;
+  translate: 0 -50%;
+  border-radius: 2px;
+  background: var(--vg-viz-3);
+  pointer-events: none;
+  z-index: 1;
+  transition: left var(--vg-bahn) var(--vg-kurve-praezise),
+              width var(--vg-bahn) var(--vg-kurve-praezise);
+}
+
+/* Kerbe: Wert des heutigen Modells, ragt 5 px über die Bahn */
+.vg-regler-basis {
+  position: absolute;
+  top: 50%;
+  translate: -50% -50%;
+  width: 2px;
+  height: 14px;
+  border-radius: 1px;
+  background: var(--vg-viz-heute);
+  opacity: 1;
+  pointer-events: none;
+  z-index: 2;
+}
+/* „heute 33 ‰“ erscheint unter der Kerbe, sobald die Zeile Hand oder Fokus hat */
+.vg-regler-basis[data-label]::after {
+  content: attr(data-label);
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  translate: -50% 0;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  line-height: 1.2;
+  color: var(--vg-text-4);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-regler:hover .vg-regler-basis[data-label]::after,
+.vg-regler:focus-within .vg-regler-basis[data-label]::after { opacity: 1; }
+
+/* Knopf: hohl auf dem heutigen Wert, gefüllt bei Abweichung */
+.vg-regler-knopf {
+  position: absolute;
+  top: 50%;
+  left: var(--fuellung);
+  width: 16px;
+  height: 16px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  border: 2px solid var(--vg-viz-3);
+  background: var(--vg-flaeche);
+  box-shadow: var(--vg-s1);
+  pointer-events: none;
+  z-index: 3;
+  transition: left var(--vg-bahn) var(--vg-kurve-praezise),
+              background-color var(--vg-schnell) var(--vg-kurve-weich),
+              box-shadow var(--vg-schnell) var(--vg-kurve);
+}
+.vg-regler[data-veraendert="true"] .vg-regler-knopf { background: var(--vg-viz-3); }
+
+/* Während des Ziehens folgt alles der Hand — kein Nachlaufen */
+.vg-regler [data-zieht="true"] .vg-regler-knopf,
+.vg-regler [data-zieht="true"] .vg-regler-abweichung,
+.vg-regler[data-zieht="true"] .vg-regler-knopf,
+.vg-regler[data-zieht="true"] .vg-regler-abweichung { transition: none; }
+
+/* Fahne mit dem Wert, 18 px über dem Knopf, nur während des Ziehens */
+.vg-regler-knopf::after {
+  content: none;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  translate: -50% 0;
+  padding: 2px 6px;
+  border-radius: var(--vg-r-xs);
+  background: var(--vg-invers);
+  color: var(--vg-text-invers);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-xs);
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  box-shadow: var(--vg-s3);
+  animation: vg-tip-ein var(--vg-schnell) var(--vg-kurve-ein) both;
+}
+.vg-regler [data-zieht="true"] .vg-regler-knopf[data-wert]::after,
+.vg-regler[data-zieht="true"] .vg-regler-knopf[data-wert]::after { content: attr(data-wert); }
+
+/* Nativer Range-Input: liegt obenauf und trägt Maus, Tastatur, Screenreader.
+   Track und Thumb sind unsichtbar; gezeichnet wird ausschließlich oben. */
+.vg-regler-bahn input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.vg-regler-bahn input[type="range"]:focus { outline: none; }
+.vg-regler-bahn input[type="range"]::-webkit-slider-runnable-track {
+  height: 24px;
+  border: 0;
+  background: transparent;
+}
+.vg-regler-bahn input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  opacity: 0;
+}
+.vg-regler-bahn input[type="range"]::-moz-range-track {
+  height: 24px;
+  border: 0;
+  background: transparent;
+}
+.vg-regler-bahn input[type="range"]::-moz-range-progress {
+  height: 24px;
+  background: transparent;
+}
+.vg-regler-bahn input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  opacity: 0;
+}
+.vg-regler-bahn input[type="range"]:disabled { cursor: not-allowed; }
+.vg-regler-bahn:has(input[type="range"]:disabled) .vg-regler-knopf,
+.vg-regler-bahn:has(input[type="range"]:disabled) .vg-regler-abweichung { opacity: 0.5; }
+
+/* Fokus: der Hof liegt auf dem gezeichneten Knopf, nicht auf dem Input */
+.vg-regler-bahn:has(input[type="range"]:focus-visible) .vg-regler-knopf {
+  box-shadow: 0 0 0 3px var(--vg-fokus-hof);
+}
+
+/* Hinweistext — nur in der Schublade und nur am fokussierten Regler */
+.vg-regler-hinweis {
+  grid-column: 1 / -1;
+  padding-top: var(--vg-a2);
+  font-size: var(--vg-fs-xs);
+  line-height: var(--vg-zh-normal);
+  color: var(--vg-text-4);
+  max-width: 72ch;
+}
+:root[data-dichte="kompakt"] .vg-regler-hinweis { display: none; }
+
+/* Skala unter der Bahn (optionale Tick-Marken) */
+.vg-regler-skala {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 2px;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  color: var(--vg-text-4);
+}
+.vg-regler-skala > span { position: relative; padding-top: 4px; }
+.vg-regler-skala > span::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  translate: -50% 0;
+  width: 1px; height: 3px;
+  background: var(--vg-rand-hart);
+}
+.vg-regler-skala > span:first-child::before { left: 0; translate: 0 0; }
+.vg-regler-skala > span:last-child::before { left: auto; right: 0; translate: 0 0; }
+
+/* ==========================================================================
+   13  SEGMENT, REITER, SCHRITTE
+   ========================================================================== */
+
+/* ---- 13.1 Segmentierte Umschaltung -------------------------------------- */
+.vg-segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  height: var(--vg-d-ctl);
+  border: 1px solid var(--vg-rand);
+  border-radius: var(--vg-r-md);
+  background: var(--vg-tief);
+  flex: none;
+}
+.vg-segment > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vg-a2);
+  height: 100%;
+  padding: 0 var(--vg-a5);
+  border: 0;
+  border-radius: calc(var(--vg-r-md) - 2px);
+  background: transparent;
+  color: var(--vg-text-3);
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color var(--vg-normal) var(--vg-kurve),
+              color var(--vg-normal) var(--vg-kurve-weich),
+              box-shadow var(--vg-normal) var(--vg-kurve);
+}
+.vg-segment > button:hover { color: var(--vg-text); }
+.vg-segment > button[aria-pressed="true"],
+.vg-segment > button[aria-selected="true"] {
+  background: var(--vg-flaeche);
+  color: var(--vg-text);
+  font-weight: 500;
+  box-shadow: var(--vg-s2);
+}
+.vg-segment > button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ---- 13.2 Reiter (Unterstrich) ------------------------------------------ */
+.vg-reiter {
+  display: flex;
+  align-items: stretch;
+  gap: var(--vg-a1);
+  border-bottom: 1px solid var(--vg-rand);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.vg-reiter::-webkit-scrollbar { display: none; }
+.vg-reiter > button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  padding: var(--vg-a4) var(--vg-a5);
+  border: 0;
+  background: none;
+  color: var(--vg-text-3);
+  font-size: var(--vg-fs-md);
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: var(--vg-r-sm) var(--vg-r-sm) 0 0;
+  transition: color var(--vg-normal) var(--vg-kurve-weich),
+              background-color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-reiter > button::after {
+  content: '';
+  position: absolute;
+  left: var(--vg-a4); right: var(--vg-a4);
+  bottom: -1px;
+  height: 2px;
+  border-radius: 1px 1px 0 0;
+  background: var(--vg-marke-flaeche);
+  scale: 0 1;
+  transition: scale var(--vg-normal) var(--vg-kurve);
+}
+.vg-reiter > button:hover { color: var(--vg-text); background: var(--vg-hover); }
+.vg-reiter > button[aria-selected="true"] { color: var(--vg-text); font-weight: 500; }
+.vg-reiter > button[aria-selected="true"]::after { scale: 1 1; }
+.vg-reiter > button:disabled { opacity: 0.5; cursor: not-allowed; }
+:root[data-dichte="kompakt"] .vg-reiter > button { padding: var(--vg-a3) var(--vg-a4); }
+
+/* ---- 13.3 Schritte (geführter Modus) ------------------------------------ */
+.vg-schritte {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.vg-schritte::-webkit-scrollbar { display: none; }
+
+.vg-schritt-trenner {
+  width: var(--vg-a6);
+  height: 1px;
+  flex: none;
+  background: var(--vg-rand-stark);
+}
+
+.vg-schritt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  height: var(--vg-d-ctl);
+  padding: 0 var(--vg-a4);
+  border: 0;
+  border-radius: var(--vg-r-md);
+  background: none;
+  color: var(--vg-text-4);
+  font-size: var(--vg-fs-md);
+  font-weight: 500;
+  white-space: nowrap;
+  flex: none;
+  transition: background-color var(--vg-schnell) var(--vg-kurve-weich),
+              color var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-schritt:hover { background: var(--vg-hover); color: var(--vg-text-2); }
+
+.vg-schritt-nummer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid var(--vg-rand-hart);
+  background: var(--vg-flaeche);
+  color: var(--vg-text-4);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: 10px;
+  font-weight: 500;
+  transition: background-color var(--vg-normal) var(--vg-kurve-weich),
+              border-color var(--vg-normal) var(--vg-kurve-weich),
+              color var(--vg-normal) var(--vg-kurve-weich);
+}
+/* erledigt */
+.vg-schritt[data-zustand="erledigt"] { color: var(--vg-text-2); }
+.vg-schritt[data-zustand="erledigt"] .vg-schritt-nummer {
+  background: var(--vg-marke-flaeche);
+  border-color: var(--vg-marke-flaeche);
+  color: var(--vg-auf-marke);
+}
+/* aktiv */
+.vg-schritt[aria-current="step"],
+.vg-schritt[data-zustand="aktiv"] { color: var(--vg-text); font-weight: 500; background: var(--vg-marke-weich); }
+.vg-schritt[aria-current="step"] .vg-schritt-nummer,
+.vg-schritt[data-zustand="aktiv"] .vg-schritt-nummer {
+  border-color: var(--vg-marke-flaeche);
+  color: var(--vg-marke);
+  box-shadow: 0 0 0 3px var(--vg-fokus-hof);
+}
+.vg-schritt:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ==========================================================================
+   14  SCHALTFLÄCHEN
+   .vg-btn  (Standard = sekundär) · .vg-btn-primaer · .vg-btn-still · .vg-btn-gefahr
+   Größen: .vg-btn-sm · Standard · .vg-btn-lg · .vg-btn-symbol (quadratisch)
+   ========================================================================== */
+
+.vg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vg-a3);
+  height: var(--vg-d-ctl);
+  padding: 0 var(--vg-d-ctl-pad);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-md);
+  background: var(--vg-flaeche);
+  color: var(--vg-text);
+  font-size: var(--vg-fs-md);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: var(--vg-sp-eng);
+  white-space: nowrap;
+  user-select: none;
+  box-shadow: var(--vg-s1);
+  transition: background-color var(--vg-schnell) var(--vg-kurve-weich),
+              border-color var(--vg-schnell) var(--vg-kurve-weich),
+              color var(--vg-schnell) var(--vg-kurve-weich),
+              box-shadow var(--vg-schnell) var(--vg-kurve);
+}
+.vg-btn:hover { background: var(--vg-still); border-color: var(--vg-rand-hart); }
+.vg-btn:active { translate: 0 0.5px; box-shadow: none; }
+.vg-btn:disabled, .vg-btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+
+.vg-btn-primaer {
+  background: var(--vg-marke-flaeche);
+  border-color: var(--vg-marke-flaeche);
+  color: var(--vg-auf-marke);
+}
+.vg-btn-primaer:hover { background: var(--vg-marke-hover); border-color: var(--vg-marke-hover); }
+
+.vg-btn-still {
+  background: transparent;
+  border-color: transparent;
+  color: var(--vg-text-3);
+  box-shadow: none;
+}
+.vg-btn-still:hover { background: var(--vg-hover); border-color: transparent; color: var(--vg-text); }
+.vg-btn-still[aria-pressed="true"] { background: var(--vg-aktiv); color: var(--vg-text); }
+
+.vg-btn-gefahr {
+  background: var(--vg-rot-500);
+  border-color: var(--vg-rot-500);
+  color: #ffffff;
+}
+.vg-btn-gefahr:hover { background: var(--vg-rot-600); border-color: var(--vg-rot-600); }
+
+.vg-btn-sm { height: var(--vg-d-ctl-sm); padding: 0 var(--vg-a4); font-size: var(--vg-fs-sm); gap: var(--vg-a2); border-radius: var(--vg-r-sm); }
+.vg-btn-lg { height: var(--vg-d-ctl-lg); padding: 0 var(--vg-a6); font-size: var(--vg-fs-lg); }
+.vg-btn-symbol { width: var(--vg-d-ctl); padding: 0; }
+.vg-btn-symbol.vg-btn-sm { width: var(--vg-d-ctl-sm); }
+.vg-btn-symbol.vg-btn-lg { width: var(--vg-d-ctl-lg); }
+
+/* ==========================================================================
+   15  EINGABEN, SUCHE, SCHALTER
+   ========================================================================== */
+
+.vg-label { font-size: var(--vg-fs-xs); font-weight: 500; color: var(--vg-text-3); }
+
+.vg-feld {
+  width: 100%;
+  height: var(--vg-d-ctl);
+  padding: 0 var(--vg-a4);
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-md);
+  color: var(--vg-text);
+  font-size: var(--vg-fs-md);
+  transition: border-color var(--vg-schnell) var(--vg-kurve-weich),
+              box-shadow var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-feld::placeholder { color: var(--vg-text-4); }
+.vg-feld:hover:not(:disabled) { border-color: var(--vg-rand-hart); }
+.vg-feld:focus { outline: none; border-color: var(--vg-fokus); box-shadow: 0 0 0 3px var(--vg-fokus-hof); }
+.vg-feld:disabled { background: var(--vg-still); color: var(--vg-text-4); cursor: not-allowed; }
+.vg-feld[aria-invalid="true"] { border-color: var(--vg-negativ); }
+textarea.vg-feld { height: auto; min-height: 76px; padding: var(--vg-a4); line-height: var(--vg-zh-normal); resize: vertical; }
+select.vg-feld { appearance: none; -webkit-appearance: none; padding-right: var(--vg-a9); cursor: pointer; }
+.vg-feld-num { font-family: var(--vg-schrift-zahl); font-variant-numeric: tabular-nums; text-align: right; }
+
+/* Datumsfeld: die deutsche Anzeige steht immer als Text darunter, unabhängig
+   von der Sprache der Browseroberfläche. Monatsauswahl nie nativ. */
+.vg-datum-anzeige {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  color: var(--vg-text-4);
+}
+
+/* Suche */
+.vg-suche { position: relative; display: flex; align-items: center; min-width: 0; }
+.vg-suche > svg:first-child { position: absolute; left: var(--vg-a4); color: var(--vg-text-4); pointer-events: none; }
+.vg-suche .vg-feld, .vg-suche input { padding-left: calc(var(--vg-a4) * 2 + 16px); }
+.vg-suche input {
+  width: 100%;
+  height: var(--vg-d-ctl);
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-md);
+  color: var(--vg-text);
+  font-size: var(--vg-fs-md);
+  outline: none;
+  transition: border-color var(--vg-schnell) var(--vg-kurve-weich), box-shadow var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-suche input:focus { border-color: var(--vg-fokus); box-shadow: 0 0 0 3px var(--vg-fokus-hof); }
+
+/* Schalter — ein <button role="switch">, Spur und Knopf über Pseudoelemente */
+.vg-schalter {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  flex: none;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-n300);
+  transition: background-color var(--vg-normal) var(--vg-kurve);
+}
+.vg-schalter::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: var(--vg-s2);
+  transition: translate var(--vg-normal) var(--vg-kurve);
+}
+.vg-schalter[aria-checked="true"] { background: var(--vg-marke-flaeche); }
+.vg-schalter[aria-checked="true"]::after { translate: 14px 0; }
+.vg-schalter:disabled { opacity: 0.45; cursor: not-allowed; }
+:root[data-theme="dark"] .vg-schalter { background: var(--vg-n700); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .vg-schalter { background: var(--vg-n700); }
+}
+
+/* Kleiner runder Info-Anker neben Labels */
+.vg-info-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  color: var(--vg-text-4);
+  background: transparent;
+  cursor: help;
+  transition: background-color var(--vg-schnell) var(--vg-kurve-weich), color var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-info-knopf:hover, .vg-info-knopf:focus-visible { background: var(--vg-hover); color: var(--vg-text-2); }
+
+/* ==========================================================================
+   16  OVERLAYS — Kurzinfo, Schleier, Schublade, Dialog
+   ========================================================================== */
+
+/* ---- 16.1 Kurzinfo (Tip) ------------------------------------------------- */
+.vg-tip { position: relative; display: inline-flex; align-items: center; }
+/* Hülle ohne eigene Box: das Kind (z. B. eine Plakette) bleibt Raster- oder Flex-Kind */
+.vg-tip.vg-tip-block { display: contents; }
+.vg-tip-blase {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  translate: -50% 0;
+  z-index: var(--vg-z-tip);
+  width: max-content;
+  max-width: 300px;
+  padding: var(--vg-a3) var(--vg-a4);
+  border-radius: var(--vg-r-sm);
+  background: var(--vg-invers);
+  color: var(--vg-text-invers);
+  font-size: var(--vg-fs-xs);
+  font-weight: 400;
+  line-height: var(--vg-zh-normal);
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: left;
+  white-space: normal;
+  box-shadow: var(--vg-s4);
+  pointer-events: none;
+  animation: vg-tip-ein var(--vg-schnell) var(--vg-kurve-ein) both;
+}
+.vg-tip-blase::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  translate: -50% -50%;
+  width: 7px; height: 7px;
+  rotate: 45deg;
+  background: var(--vg-invers);
+}
+@keyframes vg-tip-ein { from { opacity: 0; translate: -50% 3px; } to { opacity: 1; translate: -50% 0; } }
+/* Blase als Overlay (Portal, basis.jsx): fest im Fenster, links/top von der
+   Messung gesetzt, Pfeil über dem Anker (--tip-pfeil); ohne Platz oben nach unten. */
+.vg-tip-blase[data-fixiert] {
+  position: fixed;
+  bottom: auto;
+  translate: 0 -100%;
+  animation-name: vg-tip-ein-fixiert;
+}
+.vg-tip-blase[data-fixiert][data-unten] { translate: 0 0; animation-name: vg-tip-ein-fixiert-unten; }
+.vg-tip-blase[data-fixiert]::after { left: var(--tip-pfeil, 50%); }
+.vg-tip-blase[data-fixiert][data-unten]::after { top: 0; }
+@keyframes vg-tip-ein-fixiert { from { opacity: 0; translate: 0 calc(-100% + 3px); } to { opacity: 1; translate: 0 -100%; } }
+@keyframes vg-tip-ein-fixiert-unten { from { opacity: 0; translate: 0 -3px; } to { opacity: 1; translate: 0 0; } }
+
+/* ---- 16.2 Schleier ------------------------------------------------------- */
+.vg-schleier {
+  position: fixed;
+  inset: 0;
+  z-index: var(--vg-z-schleier);
+  background: rgb(7 12 22 / 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: vg-ein var(--vg-normal) var(--vg-kurve) both;
+}
+
+/* ---- 16.3 Schublade (von rechts) ---------------------------------------- */
+.vg-schublade {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  z-index: var(--vg-z-schublade);
+  width: min(520px, 100vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--vg-flaeche);
+  border-left: 1px solid var(--vg-rand-stark);
+  box-shadow: var(--vg-s5);
+  animation: vg-schublade-ein var(--vg-bahn) var(--vg-kurve-praezise) both;
+}
+.vg-schublade-breit { width: min(820px, 100vw); }
+@keyframes vg-schublade-ein { from { translate: 100% 0; } to { translate: 0 0; } }
+
+.vg-schublade-kopf {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--vg-a5);
+  padding: var(--vg-a6);
+  border-bottom: 1px solid var(--vg-rand);
+  flex: none;
+}
+.vg-schublade-koerper {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--vg-a6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vg-a6);
+}
+.vg-schublade-fuss {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vg-a3);
+  padding: var(--vg-a5) var(--vg-a6);
+  border-top: 1px solid var(--vg-rand);
+  background: var(--vg-still);
+  flex: none;
+}
+
+/* ---- 16.4 Dialog --------------------------------------------------------- */
+.vg-dialog {
+  position: fixed;
+  top: 50%; left: 50%;
+  z-index: var(--vg-z-dialog);
+  width: min(620px, calc(100vw - 32px));
+  max-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-xl);
+  box-shadow: var(--vg-s5);
+  translate: -50% -50%;
+  animation: vg-dialog-ein var(--vg-normal) var(--vg-kurve-ein) both;
+}
+.vg-dialog .vg-schublade-fuss { border-radius: 0 0 var(--vg-r-xl) var(--vg-r-xl); }
+@keyframes vg-dialog-ein {
+  from { opacity: 0; scale: 0.985; }
+  to { opacity: 1; scale: 1; }
+}
+
+/* ==========================================================================
+   17  BALKEN, METER, STREIFEN
+   ========================================================================== */
+
+/* Anteilsbalken in Zellen und Listen */
+.vg-messlatte {
+  position: relative;
+  height: 6px;
+  width: 100%;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-tief);
+  overflow: hidden;
+}
+.vg-messlatte > span {
+  display: block;
+  height: 100%;
+  border-radius: var(--vg-r-voll);
+  background: var(--brand-500);
+  transition: width var(--vg-ruhig) var(--vg-kurve);
+}
+
+/* Zweiseitiger Mini-Balken um die Nulllinie — Delta-Spalten */
+.vg-mini-balken {
+  position: relative;
+  height: 10px;
+  width: 100%;
+  min-width: 56px;
+  border-radius: 2px;
+  background: var(--vg-tief);
+  overflow: hidden;
+}
+.vg-mini-balken > span {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  border-radius: 1px;
+  transition: left var(--vg-ruhig) var(--vg-kurve), width var(--vg-ruhig) var(--vg-kurve);
+}
+
+/* Wegbalken — der eine Zeichen je Einheit im Lagebild.
+   Aufbau:  .vg-weg[data-ton="positiv|negativ|neutral"]
+              .vg-weg-null       Nullmarke, mittig
+              .vg-weg-fuellung   von Null zum Wert (left/width in %)
+              .vg-weg-kerbe      Schwelle „kritisch“ (−8 %), left in %
+              .vg-weg-marke      hohle Marke der Übergangsregel (2028), left in %
+   Die Skala (±30 %) kommt aus dem GANZEN Portfolio, nie aus dem Filter —
+   sonst änderte ein Balken beim Filtern seine Bedeutung. */
+.vg-weg {
+  position: relative;
+  height: 6px;
+  width: 100%;
+  min-width: 56px;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-tief);
+}
+.vg-weg-null {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--vg-rand-hart);
+}
+.vg-weg-fuellung {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-radius: 3px;
+  background: var(--vg-neutral-flaeche);
+  transition: left var(--vg-daten) var(--vg-kurve-praezise),
+              width var(--vg-daten) var(--vg-kurve-praezise),
+              background-color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-weg[data-ton="positiv"] .vg-weg-fuellung { background: var(--vg-positiv-flaeche); }
+.vg-weg[data-ton="negativ"] .vg-weg-fuellung { background: var(--vg-negativ-flaeche); }
+.vg-weg-kerbe {
+  position: absolute;
+  top: -2px; bottom: -2px;
+  width: 1px;
+  background: var(--vg-negativ);
+}
+.vg-weg-marke {
+  position: absolute;
+  top: -2px;
+  width: 6px;
+  height: 10px;
+  translate: -50% 0;
+  border: 2px solid var(--vg-text-2);
+  border-radius: 2px;
+  background: var(--vg-flaeche);
+  transition: left var(--vg-daten) var(--vg-kurve-praezise);
+}
+
+/* Hantel — heute und Ziel auf einer Spur, Qualitätsprofil ohne Radar.
+   Aufbau:  .vg-hantel
+              .vg-hantel-spur
+              .vg-hantel-verbinder   left/width in %
+              .vg-hantel-heute       left in %
+              .vg-hantel-ziel        left in % */
+.vg-hantel {
+  position: relative;
+  height: 14px;
+  width: 100%;
+  min-width: 80px;
+}
+.vg-hantel-spur {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 6px;
+  translate: 0 -50%;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-tief);
+}
+.vg-hantel-verbinder {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  translate: 0 -50%;
+  background: var(--vg-viz-3);
+  transition: left var(--vg-daten) var(--vg-kurve-praezise),
+              width var(--vg-daten) var(--vg-kurve-praezise);
+}
+.vg-hantel-heute,
+.vg-hantel-ziel {
+  position: absolute;
+  top: 50%;
+  translate: -50% -50%;
+  border-radius: 50%;
+  transition: left var(--vg-daten) var(--vg-kurve-praezise);
+}
+.vg-hantel-heute {
+  width: 8px; height: 8px;
+  background: var(--vg-viz-heute);
+  box-shadow: 0 0 0 2px var(--vg-flaeche);
+}
+.vg-hantel-ziel {
+  width: 10px; height: 10px;
+  background: var(--vg-viz-3);
+}
+
+/* Gestapelter Verteilungsstreifen — Vergütungsmix in einem Band */
+.vg-streifen {
+  display: flex;
+  width: 100%;
+  height: 22px;
+  border-radius: var(--vg-r-sm);
+  overflow: hidden;
+  gap: 2px;                       /* 2px Flächenspalt zwischen den Segmenten */
+  background: var(--vg-tief);
+}
+.vg-streifen > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  color: #ffffff;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: flex-basis var(--vg-ruhig) var(--vg-kurve);
+}
+
+/* Fortschritt und Zielmarke */
+.vg-fortschritt {
+  --wert: 0;
+  --ziel: -1;
+  position: relative;
+  height: 8px;
+  width: 100%;
+  border-radius: var(--vg-r-voll);
+  background: var(--vg-tief);
+  border: 1px solid var(--vg-rand);
+  overflow: hidden;
+}
+.vg-fortschritt > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--wert) * 1%);
+  background: var(--vg-marke-flaeche);
+  transition: width var(--vg-ruhig) var(--vg-kurve);
+}
+.vg-fortschritt[data-ton="positiv"] > span { background: var(--vg-positiv); }
+.vg-fortschritt[data-ton="warnung"] > span { background: var(--vg-warnung); }
+.vg-fortschritt[data-ton="negativ"] > span { background: var(--vg-negativ); }
+.vg-fortschritt-ziel {
+  position: absolute;
+  top: -2px; bottom: -2px;
+  left: calc(var(--ziel) * 1%);
+  width: 2px;
+  border-radius: 1px;
+  background: var(--vg-text);
+}
+
+/* ==========================================================================
+   18  ZUSTÄNDE — Skelett, Leer, Hinweis, Toast
+   ========================================================================== */
+
+.vg-skelett {
+  position: relative;
+  border-radius: var(--vg-r-sm);
+  background: var(--vg-tief);
+  overflow: hidden;
+  isolation: isolate;
+}
+.vg-skelett::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  translate: -100% 0;
+  background: linear-gradient(90deg, transparent, var(--vg-hover), transparent);
+  animation: vg-schimmer 1.3s var(--vg-kurve-weich) infinite;
+}
+@keyframes vg-schimmer { to { translate: 100% 0; } }
+.vg-skelett-text { height: 10px; border-radius: var(--vg-r-voll); }
+.vg-skelett-wert { height: 26px; width: 62%; }
+.vg-skelett-kachel { height: 92px; border-radius: var(--vg-r-lg); }
+.vg-skelett-chart { height: 220px; border-radius: var(--vg-r-md); }
+
+.vg-leer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vg-a4);
+  padding: var(--vg-a11) var(--vg-a7);
+  text-align: center;
+  color: var(--vg-text-3);
+}
+.vg-leer > svg { color: var(--vg-text-4); }
+.vg-leer-titel { font-size: var(--vg-fs-lg); font-weight: 500; color: var(--vg-text); }
+
+/* Hinweisbanner */
+.vg-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vg-a4);
+  padding: var(--vg-a4) var(--vg-a5);
+  border: 1px solid var(--vg-info-kante);
+  border-left-width: 3px;
+  border-radius: var(--vg-r-md);
+  background: var(--vg-info-weich);
+  color: var(--vg-text-2);
+  font-size: var(--vg-fs-md);
+  line-height: var(--vg-zh-normal);
+}
+.vg-hinweis > svg { flex: none; margin-top: 1px; color: var(--vg-info); }
+.vg-hinweis[data-ton="neutral"] { background: var(--vg-neutral-weich); border-color: var(--vg-neutral-kante); }
+.vg-hinweis[data-ton="neutral"] > svg { color: var(--vg-text-3); }
+.vg-hinweis[data-ton="positiv"] { background: var(--vg-positiv-weich); border-color: var(--vg-positiv-kante); }
+.vg-hinweis[data-ton="positiv"] > svg { color: var(--vg-positiv); }
+.vg-hinweis[data-ton="warnung"] { background: var(--vg-warnung-weich); border-color: var(--vg-warnung-kante); }
+.vg-hinweis[data-ton="warnung"] > svg { color: var(--vg-warnung); }
+.vg-hinweis[data-ton="negativ"] { background: var(--vg-negativ-weich); border-color: var(--vg-negativ-kante); }
+.vg-hinweis[data-ton="negativ"] > svg { color: var(--vg-negativ); }
+
+/* Toast */
+.vg-toast-stapel {
+  position: fixed;
+  right: var(--vg-a6);
+  bottom: var(--vg-a6);
+  z-index: var(--vg-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vg-a3);
+  width: min(380px, calc(100vw - 32px));
+  pointer-events: none;
+}
+.vg-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vg-a4);
+  padding: var(--vg-a4) var(--vg-a5);
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-lg);
+  box-shadow: var(--vg-s4);
+  font-size: var(--vg-fs-md);
+  color: var(--vg-text-2);
+  pointer-events: auto;
+  animation: vg-toast-ein var(--vg-ruhig) var(--vg-kurve-ein) both;
+}
+.vg-toast > svg { flex: none; margin-top: 1px; color: var(--vg-text-3); }
+.vg-toast[data-ton="positiv"] > svg { color: var(--vg-positiv); }
+.vg-toast[data-ton="warnung"] > svg { color: var(--vg-warnung); }
+.vg-toast[data-ton="negativ"] > svg { color: var(--vg-negativ); }
+.vg-toast[data-schliesst="true"] { animation: vg-toast-aus var(--vg-normal) var(--vg-kurve-aus) both; }
+@keyframes vg-toast-ein { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+@keyframes vg-toast-aus { to { opacity: 0; translate: 16px 0; } }
+
+/* ==========================================================================
+   18b  ZUSATZBAUSTEINE — Kommandopalette, Einblendung, Kleinutensilien
+   Baut ausschließlich auf den Token oben auf. Alles, was Abschnitt 22
+   bereits als Hilfsklasse führt, steht bewusst NICHT noch einmal hier.
+   ========================================================================== */
+
+.vg-punkt { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+.vg-oben { align-items: flex-start; }
+.vg-rechts { text-align: right; }
+.vg-mitte { text-align: center; }
+
+/* ---- Kommandopalette ----------------------------------------------------- */
+.vg-palette {
+  position: fixed;
+  top: 13vh;
+  left: 50%;
+  translate: -50% 0;
+  z-index: calc(var(--vg-z-dialog) + 1);
+  width: min(620px, 94vw);
+  max-height: 66vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-lg);
+  box-shadow: var(--vg-s5);
+  overflow: hidden;
+  animation: vg-dialog-ein var(--vg-normal) var(--vg-kurve-ein) both;
+}
+.vg-palette-eingabe {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a4);
+  padding: var(--vg-a5) var(--vg-a5);
+  border-bottom: 1px solid var(--vg-rand);
+  color: var(--vg-text-4);
+}
+.vg-palette-eingabe input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--vg-text);
+  font: inherit;
+  font-size: var(--vg-fs-xl);
+  outline: none;
+}
+.vg-palette-eingabe input::placeholder { color: var(--vg-text-4); }
+.vg-palette-liste { flex: 1; overflow: auto; padding: var(--vg-a3); }
+.vg-palette-neben { margin-left: auto; font-size: var(--vg-fs-sm); color: var(--vg-text-4); flex: none; }
+
+/* ---- Einblendung beim Seitenwechsel --------------------------------------
+   Die eine Bühnen-Einblendung steht in Abschnitt 20 (.vg-buehne-ein).
+   .vg-erscheint bleibt als Verträglichkeitsname ohne Staffelstufen. */
+.vg-erscheint { animation: vg-buehne-ein var(--vg-ruhig) var(--vg-kurve-ein) backwards; }
+
+/* ==========================================================================
+   19  DATENVISUALISIERUNG
+   --------------------------------------------------------------------------
+   KATEGORIAL (Identität) — --vg-viz-1 … --vg-viz-8, feste Reihenfolge, nie
+   zyklisch weitergedreht. Die Reihe ist NICHT nach Buntheit sortiert, sondern
+   nach Bedeutungsgruppen, und die Helligkeit wechselt von Nachbar zu Nachbar.
+   Das ist Absicht: die Slots liegen fast immer als gestapelter Balken in
+   dieser Reihenfolge nebeneinander, und dort entscheidet der Helligkeitssprung
+   zwischen zwei Segmenten über die Lesbarkeit — auch bei Farbfehlsichtigkeit.
+
+     Slot  hell      dunkel     Bauteil                       Gruppe
+       1   #2f4a63   #b7c8dc    Abschlussprovision Leben      Schiefer
+       2   #a3b6cb   #57708c    Abschlussprovision Komposit   Schiefer
+       3   #1f6b58   #5fc9a1    laufende Provision            Tiefgrün
+       4   #7fc8ad   #2a7a62    Bestandsprovision Leben       Grün hell
+       5   #2e8f78   #a6e3cc    Bestandsprovision Komposit    Grün mittel
+       6   #c08434   #e0a557    Bonifikation                  Ocker
+       7   #b9c1cb   #5f6570    Zuschüsse und Restposten      Grau
+       8   #66788c   #94a3b5    Reserve
+
+   Schiefer steht für das, was zurückgefahren wird, Tiefgrün für das, was
+   aufgebaut wird (dieselbe Farbe wie das Zielmodell und der Steuerblock),
+   Ocker für die Bonifikation als einzigen Gegenton. Burgund ist die
+   Markenfarbe der Oberfläche und kommt in keiner Datenserie vor. Wer die
+   Zuordnung ändert, ändert sie in BAUTEIL_FARBE (src/charts/index.jsx) und
+   nirgends sonst.
+
+   Prüfung (OKLab-ΔE ×100; Farbfehlsichtigkeit nach Machado-Oliveira-
+   Fernandes 2009, Stärke 1,0), für die BENACHBARTEN Slots 1…7, also genau
+   die Paare, die im gestapelten Balken aneinanderstoßen:
+     hell auf #ffffff    Normalsicht 18,5 · Protanopie 9,1 ·
+                         Deuteranopie 13,2 · Tritanopie 18,5
+                         (schwächstes Paar Ocker–Grün mittel)
+     dunkel auf #141619  Normalsicht 19,2 · Protanopie 18,7 ·
+                         Deuteranopie 17,1 · Tritanopie 21,8
+
+   Nicht benachbarte Slots liegen bewusst näher beieinander — sie gehören
+   zur selben Bedeutungsgruppe. Für sie gilt die Entlastungsregel ohne
+   Ausnahme: jede Fläche trägt Beschriftung und Wert, nie Farbe allein.
+   Deshalb bringt der Anteilsbalken seine Legende mit Prozentwert selbst mit.
+
+   Flächenkontrast gegen den Grund (nur Flächen, kein Text):
+     hell    9,21 · 2,08 · 6,03 · 2,22 · 4,58 · 3,19 · 1,82
+     dunkel 10,62 · 3,54 · 7,96 · 3,11 · 10,80 · 8,36 · 3,09
+   Die hellen Slots 2, 4 und 7 liegen unter 3:1 und dürfen daher nie ohne
+   danebenstehenden Wert auftreten.
+
+   SEQUENZIELL (Magnitude) — --vg-seq-1…7, ein Farbton hell→dunkel. Im
+   Dunkelmodus kehrt der Anker um, damit „viel“ weiterhin kontrastreich ist.
+   Als ordinale Stufung (Klassen, Stufen) beginnt die Rampe hell erst bei
+   --vg-seq-2 (#9ec5f4, 1,87:1) und endet dunkel bei --vg-seq-6.
+
+   DIVERGIEREND (Gewinner ↔ Verlierer) — Blau ↔ Rot mit neutraler grauer
+   Mitte. Bewusst NICHT Grün ↔ Rot: dieses Paar kollabiert bei Rot-Grün-
+   Schwäche und ist genau das Paar, auf das in der Verhandlung alle schauen.
+   Blau trägt hier den Gewinn, Rot den Verlust; die Mitte ist Grau und liest
+   sich als „unverändert“. Grün und Rot bleiben den Status- und Delta-
+   Zeichen vorbehalten, wo Vorzeichen, Pfeil und Text mitlaufen.
+
+   IST ↔ ZIEL — die häufigste Gegenüberstellung trägt keine zwei Serienfarben,
+   sondern Grau gestrichelt (heute, --vg-viz-ist) gegen Marke durchgezogen
+   (Zielmodell, --brand-500). Die Strichart ist die zweite Codierung.
+   ========================================================================== */
+
+.vg-diagramm {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  color: var(--vg-text-4);
+  font-size: var(--vg-fs-2xs);
+}
+
+/* Legende — ab zwei Reihen immer sichtbar; der Text trägt Ink-Token,
+   niemals die Serienfarbe. */
+.vg-legende {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vg-a3) var(--vg-a5);
+  font-size: var(--vg-fs-2xs);
+  color: var(--vg-text-3);
+}
+.vg-legende-eintrag { display: inline-flex; align-items: center; gap: var(--vg-a2); white-space: nowrap; }
+.vg-legende-marke { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.vg-legende-linie { width: 13px; height: 2px; border-radius: 1px; flex: none; }
+
+/* Legendenchip — ein Abzeichen als Knopf (Ampelstufe mit Zähler).
+   aria-pressed="true" hebt hervor; sobald ein Chip gedrückt ist, treten die
+   Geschwister zurück. Die Fläche ist bewusst der translucente Hover-Ton:
+   er gilt auf Weiß, im Dunkelmodus und im Steuerblock gleichermaßen. */
+.vg-legende-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a2);
+  height: 22px;
+  padding: 0 var(--vg-a3);
+  border: 1px solid var(--vg-rand);
+  border-radius: var(--vg-r-sm);
+  background: var(--vg-hover);
+  color: var(--vg-text-2);
+  font-size: var(--vg-fs-xs);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color var(--vg-schnell) var(--vg-kurve-weich),
+              background-color var(--vg-schnell) var(--vg-kurve-weich),
+              opacity var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-legende-chip:hover { background: var(--vg-aktiv); color: var(--vg-text); }
+.vg-legende-chip .vg-ampel-punkt { width: 7px; height: 7px; }
+.vg-legende-chip[aria-pressed="true"] { border-color: var(--vg-rand-hart); color: var(--vg-text); }
+:where(*):has(> .vg-legende-chip[aria-pressed="true"]) > .vg-legende-chip:not([aria-pressed="true"]) { opacity: 0.55; }
+
+/* Diagramm-Kurzinfo — ersetzt den recharts-Standard vollständig */
+.vg-tooltip {
+  min-width: 176px;
+  max-width: 320px;
+  padding: var(--vg-a4);
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand-stark);
+  border-radius: var(--vg-r-md);
+  box-shadow: var(--vg-s4);
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-2);
+}
+.vg-tooltip-titel {
+  padding-bottom: var(--vg-a3);
+  margin-bottom: var(--vg-a3);
+  border-bottom: 1px solid var(--vg-rand);
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  letter-spacing: -0.006em;
+  color: var(--vg-text);
+}
+.vg-tooltip-zeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vg-a5);
+  padding: 2px 0;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  color: var(--vg-text);
+  font-weight: 500;
+}
+.vg-tooltip-zeile > .vg-reihe { font-family: 'DM Sans', sans-serif; font-weight: 400; }
+.vg-tooltip-zeile > span:last-child { font-family: var(--vg-schrift-zahl); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+/* --------------------------------------------------------------------------
+   recharts — Konventionen
+     <CartesianGrid vertical={false} stroke="var(--vg-viz-gitter)" />
+     <XAxis tickLine={false} axisLine={false} />
+     <YAxis width={64} tickFormatter={achseEuro} tickLine={false} axisLine={false} />
+     <Bar maxBarSize={26} radius={[4,4,0,0]} />        4px nur am Datenende
+     <BarChart barCategoryGap="26%" barGap={2} />      2px Flächenspalt
+     gestapelt: stroke="var(--vg-flaeche)" strokeWidth={1}
+     <Line strokeWidth={2} dot={false} activeDot={{ r: 4, strokeWidth: 2 }} />
+     <Tooltip content={<VgTooltip/>} cursor={{ fill: 'var(--vg-viz-band)' }} />
+     Legende nicht von recharts rendern — .vg-legende im Markup verwenden.
+   -------------------------------------------------------------------------- */
+
+.recharts-wrapper { font-family: inherit; }
+.recharts-surface { overflow: visible; }
+
+.recharts-cartesian-grid line { stroke: var(--vg-viz-gitter); stroke-width: 1; shape-rendering: crispEdges; }
+.recharts-cartesian-grid-vertical line { display: none; }
+.vg-diagramm-gitter-beide .recharts-cartesian-grid-vertical line { display: inline; }
+
+.recharts-cartesian-axis-line { stroke: var(--vg-viz-achse); stroke-width: 1; }
+.recharts-cartesian-axis-tick-line { stroke: var(--vg-viz-achse); }
+.recharts-cartesian-axis-tick text {
+  fill: var(--vg-text-3);
+  font-size: 12px;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+}
+.recharts-label, .recharts-text { fill: var(--vg-text-3); }
+.recharts-label-list text { fill: var(--vg-text); font-weight: 500; font-family: var(--vg-schrift-zahl); font-variant-numeric: tabular-nums; }
+
+.recharts-reference-line line { stroke: var(--vg-viz-achse); stroke-width: 1.5; }
+.recharts-reference-line .recharts-label { fill: var(--vg-text-3); }
+.recharts-reference-area rect { fill: var(--vg-viz-band); }
+
+.recharts-tooltip-wrapper { outline: none; z-index: var(--vg-z-tip); }
+.recharts-tooltip-cursor { fill: var(--vg-viz-band); }
+.recharts-default-tooltip { display: none !important; }
+
+.recharts-active-dot circle { stroke: var(--vg-flaeche); stroke-width: 2; }
+.recharts-dot { stroke: var(--vg-flaeche); stroke-width: 1.5; }
+.recharts-sector { stroke: var(--vg-flaeche); stroke-width: 2; }
+.recharts-polar-grid line, .recharts-polar-grid path { stroke: var(--vg-viz-gitter); }
+.recharts-polar-angle-axis-tick text { fill: var(--vg-text-2); }
+
+.recharts-brush rect.recharts-brush-slide { fill: var(--vg-viz-band); }
+.recharts-brush .recharts-brush-traveller rect { fill: var(--vg-flaeche); stroke: var(--vg-rand-hart); }
+
+/* Hervorhebung einer Reihe: alles andere tritt zurück, nichts wechselt Farbe */
+.vg-diagramm[data-hervorhebung="true"] .recharts-bar-rectangle,
+.vg-diagramm[data-hervorhebung="true"] .recharts-layer.recharts-line { opacity: 0.32; }
+.vg-diagramm[data-hervorhebung="true"] .vg-hervor { opacity: 1; }
+
+/* Skalen als Klassen — Heatmap-Zellen, Kartenflächen, Legendenbänder */
+.vg-seq-1 { background: var(--vg-seq-1); color: var(--vg-n950); }
+.vg-seq-2 { background: var(--vg-seq-2); color: var(--vg-n950); }
+.vg-seq-3 { background: var(--vg-seq-3); color: var(--vg-n950); }
+.vg-seq-4 { background: var(--vg-seq-4); color: #ffffff; }
+.vg-seq-5 { background: var(--vg-seq-5); color: #ffffff; }
+.vg-seq-6 { background: var(--vg-seq-6); color: #ffffff; }
+.vg-seq-7 { background: var(--vg-seq-7); color: #ffffff; }
+
+.vg-div-n3 { background: var(--vg-div-n3); color: #ffffff; }
+.vg-div-n2 { background: var(--vg-div-n2); color: #ffffff; }
+.vg-div-n1 { background: var(--vg-div-n1); color: var(--vg-n950); }
+.vg-div-0  { background: var(--vg-div-0);  color: var(--vg-n950); }
+.vg-div-p1 { background: var(--vg-div-p1); color: var(--vg-n950); }
+.vg-div-p2 { background: var(--vg-div-p2); color: #ffffff; }
+.vg-div-p3 { background: var(--vg-div-p3); color: #ffffff; }
+:root[data-theme="dark"] .vg-div-n1,
+:root[data-theme="dark"] .vg-div-0,
+:root[data-theme="dark"] .vg-div-p3 { color: var(--vg-n1000); }
+
+.vg-heatmap { display: grid; gap: 2px; }
+.vg-heatmap-zelle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 24px;
+  padding: var(--vg-a1) var(--vg-a3);
+  border-radius: var(--vg-r-xs);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  font-weight: 500;
+}
+.vg-heatmap-zelle:focus-visible { outline: 2px solid var(--vg-text); outline-offset: 1px; }
+
+.vg-skalenlegende { display: flex; align-items: center; gap: var(--vg-a3); font-size: var(--vg-fs-2xs); color: var(--vg-text-4); }
+.vg-skalenlegende-band { display: flex; height: 8px; border-radius: 2px; overflow: hidden; }
+.vg-skalenlegende-band > span { width: 22px; }
+
+/* ==========================================================================
+   20  MOTION
+   Bewegung erklärt Herkunft und Ziel; sie schmückt nicht. Layout springt nie,
+   nur Werte bewegen sich.
+      60ms  Fokus, Hover-Tönung, Zeilen-Hover
+     120ms  Schaltfläche, Chip, Feldrahmen, Reglergriff
+     180ms  Reiter, Segment, Popover, Kurzinfo, Dialog
+     260ms  Karte, Toast, Balken, Fortschritt
+     340ms  Schublade, Kollaps, Reglerknopf bei programmatischem Wechsel
+     420ms  Diagrammaufbau, Zahlen-Tweening, Säulen-Morph
+     700ms  Verteilung zieht aus der Nulllinie ein (--vg-einzug)
+     900ms  Leitzahl zählt einmalig hoch (--vg-zaehl)
+     Staffel 45 ms je Säule (--vg-staffel), 18 ms je Kachel (--vg-staffel-kachel)
+   Kurven: -ein für Erscheinen, -praezise für Positionswechsel, -weich für
+   Farbe, -aus für Ausblenden und Puls. Nichts davon unter reduced-motion.
+   ========================================================================== */
+
+@keyframes vg-ein { from { opacity: 0; } to { opacity: 1; } }
+@keyframes vg-ein-hoch { from { opacity: 0; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
+
+.vg-anim-ein { animation: vg-ein var(--vg-normal) var(--vg-kurve-ein) both; }
+.vg-anim-hoch { animation: vg-ein-hoch var(--vg-ruhig) var(--vg-kurve-ein) both; }
+.vg-staffel > *:nth-child(2) { animation-delay: 40ms; }
+.vg-staffel > *:nth-child(3) { animation-delay: 80ms; }
+.vg-staffel > *:nth-child(n+4) { animation-delay: 120ms; }
+
+/* ---- Bühne: Schritt-, Reiter- und Ansichtswechsel -------------------------
+   <div key={schritt} className="vg-buehne-ein"> — der neue Inhalt blendet
+   260 ms aus 8 px Tiefe ein. Kacheln staffeln über animation-delay
+   (min(i · 18, 300) ms). Fill-Mode backwards: während einer Verzögerung
+   gilt der Startzustand, danach bleibt kein transform zurück, das Schublade
+   oder Dialog (position: fixed) einfangen könnte. */
+@keyframes vg-buehne-ein { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+.vg-buehne-ein { animation: vg-buehne-ein var(--vg-ruhig) var(--vg-kurve-ein) backwards; }
+
+/* ---- Einzeichnen: Säulen und Stufen wachsen aus der Grundlinie ------------
+   Auf SVG-<path> oder <g>: class="vg-zeichnen" style={{ '--i': i }}.
+   transform-box: fill-box lässt jede Säule um ihre eigene Unterkante
+   skalieren; --i staffelt 45 ms je Säule. */
+@keyframes vg-wachsen { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.vg-zeichnen {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: vg-wachsen var(--vg-daten) var(--vg-kurve-ein) backwards;
+  animation-delay: calc(var(--i, 0) * var(--vg-staffel));
+}
+/* Beschriftungen folgen den Säulen mit 300 ms Abstand */
+.vg-zeichnen-text {
+  animation: vg-ein var(--vg-normal) var(--vg-kurve-ein) backwards;
+  animation-delay: calc(var(--i, 0) * var(--vg-staffel) + 300ms);
+}
+
+/* Frisch gerechneter Wert blitzt einmal kurz auf, statt zu springen */
+@keyframes vg-wert-puls { from { background-color: var(--vg-marke-weich); } to { background-color: transparent; } }
+.vg-wert-neu { animation: vg-wert-puls var(--vg-ruhig) var(--vg-kurve-aus) both; border-radius: var(--vg-r-xs); }
+
+/* ---- View Transitions: Routenwechsel ---------------------------------------
+   lib/bewegung.js kapselt document.startViewTransition (mitUebergang).
+   Die Seite blendet 180 ms über; der Steuerblock trägt in steuerblock.css
+   view-transition-name: vg-steuerblock und morpht 260 ms an Ort und Stelle
+   zwischen Simulation, Lagebild und Akte. Die Topbar bleibt außerhalb der
+   Bewegung (kein view-transition-name). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--vg-normal);
+  animation-timing-function: var(--vg-kurve-weich);
+}
+::view-transition-group(vg-steuerblock) {
+  animation-duration: var(--vg-ruhig);
+  animation-timing-function: var(--vg-kurve-praezise);
+}
+::view-transition-old(vg-steuerblock),
+::view-transition-new(vg-steuerblock) {
+  animation-duration: var(--vg-ruhig);
+  animation-timing-function: var(--vg-kurve-weich);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Zustände bleiben sichtbar, nur der Weg dorthin entfällt: Schublade und
+     Dialog erscheinen an ihrer Endlage, das Skelett pulsiert nicht. */
+  .vg-schublade, .vg-dialog { animation: vg-ein 1ms both; }
+  .vg-skelett::after { animation: none; opacity: 0.45; }
+  .vg-toast { animation: vg-ein 1ms both; }
+  .vg-buehne-ein, .vg-zeichnen, .vg-zeichnen-text { animation-delay: 0ms !important; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation-duration: 1ms !important; }
+}
+
+@media (forced-colors: active) {
+  .vg-karte, .vg-badge, .vg-btn, .vg-dialog, .vg-schublade, .vg-toast, .vg-tooltip { border: 1px solid CanvasText; }
+  .vg-reiter > button[aria-selected="true"]::after,
+  .vg-fortschritt > span,
+  .vg-messlatte > span { background: Highlight; forced-color-adjust: none; }
+  .vg-waage-nadel { background: CanvasText; forced-color-adjust: none; }
+}
+
+/* ==========================================================================
+   21  DRUCK — A4-Handout für den Verhandlungstermin
+   Regeln: helle Token erzwingen, Bedienelemente ausblenden, Karten nicht
+   trennen, Tabellenköpfe auf Folgeseiten wiederholen, Zahlen tabellarisch.
+   ========================================================================== */
+
+@page { size: A4 portrait; margin: 14mm 12mm 16mm; }
+@page quer { size: A4 landscape; margin: 12mm 14mm; }
+.vg-druck-quer { page: quer; }
+
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    color-scheme: light;
+    --vg-grund: #ffffff;
+    --vg-flaeche: #ffffff;
+    --vg-still: #f4f7fb;
+    --vg-tief: #e3e8ef;
+    --vg-hover: transparent;
+    --vg-zebra: #f7f9fc;
+    --vg-text: #000000;
+    --vg-text-2: #202935;
+    --vg-text-3: #343e4c;
+    --vg-text-4: #4d5766;
+    --vg-rand: #c0c8d3;
+    --vg-rand-stark: #9ca5b3;
+    --vg-rand-hart: #808a98;
+    --vg-marke-weich: #eef3fa;
+    --vg-viz-gitter: #d8dfe7;
+    --vg-viz-achse: #808a98;
+    --vg-s1: none; --vg-s2: none; --vg-s3: none; --vg-s4: none; --vg-s5: none;
+    /* Serienfarben bleiben die hellen Stufen — sie sind gegen Weiß geprüft */
+    --vg-viz-1: #2f4a63; --vg-viz-2: #a3b6cb; --vg-viz-3: #1f6b58;
+    --vg-viz-4: #7fc8ad; --vg-viz-5: #2e8f78; --vg-viz-6: #c08434;
+    --vg-viz-7: #b9c1cb; --vg-viz-8: #66788c;
+    --vg-seq-1: #dde7f3; --vg-seq-2: #b9cde3; --vg-seq-3: #8fadcd;
+    --vg-seq-4: #6389b4; --vg-seq-5: #416896; --vg-seq-6: #274b73;
+    --vg-seq-7: #163150;
+    --vg-div-n3: #8f1b13; --vg-div-n2: #c05043; --vg-div-n1: #e29c92;
+    --vg-div-0: #e3e8ef;
+    --vg-div-p1: #86b8b4; --vg-div-p2: #35867e; --vg-div-p3: #0f5751;
+  }
+
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html, body { background: #ffffff; font-size: 9.5pt; }
+
+  /* Bedienung verschwindet, Aussage bleibt */
+  .vg-topbar,
+  .vg-kontextleiste,
+  .vg-schleier,
+  .vg-schublade,
+  .vg-dialog,
+  .vg-tip-blase,
+  .vg-toast-stapel,
+  .vg-reiter,
+  .vg-schritte,
+  .vg-segment,
+  .vg-suche,
+  .vg-schalter,
+  .vg-btn,
+  .vg-taste,
+  .vg-info-knopf,
+  .vg-regler-werkzeuge > .vg-btn,
+  .vg-nicht-drucken { display: none !important; }
+
+  .vg-nur-druck { display: revert !important; }
+
+  /* Regler drucken als Wertzeile mit Bahn, ohne Bedienelemente */
+  .vg-regler { padding: 1.5mm 0; background: none; break-inside: avoid; }
+  .vg-regler-bahn input[type="range"] { display: none; }
+  .vg-regler-hinweis { display: block; font-size: 7.5pt; }
+
+  .vg-app { display: block; min-height: 0; }
+  .vg-inhalt { display: block; padding: 0; }
+  .vg-inhalt > * + * { margin-top: 6mm; }
+
+  .vg-raster { gap: 4mm; }
+  .vg-raster-4, .vg-raster-5, .vg-raster-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .vg-raster-2, .vg-raster-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vg-raster-arbeit, .vg-raster-akte { grid-template-columns: minmax(0, 1fr); }
+
+  .vg-karte {
+    border: 0.4pt solid var(--vg-rand-stark);
+    border-radius: 2mm;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .vg-karte-kopf, .vg-karte-fuss { background: none; }
+  .vg-karte-koerper { padding: 4mm; }
+  .vg-kpi { padding: 3.5mm; }
+  .vg-kpi-wert { font-size: 15pt; }
+  .vg-kpi-wert-gross { font-size: 19pt; }
+
+  .vg-tabelle-rahmen, .vg-tabelle-rahmen-hoch { overflow: visible; max-height: none; }
+  .vg-tabelle { font-size: 8pt; break-inside: auto; }
+  .vg-tabelle thead { display: table-header-group; }
+  .vg-tabelle tfoot { display: table-footer-group; }
+  .vg-tabelle tr { break-inside: avoid; page-break-inside: avoid; }
+  .vg-tabelle thead th { position: static; box-shadow: none; border-bottom: 0.6pt solid var(--vg-rand-hart); }
+  .vg-tabelle tbody td { height: auto; padding: 1.2mm 2mm; border-bottom: 0.3pt solid var(--vg-rand); }
+  .vg-tabelle td.vg-erste-spalte { position: static; box-shadow: none; }
+  .vg-tabelle tfoot td { position: static; box-shadow: none; border-top: 0.6pt solid var(--vg-rand-hart); }
+
+  .vg-diagramm { break-inside: avoid; page-break-inside: avoid; height: 62mm; }
+  .recharts-wrapper, .recharts-surface { max-width: 100% !important; }
+
+  h1, h2, h3, .vg-karte-titel, .vg-karte-kopf { break-after: avoid; page-break-after: avoid; }
+
+  .vg-druckseite { break-after: page; page-break-after: always; }
+  .vg-druckseite:last-child { break-after: auto; page-break-after: auto; }
+  .vg-druck-umbruch-vor { break-before: page; page-break-before: always; }
+  .vg-druck-umbruch-nach { break-after: page; page-break-after: always; }
+  .vg-druck-zusammen { break-inside: avoid; page-break-inside: avoid; }
+
+  /* Kopf- und Fußzeile des Handouts stehen nur im Druck */
+  .vg-druckkopf {
+    display: flex !important;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6mm;
+    padding-bottom: 2mm;
+    margin-bottom: 5mm;
+    border-bottom: 0.8pt solid var(--vg-text);
+    font-size: 8pt;
+  }
+  .vg-druckkopf strong { font-size: 11pt; }
+  .vg-druckfuss {
+    display: flex !important;
+    justify-content: space-between;
+    gap: 6mm;
+    margin-top: 6mm;
+    padding-top: 2mm;
+    border-top: 0.4pt solid var(--vg-rand-stark);
+    font-size: 7pt;
+    color: var(--vg-text-4);
+  }
+
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 7pt; color: var(--vg-text-4); word-break: break-all; }
+}
+
+.vg-nur-druck, .vg-druckkopf, .vg-druckfuss { display: none; }
+
+/* ==========================================================================
+   22  HILFSKLASSEN
+   ========================================================================== */
+
+.vg-reihe { display: flex; align-items: center; gap: var(--vg-a4); min-width: 0; }
+.vg-reihe-weit { display: flex; align-items: center; justify-content: space-between; gap: var(--vg-a5); min-width: 0; }
+.vg-stapel { display: flex; flex-direction: column; gap: var(--vg-a5); min-width: 0; }
+.vg-fuellen { flex: 1 1 auto; min-width: 0; }
+.vg-wrap { flex-wrap: wrap; }
+.vg-nowrap { white-space: nowrap; }
+.vg-kappen { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.vg-abstand-oben { margin-top: var(--vg-a6); }
+.vg-trenner { height: 1px; background: var(--vg-rand); border: 0; margin: var(--vg-a5) 0; }
+
+.vg-t-xs  { font-size: var(--vg-fs-xs); }
+.vg-t-sm  { font-size: var(--vg-fs-sm); }
+.vg-t-md  { font-size: var(--vg-fs-md); }
+.vg-t-lg  { font-size: var(--vg-fs-lg); }
+.vg-t-xl  { font-size: var(--vg-fs-xl); }
+.vg-t-2xl { font-size: var(--vg-fs-2xl); line-height: 1.22; letter-spacing: -0.021em; }
+.vg-t-3xl { font-size: var(--vg-fs-3xl); line-height: 1.14; letter-spacing: -0.028em; }
+
+.vg-fett     { font-weight: 500; }
+.vg-stark    { font-weight: 500; color: var(--vg-text); }
+.vg-normal   { font-weight: 400; }
+.vg-gedaempft { color: var(--vg-text-3); }
+.vg-schwach  { color: var(--vg-text-4); }
+.vg-marke    { color: var(--vg-marke); }
+.vg-positiv  { color: var(--vg-positiv); }
+.vg-negativ  { color: var(--vg-negativ); }
+.vg-warnung  { color: var(--vg-warnung); }
+.vg-info     { color: var(--vg-info); }
+
+.vg-overline {
+  font-size: var(--vg-fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--vg-sp-kapit);
+  text-transform: uppercase;
+  color: var(--vg-text-4);
+}
+.vg-flaeche { background: var(--vg-flaeche); }
+.vg-rand-box { border: 1px solid var(--vg-rand); border-radius: var(--vg-r-md); }
+.vg-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ==========================================================================
+   24  LEITBAND
+   Die eine Zahl, die die Leitfrage beantwortet, mit ihren drei Signalen
+   darunter. Absichtlich das erste und größte Element der Startseite:
+   wer die Seite öffnet, soll zuerst wissen, ob es ein Problem gibt.
+   ========================================================================== */
+
+.vg-leitband {
+  position: relative;
+  display: grid;
+  gap: var(--vg-a6);
+  margin-top: 0;
+  padding: var(--vg-a8) var(--vg-a9) var(--vg-a7);
+  border-radius: var(--vg-r-xl);
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand);
+  box-shadow: var(--vg-s2);
+  overflow: hidden;
+}
+/* Tonkante oben — 3px, die einzige Farbfläche des Bandes. */
+.vg-leitband::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--vg-neutral-flaeche);
+}
+.vg-leitband[data-ton="positiv"]::before { background: var(--vg-positiv); }
+.vg-leitband[data-ton="warnung"]::before { background: var(--vg-warnung); }
+.vg-leitband[data-ton="negativ"]::before { background: var(--vg-negativ); }
+
+.vg-leitband-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vg-a5);
+}
+.vg-leitband-urteil {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  font-size: var(--vg-fs-md);
+  font-weight: 500;
+  letter-spacing: -0.008em;
+  color: var(--vg-text-2);
+}
+.vg-leitband-urteil .vg-punkt {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--vg-neutral-flaeche);
+}
+.vg-leitband-urteil[data-ton="positiv"] { color: var(--vg-positiv); }
+.vg-leitband-urteil[data-ton="warnung"] { color: var(--vg-warnung); }
+.vg-leitband-urteil[data-ton="negativ"] { color: var(--vg-negativ); }
+.vg-leitband-urteil[data-ton] .vg-punkt { background: currentColor; }
+
+.vg-leitband-zahl {
+  display: flex;
+  align-items: baseline;
+  gap: var(--vg-a7);
+  flex-wrap: wrap;
+}
+/* Die eine Zahl: Uniform Light in 56 → 88 px, Tabellenziffern, damit der
+   Zählwert beim Hochlaufen nicht springt. Der Ton kommt erst am Ende des
+   Zählens (data-ton wird ab 90 % des Wegs gesetzt) und blendet 260 ms. */
+.vg-leitband-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-size: clamp(3.5rem, 2.4rem + 2.8vw, 5.5rem);    /* 56 → 88 */
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  color: var(--vg-text);
+  transition: color var(--vg-ruhig) var(--vg-kurve-weich);
+}
+.vg-leitband-wert[data-ton="positiv"] { color: var(--vg-positiv); }
+.vg-leitband-wert[data-ton="warnung"] { color: var(--vg-warnung); }
+.vg-leitband-wert[data-ton="negativ"] { color: var(--vg-negativ); }
+.vg-leitband-satz {
+  flex: 1 1 320px;
+  max-width: 40ch;
+  font-size: var(--vg-fs-md);
+  line-height: var(--vg-zh-normal);
+  color: var(--vg-text-3);
+  align-self: center;
+}
+.vg-leitband-satz strong { color: var(--vg-text); font-weight: 500; }
+
+.vg-leitband-signale {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--vg-rand);
+  padding-top: var(--vg-a6);
+  gap: var(--vg-a6);
+}
+.vg-leitsignal {
+  display: grid;
+  gap: 1px;
+  padding-left: var(--vg-a5);
+  border-left: 2px solid var(--vg-rand);
+  min-width: 0;
+}
+.vg-leitsignal[data-ton="positiv"] { border-left-color: var(--vg-positiv); }
+.vg-leitsignal[data-ton="warnung"] { border-left-color: var(--vg-warnung); }
+.vg-leitsignal[data-ton="negativ"] { border-left-color: var(--vg-negativ); }
+.vg-leitsignal-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-size: var(--vg-fs-2xl);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.028em;
+  font-variant-numeric: tabular-nums;
+  color: var(--vg-text);
+}
+.vg-leitsignal-label { font-size: var(--vg-fs-sm); font-weight: 500; color: var(--vg-text-2); }
+.vg-leitsignal-hinweis { font-size: var(--vg-fs-xs); color: var(--vg-text-4); line-height: var(--vg-zh-knapp); }
+
+/* ---- 24.1 Kennzahlreihe — vier Nebenwerte, klar unter dem Leitband ------ */
+/* Kennzahlreihe: ein Kontenblatt, keine Kachelreihe. Werte stehen in einer
+   Zeile, getrennt durch Haarlinien — nicht in fünf gleich schweren Kästen.
+   Die Spaltenzahl kommt über --spalten. */
+.vg-kennzahlreihe {
+  --spalten: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--spalten), minmax(0, 1fr));
+  gap: var(--vg-a8);
+  padding: var(--vg-a6) var(--vg-a2);
+}
+.vg-kennzahlreihe-3 { --spalten: 3; }
+.vg-kennzahlreihe-4 { --spalten: 4; }
+.vg-kennzahlreihe-5 { --spalten: 5; }
+.vg-kennzahlreihe > .vg-kpi {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0 var(--vg-a6) 0 0;
+  border-right: 1px solid var(--vg-rand);
+  border-radius: 0;
+}
+.vg-kennzahlreihe > .vg-kpi:last-child { border-right: 0; }
+/* Im Kontenblatt trägt der Wert selbst den Ton — eine zweite farbige
+   Kante daneben macht aus der Zeile wieder eine Kachelreihe. */
+.vg-kennzahlreihe > .vg-kpi[data-ton]::before { content: none; }
+.vg-kennzahlreihe .vg-kpi-wert { font-size: var(--vg-fs-2xl); }
+
+/* ---- 24.2 Tür — die ganze Karte ist der Knopf ----------------------------
+   Die einzige Karte mit Lift: 2 px nach oben in 180 ms. Der Pfeilring wird
+   beim Überfahren zur Markenfläche — die eine gefüllte Fläche der Tür. */
+.vg-tuer {
+  cursor: pointer;
+  border-color: var(--vg-rand-stark);
+  transition: transform var(--vg-normal) var(--vg-kurve),
+              border-color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-tuer:hover { transform: translateY(-2px); border-color: var(--vg-rand-hart); }
+.vg-tuer:focus-visible { outline: 2px solid var(--vg-fokus); outline-offset: 2px; }
+.vg-tuer .vg-karte-titel { font-size: var(--vg-fs-2xl); letter-spacing: -0.02em; }
+.vg-tuer-pfeil {
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--vg-rand-stark);
+  color: var(--vg-text-2);
+  transition: background-color var(--vg-normal) var(--vg-kurve-weich),
+              border-color var(--vg-normal) var(--vg-kurve-weich),
+              color var(--vg-normal) var(--vg-kurve-weich),
+              transform var(--vg-normal) var(--vg-kurve);
+}
+.vg-tuer:hover .vg-tuer-pfeil,
+.vg-tuer:focus-visible .vg-tuer-pfeil {
+  background: var(--vg-marke-flaeche);
+  border-color: var(--vg-marke-flaeche);
+  color: var(--vg-auf-marke);
+  transform: translateX(3px);
+}
+
+/* Umbruchregel: nur auf Teiler der Kinderzahl. Drei Signale bleiben drei
+   Spalten, vier Kennzahlen vier — verwaiste Zellen gibt es nicht. */
+.vg-leitband-signale > * { min-width: 0; }
+
+/* ---- 24.3 Anteilsbalken — dünn, ohne Text in der Fläche ----------------- */
+.vg-anteilsbalken {
+  display: flex;
+  gap: 2px;
+  border-radius: var(--vg-r-voll);
+  overflow: hidden;
+  background: var(--vg-n100);
+}
+.vg-anteilsbalken > div {
+  min-width: 2px;
+  transition: flex-basis var(--vg-ruhig) var(--vg-kurve);
+}
+.vg-anteilsbalken > div:first-child { border-radius: var(--vg-r-voll) 0 0 var(--vg-r-voll); }
+.vg-anteilsbalken > div:last-child  { border-radius: 0 var(--vg-r-voll) var(--vg-r-voll) 0; }
+
+.vg-anteilslegende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vg-a3) var(--vg-a6);
+  margin-top: var(--vg-a4);
+}
+.vg-anteilslegende-eintrag { display: inline-flex; align-items: center; gap: var(--vg-a3); min-width: 0; }
+.vg-anteilslegende-label { font-size: var(--vg-fs-xs); color: var(--vg-text-3); }
+.vg-anteilslegende-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-size: var(--vg-fs-xs);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--vg-text);
+}
+
+/* ---- 24.4 Achsenschnitt-Hinweis ---------------------------------------- */
+.vg-diagramm-fuss {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vg-a4);
+  margin: var(--vg-a4) 0 0;
+  font-size: var(--vg-fs-xs);
+  line-height: var(--vg-zh-normal);
+  color: var(--vg-text-4);
+}
+.vg-achsenschnitt {
+  flex: none;
+  width: 14px; height: 12px;
+  margin-top: 2px;
+  background:
+    linear-gradient(135deg, transparent 44%, var(--vg-n400) 44%, var(--vg-n400) 56%, transparent 56%),
+    linear-gradient(135deg, transparent 44%, var(--vg-n400) 44%, var(--vg-n400) 56%, transparent 56%);
+  background-size: 14px 6px;
+  background-position: 0 0, 0 6px;
+  background-repeat: no-repeat;
+}
+
+/* ---- 24.5 Befundblock — Regellinien statt sechs gleich schwerer Kästen -- */
+.vg-befunde {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  background: var(--vg-flaeche);
+  border: 1px solid var(--vg-rand);
+  border-radius: var(--vg-r-lg);
+  overflow: hidden;
+}
+.vg-befund {
+  padding: var(--vg-a7) var(--vg-a7) var(--vg-a8);
+  border-right: 1px solid var(--vg-rand);
+  border-bottom: 1px solid var(--vg-rand);
+}
+.vg-befunde > .vg-befund:nth-child(3n) { border-right: 0; }
+.vg-befunde > .vg-befund:nth-last-child(-n+3) { border-bottom: 0; }
+.vg-befund-titel {
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  color: var(--vg-text-3);
+}
+.vg-befund-wert {
+  margin: var(--vg-a3) 0 var(--vg-a4);
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-3xl);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+  color: var(--vg-text);
+}
+.vg-befund-text {
+  margin: 0;
+  font-size: var(--vg-fs-sm);
+  line-height: var(--vg-zh-normal);
+  color: var(--vg-text-3);
+}
+@media (max-width: 1280px) {
+  .vg-befunde { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vg-befunde > .vg-befund:nth-child(3n) { border-right: 1px solid var(--vg-rand); }
+  .vg-befunde > .vg-befund:nth-child(2n) { border-right: 0; }
+}
+
+/* ---- 24.6 Pfeil „wird zu“ ------------------------------------------------
+   Uniform führt kein U+2192. Statt eines Ersatzzeichens aus einer fremden
+   Schrift ein gezeichneter Pfeil, der die Laufweite der Zeile mitmacht. */
+.vg-pfeil {
+  display: inline-block;
+  width: 15px; height: 0.62em;
+  vertical-align: -0.04em;
+  background: currentColor;
+  opacity: .55;
+  -webkit-mask: var(--vg-pfeil-form) center / 15px auto no-repeat;
+          mask: var(--vg-pfeil-form) center / 15px auto no-repeat;
+}
+:root {
+  --vg-pfeil-form: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Cpath d='M1 5h13M10 1l4 4-4 4' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* ---- 24.7 Zahlen in SVG-Diagrammen ---------------------------------------
+   Die gehobene Diagrammschicht zeichnet ihre Werte als SVG-<text>. Dort
+   erbt nichts aus den .vg-Klassen, und Uniform allein hat keine
+   Tabellenziffern — ohne diese Regel wandern Achsenwerte und
+   Direktbeschriftungen um Bruchteile hin und her, sobald sich eine Ziffer
+   ändert. */
+.vg-diagramm svg text,
+.recharts-wrapper text {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+}
+/* Grundwert 12 px für jeden Text, der keine eigene Größe aus MASS trägt.
+   Nur Texte ohne font-size-Attribut — sonst überschriebe die Regel die
+   Direktbeschriftungen (12,5 / 13,5 px), denn Stilregeln schlagen
+   Präsentationsattribute. */
+.vg-diagramm svg text:not([font-size]),
+.recharts-wrapper text:not([font-size]) { font-size: 12px; }
+
+/* ---- 24.8 Seitenkopf — ein Bauteil für Simulation, Vergleich, Fassungen,
+   Grundlagen. Startseite, Lagebild und Akte haben keinen: dort tragen
+   Leitband bzw. Steuerblock den Titel.
+   Aufbau:  .vg-seitenkopf > .vg-seitenkopf-titel (h2 + .vg-seitenkopf-unter)
+                           + .vg-seitenkopf-aktionen */
+.vg-seitenkopf {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--vg-a5);
+  min-height: 40px;
+}
+.vg-seitenkopf-titel { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.vg-seitenkopf h2 {
+  font-size: var(--vg-fs-2xl);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--vg-text);
+}
+.vg-seitenkopf-unter {
+  font-size: var(--vg-fs-sm);
+  line-height: var(--vg-zh-normal);
+  color: var(--vg-text-3);
+  max-width: 60ch;
+}
+.vg-seitenkopf-aktionen { display: flex; align-items: center; gap: var(--vg-a4); flex: none; min-width: 0; }
+
+/* ---- 24.9 Kachel des Lagebilds — eine Einheit, ein Zeichen ----------------
+   Hülle ist .vg-karte (kein zweiter Rand). Aufbau:
+     .vg-karte.vg-kachel[data-gross]
+       .vg-kachel-kopf     Kurzname (fs-lg) · Ampelpunkt rechts
+       .vg-weg             volle Breite
+       .vg-kachel-betrag   „8,7 → 9,3 Mio. EUR“ links, Delta rechts
+       .vg-kachel-stand    Verhandlungsstand, Punkt im Statuston
+   Einheiten ab 5 Mio. EUR heute: data-gross → zwei Fächer, Zielwert fs-3xl. */
+.vg-kachel {
+  display: grid;
+  gap: var(--vg-a3);
+  padding: 14px;
+  min-width: 0;
+  cursor: pointer;
+  transition: border-color var(--vg-normal) var(--vg-kurve-weich),
+              opacity var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-kachel:hover { border-color: var(--vg-rand-hart); }
+.vg-kachel:focus-visible { outline: 2px solid var(--vg-fokus); outline-offset: 2px; }
+.vg-kachel[data-gross="true"], .vg-kachel-gross { grid-column: span 2; }
+.vg-kachel[data-gedimmt="true"] { opacity: 0.4; }
+
+.vg-kachel-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vg-a4);
+  min-width: 0;
+  font-size: var(--vg-fs-lg);
+  font-weight: 500;
+  color: var(--vg-text);
+  line-height: var(--vg-zh-knapp);
+}
+.vg-kachel-kopf > :first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.vg-kachel-kopf .vg-ampel-punkt { width: 8px; height: 8px; }
+
+.vg-kachel-betrag {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--vg-a4);
+  min-width: 0;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-sm);
+  color: var(--vg-text-3);
+  white-space: nowrap;
+}
+.vg-kachel-betrag > :first-child { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.vg-kachel-ziel { font-size: var(--vg-fs-xl); font-weight: 500; color: var(--vg-text); letter-spacing: -0.02em; }
+.vg-kachel[data-gross="true"] .vg-kachel-ziel, .vg-kachel-gross .vg-kachel-ziel { font-size: var(--vg-fs-3xl); letter-spacing: -0.028em; }
+.vg-kachel-betrag .vg-delta { font-size: var(--vg-fs-sm); }
+
+.vg-kachel-stand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a3);
+  min-width: 0;
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vg-kachel-stand .vg-punkt { width: 6px; height: 6px; background: var(--vg-neutral-flaeche); }
+.vg-kachel-stand[data-ton="positiv"] .vg-punkt { background: var(--vg-positiv); }
+.vg-kachel-stand[data-ton="warnung"] .vg-punkt { background: var(--vg-warnung); }
+.vg-kachel-stand[data-ton="negativ"] .vg-punkt { background: var(--vg-negativ); }
+.vg-kachel-stand[data-ton="info"] .vg-punkt    { background: var(--vg-info); }
+.vg-kachel-stand[data-ton="marke"] .vg-punkt   { background: var(--vg-marke-flaeche); }
+
+/* ==========================================================================
+   25  SCHMALE BREITEN — Ursache des waagerechten Überlaufs
+   --------------------------------------------------------------------------
+   .vg-app ist ein Raster; Rasterkinder haben min-width: auto. Die Topbar ist
+   eine Flexzeile aus Kindern mit flex: none — ihre Mindestbreite lag bei rund
+   1180 px. Unter dieser Breite wurde nicht die Topbar schmaler, sondern die
+   ganze Anwendung breiter als das Fenster: jede Ansicht lief bei 1024 px nach
+   rechts aus dem Bild. Zwei Regeln beheben die Ursache (.vg-app > * und
+   overflow-x: clip in Abschnitt 7); zwei Stufen räumen die Topbar auf. Die
+   Navigation behält in jeder Breite alle Wörter. Rechnung bei 1024 px:
+   Marke ≈ 200 + Nav ≈ 500 + Wähler ≈ 190 + rechts ≈ 130 + drei Lücken à 12
+   + Innenabstand 32 ≈ 1090 — mehr als das Fenster. Deshalb nimmt die zweite
+   Stufe der Marke die Mandantenzeile, der Navigation den halben Innenabstand
+   und dem Fassungswähler das Statusabzeichen (der Ton steht ohnehin als
+   Punkt); der Name im Wähler kappt mit Ellipse, der Knopf selbst schneidet
+   ab, statt über „Fassungen" und den Suchknopf zu laufen.
+   ========================================================================== */
+.vg-app > * { min-width: 0; }
+.vg-topbar { min-width: 0; }
+.vg-topbar-mitte { min-width: 0; flex: 1 1 auto; }
+.vg-topbar-rechts { flex: none; }
+
+@media (max-width: 1280px) {
+  .vg-topbar-mitte > * { flex: 0 1 auto; min-width: 0; }
+}
+@media (max-width: 1100px) {
+  .vg-topbar-marke .vg-topbar-mandant { display: none; }
+  .vg-nav-eintrag { padding-inline: var(--vg-a3); }
+  .vg-topbar-mitte .vg-btn { overflow: hidden; min-width: 0; }
+  .vg-topbar-mitte .vg-btn > .vg-badge { display: none; }
+}
+
+/* ---- Farblegende der Budgetampel (Waage.jsx) ----------------------------- */
+.vg-farblegende { font-size: var(--vg-fs-xs); color: var(--vg-text-3); line-height: 1.55; }
+.vg-farblegende .vg-delta { font-size: inherit; font-weight: 500; }
+.vg-steuerblock .vg-farblegende { color: var(--sb-text-3); margin-top: var(--vg-a2); }
+.vg-leitband .vg-farblegende { margin-top: var(--vg-a4); }

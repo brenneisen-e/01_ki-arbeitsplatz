@@ -1,0 +1,81 @@
+An: Stefan.Schwarz@ergo.de, Marcus.Koch@ergo.de, Anika.Wesche@ergo.de, Inge.Lorusso@ergo.de, Nuria.Garcia-Fernandez@ergo.de, Ute.Gerhards@ergo.de
+Cc: Dirk.Amend@ergo.de, Marco.Jeglorz.extern@ergo.de, Alexandra.Mai@ergo.de, Niels.Luetke@ergo.de, Kamil.Rypa@ergo.de, ebrenneisen@deloitte.de
+Betreff: AW: Makler BUE meets KI | Ausbaustufe 2 | BUE_KLASSIFIKATION: alle Auspraegungen mit Steuerlogik (EMWS / KWAD mit und ohne Folge-BUE) zur Bestaetigung
+
+Hallo Stefan, hallo zusammen,
+
+anbei mein Verständnis für die Aufstellung aller Ausprägungen von BUE_KLASSIFIKATION: wann sie zu vergeben sind und welche Steuerung daraus folgt. Bitte um Bestätigung oder Korrektur durch das Fachteam.
+
+Die Steuerung hängt an zwei Feldern
+
+- BUE_KLASSIFIKATION sagt, was das Anliegen ist.
+- BUE_WUNSCH_VORHANDEN sagt, ob eine Bestandsübertragung folgt.
+
+Daraus ergeben sich drei Wege:
+
+- A — Celonis eröffnet den Postkorbvorgang über EMWS.
+- B — Die Mail geht an KWAD; die Sparte bearbeitet zuerst, die BÜ folgt.
+- C — Die Mail geht an KWAD; es folgt keine BÜ.
+
+Alle Ausprägungen
+
+- BÜ-Vorgang
+  Wann: Bestandsübertragung mit Maklervollmacht (Makler) oder Betreuungswunsch (MFA, über BUE_VERMITTLER_TYP); auch mit Anforderung von Unterlagen (BUE_ANF_UNTERLAGEN = ja)
+  BUE_WUNSCH_VORHANDEN = ja → Weg A: Prüf-Bot, danach 72-Stunden-BOT / BÜ-Bot
+  BUE_WUNSCH_VORHANDEN = nein → Weg A: Makler – nicht relevant, die Maklervollmacht belegt den Auftrag, Prüfung wie bei ja; MFA – im Prüf-Bot die BE „BÜ-Wunsch nicht vorhanden“, weil der Betreuungswunsch der einzige Auftrag ist
+- Kündigung Maklervollmacht (neu, zu bestätigen)
+  Wann: Makler oder Kunde kündigt Vollmacht oder Mandat; fachlich eine BÜ in den Freibestand (M. Koch, 11.09.)
+  BUE_WUNSCH_VORHANDEN = ja → Weg A: Prüf-Bot mit MV-Feldern N/A; Übertragung in den Freibestand. KV über den Widerrufs-Bot (Notiz 2013), LV/SU bis auf Weiteres halbmanuell
+- VN-Wechsel
+  Wann: Wechsel oder Änderung des Versicherungsnehmers
+  BUE_WUNSCH_VORHANDEN = ja / nein → Weg B / C: ja → Sparte zuerst, danach BÜ über den Prüf-Bot; nein → nur Sparte, keine BÜ
+- WEG-Wechsel
+  Wann: Wechsel der Wohnungseigentümergemeinschaft (nur Wohngebäude); Behandlung wie VN-Wechsel
+  BUE_WUNSCH_VORHANDEN = ja / nein → Weg B / C: ja → Sparte zuerst, danach BÜ über den Prüf-Bot; nein → nur Sparte, keine BÜ
+- Kündigung Versicherungsvertrag
+  Wann: Kündigung eines Vertrags, auch unterjährig oder wegen Beitragsanpassung. Nicht: Kündigung der Maklervollmacht
+  BUE_WUNSCH_VORHANDEN = ja / nein → Weg B / C: ja → Sparte zuerst, danach BÜ über den Prüf-Bot; nein → nur Sparte, keine BÜ
+- Verkürzung Kündigungsfrist
+  Wann: Bitte um Verkürzung der Kündigungsfrist auf einen Termin
+  BUE_WUNSCH_VORHANDEN = ja / nein → Weg B / C: ja → Sparte zuerst, danach BÜ über den Prüf-Bot; nein → nur Sparte, keine BÜ
+- Sonstige Fachthemen
+  Wann: Jedes andere erkennbare Sparten-Anliegen: Anfrage oder Rücksprache, Antrag oder Vertragsänderung (z. B. Adressänderung mit oder ohne Maklervollmacht), Schadenmeldung, Vertragstrennung, Beitragsfreistellung
+  BUE_WUNSCH_VORHANDEN = ja / nein → Weg B / C: ja → Sparte zuerst, danach BÜ über den Prüf-Bot; nein → nur Sparte, keine BÜ
+- Nicht-Standard
+  Wann: Anliegen nicht erkennbar oder nicht zuordenbar; Eingangsmanagement klassifiziert selbst
+  BUE_WUNSCH_VORHANDEN = ja / nein → Weg B / C: ja → Sparte zuerst, danach BÜ über den Prüf-Bot; nein → nur Sparte, keine BÜ
+- Kein-Makler-Vorgang
+  Wann: Absender ist kein Vermittler oder es fehlt jeder Vermittlerbezug
+  BUE_WUNSCH_VORHANDEN = nein → Weg C: Nur Sparte — ohne Vermittler keine Folge-BÜ
+
+Gegenüber der Feldliste V1.7: Die fünf Sparten-Ausprägungen (VN-Wechsel bis Sonstige Fachthemen) kommen wie am 11.09. vorgeschlagen dazu; Anfrage-Rücksprache, Antrag-Änderung und Schadenmeldung gehen in Sonstige Fachthemen auf, weil sie dieselbe Steuerung haben. Die Kündigung Maklervollmacht wird eigene Ausprägung — sie läuft zwar über Weg A, braucht im Bot aber eine andere Behandlung als der Standardfall (Freibestand, MV-Felder N/A).
+
+Die drei Wege
+
+A – Celonis eröffnet über EMWS (Fall 1 und 2 der GeVo-Steuerung)
+  - Celonis: Postkorbvorgang je VNR über EMWS, mit E-Mail, allen Anhängen, KI-Deckblatt und Datenpool. Keine Mail an KWAD.
+  - Eingangsmanagement: nicht beteiligt.
+  - Danach: Prüf-Bot der Sparte. Sauber geprüft → 72-Stunden-BOT / BÜ-Bot. BE oder Prüfnotiz → KV an HSB4K MV; Komposit/Leben nach abgebendem Bestandsinhaber an ODPB (Makler) oder HSB4K KO.
+
+B – KWAD mit Folge-BÜ (Fall 3)
+  - Celonis: Mail mit allen Anhängen, KI-Deckblatt und Hinweistext an kwad@ergo.de. Datenpool schreiben. Keine Eröffnung über EMWS.
+  - Eingangsmanagement: Verbunderöffnung in der Sparte — Sparten-GeVo nach Klassifikation plus BÜ-GeVo als Zusatzwunsch.
+  - Danach: Die Sparte bearbeitet ihren GeVo zuerst. Anschließend Weiterleitung des BÜ-GeVo in den Themenpostkorb; ab hier wie Weg A mit dem Prüf-Bot.
+  - Hinweistext in der KWAD-Mail, mit dem Fachthema aus BUE_KLASSIFIKATION im Klartext, zum Beispiel: „VN-Wechsel mit anschließender Bestandsübertragung. Bitte gemäß Zuständigkeit in der Sparte eröffnen, zusätzlich GeVo Bestandsübertragung als Zusatzwunsch; die Bestandsübertragung wird erst nach dem VN-Wechsel bearbeitet.“
+
+C – KWAD ohne Folge-BÜ (Fall 4)
+  - Celonis: Mail mit allen Anhängen, KI-Deckblatt und Hinweistext an kwad@ergo.de. Kein Datenpool, keine Eröffnung über EMWS. Loggen für die Auswertung.
+  - Eingangsmanagement: Sparten-GeVo nach Zuständigkeit. Kein BÜ-GeVo.
+  - Danach: Bearbeitung in der Sparte. Der Prüf-Bot sieht den Vorgang nicht.
+  - Hinweistext in der KWAD-Mail, zum Beispiel: „Kündigung Versicherungsvertrag ohne Bestandsübertragung. Bitte gemäß Zuständigkeit in der Sparte eröffnen; kein GeVo Bestandsübertragung.“
+
+Sonderfälle
+
+Reminder ist keine Klassifikation, sondern das Feld BUE_REMINDER; die Erinnerung folgt dem Weg ihres Anliegens (Entscheidung 22.09.: keine eigene Prüfung im Bot). Spam bleibt ohne Weiterleitung — die Erkennung ist mit Celonis noch festzulegen.
+
+Folge für den Prüf-Bot
+
+Der Prüf-Bot prüft BUE_KLASSIFIKATION nicht mehr. Er wird nur durch Vorgänge getriggert, die Celonis in den Themenpostkorb stellt (Weg A) — und künftig durch BÜ-GeVos, die die Sparte nach ihrer Bearbeitung dorthin weiterleitet (Weg B). Beides sind per Definition Bestandsübertragungen; die BE „Kein BÜ-Vorgang“ entfällt. Die BE „BÜ-Wunsch nicht vorhanden“ bleibt nur im MFA-Zweig, beim Makler belegt die Maklervollmacht den Auftrag.
+
+Beste Grüße
+Eike

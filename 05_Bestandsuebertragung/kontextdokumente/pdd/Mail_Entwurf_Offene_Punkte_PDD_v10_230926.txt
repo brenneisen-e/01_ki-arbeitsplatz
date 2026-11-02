@@ -1,0 +1,40 @@
+An: Dirk.Amend@ergo.de, Christoph-Reber.Lucht@ergo.de, Kamil.Rypa@ergo.de
+Cc: Tanja.Juraschek@ergo.de, Marco.Jeglorz.extern@ergo.de, ebrenneisen@deloitte.de
+Betreff: Makler BUE meets KI | PDD v10 Pruef-Bot (KV und Komposit/Leben): offene Punkte fuer Fachbereich und Robotics
+
+Hallo zusammen,
+
+anbei die PDD v10 für Gesundheit (KV) und für Komposit / Leben, beide zweisprachig nach dem Template und mit allen Kommentaren der Reviewrunde eingearbeitet (Stand je Kommentar im beigefügten Protokoll). Damit Robotics bauen kann, brauche ich noch die folgenden Angaben und Bestätigungen:
+
+Postkörbe und Routing
+- Postkorb-Nr. des Themenpostkorbs „HSB4K 72“ (Übergabe aller Vorgänge ohne Befund an den 72-Stunden-BOT, beide Sparten).
+- Postkorb-Nr. „HSB4K MV“ (KV, Vorgänge mit Befund) und „HSB4K KO“ (Komposit / Leben, Vorgänge mit Befund, wenn der abgebende Bestandsinhaber der AO angehört).
+- Komposit / Leben, abgebender Bestandsinhaber nicht AO: welcher Themenpostkorb von ODPB (Name und Postkorb-Nr.)?
+- Woran erkennt der Bot in OB726, dass der abgebende Bestandsinhaber der AO angehört (Ausprägung der Kopfzeile hinter der Vermittler-Nr.)?
+- Nicht ermittelbarer Bestandsinhaber (Feld „Betreuung“ in VA230 leer, Agentur in OB726 unbekannt) oder BE vor Kapitel II: Vorschlag HSB4K KO – einverstanden?
+- Makler auf Makler (K. Rypa): geht jeder Vorgang ohne Befund an den 72-Stunden-BOT oder direkt an HSB4K GR?
+
+Fachliche Bestätigungen
+- Prüfung auf Mantelvertrag bei KR (K. Rypa): Feld in VA230 und Ausprägung, an der der Bot einen Flottenvertrag mit führendem Mantel erkennt.
+- Notizfeld „Komposit / Leben / KV“: welche Kürzel in BUE_SPARTE gehören zu Leben (z. B. LV, BU), welche zu Komposit?
+- Vorlage der Telefonnotiz KV (BOT2011): wird die Vorlage bestückt oder eine Freitextnotiz mit gleichem Aufbau erzeugt? Für Komposit / Leben: Anwendung und Vorlage des Bearbeitungshinweises.
+- Sonderliste TOP-Makler (8 Vermittler, Stand 23.09.2026, mit fester Adresse auch für Fonds Finanz): gilt einmalig – Bestätigung, dass keine laufende Pflege vorgesehen ist.
+
+Stammdaten
+- Involvierte Geschäftsbereiche (Gruppe, Abteilung, Standort) und Abnahmeumgebung – Robotics / D. Amend.
+
+Offene Screenshots
+Fassung | Kapitel / Schritt | Screenshot | Status
+KV und Komposit/Leben | Start – Postkorbvorgang und Datenpool lesen | Datenpool, Datensatz zum Postkorbvorgang (Felder BUE_*) | fehlt – Platzhalter im Dokument
+KV und Komposit/Leben | III – E-Mail-Adresse des übernehmenden Vermittlers ermitteln | OB729 Vermittlerkommunikation, Feld E-Mail-Adresse | fehlt – Platzhalter im Dokument
+KV und Komposit/Leben | I – Kundennummer über die Versicherungsnummer (IS011/VAF017) | IS011/VAF017 mit Name, Anschrift, Geburtsdatum, Kundennummer | vorhanden – bitte bestätigen, dass es Testdaten sind, sonst schwärzen
+KV und Komposit/Leben | II – PNR des Bestandsinhabers lesen (OB726) | OB726 zum abgebenden Bestandsinhaber (Betreuung aus VA230) | vorhanden, zeigt aber den übernehmenden Makler – passenden Screenshot liefern
+KV | VI – Telefonnotiz bestücken | Notizvorlage BOT2011 (Krankenversicherung) | heute Maske 1515 als Ersatz – KV-Vorlage liefern
+Komposit/Leben | Start, I, II, III, IV – alle Hostmasken | Themenpostkorb, IS011, VA230 (heute Sparte Kranken), OB726, GH040 | heute KV-Screenshots – durch Komposit/Leben-Masken ersetzen
+Komposit/Leben | IV – Vertrag, Prüfung auf Mantelvertrag bei KR | VA230, Feld für Mantelvertrag / Flotte | fehlt – Feld und Ausprägung noch festzulegen (K. Rypa)
+Komposit/Leben | VII – Abschluss mit Befund | Bearbeitungshinweis am Postkorbvorgang (Anwendung und Vorlage Komposit/Leben) | fehlt – Platzhalter im Dokument
+
+Alles Weitere steht im Protokoll; Rückfragen gern direkt an mich.
+
+Viele Grüße
+Eike Brenneisen

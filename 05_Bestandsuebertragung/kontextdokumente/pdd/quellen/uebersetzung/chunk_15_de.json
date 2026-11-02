@@ -1,0 +1,166 @@
+[
+ {
+  "de": "Bearbeitung nach",
+  "art": "text"
+ },
+ {
+  "de": "„Untervollmacht fehlt“ oder „Mit BÜ-Wunsch“",
+  "art": "text"
+ },
+ {
+  "de": "Auswahl nach der Tabelle „Bearbeitung nach“ unten",
+  "art": "text"
+ },
+ {
+  "de": "Rahmenvertrag übertragbar / Rahmenvertrag nicht übertragbar",
+  "art": "text"
+ },
+ {
+  "de": "nicht setzen",
+  "art": "text"
+ },
+ {
+  "de": "fachlich nicht geregelt; Rahmenverträge werden wie alle anderen Verträge behandelt",
+  "art": "text"
+ },
+ {
+  "de": "Betroffene VNR",
+  "art": "text"
+ },
+ {
+  "de": "„angegebene VNR beachten“",
+  "art": "text"
+ },
+ {
+  "de": "immer Einzel-BÜ; „gesamte Kundenverbindung“ und „angegebene VNR nicht beachten“ werden nie gewählt",
+  "art": "text"
+ },
+ {
+  "de": "VNR",
+  "art": "text"
+ },
+ {
+  "de": "dahinter nachrichtlich die weiteren Nummern aus <BUE_VNR> und <BUE_VNR_2>, mit „;“ getrennt",
+  "art": "text"
+ },
+ {
+  "de": "Folgearbeit für Komposit (drei Kennzeichen)",
+  "art": "text"
+ },
+ {
+  "de": "entfällt für die Krankenversicherung – die Anforderung von Unterlagen ist ein Thema von Komposit und Leben",
+  "art": "text"
+ },
+ {
+  "de": "Sonstiges: Dokumente für weitere VNR hochladen / eröffnen",
+  "art": "text"
+ },
+ {
+  "de": "fachlich nicht geregelt",
+  "art": "text"
+ },
+ {
+  "de": "Komposit / Leben / KV (Freitext)",
+  "art": "text"
+ },
+ {
+  "de": "„KV“",
+  "art": "text"
+ },
+ {
+  "de": "nachrichtlich; bei <BUE_UMFANG> = „Gesamt“ zusätzlich „Auftrag: gesamte Kundenverbindung“",
+  "art": "text"
+ },
+ {
+  "de": "Laufende Nr. aus Vorgangsdatenbank",
+  "art": "text"
+ },
+ {
+  "de": "mehrere Nummern werden nur mit „,“ getrennt",
+  "art": "text"
+ },
+ {
+  "de": "Wert „Bearbeitung nach“",
+  "art": "text"
+ },
+ {
+  "de": "Bedingung",
+  "art": "text"
+ },
+ {
+  "de": "Untervollmacht fehlt",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_POOL> <> leer UND <BUE_UV_ERTEILT> = „nein“ – Einreichung über einen Pool ohne erteilte Untervollmacht",
+  "art": "text"
+ },
+ {
+  "de": "Mit BÜ-Wunsch",
+  "art": "text"
+ },
+ {
+  "de": "alle übrigen Fälle, auch beim Mehrfachagenten (<BUE_UV_ERTEILT> = N/A)",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang übergeben und abschließen",
+  "art": "text"
+ },
+ {
+  "de": "Den bestehenden Postkorbvorgang mit der Telefonnotiz an den 72-Stunden-BOT weiterleiten (Postkorb des 72-Stunden-BOT: Postkorb-Nr. TBD).",
+  "art": "text"
+ },
+ {
+  "de": "Verarbeitung beenden. Status „Completed“ wird nur gesetzt, wenn Telefonnotiz und Weiterleitung erfolgreich ausgeführt wurden.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Es gilt Variante A (K. Rypa, 17.09.2026): Der bestehende Vorgang wird weitergeleitet, es wird kein neuer Vorgang eröffnet.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Zu klären ist noch (K. Rypa), ob jeder Vorgang an den 72-Stunden-BOT geht oder Vorgänge mit Makler als abgebendem Bestandsinhaber direkt an HSB4K GR (Makler auf Makler).",
+  "art": "text"
+ },
+ {
+  "de": "VII. Abschluss mit Befund – BE-Handling",
+  "art": "text"
+ },
+ {
+  "de": "Business Exception und Prüfnotizen zentral behandeln",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Jede Business Exception wird an dieser Stelle einheitlich behandelt. <BE-Klassifikation> trägt den Grund der BE; <Fehlerliste> enthält die in den Einzelprüfungen gesammelten Prüfnotizen. Das Routing ist für harte Business Exceptions und für „Nachprüfung erforderlich“ identisch; es unterscheidet sich nur im Inhalt des Bearbeitungshinweises.",
+  "art": "text"
+ },
+ {
+  "de": "<BE> = „ja“ setzen",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis füllen mit <BE-Klassifikation>, allen Prüfnotizen aus <Fehlerliste> (je Prüfnotiz eine Zeile) sowie <Vorgang-VNR>, <BUE_VNR> und <BUE_VNR_2>",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis am Postkorbvorgang speichern (Notiz über ErgoNotiz, Vorlage 2011, siehe Screenshot)",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „HSB4K MV“ (HSB4 K MV Gesundheit Posteingang, Postkorb-Nr. TBD) weiterleiten",
+  "art": "text"
+ },
+ {
+  "de": "Report: <BE-Klassifikation> und <Fehlerliste> in das Reporting übernehmen (Status Referred)",
+  "art": "text"
+ },
+ {
+  "de": "Verarbeitung dieses Vorgangs beenden, weiter mit dem nächsten Vorgang",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Nennt der Auftrag mehrere Versicherungsnummern, wird zu jeder Nummer ein eigener Vorgang geprüft. Die vollständige Liste wird nachrichtlich in den Bearbeitungshinweis übernommen, damit die Sachbearbeitung den Zusammenhang der Vorgänge erkennt.",
+  "art": "text"
+ }
+]

@@ -1,0 +1,26 @@
+Hallo Martin, hallo Kiya,
+
+ich habe mir die Reminder von JDC (Jung, DMS & Cie.) in den beiden Postfächern maklerauftraege@ergo.de und bestandsuebertragungen@ergo.de angesehen, jeweils im Archiv der an KWAD weitergeleiteten Mails. Zeitraum ist der 13.07. bis 07.09.2026, also acht volle Kalenderwochen plus der heutige Montag. Zum Mengengerüst lässt sich Folgendes sagen:
+
+1. Deutlicher Anstieg seit Mitte August
+Bis KW32 lagen die JDC-Erinnerungen bei 30 bis 56 pro Woche (KW29: 30, KW30: 56, KW31: 42, KW32: 47). Ab KW33 steigen sie sprunghaft an: KW33: 259, KW34: 434, KW35: 788, KW36: 878. Die letzten vier Wochen liegen damit um den Faktor 10 bis 20 über dem Niveau davor. Allein heute sind bis zum Abend bereits 74 eingegangen.
+
+2. Anteil am Gesamteingang
+Im Postfach maklerauftraege@ergo.de machten die JDC-Erinnerungen bis KW32 rund 1 % aller Mails aus, in KW35 und KW36 sind es 15 bis 16 %. Über den gesamten Zeitraum sind es 2.608 JDC-Erinnerungen bei 35.376 Mails, also 7,4 %. Zum Vergleich: Alle anderen Absender zusammen kommen auf 2.004 Erinnerungen; JDC stellt damit 57 % aller Erinnerungen, in den letzten beiden Wochen etwa drei Viertel.
+
+3. Kanal und Sparten
+Praktisch alle JDC-Erinnerungen laufen über maklerauftraege@ergo.de (2.603 von 2.608), das Postfach bestandsuebertragungen@ergo.de ist mit 5 Stück nicht betroffen. Nach Sparte entfallen 45 % auf Kranken, 32 % auf Komposit, 3 % auf Leben; bei 17 % ist die Sparte aus der VNR nicht erkennbar.
+
+4. Mehrfach-Erinnerungen
+Die 2.608 Erinnerungen betreffen rund 1.900 Verträge. Etwa ein Viertel der Verträge wurde bereits zwei- oder mehrfach erinnert, einzelne Verträge bis zu acht Mal. Die Erinnerungen kommen auch am Wochenende, es handelt sich also um einen automatisierten Versand.
+
+5. Bezug zum Erstvorgang
+Nur bei rund 100 JDC-Erinnerungen haben wir im Scan-Zeitraum einen Erstvorgang zur gleichen VNR gefunden; dort liegen im Median 15 Tage zwischen Erstvorgang und Erinnerung. Bei über 90 % der Erinnerungen liegt der Erstvorgang vor dem 13.07. oder in einem anderen Ordner. JDC erinnert also überwiegend Vorgänge, die schon länger offen sind.
+
+6. Ausblick
+Ob sich die Reminderwelle in dieser Deutlichkeit fortsetzt, kann ich leider nicht bewerten. Das hängt davon ab, wann genau der technische Fehler aufgetreten ist und ob JDC die dadurch offenen Vorgänge inzwischen abgearbeitet hat. Heute waren es mit 74 Erinnerungen an einem Tag aber leider wieder deutlich mehr als früher, als es rund 30 in einer ganzen Woche waren.
+
+Die Auswertung mit Wochenverlauf, Reminder je Vertrag und der Einzelliste aller Mails hängt an. Wenn es hilft, ziehe ich den Zeitraum weiter nach vorne, um zu sehen, wann die Welle tatsächlich begonnen hat, und welche Vorgänge dahinterstehen.
+
+Beste Grüße
+Eike

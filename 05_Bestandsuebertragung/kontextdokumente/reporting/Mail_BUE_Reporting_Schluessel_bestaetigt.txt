@@ -1,0 +1,35 @@
+An:     Koeberer, Stefan (DCO1HH); Amend, Dirk (HSB4K); Koch, Marcus (ODPB3D); Klindworth, Holger (KBIGD)
+Cc:     Andermann, Hilke (BTK); Boes, Christian (BTK)
+Betreff: AW: Abgrenzung Verbund OPAG und OA | BÜ-Reporting – GeVo-Schlüssel final, ich stelle einen Termin ein
+
+Hallo zusammen,
+
+vielen Dank für die schnelle Zuarbeit – besonders an Dirk für die Rückmeldung aus
+der Sparte Gesundheit (Frau Andermann, Herr Böttger) und an Stefan für die MIS-O-Klärung.
+
+Damit sind aus meiner Sicht alle offenen fachlichen Punkte zu den Schlüsseln geklärt:
+
+- Komposit / Leben: GeVo 469 und 108 (Bezeichnung „Bestandsübertragung"), wie im
+  heutigen MIS-O-Bericht. Der in meinem Fachkonzept genannte „SV 496" war ein
+  Zahlendreher – richtig ist die 469.
+
+- KV / Gesundheit: ID 02015 (Maklervollmacht) und 06065 (Betreuung bzw. Anfrage
+  Betreuung). Betrieb Gesundheit hat bestätigt, dass damit die typischen Verbundtypen
+  für die Bestandsübertragung erfasst sind.
+
+Damit ist auch der zweite, zuletzt noch offene BÜ-Schlüssel bestätigt.
+
+Einen Punkt nehmen wir noch in den Termin mit: Holgers Hinweis, ob wir neben 469/108
+weitere GeVo (z. B. Vertragsänderungen) aufnehmen sollten, damit nicht sauber als BÜ
+klassifizierte Vorgänge nicht fehlen. Dirks aktuelle Sicht ist, dass in MIS-O für
+Komposit/Leben nur 469/108 die Bezeichnung Bestandsübertragung tragen – das schauen
+wir uns gemeinsam an.
+
+Das aktualisierte Fachkonzept mit den bestätigten Schlüsseln habe ich angehängt.
+
+Stefan, wie von dir vorgeschlagen, lass uns im Termin die Report-Variante (mit oder
+ohne SAS Viya) und die Zähllogik im Detail (Verbund vs. Verbundkette bzw. mehrere VNR
+je Verbund) final klären. Ich stelle dazu zeitnah einen Termin ein.
+
+Beste Grüße
+Eike

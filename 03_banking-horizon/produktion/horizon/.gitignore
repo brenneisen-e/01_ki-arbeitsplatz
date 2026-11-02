@@ -1,0 +1,13 @@
+# Die fertigen Filme in Sendequalitaet bleiben ausserhalb des Repos —
+# ins Repo geht die Webfassung unter public/videos/horizon/.
+filme/
+# Voice-over und Klangbett sind reproduzierbar (stimme_horizon.py).
+ton/
+lauf_*.log
+__pycache__/
+
+# Die verworfene erste Bildsprache — dokumentiert im BRIEFING, nicht im Repo.
+bilder/alt_v1/
+
+# Alte Standbilder mit Naht, nur zum Vergleich (hypothesen_fest.py legt sie ab)
+hypothesen/alt/

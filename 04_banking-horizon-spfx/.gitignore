@@ -1,0 +1,4 @@
+# SharePoint-Solution-Pakete sind Build-Artefakte (>25 MiB, sprengt das
+# Cloudflare-Pages-Dateilimit). Bei Bedarf mit `gulp bundle --ship &&
+# gulp package-solution --ship` neu bauen.
+*.sppkg

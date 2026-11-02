@@ -1,0 +1,166 @@
+[
+ {
+  "de": "Hinweis: Vorgänge ohne Befund werden dunkel verarbeitet und laufen nicht in diesen Postkorb.",
+  "art": "text"
+ },
+ {
+  "de": "Mögliche Werte von <BE-Klassifikation>:",
+  "art": "text"
+ },
+ {
+  "de": "BÜ-Wunsch nicht vorhanden",
+  "art": "wert"
+ },
+ {
+  "de": "Betreuungswunsch nicht auf MFA ausgestellt",
+  "art": "wert"
+ },
+ {
+  "de": "Unterschrift VN fehlt",
+  "art": "wert"
+ },
+ {
+  "de": "Kunde in IS011 nicht gefunden",
+  "art": "wert"
+ },
+ {
+  "de": "Kunde ist nicht Versicherungsnehmer",
+  "art": "wert"
+ },
+ {
+  "de": "Vertrag gehört nicht zum Kunden",
+  "art": "wert"
+ },
+ {
+  "de": "Agenturnummer nicht vorhanden",
+  "art": "wert"
+ },
+ {
+  "de": "Keine Zusammenarbeit",
+  "art": "wert"
+ },
+ {
+  "de": "<Klassifikation für nicht aktuelle Verträge – durch Fachbereich festzulegen>",
+  "art": "wert"
+ },
+ {
+  "de": "Nachprüfung erforderlich",
+  "art": "wert"
+ },
+ {
+  "de": "Mögliche Prüfnotizen in <Fehlerliste>:",
+  "art": "text"
+ },
+ {
+  "de": "Vermittlertyp nicht angegeben",
+  "art": "wert"
+ },
+ {
+  "de": "Unterlagen nicht vollständig",
+  "art": "wert"
+ },
+ {
+  "de": "Geburtsdatum abweichend",
+  "art": "wert"
+ },
+ {
+  "de": "Anbindung Bestandsinhaber nicht aktiv",
+  "art": "wert"
+ },
+ {
+  "de": "Vermittlertyp abweichend",
+  "art": "wert"
+ },
+ {
+  "de": "E-Mail-Adresse des Vermittlers fehlt",
+  "art": "wert"
+ },
+ {
+  "de": "Absender ist eine interne ERGO-Adresse",
+  "art": "wert"
+ },
+ {
+  "de": "Ein Postkorbeingang.",
+  "art": "text"
+ },
+ {
+  "de": "Genauer: ein Bestandsübertragungs-Vorgang im Themenpostkorb des Prüf-Bots mit den zugehörigen Vorgangsdaten im Datenpool.",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang-Lfd-Nr des Postkorbvorgangs.",
+  "art": "text"
+ },
+ {
+  "de": "Ergänzender Ordnungsbegriff für das Reporting: die geprüfte Versicherungsscheinnummer.",
+  "art": "text"
+ },
+ {
+  "de": "Nein.",
+  "art": "text"
+ },
+ {
+  "de": "Nach erfolgreicher Verarbeitung ist der Vorgang mit bestückter Notiz an den 72-Stunden-BOT übergeben.",
+  "art": "text"
+ },
+ {
+  "de": "Ein bereits bearbeiteter Postkorbvorgang (gleiche <Vorgang-Lfd-Nr>) wird nicht erneut verarbeitet.",
+  "art": "text"
+ },
+ {
+  "de": "Ja, jedoch nur vollständig von vorne.",
+  "art": "text"
+ },
+ {
+  "de": "Der Prüf-Bot speichert keine Zwischenstände. Ein abgebrochener Vorgang wird beim Wiederanlauf komplett neu durchlaufen.",
+  "art": "text"
+ },
+ {
+  "de": "Die Prüfschritte in IS011 einschließlich Scout-Service, VA230, OB726 und GH040 sind lesend. Schreibende Schritte sind die Erstellung der Telefonnotiz sowie die Weiterleitung am Prozessende; ein Wiederanlauf ist zulässig, solange diese noch nicht erfolgt sind.",
+  "art": "text"
+ },
+ {
+  "de": "Celonis eröffnet den Postkorbvorgang je Versicherungsnummer über die EMWS-Schnittstelle und befüllt den Datenpool; die E-Mail mit allen Anhängen und dem KI-Deckblatt hängt am Vorgang.",
+  "art": "text"
+ },
+ {
+  "de": "Arbeitstäglich, laufend. Die Taktung ist noch in Klärung und wird mit dem Robotics-Betrieb abgestimmt.",
+  "art": "text"
+ },
+ {
+  "de": "Ja. Peaks entstehen zu Monatsbeginn sowie bei der Übertragung ganzer Bestände (Maklerwechsel, Poolwechsel), bei denen mehrere hundert Einzelvorgänge an einem Tag eingehen können.",
+  "art": "text"
+ },
+ {
+  "de": "Ja. Bleibt die Lieferung an einem Arbeitstag vollständig aus, versendet der Roboter eine Information an den Betriebsinformationsempfänger (Gruppenpostfach), damit die vorgelagerte Befüllung des Datenpools geprüft werden kann.",
+  "art": "text"
+ },
+ {
+  "de": "Nein. Innerhalb des Prüf-Bots gibt es keine Wartezustände und keine Wiedervorlage. Die Weiterverarbeitung erfolgt asynchron durch den 72-Stunden-BOT und den nachgelagerten BÜ-BOT.",
+  "art": "text"
+ },
+ {
+  "de": "Ja. Die Vorgangsdokumente unterliegen dem Löschkonzept des Postkorbs; der Prüf-Bot legt keine eigenen Dateien ab. Vom Roboter empfangene und versendete Mails werden nach 6 Monaten gelöscht.",
+  "art": "text"
+ },
+ {
+  "de": "Nein. Es wird ausschließlich lesend auf Hostanwendungen und den Datenpool zugegriffen. Gemeinsam genutzte Dateien werden nicht verwendet.",
+  "art": "text"
+ },
+ {
+  "de": "6 Monate",
+  "art": "text"
+ },
+ {
+  "de": "<Themenpostkorb gezielt benennen – durch Fachbereich zu liefern>",
+  "art": "text"
+ },
+ {
+  "de": "Mails, die nicht dem definierten Eingangskanal entsprechen, werden unverändert an den unter Zeile 2 genannten Verteiler weitergeleitet und anschließend aus dem Bot-Postfach gelöscht. Der Bot beantwortet sie nicht.",
+  "art": "text"
+ },
+ {
+  "de": "Ich bin ein Roboter. Diese Mail wird ungelesen gelöscht.",
+  "art": "text"
+ }
+]

@@ -1,0 +1,62 @@
+An:      Stöhnken, Dennis (EYCK); von Wirtz, Markus; Gröning, <Vorname>;
+         Roth, Bastian (EYC1HH); Holthusen, Jan Steffen (EYCHH)
+Cc:      Amend, Dirk (HSB4K); Richarz, Martin; Hadse, Sahil;
+         Juraschek, Tanja (DTEA2D); Jeglorz, Marco
+Betreff: AW: Makler-BÜ meets Celonis | Datenfelder für den Datenpool – Bitte um grobe
+         Aufwandsschätzung AIDA OCR
+
+Hallo zusammen,
+
+ich komme auf meine Mail von unten zurück und wende mich damit direkt an Sie.
+
+Zwischenstand: Die Liste der Datenpoolfelder für den BÜ-Prüf-Bot ist finalisiert. Es
+handelt sich um 32 Felder nach der Konvention BUE_..., die den Vorgaben von Herrn Roth
+entsprechen (maximal 25 Zeichen, keine Sonderzeichen, Umlaute oder Leerzeichen; Feld_Format
+CH, NU, DA oder JN). Die Schlüssel sind aus der Abstimmung zum BÜ-Reporting bestätigt:
+für Komposit und Leben die GeVo 469 und 108, für Gesundheit die Dokumenttypen 02015
+(Maklervollmacht) und 06065 (Betreuung beziehungsweise Anfrage Betreuung). Wir werden die
+Felder zeitnah über das Template beantragen.
+
+Für die Umsetzung gehen wir aktuell davon aus, dass Celonis die Felder über EWMS selbst
+beschreiben kann, einschließlich der Eröffnung des Postkorbvorgangs. Das ist der von
+Robotics und dem Eingangsmanagement bevorzugte Weg.
+
+Falls sich das technisch nicht darstellen lässt, brauchen wir den Rückfallweg über das
+Eingangsmanagement. Unsere Anforderung dafür lautet:
+
+- Die Vorgänge werden wie bisher über das EM eröffnet, jedoch nicht über die
+  EM-Standard-Indizierung mit Stichworten.
+- Für die BÜ-Mails aus Celonis wird eine Sonderweiche in der Indizierung benötigt.
+  Erkennbar wären diese Vorgänge zum Beispiel am Betreffanfang "[BÜ-KI-Prozess]".
+- Der Inhalt der Mail selbst soll für die Indizierung nachrangig behandelt werden.
+  Maßgeblich ist das beigefügte KI-Deckblatt.
+- Das Deckblatt wird per AIDA OCR ausgelesen und in die Datenfelder des Datenpools
+  geschrieben, einschließlich der Eröffnung des Postkorbvorgangs.
+
+Zur Veranschaulichung habe ich das KI-Deckblatt in der aktuellen Fassung angehängt. Die
+Felder des Deckblatts entsprechen den beantragten Datenpoolfeldern; lediglich Lfd-Nr,
+Status (Ampel) und Vorgangstyp werden im Datenpool nicht benötigt.
+
+Vor diesem Hintergrund bitten wir um eine grobe Aufwandsschätzung für diesen Rückfallweg,
+jeweils getrennt für Komposit/Leben und für KV:
+
+1. Wie hoch ist der technische Aufwand, die beschriebene Sonderweiche in der Indizierung
+   einzubauen und das Deckblatt per AIDA OCR in die Datenpoolfelder zu schreiben?
+
+2. Wie lange dauert der Aufbau über das EM realistisch, gerechnet ab Beauftragung?
+
+3. Stünden im Eingangsmanagement Kapazitäten dafür bereit, falls Celonis die Felder nicht
+   selbst über EWMS beschreiben kann?
+
+Eine belastbare Detailschätzung brauchen wir an dieser Stelle noch nicht. Uns geht es
+darum, den Rückfallweg terminlich und kapazitiv einordnen zu können, bevor wir die Felder
+beantragen.
+
+Falls es sinnvoll ist, das gemeinsam durchzusprechen, setze ich gerne einen Termin in
+dieser Runde auf.
+
+Beste Grüße
+
+Eike Brenneisen
+
+Anlage: KI-Deckblatt Makler BÜ (aktuelle Fassung)

@@ -1,0 +1,2370 @@
+<!-- Bestandsuebertragung Module: Portfolio Transfer Management -->
+<div class="bestand-page">
+    <!-- Module Header with Back Button -->
+    <div class="bestand-module-header">
+        <button class="back-button" onclick="closeBestandsuebertragung()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Zurück
+        </button>
+        <div class="bestand-header-info">
+            <div class="bestand-logo-small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <div class="bestand-header-text">
+                <h1 class="bestand-page-title">Bestandsübertragung</h1>
+                <div class="bestand-subtitle">Sales Operations | Portfolio Transfer Management</div>
+            </div>
+        </div>
+    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <svg width="100" height="36" viewBox="0 0 100 36" fill="none">
+                    <rect width="100" height="36" rx="4" fill="#C8102E"/>
+                    <text x="50" y="24" text-anchor="middle" fill="white" font-size="16" font-weight="bold">ERGO</text>
+                </svg>
+            </div>
+            <h1>Bestandsübertragung</h1>
+        </div>
+        <div class="header-actions">
+            <label class="btn btn-secondary">
+                <span class="icon">↓</span> JSON Import
+                <input type="file" id="fileInput" accept=".json" hidden>
+            </label>
+            <button class="btn btn-secondary" id="downloadDemoBtn" title="1000 Demo-E-Mails herunterladen">
+                <span class="icon">↑</span> Demo JSON
+            </button>
+            <button class="btn btn-secondary" id="resetDemoBtn" title="Demo-Daten zurücksetzen">
+                <span class="icon">↻</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Haupt-Navigation -->
+    <nav class="main-nav">
+        <button class="nav-btn active" data-view="dashboard">
+            Dashboard
+        </button>
+        <button class="nav-btn" data-view="vorgaenge">
+            Vorgänge
+            <span class="nav-count" id="vorgaengeCount">0</span>
+        </button>
+        <button class="nav-btn" data-view="makler">
+            Makler
+            <span class="nav-count" id="maklerNavCount">0</span>
+        </button>
+        <button class="nav-btn" data-view="emails">
+            E-Mails
+            <span class="nav-count" id="emailsNavCount">0</span>
+        </button>
+        <button class="nav-btn" data-view="ai-upload">
+            KI Upload
+        </button>
+        <button class="nav-btn" data-view="architektur">
+            Architektur
+        </button>
+        <button class="nav-btn" data-view="vorlagen">
+            E-Mail Vorlagen
+        </button>
+        <button class="nav-btn" data-view="prozess">
+            Prozess
+        </button>
+        <button class="nav-btn" data-view="projektplan">
+            Projektplan
+        </button>
+    </nav>
+
+    <!-- ============================================ -->
+    <!-- VIEW: Dashboard -->
+    <!-- ============================================ -->
+    <section class="view active" id="view-dashboard">
+        <!-- KPI Pipeline - Workflow-Schritte als visueller Funnel -->
+        <div class="kpi-pipeline">
+            <div class="kpi-card kpi-total">
+                <div class="kpi-icon">◉</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="kpiTotal">0</div>
+                    <div class="kpi-label">Vorgänge gesamt</div>
+                </div>
+            </div>
+            <div class="kpi-connector"><span>›</span></div>
+            <div class="kpi-card kpi-ki-recognized">
+                <div class="kpi-icon">◈</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="kpiKiRecognized">0</div>
+                    <div class="kpi-label">Von KI erkannt</div>
+                    <div class="kpi-percent" id="kpiKiRecognizedPct">0%</div>
+                </div>
+                <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-ki" id="kpiBarKi"></div></div>
+            </div>
+            <div class="kpi-connector"><span>›</span></div>
+            <div class="kpi-card kpi-pv-validated">
+                <div class="kpi-icon">✓</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="kpiPvValidated">0</div>
+                    <div class="kpi-label">Von PV validiert</div>
+                    <div class="kpi-percent" id="kpiPvValidatedPct">0%</div>
+                </div>
+                <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-pv" id="kpiBarPv"></div></div>
+            </div>
+            <div class="kpi-connector"><span>›</span></div>
+            <div class="kpi-card kpi-export-ready kpi-card-clickable kpi-card-with-action" id="exportReadyBtn">
+                <div class="kpi-icon">↑</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="kpiExportReady">0</div>
+                    <div class="kpi-label">Export-Bereit</div>
+                    <div class="kpi-percent" id="kpiExportReadyPct">0%</div>
+                </div>
+                <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-export" id="kpiBarExport"></div></div>
+                <button class="kpi-hover-action" id="exportToRoboticsBtn" title="Nach Robotics exportieren">
+                    Exportieren
+                </button>
+            </div>
+            <div class="kpi-connector"><span>›</span></div>
+            <div class="kpi-card kpi-exportiert">
+                <div class="kpi-icon">↗</div>
+                <div class="kpi-content">
+                    <div class="kpi-value" id="kpiExportiert">0</div>
+                    <div class="kpi-label">Exportiert</div>
+                    <div class="kpi-percent" id="kpiExportiertPct">0%</div>
+                </div>
+                <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-done" id="kpiBarDone"></div></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid - Action Cards + Sparten -->
+        <div class="dashboard-grid-3col">
+            <div class="dashboard-card card-incomplete">
+                <h3>Vorgänge ergänzen</h3>
+                <p class="card-description">Unvollständige Vorgänge mit fehlenden Daten.</p>
+                <div class="incomplete-count" id="incompleteCount">0</div>
+                <button class="btn btn-warning btn-large" id="showIncompleteBtn">
+                    <span class="icon">◇</span> Unvollständige anzeigen
+                </button>
+            </div>
+            <div class="dashboard-card card-validation">
+                <h3>Offene Validierung</h3>
+                <p class="card-description">Von KI erkannte Vorgänge die noch validiert werden müssen.</p>
+                <div class="validation-count" id="validationPendingCount">0</div>
+                <div class="validation-buttons">
+                    <button class="btn btn-secondary btn-large" id="validateAllBtn">
+                        <span class="icon">✓</span> Offene validieren
+                    </button>
+                    <button class="btn btn-primary btn-large" id="massValidateBtn">
+                        <span class="icon">⚡</span> Massenvalidierung
+                    </button>
+                </div>
+            </div>
+            <div class="dashboard-card card-sparten">
+                <h3>Sparten-Verteilung</h3>
+                <div id="spartenList" class="sparten-bars"></div>
+            </div>
+        </div>
+
+        <!-- Vorgangssuche mit Live-Ergebnissen -->
+        <div class="dashboard-card dashboard-wide">
+            <h3>Vorgangssuche</h3>
+            <div class="search-box search-box-large">
+                <span class="search-icon">⌕</span>
+                <input type="text" id="dashboardSearch" placeholder="Kunde, VS-Nr oder Makler suchen...">
+            </div>
+            <div id="dashboardSearchResults" class="search-results-live"></div>
+        </div>
+
+        <!-- Letzte Aktivitäten & Import/Export nebeneinander -->
+        <div class="dashboard-grid-2col">
+            <div class="dashboard-card">
+                <div class="activity-header">
+                    <h3>Letzte Aktivitäten</h3>
+                    <div class="activity-controls">
+                        <select id="activityStatusFilter">
+                            <option value="">Alle Status</option>
+                            <option value="unvollstaendig">◇ Unvollständig</option>
+                            <option value="zu-validieren">◐ Zu Validieren</option>
+                            <option value="export-bereit">● Export-Bereit</option>
+                            <option value="abgeschlossen">✓ Abgeschlossen</option>
+                            <option value="abgelehnt">✕ Abgelehnt</option>
+                            <option value="wiedervorlage">⟳ Wiedervorlage</option>
+                        </select>
+                        <select id="activitySort">
+                            <option value="desc">Neueste zuerst</option>
+                            <option value="asc">Älteste zuerst</option>
+                        </select>
+                    </div>
+                </div>
+                <table class="data-table compact">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Kunde</th>
+                            <th>Makler</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentActivityBody"></tbody>
+                </table>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Import/Export Historie</h3>
+                <table class="data-table compact">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Typ</th>
+                            <th>Anzahl</th>
+                            <th>Bearbeiter</th>
+                        </tr>
+                    </thead>
+                    <tbody id="importExportHistory"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: Vorgänge (Status-gruppierte Liste) -->
+    <!-- ============================================ -->
+    <section class="view" id="view-vorgaenge">
+        <div class="toolbar">
+            <div class="search-box">
+                <span class="search-icon">⌕</span>
+                <input type="text" id="vorgaengeSearch" placeholder="Kunde, VS-Nr oder Makler suchen...">
+            </div>
+            <select id="filterSparte">
+                <option value="">Alle Sparten</option>
+                <option value="KFZ">KFZ</option>
+                <option value="Leben">Leben</option>
+                <option value="Kranken">Kranken</option>
+                <option value="Haftpflicht">Haftpflicht</option>
+                <option value="Hausrat">Hausrat</option>
+                <option value="Rechtsschutz">Rechtsschutz</option>
+                <option value="Unfall">Unfall</option>
+                <option value="BU">BU</option>
+                <option value="Wohngebäude">Wohngebäude</option>
+                <option value="Rente">Rente</option>
+            </select>
+            <select id="filterExport">
+                <option value="">Alle</option>
+                <option value="not-exported">Nicht exportiert</option>
+                <option value="exported">Bereits exportiert</option>
+            </select>
+            <button class="btn btn-primary" id="newCaseBtn">+ Neuer Vorgang</button>
+        </div>
+
+        <!-- Status-gruppierte Liste -->
+        <div class="cases-grouped" id="casesGroupedContainer">
+            <!-- Dynamisch gefüllt -->
+        </div>
+        <div class="empty-state" id="vorgaengeEmpty" style="display: none;">
+            <p>Keine Vorgänge gefunden</p>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: Makler -->
+    <!-- ============================================ -->
+    <section class="view" id="view-makler">
+        <div class="toolbar">
+            <div class="search-box">
+                <span class="search-icon">⌕</span>
+                <input type="text" id="maklerSearch" placeholder="Makler suchen...">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table" id="maklerTable">
+                <thead>
+                    <tr>
+                        <th class="col-makler-name sortable" data-sort="name">Maklerbüro</th>
+                        <th class="col-makler-email">E-Mail</th>
+                        <th class="col-number sortable" data-sort="total">Vorgänge</th>
+                        <th class="col-number sortable" data-sort="bestaetigt">Bestätigt</th>
+                        <th class="col-number sortable" data-sort="offen">Offen</th>
+                        <th class="col-number sortable" data-sort="abgelehnt">Abgelehnt</th>
+                    </tr>
+                </thead>
+                <tbody id="maklerTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="maklerEmpty" style="display: none;">
+                <p>Keine Makler gefunden</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: E-Mails -->
+    <!-- ============================================ -->
+    <section class="view" id="view-emails">
+        <div class="toolbar">
+            <div class="search-box">
+                <span class="search-icon">⌕</span>
+                <input type="text" id="emailSearch" placeholder="In E-Mails suchen...">
+            </div>
+            <select id="emailSort">
+                <option value="desc">Neueste zuerst</option>
+                <option value="asc">Älteste zuerst</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table" id="emailsTable">
+                <thead>
+                    <tr>
+                        <th class="col-direction"></th>
+                        <th class="col-datum">Datum</th>
+                        <th class="col-sender">Von / An</th>
+                        <th class="col-subject">Betreff</th>
+                        <th class="col-kunde">Kunde</th>
+                        <th class="col-status">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="emailsTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emailsEmpty" style="display: none;">
+                <p>Keine E-Mails gefunden</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: Architektur -->
+    <!-- ============================================ -->
+    <section class="view" id="view-architektur">
+        <div class="architecture-container">
+            <h2 class="architecture-title">Lösungsarchitektur Bestandsübertragung</h2>
+            <p class="architecture-intro">Übersicht der verschiedenen Implementierungsoptionen für die automatisierte Bestandsübertragung.</p>
+
+            <!-- Option 1: Ohne KI -->
+            <div class="architecture-card">
+                <div class="architecture-header">
+                    <span class="architecture-number">1</span>
+                    <h3>Ohne KI (Stichwortbasiert)</h3>
+                    <span class="architecture-badge badge-simple">Einfachste Lösung</span>
+                </div>
+                <p class="architecture-description">
+                    Rein regelbasierte Extraktion mittels Stichwortverzeichnis. Keine KI-Komponente erforderlich.
+                </p>
+                <div class="architecture-flow">
+                    <div class="flow-step">
+                        <div class="flow-icon">✉</div>
+                        <div class="flow-label">Outlook</div>
+                        <div class="flow-detail">E-Mail Export Tool</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon">⌕</div>
+                        <div class="flow-label">Web-Tool</div>
+                        <div class="flow-detail">Stichwortverzeichnis</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon">✓</div>
+                        <div class="flow-label">PV Validierung</div>
+                        <div class="flow-detail">Manuelle Prüfung</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon">⚙</div>
+                        <div class="flow-label">Robotics</div>
+                        <div class="flow-detail">JSON Export</div>
+                    </div>
+                </div>
+                <div class="architecture-pros-cons">
+                    <div class="pros">
+                        <h4>✓ Vorteile</h4>
+                        <ul>
+                            <li>Keine zusätzliche Infrastruktur</li>
+                            <li>Sofort einsetzbar</li>
+                            <li>Geringe Kosten</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>✕ Nachteile</h4>
+                        <ul>
+                            <li>Höherer manueller Aufwand</li>
+                            <li>Begrenzte Erkennungsqualität</li>
+                            <li>Kein Lernen aus Fehlern</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Option 2: Mit KI -->
+            <div class="architecture-card architecture-card-ai">
+                <div class="architecture-header">
+                    <span class="architecture-number">2</span>
+                    <h3>Mit KI (Agent-basiert)</h3>
+                    <span class="architecture-badge badge-advanced">Empfohlen</span>
+                </div>
+                <p class="architecture-description">
+                    KI-Agent extrahiert strukturierte Daten aus E-Mails. Höhere Erkennungsrate und kontinuierliche Verbesserung.
+                </p>
+
+                <!-- Sub-Option 2a: ERGO Lösung -->
+                <div class="architecture-suboption">
+                    <div class="suboption-header">
+                        <span class="suboption-letter">A</span>
+                        <h4>ERGO-Lösung (Interne Agent-Plattform)</h4>
+                    </div>
+                    <p class="suboption-description">
+                        Agent wird auf ERGO-eigener Plattform gehostet. Volle Kontrolle über Daten und Infrastruktur.
+                    </p>
+                    <div class="architecture-flow">
+                        <div class="flow-step">
+                            <div class="flow-icon">✉</div>
+                            <div class="flow-label">Outlook</div>
+                            <div class="flow-detail">E-Mail Export</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step flow-step-highlight">
+                            <div class="flow-icon">◈</div>
+                            <div class="flow-label">ERGO Agent</div>
+                            <div class="flow-detail">Interne Plattform</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-icon">⌕</div>
+                            <div class="flow-label">Web-Tool</div>
+                            <div class="flow-detail">+ PV Validierung</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-icon">⚙</div>
+                            <div class="flow-label">Robotics</div>
+                            <div class="flow-detail">JSON Export</div>
+                        </div>
+                    </div>
+                    <div class="suboption-requirement">
+                        <strong>Voraussetzung:</strong> ERGO Agent-Plattform für Hosting des KI-Agenten
+                    </div>
+                </div>
+
+                <!-- Sub-Option 2b: Deloitte Lösung -->
+                <div class="architecture-suboption">
+                    <div class="suboption-header">
+                        <span class="suboption-letter">B</span>
+                        <h4>Deloitte-Lösung (Externe Agent-API)</h4>
+                    </div>
+                    <p class="suboption-description">
+                        Deloitte stellt den Agenten als Service bereit. Zwei Varianten für den Datenaustausch:
+                    </p>
+
+                    <!-- Variante B1: Direkte API -->
+                    <div class="architecture-variant">
+                        <h5><span class="variant-badge">B1</span> Direkte API-Verbindung</h5>
+                        <div class="architecture-flow architecture-flow-small">
+                            <div class="flow-step">
+                                <div class="flow-icon">✉</div>
+                                <div class="flow-label">E-Mails</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step flow-step-deloitte">
+                                <div class="flow-icon">◈</div>
+                                <div class="flow-label">Deloitte API</div>
+                                <div class="flow-detail">Echtzeit</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">
+                                <div class="flow-icon">⌕</div>
+                                <div class="flow-label">Web-Tool</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">
+                                <div class="flow-icon">⚙</div>
+                                <div class="flow-label">Robotics</div>
+                            </div>
+                        </div>
+                        <p class="variant-note">Direkte Verbindung zum Agenten - Antwort in Echtzeit. Aufwändigere Integration.</p>
+                    </div>
+
+                    <!-- Variante B2: Batch-Austausch -->
+                    <div class="architecture-variant">
+                        <h5><span class="variant-badge">B2</span> Sicherer Batch-Datenaustausch</h5>
+                        <div class="architecture-flow architecture-flow-small">
+                            <div class="flow-step">
+                                <div class="flow-icon">✉</div>
+                                <div class="flow-label">E-Mails</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step flow-step-transfer">
+                                <div class="flow-icon">↔</div>
+                                <div class="flow-label">Sicherer Transfer</div>
+                                <div class="flow-detail">z.B. 1x/Woche</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step flow-step-deloitte">
+                                <div class="flow-icon">◈</div>
+                                <div class="flow-label">Deloitte Agent</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step flow-step-transfer">
+                                <div class="flow-icon">↔</div>
+                                <div class="flow-label">Rücktransfer</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">
+                                <div class="flow-icon">⌕</div>
+                                <div class="flow-label">Web-Tool</div>
+                            </div>
+                        </div>
+                        <p class="variant-note">Periodischer Datenaustausch über sichere Kanäle. Einfachere Integration, aber zeitversetzt.</p>
+                    </div>
+                </div>
+
+                <div class="architecture-pros-cons">
+                    <div class="pros">
+                        <h4>✓ Vorteile KI-Lösung</h4>
+                        <ul>
+                            <li>Höhere Erkennungsqualität (>95%)</li>
+                            <li>Weniger manuelle Nacharbeit</li>
+                            <li>Kontinuierliches Lernen</li>
+                            <li>Skalierbar</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>✕ Nachteile</h4>
+                        <ul>
+                            <li>Zusätzliche Infrastruktur/Kosten</li>
+                            <li>Datenschutz-Anforderungen</li>
+                            <li>Längere Implementierungszeit</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empfehlung -->
+            <div class="architecture-recommendation">
+                <h3>💡 Empfehlung</h3>
+                <p>
+                    <strong>Kurzfristig:</strong> Start mit Lösung 1 (Stichwortbasiert) für schnellen Go-Live.<br>
+                    <strong>Mittelfristig:</strong> Migration zu Lösung 2A (ERGO Agent-Plattform) für optimale Kontrolle und Datenhoheit.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: E-Mail Vorlagen -->
+    <!-- ============================================ -->
+    <section class="view" id="view-vorlagen">
+        <div class="vorlagen-container">
+            <h2>Testdateien &amp; E-Mail Vorlagen</h2>
+            <p class="text-muted" style="margin-bottom: 0.5rem;">Realistische Demo-Dateien zum Testen des KI-Upload-Workflows. Alle Dateien werden im Browser erzeugt und k&ouml;nnen direkt im KI Upload verwendet werden.</p>
+            <div style="margin-bottom: 1.5rem;">
+                <button class="btn btn-primary" id="downloadAllDemoFiles">Alle Dateien herunterladen (20 Dateien)</button>
+            </div>
+
+            <!-- Einfache E-Mails -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Einfache E-Mails (nur Text)</h3>
+                <p class="demo-section-desc">Eingehende E-Mails ohne Anh&auml;nge &ndash; Anfragen, Erinnerungen und Nachreichungen von Maklern an ERGO.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-eml">&#9993;</div>
+                        <div class="demo-file-info">
+                            <h4>Anfrage KFZ &ndash; M&uuml;ller</h4>
+                            <p>Makler beantragt Bestands&uuml;bertragung KFZ bei ERGO</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-text">Anfrage</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="anfrage_text_mueller">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-eml">&#9993;</div>
+                        <div class="demo-file-info">
+                            <h4>Erinnerung Leben &ndash; Weber</h4>
+                            <p>Makler fragt nach Bearbeitungsstand Lebensversicherung</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-text">Erinnerung</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="erinnerung_leben_weber">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-eml">&#9993;</div>
+                        <div class="demo-file-info">
+                            <h4>Nachreichung Vollmacht &ndash; Schneider</h4>
+                            <p>Makler k&uuml;ndigt Nachreichung der Maklervollmacht per Post an</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-text">Nachreichung</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="nachreichung_schneider">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-Mails mit Word-Anhang -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">E-Mails mit Word-Anhang</h3>
+                <p class="demo-section-desc">E-Mails mit echten DOCX-Dokumenten: Maklervollmachten und Antragsschreiben.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Anfrage + Maklervollmacht &ndash; Seidel</h4>
+                            <p>Krankenversicherung-Antrag mit Maklervollmacht.docx im Anhang</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollmacht</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="anfrage_vollmacht_seidel">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>&bdquo;Siehe Anlage&ldquo; + Antrag &ndash; Franke</h4>
+                            <p>Kurze E-Mail: &bdquo;siehe beigef&uuml;gtes Schreiben&ldquo; &ndash; Antrag als Word-Datei</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-antrag">Antrag</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="siehe_anlage_franke">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Nachreichung Vollmacht &ndash; Schneider</h4>
+                            <p>Antwort auf R&uuml;ckfrage mit nachgereichter Maklervollmacht</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollmacht</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="antwort_vollmacht_schneider">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett Anfrage &ndash; Kraus (Rechtsschutz)</h4>
+                            <p>Vollst&auml;ndige Anfrage mit MV: VS-Nr, Sparte, Datum</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollst&auml;ndig</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_kraus">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett Anfrage &ndash; Winter (Leben)</h4>
+                            <p>Vollst&auml;ndige Anfrage Lebensversicherung mit MV</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollst&auml;ndig</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_winter">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett Anfrage &ndash; Engel (Unfall)</h4>
+                            <p>Vollst&auml;ndige Anfrage Unfallversicherung mit MV</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollst&auml;ndig</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_engel">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-Mails mit Excel-Anhang -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">E-Mails mit Excel-Anhang</h3>
+                <p class="demo-section-desc">E-Mails mit echten XLSX-Tabellen: Versicherungslisten und Kundendaten.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-excel">X</div>
+                        <div class="demo-file-info">
+                            <h4>Vertragsliste 6 Vertr&auml;ge &ndash; Braun</h4>
+                            <p>Sammelantrag mit Excel-Liste: 6 Vertr&auml;ge von 3 Kunden bei AXA</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                                <span class="demo-tag tag-liste">6 Vertr&auml;ge</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="versicherungsliste_braun">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-excel">X</div>
+                        <div class="demo-file-info">
+                            <h4>Kundenliste 5 Kunden &ndash; Schmidt</h4>
+                            <p>Kundenliste mit Status&uuml;bersicht f&uuml;r laufende &Uuml;bertragungen</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                                <span class="demo-tag tag-liste">5 Kunden</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="kundenliste_schmidt">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Komplexe E-Mails -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Komplexe E-Mails (mehrere Anh&auml;nge)</h3>
+                <p class="demo-section-desc">E-Mails mit Maklervollmacht + Excel-Liste + Antrag kombiniert.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card demo-file-card-highlight">
+                        <div class="demo-file-icon demo-icon-complex">&#9830;</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett-Paket &ndash; Huber (3 Anh&auml;nge)</h4>
+                            <p>Vollst&auml;ndige Unterlagen: Vollmacht (DOCX) + Antrag (DOCX) + Vertragsliste (XLSX)</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">2&times; DOCX</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_huber">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card demo-file-card-highlight">
+                        <div class="demo-file-icon demo-icon-complex">&#9830;</div>
+                        <div class="demo-file-info">
+                            <h4>Excel + Vollmacht &ndash; Keller (NICHT unterschrieben)</h4>
+                            <p>Haftpflicht + Unfall: Vollmacht ohne Unterschrift (DOCX) + Vertragsliste (XLSX)</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                                <span class="demo-tag tag-vollmacht">Ohne Unterschrift</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="excel_und_vollmacht_keller">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card demo-file-card-highlight">
+                        <div class="demo-file-icon demo-icon-complex">&#9830;</div>
+                        <div class="demo-file-info">
+                            <h4>Sammel&uuml;bertragung &ndash; Otto + Sommer (2 VN)</h4>
+                            <p>2 verschiedene Versicherungsnehmer in einer E-Mail. Beide MVs vorhanden + unterschrieben.</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">2&times; DOCX</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                                <span class="demo-tag tag-vollmacht">Vollst&auml;ndig</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_sammel_otto_sommer">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edge-Cases -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Edge-Cases (fehlende Daten / Sonderf&auml;lle)</h3>
+                <p class="demo-section-desc">E-Mails mit typischen Problemf&auml;llen: fehlende VS-Nr, mehrere VS-Nummern, fehlendes Datum.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>MV vorhanden, VS-Nr fehlt &ndash; Bergmann</h4>
+                            <p>Unterschriebene Maklervollmacht als Anhang, aber keine Versicherungsnummer im Text</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">VS-Nr fehlt</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="vollmacht_ohne_vsnr_bergmann">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Teilweise vollst&auml;ndig &ndash; Fischer</h4>
+                            <p>Haftpflicht mit VS-Nr (vollst&auml;ndig) + Unfall ohne VS-Nr (nicht vollst&auml;ndig)</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">VS-Nr fehlt</span>
+                                <span class="demo-tag tag-text">Teilweise</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="teilweise_fischer">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Kein G&uuml;ltigkeitsdatum &ndash; Lange</h4>
+                            <p>Wohngeb&auml;ude-Vertrag: MV vorhanden, aber kein &Uuml;bertragungsdatum angegeben</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Datum fehlt</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="ohne_datum_lange">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standalone Vorlagen -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Dokument-Vorlagen (Standalone)</h3>
+                <p class="demo-section-desc">Einzelne Dokumente zum direkten Download &ndash; auch als Vorlagen f&uuml;r eigene Antr&auml;ge nutzbar.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Maklervollmacht (Blanko-Vorlage)</h4>
+                            <p>Word-Vorlage mit Platzhaltern &ndash; zum Ausf&uuml;llen und Unterschreiben</p>
+                            <div class="demo-file-tags"><span class="demo-tag tag-docx">DOCX</span></div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="vorlage_maklervollmacht">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-excel">X</div>
+                        <div class="demo-file-info">
+                            <h4>Versicherungsliste (Blanko-Vorlage)</h4>
+                            <p>Excel-Vorlage mit Beispielzeile &ndash; VS-Nr, Sparte, Beitrag etc.</p>
+                            <div class="demo-file-tags"><span class="demo-tag tag-xlsx">XLSX</span></div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="vorlage_versicherungsliste">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Antrag Bestands&uuml;bertragung (Vorlage)</h4>
+                            <p>Formeller Antrag als Word-Dokument mit Platzhaltern</p>
+                            <div class="demo-file-tags"><span class="demo-tag tag-docx">DOCX</span></div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="vorlage_antrag">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-Mail Textvorlagen (Copy-Paste) -->
+            <details class="demo-section demo-section-collapsible">
+                <summary class="demo-section-toggle">
+                    <h3 class="demo-section-title">E-Mail Textvorlagen (Copy &amp; Paste)</h3>
+                    <p class="demo-section-desc">Fertige Textbausteine zum Kopieren in Outlook oder andere E-Mail-Programme.</p>
+                </summary>
+                <div class="vorlagen-grid">
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>1. Bestandsübertragung anfragen</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl1">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl1">Sehr geehrte Damen und Herren,
+
+hiermit beantragen wir die Bestandsübertragung für unseren Kunden Hans Müller.
+
+Versicherungsnummer: ERG-7823456
+Sparte: KFZ
+Gewünschter Übertragungstermin: 01.01.2026
+
+Die unterschriebene Maklervollmacht liegt diesem Schreiben bei.
+
+Mit freundlichen Grüßen
+Thomas Meier
+Versicherungsmakler</div>
+                    </div>
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>2. Rückfrage fehlende VS-Nr</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl2">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl2">Sehr geehrte Damen und Herren,
+
+bezugnehmend auf unseren Antrag zur Bestandsübertragung für Ralf Seidel bitten wir um Mitteilung der korrekten Versicherungsnummer.
+
+In den uns vorliegenden Unterlagen konnte die VS-Nr nicht eindeutig identifiziert werden.
+
+Vielen Dank für Ihre Rückmeldung.
+
+Mit freundlichen Grüßen
+Martina Koch
+Versicherungsmaklerin</div>
+                    </div>
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>3. Nachreichung Maklervollmacht</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl3">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl3">Sehr geehrte Damen und Herren,
+
+in der Anlage übersende ich Ihnen die nachgeforderte Maklervollmacht für die Kundin Birgit Franke.
+
+Versicherungsnummer: ERG-4432109
+
+Ich bitte um Fortsetzung der Bestandsübertragung.
+
+Mit freundlichen Grüßen
+Stefan Zimmermann
+Versicherungsmakler</div>
+                    </div>
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>4. Statusanfrage</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl4">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl4">Sehr geehrte Damen und Herren,
+
+ich erlaube mir, nach dem Stand unserer Bestandsübertragung zu fragen.
+
+Kunde: Christine Weber
+Versicherungsnummer: ERG-4512378
+Antragsdatum: 15.10.2024
+
+Über eine zeitnahe Rückmeldung würde ich mich freuen.
+
+Mit freundlichen Grüßen
+Sandra Schmidt
+Versicherungsmaklerin</div>
+                    </div>
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>5. Bestätigung weiterleiten</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl5">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl5">Sehr geehrter Herr Meier,
+
+wir freuen uns, Ihnen mitteilen zu können, dass die Bestandsübertragung für Ihren Kunden Hans Müller bestätigt wurde.
+
+Versicherungsnummer: ERG-7823456
+Wirksam ab: 01.01.2026
+
+Sie sind nun als betreuender Makler für diesen Vertrag hinterlegt.
+
+Bei Fragen stehen wir Ihnen gerne zur Verfügung.
+
+Mit freundlichen Grüßen
+ERGO Maklerservice</div>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: KI Upload -->
+    <!-- ============================================ -->
+    <section class="view" id="view-ai-upload">
+        <div class="ai-landing-container">
+            <!-- Header -->
+            <div class="ai-header">
+                <div class="ai-header-content">
+                    <div class="ai-title-section">
+                        <div class="ai-icon">◈</div>
+                        <div>
+                            <h2>KI-gestützte Analyse</h2>
+                            <p class="ai-subtitle">E-Mails und Dokumente mit KI verarbeiten</p>
+                        </div>
+                    </div>
+                    <div class="ai-header-actions">
+                        <button class="btn btn-secondary" id="aiApiKeyBtn">
+                            <span class="icon">⚙</span> API Key
+                        </button>
+                        <div class="api-status" id="aiApiKeyStatus">
+                            <span class="status-dot status-inactive"></span> Kein API Key
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="ai-main-grid">
+                <!-- Upload Section -->
+                <div class="ai-upload-section">
+                    <div class="ai-drop-zone" id="aiDropZone">
+                        <div class="drop-zone-content">
+                            <div class="drop-icon">↑</div>
+                            <h3>Dateien hochladen</h3>
+                            <p>E-Mail-Dateien (EML/MSG), Excel oder Word hier ablegen</p>
+                            <p class="drop-hint">oder klicken zum Auswählen</p>
+                        </div>
+                        <input type="file" id="aiFileInput" multiple accept=".msg,.eml,.xlsx,.xls,.docx,.doc,.pdf" hidden>
+                    </div>
+
+                    <!-- File List -->
+                    <div class="ai-file-list" id="aiFileList">
+                        <p class="empty-message">Keine Dateien hochgeladen</p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="ai-actions">
+                        <button class="btn btn-primary btn-large" id="aiAnalyzeBtn" disabled>
+                            <span class="icon">◈</span> KI Analyse starten
+                        </button>
+                        <button class="btn btn-secondary" id="aiClearBtn" disabled>
+                            <span class="icon">×</span> Zurücksetzen
+                        </button>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="ai-progress" id="aiProgress" style="display: none;">
+                        <div class="progress-text" id="aiProgressText">Verarbeite...</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="aiProgressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="ai-results-section">
+                    <div class="ai-results" id="aiResults">
+                        <!-- Dynamisch gefüllt -->
+                    </div>
+
+                    <!-- Export Actions -->
+                    <div class="ai-export-actions">
+                        <button class="btn btn-success btn-large" id="aiExportBtn" disabled>
+                            <span class="icon">▦</span> Excel Export
+                        </button>
+                        <button class="btn btn-primary" id="aiSaveToStorageBtn" disabled>
+                            <span class="icon">↓</span> In Vorgänge übernehmen
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="ai-info-grid">
+                <div class="ai-info-card">
+                    <div class="info-icon">✉</div>
+                    <h4>EML / MSG Dateien</h4>
+                    <p>E-Mails direkt verarbeiten</p>
+                </div>
+                <div class="ai-info-card">
+                    <div class="info-icon">▦</div>
+                    <h4>Excel Listen</h4>
+                    <p>Kundenlisten aus Tabellen</p>
+                </div>
+                <div class="ai-info-card">
+                    <div class="info-icon">▤</div>
+                    <h4>Word Dokumente</h4>
+                    <p>Maklervollmachten prüfen</p>
+                </div>
+                <div class="ai-info-card">
+                    <div class="info-icon">◈</div>
+                    <h4>KI Erkennung</h4>
+                    <p>Automatische Datenextraktion</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: Prozess -->
+    <!-- ============================================ -->
+    <section class="view" id="view-prozess">
+        <div class="prozess-container">
+            <h2>Prozess Bestands&uuml;bertragung</h2>
+            <p class="text-muted" style="margin-bottom: 2rem;">Darstellung des aktuellen Ablaufs und Optimierungspotenziale durch KI-Automatisierung.</p>
+
+            <!-- ===== IST-Prozess: Horizontaler Flowchart ===== -->
+            <div class="prozess-section">
+                <div class="prozess-section-header">
+                    <span class="prozess-label prozess-label-ist">IST</span>
+                    <h3>Aktueller Prozess</h3>
+                </div>
+
+                <div class="flow-h-scroll">
+                    <div class="flow-h-track">
+
+                        <!-- Step 1 -->
+                        <div class="flow-node node-input">
+                            <div class="flow-node-head">
+                                <span class="flow-node-num">1</span>
+                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></span>
+                            </div>
+                            <h4>Makler sendet E-Mail</h4>
+                            <p>E-Mail an ERGO Gruppenpostfach</p>
+                            <div class="flow-node-tags">
+                                <span>Betreff</span>
+                                <span>Body</span>
+                                <span>Anh&auml;nge</span>
+                            </div>
+                        </div>
+
+                        <div class="flow-arrow"><span>&rarr;</span></div>
+
+                        <!-- Step 2 -->
+                        <div class="flow-node node-system">
+                            <div class="flow-node-head">
+                                <span class="flow-node-num">2</span>
+                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></span>
+                            </div>
+                            <h4>Weiterleitung Postkorbsystem</h4>
+                            <p>Automatische Weiterleitung an internes System</p>
+                            <div class="flow-node-meta">Automatisch</div>
+                        </div>
+
+                        <div class="flow-arrow"><span>&rarr;</span></div>
+
+                        <!-- Step 3 -->
+                        <div class="flow-node node-system">
+                            <div class="flow-node-head">
+                                <span class="flow-node-num">3</span>
+                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                            </div>
+                            <h4>Postkorbvorgang erstellt</h4>
+                            <p>Vorgang wird erzeugt und steht zur Bearbeitung bereit</p>
+                            <div class="flow-node-meta">Automatisch</div>
+                        </div>
+
+                        <div class="flow-arrow"><span>&rarr;</span></div>
+
+                        <!-- Step 4 -->
+                        <div class="flow-node node-manual">
+                            <div class="flow-node-head">
+                                <span class="flow-node-num">4</span>
+                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                            </div>
+                            <h4>Manuelle Pr&uuml;fung</h4>
+                            <p>Sachbearbeiter pr&uuml;ft Vollst&auml;ndigkeit, Maklervollmacht, VS-Nr</p>
+                            <div class="flow-node-pain"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Zeitaufwendig</div>
+                        </div>
+
+                        <div class="flow-arrow"><span>&rarr;</span></div>
+
+                        <!-- Step 5: Decision -->
+                        <div class="flow-node node-decision">
+                            <div class="flow-node-head">
+                                <span class="flow-node-num">5</span>
+                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
+                            </div>
+                            <h4>Einfach-Vorgang?</h4>
+                            <p>Einzelne Mail zu einer einzigen Versicherung?</p>
+                            <div class="flow-node-branches">
+                                <span class="flow-branch-yes">Ja &rarr; weiter</span>
+                                <span class="flow-branch-no">Nein &rarr; manuell</span>
+                            </div>
+                            <div class="flow-node-pain"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Komplex = kein GPT</div>
+                        </div>
+
+                        <div class="flow-arrow"><span>&rarr;</span></div>
+
+                        <!-- Step 6 -->
+                        <div class="flow-node node-ai">
+                            <div class="flow-node-head">
+                                <span class="flow-node-num">6</span>
+                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+                            </div>
+                            <h4>ERGO GPT</h4>
+                            <p>Datenextraktion per Prompt (nur E-Mail-Text, keine Anh&auml;nge)</p>
+                            <div class="flow-node-tags">
+                                <span>Input: Text</span>
+                                <span>Output: Daten</span>
+                            </div>
+                        </div>
+
+                        <div class="flow-arrow"><span>&rarr;</span></div>
+
+                        <!-- Step 7 -->
+                        <div class="flow-node node-output">
+                            <div class="flow-node-head">
+                                <span class="flow-node-num">7</span>
+                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg></span>
+                            </div>
+                            <h4>Excel f&uuml;r Robotics</h4>
+                            <p>Strukturierte Excel als Input f&uuml;r RPA-Prozess</p>
+                            <div class="flow-node-meta">Endstation</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SOLL: Ansatzpunkt zwischen Schritt 1 und 2 ===== -->
+            <div class="prozess-section">
+                <div class="prozess-section-header">
+                    <span class="prozess-label prozess-label-soll">SOLL</span>
+                    <h3>Ansatzpunkt: zwischen Schritt 1 und 2</h3>
+                </div>
+
+                <div class="flow-soll-card">
+                    <div class="flow-soll-card-head">
+                        <div class="improvement-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                        <div>
+                            <h4>KI-Agentensystem zur vollst&auml;ndigen Vorpr&uuml;fung</h4>
+                            <p>Direkt nach Eingang der E-Mail im Gruppenpostfach wird diese durch ein KI-Agentensystem komplett gepr&uuml;ft &ndash; noch bevor sie ins Postkorbsystem gelangt.</p>
+                        </div>
+                    </div>
+
+                    <!-- SOLL mini-flowchart: horizontal -->
+                    <div class="flow-h-scroll flow-h-soll">
+                        <div class="flow-h-track">
+                            <div class="flow-node-mini node-mini-input">
+                                <span class="flow-node-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></span>
+                                <strong>E-Mail Eingang</strong>
+                            </div>
+                            <div class="flow-arrow-mini"><span>&rarr;</span></div>
+                            <div class="flow-node-mini node-mini-ai">
+                                <span class="flow-node-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+                                <strong>KI-Agent pr&uuml;ft E-Mail + Anh&auml;nge</strong>
+                            </div>
+                            <div class="flow-arrow-mini"><span>&rarr;</span></div>
+                            <div class="flow-node-mini node-mini-process">
+                                <span class="flow-node-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></span>
+                                <strong>Klassifikation &amp; Extraktion</strong>
+                            </div>
+                            <div class="flow-arrow-mini"><span>&rarr;</span></div>
+                            <div class="flow-node-mini node-mini-output">
+                                <span class="flow-node-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg></span>
+                                <strong>Direkt Robotics-ready</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-soll-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+                            <div>
+                                <strong>Vollst&auml;ndige Analyse inkl. Anh&auml;nge</strong>
+                                <p>KI liest E-Mail-Text, Word-Dokumente, Excel-Listen und Maklervollmachten.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+                            <div>
+                                <strong>Komplex-Vorg&auml;nge automatisierbar</strong>
+                                <p>Excel-Listen werden in Einzelvorg&auml;nge aufgesplittet. &bdquo;Siehe Anlage&ldquo;-Mails durch Anhang-Analyse aufgel&ouml;st.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+                            <div>
+                                <strong>Manuelle Pr&uuml;fung nur f&uuml;r Sonderf&auml;lle</strong>
+                                <p>Standard-Vorg&auml;nge automatisch klassifiziert. Sachbearbeiter pr&uuml;fen nur Ausnahmen.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+                            <div>
+                                <strong>Maklervollmacht-Erkennung</strong>
+                                <p>Automatische Pr&uuml;fung ob g&uuml;ltige, unterschriebene Maklervollmacht beiliegt.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SOLL: Ansatzpunkt zwischen Schritt 3 und 4 ===== -->
+            <div class="prozess-section">
+                <div class="prozess-section-header">
+                    <span class="prozess-label prozess-label-soll">SOLL</span>
+                    <h3>Ansatzpunkt: zwischen Schritt 3 und 4</h3>
+                </div>
+
+                <div class="flow-soll-card">
+                    <div class="flow-soll-card-head">
+                        <div class="improvement-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+                        <div>
+                            <h4>Export der Postkorbvorg&auml;nge f&uuml;r KI-Nutzung</h4>
+                            <p>Bevor die manuelle Pr&uuml;fung beginnt, m&uuml;ssen die Postkorbvorg&auml;nge in einem maschinell lesbaren Format exportiert werden &ndash; als Grundlage f&uuml;r die automatisierte KI-Analyse.</p>
+                        </div>
+                    </div>
+
+                    <div class="flow-soll-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></span>
+                            <div>
+                                <strong>EML/MSG-Export</strong>
+                                <p>Einzelne Postkorbvorg&auml;nge als .eml- oder .msg-Dateien exportieren &ndash; inkl. aller Anh&auml;nge (Word, Excel, PDF).</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+                            <div>
+                                <strong>API-Schnittstelle</strong>
+                                <p>Pr&uuml;fen, ob das Postkorbsystem eine API bereitstellt, &uuml;ber die Vorg&auml;nge programmatisch abgerufen werden k&ouml;nnen.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+                            <div>
+                                <strong>Batch-/Ordner-Export</strong>
+                                <p>Sammlung der E-Mails in einem &uuml;berwachten Ordner oder Batch-Download f&uuml;r automatisierte Weiterverarbeitung.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-soll-note">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <span>Exportformat und -m&ouml;glichkeiten m&uuml;ssen mit der IT gekl&auml;rt werden, bevor die KI-Pipeline aufgesetzt wird.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Vergleich IST vs SOLL ===== -->
+            <div class="prozess-section">
+                <div class="prozess-section-header">
+                    <span class="prozess-label prozess-label-soll">VERGLEICH</span>
+                    <h3>IST vs. SOLL</h3>
+                </div>
+                <div class="prozess-comparison">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Kriterium</th>
+                                <th>IST (heute)</th>
+                                <th>SOLL (KI-Agent)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bearbeitete Formate</td>
+                                <td class="ist-cell">Nur E-Mail-Text (Einfach-Vorg&auml;nge)</td>
+                                <td class="soll-cell">E-Mail + Word + Excel + PDF</td>
+                            </tr>
+                            <tr>
+                                <td>Komplexe Vorg&auml;nge</td>
+                                <td class="ist-cell">Manuell bearbeitet</td>
+                                <td class="soll-cell">Automatisch aufgesplittet</td>
+                            </tr>
+                            <tr>
+                                <td>Maklervollmacht</td>
+                                <td class="ist-cell">Manuell gepr&uuml;ft</td>
+                                <td class="soll-cell">KI erkennt und pr&uuml;ft</td>
+                            </tr>
+                            <tr>
+                                <td>Durchlaufzeit</td>
+                                <td class="ist-cell">Stunden bis Tage</td>
+                                <td class="soll-cell">Sekunden bis Minuten</td>
+                            </tr>
+                            <tr>
+                                <td>Manuelle Schritte</td>
+                                <td class="ist-cell">3&ndash;4 pro Vorgang</td>
+                                <td class="soll-cell">Nur Ausnahmen / Validierung</td>
+                            </tr>
+                            <tr>
+                                <td>&bdquo;Siehe Anlage&ldquo;-Mails</td>
+                                <td class="ist-cell">Manuelles &Ouml;ffnen der Anh&auml;nge</td>
+                                <td class="soll-cell">Anh&auml;nge werden automatisch gelesen</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: Projektplan (T-09) -->
+    <!-- ============================================ -->
+    <section class="view" id="view-projektplan">
+        <div class="projektplan-container">
+            <h2>Projektplan &amp; Ressourcensch&auml;tzung</h2>
+            <p class="text-muted" style="margin-bottom: 2rem;">Gesch&auml;tzter Zeitrahmen und Deloitte-Ressourcenbedarf f&uuml;r Prozessanalyse, Optimierung und KI-L&ouml;sungsbegleitung.</p>
+
+            <!-- ===== Executive Summary ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-soll">&Uuml;BERSICHT</span>
+                    <h3>Executive Summary</h3>
+                </div>
+                <div class="projektplan-summary-grid">
+                    <div class="pp-kpi-card">
+                        <div class="pp-kpi-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div class="pp-kpi-value">20&ndash;26</div>
+                        <div class="pp-kpi-label">Wochen Gesamtlaufzeit</div>
+                        <div class="pp-kpi-sub">ca. 5&ndash;6 Monate</div>
+                    </div>
+                    <div class="pp-kpi-card">
+                        <div class="pp-kpi-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                        </div>
+                        <div class="pp-kpi-value">5</div>
+                        <div class="pp-kpi-label">Projektphasen</div>
+                        <div class="pp-kpi-sub">Analyse bis Rollout</div>
+                    </div>
+                    <div class="pp-kpi-card">
+                        <div class="pp-kpi-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                        </div>
+                        <div class="pp-kpi-value">3&ndash;4</div>
+                        <div class="pp-kpi-label">Deloitte FTEs (Peak)</div>
+                        <div class="pp-kpi-sub">Fachkonzeption, Steuerung, IT</div>
+                    </div>
+                    <div class="pp-kpi-card">
+                        <div class="pp-kpi-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        </div>
+                        <div class="pp-kpi-value">~200&ndash;265</div>
+                        <div class="pp-kpi-label">Personentage gesamt</div>
+                        <div class="pp-kpi-sub">alle Rollen kumuliert</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Phasen-Timeline (Gantt) ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-ist">TIMELINE</span>
+                    <h3>Phasen&uuml;bersicht</h3>
+                </div>
+                <div class="pp-gantt">
+                    <!-- Header -->
+                    <div class="pp-gantt-header">
+                        <div class="pp-gantt-label">Phase</div>
+                        <div class="pp-gantt-track-hd">
+                            <span>M1</span><span>M2</span><span>M3</span><span>M4</span><span>M5</span><span>M6</span>
+                        </div>
+                    </div>
+
+                    <!-- Phase 1 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">1</span>
+                            <div><strong>Analyse &amp; Konzeption</strong><small>4&ndash;5 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-1" style="left:0%;width:19%"><span>W1&ndash;5</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">2</span>
+                            <div><strong>Proof of Concept</strong><small>4&ndash;5 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-2" style="left:15%;width:19%"><span>W4&ndash;9</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">3</span>
+                            <div><strong>Implementierung</strong><small>8&ndash;10 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-3" style="left:31%;width:38%"><span>W8&ndash;18</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">4</span>
+                            <div><strong>Test &amp; Pilot</strong><small>3&ndash;4 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-4" style="left:69%;width:15%"><span>W18&ndash;22</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 5 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">5</span>
+                            <div><strong>Rollout &amp; &Uuml;bergabe</strong><small>2&ndash;3 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-5" style="left:84%;width:12%"><span>W22&ndash;26</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Meilensteine -->
+                    <div class="pp-gantt-row pp-gantt-milestones">
+                        <div class="pp-gantt-label"><strong>Meilensteine</strong></div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-milestone" style="left:19%" title="Go/No-Go Entscheidung"><span>&loz;</span><small>Go/No-Go</small></div>
+                            <div class="pp-milestone" style="left:34%" title="PoC Abnahme"><span>&loz;</span><small>PoC ok</small></div>
+                            <div class="pp-milestone" style="left:69%" title="Feature Complete"><span>&loz;</span><small>Feature Complete</small></div>
+                            <div class="pp-milestone" style="left:84%" title="Pilotabnahme"><span>&loz;</span><small>Pilot ok</small></div>
+                            <div class="pp-milestone" style="left:96%" title="Go-Live"><span>&loz;</span><small>Go-Live</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Phasen-Details ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-ist">DETAILS</span>
+                    <h3>Detailbeschreibung je Phase</h3>
+                </div>
+
+                <div class="pp-phase-grid">
+                    <!-- Phase 1 -->
+                    <div class="pp-phase-card pp-phase-1">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">1</span>
+                            <div>
+                                <h4>Analyse &amp; Konzeption</h4>
+                                <span class="pp-phase-time">4&ndash;5 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>IST-Prozessaufnahme mit Fachbereich (Workshops)</li>
+                            <li>Volumenanalyse: E-Mail-Aufkommen, Falltypen, Komplexit&auml;tsverteilung</li>
+                            <li>Anforderungserhebung an KI-L&ouml;sung und Schnittstellen</li>
+                            <li>SOLL-Prozessdesign und Architekturentscheidung (Option 1 / 2A / 2B)</li>
+                            <li>Fachkonzept und Entscheidungsvorlage f&uuml;r Steering</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Fachkonzept, Architektur-Empfehlung, Business Case</div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="pp-phase-card pp-phase-2">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">2</span>
+                            <div>
+                                <h4>Proof of Concept</h4>
+                                <span class="pp-phase-time">4&ndash;5 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Technisches Setup KI-Agent (Claude / LLM-Anbindung)</li>
+                            <li>E-Mail-Parsing: EML/MSG inkl. Anh&auml;nge (Word, Excel, PDF)</li>
+                            <li>Erste Extraktionslogik f&uuml;r VS-Nr., Sparten, Maklerdaten</li>
+                            <li>Test mit repr&auml;sentativen Beispieldaten (20&ndash;50 F&auml;lle)</li>
+                            <li>Ergebnispr&auml;sentation und Go/No-Go</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Funktionierender Prototyp, Testbericht, Erkennungsrate</div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="pp-phase-card pp-phase-3">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">3</span>
+                            <div>
+                                <h4>Implementierung &amp; Integration</h4>
+                                <span class="pp-phase-time">8&ndash;10 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>KI-Agent Produktiventwicklung (alle Dokumenttypen, Maklervollmacht-Erkennung)</li>
+                            <li>Handling komplexer F&auml;lle: Multi-Vertr&auml;ge, &bdquo;Siehe Anlage&ldquo;-Mails</li>
+                            <li>Integration Postkorbsystem (API oder Batch-Export)</li>
+                            <li>Anbindung an Robotics-Pipeline (JSON-Output)</li>
+                            <li>Web-Tool / Dashboard f&uuml;r Validierung und Ausnahmenbehandlung</li>
+                            <li>Sicherheits- und Datenschutzkonzept</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Produktionsreifer KI-Agent, Schnittstellendoku, Sicherheitskonzept</div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="pp-phase-card pp-phase-4">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">4</span>
+                            <div>
+                                <h4>Test &amp; Pilotbetrieb</h4>
+                                <span class="pp-phase-time">3&ndash;4 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Integrationstests mit echten E-Mail-Daten</li>
+                            <li>User Acceptance Testing mit Sachbearbeitern</li>
+                            <li>Feintuning Erkennungsqualit&auml;t (Ziel: &gt;95%)</li>
+                            <li>Pilotbetrieb mit begrenztem E-Mail-Volumen</li>
+                            <li>Feedback-Schleifen und Anpassungen</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Testprotokoll, Pilotbericht, Freigabeempfehlung</div>
+                    </div>
+
+                    <!-- Phase 5 -->
+                    <div class="pp-phase-card pp-phase-5">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">5</span>
+                            <div>
+                                <h4>Rollout &amp; &Uuml;bergabe</h4>
+                                <span class="pp-phase-time">2&ndash;3 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Go-Live Begleitung und Monitoring</li>
+                            <li>Schulung der Sachbearbeiter und Key User</li>
+                            <li>Betriebsdokumentation und Runbooks</li>
+                            <li>&Uuml;bergabe an ERGO IT / internes Betriebsteam</li>
+                            <li>Hyper-Care Phase (2 Wochen nach Go-Live)</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Betriebshandbuch, Schulungsunterlagen, &Uuml;bergabeprotokoll</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Ressourcenplanung Deloitte ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-soll">RESSOURCEN</span>
+                    <h3>Deloitte-Ressourcenplanung</h3>
+                </div>
+
+                <div class="pp-table-scroll">
+                    <table class="comparison-table pp-ressourcen-table">
+                        <thead>
+                            <tr>
+                                <th>Rolle</th>
+                                <th>Seniorit&auml;t</th>
+                                <th>Ph.1<br><small>Analyse</small></th>
+                                <th>Ph.2<br><small>PoC</small></th>
+                                <th>Ph.3<br><small>Impl.</small></th>
+                                <th>Ph.4<br><small>Test</small></th>
+                                <th>Ph.5<br><small>Rollout</small></th>
+                                <th>PT gesamt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Projektleitung / Steuerung</strong></td>
+                                <td>Manager</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-mid">60%</td>
+                                <td class="pp-util-mid">50%</td>
+                                <td class="pp-util-mid">60%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td><strong>50&ndash;65</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fachliche Konzeption</strong></td>
+                                <td>Senior Consultant</td>
+                                <td class="pp-util-full">100%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-mid">60%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-low">40%</td>
+                                <td><strong>55&ndash;70</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>KI / Data Engineer</strong></td>
+                                <td>Senior Consultant</td>
+                                <td class="pp-util-low">20%</td>
+                                <td class="pp-util-full">100%</td>
+                                <td class="pp-util-full">100%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-low">40%</td>
+                                <td><strong>60&ndash;80</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>IT-Integration / Entwicklung</strong></td>
+                                <td>Consultant</td>
+                                <td class="pp-util-none">&ndash;</td>
+                                <td class="pp-util-low">40%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-mid">60%</td>
+                                <td class="pp-util-low">20%</td>
+                                <td><strong>35&ndash;50</strong></td>
+                            </tr>
+                            <tr class="pp-total-row">
+                                <td colspan="2"><strong>Gesamt Deloitte (FTE)</strong></td>
+                                <td><strong>3.0</strong></td>
+                                <td><strong>2.8</strong></td>
+                                <td><strong>2.9</strong></td>
+                                <td><strong>2.8</strong></td>
+                                <td><strong>1.8</strong></td>
+                                <td><strong>~200&ndash;265 PT</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pp-hinweis">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span>Auslastung in % bezogen auf Vollzeit. Erg&auml;nzend wird partielle Einbindung eines Partners / Senior Managers f&uuml;r Quality Gates und Steering empfohlen (~10&ndash;15% &uuml;ber alle Phasen, ca. 8&ndash;12 PT).</span>
+                </div>
+            </div>
+
+            <!-- ===== Rollenprofile ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-ist">ROLLEN</span>
+                    <h3>Rollenprofile Deloitte</h3>
+                </div>
+
+                <div class="pp-rollen-grid">
+                    <div class="pp-rolle-card">
+                        <div class="pp-rolle-icon pp-rolle-steuerung">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                        </div>
+                        <h4>Projektleitung / Steuerung</h4>
+                        <p class="pp-rolle-level">Manager</p>
+                        <ul>
+                            <li>Gesamtprojektsteuerung und Kundeninteraktion</li>
+                            <li>Stakeholder-Management bei ERGO</li>
+                            <li>Risiko- und Eskalationsmanagement</li>
+                            <li>Qualit&auml;tssicherung der Deliverables</li>
+                            <li>Steering-Committee Vorbereitung</li>
+                        </ul>
+                    </div>
+
+                    <div class="pp-rolle-card">
+                        <div class="pp-rolle-icon pp-rolle-fach">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                        </div>
+                        <h4>Fachliche Konzeption</h4>
+                        <p class="pp-rolle-level">Senior Consultant</p>
+                        <ul>
+                            <li>Prozessanalyse IST/SOLL und Gap-Analyse</li>
+                            <li>Fachkonzept Bestands&uuml;bertragung</li>
+                            <li>Anforderungsdefinition an KI-Agent</li>
+                            <li>Testfalldefinition und UAT-Begleitung</li>
+                            <li>Schulungskonzept und Change Management</li>
+                        </ul>
+                    </div>
+
+                    <div class="pp-rolle-card">
+                        <div class="pp-rolle-icon pp-rolle-ki">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        </div>
+                        <h4>KI / Data Engineer</h4>
+                        <p class="pp-rolle-level">Senior Consultant</p>
+                        <ul>
+                            <li>KI-Agent-Entwicklung (LLM-Prompting, Pipeline)</li>
+                            <li>E-Mail-/Dokumenten-Parsing (EML, MSG, DOCX, XLSX)</li>
+                            <li>Maklervollmacht-Erkennung und Validierung</li>
+                            <li>Qualit&auml;tsmonitoring und Modell-Feintuning</li>
+                            <li>Performance-Optimierung und Skalierung</li>
+                        </ul>
+                    </div>
+
+                    <div class="pp-rolle-card">
+                        <div class="pp-rolle-icon pp-rolle-it">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        </div>
+                        <h4>IT-Integration / Entwicklung</h4>
+                        <p class="pp-rolle-level">Consultant</p>
+                        <ul>
+                            <li>Anbindung Postkorbsystem (API/Batch)</li>
+                            <li>Robotics-Pipeline Integration (JSON-Export)</li>
+                            <li>Web-Tool f&uuml;r Validierung und Monitoring</li>
+                            <li>Deployment und Infrastruktur (je nach Option 2A/2B)</li>
+                            <li>Technische Dokumentation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Aufwand nach Architektur-Option ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-soll">VARIANTEN</span>
+                    <h3>Aufwand je Architektur-Option</h3>
+                </div>
+
+                <div class="pp-varianten-grid">
+                    <div class="pp-variante pp-variante-1">
+                        <div class="pp-variante-head">
+                            <span class="pp-variante-num">1</span>
+                            <h4>Ohne KI (Stichwortbasiert)</h4>
+                        </div>
+                        <div class="pp-variante-metrics">
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">8&ndash;12</span>
+                                <span class="pp-variante-lbl">Wochen</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">~60&ndash;90</span>
+                                <span class="pp-variante-lbl">PT Deloitte</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">2</span>
+                                <span class="pp-variante-lbl">FTEs Peak</span>
+                            </div>
+                        </div>
+                        <p class="pp-variante-note">Schnellste Umsetzung, aber eingeschr&auml;nkte Erkennungsqualit&auml;t. Kein KI-Spezialist erforderlich.</p>
+                    </div>
+
+                    <div class="pp-variante pp-variante-2a">
+                        <div class="pp-variante-head">
+                            <span class="pp-variante-num">2A</span>
+                            <h4>ERGO-interne KI-Plattform</h4>
+                            <span class="pp-variante-badge">Empfohlen</span>
+                        </div>
+                        <div class="pp-variante-metrics">
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">20&ndash;26</span>
+                                <span class="pp-variante-lbl">Wochen</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">~200&ndash;265</span>
+                                <span class="pp-variante-lbl">PT Deloitte</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">3&ndash;4</span>
+                                <span class="pp-variante-lbl">FTEs Peak</span>
+                            </div>
+                        </div>
+                        <p class="pp-variante-note">Volle Kontrolle bei ERGO. Ben&ouml;tigt Agent-Plattform als Voraussetzung. H&ouml;chste Datenhoheit.</p>
+                    </div>
+
+                    <div class="pp-variante pp-variante-2b">
+                        <div class="pp-variante-head">
+                            <span class="pp-variante-num">2B</span>
+                            <h4>Deloitte External API</h4>
+                        </div>
+                        <div class="pp-variante-metrics">
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">18&ndash;22</span>
+                                <span class="pp-variante-lbl">Wochen</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">~180&ndash;230</span>
+                                <span class="pp-variante-lbl">PT Deloitte</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">3&ndash;4</span>
+                                <span class="pp-variante-lbl">FTEs Peak</span>
+                            </div>
+                        </div>
+                        <p class="pp-variante-note">Schnellerer Start da keine ERGO-Plattform n&ouml;tig. Laufende Betriebskosten bei Deloitte. Datenschutz-Abstimmung erforderlich.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Annahmen & Risiken ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-ist">ANNAHMEN</span>
+                    <h3>Annahmen &amp; Risiken</h3>
+                </div>
+
+                <div class="pp-ar-grid">
+                    <div class="pp-ar-card">
+                        <h4>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                            Annahmen
+                        </h4>
+                        <ul>
+                            <li>Zugang zu repr&auml;sentativen E-Mail-Testdaten wird innerhalb Phase 1 bereitgestellt</li>
+                            <li>Fachliche Ansprechpartner bei ERGO stehen f&uuml;r Workshops zur Verf&uuml;gung (mind. 1 Tag/Woche)</li>
+                            <li>Architekturentscheidung (Option 1/2A/2B) wird am Ende Phase 1 getroffen</li>
+                            <li>Bei Option 2A: ERGO Agent-Plattform ist verf&uuml;gbar oder wird parallel bereitgestellt</li>
+                            <li>Datenschutzfreigabe f&uuml;r KI-Verarbeitung von Kundendaten liegt vor oder wird in Phase 1 gekl&auml;rt</li>
+                        </ul>
+                    </div>
+                    <div class="pp-ar-card pp-ar-risiken">
+                        <h4>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            Risiken
+                        </h4>
+                        <ul>
+                            <li><strong>Datenzugang:</strong> Verz&ouml;gerung bei Testdaten kann PoC verschieben (+2&ndash;4 Wo.)</li>
+                            <li><strong>Datenschutz:</strong> Langwierige DSGVO-Abstimmung kann Phase 2/3 blockieren</li>
+                            <li><strong>Systemzugang:</strong> Fehlende API zum Postkorbsystem erfordert Workaround (Batch statt Echtzeit)</li>
+                            <li><strong>Scope Creep:</strong> Erweiterung auf weitere Dokumenttypen oder Sparten erh&ouml;ht Aufwand</li>
+                            <li><strong>Erkennungsqualit&auml;t:</strong> Handschriftliche Vollmachten k&ouml;nnen zus&auml;tzliche Nacharbeit erfordern</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ERGO-seitiger Bedarf ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-soll">ERGO</span>
+                    <h3>Kundenseitiger Ressourcenbedarf</h3>
+                </div>
+
+                <div class="pp-table-scroll">
+                    <table class="comparison-table pp-ressourcen-table">
+                        <thead>
+                            <tr>
+                                <th>Rolle (ERGO)</th>
+                                <th>Aufwand</th>
+                                <th>Schwerpunkt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Product Owner / Fachbereich</strong></td>
+                                <td>~30&ndash;40% &uuml;ber Laufzeit</td>
+                                <td>Anforderungen, Abnahmen, Priorisierung</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IT-Ansprechpartner</strong></td>
+                                <td>~20&ndash;30% ab Phase 2</td>
+                                <td>Systemzug&auml;nge, Schnittstellenkl&auml;rung, Infrastruktur</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sachbearbeiter (Tester)</strong></td>
+                                <td>~20% in Phase 4</td>
+                                <td>UAT, Feedback, Validierung der Ergebnisse</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Datenschutzbeauftragter</strong></td>
+                                <td>Punktuell (Phase 1, 3)</td>
+                                <td>DSGVO-Bewertung, Freigabe KI-Verarbeitung</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ============================================ -->
+    <!-- MODAL: API Key -->
+    <!-- ============================================ -->
+    <div class="modal-overlay" id="aiApiKeyModal" style="display: none;">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2>API Key</h2>
+                <button class="modal-close" id="aiApiKeyModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted" style="margin-bottom: 1rem;">
+                    Geben Sie Ihren API Key ein, um die KI-Analyse zu nutzen.
+                </p>
+                <div class="form-group">
+                    <label>API Key</label>
+                    <input type="password" id="aiApiKeyInput" placeholder="sk-ant-api...">
+                </div>
+                <p class="text-muted text-small" style="margin-top: 0.5rem;">
+                    Der Key wird lokal im Browser gespeichert.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="aiApiKeySave">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MODAL: Vorgang Detail (Komplett neu) -->
+    <!-- ============================================ -->
+    <div class="modal-overlay" id="caseModal" style="display: none;">
+        <div class="modal modal-xlarge">
+            <div class="modal-header">
+                <h2 id="modalTitle">Vorgang</h2>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body case-detail-body">
+                <form id="caseForm">
+                    <input type="hidden" id="caseId">
+
+                    <!-- Workflow Timeline -->
+                    <div class="workflow-section">
+                        <h3>Prozess-Status</h3>
+                        <div class="workflow-timeline" id="workflowTimeline">
+                            <div class="workflow-step" data-step="mailReceived">
+                                <div class="step-icon">◉</div>
+                                <div class="step-content">
+                                    <div class="step-label">Mail erhalten</div>
+                                    <div class="step-date" id="stepMailReceived">–</div>
+                                </div>
+                            </div>
+                            <div class="workflow-connector"></div>
+                            <div class="workflow-step" data-step="mailUploaded">
+                                <div class="step-icon">↑</div>
+                                <div class="step-content">
+                                    <div class="step-label">Importiert</div>
+                                    <div class="step-date" id="stepMailUploaded">–</div>
+                                </div>
+                            </div>
+                            <div class="workflow-connector"></div>
+                            <div class="workflow-step" data-step="kiRecognized">
+                                <div class="step-icon">◈</div>
+                                <div class="step-content">
+                                    <div class="step-label">Von KI erkannt</div>
+                                    <div class="step-date" id="stepKiRecognized">–</div>
+                                </div>
+                            </div>
+                            <div class="workflow-connector"></div>
+                            <div class="workflow-step" data-step="pvValidated">
+                                <div class="step-icon">✓</div>
+                                <div class="step-content">
+                                    <div class="step-label">Von PV validiert</div>
+                                    <div class="step-date" id="stepPvValidated">–</div>
+                                </div>
+                            </div>
+                            <div class="workflow-connector"></div>
+                            <div class="workflow-step" data-step="exported">
+                                <div class="step-icon">↗</div>
+                                <div class="step-content">
+                                    <div class="step-label">Exportiert</div>
+                                    <div class="step-date" id="stepExported">–</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zwei-Spalten Layout -->
+                    <div class="case-detail-columns">
+                        <!-- Linke Spalte: Stammdaten -->
+                        <div class="case-detail-left">
+                            <div class="stammdaten-card">
+                                <h3>Stammdaten</h3>
+                                <div class="stammdaten-grid">
+                                    <div class="stammdaten-item">
+                                        <label>Kunde (VN)</label>
+                                        <input type="text" id="caseKunde" placeholder="Nachname, Vorname">
+                                    </div>
+                                    <div class="stammdaten-item">
+                                        <label>VS-Nr</label>
+                                        <input type="text" id="caseVsNr" placeholder="ERG-12345678">
+                                    </div>
+                                    <div class="stammdaten-item">
+                                        <label>Sparte</label>
+                                        <select id="caseSparte">
+                                            <option value="">– Auswählen –</option>
+                                            <option value="KFZ">KFZ</option>
+                                            <option value="Leben">Leben</option>
+                                            <option value="Kranken">Kranken</option>
+                                            <option value="Haftpflicht">Haftpflicht</option>
+                                            <option value="Hausrat">Hausrat</option>
+                                            <option value="Rechtsschutz">Rechtsschutz</option>
+                                            <option value="Unfall">Unfall</option>
+                                            <option value="BU">BU</option>
+                                            <option value="Wohngebäude">Wohngebäude</option>
+                                            <option value="Rente">Rente</option>
+                                        </select>
+                                    </div>
+                                    <div class="stammdaten-item">
+                                        <label>Gültig ab</label>
+                                        <input type="text" id="caseDatum" placeholder="TT.MM.JJJJ">
+                                    </div>
+                                    <div class="stammdaten-item">
+                                        <label>Maklerbüro</label>
+                                        <input type="text" id="caseMaklerName" placeholder="Name des Maklerbüros">
+                                    </div>
+                                    <div class="stammdaten-item">
+                                        <label>Makler E-Mail</label>
+                                        <input type="email" id="caseMaklerEmail" placeholder="makler@beispiel.de">
+                                    </div>
+                                    <div class="stammdaten-item full-width">
+                                        <label>Status</label>
+                                        <select id="caseStatus">
+                                            <option value="unvollstaendig">◇ Unvollständig</option>
+                                            <option value="zu-validieren">◐ Zu Validieren</option>
+                                            <option value="export-bereit">● Export-Bereit</option>
+                                            <option value="abgeschlossen">✓ Abgeschlossen</option>
+                                            <option value="abgelehnt">✕ Abgelehnt</option>
+                                            <option value="wiedervorlage">⟳ Wiedervorlage</option>
+                                        </select>
+                                    </div>
+                                    <div class="stammdaten-item full-width">
+                                        <label>Notizen</label>
+                                        <textarea id="caseNotes" rows="2" placeholder="Interne Notizen..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Erkannte Schlagwörter -->
+                            <div class="keywords-card">
+                                <h3>Erkannte Schlagwörter</h3>
+                                <div class="keywords-list" id="keywordsList">
+                                    <!-- Dynamisch gefüllt -->
+                                </div>
+                            </div>
+
+                            <!-- Verknüpfte Vorgänge (aus Sammelmail) -->
+                            <div class="linked-cases-card" id="linkedCasesCard" style="display: none;">
+                                <h3>Verknüpfte Vorgänge <span class="badge" id="linkedCasesCount">0</span></h3>
+                                <p class="card-description">Weitere Vorgänge aus derselben E-Mail</p>
+                                <div class="linked-cases-list" id="linkedCasesList">
+                                    <!-- Dynamisch gefüllt -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rechte Spalte: E-Mails -->
+                        <div class="case-detail-right">
+                            <div class="emails-card">
+                                <h3>E-Mail Verlauf <span class="badge" id="modalMailCount">0</span></h3>
+                                <div class="email-timeline" id="emailTimeline">
+                                    <!-- Dynamisch gefüllt -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="deleteCase">Löschen</button>
+                <button class="btn btn-warning" id="validateCaseBtn" style="display: none;">
+                    <span class="icon">✓</span> Validieren
+                </button>
+                <div class="modal-footer-right">
+                    <button class="btn btn-secondary" id="cancelCase">Abbrechen</button>
+                    <button class="btn btn-primary" id="saveCase">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Makler Details -->
+    <div class="modal-overlay" id="maklerModal" style="display: none;">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2 id="maklerModalTitle">Makler</h2>
+                <button class="modal-close" id="maklerModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="makler-info" id="maklerInfo"></div>
+                <h3>Vorgänge dieses Maklers</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Kunde</th>
+                            <th>VS-Nr</th>
+                            <th>Sparte</th>
+                            <th>Letzte Aktivität</th>
+                        </tr>
+                    </thead>
+                    <tbody id="maklerCasesBody"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeMaklerModal">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Export Dialog -->
+    <div class="modal-overlay" id="exportModal" style="display: none;">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2>Robotics Export</h2>
+                <button class="modal-close" id="exportModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p><strong id="exportCaseCount">0</strong> Vorgänge werden exportiert.</p>
+                <div class="form-group">
+                    <label for="exporterName">Bearbeiter</label>
+                    <input type="text" id="exporterName" placeholder="Ihr Name" required>
+                </div>
+                <p class="text-muted">Die exportierten Vorgänge werden als "exportiert" markiert.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelExport">Abbrechen</button>
+                <button class="btn btn-primary" id="confirmExport">
+                    <span class="icon">↑</span> Exportieren
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Validierung Schritt-für-Schritt -->
+    <div class="modal-overlay" id="validationModal" style="display: none;">
+        <div class="modal modal-medium">
+            <div class="modal-header">
+                <h2>PV-Validierung</h2>
+                <div class="validation-progress">
+                    <span id="validationCurrent">1</span> / <span id="validationTotal">0</span>
+                </div>
+                <button class="modal-close" id="validationModalClose">×</button>
+            </div>
+            <div class="modal-body validation-body">
+                <div class="validation-case-data">
+                    <p class="validation-hint">Klicken Sie auf ein Feld zum Bearbeiten. Änderungen werden gespeichert.</p>
+                    <div class="validation-field">
+                        <label class="field-label">Kunde (VN)</label>
+                        <input type="text" class="field-input" id="valKunde" placeholder="-">
+                    </div>
+                    <div class="validation-field">
+                        <label class="field-label">VS-Nr</label>
+                        <input type="text" class="field-input" id="valVsNr" placeholder="-">
+                    </div>
+                    <div class="validation-field">
+                        <label class="field-label">Sparte</label>
+                        <select class="field-input" id="valSparte">
+                            <option value="">-</option>
+                            <option value="KFZ">KFZ</option>
+                            <option value="Leben">Leben</option>
+                            <option value="Kranken">Kranken</option>
+                            <option value="Haftpflicht">Haftpflicht</option>
+                            <option value="Hausrat">Hausrat</option>
+                            <option value="Rechtsschutz">Rechtsschutz</option>
+                            <option value="Unfall">Unfall</option>
+                            <option value="BU">BU</option>
+                            <option value="Wohngebäude">Wohngebäude</option>
+                            <option value="Rente">Rente</option>
+                        </select>
+                    </div>
+                    <div class="validation-field">
+                        <label class="field-label">Gültig ab</label>
+                        <input type="date" class="field-input" id="valDatum">
+                    </div>
+                    <div class="validation-field">
+                        <label class="field-label">Makler</label>
+                        <input type="text" class="field-input" id="valMakler" placeholder="-">
+                    </div>
+                    <div class="validation-field">
+                        <label class="field-label">Wiedervorlage</label>
+                        <input type="date" class="field-input" id="valWiedervorlage">
+                    </div>
+                </div>
+                <div class="validation-email-preview">
+                    <h4>E-Mail Auszug <span class="highlight-hint">(Stichworte markiert)</span></h4>
+                    <div class="email-preview-content" id="valEmailPreview">-</div>
+                </div>
+                <!-- Ablehnungsgrund (zunächst versteckt) -->
+                <div class="validation-reject-section" id="valRejectSection" style="display: none;">
+                    <label class="field-label">Ablehnungsgrund</label>
+                    <textarea class="field-input" id="valRejectReason" rows="3" placeholder="Bitte Grund für Ablehnung angeben..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer validation-footer">
+                <button class="btn btn-secondary" id="validationSkip">
+                    Überspringen →
+                </button>
+                <button class="btn btn-danger" id="validationReject">
+                    <span class="icon">✕</span> Ablehnen
+                </button>
+                <button class="btn btn-warning" id="validationWiedervorlage">
+                    <span class="icon">⟳</span> Wiedervorlage
+                </button>
+                <button class="btn btn-success" id="validationConfirm">
+                    <span class="icon">✓</span> Validieren
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: E-Mail Vorlagen -->
+    <div class="modal-overlay" id="emailTemplatesModal" style="display: none;">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>E-Mail Vorlagen</h2>
+                <button class="modal-close" id="emailTemplatesModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted" style="margin-bottom: 1rem;">Klicken Sie auf "Kopieren" um den Text in die Zwischenablage zu kopieren.</p>
+
+                <!-- Vorlage 1: Bestandsübertragung anfragen -->
+                <div class="email-template-card">
+                    <div class="template-header">
+                        <h4>1. Bestandsübertragung anfragen</h4>
+                        <button class="btn btn-secondary btn-copy" data-template="template1">Kopieren</button>
+                    </div>
+                    <div class="template-content" id="template1">Sehr geehrte Damen und Herren,
+
+hiermit beantragen wir die Bestandsübertragung für unseren Kunden Hans Müller.
+
+Versicherungsnummer: ERG-7823456
+Sparte: KFZ
+Gewünschter Übertragungstermin: 01.01.2026
+
+Die unterschriebene Maklervollmacht liegt diesem Schreiben bei.
+
+Mit freundlichen Grüßen
+Thomas Meier
+Versicherungsmakler</div>
+                </div>
+
+                <!-- Vorlage 2: Rückfrage VS-Nr -->
+                <div class="email-template-card">
+                    <div class="template-header">
+                        <h4>2. Rückfrage fehlende Versicherungsnummer</h4>
+                        <button class="btn btn-secondary btn-copy" data-template="template2">Kopieren</button>
+                    </div>
+                    <div class="template-content" id="template2">Sehr geehrte Damen und Herren,
+
+bezugnehmend auf unseren Antrag zur Bestandsübertragung für Ralf Seidel bitten wir um Mitteilung der korrekten Versicherungsnummer.
+
+In den uns vorliegenden Unterlagen konnte die VS-Nr nicht eindeutig identifiziert werden.
+
+Vielen Dank für Ihre Rückmeldung.
+
+Mit freundlichen Grüßen
+Martina Koch
+Versicherungsmaklerin</div>
+                </div>
+
+                <!-- Vorlage 3: Nachreichung Vollmacht -->
+                <div class="email-template-card">
+                    <div class="template-header">
+                        <h4>3. Nachreichung Maklervollmacht</h4>
+                        <button class="btn btn-secondary btn-copy" data-template="template3">Kopieren</button>
+                    </div>
+                    <div class="template-content" id="template3">Sehr geehrte Damen und Herren,
+
+in der Anlage übersende ich Ihnen die nachgeforderte Maklervollmacht für die Kundin Birgit Franke.
+
+Versicherungsnummer: ERG-4432109
+
+Ich bitte um Fortsetzung der Bestandsübertragung.
+
+Mit freundlichen Grüßen
+Stefan Zimmermann
+Versicherungsmakler</div>
+                </div>
+
+                <!-- Vorlage 4: Statusanfrage -->
+                <div class="email-template-card">
+                    <div class="template-header">
+                        <h4>4. Statusanfrage laufende Übertragung</h4>
+                        <button class="btn btn-secondary btn-copy" data-template="template4">Kopieren</button>
+                    </div>
+                    <div class="template-content" id="template4">Sehr geehrte Damen und Herren,
+
+ich erlaube mir, nach dem Stand unserer Bestandsübertragung zu fragen.
+
+Kunde: Christine Weber
+Versicherungsnummer: ERG-4512378
+Antragsdatum: 15.10.2024
+
+Über eine zeitnahe Rückmeldung würde ich mich freuen.
+
+Mit freundlichen Grüßen
+Sandra Schmidt
+Versicherungsmaklerin</div>
+                </div>
+
+                <!-- Vorlage 5: Bestätigung erhalten -->
+                <div class="email-template-card">
+                    <div class="template-header">
+                        <h4>5. Bestätigung an Makler weiterleiten</h4>
+                        <button class="btn btn-secondary btn-copy" data-template="template5">Kopieren</button>
+                    </div>
+                    <div class="template-content" id="template5">Sehr geehrter Herr Meier,
+
+wir freuen uns, Ihnen mitteilen zu können, dass die Bestandsübertragung für Ihren Kunden Hans Müller bestätigt wurde.
+
+Versicherungsnummer: ERG-7823456
+Wirksam ab: 01.01.2026
+
+Sie sind nun als betreuender Makler für diesen Vertrag hinterlegt.
+
+Bei Fragen stehen wir Ihnen gerne zur Verfügung.
+
+Mit freundlichen Grüßen
+ERGO Maklerservice</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeEmailTemplates">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drag & Drop Overlay -->
+    <div class="drop-overlay" id="dropOverlay" style="display: none;">
+        <div class="drop-content">
+            <span class="drop-icon">↓</span>
+            <p>JSON-Datei hier ablegen</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+</div>

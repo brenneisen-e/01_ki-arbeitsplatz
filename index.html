@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Services AI Use Case Platform</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2386BC25'/%3E%3Cstop offset='100%25' stop-color='%2300AA4F'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23g)'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='system-ui' font-size='14' font-weight='bold' fill='white'%3EKI%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        safelist: [
+            'bg-green-50', 'text-green-600',
+            'bg-blue-50', 'text-blue-600',
+            'bg-violet-50', 'text-violet-600',
+            'bg-emerald-50', 'text-emerald-700',
+        ],
+        theme: {
+            extend: {
+                colors: { brand: { DEFAULT: '#004d26', light: '#00843d', dark: '#003318' } }
+            }
+        }
+    };
+    </script>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.453.0?deps=react@18.3.1"
+      }
+    }
+    </script>
+    <style>
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fade-in-up 0.4s ease-out both; }
+        .module-tile { transition: all 0.25s ease; }
+        .module-tile:hover { background: #004d26 !important; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,77,38,0.2); }
+        .module-tile:hover .tile-icon-wrap { background: rgba(255,255,255,0.2) !important; }
+        .module-tile:hover .tile-icon { color: white !important; }
+        .module-tile:hover .tile-label { color: white !important; }
+        .module-tile:hover .tile-desc { color: rgba(255,255,255,0.7) !important; }
+        .module-tile:hover .tile-external { color: rgba(255,255,255,0.5) !important; }
+        .module-tile:hover .tile-versions a { background: rgba(255,255,255,0.15) !important; color: white !important; border-color: rgba(255,255,255,0.3) !important; }
+        .module-tile:hover .tile-versions a:hover { background: rgba(255,255,255,0.3) !important; }
+        .module-tile:hover .tile-tag circle { fill: rgba(255,255,255,0.8) !important; }
+
+        /* Hero dot-pattern background */
+        .hero-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(0,77,38,0.04) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        /* Cluster card hover */
+        .cluster-section { transition: box-shadow 0.3s ease; }
+        .cluster-section:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+
+        /* Animated Header Logo */
+        @keyframes logo-glow { 0%, 100% { filter: drop-shadow(0 0 4px rgba(134,188,37,0.4)); } 50% { filter: drop-shadow(0 0 10px rgba(134,188,37,0.7)); } }
+        .header-logo { animation: logo-glow 3s ease-in-out infinite; }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease-out;
+        }
+        #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+        @keyframes logo-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .loading-logo {
+            width: 100px; height: 100px; background: white; border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 24px; animation: logo-pulse 2s ease-in-out infinite;
+        }
+        .loading-logo svg { color: #86BC25; }
+        .loading-brand { color: #94a3b8; font-size: 28px; font-weight: 700; margin: 0 0 32px 0; letter-spacing: -0.5px; font-family: system-ui, sans-serif; }
+        .progress-track { width: 320px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #86BC25, #00AA4F); border-radius: 4px; transition: width 0.3s ease; position: relative; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .progress-bar::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 1.5s infinite; }
+
+        /* Name Prompt Overlay */
+        @keyframes name-overlay-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes name-card-in { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .name-overlay { animation: name-overlay-in 0.3s ease-out both; }
+        .name-card { animation: name-card-in 0.4s ease-out 0.1s both; }
+        .progress-details { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; width: 320px; font-family: system-ui, sans-serif; }
+        .progress-status { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; }
+        .progress-percent { color: white; font-size: 14px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 12px; }
+
+        /* Password Gate Overlay */
+        @keyframes auth-fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes auth-card-in { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes auth-shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+        #auth-overlay {
+            position: fixed; inset: 0; z-index: 100000;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #003318 0%, #004d26 45%, #00843d 100%);
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            animation: auth-fade-in 0.3s ease-out both;
+        }
+        #auth-overlay::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                radial-gradient(800px 500px at 15% 20%, rgba(134,188,37,0.25), transparent 60%),
+                radial-gradient(900px 600px at 85% 80%, rgba(0,170,79,0.22), transparent 60%);
+            pointer-events: none;
+        }
+        .auth-card {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 36px 32px 28px;
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            animation: auth-card-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s both;
+        }
+        .auth-card.shake { animation: auth-shake 0.45s ease-in-out; }
+        .auth-logo {
+            width: 54px; height: 54px; border-radius: 14px;
+            background: linear-gradient(135deg, #86BC25, #00AA4F);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 24px rgba(0,170,79,0.35);
+        }
+        .auth-title {
+            color: #0f172a; font-size: 22px; font-weight: 700;
+            letter-spacing: -0.01em; margin: 0 0 6px;
+        }
+        .auth-subtitle {
+            color: #64748b; font-size: 14px; margin: 0 0 22px; line-height: 1.5;
+        }
+        .auth-field { position: relative; margin-bottom: 12px; }
+        .auth-field input {
+            width: 100%;
+            padding: 13px 14px 13px 44px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #0f172a;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        .auth-field input:focus {
+            border-color: #00843d;
+            box-shadow: 0 0 0 4px rgba(0,132,61,0.15);
+        }
+        .auth-field svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
+        .auth-submit {
+            width: 100%;
+            padding: 13px 16px;
+            background: linear-gradient(135deg, #004d26, #00843d);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+            font-family: inherit;
+        }
+        .auth-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,77,38,0.35); }
+        .auth-submit:disabled { opacity: 0.65; cursor: not-allowed; transform: none; box-shadow: none; }
+        .auth-error {
+            margin-top: 12px;
+            padding: 10px 12px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .auth-info-toggle {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 22px;
+            background: transparent; border: none; padding: 4px 0;
+            color: #64748b; font-size: 13px; cursor: pointer; font-family: inherit;
+            transition: color 0.2s ease;
+        }
+        .auth-info-toggle:hover { color: #00843d; }
+        .auth-info-panel {
+            margin-top: 12px;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            color: #334155;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+        .auth-info-panel a { color: #00843d; font-weight: 600; text-decoration: none; }
+        .auth-info-panel a:hover { text-decoration: underline; }
+        .auth-footer {
+            margin-top: 22px; padding-top: 18px;
+            border-top: 1px solid #f1f5f9;
+            color: #94a3b8; font-size: 11px; text-align: center;
+        }
+        body.auth-locked { overflow: hidden; }
+    </style>
+</head>
+<body class="min-h-screen" style="background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 40%, #eff6ff 100%);">
+    <!-- Password Gate Overlay -->
+    <div id="auth-overlay" style="display:none;">
+        <div class="auth-card" id="auth-card">
+            <div class="auth-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="28" height="28" color="white">
+                    <rect x="4" y="10" width="16" height="11" rx="2"/>
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                    <circle cx="12" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>
+            <h1 class="auth-title">Zugang</h1>
+            <p class="auth-subtitle">Bitte gib das Passwort ein, um die Financial Services AI Use Case Platform zu oeffnen.</p>
+            <form id="auth-form" autocomplete="off">
+                <div class="auth-field">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <rect x="3" y="11" width="18" height="11" rx="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <input id="auth-password" type="password" placeholder="Passwort" autocomplete="current-password" autofocus required>
+                </div>
+                <button type="submit" class="auth-submit" id="auth-submit">Entsperren</button>
+                <div id="auth-error" class="auth-error" style="display:none"></div>
+            </form>
+            <button type="button" class="auth-info-toggle" id="auth-info-toggle" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <span>Wie erhalte ich Zugang?</span>
+            </button>
+            <div id="auth-info" class="auth-info-panel" style="display:none">
+                Zugriff auf das Tool kannst du per E-Mail bei
+                <a href="mailto:ebrenneisen@deloitte.de?subject=Zugriff%20Financial%20Services%20AI%20Use%20Case%20Platform">ebrenneisen@deloitte.de</a>
+                anfragen.
+            </div>
+            <div class="auth-footer">Financial Services AI Use Case Platform &middot; Eike Brenneisen (BCMT)</div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var AUTH_KEY = 'kiarbeitsplatz_auth_v1';
+        var AUTH_SCOPE = 'app';
+        var overlay = document.getElementById('auth-overlay');
+        var card = document.getElementById('auth-card');
+        var form = document.getElementById('auth-form');
+        var pwInput = document.getElementById('auth-password');
+        var submitBtn = document.getElementById('auth-submit');
+        var errorBox = document.getElementById('auth-error');
+        var infoToggle = document.getElementById('auth-info-toggle');
+        var infoPanel = document.getElementById('auth-info');
+
+        // Already authenticated? Skip overlay.
+        try { if (localStorage.getItem(AUTH_KEY) === 'ok') { return; } } catch (e) { /* ignore */ }
+
+        // Show overlay + lock scroll. React renders behind but is unreachable.
+        overlay.style.display = 'flex';
+        document.body.classList.add('auth-locked');
+        setTimeout(function() { try { pwInput.focus(); } catch (e) {} }, 50);
+
+        infoToggle.addEventListener('click', function() {
+            var showing = infoPanel.style.display !== 'none';
+            infoPanel.style.display = showing ? 'none' : 'block';
+            infoToggle.setAttribute('aria-expanded', showing ? 'false' : 'true');
+        });
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+            card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+        }
+        function clearError() { errorBox.style.display = 'none'; errorBox.textContent = ''; }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearError();
+            var pw = pwInput.value || '';
+            if (!pw) { showError('Bitte ein Passwort eingeben.'); return; }
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Pruefe...';
+
+            fetch('/api/auth', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ password: pw, scope: AUTH_SCOPE }),
+                credentials: 'same-origin',
+            }).then(function(res) {
+                if (res.status === 401) { throw new Error('Falsches Passwort.'); }
+                if (res.status === 500) { throw new Error('ACCESS_PASSWORD-Secret ist noch nicht in Cloudflare hinterlegt.'); }
+                if (!res.ok) { throw new Error('Fehler ' + res.status + ' beim Anmelden.'); }
+                return res.json();
+            }).then(function(data) {
+                if (!data || !data.ok) { throw new Error('Falsches Passwort.'); }
+                try { localStorage.setItem(AUTH_KEY, 'ok'); } catch (e) {}
+                overlay.style.transition = 'opacity 0.3s ease';
+                overlay.style.opacity = '0';
+                document.body.classList.remove('auth-locked');
+                setTimeout(function() { overlay.remove(); }, 300);
+            }).catch(function(err) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Entsperren';
+                showError(err && err.message ? err.message : 'Unbekannter Fehler.');
+                pwInput.select();
+            });
+        });
+    })();
+    </script>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64">
+                <circle cx="12" cy="12" r="1"></circle>
+                <path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"></path>
+                <path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"></path>
+            </svg>
+        </div>
+        <h1 class="loading-brand">Financial Services AI Use Case Platform</h1>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-details">
+            <span class="progress-status" id="progressStatus">Initialisiere...</span>
+            <span class="progress-percent" id="progressPercent">0%</span>
+        </div>
+    </div>
+
+    <div id="root"></div>
+
+    <script>
+    (function() {
+        var bar = document.getElementById('progressBar');
+        var status = document.getElementById('progressStatus');
+        var percent = document.getElementById('progressPercent');
+        var steps = [
+            { pct: 15, text: 'Module laden...' },
+            { pct: 35, text: 'React initialisieren...' },
+            { pct: 55, text: 'Komponenten aufbauen...' },
+            { pct: 75, text: 'Daten vorbereiten...' },
+            { pct: 90, text: 'Fast fertig...' },
+        ];
+        var i = 0;
+        var interval = setInterval(function() {
+            if (i < steps.length) { bar.style.width = steps[i].pct + '%'; status.textContent = steps[i].text; percent.textContent = steps[i].pct + '%'; i++; }
+        }, 300);
+        window.__finishLoading = function() {
+            clearInterval(interval);
+            bar.style.width = '100%'; status.textContent = 'Bereit!'; percent.textContent = '100%';
+            setTimeout(function() { document.getElementById('loading-screen').classList.add('fade-out'); setTimeout(function() { document.getElementById('loading-screen').remove(); }, 500); }, 300);
+        };
+    })();
+    </script>
+
+    <script type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import {
+        LayoutDashboard, Users, Home, Zap, Clock, ShieldCheck, FileText,
+        CreditCard, CheckCircle, LayoutGrid, UserPlus, BookOpen, ClipboardCheck,
+        Briefcase, ExternalLink, Mic, Send, MessageCircle, Search,
+        Settings, User, Key, Upload, Play, FileUp, Lock, Camera, Video, Eye, EyeOff, ChevronDown,
+        Activity, LineChart, Atom, Compass, BarChart3, AlertTriangle, FilePen
+    } from 'lucide-react';
+
+    const h = React.createElement;
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    const VAP_BASE = '22_vertriebsarbeitsplatz/dist/index.html';
+
+    const MODULE_CLUSTERS = [
+        {
+            id: 'sales',
+            title: 'Vertrieb & Beratung',
+            icon: Zap,
+            accentColor: '#00843d',
+            bgColor: '#f0fdf4',
+            iconBg: 'bg-green-50',
+            iconColor: 'text-green-600',
+            modules: [
+                { id: 'vap',     label: 'Vertriebsarbeitsplatz', icon: Users,          desc: 'Agenturansicht, Kunden, Verträge',  href: '22_vertriebsarbeitsplatz/dist/index.html', tags: ['versicherung', 'banken', 'am'] },
+                { id: 'scoring', label: 'Vermittler-Scoring',    icon: Clock,          desc: 'Risikobewertung & Analyse',         href: '18_Risikoscoring/index.html',              tags: ['versicherung'] },
+                { id: 'bgav',   label: 'Vergütungswerk',         icon: ShieldCheck,    desc: 'Vergütungsmodell simulieren & umstellen', href: '21_vertragsumstellung/dist/index.html', tags: ['versicherung', 'banken'] },
+                { id: 'kredit', label: 'KI-Kreditanalyse',       icon: ClipboardCheck, desc: 'KI-gestützte Kreditbewertung',      href: '14_kreditanalyse/dist/index.html',         tags: ['banken'] },
+                { id: 'hr',    label: 'HR Pipeline',             icon: UserPlus,       desc: 'Recruiting & Bewerbermanagement',   href: '13_HRPipeline/dist/index.html', tags: ['versicherung'] },
+            ]
+        },
+        {
+            id: 'monitoring',
+            title: 'Cockpits & Monitoring',
+            icon: LayoutDashboard,
+            accentColor: '#7c3aed',
+            bgColor: '#f5f3ff',
+            iconBg: 'bg-violet-50',
+            iconColor: 'text-violet-600',
+            modules: [
+                { id: 'dashboard',   label: 'VST-Cockpit',      icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',       href: '23_VSTCockpit/dist/index.html',           tags: ['versicherung'] },
+                { id: 'am-equities', label: 'Active Equities',   icon: Activity,       desc: 'Portfolio Management Dashboard',    href: '01_asset-management/dist/index.html',     tags: ['am'] },
+                { id: 'banken-kpi',  label: 'Banken-KPI',         icon: BarChart3,      desc: 'Monatlicher KPI-Bericht mit KI-Kommentar', href: '02_BankenKPI/dist/index.html',         tags: ['banken'] },
+                { id: 'pmo',         label: 'PMO Toolbox',       icon: LayoutGrid,     desc: 'Transformationsprogramm',           href: '16_PMOToolbox/index.html' },
+            ]
+        },
+        {
+            id: 'backoffice',
+            title: 'Backoffice-Prozesse',
+            icon: FileText,
+            accentColor: '#2563eb',
+            bgColor: '#eff6ff',
+            iconBg: 'bg-blue-50',
+            iconColor: 'text-blue-600',
+            modules: [
+                { id: 'bestand',    label: 'Bestandsübertragung',    icon: FileText,    desc: 'Vertragsübertragungen verwalten',  href: '05_Bestandsuebertragung/dist/index.html',       tags: ['versicherung'] },
+                { id: 'abrechnung', label: 'Abrechnungsprüfung',     icon: CreditCard,  desc: 'Abrechnungen prüfen & validieren', href: 'https://billingcheck.pages.dev/app', external: true, tags: ['versicherung'] },
+                { id: 'provision',  label: 'Provisionsvalidierung',  icon: CheckCircle, desc: 'Provisionen analysieren',           href: 'https://provisions-analyzer.pages.dev/', external: true, tags: ['versicherung'] },
+                { id: 'provrekl',  label: 'Provisionsreklamation',  icon: Briefcase,   desc: 'KI-gestützte Reklamationsprüfung', href: '17_provisionsreklamation/dist/index.html',  tags: ['versicherung'] },
+                { id: 'pdfeditor', label: 'PDF-Editor',             icon: FilePen,     desc: 'Text im PDF ändern, Schrift bleibt erhalten', href: '15_pdfeditor/dist/index.html', tags: ['versicherung', 'banken', 'am'] },
+            ]
+        },
+        {
+            id: 'risk-iks',
+            title: 'Risiko & IKS',
+            icon: ShieldCheck,
+            accentColor: '#0F4D2A',
+            bgColor: '#f0fdf4',
+            iconBg: 'bg-emerald-50',
+            iconColor: 'text-emerald-700',
+            modules: [
+                { id: 'controlhub', label: 'ControlHub', icon: ShieldCheck, desc: 'KI-gestützte Analyse und Optimierung des internen Kontrollsystems', href: '07_ControlHub/dist/index.html', tags: ['banken', 'versicherung'] },
+                { id: 'collections', label: 'Collections Management', icon: AlertTriangle, desc: 'AI Collections & Recovery: Cockpit mit Next Best Actions, Agenten & Risiko-Monitoring', href: '06_Collections/dist/index.html', tags: ['banken'] },
+            ]
+        },
+        {
+            id: 'wissen',
+            title: 'Wissen',
+            icon: BookOpen,
+            accentColor: '#dc2626',
+            bgColor: '#fef2f2',
+            iconBg: 'bg-red-50',
+            iconColor: 'text-red-600',
+            modules: [
+                { id: 'v1x1', label: 'Versicherungs-1×1', icon: BookOpen, desc: '13 Kapitel Versicherungswissen mit Wissenscheck und Glossar', href: '19_Versicherungs1x1/index.html', tags: ['versicherung'] },
+            ]
+        },
+        {
+            id: 'workshops',
+            title: 'Workshops & Strategie',
+            icon: Compass,
+            accentColor: '#6366f1',
+            bgColor: '#eef2ff',
+            iconBg: 'bg-indigo-50',
+            iconColor: 'text-indigo-600',
+            modules: [
+                { id: 'bdz', label: 'Banking Horizon', icon: Compass, desc: 'Interaktiver Workshop: 8 Dimensionen der Zukunft', href: '03_banking-horizon/dist/index.html', tags: ['banken', 'versicherung'] },
+            ]
+        }
+    ];
+
+    const DEMO_SUGGESTIONS = [
+        { text: 'Zusammenfassung heutiger Tag',        href: VAP_BASE + '#/versicherung/overview/uebersicht' },
+        { text: 'Zeige meine Vertriebspotentiale',     href: VAP_BASE + '#/versicherung/overview/potentiale' },
+        { text: 'Top 5 Vertriebsregionen',             href: VAP_BASE + '#/versicherung/cockpit' },
+        { text: 'Kreditantrag analysieren',              href: '14_kreditanalyse/dist/index.html' },
+        { text: 'Notleidende Kredite im Blick',          href: '06_Collections/dist/index.html' },
+        { text: 'Cross-Selling Chancen anzeigen',       href: VAP_BASE + '#/versicherung/overview/potentiale' },
+        { text: 'Was kann ich hier machen?',            href: VAP_BASE + '#/versicherung/cockpit' },
+    ];
+
+    const TAG_CONFIG = {
+        versicherung: { label: 'Versicherung', color: '#C8102E' },
+        banken:       { label: 'Banken',       color: '#00843d' },
+        am:           { label: 'Asset Mgmt',   color: '#2d5016' },
+    };
+
+    function TagDot({ tag }) {
+        const cfg = TAG_CONFIG[tag];
+        if (!cfg) return null;
+        return h('svg', { width: 10, height: 10, viewBox: '0 0 10 10', className: 'tile-tag shrink-0' },
+            h('circle', { cx: 5, cy: 5, r: 4.5, fill: cfg.color })
+        );
+    }
+
+    function ModuleTile({ mod, delay, cluster }) {
+        const iconBg = cluster ? cluster.iconBg : 'bg-slate-100';
+        const iconColor = cluster ? cluster.iconColor : 'text-slate-600';
+
+        if (mod.versions) {
+            const vTags = mod.tags || [];
+            return h('div', {
+                className: 'module-tile bg-white rounded-xl border border-slate-200 p-5 animate-fade-in-up cursor-default',
+                style: { animationDelay: delay + 'ms' }
+            },
+                h('div', { className: 'tile-icon-wrap w-10 h-10 rounded-lg ' + iconBg + ' flex items-center justify-center mb-3' },
+                    h(mod.icon, { size: 20, className: 'tile-icon ' + iconColor, strokeWidth: 1.75 })
+                ),
+                h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
+                h('div', { className: 'tile-desc text-xs text-slate-400 mb-2' }, mod.desc),
+                vTags.length > 0 && h('div', { className: 'tile-tags flex items-center gap-1.5 mb-2' },
+                    vTags.map(t => h(TagDot, { key: t, tag: t }))
+                ),
+                h('div', { className: 'tile-versions flex gap-2' },
+                    mod.versions.map(v =>
+                        h('a', {
+                            key: v.label,
+                            href: v.href,
+                            className: 'px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors no-underline',
+                            onClick: (e) => e.stopPropagation()
+                        }, v.label)
+                    )
+                )
+            );
+        }
+
+        const tags = mod.tags || [];
+
+        return h('a', {
+            href: mod.href,
+            target: mod.external ? '_blank' : undefined,
+            rel: mod.external ? 'noopener noreferrer' : undefined,
+            className: 'module-tile bg-white rounded-xl border border-slate-200 p-5 block no-underline animate-fade-in-up relative',
+            style: { animationDelay: delay + 'ms' }
+        },
+            mod.external && h('div', { className: 'absolute top-3 right-3' },
+                h(ExternalLink, { size: 12, className: 'tile-external text-slate-300' })
+            ),
+            h('div', { className: 'tile-icon-wrap w-10 h-10 rounded-lg ' + iconBg + ' flex items-center justify-center mb-3' },
+                h(mod.icon, { size: 20, className: 'tile-icon ' + iconColor, strokeWidth: 1.75 })
+            ),
+            h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
+            h('div', { className: 'tile-desc text-xs text-slate-400' }, mod.desc),
+            tags.length > 0 && h('div', { className: 'tile-tags flex items-center gap-1.5 mt-2.5' },
+                tags.map(t => h(TagDot, { key: t, tag: t }))
+            )
+        );
+    }
+
+    function ClusterSection({ cluster, startDelay }) {
+        return h('div', {
+            className: 'cluster-section mb-8 rounded-xl border border-slate-200 overflow-hidden',
+            style: { background: cluster.bgColor || '#ffffff' }
+        },
+            // Cluster header
+            h('div', {
+                className: 'flex items-center gap-3 px-5 py-3 border-b border-slate-100/60',
+                style: { borderLeft: '4px solid ' + cluster.accentColor }
+            },
+                h('div', {
+                    className: 'w-7 h-7 rounded-md ' + cluster.iconBg + ' flex items-center justify-center'
+                },
+                    h(cluster.icon, { size: 15, className: cluster.iconColor, strokeWidth: 2 })
+                ),
+                h('h3', { className: 'text-sm font-semibold text-slate-700 tracking-wide' }, cluster.title),
+                h('span', { className: 'ml-auto text-xs text-slate-400 font-medium' }, cluster.modules.length + ' Module')
+            ),
+            // Module grid inside cluster
+            h('div', { className: 'p-4 grid grid-cols-4 gap-3' },
+                cluster.modules.map((mod, i) =>
+                    h(ModuleTile, { key: mod.id, mod, delay: startDelay + i * 50, cluster })
+                )
+            )
+        );
+    }
+
+    function ToggleSwitch({ id, checked, onChange }) {
+        return h('label', { className: 'relative inline-flex items-center cursor-pointer' },
+            h('input', { type: 'checkbox', className: 'sr-only peer', checked, onChange: (e) => onChange(e.target.checked) }),
+            h('div', { className: 'w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:bg-green-600 transition-colors' }),
+            h('div', { className: 'absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4 shadow-sm', style: { transform: checked ? 'translateX(16px)' : 'translateX(0)' } })
+        );
+    }
+
+    function SettingsPanel() {
+        const [open, setOpen] = useState(false);
+        const [authenticated, setAuthenticated] = useState(false);
+        const [userName, setUserName] = useState(() => localStorage.getItem('kiUserName') || '');
+        const [apiToken, setApiToken] = useState(() => localStorage.getItem('openai_api_token') || '');
+        const [showApiToken, setShowApiToken] = useState(false);
+        const [speechKey, setSpeechKey] = useState(() => localStorage.getItem('google_speech_api_key') || '');
+        const [showSpeechKey, setShowSpeechKey] = useState(false);
+        const [mockMode, setMockMode] = useState(() => localStorage.getItem('mockMode') !== 'false');
+        const [uploadMode, setUploadMode] = useState(() => localStorage.getItem('uploadMode') === 'true');
+        const [saveStatus, setSaveStatus] = useState('');
+
+        function showStatus(msg) { setSaveStatus(msg); setTimeout(() => setSaveStatus(''), 2000); }
+
+        function saveUserNameFn() {
+            localStorage.setItem('kiUserName', userName);
+            showStatus('Name gespeichert');
+            window.dispatchEvent(new CustomEvent('userNameChanged', { detail: userName }));
+        }
+
+        function saveApiTokenFn() {
+            localStorage.setItem('openai_api_token', apiToken);
+            showStatus('API Key gespeichert');
+        }
+
+        function saveSpeechKeyFn() {
+            localStorage.setItem('google_speech_api_key', speechKey);
+            showStatus('Speech Key gespeichert');
+        }
+
+        function handleMockMode(val) { setMockMode(val); localStorage.setItem('mockMode', val); }
+        function handleUploadMode(val) { setUploadMode(val); localStorage.setItem('uploadMode', val); }
+
+        function openGenerator() { window.location.href = 'csv-generator.html'; }
+
+        return h('div', { className: 'mt-6 bg-white rounded-xl border border-slate-200 overflow-hidden' },
+            h('button', {
+                onClick: () => {
+                    if (!open && !authenticated) {
+                        var pw = prompt('Passwort eingeben:');
+                        if (pw === 'Brenneisen') { setAuthenticated(true); setOpen(true); }
+                    } else { setOpen(!open); }
+                },
+                className: 'w-full flex items-center gap-2 px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors'
+            },
+                h(Settings, { size: 16, className: 'text-slate-400', strokeWidth: 1.75 }),
+                h('span', null, 'Settings'),
+                h(ChevronDown, { size: 14, className: 'ml-auto text-slate-400 transition-transform ' + (open ? 'rotate-180' : ''), strokeWidth: 2 })
+            ),
+
+            open && h('div', { className: 'border-t border-slate-100 px-5 py-4 space-y-4' },
+                // Save status
+                saveStatus && h('div', { className: 'text-xs text-green-600 font-medium' }, saveStatus),
+
+                // Username
+                h('div', null,
+                    h('div', { className: 'flex items-center gap-2 mb-2' },
+                        h(User, { size: 14, className: 'text-slate-400' }),
+                        h('span', { className: 'text-xs font-medium text-slate-500' }, 'Benutzername')
+                    ),
+                    h('div', { className: 'flex gap-2' },
+                        h('input', {
+                            type: 'text', value: userName,
+                            onChange: (e) => setUserName(e.target.value),
+                            onKeyDown: (e) => { if (e.key === 'Enter') saveUserNameFn(); },
+                            className: 'flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200'
+                        }),
+                        h('button', { onClick: saveUserNameFn, className: 'px-3 py-2 text-xs font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors' }, 'Speichern')
+                    )
+                ),
+
+                // Test-Daten generieren
+                h('button', {
+                    onClick: openGenerator,
+                    className: 'w-full flex items-center gap-2 px-3 py-2.5 text-sm text-slate-600 rounded-lg hover:bg-slate-50 border border-slate-200 transition-colors'
+                },
+                    h(FileUp, { size: 14, className: 'text-slate-400' }),
+                    h('span', null, 'Test-Daten generieren')
+                ),
+
+                // CSV Upload
+                h('label', {
+                    className: 'w-full flex items-center gap-2 px-3 py-2.5 text-sm text-slate-600 rounded-lg hover:bg-slate-50 border border-slate-200 cursor-pointer transition-colors'
+                },
+                    h(Upload, { size: 14, className: 'text-slate-400' }),
+                    h('span', null, 'CSV Upload'),
+                    h('input', { type: 'file', accept: '.csv', className: 'hidden', onChange: (e) => {
+                        if (e.target.files[0]) showStatus('CSV geladen: ' + e.target.files[0].name);
+                    }})
+                ),
+
+                // API Key
+                h('div', null,
+                    h('div', { className: 'flex items-center gap-2 mb-2' },
+                        h(Key, { size: 14, className: 'text-slate-400' }),
+                        h('span', { className: 'text-xs font-medium text-slate-500' }, 'KI-API (via Worker aktiv)')
+                    ),
+                    h('div', { className: 'flex gap-2' },
+                        h('input', {
+                            type: showApiToken ? 'text' : 'password', value: apiToken,
+                            onChange: (e) => setApiToken(e.target.value),
+                            placeholder: 'Nicht nötig - Worker konfiguriert',
+                            disabled: true,
+                            className: 'flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-400'
+                        }),
+                        h('button', { onClick: () => setShowApiToken(!showApiToken), className: 'p-2 border border-slate-200 rounded-lg hover:bg-slate-50' },
+                            h(showApiToken ? EyeOff : Eye, { size: 14, className: 'text-slate-400' })
+                        ),
+                        h('button', { onClick: saveApiTokenFn, className: 'px-3 py-2 text-xs font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors' }, 'Speichern')
+                    )
+                ),
+
+                // Speech-to-Text Key
+                h('div', null,
+                    h('div', { className: 'flex items-center gap-2 mb-2' },
+                        h(Mic, { size: 14, className: 'text-slate-400' }),
+                        h('span', { className: 'text-xs font-medium text-slate-500' }, 'Google Cloud Speech-to-Text')
+                    ),
+                    h('div', { className: 'flex gap-2' },
+                        h('input', {
+                            type: showSpeechKey ? 'text' : 'password', value: speechKey,
+                            onChange: (e) => setSpeechKey(e.target.value),
+                            placeholder: 'AIza... (Google Cloud API Key)',
+                            className: 'flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200'
+                        }),
+                        h('button', { onClick: () => setShowSpeechKey(!showSpeechKey), className: 'p-2 border border-slate-200 rounded-lg hover:bg-slate-50' },
+                            h(showSpeechKey ? EyeOff : Eye, { size: 14, className: 'text-slate-400' })
+                        ),
+                        h('button', { onClick: saveSpeechKeyFn, className: 'px-3 py-2 text-xs font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors' }, 'Speichern')
+                    )
+                ),
+
+                // Demo Tour
+                h('button', {
+                    onClick: () => { window.location.href = VAP_BASE + '#/versicherung/overview/uebersicht'; },
+                    className: 'w-full flex items-center gap-2 px-3 py-2.5 text-sm text-slate-600 rounded-lg hover:bg-slate-50 border border-slate-200 transition-colors'
+                },
+                    h(Play, { size: 14, className: 'text-slate-400' }),
+                    h('span', null, 'Interaktive Demo starten')
+                ),
+
+                // Toggles
+                h('div', { className: 'space-y-3 pt-2 border-t border-slate-100' },
+                    h('div', { className: 'flex items-center justify-between' },
+                        h('div', { className: 'flex items-center gap-2' },
+                            h(Lock, { size: 14, className: 'text-slate-400' }),
+                            h('span', { className: 'text-sm text-slate-600' }, 'Mock-Modus')
+                        ),
+                        h(ToggleSwitch, { checked: mockMode, onChange: handleMockMode })
+                    ),
+                    h('div', { className: 'flex items-center justify-between' },
+                        h('div', { className: 'flex items-center gap-2' },
+                            h(Upload, { size: 14, className: 'text-slate-400' }),
+                            h('span', { className: 'text-sm text-slate-600' }, 'Upload-Modus')
+                        ),
+                        h(ToggleSwitch, { checked: uploadMode, onChange: handleUploadMode })
+                    ),
+                    uploadMode && h('p', { className: 'text-xs text-slate-400 ml-6' }, 'Klicke auf das Logo oder Profilbild um eigene Bilder hochzuladen.')
+                )
+            )
+        );
+    }
+
+    function App() {
+        const [chatInput, setChatInput] = useState('');
+        const [suggestions, setSuggestions] = useState([]);
+        const [showSuggestions, setShowSuggestions] = useState(false);
+        const [userName, setUserName] = useState(() => localStorage.getItem('kiUserName') || '');
+        const [showNamePrompt, setShowNamePrompt] = useState(() => !localStorage.getItem('kiUserName'));
+        const [nameInput, setNameInput] = useState('');
+        const nameInputRef = useRef(null);
+        const inputRef = useRef(null);
+
+        useEffect(() => {
+            if (window.__finishLoading) window.__finishLoading();
+            const handler = (e) => setUserName(e.detail);
+            window.addEventListener('userNameChanged', handler);
+            return () => window.removeEventListener('userNameChanged', handler);
+        }, []);
+
+        useEffect(() => {
+            if (showNamePrompt && nameInputRef.current) nameInputRef.current.focus();
+        }, [showNamePrompt]);
+
+        function saveName() {
+            const name = nameInput.trim() || 'Maria';
+            localStorage.setItem('kiUserName', name);
+            setUserName(name);
+            setShowNamePrompt(false);
+            window.dispatchEvent(new CustomEvent('userNameChanged', { detail: name }));
+        }
+
+        function handleInput(val) {
+            setChatInput(val);
+            if (val.trim().length > 0) {
+                const filtered = DEMO_SUGGESTIONS.filter(s => s.text.toLowerCase().includes(val.toLowerCase()));
+                setSuggestions(filtered.length > 0 ? filtered : DEMO_SUGGESTIONS);
+                setShowSuggestions(true);
+            } else {
+                setShowSuggestions(false);
+            }
+        }
+
+        function handleFocus() {
+            if (chatInput.trim().length === 0) {
+                setSuggestions(DEMO_SUGGESTIONS);
+                setShowSuggestions(true);
+            }
+        }
+
+        function handleSuggestionClick(s) {
+            setChatInput(s.text);
+            setShowSuggestions(false);
+            setTimeout(() => { window.location.href = s.href; }, 300);
+        }
+
+        function handleSubmit() {
+            if (!chatInput.trim()) return;
+            const match = DEMO_SUGGESTIONS.find(s => s.text.toLowerCase() === chatInput.toLowerCase());
+            if (match) { window.location.href = match.href; }
+            else { window.location.href = VAP_BASE + '#/versicherung/overview/uebersicht'; }
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); }
+        }
+
+        return h('div', { className: 'min-h-screen', onClick: () => setShowSuggestions(false) },
+
+            // Name Prompt Modal
+            showNamePrompt && h('div', {
+                className: 'name-overlay fixed inset-0 z-[10000] bg-black/50 backdrop-blur-sm flex items-center justify-center'
+            },
+                h('div', { className: 'name-card bg-white rounded-2xl shadow-2xl p-8 mx-4 w-full max-w-md' },
+                    h('div', { className: 'flex items-center gap-3 mb-6' },
+                        h('div', {
+                            className: 'w-12 h-12 rounded-full flex items-center justify-center',
+                            style: { background: 'linear-gradient(135deg, #86BC25, #00AA4F)' }
+                        },
+                            h(Atom, { size: 24, className: 'text-white', strokeWidth: 1.75 })
+                        ),
+                        h('div', null,
+                            h('h2', { className: 'text-lg font-semibold text-slate-800' }, 'Willkommen!'),
+                            h('p', { className: 'text-sm text-slate-500' }, 'Financial Services AI Platform')
+                        )
+                    ),
+                    h('label', { className: 'block text-sm font-medium text-slate-700 mb-2' }, 'Wie darf ich dich nennen?'),
+                    h('input', {
+                        ref: nameInputRef,
+                        type: 'text',
+                        value: nameInput,
+                        onChange: (e) => setNameInput(e.target.value),
+                        onKeyDown: (e) => { if (e.key === 'Enter') saveName(); },
+                        placeholder: 'Dein Name...',
+                        className: 'w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-200 mb-4'
+                    }),
+                    h('button', {
+                        onClick: saveName,
+                        className: 'w-full py-3 rounded-xl text-white font-medium text-sm transition-colors',
+                        style: { background: 'linear-gradient(135deg, #004d26, #00843d)' }
+                    }, 'Los geht\u2019s')
+                )
+            ),
+
+            // Header
+            h('div', {
+                className: 'px-6 py-5 relative overflow-hidden',
+                style: { background: 'linear-gradient(135deg, #003318 0%, #004d26 30%, #00843d 60%, #2d5016 100%)' }
+            },
+                // Subtle animated background pattern
+                h('div', {
+                    className: 'absolute inset-0 opacity-10',
+                    style: {
+                        backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(134,188,37,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(0,170,79,0.3) 0%, transparent 50%)',
+                    }
+                }),
+                h('div', { className: 'max-w-5xl mx-auto flex flex-col items-center justify-center relative z-10' },
+                    h('div', { className: 'flex items-center gap-4' },
+                        // Atom Logo
+                        h('div', {
+                            className: 'header-logo shrink-0 w-11 h-11 rounded-full flex items-center justify-center',
+                            style: { background: 'linear-gradient(135deg, #86BC25, #00AA4F)' }
+                        },
+                            h(Atom, { size: 24, className: 'text-white', strokeWidth: 1.75 })
+                        ),
+                        h('div', null,
+                            h('div', { className: 'text-lg font-bold text-white tracking-tight' }, 'Financial Services AI Use Case Platform'),
+                            h('div', { className: 'text-xs text-white/50 font-medium tracking-wider mt-0.5' }, 'Product Owner: Eike Brenneisen (BCMT)')
+                        )
+                    )
+                )
+            ),
+
+            h('div', { className: 'max-w-5xl mx-auto px-6 py-8' },
+
+                // Welcome + Chat
+                h('div', { className: 'mb-8 hero-pattern rounded-2xl p-6 -mx-2' },
+                    h('div', { className: 'bg-white rounded-xl border border-slate-200 p-6 mb-4 shadow-sm' },
+                        h('div', { className: 'flex items-center gap-3' },
+                            h('div', { className: 'w-10 h-10 rounded-full bg-green-50 flex items-center justify-center' },
+                                h(MessageCircle, { size: 20, className: 'text-green-600', strokeWidth: 1.75 })
+                            ),
+                            h('p', { className: 'text-slate-700' },
+                                userName ? 'Willkommen zurück ' : 'Willkommen ',
+                                userName && h('span', { className: 'font-semibold' }, userName),
+                                ', was kann ich für dich tun?'
+                            )
+                        )
+                    ),
+                    h('div', { className: 'relative', onClick: (e) => e.stopPropagation() },
+                        h('div', { className: 'flex gap-2' },
+                            h('input', {
+                                ref: inputRef,
+                                type: 'text',
+                                value: chatInput,
+                                onChange: (e) => handleInput(e.target.value),
+                                onFocus: handleFocus,
+                                onKeyDown: handleKeyDown,
+                                placeholder: 'Frag mich etwas...',
+                                className: 'flex-1 px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-200 transition-shadow'
+                            }),
+                            h('button', { className: 'p-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 transition-colors' },
+                                h(Mic, { size: 18, className: 'text-slate-500', strokeWidth: 1.75 })
+                            ),
+                            h('button', {
+                                onClick: handleSubmit,
+                                className: 'p-3 rounded-xl bg-green-700 hover:bg-green-800 transition-colors'
+                            },
+                                h(Send, { size: 18, className: 'text-white', strokeWidth: 1.75 })
+                            )
+                        ),
+                        // Autocomplete suggestions
+                        showSuggestions && suggestions.length > 0 && h('div', {
+                            className: 'absolute left-0 right-16 top-full mt-1 bg-white rounded-xl border border-slate-200 shadow-lg z-50 overflow-hidden'
+                        },
+                            suggestions.map((s, i) =>
+                                h('button', {
+                                    key: i,
+                                    onClick: () => handleSuggestionClick(s),
+                                    className: 'w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-green-50 transition-colors text-left border-b border-slate-100 last:border-b-0'
+                                },
+                                    h(Search, { size: 14, className: 'text-slate-400 shrink-0' }),
+                                    s.text
+                                )
+                            )
+                        )
+                    )
+                ),
+
+                // Module Clusters
+                h('h3', { className: 'text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4' }, 'Module'),
+                MODULE_CLUSTERS.map((cluster, ci) =>
+                    h(ClusterSection, { key: cluster.id, cluster, startDelay: ci * 200 })
+                ),
+
+                // Domain Legend
+                h('div', { className: 'flex items-center gap-5 mt-2 mb-6 px-1' },
+                    Object.entries(TAG_CONFIG).map(([key, cfg]) =>
+                        h('div', { key, className: 'flex items-center gap-1.5' },
+                            h('svg', { width: 10, height: 10, viewBox: '0 0 10 10' },
+                                h('circle', { cx: 5, cy: 5, r: 4.5, fill: cfg.color })
+                            ),
+                            h('span', { className: 'text-xs text-slate-400' }, cfg.label)
+                        )
+                    )
+                ),
+
+                // Settings Panel
+                h(SettingsPanel)
+            )
+        );
+    }
+
+    createRoot(document.getElementById('root')).render(h(App));
+    </script>
+</body>
+</html>

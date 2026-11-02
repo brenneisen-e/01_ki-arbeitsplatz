@@ -1,0 +1,386 @@
+/* ===========================================================================
+   Simulationskasten — Modulklassen
+   Nur, was es allein hier gibt: die Szenarienzeile im Seitenkopf, die
+   Anordnung der Tafeln im Raster, die Reglerlisten in den Eingabe-Tafeln,
+   der Umschalter, die Beispielhaus-Auswahl im Steuerblock, die kleinen
+   Plaketten im Tafelkopf, die Bonusvolumen-Bilanz und der Gewinner/
+   Verlierer-Streifen. Raster, Tafel, Tabellen, dichte Reglerzeile und
+   Steuerblock kommen aus tafel.css, regler.css, steuerblock.css, index.css.
+   =========================================================================== */
+
+/* ---- Szenarienzeile: rechts im Seitenkopf ---------------------------------
+   Der aktive Chip ist der Primärknopf (Burgund) — die einzige gefüllte
+   Markenfläche in der Zeile. Bei knapper Breite bricht die Zeile hinter dem
+   Titel um, statt ihn zu quetschen. */
+.vg-szenarien {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vg-a3);
+  min-width: 0;
+}
+.vg-szenarien-label {
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-4);
+  margin-right: var(--vg-a2);
+  white-space: nowrap;
+}
+/* Der Kopf klebt unter Topbar und Kontextleiste, damit die Szenarienleiste
+   beim Scrollen durch die Tafeln erreichbar bleibt. Er zieht sich mit
+   negativen Rändern in den Inhaltsrand hinein und trägt den Seitengrund,
+   so scrollt nichts an seinen Kanten vorbei. Der Steuerblock rückt um
+   --vg-d-kopf nach unten (gemessene Kopfhöhe, MakroTool.jsx); außerhalb
+   des Kastens bleibt die Variable 0. */
+.vg-kasten { --vg-d-kopf: 0px; }
+.vg-kasten-kopf {
+  flex-wrap: wrap;
+  position: sticky;
+  top: calc(var(--vg-d-topbar) + var(--vg-d-kontext));
+  z-index: var(--vg-z-sticky, 20);
+  margin: calc(-1 * var(--vg-d-inhalt-pad)) calc(-1 * var(--vg-d-inhalt-pad)) 0;
+  padding: var(--vg-d-inhalt-pad) var(--vg-d-inhalt-pad) var(--vg-a4);
+  background: var(--vg-grund);
+  transition: box-shadow var(--vg-schnell) var(--vg-kurve);
+}
+.vg-kasten-kopf[data-haftet] {
+  box-shadow: 0 1px 0 var(--vg-rand), 0 10px 18px -14px rgb(0 0 0 / .22);
+}
+.vg-kasten-kopf .vg-seitenkopf-aktionen { flex: 0 1 auto; }
+
+/* ---- Anordnung im Raster --------------------------------------------------
+   Drei Spalten (tafel.css). Jede Tafel endet mit ihrem Inhalt (align-items:
+   start) — Leere liegt zwischen den Karten, nie in ihnen. Die dichte
+   Belegung (dense) füllt Lücken, die spannende Tafeln lassen:
+
+     Abschluss   │ Laufend/Bestand │ Bonifikation   (zwei Reihen hoch)
+     Garantien   │ Zuschüsse       │      ″
+     Weitere Stellhebel — flach über alle Spalten, zugeklappt nur der Kopf
+     Produktionszeilen (zwei Spalten)   │ Bonusstaffel  ┐ gestapelte
+     Beispielhaus (zwei Spalten)        │ Verlauf       ┘ Gruppe          */
+.vg-kasten-tafeln {
+  align-items: start;
+  grid-auto-flow: dense;
+}
+.vg-kasten-tafel-bonus { grid-row: span 2; }
+.vg-kasten-tafel-weitere { grid-column: 1 / -1; }
+.vg-kasten-spalte {
+  display: grid;
+  gap: var(--vg-a6);
+  align-content: start;
+  grid-row: span 2;
+  min-width: 0;
+}
+
+/* ---- Reglerlisten in den Eingabe-Tafeln -----------------------------------
+   Die Tafel ist bündig (kein Innenabstand), die Liste bringt ihn mit, damit
+   Staffeltabelle und Regler in derselben Tafel dieselbe Kante haben. Die
+   Maße der dichten Zeile (Name 112 px, Wert 58 px, Chip 40 px, Knöpfe bei
+   Hand oder Fokus über dem Namen) trägt regler.css. */
+.vg-kasten-regler {
+  display: flex;
+  flex-direction: column;
+  padding: var(--vg-a2) var(--vg-a5);
+}
+.vg-kasten-regler-unter-tabelle {
+  border-top: 1px solid var(--vg-rand);
+  padding-top: var(--vg-a3);
+}
+/* Aufgeklappte „Weitere Stellhebel“: vier Gruppen in zwei Spalten */
+.vg-kasten-regler-zweispaltig {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--vg-a9);
+  row-gap: var(--vg-a3);
+  padding-bottom: var(--vg-a4);
+}
+.vg-kasten-gruppe { display: flex; flex-direction: column; min-width: 0; }
+.vg-kasten-zwischenkopf {
+  height: 26px;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: var(--vg-a1);
+  font-size: var(--vg-fs-2xs);
+  font-weight: 500;
+  color: var(--vg-text-4);
+  border-bottom: 1px solid var(--vg-rand-stark);
+  margin-bottom: var(--vg-a1);
+}
+
+/* ---- Umschalter „auf Budget normieren“ ------------------------------------
+   Dieselbe Zeile wie ein dichter Regler: Name links, Stand und Schalter
+   rechts, 44 px hoch. Ohne Bahn darf der Name die freie Breite nehmen. */
+.vg-kasten-schalter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0 var(--vg-a4);
+  height: 44px;
+  min-width: 0;
+}
+.vg-kasten-schalter > .vg-tip { min-width: 0; max-width: 100%; }
+.vg-kasten-schalter .vg-regler-name { font-size: var(--vg-fs-sm); max-width: 100%; }
+.vg-kasten-schalter[data-veraendert="true"] .vg-regler-name { color: var(--vg-text); }
+.vg-kasten-schalter-stand {
+  grid-column: 2;
+  font-family: var(--vg-schrift-zahl);
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  color: var(--vg-text-3);
+  min-width: 26px;
+  text-align: right;
+}
+.vg-kasten-schalter[data-veraendert="true"] .vg-kasten-schalter-stand { color: var(--vg-viz-3); }
+.vg-kasten-schalter > label { grid-column: 3; }
+
+/* ---- Staffeltabelle in der Bonifikations-Tafel ----------------------------
+   Drei Spalten (Bereich · Schwelle · Satz neu) in fester Tabellenbreite —
+   das passt in eine Drittel-Tafel bei 1600 wie bei 1280 ohne Überlauf;
+   Einheiten und Volumen stehen in der Wirkungs-Tafel. */
+.vg-kasten-staffel { min-width: 0; }
+
+/* ---- Beispielhaus-Auswahl im Steuerblock ----------------------------------
+   select.vg-feld blendet den nativen Pfeil aus; der Chevron liegt rechts
+   darüber. Die Token des Blocks färben Feld und Text bereits um. */
+.vg-kasten-auswahl { display: grid; gap: var(--vg-a2); min-width: 0; }
+.vg-kasten-auswahl-feld { position: relative; display: block; min-width: 0; }
+.vg-kasten-auswahl-feld > select {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vg-kasten-auswahl-feld > svg {
+  position: absolute;
+  right: var(--vg-a4);
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--vg-text-4);
+  pointer-events: none;
+}
+
+/* ---- Kleine Plaketten im Tafelkopf (Beispielhaus) -------------------------- */
+.vg-kasten-plakette {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--vg-a2);
+  height: 22px;
+  padding: 0 var(--vg-a3);
+  border-radius: var(--vg-r-sm);
+  background: var(--vg-abzeichen-flaeche);
+  border: 1px solid var(--vg-rand);
+  white-space: nowrap;
+}
+.vg-kasten-plakette-label { font-size: var(--vg-fs-2xs); color: var(--vg-text-4); }
+.vg-kasten-plakette-wert {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: var(--vg-fs-xs);
+  font-weight: 500;
+  color: var(--vg-text);
+  transition: color var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-kasten-plakette[data-ton="positiv"] .vg-kasten-plakette-wert { color: var(--vg-positiv); }
+.vg-kasten-plakette[data-ton="negativ"] .vg-kasten-plakette-wert { color: var(--vg-negativ); }
+.vg-kasten-plakette[data-ton="warnung"] .vg-kasten-plakette-wert { color: var(--vg-warnung); }
+
+/* ---- „heute → neu“ in einer Zelle ------------------------------------------
+   Die nachlaufende Zahl (.vg-zahl, index.css) bringt eigene Tinte und
+   Gewicht mit; in diesen Hüllen erbt sie, damit „heute“ gedämpft und die
+   Differenz in der Tinte ihres Vorzeichens steht. */
+.vg-kasten-heuteneu .vg-zahl,
+.vg-kasten-bilanz .vg-zahl { color: inherit; font-weight: inherit; }
+.vg-kasten-heuteneu { display: inline-flex; align-items: baseline; gap: 3px; white-space: nowrap; }
+.vg-kasten-heuteneu-zu { display: inline-flex; align-items: baseline; gap: 3px; }
+.vg-kasten-heuteneu-alt { color: var(--vg-text-3); font-weight: 400; }
+.vg-kasten-heuteneu-neu { color: var(--vg-text); font-weight: 500; }
+/* In der Summenzeile bleibt „heute“ gedämpft, obwohl die Zeile Gewicht 500 trägt */
+.vg-vergleich tr.vg-vergleich-summe td .vg-kasten-heuteneu-alt { color: var(--vg-text-2); font-weight: 400; }
+
+/* ---- Bonusvolumen: nur die Differenz unter der Staffel ----------------------
+   Heute und neu stehen in der Summenzeile der Tabelle; hier bleibt, was die
+   Staffel kostet oder spart — Betrag und Prozent, in der Tinte des Vorzeichens. */
+.vg-kasten-bilanz {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--vg-a4);
+  min-height: 34px;
+  padding: var(--vg-a2) var(--vg-a5);
+  border-top: 1px solid var(--vg-rand-hart);
+  font-size: var(--vg-fs-sm);
+  font-weight: 500;
+  color: var(--vg-text);
+  white-space: nowrap;
+}
+.vg-kasten-bilanz-label { overflow: hidden; text-overflow: ellipsis; }
+.vg-kasten-bilanz-differenz,
+.vg-kasten-bilanz-prozent {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  text-align: right;
+}
+.vg-kasten-bilanz-prozent { font-size: var(--vg-fs-xs); font-weight: 400; }
+.vg-kasten-bilanz-differenz[data-ton="positiv"], .vg-kasten-bilanz-prozent[data-ton="positiv"] { color: var(--vg-positiv); }
+.vg-kasten-bilanz-differenz[data-ton="negativ"], .vg-kasten-bilanz-prozent[data-ton="negativ"] { color: var(--vg-negativ); }
+.vg-kasten-bilanz-differenz[data-ton="neutral"], .vg-kasten-bilanz-prozent[data-ton="neutral"] { color: var(--vg-text-4); }
+
+/* ---- Verlauf: Platz für das Endlabel ---------------------------------------
+   Der kompakte Verlauf schreibt „2035 −3,6 %“ rechts neben das Reihenende,
+   über den Rand seiner Zeichenfläche hinaus; die Karte (contain: paint)
+   kappte es an ihrer Kante. Der Diagrammbehälter hält den Streifen frei,
+   in den der Text läuft — bei jeder Breite gleich, weil der rechte Rand des
+   Diagramms fest ist. */
+.vg-kasten-tafel-verlauf .vg-diagramm { padding-right: 32px; }
+
+/* ---- Gewinner / Neutral / Verlierer unter dem Verlauf ---------------------
+   Drei Blöcke nebeneinander, bewusst kein .vg-raster-3 (das bräche bei 1280
+   auf 2+1 um): Punkt, Name, Anzahl · Messlatte nach Volumen · Anteil. */
+.vg-kasten-streifen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vg-a5);
+  margin-top: var(--vg-a4);
+  padding-top: var(--vg-a4);
+  border-top: 1px solid var(--vg-rand);
+  min-width: 0;
+}
+.vg-kasten-streifen-teil { min-width: 0; display: grid; gap: var(--vg-a2); }
+.vg-kasten-streifen-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a2);
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-2);
+  min-width: 0;
+}
+.vg-kasten-streifen-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vg-kasten-streifen-anzahl {
+  margin-left: auto;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--vg-text);
+}
+.vg-kasten-streifen-fuss {
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  color: var(--vg-text-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Gewinner und Verlierer: Verteilung je Vertriebsweg ------------------- */
+/* Drei Reihen (Sparkassen, Agenturen, alle) mit je acht Säulen auf 100 %;
+   unter jeder Reihe steht die Klasse direkt unter ihrer Säule. */
+.vg-vert-reihe { display: grid; gap: 4px; min-width: 0; }
+.vg-vert-kopf { align-items: baseline; gap: 0 var(--vg-a3); flex-wrap: wrap; }
+.vg-vert-kopf > span:first-child { white-space: nowrap; }
+.vg-vert-summen { white-space: nowrap; }
+.vg-vert-saeulen {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  height: 58px;
+  border-bottom: 1px solid var(--vg-viz-achse);
+}
+.vg-vert-fach { position: relative; min-width: 0; }
+.vg-vert-saeule {
+  position: absolute; left: 16%; right: 16%; bottom: 0;
+  border-radius: 2px 2px 0 0;
+  background: var(--vg-neutral-flaeche);
+  transition: height var(--vg-daten) var(--vg-kurve), opacity var(--vg-daten) var(--vg-kurve);
+}
+.vg-vert-saeule[data-ton="negativ"] { background: var(--vg-negativ); }
+.vg-vert-saeule[data-ton="positiv"] { background: var(--vg-positiv); }
+.vg-vert-wert {
+  position: absolute; left: 0; right: 0;
+  text-align: center;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  line-height: 1;
+  color: var(--vg-text-2);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: bottom var(--vg-daten) var(--vg-kurve), top var(--vg-daten) var(--vg-kurve);
+}
+.vg-vert-klassen {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  margin-top: 3px;
+}
+.vg-vert-klassen span {
+  min-width: 0;
+  overflow: hidden;              /* kein Ellipsis: die Kurzformen passen ab 33 px Fachbreite */
+  text-align: center;
+  font-family: var(--vg-schrift-zahl);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vg-fs-2xs);
+  line-height: 1.2;
+  color: var(--vg-text-4);
+  white-space: nowrap;
+}
+@media (max-width: 1280px) {
+  .vg-vert-klassen span { font-size: 9.5px; letter-spacing: -0.01em; }
+}
+
+/* ---- Responsivität -------------------------------------------------------- */
+/* ≤ 1280: drei Spalten bleiben (rund 300 px je Tafel). Im Tafelkopf weichen
+   Unterzeilen und Plakettenlabels (der Tooltip trägt sie weiter), damit
+   „Beispielhaus: <Name>“ und „Verlauf 2028–2035“ ganz stehen. In der
+   Bonusstaffel-Tafel stapelt die Volumen-Zelle heute über neu — in einer
+   Zeile bräuchte sie 190 px, die Bereichsspalte müsste kappen. Der Pfeil
+   bleibt, klein vor der zweiten Zeile: er ist die einzige Richtungsangabe,
+   sobald die Unterzeile „heute → neu je Stufe“ gewichen ist. */
+@media (max-width: 1280px) {
+  .vg-kasten-unter-weicht .vg-tafel-unter { display: none; }
+  .vg-kasten-plakette-label { display: none; }
+  .vg-kasten-tafel-staffel .vg-vergleich td[data-spalte="neu"] .vg-kasten-heuteneu {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+    line-height: 1.2;
+    padding: 2px 0;
+  }
+  .vg-kasten-tafel-staffel .vg-vergleich td[data-spalte="neu"] .vg-kasten-heuteneu .vg-pfeil {
+    width: 12px;
+    -webkit-mask-size: 12px auto;
+            mask-size: 12px auto;
+  }
+  .vg-kasten-bilanz { padding-left: var(--vg-a4); padding-right: var(--vg-a4); gap: var(--vg-a3); }
+}
+/* ≤ 1024: zwei Spalten (tafel.css). Die Bonifikations-Tafel spannt weiter
+   zwei Reihen (neben Garantien und Zuschüssen); die gestapelte Gruppe aus
+   Bonusstaffel und Verlauf wird zur vollen Reihe mit beiden nebeneinander;
+   der Steuerblock ist ein Band, seine Einstellungen stehen in einer Zeile. */
+@media (max-width: 1024px) {
+  .vg-kasten-spalte {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+  .vg-kasten-unter-weicht .vg-tafel-unter { display: inline; }
+  .vg-kasten-plakette-label { display: inline; }
+  .vg-kasten-tafel-staffel .vg-vergleich td[data-spalte="neu"] .vg-kasten-heuteneu { flex-direction: row; align-items: baseline; gap: 3px; padding: 0; line-height: inherit; }
+  .vg-kasten-tafel-staffel .vg-vergleich td[data-spalte="neu"] .vg-kasten-heuteneu .vg-pfeil {
+    width: 15px;
+    -webkit-mask-size: 15px auto;
+            mask-size: 15px auto;
+  }
+  .vg-kasten-auswahl { flex: 1 1 240px; max-width: 360px; }
+  .vg-kasten-auswahl > .vg-label { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vg-kasten-plakette-wert { transition-duration: 1ms; }
+}
+
+@media print {
+  .vg-kasten-kopf { position: static; margin: 0; padding: 0; box-shadow: none; }
+  .vg-kasten-kopf .vg-seitenkopf-aktionen { display: none; }
+}

@@ -1,0 +1,152 @@
+[
+ {
+  "de": "System",
+  "en": "System",
+  "art": "text"
+ },
+ {
+  "de": "Anmerkung / remark",
+  "en": "Remark",
+  "art": "text"
+ },
+ {
+  "de": "Themenpostkorb (Eröffnung über die EMWS-Schnittstelle)",
+  "en": "Topic mailbox (opened via the EMWS interface)",
+  "art": "text"
+ },
+ {
+  "de": "Eingangskanal des Prozesses. Celonis eröffnet je Versicherungsnummer einen Postkorbvorgang über die EMWS-Schnittstelle (E-Mail mit Anhängen, KI-Deckblatt, Datenpool). Der Roboter öffnet den Vorgang, liest das Eröffnungsdatum, legt die Notiz an und leitet den Vorgang weiter.",
+  "en": "Inbound channel of the process. Celonis opens one mailbox case per policy number via the EMWS interface (e-mail with attachments, AI cover sheet, data pool). The robot opens the case, reads the opening date, creates the note and forwards the case.",
+  "art": "text"
+ },
+ {
+  "de": "Datenpool",
+  "en": "Datenpool (data pool)",
+  "art": "text"
+ },
+ {
+  "de": "Einzige Datenquelle des Prüf-Bots für die Vorgangsdaten. Enthält die Felder BUE_* aus dem KI-Deckblatt. Wie die Felder befüllt werden, ist nicht Gegenstand dieses PDD.",
+  "en": "The Prüf-Bot's only data source for the case data. Contains the BUE_* fields from the AI cover sheet. How the fields are populated is not the subject of this PDD.",
+  "art": "text"
+ },
+ {
+  "de": "VA230 – Vertragsauskunft",
+  "en": "VA230 – contract enquiry",
+  "art": "text"
+ },
+ {
+  "de": "Auslesen des Vertragsstatus und der Agentur-Nr. (A…) des abgebenden Bestandsinhabers.",
+  "en": "Reading the contract status and the agency number (A…) of the transferring portfolio holder.",
+  "art": "text"
+ },
+ {
+  "de": "IS011 – Partnerauskunft",
+  "en": "IS011 – partner enquiry",
+  "art": "text"
+ },
+ {
+  "de": "Kundennummer des Versicherungsnehmers über die Versicherungsnummer (Maske VAF017), Matchcodesuche mit den Angaben aus dem Auftrag (Maske VAF121) und Geburtsdatum des Versicherungsnehmers.",
+  "en": "Customer number of the policyholder via the policy number (mask VAF017), match code search with the details from the order (mask VAF121) and date of birth of the policyholder.",
+  "art": "text"
+ },
+ {
+  "de": "Scout-Service – Vertragsübersicht",
+  "en": "Scout-Service – contract overview",
+  "art": "text"
+ },
+ {
+  "de": "Liefert zu einer Kundennummer alle Versicherungsnummern. Wird nur benötigt, wenn die Matchcodesuche einen anderen Partner als den Versicherungsnehmer findet, um den Grund der Business Exception zu bestimmen.",
+  "en": "Returns all policy numbers for a customer number. Only required when the match code search finds a partner other than the policyholder, in order to determine the reason for the business exception.",
+  "art": "text"
+ },
+ {
+  "de": "OB726 – Vermittlerauskunft",
+  "en": "OB726 – intermediary enquiry",
+  "art": "text"
+ },
+ {
+  "de": "Auslesen von Vermittler-Nr. (PNR), Name und Klassifizierung (Makler, Mehrfachagent, Courtagefortzahler) des übernehmenden Vermittlers sowie der PNR des abgebenden Bestandsinhabers; hinterlegte E-Mail-Adresse des Vermittlers (Anwendung zu bestätigen, bisher OB729 vorgesehen).",
+  "en": "Reading the intermediary number (PNR), name and classification (broker, multiple agent, Courtagefortzahler) of the acquiring intermediary as well as the PNR of the transferring portfolio holder; stored e-mail address of the intermediary (application to be confirmed, OB729 envisaged so far).",
+  "art": "text"
+ },
+ {
+  "de": "GH040 – Anbindung Vermittler",
+  "en": "GH040 – intermediary affiliation",
+  "art": "text"
+ },
+ {
+  "de": "Prüfung des Anbindungsstatus des übernehmenden Vermittlers und des abgebenden Bestandsinhabers über die Zeile „Status der Beschäftigung“ (Wert hinter „=“: aktiv / inaktiv).",
+  "en": "Checking the affiliation status of the acquiring intermediary and the transferring portfolio holder via the line „Status der Beschäftigung“ (value after „=“: aktiv / inaktiv, i.e. active / inactive).",
+  "art": "text"
+ },
+ {
+  "de": "Sonderliste TOP-Makler",
+  "en": "Sonderliste TOP-Makler (special list of TOP brokers)",
+  "art": "text"
+ },
+ {
+  "de": "Fest hinterlegte Liste der Vermittler mit eigener Ausgangsadresse für die Bestandsübertragung (Agenturnummer, PNR, E-Mail-Adresse; siehe Kapitel „III. Übernehmender Makler“). Die Liste gilt einmalig und wird nicht laufend gepflegt.",
+  "en": "Fixed list of intermediaries with their own outgoing address for the portfolio transfer (agency number, PNR, e-mail address; see chapter „III. Übernehmender Makler“). The list applies once only and is not maintained on an ongoing basis.",
+  "art": "text"
+ },
+ {
+  "de": "Notizanwendung Robotics (Vorlage BOT2011, Feldumfang wie Vorlage 1515)",
+  "en": "Robotics note application (Vorlage BOT2011, field scope as in Vorlage 1515)",
+  "art": "text"
+ },
+ {
+  "de": "Erstellung der Telefonnotiz für den nachgelagerten 72-Stunden-BOT und BÜ-BOT. Der Prüf-Bot bestückt die Notiz Feld für Feld (siehe Kapitel „VI. Abschluss ohne Befund“); die Weiterverarbeitung erfolgt asynchron.",
+  "en": "Creation of the telephone note for the downstream 72-Stunden-BOT and BÜ-BOT. The Prüf-Bot populates the note field by field (see chapter „VI. Abschluss ohne Befund“); further processing takes place asynchronously.",
+  "art": "text"
+ },
+ {
+  "de": "72-Stunden-BOT",
+  "en": "72-Stunden-BOT",
+  "art": "text"
+ },
+ {
+  "de": "Nachgelagerter Bot, an den der Prüf-Bot alle Vorgänge ohne Befund übergibt. Er erkennt selbst, ob der abgebende Bestandsinhaber der Ausschließlichkeitsorganisation (AO) zugeordnet ist, wahrt in diesem Fall die 72-Stunden-Frist und gibt alle übrigen Vorgänge ohne Wartezeit an den BÜ-BOT weiter (spartenübergreifend).",
+  "en": "Downstream bot to which the Prüf-Bot hands over all cases without findings. It detects itself whether the transferring portfolio holder is assigned to the tied agent organisation (AO), observes the 72-hour period in that case and passes all other cases on to the BÜ-BOT without any waiting time (across all lines of business).",
+  "art": "text"
+ },
+ {
+  "de": "Outlook (Bot-Postfach)",
+  "en": "Outlook (bot mailbox)",
+  "art": "text"
+ },
+ {
+  "de": "Standard-Postfach des Roboters für Betriebsinformationen und die Weiterleitung von Irrläufern. Der Prüf-Bot versendet keine Ablehnungen; Vorgänge mit Befund gehen mit Bearbeitungshinweis in die manuelle Bearbeitung.",
+  "en": "Standard mailbox of the robot for operational information and the forwarding of misdirected items. The Prüf-Bot does not send any rejections; cases with findings go to manual processing with a processing note.",
+  "art": "text"
+ },
+ {
+  "de": "Involvierte Geschäftsbereiche",
+  "en": "Business areas involved",
+  "art": "text"
+ },
+ {
+  "de": "Welche Arbeitsgruppe führt welche Tätigkeit im bestehenden manuellen Prozess aus?",
+  "en": "Which working group performs which activity in the existing manual process?",
+  "art": "text"
+ },
+ {
+  "de": "Gruppe",
+  "en": "Group",
+  "art": "text"
+ },
+ {
+  "de": "Abteilung",
+  "en": "Department",
+  "art": "text"
+ },
+ {
+  "de": "Bereich",
+  "en": "Division",
+  "art": "text"
+ },
+ {
+  "de": "Standort",
+  "en": "Location",
+  "art": "text"
+ }
+]

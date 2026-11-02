@@ -1,0 +1,18 @@
+node_modules
+.DS_Store
+*.log
+.vite
+package-lock.json
+
+# Build-Ausgabe der SPFx-Variante (siehe vite.spfx.config.ts) — wird nur
+# transient von 04_banking-horizon-spfx/scripts/prepare-assets.mjs konsumiert
+dist-spfx/
+
+# Zu groß für Cloudflare Pages (>25 MiB) — blockiert das Deployment
+Banking-Horizon-2035_Hypothesen_DE.xlsx
+
+# Hypothesen-Quelldateien: zu gross fuer Cloudflare Pages (Limit 25 MiB pro
+# Datei) und im Produkt nicht noetig — die Inhalte stehen in src/operationstag/data.ts.
+AI native Banking Operations Demo_Hypothesen_ENG_v04.xlsx
+*.xlsx.orig
+*.xlsx.bak

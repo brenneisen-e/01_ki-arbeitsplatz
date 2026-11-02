@@ -1,0 +1,187 @@
+[
+ {
+  "de": "Notation nach der Vorgabe des Templates. Drei Schreibweisen sind zu unterscheiden: <BUE_…> bezeichnet ein Eingangsfeld aus dem Datenpool, <…> einen vom Bot gelesenen oder gesetzten Wert, „…“ ohne Zusatz ein Feld auf der Hostmaske oder einen festen Wert. Variablen, die aus einer Hostanwendung gelesen werden, tragen die Anwendung im Namen. Damit ist in jedem Vergleich erkennbar, welche Quelle gegen welche geprüft wird: <IS011-Gebdat> <> <BUE_KUNDE_GEBDAT> vergleicht das in IS011 gelesene Geburtsdatum mit dem Feld aus dem Datenpool.",
+  "en": "Notation as specified by the template. Three notations are to be distinguished: <BUE_…> denotes an input field from the data pool, <…> a value read or set by the bot, „…“ without any addition a field on the host screen or a fixed value. Variables that are read from a host application carry the application in their name. This makes it recognisable in every comparison which source is checked against which: <IS011-Gebdat> <> <BUE_KUNDE_GEBDAT> compares the date of birth read in IS011 with the field from the data pool.",
+  "art": "text"
+ },
+ {
+  "de": "Lesehilfe zur Farblogik: Systeme stehen fett (OB726), Felder aus dem Datenpool dunkelblau (<BUE_VNR>), im Lauf erzeugte Variablen dunkelgrün (<Vorgang-VNR>), die <BE-Klassifikation> dunkelrot. Die Steuerwörter WENN / DANN / SONST / Ende WENN stehen türkis in der Formatvorlage „WENN DANN“ und sind wie Programmcode eingerückt. Querverweise auf andere Kapitel stehen fett und unterstrichen, Hinweise kursiv.",
+  "en": "Reading aid for the colour logic: systems are in bold (OB726), fields from the data pool in dark blue (<BUE_VNR>), variables generated during the run in dark green (<Vorgang-VNR>), the <BE-Klassifikation> in dark red. The control words IF / THEN / ELSE / END IF are in turquoise in the paragraph style „WENN DANN“ and are indented like program code. Cross-references to other chapters are in bold and underlined, notes in italics.",
+  "art": "text"
+ },
+ {
+  "de": "Initialisierung über „Lese … und speichere als <…>“, Zuweisung über „=“, Vergleich über „<>“.",
+  "en": "Initialisation via „Lese … und speichere als <…>“ (read … and store as), assignment via „=“, comparison via „<>“.",
+  "art": "text"
+ },
+ {
+  "de": "Eine Business Exception wird über <BE-Klassifikation> gemeldet; sie beendet die Prüfung sofort und verzweigt in das Kapitel „VII. Abschluss mit Befund“. Sie kann in der Vorprüfung und in jedem späteren Schritt auftreten. Abweichungen aus den Einzelprüfungen werden mit „Merke Prüfnotiz … in <Fehlerliste>“ gesammelt, die Verarbeitung läuft weiter; am Ende der Prüfungen wird die Fehlerliste getestet. Wie mit einer BE umgegangen wird, steht nur im Kapitel „VII. Abschluss mit Befund“ und wird in den einzelnen Schritten nicht wiederholt.",
+  "en": "A business exception is reported via <BE-Klassifikation>; it ends the check immediately and branches to chapter „VII. Abschluss mit Befund“. It can occur in the preliminary check and in any later step. Deviations from the individual checks are collected with „Merke Prüfnotiz … in <Fehlerliste>“ (record check note … in the error list), and processing continues; at the end of the checks, the error list is tested. How a BE is handled is described only in chapter „VII. Abschluss mit Befund“ and is not repeated in the individual steps.",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb Prüf-Bot Komposit / Leben – Postkorb-Nr. TBD, siehe Kapitel „Details zum Startereignis“) öffnen. GeVo 108 (Bestandsübertragung) bzw. 469.",
+  "en": "Values from the mailbox case: open the mailbox case in the start mailbox (topic mailbox Prüf-Bot Komposit / Leben – Postkorb-Nr. TBD, see chapter „Details zum Startereignis“). GeVo 108 (portfolio transfer) or 469.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Trennung nach Sparte erfolgt vor dem Prüf-Bot: KV-Vorgänge und Vorgänge aus Komposit und Leben liegen in getrennten Postkörben. Dieser Prüf-Bot bedient den Postkorb Komposit / Leben; die Notiz entspricht der Vorlage 1515.",
+  "en": "Note: The separation by line of business takes place before the Prüf-Bot: KV cases and cases from Komposit (P&C) and Leben (life) are held in separate mailboxes. This Prüf-Bot serves the Komposit / Leben mailbox; the note corresponds to Vorlage 1515.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Spartenweiche innerhalb des Prozesses ist deshalb nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt; bei KR steuert das Feld im Kapitel „IV. Vertrag“ die Prüfung auf Mantelvertrag.",
+  "en": "Note: A line-of-business switch within the process is therefore not required. <BUE_SPARTE> is carried along for information only; for KR, the field controls the check for an umbrella contract in chapter „IV. Vertrag“.",
+  "art": "text"
+ },
+ {
+  "de": "UND <BUE_ANF_UNTERLAGEN> = „nein“",
+  "en": "AND <BUE_ANF_UNTERLAGEN> = „nein“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein anderer Wert als „Vollständig“ ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz „Unterlagen nicht vollständig“ in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“. Ist <BUE_ANF_UNTERLAGEN> = „ja“, entsteht keine Prüfnotiz; die Unterlagen werden über die Notiz angefordert.",
+  "en": "Note: <BUE_PRUEFUNG_UNTERLAGEN> is a business value of the document check, not a technical error. A value other than „Vollständig“ is not an exclusion criterion: the bot records the check note „Unterlagen nicht vollständig“ in <Fehlerliste>, and the remaining checks continue. Only the test for the error list leads to the BE „Nachprüfung erforderlich“ if <Fehlerliste> is populated. If <BUE_ANF_UNTERLAGEN> = „ja“, no check note is created; the documents are requested via the note.",
+  "art": "text"
+ },
+ {
+  "de": "IV. Vertrag – Vertragsstatus in VA230 und Mantelvertrag bei KR",
+  "en": "IV. Contract – contract status in VA230 and umbrella contract for KR",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_SPARTE> = „KR“",
+  "en": "<BUE_SPARTE> = „KR“",
+  "art": "text"
+ },
+ {
+  "de": "Prüfe in VA230, ob der Vertrag einem Mantelvertrag (Flotte) zugeordnet ist, und speichere das Ergebnis als <VA230-Mantel>.",
+  "en": "Check in VA230 whether the contract is assigned to an umbrella contract (fleet), and store the result as <VA230-Mantel>.",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-Mantel> = „ja“",
+  "en": "<VA230-Mantel> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „KR Flottenvertrag“",
+  "en": "<BE-Klassifikation> = „KR Flottenvertrag“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Prüfung auf Mantelvertrag ist noch zu validieren – durch den Fachbereich (K. Rypa) sind das Feld in VA230 und die Ausprägung festzulegen, an der der Bot einen Flottenvertrag mit führendem Mantel erkennt.",
+  "en": "Note: The check for an umbrella contract is still to be validated – the business department (K. Rypa) has to define the field in VA230 and the value by which the bot recognises a fleet contract with a leading umbrella contract.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Rahmenverträge und Verträge im Mahnverfahren werden wie alle anderen Verträge geprüft.",
+  "en": "Note: Framework contracts and contracts in the dunning procedure are checked like all other contracts.",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz anlegen: Vorlage 1515 „Bestandsübertragung Robotics PB“.",
+  "en": "Create telephone note: Vorlage 1515 „Bestandsübertragung Robotics PB“.",
+  "art": "text"
+ },
+ {
+  "de": "Folgearbeit für Komposit – Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw.",
+  "en": "Folgearbeit für Komposit – Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw. (follow-up work for Komposit/P&C – policy/contract summary/contract extract/replacement invoice etc.)",
+  "art": "text"
+ },
+ {
+  "de": "setzen, wenn <Anforderung-Arten> die Art enthält",
+  "en": "set if <Anforderung-Arten> contains the type",
+  "art": "text"
+ },
+ {
+  "de": "nur bei <BUE_ANF_UNTERLAGEN> = „ja“ (siehe „Anforderung von Unterlagen“ unten)",
+  "en": "only if <BUE_ANF_UNTERLAGEN> = „ja“ (see „Anforderung von Unterlagen“ below)",
+  "art": "text"
+ },
+ {
+  "de": "Folgearbeit für Komposit – Schadenaufstellung/Schadenrenta usw.",
+  "en": "Folgearbeit für Komposit – Schadenaufstellung/Schadenrenta usw. (follow-up work for Komposit/P&C – claims statement/loss ratio etc.)",
+  "art": "text"
+ },
+ {
+  "de": "wie oben",
+  "en": "as above",
+  "art": "text"
+ },
+ {
+  "de": "Folgearbeit für Komposit – Sonstige Unterlagen",
+  "en": "Folgearbeit für Komposit – Sonstige Unterlagen (follow-up work for Komposit/P&C – other documents)",
+  "art": "text"
+ },
+ {
+  "de": "Sparte aus <BUE_SPARTE>",
+  "en": "Line of business from <BUE_SPARTE>",
+  "art": "text"
+ },
+ {
+  "de": "Anforderung von Unterlagen in der Notiz kennzeichnen",
+  "en": "Flag the request for documents in the note",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Dieser Schritt steuert nicht die Prüfung, sondern die Folgearbeit. <BUE_ANF_UNTERLAGEN> sagt, ob der übernehmende Makler Unterlagen anfordert; <BUE_ART_UNTERLAGEN> nennt die Arten, mit Semikolon getrennt.",
+  "en": "Note: This step does not control the check but the follow-up work. <BUE_ANF_UNTERLAGEN> states whether the acquiring broker requests documents; <BUE_ART_UNTERLAGEN> names the types, separated by semicolons.",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_ANF_UNTERLAGEN> = „ja“",
+  "en": "<BUE_ANF_UNTERLAGEN> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "Zerlege <BUE_ART_UNTERLAGEN> am Semikolon und speichere die Arten als <Anforderung-Arten>.",
+  "en": "Split <BUE_ART_UNTERLAGEN> at the semicolon and store the types as <Anforderung-Arten>.",
+  "art": "text"
+ },
+ {
+  "de": "Setze im Abschnitt „Folgearbeit für Komposit“ je enthaltener Art das Kennzeichen: „Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw.“, „Schadenaufstellung/Schadenrenta usw.“, „Sonstige Unterlagen“.",
+  "en": "In the section „Folgearbeit für Komposit“, set the indicator for each type contained: „Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw.“, „Schadenaufstellung/Schadenrenta usw.“, „Sonstige Unterlagen“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Bestätigung der Bestandsübertragung ist keine Unterlagenart; sie erfolgt mit dem automatischen Vertragsspiegel. Eine Unterlagenart, die keinem Kennzeichen zuzuordnen ist, wird als „Sonstige Unterlagen“ gesetzt.",
+  "en": "Note: The confirmation of the portfolio transfer is not a document type; it is provided with the automatic contract summary (Vertragsspiegel). A document type that cannot be assigned to any indicator is set as „Sonstige Unterlagen“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei <BUE_ANF_UNTERLAGEN> = „ja“ entsteht in der Vorprüfung keine Prüfnotiz zu unvollständigen Unterlagen; die Unterlagen werden über die Notiz angefordert. Ob Celonis zusätzlich einen eigenen GeVo „Anforderung von Unterlagen“ eröffnet, ist mit Celonis festzulegen, damit nicht doppelt angefordert wird.",
+  "en": "Note: If <BUE_ANF_UNTERLAGEN> = „ja“, no check note on incomplete documents is created in the preliminary check; the documents are requested via the note. Whether Celonis additionally opens a separate GeVo „Anforderung von Unterlagen“ is to be agreed with Celonis so that documents are not requested twice.",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis am Postkorbvorgang speichern",
+  "en": "Save the processing note on the mailbox case",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-AGT-Inhaber> ist einem Makler zugeordnet",
+  "en": "<VA230-AGT-Inhaber> is assigned to a broker",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang in die Nachbearbeitung nach ODPB geben",
+  "en": "Pass the case to ODPB for follow-up processing",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „HSB4K KO“ (Postkorb-Nr. TBD) weiterleiten",
+  "en": "Forward the case to the topic mailbox „HSB4K KO“ (Postkorb-Nr. TBD)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei Komposit und Leben entscheidet der abgebende Bestandsinhaber: ein Makler führt nach ODPB, alle übrigen Fälle einschließlich eines nicht ermittelbaren Bestandsinhabers führen nach HSB4K KO.",
+  "en": "Note: For Komposit (P&C) and Leben (life), the transferring portfolio holder is decisive: a broker leads to ODPB; all other cases, including a portfolio holder that cannot be determined, lead to HSB4K KO.",
+  "art": "text"
+ },
+ {
+  "de": "KR Flottenvertrag",
+  "en": "KR Flottenvertrag (KR fleet contract)",
+  "art": "wert"
+ }
+]

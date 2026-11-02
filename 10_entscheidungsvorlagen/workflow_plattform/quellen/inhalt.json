@@ -1,0 +1,372 @@
+{
+ "titel": "Workflow-Plattform: Weiterentwicklung der Eigenlösung auf Camunda und MuleSoft oder Migration auf ServiceNow",
+ "untertitel": "Entscheidungsgrundlage für den Vorstand – Kriterienvergleich, Zielbild-Varianten, Empfehlung und Realisierung",
+ "option_kurz": {
+  "o1": "Eigenlösung Camunda/MuleSoft",
+  "o2": "Migration auf ServiceNow"
+ },
+ "management_summary": [
+  "Empfehlung: Eigenlösung (Option 1) für bankfachliche Prozesse modernisieren statt Gesamtmigration; ausschlaggebend sind Wechselkosten und Migrationsrisiko.",
+  "Die produktive MuleSoft-Schicht ist ein Aktivposten von Option 1; Option 2 müsste alle Anbindungen neu oder über MuleSoft an ServiceNow hängen.",
+  "ServiceNow für IT-, Service- und Konzernprozesse; welche davon heute auf der Eigenlösung laufen, ist zu erheben.",
+  "Option 2 führt bei Konzernkonformität (Nr. 7) und Zukunftsfähigkeit (Nr. 5); Customer-Intent-KI geht auf beiden Wegen, ihr Nutzen ist erst im Pilot zu belegen.",
+  "Vorbehalte: Konzernvorgabe muss Ausnahmen zulassen; Lizenz- und Supportpfad der Camunda-Basis ungeklärt (Version, Edition); RTB-Vergleich ohne Konditionen offen.",
+  "Beschlussvorschlag: Zielbild und Phase 1 freigeben; Modernisierungsinvestition erst an Entscheidungspunkt 1 nach Klärung der Vorbehalte freigeben."
+ ],
+ "kernaussage": "Die Eigenlösung auf Camunda und MuleSoft für bankfachliche Prozesse modernisieren, ServiceNow für abgegrenzte Service- und Konzernprozesse nutzen, MuleSoft als gemeinsame Integrationsschicht beider Plattformen prüfen und die Investition erst nach Klärung von Konzernvorgabe, Camunda-Lizenzpfad und Konditionen an Entscheidungspunkt 1 freigeben.",
+ "annahmen": [
+  "Faktenbasis laut Auftrag: Multichannel- und Multibrand-Bank, rund 2.000 Mitarbeitende; Eigenlösung u. a. auf Camunda und MuleSoft produktiv; ServiceNow konzernweit strategisch.",
+  "A1: Eigenlösung stabil, fachlich akzeptiert, deckt bankfachliche Prozesse weitgehend ab; Kontroll-, Berechtigungs- und Notfallprozesse etabliert; zu bestätigen.",
+  "A2: Camunda orchestriert lang laufende Prozesse mit Kompensation; MuleSoft kapselt die Anbindungen an Kernbank, DMS und Kanäle ohne eigene Prozesslogik.",
+  "A3: ServiceNow ist strategisch positioniert, ohne Ablösepflicht. Bei verbindlicher Vorgabe entfällt die Abwägung; offen bleiben dann Reihenfolge und Tempo.",
+  "A4: Falls Camunda 7 im Einsatz: Community-Versorgung endet, Enterprise-Support ist befristet, ein Pfadwechsel wäre nötig; Version, Edition und Fristen zu verifizieren.",
+  "A5: ServiceNow würde anteilig verrechnet; MuleSoft annahmegemäß lizenziert auf Kosten der Bank; Edition, Konditionen und Laufzeiten liegen nicht vor.",
+  "A6: Ein internes Team mit BPMN-, Java- und MuleSoft-Kompetenz ist vorhanden, aber klein; Schlüsselpersonenrisiken bestehen."
+ ],
+ "kriterien": [
+  {
+   "nr": 1,
+   "kriterium": "Change-the-Bank-Kosten",
+   "beschreibung": "Projektbezogene Aufwände für Einführung, Migration, Anpassung und Weiterentwicklung, inklusive temporärem Doppelbetrieb.",
+   "o1_bewertung": "0",
+   "o1_begruendung": "Fachlogik und MuleSoft-APIs weitgehend nutzbar; BPMN-Modelle je nach Pfad anzupassen (bei Camunda 8 u. a. Delegates); Engine-Wechsel inkl. Instanzen eigenes Projekt.",
+   "o2_bewertung": "--",
+   "o2_begruendung": "Neumodellierung voraussichtlich aller Prozesse, Neuanbindung der Integrationen (Integration Hub oder MuleSoft), Tests, Schulung, Doppelbetrieb.",
+   "verbindlich": true
+  },
+  {
+   "nr": 2,
+   "kriterium": "Run-the-Bank-Kosten",
+   "beschreibung": "Laufende Kosten im eingeschwungenen Zielzustand für Lizenzen, Infrastruktur, Betrieb, Support und Kompetenzen.",
+   "o1_bewertung": "0",
+   "o1_begruendung": "MuleSoft-Kosten je Edition (A5), Camunda-Lizenz pfadabhängig (A4); Betrieb, Schwachstellenmanagement und DORA-Tests liegen voll bei der Bank.",
+   "o2_bewertung": "0",
+   "o2_begruendung": "Eigenbetrieb entfällt; dafür Verrechnung inkl. Modulen (Integration Hub, KI, Kundenservice) oder weiter MuleSoft, Konditionen offen; lokale Kompetenz bleibt.",
+   "verbindlich": true
+  },
+  {
+   "nr": 3,
+   "kriterium": "Schnittstellenkomplexität zu anderen Systemen",
+   "beschreibung": "Integrationsaufwand, Standardisierung, Abhängigkeiten und Wartbarkeit der Anbindungen im Zielzustand (Umbau: Nr. 1).",
+   "o1_bewertung": "+",
+   "o1_begruendung": "Produktive MuleSoft-Schicht bündelt Anbindungen an Kernbank, DMS und Kanäle; Wiederverwendungsgrad und Dokumentation der APIs zu prüfen.",
+   "o2_bewertung": "0",
+   "o2_begruendung": "Zielzustand offen: lizenzpflichtiges Integration Hub als zweite Schicht (Eignung für Kernbank offen) oder MuleSoft bleibt, mit zusätzlicher Plattformgrenze.",
+   "verbindlich": true
+  },
+  {
+   "nr": 4,
+   "kriterium": "Schnittstellenkomplexität innerhalb des Workflows",
+   "beschreibung": "Orchestrierung, Datenflüsse, Fehlerbehandlung und Transparenz innerhalb der Prozesskette.",
+   "o1_bewertung": "+",
+   "o1_begruendung": "Camunda steuert Ablauf und Kompensation, MuleSoft nur Vermittlung (A2); bewährte Trennung, Ende-zu-Ende-Monitoring über beide Schichten zu prüfen.",
+   "o2_bewertung": "0",
+   "o2_begruendung": "Mit Integration Hub Prozess und Anbindung auf einer Plattform, was Transparenz erhöhen kann; lang laufende Prozesse mit Kompensation im Pilot nachzuweisen.",
+   "verbindlich": true
+  },
+  {
+   "nr": 5,
+   "kriterium": "Zukunftsfähigkeit",
+   "beschreibung": "Skalierbarkeit, Weiterentwicklung, Innovationsfähigkeit und Einbindung von KI für Customer-Intent-Prozessierung.",
+   "o1_bewertung": "0",
+   "o1_begruendung": "Offene Architektur: Intent-Dienst über MuleSoft anbindbar, Camunda steuert in den Prozess; Dienst, Modellbetrieb und Kontrollen Eigenaufwand; Lebenszyklus (A4).",
+   "o2_bewertung": "+",
+   "o2_begruendung": "Herstellergepflegt, skaliert ohne Eigenaufwand; KI-Bausteine laut Hersteller lizenz- und modulabhängig (zu verifizieren), an Konzernfreigabe und Kanalanbindung gebunden.",
+   "verbindlich": true
+  },
+  {
+   "nr": 6,
+   "kriterium": "Migrationsrisiko und Übergangskomplexität",
+   "beschreibung": "Risiko für Betriebsstabilität, Kunden und laufende Vorhaben während des Übergangs; Kosten sind in Nr. 1 erfasst.",
+   "o1_bewertung": "+",
+   "o1_begruendung": "Kein Plattformwechsel, Integrationsschicht bleibt; aber Camunda-Engine-Wechsel mit Instanz- und Historienmigration; deutlich geringer als Option 2.",
+   "o2_bewertung": "--",
+   "o2_begruendung": "Mehrjähriger Parallelbetrieb, Migration laufender Instanzen und Umhängen aller Anbindungen erhöhen Störungsrisiko und binden Schlüsselkapazität.",
+   "verbindlich": false
+  },
+  {
+   "nr": 7,
+   "kriterium": "Strategische Konzernkonformität und Synergien",
+   "beschreibung": "Übereinstimmung mit der Konzernstrategie sowie Nutzung gemeinsamer Plattformen, Governance und Wiederverwendung.",
+   "o1_bewertung": "-",
+   "o1_begruendung": "Lokaler Sonderweg mit Begründungspflicht; Synergien nur über gemeinsame Integrations- und Sicherheitsstandards; Konzernstatus von MuleSoft offen.",
+   "o2_bewertung": "+",
+   "o2_begruendung": "Gemeinsame Governance und Bausteine nutzbar, sofern Mandantentrennung eine gemeinsame Instanz zulässt; sonst Synergien vor allem bei Know-how.",
+   "verbindlich": false
+  },
+  {
+   "nr": 8,
+   "kriterium": "Time-to-Market und fachliche Flexibilität",
+   "beschreibung": "Geschwindigkeit und Freiheit, mit der neue oder geänderte Bankprozesse umgesetzt werden können.",
+   "o1_bewertung": "+",
+   "o1_begruendung": "Änderungen direkt und ohne Konzern-Releasezyklen; vorhandene MuleSoft-APIs beschleunigen neue Prozesse; Durchsatz hängt am Team (A6).",
+   "o2_bewertung": "0",
+   "o2_begruendung": "Low-Code kann Standardfälle beschleunigen; Konzerngovernance, gemeinsame Releasezyklen und Abstimmung können lokale Änderungen verlangsamen.",
+   "verbindlich": false
+  },
+  {
+   "nr": 9,
+   "kriterium": "Regulatorik, Sicherheit und Betriebsstabilität",
+   "beschreibung": "DORA, MaRisk, Auslagerung, Revisionssicherheit, Sicherheit und Verfügbarkeit im Regelbetrieb (Übergang: Nr. 6).",
+   "o1_bewertung": "+",
+   "o1_begruendung": "Kontroll- und Notfallprozesse etabliert (A1, zu belegen); Betriebsform von MuleSoft im DORA-Register prüfen; ungepatchte Version wäre DORA-Risiko.",
+   "o2_bewertung": "0",
+   "o2_begruendung": "Verantwortung bleibt beim Vorstand, auch konzerninterne IKT-Dienste fallen unter DORA-Drittparteienregeln; Betriebsform, Datenhaltung, KI-Einsatz nachzuweisen.",
+   "verbindlich": false
+  },
+  {
+   "nr": 10,
+   "kriterium": "Hersteller- und Technologieabhängigkeit, Know-how",
+   "beschreibung": "Bindung an Hersteller und Technologien sowie Verfügbarkeit von Fach- und Plattformkompetenz.",
+   "o1_bewertung": "0",
+   "o1_begruendung": "Bindung an MuleSoft je nach Edition und Vertrag (A5), Camunda pfadabhängig (A4); BPMN-Standard, Portabilität je Engine prüfen; Schlüsselpersonen (A6).",
+   "o2_bewertung": "-",
+   "o2_begruendung": "Prozesslogik und ggf. Integration bei einem Hersteller, nach heutigem Stand kein ausführbarer BPMN-Export; DORA-Exit aufwendig; Konzern-Know-how hilft.",
+   "verbindlich": false
+  }
+ ],
+ "gesamtbild": {
+  "o1_staerken": [
+   "Produktiv; Investitionen in Modelle, Fachlogik und MuleSoft-Anbindungen bleiben wirksam. Stabilität und Akzeptanz sind als Annahme (A1) zu bestätigen.",
+   "Klare Arbeitsteilung: Camunda orchestriert lang laufende Bankprozesse, MuleSoft kapselt die Systemanbindungen (A2).",
+   "Offene Architektur: BPMN als Standard, ein Intent-Dienst lässt sich über vorhandene APIs einbinden; Dienst und Modellbetrieb sind Eigenaufwand."
+  ],
+  "o1_schwaechen": [
+   "Abweichung von der Konzernstrategie mit dauerhafter Begründungspflicht.",
+   "Volle laufende Kostenlast (RTB) für Betrieb, Sicherheit, DORA-Pflichten und MuleSoft-Lizenz (A5); die Weiterentwicklung (CTB) trägt die Bank ebenfalls allein.",
+   "KI- und Innovationstempo durch das annahmegemäß kleine Team begrenzt; Intent-Erkennung erfordert Eigenaufwand (A6)."
+  ],
+  "o1_risiken_abhaengigkeiten": [
+   "Falls Camunda 7: Community-Versorgung endet, Enterprise-Support ist befristet; der Pfadwechsel erzwingt eine eigene Engine-Migration (zu verifizieren, A4).",
+   "Edition, Lizenzbedingungen und Vertragslaufzeit von MuleSoft bestimmen die RTB mit; zu verifizieren.",
+   "Schlüsselpersonenrisiko und mögliche Dokumentationslücken in der Eigenentwicklung.",
+   "Gefahr eines schleichenden Auseinanderdriftens von Konzernstandards bei Integration und Sicherheit."
+  ],
+  "o2_staerken": [
+   "Konzernkonform mit gemeinsamer Governance, Betriebsmodell und potenziell geteilten Komponenten.",
+   "KI-Bausteine und Low-Code laut Herstellerangaben, abhängig von Lizenzstufe und Modulen; Verfügbarkeit und Freigabe in der Konzerninstanz zu verifizieren.",
+   "Mit Integration Hub können Prozess und Anbindung auf einer Plattform sichtbar sein; Eignung für Kernbankanbindungen offen."
+  ],
+  "o2_schwaechen": [
+   "Sehr hohe Change-Kosten; Nutzen der bestehenden Lösung entfällt, ohne dass ein fachlicher Mehrwert für Kernprozesse nachgewiesen ist.",
+   "Die produktive MuleSoft-Schicht wird entweder abgelöst und neu gebaut oder bleibt als zweite Plattform neben ServiceNow.",
+   "Customer-Intent-KI setzt eine Anbindung der Bankkanäle an ServiceNow voraus, die neu entsteht oder über MuleSoft angehängt werden muss."
+  ],
+  "o2_risiken_abhaengigkeiten": [
+   "Mehrjähriger Parallelbetrieb und Migration laufender Prozesse und Anbindungen gefährden Stabilität und binden Kapazität.",
+   "Prozesslogik und Integration bei einem Hersteller, Abläufe nach heutigem Stand nicht als ausführbares BPMN exportierbar; Exit-Fähigkeit nachzuweisen.",
+   "Bankgeheimnis, Datenhaltung und Mandantentrennung können eine eigene Instanz erzwingen und Synergien weitgehend aufheben.",
+   "Einsatz der Hersteller-KI hängt an Lizenzierung, Konzernfreigabe, Datenschutz und Regulatorik; zu klären.",
+   "Abhängigkeit von Konzernprioritäten, Releasezyklen und Kapazität des Konzern-Plattformteams."
+  ]
+ },
+ "zielbild_varianten": [
+  {
+   "variante": "Entweder-oder-Entscheidung",
+   "beschreibung": "Vollständiger Verbleib auf Camunda und MuleSoft oder vollständige Migration aller Workflows und Anbindungen auf ServiceNow.",
+   "einschaetzung": "Nicht empfohlen: Gesamtmigration ist teuer und riskant; reiner Verbleib ignoriert berechtigte Konzern- und Synergieziele."
+  },
+  {
+   "variante": "Gestuftes Zielbild",
+   "beschreibung": "Erst Vorbehalte klären, dann Eigenlösung modernisieren und an Konzernstandards anbinden; zwei Entscheidungspunkte mit Kennzahlen.",
+   "einschaetzung": "Empfohlen als Rahmen: Entscheidungspunkt 1 vor der Großinvestition verhindert eine Vorfestlegung auf Option 1."
+  },
+  {
+   "variante": "Abgegrenzter Parallelbetrieb",
+   "beschreibung": "Camunda für bankfachliche, hoch integrierte Prozesse; ServiceNow für IT-, Service- und Konzernprozesse; MuleSoft verbindet beide.",
+   "einschaetzung": "Empfohlen als Zielbild: höhere RTB und Übergänge zwischen den Plattformen über verbindliche Zuordnungsregeln begrenzen."
+  },
+  {
+   "variante": "Selektive Migration",
+   "beschreibung": "Einzelne Prozesse mit geringer Bankspezifik und hohem Konzernbezug gezielt von der Eigenlösung auf ServiceNow verlagern.",
+   "einschaetzung": "Sinnvoll als Bestandteil des Parallelbetriebs, wenn je Prozess ein positiver Nutzen-Aufwand-Nachweis vorliegt."
+  }
+ ],
+ "empfehlung": {
+  "empfehlung": "Option 1 mit Camunda und MuleSoft als Plattform für bankfachliche Prozesse modernisieren und weiterführen; ServiceNow für klar abgegrenzte Service- und Konzernprozesse einsetzen; keine Gesamtmigration. Investitionsfreigabe erst an Entscheidungspunkt 1.",
+  "begruendung": [
+   "Option 1 ist in keinem Kriterium sehr nachteilig; Option 2 ist bei Change-the-Bank-Kosten (Nr. 1) und Migrationsrisiko (Nr. 6) sehr nachteilig.",
+   "Die produktive MuleSoft-Schicht macht Option 1 bei den Schnittstellen (Nr. 3) stärker; Option 2 müsste den Integrationsweg erst festlegen und umbauen.",
+   "Vorteile von Option 2 liegen bei Nr. 7 und Nr. 5; Nr. 7 hängt an einer gemeinsamen Instanz mit Mandantentrennung, Nr. 5 an KI-Freigaben in der Konzerninstanz.",
+   "Customer-Intent-KI ist kein Ablösegrund: Ein Intent-Dienst lässt sich über die Integrationsschicht vor beide Plattformen setzen; bei Option 1 Eigenaufwand, bei Option 2 lizenzabhängig.",
+   "Die Konzernpositionierung wird ernst genommen, begründet ohne Nutzennachweis aber keine Ablösung; die Empfehlung gilt unter A1 bis A6, vor allem A3 und A4."
+  ],
+  "zielbild": "Zwei abgegrenzte Plattformen: modernisierte Camunda-Basis für bankfachliche Kernprozesse, ServiceNow für IT-, Service- und Konzernprozesse. MuleSoft als gemeinsame Integrationsschicht, sofern Konzern und Konditionen es tragen. Sofern der Pilot den Nutzen belegt, steuert eine KI-gestützte Intent-Erkennung an den Kanälen Anliegen in den passenden Prozess beider Plattformen, mit nachvollziehbarer Zuordnung und Rückfall auf menschliche Bearbeitung. Orchestrierung nur in den Workflow-Engines.",
+  "uebergangspfad": [
+   {
+    "phase": "1 – Klärung und Entscheidungspunkt 1",
+    "zeitraum": "indikativ 0 bis 6 Monate",
+    "inhalt": "Konzernvorgabe, Camunda-Version und Lizenzpfad, MuleSoft-Vertrag, DORA-Kritikalität, Konditionen und Inventar klären; Entscheidungspunkt 1 vor der Modernisierungsinvestition."
+   },
+   {
+    "phase": "2 – Modernisierung und Pilote",
+    "zeitraum": "indikativ 6 bis 24 Monate",
+    "inhalt": "Camunda-Laufzeitbasis modernisieren inkl. Instanzmigration, MuleSoft-APIs an Konzernstandards ausrichten; ServiceNow- und Customer-Intent-Pilot parallel."
+   },
+   {
+    "phase": "3 – Selektive Verlagerung",
+    "zeitraum": "indikativ ab rund 18 Monaten",
+    "inhalt": "Prozesse mit positivem Nutzennachweis verlagern; Intent-Steuerung nur bei belegtem Pilotnutzen ausweiten; Kennzahlen und Monitoring über beide Plattformen etablieren."
+   },
+   {
+    "phase": "4 – Entscheidungspunkt 2",
+    "zeitraum": "nach Abschluss der Modernisierung, spätestens nach rund 36 Monaten",
+    "inhalt": "Gesamtausrichtung anhand Kennzahlen zu Kosten, Stabilität, Synergien, KI-Nutzen und Konzernstrategie neu bewerten; ggf. weiter konsolidieren."
+   }
+  ],
+  "bedingungen_option1_vorzuziehen": [
+   "Die Konzernvorgabe lässt begründete Ausnahmen für bankfachliche Kernprozesse zu.",
+   "Der Lizenz- und Laufzeitpfad der Camunda-Basis ist mit vertretbarem Aufwand gangbar und DORA-konform betreibbar.",
+   "MuleSoft kann zu tragbaren Konditionen weiterbetrieben werden und ist mit Konzernstandards vereinbar.",
+   "Ein Kernteam mit mindestens einer Vertretung je Schlüsselrolle kann gesichert werden."
+  ],
+  "bedingungen_option2_vorzuziehen": [
+   "Die Konzernvorgabe zu ServiceNow ist verbindlich und lässt keine Ausnahme für bankfachliche Kernprozesse zu (A3); offen bleiben dann nur Reihenfolge und Tempo.",
+   "Der Konzern trägt Migration und Doppelbetrieb so weit, dass die Lebenszykluskosten (CTB plus RTB) die der modernisierten Eigenlösung nicht übersteigen.",
+   "Der verifizierte Modernisierungsaufwand der Camunda-Basis erreicht eine mit der ServiceNow-Migration vergleichbare Größenordnung.",
+   "Die Anbindungen lassen sich ohne Neubau der Kernbankadapter übernehmen, über Integration Hub oder die bestehende MuleSoft-Schicht.",
+   "Ein Pilot mit lang laufendem, kernbanknahem Prozess erfüllt vorab festgelegte Kriterien zu Fehlerbehandlung, Kompensation, Monitoring und Änderungsaufwand.",
+   "Eine gemeinsame Konzerninstanz inklusive KI-Funktionen ist mit Mandantentrennung, Datenhaltung und Exit-Strategie regulatorisch tragfähig."
+  ]
+ },
+ "realisierung": {
+  "voraussetzungen": [
+   "Vorstandsbeschluss zum Zielbild mit Domänenabgrenzung und dem Prinzip: Orchestrierung in den Workflow-Engines, Vermittlung in der Integrationsschicht.",
+   "Abgestimmte Position mit der Konzern-IT zu Reichweite der ServiceNow-Vorgabe, Ausnahmen, Konditionen und Konzernstatus von MuleSoft.",
+   "Verifizierte Version, Edition, Lizenz- und Supportstatus der eingesetzten Camunda-Basis sowie Edition und Laufzeit des MuleSoft-Vertrags.",
+   "DORA-Kritikalitätseinstufung der Workflow-Plattform mit RTO/RPO aus BIA und Notfallkonzept.",
+   "Vollständiges Prozess-, Schnittstellen- und API-Inventar inklusive laufender Instanzen."
+  ],
+  "governance": [
+   "Architekturboard mit Konzernbeteiligung entscheidet über Zuordnung neuer Prozesse nach festen Kriterien.",
+   "Verbindliche Integrations- und Sicherheitsstandards für beide Plattformen, abgestimmt mit Konzernvorgaben.",
+   "Entscheidungspunkte 1 und 2 mit Kennzahlen zu CTB und RTB je Plattform, Störungen, Durchlaufzeit und Änderungsaufwand.",
+   "KI-Einstufung nach KI-Verordnung vor Produktivsetzung: reine Anliegenweiterleitung voraussichtlich nicht hochriskant, wohl aber bei Einfluss auf Kreditwürdigkeitsprüfungen.",
+   "KI-Kontrollen: Kundentransparenz, DSFA und Rechtsgrundlage, Bankgeheimnis, KI-Anbieter als IKT-Drittdienstleister (DORA), protokollierte Zuordnung, menschlicher Rückfall.",
+   "Interne Revision, Auslagerungsmanagement, Datenschutz und Betriebsrat frühzeitig einbinden; Informationsregister aktualisieren."
+  ],
+  "kompetenzen": [
+   "Kernteam für BPMN, Camunda, Java und MuleSoft absichern, Wissen dokumentieren und Vertretungen je Schlüsselrolle aufbauen.",
+   "KI-Kompetenz für Intent-Erkennung, Datenaufbereitung und Modellbetrieb aufbauen oder aus dem Konzern beziehen; KI-Kompetenzpflicht der Mitarbeitenden erfüllen.",
+   "ServiceNow-Kompetenz über das Konzern-Plattformteam beziehen, lokale Ansprechpartner benennen."
+  ],
+  "migrations_integrationsschritte": [
+   "Prozessinventar nach Bankspezifik, Integrationsgrad, Kritikalität und Konzernbezug klassifizieren.",
+   "Camunda-Laufzeitbasis modernisieren inklusive Anpassung der Modelle, Migration laufender Instanzen und Regressionstests.",
+   "Historien- und Auditdaten vor jedem Engine- oder Plattformwechsel revisionssicher archivieren und über die Aufbewahrungsfrist lesbar halten.",
+   "MuleSoft-APIs an Konzernstandards ausrichten und für ServiceNow nutzbar machen, wo Nutzen und Wiederverwendung belegt sind.",
+   "Pilote mit festen Abnahmekriterien: Serviceprozess auf ServiceNow, Intent-Erkennung für einen Kanal mit Steuerung in den passenden Prozess.",
+   "Plattformübergreifendes Monitoring und Ende-zu-Ende-Transparenz für übergreifende Prozesse etablieren."
+  ],
+  "risiken": [
+   {
+    "risiko": "Camunda-Pfadwechsel aufwendiger als erwartet",
+    "gegenmassnahme": "Machbarkeitsprüfung vor Entscheidungspunkt 1; Enterprise-Verlängerung, Camunda 8 und Community-Fork vergleichen, Reife, Support und DORA-Tauglichkeit des Forks gesondert prüfen."
+   },
+   {
+    "risiko": "Konzern verschärft Vorgabe zu ServiceNow oder stellt MuleSoft in Frage",
+    "gegenmassnahme": "Frühzeitige Abstimmung, dokumentierte Begründung und Neubewertung an den Entscheidungspunkten."
+   },
+   {
+    "risiko": "Doppelstrukturen und wachsende Komplexität plattformübergreifender Prozesse",
+    "gegenmassnahme": "Verbindliche Zuordnungsregeln, Architekturboard; Übergänge nur über definierte MuleSoft-APIs und gemeinsames Monitoring."
+   },
+   {
+    "risiko": "Verlust von Schlüsselpersonen im Kernteam",
+    "gegenmassnahme": "Dokumentation, Wissenstransfer, Vertretungsregeln und gezielte Bindungsmaßnahmen."
+   },
+   {
+    "risiko": "Regulatorische Lücken bei Verlagerung oder KI-Einsatz, insbesondere fehlende Exit-Strategie und Datenschutz",
+    "gegenmassnahme": "DORA-, Auslagerungs-, Datenschutz- und KI-Verordnungsprüfung vor jeder Verlagerung und jedem KI-Einsatz; Exit-Plan erstellen und testen."
+   },
+   {
+    "risiko": "Entscheidungspunkte mangels Vergleichsdaten nicht wirksam; Zielbild verfestigt sich ungeprüft",
+    "gegenmassnahme": "Kennzahlen zu CTB, RTB, Störungen, Durchlaufzeit und Änderungsaufwand ab Phase 1 erheben und dem Vorstand vorlegen."
+   }
+  ],
+  "top5_massnahmen": [
+   {
+    "massnahme": "Camunda-Version, Edition und Lizenzpfad, MuleSoft-Vertrag und DORA-Kritikalität klären; Modernisierungsplan mit Instanzmigration erstellen",
+    "ergebnis": "Belastbare Aussage zu Aufwand, Zukunftsfähigkeit und regulatorischem Rahmen vor Entscheidungspunkt 1"
+   },
+   {
+    "massnahme": "Reichweite der ServiceNow-Konzernvorgabe, Betriebsform, Module, KI-Freigaben und Konditionen mit der Konzern-IT klären",
+    "ergebnis": "Verbindlicher Rahmen und Kostenbasis für den CTB- und RTB-Vergleich"
+   },
+   {
+    "massnahme": "Prozess-, Schnittstellen- und API-Inventar mit Zuordnungskriterien erstellen",
+    "ergebnis": "Transparente Grundlage für Abgrenzung, selektive Migration und Wiederverwendung der MuleSoft-APIs"
+   },
+   {
+    "massnahme": "Architekturboard mit Konzernbeteiligung, Kennzahlen und zwei Entscheidungspunkten einrichten",
+    "ergebnis": "Steuerung von Zuordnung, Standards und faktenbasierter Neubewertung"
+   },
+   {
+    "massnahme": "Pilote mit vorab festgelegten Abnahmekriterien umsetzen: ServiceNow-Serviceprozess und Customer-Intent-Erkennung",
+    "ergebnis": "Belegte Erfahrungswerte zu Aufwand, Integration, KI-Nutzen und Synergien beider Plattformen"
+   }
+  ]
+ },
+ "offene_punkte": [
+  {
+   "prio": 1,
+   "frage": "Ist die ServiceNow-Positionierung eine verbindliche Konzernvorgabe für alle Workflows oder eine Empfehlung mit Ausnahmemöglichkeit?",
+   "warum_entscheidend": "Bestimmt, ob eine Abwägung überhaupt offen ist und welche Begründungspflichten entstehen."
+  },
+  {
+   "prio": 2,
+   "frage": "Unterstützt die Workflow-Plattform kritische oder wichtige Funktionen im Sinne von DORA, und welche RTO/RPO-Vorgaben gelten?",
+   "warum_entscheidend": "Bestimmt Vertrags-, Exit-, Test- und Anzeigepflichten für beide Optionen und damit Aufwand und Machbarkeit."
+  },
+  {
+   "prio": 3,
+   "frage": "Welche Camunda-Version und Edition ist im Einsatz, und welcher Support- und Lizenzpfad ist künftig tragfähig?",
+   "warum_entscheidend": "Entscheidet über Modernisierungsaufwand und Zukunftsfähigkeit von Option 1; Herstelleraussagen sind zu verifizieren."
+  },
+  {
+   "prio": 4,
+   "frage": "Würde bei Option 2 MuleSoft weiterbetrieben oder durch Integration Hub ersetzt, und ist MuleSoft im Konzern Standard?",
+   "warum_entscheidend": "Bestimmt Umbauaufwand, RTB und Herstellerbindung von Option 2 sowie die Rolle von MuleSoft im Zielbild."
+  },
+  {
+   "prio": 5,
+   "frage": "Welche Kernbanksysteme bzw. welcher Rechenzentrumsdienstleister sind angebunden, über welche Technik und mit welchen Vorgaben?",
+   "warum_entscheidend": "Kernbankanbindung ist der größte Einzelposten jeder Integrationsschätzung und kann SaaS-Zugriffe einschränken."
+  },
+  {
+   "prio": 6,
+   "frage": "Welche ServiceNow-Kosten (inkl. Integration Hub, KI- und Kundenservice-Modulen) würden verrechnet, und welche Edition, Bedingungen und Laufzeit hat der MuleSoft-Vertrag?",
+   "warum_entscheidend": "Ohne Konditionen ist der Run-the-Bank-Vergleich nicht belastbar."
+  },
+  {
+   "prio": 7,
+   "frage": "Wie viele Prozesse, Schnittstellen und laufende Instanzen umfasst die Eigenlösung, wie stabil und dokumentiert ist sie?",
+   "warum_entscheidend": "Bestimmt Migrationsumfang und bestätigt oder widerlegt A1 und A6, auf denen mehrere Bewertungen für Option 1 beruhen."
+  },
+  {
+   "prio": 8,
+   "frage": "Kann die Bank eine Konzerninstanz mitnutzen: Datenregion, Supportzugriffe aus Drittstaaten, eigene Schlüssel, Mandantentrennung?",
+   "warum_entscheidend": "Bankgeheimnis und DSGVO können eine eigene Instanz erzwingen und das Synergiepotenzial aufheben."
+  },
+  {
+   "prio": 9,
+   "frage": "Welche Kanäle und Anliegen soll die Intent-KI abdecken, mit welcher Datenbasis, Rechtsgrundlage und Rückfallebene, und sind ServiceNow-KI-Funktionen lizenziert und freigegeben?",
+   "warum_entscheidend": "Bestimmt, ob die KI-Vorteile von Option 2 nutzbar sind, ob ein offener Intent-Dienst in Option 1 gleichwertig ist und welche Pflichten aus KI-Verordnung, DSGVO und DORA greifen."
+  }
+ ],
+ "action_titles": {
+  "agenda": "Die Vorlage führt von der Ausgangslage über zehn Kriterien zu Empfehlung, Realisierung und offenen Punkten",
+  "management_summary": "Camunda und MuleSoft für Bankprozesse modernisieren, ServiceNow gezielt nutzen, Freigabe erst nach Klärung",
+  "ausgangslage": "Abzuwägen ist eine produktive Eigenlösung mit eigener Integrationsschicht gegen den Konzernstandard ServiceNow",
+  "vergleich_1": "Option 1 führt in drei der fünf verbindlichen Kriterien, Option 2 bei Zukunftsfähigkeit; RTB gleichauf",
+  "vergleich_2": "Bei den weiteren Kriterien führt Option 1 in vier von fünf, Option 2 nur bei Konzernkonformität",
+  "bewertungsuebersicht": "Option 1 fünfmal vorteilhaft, einmal nachteilig; Option 2 zweimal vorteilhaft, dreimal nachteilig, davon zweimal sehr",
+  "gesamtbild": "Option 1 bewahrt Integration und Orchestrierung, Option 2 bietet Konzernnähe um den Preis eines Neubaus",
+  "zielbild_varianten": "Ein abgegrenzter Parallelbetrieb im gestuften Zielbild ist sachgerechter als eine Entweder-oder-Entscheidung",
+  "empfehlung": "Camunda/MuleSoft für Bankprozesse modernisieren, ServiceNow gezielt nutzen, Investition erst an Entscheidungspunkt 1",
+  "realisierung": "Die Umsetzung braucht Konzernabstimmung, ein gesichertes Kernteam und verbindliche Zuordnungsregeln",
+  "migrationsschritte": "Camunda-Basis modernisieren, MuleSoft-APIs bei belegtem Nutzen für ServiceNow öffnen, Verlagerungen einzeln prüfen",
+  "massnahmen": "Fünf Maßnahmen schaffen bis Entscheidungspunkt 1 die Grundlage für eine belastbare Investitionsfreigabe",
+  "offene_punkte": "Neun offene Fragen, angeführt von der Reichweite der Konzernvorgabe, sind vor der Entscheidung zu klären"
+ }
+}

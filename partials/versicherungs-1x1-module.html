@@ -1,0 +1,127 @@
+<!-- Versicherungs-1×1 Knowledge Module -->
+<div class="v1x1-module">
+  <!-- Header -->
+  <div class="v1x1-header">
+    <div class="v1x1-header-left">
+      <button class="v1x1-back-btn" onclick="closeVersicherungs1x1()" title="Zurück zur Startseite">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <h1 class="v1x1-brand">Versicherungs-1×1</h1>
+    </div>
+    <div class="v1x1-header-center">
+      <img src="assets/images/6364529b74a1f1454594542e_Monitor Deloitte Logo.png" alt="Monitor Deloitte" class="v1x1-monitor-deloitte-logo">
+    </div>
+    <div class="v1x1-header-right">
+      <button class="v1x1-cmdK-btn" onclick="V1x1.openSearchOverlay()" title="Suche (Ctrl+K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="v1x1-cmdK-label">Suchen</span>
+        <kbd class="v1x1-cmdK-badge">Ctrl+K</kbd>
+      </button>
+      <div class="v1x1-search-wrapper">
+        <svg class="v1x1-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" class="v1x1-search-input" id="v1x1SearchInput" placeholder="Begriffe suchen..." autocomplete="off">
+        <div class="v1x1-search-results" id="v1x1SearchResults" style="display:none;"></div>
+      </div>
+      <div class="v1x1-progress-wrapper">
+        <span class="v1x1-progress-label">Fortschritt</span>
+        <div class="v1x1-progress-bar">
+          <div class="v1x1-progress-fill" id="v1x1ProgressFill" style="width:0%"></div>
+        </div>
+        <span class="v1x1-progress-value" id="v1x1ProgressValue">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <nav class="v1x1-topnav" id="v1x1TopNav">
+    <div class="v1x1-topnav-scroll">
+      <button class="v1x1-topnav-item active" data-target="overview" onclick="V1x1.showOverview()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span>Übersicht</span>
+      </button>
+      <div class="v1x1-topnav-chapters" id="v1x1TopNavChapters">
+        <!-- Populated by JS -->
+      </div>
+      <div class="v1x1-topnav-separator"></div>
+      <button class="v1x1-topnav-item v1x1-topnav-quiz" data-target="wissenscheck" onclick="V1x1.openWissencheck()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Wissenscheck</span>
+      </button>
+      <button class="v1x1-topnav-item v1x1-topnav-glossar" data-target="glossary" onclick="V1x1.showGlossary()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"></path>
+        </svg>
+        <span>Glossar</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div id="v1x1Breadcrumb" class="v1x1-breadcrumb-bar"></div>
+
+  <!-- Content Area (full width, no sidebar) -->
+  <main class="v1x1-content" id="v1x1Content">
+    <div class="v1x1-content-inner" id="v1x1ContentInner">
+      <!-- Populated by JS showOverview() -->
+    </div>
+  </main>
+
+  <!-- Glossary Overlay -->
+  <div class="v1x1-glossary-overlay" id="v1x1GlossaryOverlay" style="display:none;">
+    <div class="v1x1-glossary-panel">
+      <div class="v1x1-glossary-header">
+        <h2>Glossar</h2>
+        <button class="v1x1-glossary-close" onclick="V1x1.closeGlossary()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <!-- A-Z navigation -->
+      <div class="v1x1-glossary-alpha" id="v1x1GlossaryAlpha">
+        <!-- Populated by JS -->
+      </div>
+      <!-- Thematic tabs -->
+      <div class="v1x1-glossary-tabs" id="v1x1GlossaryTabs">
+        <!-- Populated by JS -->
+      </div>
+      <input type="text" class="v1x1-glossary-search" id="v1x1GlossarySearch" placeholder="Begriff suchen...">
+      <div class="v1x1-glossary-list" id="v1x1GlossaryList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Cmd+K Search Overlay -->
+  <div class="v1x1-search-overlay" id="v1x1SearchOverlay">
+    <div class="v1x1-sov-panel">
+      <div class="v1x1-sov-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="v1x1SearchOverlayInput" placeholder="Kapitel oder Begriff suchen…" autocomplete="off">
+        <button class="v1x1-sov-close" onclick="V1x1.closeSearchOverlay()">Esc</button>
+      </div>
+      <div class="v1x1-sov-results" id="v1x1SearchOverlayResults">
+        <div class="v1x1-sov-hint">Tippe um zu suchen — Kapitel, Glossar, Begriffe</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inline Glossary Popover -->
+  <div class="v1x1-gloss-popover" id="v1x1GlossaryPopover" style="display:none;">
+    <div class="v1x1-gp-term"></div>
+    <div class="v1x1-gp-def"></div>
+  </div>
+</div>

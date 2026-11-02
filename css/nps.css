@@ -1,0 +1,74 @@
+/* css/nps.css - NPS Stars Display */
+/* Extracted from styles.css for modularity */
+
+/* ========================================
+   NPS STARS DISPLAY (permanent)
+   ======================================== */
+.nps-stars-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.nps-stars-display .nps-star {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.nps-stars-display .nps-star.filled { color: #f59e0b; }
+.nps-stars-display .nps-star.half { color: #f59e0b; opacity: 0.5; }
+.nps-stars-display .nps-star.empty { color: #e2e8f0; }
+
+.nps-stars-display .nps-score-num {
+    font-size: 15px;
+    font-weight: 700;
+    color: #334155;
+    margin-left: 4px;
+}
+
+.nps-stars-display-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.nps-stars-display-small .nps-star {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.nps-stars-display-small .nps-star.filled { color: #f59e0b; }
+.nps-stars-display-small .nps-star.half { color: #f59e0b; opacity: 0.5; }
+.nps-stars-display-small .nps-star.empty { color: #e2e8f0; }
+
+.nps-stars-display-small .nps-score-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    margin-left: 2px;
+}
+
+/* NPS Stars in Kundenliste table */
+.nps-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.nps-star {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.nps-star.filled { color: #f59e0b; }
+.nps-star.half { color: #f59e0b; opacity: 0.5; }
+.nps-star.empty { color: #e2e8f0; }
+
+.nps-stars .nps-score-num {
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+    margin-left: 4px;
+}
+

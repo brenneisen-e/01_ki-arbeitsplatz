@@ -1,0 +1,43 @@
+An: Kamil.Rypa@ergo.de
+Cc: Tanja.Juraschek@ergo.de, Nuria.Garcia-Fernandez@ergo.de, Marcus.Koch@ergo.de, Dirk.Amend@ergo.de, Anika.Wesche@ergo.de, Alexandra.Mai@ergo.de, Niels.Luetke@ergo.de, Inge.Lorusso@ergo.de, Faisal.Noorzy@ergo.de, Marco.Jeglorz.extern@ergo.de
+Betreff: AW: Makler BUE meets KI | PDDs KV/Non-KV mit der Bitte um QS
+
+Hallo zusammen,
+
+danke, Kamil, für die schnelle Rückmeldung und die Screenshots. Ich habe beides in die Dokumente übernommen und die beiden PDDs sauber neu gesetzt (v11, Links unten): gleiche Struktur wie bisher, Inhaltsverzeichnis und Bildgrößen neu, alle eingefügten Screenshots an ihrer Stelle mit Bildunterschrift. Zu den einzelnen Punkten – Erklärungen stehen normal, Fragen an euch sind als „Frage“ markiert:
+
+1. Vermittlertyp – eure Rückfrage
+- Nein, nicht jeder Vermittler, der kein Makler ist, wird zur BE. Der MFA-Zweig ist in der Vorprüfung beschrieben: Beim Mehrfachagenten prüft der Bot, ob der BÜ-Wunsch vorliegt und der Betreuungswunsch auf den MFA ausgestellt ist; eine Vollmacht braucht er nicht. Danach läuft der MFA dieselbe Prüfstrecke wie der Makler (Kunde in IS011, Bestandsinhaber, Vermittler in OB726, Vertrag in VA230, Notiz).
+- Der Vorschlag betraf nur den leeren Vermittlertyp: leer und „Fremdversicherungsunternehmen“ laufen wie Makler, also mit Prüfung der unterschriebenen Maklervollmacht. Es bleibt also alles in dieser Ausbaustufe, nichts wird verschoben.
+- Neu gegenüber dem Stand, den ihr in der Hand hattet (abgestimmt am 24.09. mit Marcus Koch und Stefan Schwarz): „Courtagefortzahler“ und „Kontaktgeber“ (Tippgeber) erhalten keine Bestände. Der Bot setzt bei diesen Typen als erste Prüfung die BE „Keine Bestandsübertragung möglich: <Typ>“ und gibt den Vorgang mit Bearbeitungshinweis an die Sachbearbeitung, die die Ablehnung versendet. Das steht jetzt in beiden PDDs.
+- Die Werteliste des Vermittlertyps ist damit: Makler, MFA, Courtagefortzahler, Kontaktgeber; leer und „Fremdversicherungsunternehmen“ laufen wie Makler.
+
+2. KR-Flottenvertrag (Komposit / Leben)
+- Übernommen: Der Bot liest in VA230 (VAF230 „Anzeige steuerrelevanter Daten“) das Feld „Sparte/Vers.Art“; die Versicherungsart „FK“ führt zur BE „KR Flottenvertrag“, „KR“ ist ein normaler KR-Vertrag. Jeder Vertrag unter einem Mantel wird ausgesteuert, nicht nur der Mantel selbst. Die KM001-Variante ist raus, dein Screenshot der Flotte steht im Kapitel IV.
+
+3. Themenpostkörbe und AO-Erkennung
+- Die vier Bezeichnungen sind in beiden PDDs eingetragen: „HSB4 K 72 - Erstinformation“ (alle Vorgänge ohne Befund), „HSB4 K MV Gesundheit Posteingang“ (KV mit Befund), „HSB4 K KO Komposit / Leben Posteingang“ (Komposit / Leben mit Befund, abgebender Bestandsinhaber AO) und „ODPP1 D - Ma/Ma Bestandsübertragungen“ (Komposit / Leben mit Befund, Makler- und Kooperationsvertrieb). Die Postkorb-Nummern stehen weiter auf TBD.
+- FRAGE: Reicht dem Bot für die Weiterleitung die Bezeichnung des Themenpostkorbs, oder wird die Nummer aus der Postkorbverwaltung gebraucht?
+- AO-Erkennung über den Vertriebskanal in OB726 ist übernommen: Die Kanäle 2200, 2215, 2271, 2281, 2300, 2301, 2302 und 2400 gehören zum Makler- und Kooperationsvertrieb und führen nach ODPP1 D; alle übrigen Kanäle gelten als AO (z. B. 2050, 2100, 2111, 2130, 2151, 2800) und führen nach HSB4 K KO.
+- FRAGE: Kamil, gehört 2720 zum Maklervertrieb? Und sind die acht Makler/Koop-Kanäle aus deiner Mail die vollständige Liste aus deiner Excel-Beilage (2111 stand doppelt)? Passt die Regel „alles außer Makler/Koop ist AO“ so?
+
+4. Screenshots – Stand
+- KI-Deckblatt: eingefügt, steht jetzt in der Vorprüfung (Ausschlusskriterien aus dem KI-Deckblatt). Der Platzhalter auf S. 19 meint etwas anderes, nämlich den Datensatz im Datenpool (Felder BUE_*), den der Bot liest; dafür brauchen wir einen Screenshot aus dem Datenpool selbst. Der bleibt offen.
+- IS011: die geschwärzten Match-Code-Screens sind in beiden Fassungen übernommen. OB726 zum abgebenden Bestandsinhaber bleibt, wie er ist. OB729 (Betreuungsvermerk mit E-Mail-Adresse) ist in beiden Fassungen drin.
+- KV-Notizvorlage BOT2011: drin, ersetzt in der KV-Fassung die Maske 1515. Die Feldtabelle im Kapitel VI folgt weiterhin dem Aufbau der Maske 1515; ob der Bot die Vorlage BOT2011 bestückt oder eine Freitextnotiz erzeugt, ist noch offen (Punkt 5).
+- Komposit / Leben: Die übrigen Hostmasken bleiben die KV-Screenshots, die Masken sind spartenunabhängig; nur VA230 zeigt jetzt einen KR-Vertrag. So passt es. Der Bearbeitungshinweis Komposit / Leben (Kapitel VII) bleibt als Platzhalter (Punkt 5).
+
+5. Weiterhin offen – Fragen an den Verteiler
+- FRAGE: Notizvorlage KV: Bestückt der Bot die Vorlage BOT2011, oder erzeugt er eine Freitextnotiz mit demselben Aufbau?
+- FRAGE: Bearbeitungshinweis Komposit / Leben: Welche Anwendung und welche Vorlage werden dafür genutzt (bei KV ist es ErgoNotiz, Vorlage 2011)?
+- FRAGE: Involvierte Geschäftsbereiche: Wie lauten Gruppe, Abteilung und Standort der beteiligten Einheiten (Fachbereiche KV und Komposit / Leben sowie die bauende Einheit)?
+- FRAGE: Abnahmeumgebung: Welche Postkörbe werden dort genutzt, und ab wann steht die Umgebung mit dem PTU-Abzug für die Tests bereit?
+
+Die beiden PDDs in der Fassung v11:
+- PDD Gesundheit (KV) v11: [Link PDD_Vorpruefung_BUE_Gesundheit_KV_v11.docx]
+- PDD Komposit / Leben v11: [Link PDD_Vorpruefung_BUE_Komposit_Leben_v11.docx]
+
+Die QS mit den KV-Kollegen Ende nächster Woche passt. Rückmeldungen gern wieder direkt in den Dokumenten oder in der Mail, dann arbeite ich sie wie diesmal Punkt für Punkt ein.
+
+Viele Grüße
+Eike Brenneisen

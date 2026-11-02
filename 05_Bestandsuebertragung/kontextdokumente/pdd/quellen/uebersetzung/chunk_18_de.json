@@ -1,0 +1,982 @@
+[
+ {
+  "de": "<BE-Klassifikation> = „Agenturnummer in OB726 unbekannt“",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Vertrag zur VNR nicht gefunden“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> in der Spalte „Agenturnummer / PNR“ der Sonderliste TOP-Makler enthalten (Tabelle unten; verglichen wird die Agenturnummer, die PNR steht nachrichtlich)",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-AGT-Inh-Klassifizierung> enthält „Makler“",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-PNR> = <BUE_VERMITTLER_NR>, links mit Nullen auf 7 Stellen aufgefüllt",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-AGT-Inhaber> = leer",
+  "art": "text"
+ },
+ {
+  "de": "Abschnitt",
+  "art": "text"
+ },
+ {
+  "de": "Agenturnummer in OB726 unbekannt",
+  "art": "wert"
+ },
+ {
+  "de": "Aufbau des Bearbeitungshinweises",
+  "art": "text"
+ },
+ {
+  "de": "BE",
+  "art": "wert"
+ },
+ {
+  "de": "BE: Nachprüfung erforderlich",
+  "art": "wert"
+ },
+ {
+  "de": "Bearbeitungshinweis am Postkorbvorgang speichern (ErgoNotiz, Vorlage 2011, siehe Screenshot)",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis am Postkorbvorgang speichern (Notiz am Postkorbvorgang; Anwendung und Vorlage durch den Fachbereich zu bestätigen)",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitungshinweis in drei Abschnitten füllen – „BE:“, „Fehler:“, „Hinweis:“ – nach der Tabelle „Aufbau des Bearbeitungshinweises“ unten.",
+  "art": "text"
+ },
+ {
+  "de": "Beispiel",
+  "art": "text"
+ },
+ {
+  "de": "Bestandsinhaber nicht ermittelbar",
+  "art": "wert"
+ },
+ {
+  "de": "Die E-Mail-Adresse wird für das Notizfeld „E-Mail aufnehmender Makler“ benötigt. Sie wird in fester Reihenfolge bestimmt: Sonderliste TOP-Makler, sonst die in OB726 hinterlegte Adresse (<OB726-Email>, bereits im OB726-Block gelesen), bei fehlender oder interner Adresse die Absenderadresse aus dem Datenpool.",
+  "art": "text"
+ },
+ {
+  "de": "Die Prüfschritte in IS011 einschließlich Scout-Service, VA230, OB726 und GH040 sind lesend. Schreibende Schritte sind die Telefonnotiz (Kapitel „VI. Abschluss ohne Befund“), der Bearbeitungshinweis (Kapitel „VII. Abschluss mit Befund“) und die jeweilige Weiterleitung am Prozessende; ein Wiederanlauf ist zulässig, solange diese noch nicht erfolgt sind.",
+  "art": "text"
+ },
+ {
+  "de": "Fehler",
+  "art": "text"
+ },
+ {
+  "de": "Fehler:",
+  "art": "wert"
+ },
+ {
+  "de": "Grund der Abweichung bestimmen (nur über den Sprung aus der vorigen Zeile erreicht): Rufe im Scout-Service die Vertragsübersicht zu <IS011-KNR> auf und lese alle Versicherungsnummern (Spalte „VNR“).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis:",
+  "art": "wert"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein Mangel („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz mit dem Feldwert in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Ein leeres Feld und der Wert „Reminder - keine Vollst.-Prüfung“ bedeuten, dass keine Vollständigkeitsprüfung stattgefunden hat; sie lösen keine Prüfnotiz aus. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein Mangel („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz mit dem Feldwert in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Ein leeres Feld und der Wert „Reminder - keine Vollst.-Prüfung“ bedeuten, dass keine Vollständigkeitsprüfung stattgefunden hat; sie lösen keine Prüfnotiz aus. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“. Ist <BUE_ANF_UNTERLAGEN> = „ja“, entsteht keine Prüfnotiz; die Unterlagen werden über die Notiz angefordert.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Auch bei einer harten Business Exception werden die bis dahin gemerkten Prüfnotizen im Abschnitt „Fehler:“ ausgegeben; die Sachbearbeitung sieht so alle Abweichungen auf einen Blick.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei Komposit und Leben entscheidet die Klassifizierung des abgebenden Bestandsinhabers aus OB726 (Kapitel II): ein Makler führt nach ODPB, alle übrigen Fälle einschließlich eines nicht ermittelbaren Bestandsinhabers oder einer BE vor Kapitel II führen nach HSB4K KO.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Das Geburtsdatum geht nicht in die Suche ein. Es wird erst nach der Suche als Gegenprobe verglichen (Schritt „Geburtsdatum abgleichen“ unten). Als Suchbegriff würde ein abweichendes Geburtsdatum die Suche scheitern lassen; der Vorgang endete dann als harte BE mit falschem Grund statt als Prüfnotiz.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Anbindungsprüfung steht am Ende der OB726-Schritte, damit OB726 nicht erneut aufgerufen werden muss; PNR, Name, Klassifizierung und E-Mail-Adresse sind dort bereits gelesen.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ein leeres Feld „Betreuung“ (etwa Direktbestand ohne Vermittler) ist kein Ausschlusskriterium; der Bestandsinhaber wird in der Nachprüfung manuell bestimmt.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Nennt der Auftrag mehrere Versicherungsnummern, wird zu jeder Nummer ein eigener Vorgang geprüft. Die vollständige Liste steht im Abschnitt „Hinweis:“ des Bearbeitungshinweises („Weitere VNR“), damit die Sachbearbeitung den Zusammenhang der Vorgänge erkennt.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die OB726-Kopfzeile mit der Vermittler-Nr. („P,…“) aus und speichere den Text hinter der Nummer als <OB726-AGT-Inh-Klassifizierung> (steuert im Kapitel „VII. Abschluss mit Befund“ das Routing nach ODPB oder HSB4K KO).",
+  "art": "text"
+ },
+ {
+  "de": "Lese die hinterlegte E-Mail-Adresse des Vermittlers und speichere als <OB726-Email> (leer, wenn keine Adresse hinterlegt ist). Sie wird im Schritt „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“ ausgewertet.",
+  "art": "text"
+ },
+ {
+  "de": "Lesehilfe zur Farblogik: Systeme stehen fett (OB726), Felder aus dem Datenpool dunkelblau (<BUE_VNR>), im Lauf erzeugte Variablen dunkelgrün (<Vorgang-VNR>), die <BE-Klassifikation> dunkelrot. Die Steuerwörter WENN / DANN / SONST / SONST WENN / Ende WENN stehen türkis in der Formatvorlage „WENN DANN“ und sind wie Programmcode eingerückt; „SONST WENN“ hängt eine weitere Bedingung an denselben Block, ein „Ende WENN“ schließt die ganze Kette. Querverweise auf andere Kapitel und Schritte sind Links und stehen fett und unterstrichen, Hinweise kursiv.",
+  "art": "text"
+ },
+ {
+  "de": "Maskenname <> „IS011/VAF017“ ODER Feld „KD“ leer (IS011 zeigt zur <Vorgang-VNR> keine Stammdaten)",
+  "art": "text"
+ },
+ {
+  "de": "Maskenname weder „IS011/VAF121“ noch „IS011/VAF017“ (Fehlermeldung von IS011)",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Bestandsinhaber nicht ermittelbar“ in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "Merke Prüfnotiz „Unterlagen nicht vollständig: <BUE_PRUEFUNG_UNTERLAGEN>“ in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; <OB726-PNR> = <BUE_VERMITTLER_NR> (auf 7 Stellen aufgefüllt); Name, Klassifizierung und E-Mail-Adresse lesen; Anbindung in GH040 prüfen",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; PNR aus OB726 lesen; Name, Klassifizierung und E-Mail-Adresse lesen; Anbindung in GH040 prüfen",
+  "art": "text"
+ },
+ {
+  "de": "Regel",
+  "art": "text"
+ },
+ {
+  "de": "Reihenfolge, in der die Prüfnotizen gemerkt wurden; ist <Fehlerliste> leer, lautet die Zeile „Fehler: keine“",
+  "art": "text"
+ },
+ {
+  "de": "UND <BUE_PRUEFUNG_UNTERLAGEN> <> leer",
+  "art": "text"
+ },
+ {
+  "de": "UND <BUE_PRUEFUNG_UNTERLAGEN> <> „Reminder - keine Vollst.-Prüfung“",
+  "art": "text"
+ },
+ {
+  "de": "Unterlagen nicht vollständig: <BUE_PRUEFUNG_UNTERLAGEN>",
+  "art": "wert"
+ },
+ {
+  "de": "Unterlagen nicht vollständig: MV fehlt",
+  "art": "wert"
+ },
+ {
+  "de": "Verarbeitung dieses Vorgangs als System Exception abbrechen; der Vorgang bleibt unbearbeitet im Themenpostkorb.",
+  "art": "text"
+ },
+ {
+  "de": "Vertrag zur VNR nicht gefunden",
+  "art": "wert"
+ },
+ {
+  "de": "Weiter mit „Grund der Abweichung bestimmen“ (nächste Zeile)",
+  "art": "text"
+ },
+ {
+  "de": "Weitere VNR: KV204071336; KV204071337",
+  "art": "wert"
+ },
+ {
+  "de": "Zeilen im Bearbeitungshinweis",
+  "art": "text"
+ },
+ {
+  "de": "alle im Auftrag genannten Versicherungsnummern, wie im Datenpool geliefert; <BUE_VNR_2> nur, wenn gefüllt. Der Abschnitt ist für weitere Hinweise vorgesehen, die später ergänzt werden können, ohne den Aufbau zu ändern.",
+  "art": "text"
+ },
+ {
+  "de": "darunter je Prüfnotiz aus <Fehlerliste> eine eigene Zeile",
+  "art": "text"
+ },
+ {
+  "de": "darunter „Weitere VNR: “ + <BUE_VNR> + „; “ + <BUE_VNR_2>",
+  "art": "text"
+ },
+ {
+  "de": "immer genau eine Zeile; Werte siehe Liste „Mögliche Werte von <BE-Klassifikation>“ oben",
+  "art": "text"
+ },
+ {
+  "de": "„BE: “ + <BE-Klassifikation>",
+  "art": "wert"
+ },
+ {
+  "de": "„Fehler:“",
+  "art": "wert"
+ },
+ {
+  "de": "„Hinweis:“",
+  "art": "wert"
+ },
+ {
+  "de": "(durch Fachbereich festzulegen: Klassifikation für nicht aktuelle Verträge)",
+  "art": "wert"
+ },
+ {
+  "de": "<BE-Klassifikation> = „(durch Fachbereich festzulegen: Klassifikation für nicht aktuelle Verträge)“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> in der Spalte „Agenturnummer“ der Sonderliste TOP-Makler enthalten (Tabelle unten; verglichen wird ausschließlich die Agenturnummer, die PNR steht nachrichtlich)",
+  "art": "text"
+ },
+ {
+  "de": "Agenturnummer (Vergleichswert)",
+  "art": "text"
+ },
+ {
+  "de": "PNR (nachrichtlich)",
+  "art": "text"
+ },
+ {
+  "de": "Alle Felder werden ohne weitere Prüfung aus den Variablen übernommen (Ausfüllhinweise in der Tabelle unten). Die Telefonnotiz wird erst nach dem Schritt „Anforderung von Unterlagen in der Notiz kennzeichnen“ gespeichert.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein Mangel („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz mit dem Feldwert in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Ein leeres Feld und der Wert „Reminder - keine Vollst.-Prüfung“ bedeuten, dass keine Vollständigkeitsprüfung stattgefunden hat; sie lösen keine Prüfnotiz aus. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“. Die Anforderung von Unterlagen durch den Makler (<BUE_ANF_UNTERLAGEN>) ist davon unabhängig und wird im Kapitel „VI. Abschluss ohne Befund“ in der Notiz gekennzeichnet.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Prüfung auf Mantelvertrag ist noch zu validieren – durch den Fachbereich (K. Rypa) sind das Feld in VA230 und die Ausprägung festzulegen, an der der Bot einen Flottenvertrag mit führendem Mantel erkennt. Maßgeblich ist die Sparte der <Vorgang-VNR>; <BUE_SPARTE> kann bei mehreren Nummern mehrere Kürzel enthalten und wird deshalb nicht ausgewertet.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Dieser Schritt steuert nicht die Prüfung, sondern die Folgearbeit. <BUE_ANF_UNTERLAGEN> sagt, ob der übernehmende Makler Unterlagen zum Vertrag anfordert, die ERGO ihm liefert; <BUE_ART_UNTERLAGEN> nennt die Arten, mit Semikolon getrennt. Die Anforderung ist unabhängig von der Vollständigkeitsprüfung der eingereichten Unterlagen in der Vorprüfung.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Spartenweiche innerhalb des Prozesses ist deshalb nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt; die Prüfung auf Mantelvertrag bei KR im Kapitel „IV. Vertrag“ nutzt das Spartenkürzel der <Vorgang-VNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ob Celonis zusätzlich einen eigenen GeVo „Anforderung von Unterlagen“ eröffnet, ist mit Celonis festzulegen, damit nicht doppelt angefordert wird. Die Bedeutung des Kennzeichens (Anforderung durch den Makler) ist durch den Fachbereich zu bestätigen.",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz anlegen: Vorlage BOT2011 (Krankenversicherung); der Feldumfang entspricht der Notizmaske 1515, der Abschnitt „Folgearbeit für Komposit“ bleibt leer. Ob die Vorlage bestückt oder eine Freitextnotiz mit gleichem Aufbau erzeugt wird, ist durch den Fachbereich zu bestätigen.",
+  "art": "text"
+ },
+ {
+  "de": "Telefonnotiz speichern.",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an ODPB übergeben (Art der Übergabe und Postkorb-Nr. TBD – Fachbereich)",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb Prüf-Bot Komposit / Leben – Postkorb-Nr. TBD, siehe Kapitel „Details zum Startereignis“) öffnen. GeVo 108 (Bestandsübertragung) bzw. 469 (Bezeichnung durch den Fachbereich zu benennen) (zu bestätigen).",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb „HSB4 K BÜ Prüf BOT“, Postkorb-Nr. 2015, siehe Kapitel „Details zum Startereignis“) öffnen. Dokumenttyp 02015 (Maklervollmacht) bzw. 06065 (Betreuung / Anfrage Betreuung) (zu bestätigen).",
+  "art": "text"
+ },
+ {
+  "de": "Zuordnung der Spartenkürzel zu Komposit und Leben durch den Fachbereich zu liefern; bei <BUE_UMFANG> = „Gesamt“ zusätzlich „Auftrag: gesamte Kundenverbindung“",
+  "art": "text"
+ },
+ {
+  "de": "die ersten zwei Zeichen von <Vorgang-VNR> = „KR“ (Spartenkürzel der geprüften Versicherungsnummer)",
+  "art": "text"
+ },
+ {
+  "de": "„Komposit“ oder „Leben“ nach dem Spartenkürzel der <Vorgang-VNR>",
+  "art": "text"
+ },
+ {
+  "de": "Die E-Mail-Adresse wird für das Notizfeld „E-Mail aufnehmender Makler“ benötigt. Es gilt in dieser Reihenfolge:",
+  "art": "text"
+ },
+ {
+  "de": "1. TOP-Makler laut Sonderliste: die dort hinterlegte Ausgangsadresse für die Bestandsübertragung.",
+  "art": "text"
+ },
+ {
+  "de": "2. Ausnahme Fonds Finanz: die Absenderadresse der Eingangsmail (<BUE_MAKLER_EMAIL>), weil Fonds Finanz je Sparte eine eigene Adresse nutzt.",
+  "art": "text"
+ },
+ {
+  "de": "3. Sonst die im System hinterlegte Adresse (<OB726-Email>, im OB726-Block gelesen), außer sie ist eine interne ERGO-Adresse (enthält „@ergo“).",
+  "art": "text"
+ },
+ {
+  "de": "4. Sonst die Absenderadresse der Eingangsmail (<BUE_MAKLER_EMAIL>).",
+  "art": "text"
+ },
+ {
+  "de": "600020034",
+  "art": "wert"
+ },
+ {
+  "de": "600020036",
+  "art": "wert"
+ },
+ {
+  "de": "600021389",
+  "art": "wert"
+ },
+ {
+  "de": "600042497",
+  "art": "wert"
+ },
+ {
+  "de": "600082061",
+  "art": "wert"
+ },
+ {
+  "de": "811774",
+  "art": "wert"
+ },
+ {
+  "de": "811781",
+  "art": "wert"
+ },
+ {
+  "de": "811801",
+  "art": "wert"
+ },
+ {
+  "de": "811809",
+  "art": "wert"
+ },
+ {
+  "de": "818468",
+  "art": "wert"
+ },
+ {
+  "de": "823007",
+  "art": "wert"
+ },
+ {
+  "de": "8903235",
+  "art": "wert"
+ },
+ {
+  "de": "8905060",
+  "art": "wert"
+ },
+ {
+  "de": "891300",
+  "art": "wert"
+ },
+ {
+  "de": "Hinweis zu den Screenshots: Die Bildschirmfotos stammen aus der KV-Fassung (Postkorb, VA230 mit Sparte Kranken) und sind für Komposit / Leben durch den Fachbereich zu ersetzen.",
+  "art": "text"
+ },
+ {
+  "de": "<Suche-ohne-Gebdat> = leer",
+  "art": "text"
+ },
+ {
+  "de": "<Suche-ohne-Gebdat> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "Geb-Dat = <BUE_KUNDE_GEBDAT>, aufgeteilt auf die drei Felder TT MM JJJJ (nur wenn <BUE_KUNDE_GEBDAT> <> leer und <Suche-ohne-Gebdat> = leer)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Das Geburtsdatum ist zunächst Suchfeld. Bleibt die Trefferliste leer, wird die Suche einmal ohne Geburtsdatum wiederholt (nächste Zeile). So führt ein im Auftrag falsch angegebenes Geburtsdatum nicht zur BE „Kunde in IS011 nicht gefunden“, sondern nach der Suche zur Prüfnotiz „Geburtsdatum abweichend“ (Schritt „Geburtsdatum abgleichen“ unten).",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_KUNDE_GEBDAT> <> leer UND <Suche-ohne-Gebdat> = leer",
+  "art": "text"
+ },
+ {
+  "de": "Matchcodesuche wiederholen mit denselben Angaben, aber ohne das Feld Geb-Dat, und Enter.",
+  "art": "text"
+ },
+ {
+  "de": "Weiter mit „Lese den Maskennamen“ (Beginn dieser Zeile)",
+  "art": "text"
+ },
+ {
+  "de": "Lese in OB726 die hinterlegte E-Mail-Adresse des Vermittlers und speichere als <OB729-Email>.",
+  "art": "text"
+ },
+ {
+  "de": "<OB729-Email> = leer",
+  "art": "text"
+ },
+ {
+  "de": "ODER <OB729-Email> enthält „@ergo“",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = <OB729-Email>",
+  "art": "text"
+ },
+ {
+  "de": "Die E-Mail-Adresse wird für das Notizfeld „E-Mail aufnehmender Makler“ benötigt. Sie wird in fester Reihenfolge bestimmt: Sonderliste TOP-Makler, sonst die in OB726 hinterlegte Adresse (<OB729-Email>, bereits im OB726-Block gelesen), bei fehlender oder interner Adresse die Absenderadresse aus dem Datenpool.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die hinterlegte E-Mail-Adresse des Vermittlers und speichere als <OB729-Email> (leer, wenn keine Adresse hinterlegt ist). Sie wird im Schritt „E-Mail-Adresse des übernehmenden Vermittlers ermitteln“ ausgewertet.",
+  "art": "text"
+ },
+ {
+  "de": "3. Sonst die im System hinterlegte Adresse (<OB729-Email>, im OB726-Block gelesen), außer sie ist eine interne ERGO-Adresse (enthält „@ergo“).",
+  "art": "text"
+ },
+ {
+  "de": "D. Amend (Process Owner HS, SME), C.-R. Lucht (Process Owner ODPP)",
+  "art": "wert"
+ },
+ {
+  "de": "Dirk Amend (HS), Christoph-Reber Lucht (ODPP)",
+  "art": "wert"
+ },
+ {
+  "de": "Öffne OB729 mit <BUE_AGENTUR_NR>, lese die hinterlegte E-Mail-Adresse und speichere als <OB729-Email> (leer, wenn keine Adresse hinterlegt ist).",
+  "art": "text"
+ },
+ {
+  "de": "3. Sonst die in OB729 (Vermittlerkommunikation) zur Agenturnummer hinterlegte Adresse (<OB729-Email>), außer sie ist eine interne ERGO-Adresse (enthält „@ergo“).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Sonderliste gilt einmalig (Stand 23.09.2026, M. Abbas) und wird nicht laufend gepflegt.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Anbindungsprüfung steht am Ende der OB726-Schritte, damit OB726 nicht erneut aufgerufen werden muss; die E-Mail-Adresse kommt aus OB729 und wird im nächsten Schritt gelesen.",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; <OB726-PNR> = <BUE_VERMITTLER_NR> (auf 7 Stellen aufgefüllt); Name und Klassifizierung prüfen; Anbindung in GH040 prüfen; E-Mail-Adresse ermitteln",
+  "art": "text"
+ },
+ {
+  "de": "OB726 über <BUE_AGENTUR_NR> öffnen; PNR aus OB726 lesen; Name und Klassifizierung prüfen; Anbindung in GH040 prüfen; E-Mail-Adresse ermitteln",
+  "art": "text"
+ },
+ {
+  "de": "Die Prüfschritte in IS011 einschließlich Scout-Service, VA230, OB726 und GH040 sowie OB729 sind lesend. Schreibende Schritte sind die Telefonnotiz (Kapitel „VI. Abschluss ohne Befund“), der Bearbeitungshinweis (Kapitel „VII. Abschluss mit Befund“) und die jeweilige Weiterleitung am Prozessende; ein Wiederanlauf ist zulässig, solange diese noch nicht erfolgt sind.",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb „MV 23724 BÜ Prüf BOT“, Postkorb-Nr. 23724, siehe Kapitel „Details zum Startereignis“) öffnen. Dokumenttyp 2015.",
+  "art": "text"
+ },
+ {
+  "de": "Werte aus dem Postkorbvorgang: Postkorbvorgang im Startpostkorb (Themenpostkorb „MV 23724 BÜ Prüf BOT“, Postkorb-Nr. 23724, siehe Kapitel „Details zum Startereignis“) öffnen. GeVo 108 (Bestandsübertragung).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Der Themenpostkorb „MV 23724 BÜ Prüf BOT“ nimmt Bestandsübertragungen aller Sparten auf. Die Sparte ist am Vorgang erkennbar (Dokumenttyp 2015 bei KV, GeVo 108 bei Komposit und Leben) und am Spartenkürzel der <Vorgang-VNR>. Diese Fassung gilt für die Krankenversicherung; die Notiz entspricht der KV-Variante.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Der Themenpostkorb „MV 23724 BÜ Prüf BOT“ nimmt Bestandsübertragungen aller Sparten auf. Die Sparte ist am Vorgang erkennbar (Dokumenttyp 2015 bei KV, GeVo 108 bei Komposit und Leben) und am Spartenkürzel der <Vorgang-VNR>. Diese Fassung gilt für Komposit und Leben; die Notiz entspricht der Vorlage 1515.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt; die Prüfung auf Mantelvertrag bei KR im Kapitel „IV. Vertrag“ nutzt das Spartenkürzel der <Vorgang-VNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die <Vorgang-VNR> stammt aus dem VDB-Abruf durch Celonis und ist damit eine echte Nummer; ob ein Vertrag existiert, wird nicht eigens geprüft. Die Sparte des Vorgangs steht mit Dokumenttyp bzw. GeVo und dem Spartenkürzel der <Vorgang-VNR> fest, und mit ihr die Notizvariante.",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Vertrag nicht aktuell: <VA230-Status>“",
+  "art": "text"
+ },
+ {
+  "de": "Vertrag nicht aktuell: <VA230-Status>",
+  "art": "wert"
+ },
+ {
+  "de": "Den bestehenden Postkorbvorgang mit der Telefonnotiz an den 72-Stunden-BOT weiterleiten (Themenpostkorb „HSB4K 72“, Postkorb-Nr. TBD).",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-AGT-Inh-Klassifizierung> = AO (Ausschließlichkeitsorganisation; Ausprägung in der OB726-Kopfzeile durch den Fachbereich zu bestätigen)",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb „HSB4K KO“ (Postkorb-Nr. TBD) weiterleiten",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang an den Themenpostkorb von ODPB weiterleiten (Postkorb und Postkorb-Nr. TBD – durch Fachbereich zu benennen)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Bei Komposit und Leben entscheidet die Klassifizierung des abgebenden Bestandsinhabers aus OB726 (Kapitel II): gehört er der AO an, geht der Vorgang nach HSB4K KO, alle übrigen (Makler, Mehrfachagent, sonstige) nach ODPB. Ist der Bestandsinhaber nicht ermittelbar oder endet die Prüfung vor Kapitel II, geht der Vorgang nach HSB4K KO (Vorschlag, durch den Fachbereich zu bestätigen).",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_SPARTE> = „KR“ (bei mehreren Kürzeln das Kürzel an der Position der <Vorgang-VNR> in <BUE_VNR>)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Prüfung auf Mantelvertrag ist noch zu validieren – durch den Fachbereich (K. Rypa) sind das Feld in VA230 und die Ausprägung festzulegen, an der der Bot einen Flottenvertrag mit führendem Mantel erkennt. Die Sparte kommt aus dem Datenpoolfeld <BUE_SPARTE>; nennt der Auftrag mehrere Nummern, gilt das Kürzel an der Position der <Vorgang-VNR>.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich. <BUE_SPARTE> wird nachrichtlich mitgeführt; bei „KR“ steuert das Feld im Kapitel „IV. Vertrag“ die Prüfung auf Mantelvertrag.",
+  "art": "text"
+ },
+ {
+  "de": "„Komposit“ oder „Leben“ nach <BUE_SPARTE>",
+  "art": "text"
+ },
+ {
+  "de": "1. TOP-Makler laut Sonderliste: die dort hinterlegte E-Mail-Adresse für die Antwort auf BÜ-Anfragen.",
+  "art": "text"
+ },
+ {
+  "de": "2. Sonst die in OB729 (Vermittlerkommunikation) zur Agenturnummer hinterlegte Adresse (<OB729-Email>), außer sie ist eine interne ERGO-Adresse (enthält „@ergo“).",
+  "art": "text"
+ },
+ {
+  "de": "3. Sonst die Absenderadresse der Eingangsmail (<BUE_MAKLER_EMAIL>).",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> in der Spalte „Agentur-Nr.“ der Sonderliste TOP-Makler enthalten (Tabelle unten; Vergleich der Ziffernfolge ohne führende Nullen)",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = E-Mail-Adresse aus der Sonderliste",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Die Sonderliste gilt einmalig (Stand 23.09.2026) und wird nicht laufend gepflegt. Fonds Finanz hat inzwischen eine eigene Adresse für Bestandsübertragungen; die frühere Ausnahme (Absenderadresse je Sparte) entfällt.",
+  "art": "text"
+ },
+ {
+  "de": "Agentur-Nr. (Vergleichswert)",
+  "art": "text"
+ },
+ {
+  "de": "Agentur-Name (Sonderliste TOP-Makler)",
+  "art": "text"
+ },
+ {
+  "de": "E-Mail-Adresse für Antwort auf BÜ-Anfrage",
+  "art": "text"
+ },
+ {
+  "de": "600041966",
+  "art": "wert"
+ },
+ {
+  "de": "600010016",
+  "art": "wert"
+ },
+ {
+  "de": "008903235",
+  "art": "wert"
+ },
+ {
+  "de": "008982800",
+  "art": "wert"
+ },
+ {
+  "de": "1 zu 1 Assekuranzservice AG",
+  "art": "wert"
+ },
+ {
+  "de": "Apella AG",
+  "art": "wert"
+ },
+ {
+  "de": "blau direkt GmbH",
+  "art": "wert"
+ },
+ {
+  "de": "DEMA Deutsche Versicherungsmakler AG",
+  "art": "wert"
+ },
+ {
+  "de": "Fonds Finanz Maklerservice GmbH",
+  "art": "wert"
+ },
+ {
+  "de": "INVERS Versicherungsvermittlungsgesellschaft mbH",
+  "art": "wert"
+ },
+ {
+  "de": "Jung, DMS & Cie Pool GmbH",
+  "art": "wert"
+ },
+ {
+  "de": "VEMA Versicherungsmakler Genossenschaft e.G.",
+  "art": "wert"
+ },
+ {
+  "de": "bestandsuebertragung@1zu1.ag",
+  "art": "wert"
+ },
+ {
+  "de": "bestandsuebertragung@fondsfinanz.de",
+  "art": "wert"
+ },
+ {
+  "de": "bestandsuebertragung@invers-gruppe.de",
+  "art": "wert"
+ },
+ {
+  "de": "poolservice@vema-eg.de",
+  "art": "wert"
+ },
+ {
+  "de": "Hinweis: Alle Werte von <BE-Klassifikation> und alle Prüfnotizen stehen mit Kapitel und Auslöser in den Tabellen „Werteliste der BE-Klassifikation“ und „Werteliste der Prüfnotizen“ unten.",
+  "art": "text"
+ },
+ {
+  "de": "immer genau eine Zeile; Werte siehe Tabelle „Werteliste der BE-Klassifikation“ unten",
+  "art": "text"
+ },
+ {
+  "de": "Werteliste der BE-Klassifikation",
+  "art": "text"
+ },
+ {
+  "de": "Werteliste der Prüfnotizen",
+  "art": "text"
+ },
+ {
+  "de": "Wert von <BE-Klassifikation>",
+  "art": "text"
+ },
+ {
+  "de": "Gesetzt in",
+  "art": "text"
+ },
+ {
+  "de": "Auslöser",
+  "art": "text"
+ },
+ {
+  "de": "Prüfnotiz in <Fehlerliste>",
+  "art": "text"
+ },
+ {
+  "de": "Gemerkt in",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_AGENTUR_NR> = leer",
+  "art": "text"
+ },
+ {
+  "de": "Mehrfachagent: <BUE_WUNSCH_VORHANDEN> = „nein“",
+  "art": "text"
+ },
+ {
+  "de": "Mehrfachagent: <BUE_MV_AUF_MAKLER> <> „ja“",
+  "art": "text"
+ },
+ {
+  "de": "Makler: <BUE_MV_UNTERSCHRIFT_KUNDE> <> „ja“",
+  "art": "text"
+ },
+ {
+  "de": "IS011 zeigt zur <Vorgang-VNR> keine Stammdaten",
+  "art": "text"
+ },
+ {
+  "de": "Trefferliste der Matchcodesuche leer, auch nach der Wiederholung ohne Geburtsdatum",
+  "art": "text"
+ },
+ {
+  "de": "<IS011-KNR-VN> nicht in der Trefferliste, oder der gefundene Partner ist am Vertrag in anderer Rolle beteiligt",
+  "art": "text"
+ },
+ {
+  "de": "gefundener Partner ohne die <Vorgang-VNR> in seiner Vertragsübersicht (Scout-Service)",
+  "art": "text"
+ },
+ {
+  "de": "Hinweistext „IS0042I“ beim Aufruf mit <BUE_AGENTUR_NR>",
+  "art": "text"
+ },
+ {
+  "de": "<OB726-Name> enthält „INAKTIV“ oder Status der Beschäftigung in GH040 <> „aktiv“",
+  "art": "text"
+ },
+ {
+  "de": "<VA230-Status> <> „aktuell“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_SPARTE> = „KR“ und <VA230-Mantel> = „ja“",
+  "art": "text"
+ },
+ {
+  "de": "<Fehlerliste> <> leer",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = leer",
+  "art": "text"
+ },
+ {
+  "de": "Makler: Feldwert weder „Vollständig“ noch leer noch „Reminder - keine Vollst.-Prüfung“",
+  "art": "text"
+ },
+ {
+  "de": "<IS011-Gebdat> <> <BUE_KUNDE_GEBDAT>",
+  "art": "text"
+ },
+ {
+  "de": "Feld „Betreuung“ in VA230 leer oder Hinweistext „IS0042I“ in OB726",
+  "art": "text"
+ },
+ {
+  "de": "Status der Beschäftigung in GH040 <> „aktiv“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> passt nicht zu <OB726-Klassifizierung>",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> = leer",
+  "art": "text"
+ },
+ {
+  "de": "<Makler-Email> enthält „@ergo“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „Vorprüfung“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „I. Kunde (VN)“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „II. Abgebender Bestandsinhaber“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „III. Übernehmender Makler“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „IV. Vertrag“",
+  "art": "text"
+ },
+ {
+  "de": "Kapitel „V. Test auf Fehlerliste“",
+  "art": "text"
+ },
+ {
+  "de": "Keine Zusammenarbeit",
+  "art": "wert"
+ },
+ {
+  "de": "KR Flottenvertrag",
+  "art": "wert"
+ },
+ {
+  "de": "Nachprüfung erforderlich",
+  "art": "wert"
+ },
+ {
+  "de": "Kunde ist nicht Versicherungsnehmer",
+  "art": "wert"
+ },
+ {
+  "de": "Kunde in IS011 nicht gefunden",
+  "art": "wert"
+ },
+ {
+  "de": "Vertrag gehört nicht zum Kunden",
+  "art": "wert"
+ },
+ {
+  "de": "Agenturnummer nicht vorhanden",
+  "art": "wert"
+ },
+ {
+  "de": "BÜ-Wunsch nicht vorhanden",
+  "art": "wert"
+ },
+ {
+  "de": "Betreuungswunsch nicht auf MFA ausgestellt",
+  "art": "wert"
+ },
+ {
+  "de": "Unterschrift VN fehlt",
+  "art": "wert"
+ },
+ {
+  "de": "Vermittlertyp nicht angegeben",
+  "art": "wert"
+ },
+ {
+  "de": "Geburtsdatum abweichend",
+  "art": "wert"
+ },
+ {
+  "de": "Anbindung Bestandsinhaber nicht aktiv",
+  "art": "wert"
+ },
+ {
+  "de": "Vermittlertyp abweichend",
+  "art": "wert"
+ },
+ {
+  "de": "E-Mail-Adresse des Vermittlers fehlt",
+  "art": "wert"
+ },
+ {
+  "de": "Absender ist eine interne ERGO-Adresse",
+  "art": "wert"
+ },
+ {
+  "de": "Hinweis: Die Sonderliste gilt einmalig (Stand 23.09.2026) und wird nicht laufend gepflegt.",
+  "art": "text"
+ },
+ {
+  "de": "kein Screenshot erforderlich",
+  "art": "wert"
+ },
+ {
+  "de": "D. Amend",
+  "art": "wert"
+ },
+ {
+  "de": "D. Amend (Process Owner)",
+  "art": "wert"
+ },
+ {
+  "de": "PDD – Reviewversion zur Prozessvalidierung",
+  "art": "wert"
+ },
+ {
+  "de": "Lese die folgenden 19 Felder des Datenpools aus und speichere jedes unter dem gleichnamigen Variablennamen (Format, Werteliste und Pflichtfeldkennzeichen im Kapitel „Tabelle der genutzten Variablen“, Herkunft „Datenpool“):",
+  "art": "text"
+ },
+ {
+  "de": "Lese die folgenden 22 Felder des Datenpools aus und speichere jedes unter dem gleichnamigen Variablennamen (Format, Werteliste und Pflichtfeldkennzeichen im Kapitel „Tabelle der genutzten Variablen“, Herkunft „Datenpool“):",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Beim Mehrfachagenten (<BUE_VERMITTLER_TYP> = „MFA“) gibt es keine Maklervollmacht; für ihn zählen der ausformulierte BÜ-Wunsch und der auf ihn ausgestellte Betreuungswunsch. <BUE_UV_ERTEILT> steht bei ihm auf N/A und wird nicht geprüft.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine Prüfung der Klassifikation aus dem Datenpool findet nicht statt. Der Prüf-Bot wird nur durch Vorgänge ausgelöst, die als Bestandsübertragung in den Themenpostkorb gestellt wurden – heute durch Celonis, künftig auch durch Weiterleitung aus der Sparte, wenn dort zuerst ein anderes Anliegen zu bearbeiten war.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich; die Sparte ist durch den Dokumenttyp vorgegeben.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Eine weitergehende Spartenweiche innerhalb des Prozesses ist nicht erforderlich; <BUE_SPARTE> steuert nur bei „KR“ im Kapitel „IV. Vertrag“ die Prüfung auf Mantelvertrag.",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_ART_UNTERLAGEN> <> leer",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: <BUE_PRUEFUNG_UNTERLAGEN> ist eine fachliche Ausprägung der Unterlagenprüfung, kein technischer Fehler. Ein Mangel („BÜ-Wunsch fehlt“, „MV fehlt“, „MV unvollständig“, „VN-Unterschrift fehlt“) ist kein Ausschlusskriterium: Der Bot merkt die Prüfnotiz mit dem Feldwert in <Fehlerliste>, die weiteren Prüfungen laufen weiter. Ein leeres Feld und der Wert „Reminder - keine Vollst.-Prüfung“ bedeuten, dass keine Vollständigkeitsprüfung stattgefunden hat; sie lösen keine Prüfnotiz aus. Erst der Test auf Fehlerliste führt bei gefüllter <Fehlerliste> zur BE „Nachprüfung erforderlich“. Die Anforderung von Unterlagen durch den Makler (<BUE_ART_UNTERLAGEN>) ist davon unabhängig und wird im Kapitel „VI. Abschluss ohne Befund“ in der Notiz gekennzeichnet.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Dieser Schritt steuert nicht die Prüfung, sondern die Folgearbeit. <BUE_ART_UNTERLAGEN> nennt die Unterlagen, die der übernehmende Makler zum Vertrag anfordert und die ERGO ihm liefert, mit Semikolon getrennt; das Feld ist leer, wenn er nichts anfordert. Die Anforderung ist unabhängig von der Vollständigkeitsprüfung der eingereichten Unterlagen in der Vorprüfung.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ob Celonis zusätzlich einen eigenen GeVo „Anforderung von Unterlagen“ eröffnet, ist mit Celonis festzulegen, damit nicht doppelt angefordert wird. Die Bedeutung des Feldes (Anforderung durch den Makler) ist durch den Fachbereich zu bestätigen.",
+  "art": "text"
+ },
+ {
+  "de": "Lese die folgenden 21 Felder des Datenpools aus und speichere jedes unter dem gleichnamigen Variablennamen (Format, Werteliste und Pflichtfeldkennzeichen im Kapitel „Tabelle der genutzten Variablen“, Herkunft „Datenpool“):",
+  "art": "text"
+ },
+ {
+  "de": "Setze im Abschnitt „Folgearbeit für Komposit“ je in <BUE_ART_UNTERLAGEN> enthaltener Art das Kennzeichen: „Police/Vertragsspiegel/Vertragsauszug/Ersatzrechnung usw.“, „Schadenaufstellung/Schadenrenta usw.“, „Sonstige Unterlagen“.",
+  "art": "text"
+ },
+ {
+  "de": "nur bei gefülltem <BUE_ART_UNTERLAGEN> (siehe „Anforderung von Unterlagen“ unten)",
+  "art": "text"
+ },
+ {
+  "de": "setzen, wenn <BUE_ART_UNTERLAGEN> die Art enthält",
+  "art": "text"
+ },
+ {
+  "de": "Lesehilfe zur Farblogik: Systeme stehen fett (OB726), Felder aus dem Datenpool dunkelblau (<BUE_VNR>), im Lauf erzeugte Variablen dunkelgrün (<Vorgang-VNR>), die <BE-Klassifikation> dunkelrot; Prüfnotizen stehen orange und in eigener Zeile. Die Steuerwörter WENN / DANN / SONST / SONST WENN / Ende WENN stehen türkis in der Formatvorlage „WENN DANN“ und sind wie Programmcode eingerückt; „SONST WENN“ hängt eine weitere Bedingung an denselben Block, ein „Ende WENN“ schließt die ganze Kette. Querverweise auf andere Kapitel und Schritte sind Links und stehen fett und unterstrichen, Hinweise kursiv.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer, läuft der Vorgang ohne eigene Prüfnotiz durch den Makler-Zweig: Dann muss eine vom Versicherungsnehmer unterschriebene Maklervollmacht vorliegen, sonst entsteht ohnehin die BE „Unterschrift VN fehlt“. Liegt sie vor, läuft die Prüfung normal weiter (Entscheidung E. Brenneisen, 23.09.2026).",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer, wurde in der Vorprüfung der Makler-Zweig durchlaufen; nennt OB726 einen Mehrfachagenten, greift die zweite Bedingung und der Sachbearbeiter prüft den Betreuungswunsch in der Nachprüfung.",
+  "art": "text"
+ },
+ {
+  "de": "ODER <BUE_VERMITTLER_TYP> <> „MFA“ UND <OB726-Klassifizierung> = „Mehrfachagent“",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Jeder Vorgang ohne Befund geht an den 72-Stunden-BOT, auch wenn der abgebende Bestandsinhaber selbst ein Makler ist (Makler auf Makler). Der 72-Stunden-BOT erkennt diesen Fall und leitet ihn ohne Wartefrist direkt an den BÜ-BOT weiter; der Prüf-Bot braucht dafür keine eigene Weiche (E. Brenneisen, 23.09.2026).",
+  "art": "text"
+ },
+ {
+  "de": "<BE-Klassifikation> = „Keine Bestandsübertragung möglich: <BUE_VERMITTLER_TYP>“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = „Courtagefortzahler“ ODER <BUE_VERMITTLER_TYP> = „Kontaktgeber“",
+  "art": "text"
+ },
+ {
+  "de": "<BUE_VERMITTLER_TYP> = „Courtagefortzahler“ oder „Kontaktgeber“ – der Typ wird mitgeführt",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Courtagefortzahler und Kontaktgeber erhalten keine Bestände übertragen (M. Koch, 24.09.2026). Die BE führt den Typ mit, damit der Sachbearbeiter die Ablehnung versendet und die Ablehnungsnachricht später anhand des Typs automatisiert werden kann. Vollmacht, Unterschrift und Unterlagen werden für diese Typen nicht geprüft; die übrigen Felder des KI-Deckblatts stehen wie beim Mehrfachagenten auf N/A. Die Prüfung steht deshalb vor allen anderen Ausschlusskriterien.",
+  "art": "text"
+ },
+ {
+  "de": "Hinweis: Ist <BUE_VERMITTLER_TYP> leer oder „Fremdversicherungsunternehmen“, läuft der Vorgang ohne eigene Prüfnotiz durch den Makler-Zweig: Dann muss eine vom Versicherungsnehmer unterschriebene Maklervollmacht vorliegen, sonst entsteht ohnehin die BE „Unterschrift VN fehlt“. Liegt sie vor, läuft die Prüfung normal weiter (Entscheidung E. Brenneisen, 23.09.2026).",
+  "art": "text"
+ },
+ {
+  "de": "Keine Bestandsübertragung möglich: <BUE_VERMITTLER_TYP>",
+  "art": "wert"
+ }
+]

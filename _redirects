@@ -1,0 +1,151 @@
+# Cloudflare Pages Redirects
+# Root serves index.html (React M-01 Landing Page)
+
+# VAB nutzt absolute /images/-Pfade (z. B. /images/AdobeStock_...jpeg,
+# /images/zukunftsbank-header.jpeg). Die Dateien liegen unter
+# 22_vertriebsarbeitsplatz/dist/images/. Transparenter Rewrite (Status 200),
+# damit sie auch bei Root-Deploys aufgeloest werden.
+/images/* /22_vertriebsarbeitsplatz/dist/images/:splat 200
+
+# Ordner sind alphabetisch nummeriert (NN_name, 21.10.2026). Die alten
+# Adressen bleiben gueltig und fuehren auf den neuen Ordner; Hash-Deep-Links
+# (#/...) bleiben beim Weiterleiten erhalten.
+/asset-management/ /01_asset-management/dist/ 301
+/asset-management /01_asset-management/dist/ 301
+/asset-management/* /01_asset-management/:splat 301
+/BankenKPI/ /02_BankenKPI/dist/ 301
+/BankenKPI /02_BankenKPI/dist/ 301
+/BankenKPI/* /02_BankenKPI/:splat 301
+/bank-der-zukunft-2035/ /03_banking-horizon/dist/ 301
+/bank-der-zukunft-2035 /03_banking-horizon/dist/ 301
+/bank-der-zukunft-2035/* /03_banking-horizon/:splat 301
+/banking-horizon-spfx/ /04_banking-horizon-spfx/ 301
+/banking-horizon-spfx /04_banking-horizon-spfx/ 301
+/banking-horizon-spfx/* /04_banking-horizon-spfx/:splat 301
+/Bestandsuebertragung/ /05_Bestandsuebertragung/dist/ 301
+/Bestandsuebertragung /05_Bestandsuebertragung/dist/ 301
+/Bestandsuebertragung/* /05_Bestandsuebertragung/:splat 301
+/Collections/ /06_Collections/dist/ 301
+/Collections /06_Collections/dist/ 301
+/Collections/* /06_Collections/:splat 301
+/ControlHub/ /07_ControlHub/dist/ 301
+/ControlHub /07_ControlHub/dist/ 301
+/ControlHub/* /07_ControlHub/:splat 301
+/cv/ /08_cv/ 301
+/cv /08_cv/ 301
+/cv/* /08_cv/:splat 301
+/docs/ /09_docs/ 301
+/docs /09_docs/ 301
+/docs/* /09_docs/:splat 301
+/entscheidungsvorlagen/ /10_entscheidungsvorlagen/ 301
+/entscheidungsvorlagen /10_entscheidungsvorlagen/ 301
+/entscheidungsvorlagen/* /10_entscheidungsvorlagen/:splat 301
+/galerie/ /11_galerie/ 301
+/galerie /11_galerie/ 301
+/galerie/* /11_galerie/:splat 301
+/holodeck-standalone/ /12_holodeck-standalone/ 301
+/holodeck-standalone /12_holodeck-standalone/ 301
+/holodeck-standalone/* /12_holodeck-standalone/:splat 301
+/HRPipeline/ /13_HRPipeline/dist/ 301
+/HRPipeline /13_HRPipeline/dist/ 301
+/HRPipeline/* /13_HRPipeline/:splat 301
+/kreditanalyse/ /14_kreditanalyse/dist/ 301
+/kreditanalyse /14_kreditanalyse/dist/ 301
+/kreditanalyse/* /14_kreditanalyse/:splat 301
+/pdfeditor/ /15_pdfeditor/dist/ 301
+/pdfeditor /15_pdfeditor/dist/ 301
+/pdfeditor/* /15_pdfeditor/:splat 301
+/PMOToolbox/ /16_PMOToolbox/ 301
+/PMOToolbox /16_PMOToolbox/ 301
+/PMOToolbox/* /16_PMOToolbox/:splat 301
+/provisionsreklamation/ /17_provisionsreklamation/dist/ 301
+/provisionsreklamation /17_provisionsreklamation/dist/ 301
+/provisionsreklamation/* /17_provisionsreklamation/:splat 301
+/Risikoscoring/ /18_Risikoscoring/ 301
+/Risikoscoring /18_Risikoscoring/ 301
+/Risikoscoring/* /18_Risikoscoring/:splat 301
+/Versicherungs1x1/ /19_Versicherungs1x1/dist/ 301
+/Versicherungs1x1 /19_Versicherungs1x1/dist/ 301
+/Versicherungs1x1/* /19_Versicherungs1x1/:splat 301
+/versicherungswissen/ /20_versicherungswissen/ 301
+/versicherungswissen /20_versicherungswissen/ 301
+/versicherungswissen/* /20_versicherungswissen/:splat 301
+/vertragsumstellung/ /21_vertragsumstellung/dist/ 301
+/vertragsumstellung /21_vertragsumstellung/dist/ 301
+/vertragsumstellung/* /21_vertragsumstellung/:splat 301
+/vertriebsarbeitsplatz/ /22_vertriebsarbeitsplatz/dist/ 301
+/vertriebsarbeitsplatz /22_vertriebsarbeitsplatz/dist/ 301
+/vertriebsarbeitsplatz/* /22_vertriebsarbeitsplatz/:splat 301
+/VSTCockpit/ /23_VSTCockpit/dist/ 301
+/VSTCockpit /23_VSTCockpit/dist/ 301
+/VSTCockpit/* /23_VSTCockpit/:splat 301
+
+# Sub-App redirects: redirect to built dist/ versions (301 takes priority over static files)
+/19_Versicherungs1x1/ /19_Versicherungs1x1/dist/ 301
+/19_Versicherungs1x1 /19_Versicherungs1x1/dist/ 301
+/05_Bestandsuebertragung/ /05_Bestandsuebertragung/dist/ 301
+/05_Bestandsuebertragung /05_Bestandsuebertragung/dist/ 301
+/13_HRPipeline/ /13_HRPipeline/dist/ 301
+/13_HRPipeline /13_HRPipeline/dist/ 301
+/23_VSTCockpit/ /23_VSTCockpit/dist/ 301
+/23_VSTCockpit /23_VSTCockpit/dist/ 301
+/22_vertriebsarbeitsplatz/ /22_vertriebsarbeitsplatz/dist/ 301
+/22_vertriebsarbeitsplatz /22_vertriebsarbeitsplatz/dist/ 301
+/14_kreditanalyse/ /14_kreditanalyse/dist/ 301
+/14_kreditanalyse /14_kreditanalyse/dist/ 301
+/01_asset-management/ /01_asset-management/dist/ 301
+/01_asset-management /01_asset-management/dist/ 301
+/17_provisionsreklamation/ /17_provisionsreklamation/dist/ 301
+/17_provisionsreklamation /17_provisionsreklamation/dist/ 301
+/03_banking-horizon/ /03_banking-horizon/dist/ 301
+/03_banking-horizon /03_banking-horizon/dist/ 301
+/07_ControlHub/ /07_ControlHub/dist/ 301
+/07_ControlHub /07_ControlHub/dist/ 301
+/15_pdfeditor/ /15_pdfeditor/dist/ 301
+/15_pdfeditor /15_pdfeditor/dist/ 301
+
+# Die fruehere Q&A-Landing „Banking im KI-Zeitalter" (BankDerZukunft/) ist
+# entfernt; alte Links fuehren ins Strukturbild Banking Horizon.
+/BankDerZukunft/* /03_banking-horizon/dist/ 301
+/BankDerZukunft /03_banking-horizon/dist/ 301
+
+# Use-Case-Galerie (Bewerbungsmappe) — ohne Passwort erreichbar, siehe
+# functions/_middleware.js. /galerie#dex oeffnet direkt einen Eintrag.
+# Kurzform: /gallery
+/gallery/ /11_galerie/ 301
+/gallery /11_galerie/ 301
+
+# Das Tool hiess frueher „Smart ICS", dann „IKS Control Hub" —
+# alte Deep-Links bleiben gueltig.
+/IKSControlHub/dist/* /07_ControlHub/dist/:splat 301
+/IKSControlHub/* /07_ControlHub/dist/:splat 301
+/IKSControlHub/ /07_ControlHub/dist/ 301
+/IKSControlHub /07_ControlHub/dist/ 301
+/SmartICS/dist/* /07_ControlHub/dist/:splat 301
+/SmartICS/* /07_ControlHub/dist/:splat 301
+/SmartICS/ /07_ControlHub/dist/ 301
+/SmartICS /07_ControlHub/dist/ 301
+
+# Kurzlinks auf „Ein Tag in Banking Operations 2030".
+# Es gibt nur noch EINE Fassung (die fruehere v08) unter der versionslosen
+# Adresse #/operations. Die alten Kurzlinks /v01 bis /v08 bleiben bestehen,
+# damit geteilte Links nicht ins Leere laufen, und zeigen alle dorthin; die
+# App schreibt den Hash beim Oeffnen ohnehin auf #/operations/<klick> um.
+/operations/ /03_banking-horizon/dist/#/operations 301
+/operations /03_banking-horizon/dist/#/operations 301
+/v01/ /03_banking-horizon/dist/#/operations 301
+/v01 /03_banking-horizon/dist/#/operations 301
+/v02/ /03_banking-horizon/dist/#/operations 301
+/v02 /03_banking-horizon/dist/#/operations 301
+/v03/ /03_banking-horizon/dist/#/operations 301
+/v03 /03_banking-horizon/dist/#/operations 301
+/v04/ /03_banking-horizon/dist/#/operations 301
+/v04 /03_banking-horizon/dist/#/operations 301
+/v05/ /03_banking-horizon/dist/#/operations 301
+/v05 /03_banking-horizon/dist/#/operations 301
+/v06/ /03_banking-horizon/dist/#/operations 301
+/v06 /03_banking-horizon/dist/#/operations 301
+/v07/ /03_banking-horizon/dist/#/operations 301
+/v07 /03_banking-horizon/dist/#/operations 301
+/v08/ /03_banking-horizon/dist/#/operations 301
+/v08 /03_banking-horizon/dist/#/operations 301

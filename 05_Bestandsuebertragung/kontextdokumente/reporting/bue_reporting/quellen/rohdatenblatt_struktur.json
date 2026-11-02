@@ -1,0 +1,1480 @@
+{
+ "quelle": "Rohdaten-Blatt (Wochenreport), Struktur ohne Werte",
+ "zeilen": {
+  "1": {
+   "A": "#",
+   "B": "Thema / Datum",
+   "C": "Kategorie",
+   "D": "Abteilung",
+   "E": "Verantwortlich",
+   "H": "PV (extern / intern"
+  },
+  "3": {
+   "A": "1a",
+   "B": "Nachträge / Vertragsverlängerungen, Garantien, Zuschüsse",
+   "C": "Gesamtvorgänge pro Woche",
+   "E": "[siehe Unterstruktur]",
+   "H": "Externe Serviceparameter"
+  },
+  "4": {
+   "D": "PVA9M und PVA10M",
+   "E": "Förster / Greß"
+  },
+  "5": {
+   "D": "PVA7K",
+   "E": "Streich"
+  },
+  "6": {
+   "D": "PVA8K",
+   "E": "Gress"
+  },
+  "7": {
+   "D": "PVA15B (ehem. PVB2B und PVB3B)",
+   "E": "Schneider"
+  },
+  "8": {
+   "D": "PVA17K (ehem. PVB4K)",
+   "E": "Lürken"
+  },
+  "9": {
+   "D": "PVA18K (ehem. PVB5K)",
+   "E": "Kraus"
+  },
+  "10": {
+   "D": "PVA21HH",
+   "E": "Westrich"
+  },
+  "11": {
+   "A": "1b",
+   "C": "Offene Vorgänge",
+   "E": "[siehe Unterstruktur]",
+   "H": "Externe Serviceparameter"
+  },
+  "15": {
+   "D": "PVA9M und PVA10M",
+   "E": "Förster / Greß"
+  },
+  "16": {
+   "D": "PVA7K",
+   "E": "Streich"
+  },
+  "17": {
+   "D": "PVA8K",
+   "E": "Gress"
+  },
+  "18": {
+   "D": "PVA15B (ehem. PVB2B und PVB3B)",
+   "E": "Schneider"
+  },
+  "19": {
+   "D": "PVA17K (ehem. PVB4K)",
+   "E": "Lürken"
+  },
+  "20": {
+   "D": "PVA18K (ehem. PVB5K)",
+   "E": "Kraus"
+  },
+  "21": {
+   "D": "PVA21HH",
+   "E": "Westrich"
+  },
+  "23": {
+   "A": "2a",
+   "B": "Unterstellungsänderungen / Umstrukturierung",
+   "C": "Gesamtvorgänge pro Woche",
+   "E": "[siehe Unterstruktur]",
+   "H": "Externe Serviceparameter"
+  },
+  "24": {
+   "D": "PVA9M und PVA10M",
+   "E": "Förster / Greß"
+  },
+  "25": {
+   "D": "PVA7K",
+   "E": "Streich"
+  },
+  "26": {
+   "D": "PVA8K",
+   "E": "Gress"
+  },
+  "27": {
+   "D": "PVA15B (ehem. PVB2B und PVB3B)",
+   "E": "Schneider"
+  },
+  "28": {
+   "D": "PVA17K (ehem. PVB4K)",
+   "E": "Lürken"
+  },
+  "29": {
+   "D": "PVA18K (ehem. PVB5K)",
+   "E": "Kraus"
+  },
+  "30": {
+   "D": "PVA21HH",
+   "E": "Westrich"
+  },
+  "31": {
+   "A": "2b",
+   "C": "Offene Vorgänge",
+   "E": "[siehe Unterstruktur]",
+   "H": "Externe Serviceparameter"
+  },
+  "32": {
+   "D": "PVA9M und PVA10M",
+   "E": "Förster / Greß"
+  },
+  "33": {
+   "D": "PVA7K",
+   "E": "Streich"
+  },
+  "34": {
+   "D": "PVA8K",
+   "E": "Gress"
+  },
+  "35": {
+   "D": "PVA15B (ehem. PVB2B und PVB3B)",
+   "E": "Schneider"
+  },
+  "36": {
+   "D": "PVA17K (ehem. PVB4K)",
+   "E": "Lürken"
+  },
+  "37": {
+   "D": "PVA18K (ehem. PVB5K)",
+   "E": "Kraus"
+  },
+  "38": {
+   "D": "PVA21HH",
+   "E": "Westrich"
+  },
+  "39": {
+   "A": 3,
+   "B": "ID-Kräfte An-/Abmeldung",
+   "C": "Offene Vorgänge",
+   "E": "[siehe Unterstruktur]",
+   "H": "TBD"
+  },
+  "40": {
+   "D": "PVA9M und PVA10M",
+   "E": "Förster / Greß"
+  },
+  "41": {
+   "D": "PVA7K",
+   "E": "Streich"
+  },
+  "42": {
+   "D": "PVA8K",
+   "E": "Gress"
+  },
+  "43": {
+   "D": "PVA15B (ehem. PVB2B und PVB3B)",
+   "E": "Schneider"
+  },
+  "44": {
+   "D": "PVA17K (ehem. PVB4K)",
+   "E": "Lürken"
+  },
+  "45": {
+   "D": "PVA18K (ehem. PVB5K)",
+   "E": "Kraus"
+  },
+  "46": {
+   "D": "PVA21HH",
+   "E": "Westrich"
+  },
+  "47": {
+   "A": "4a",
+   "B": "Stammdatenänderungen",
+   "C": "Gesamtvorgänge pro Woche",
+   "E": "[siehe Unterstruktur]",
+   "H": "Externe Serviceparameter"
+  },
+  "48": {
+   "D": "PVA9M und PVA10M",
+   "E": "Förster / Kyriakidis"
+  },
+  "49": {
+   "D": "PVA7K",
+   "E": "Streich"
+  },
+  "50": {
+   "D": "PVA8K",
+   "E": "Gress"
+  },
+  "51": {
+   "D": "PVA15B (ehem. PVB2B und PVB3B)",
+   "E": "Schneider"
+  },
+  "52": {
+   "D": "PVA17K (ehem. PVB4K)",
+   "E": "Lürken"
+  },
+  "53": {
+   "D": "PVA18K (ehem. PVB5K)",
+   "E": "Kraus"
+  },
+  "54": {
+   "D": "PVA21HH",
+   "E": "Westrich"
+  },
+  "55": {
+   "A": "4b",
+   "C": "Offene Vorgänge",
+   "E": "[siehe Unterstruktur]",
+   "H": "Externe Serviceparameter"
+  },
+  "56": {
+   "D": "PVA9M und PVA10M",
+   "E": "Förster / Greß"
+  },
+  "57": {
+   "D": "PVA7K",
+   "E": "Streich"
+  },
+  "58": {
+   "D": "PVA8K",
+   "E": "Gress"
+  },
+  "59": {
+   "D": "PVA15B (ehem. PVB2B und PVB3B)",
+   "E": "Schneider"
+  },
+  "60": {
+   "D": "PVA17K (ehem. PVB4K)",
+   "E": "Lürken"
+  },
+  "61": {
+   "D": "PVA18K (ehem. PVB5K)",
+   "E": "Kraus"
+  },
+  "62": {
+   "D": "PVA21HH",
+   "E": "Westrich"
+  },
+  "63": {
+   "A": 5,
+   "B": "Bestandszugriffe",
+   "C": "Offene Vorgänge",
+   "E": "Burnik",
+   "H": "TBD"
+  },
+  "64": {
+   "A": "6a",
+   "B": "Schwebefallbearbeitung",
+   "C": "Offene Vorgänge",
+   "E": "Isa Kinnert /Olaf Göddertz\nCOMMAS-REPORT",
+   "H": "Externe Einflussparameter"
+  },
+  "65": {
+   "A": "6b",
+   "C": "Zugänge",
+   "E": "Isa Kinnert /Olaf Göddertz\nCOMMAS-REPORT",
+   "H": "Externe Einflussparameter"
+  },
+  "66": {
+   "A": "6c",
+   "C": "Abgänge",
+   "E": "Isa Kinnert /Olaf Göddertz\nCOMMAS-REPORT",
+   "H": "Externe Einflussparameter"
+  },
+  "67": {
+   "A": "7VA",
+   "B": "Bestandsübertragung",
+   "C": "Offene Vorgänge Gesamt",
+   "D": "Verbund | Gesamt",
+   "H": "Externe Serviceparameter"
+  },
+  "68": {
+   "A": "7VB",
+   "C": "Offene Vorgänge",
+   "D": "Verbund | Gesundheit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "69": {
+   "A": "7VC",
+   "C": "Offene Vorgänge",
+   "D": "Verbund | Komposit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "70": {
+   "A": "7VD",
+   "C": "Offene Vorgänge",
+   "D": "Verbund | Leben",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "71": {
+   "A": "7VE",
+   "C": "Zugänge Gesamt",
+   "D": "Verbund | Gesamt",
+   "H": "Externe Serviceparameter"
+  },
+  "72": {
+   "A": "7VF",
+   "C": "Zugänge",
+   "D": "Verbund | Gesundheit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "73": {
+   "A": "7VG",
+   "C": "Zugänge",
+   "D": "Verbund | Komposit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "74": {
+   "A": "7VH",
+   "C": "Zugänge",
+   "D": "Verbund | Leben",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "75": {
+   "A": "7VI",
+   "C": "Abgänge Gesamt",
+   "D": "Verbund | Gesamt",
+   "H": "Externe Serviceparameter"
+  },
+  "76": {
+   "A": "7VJ",
+   "C": "Abgänge",
+   "D": "Verbund | Gesundheit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "77": {
+   "A": "7VK",
+   "C": "Abgänge",
+   "D": "Verbund | Komposit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "78": {
+   "A": "7VL",
+   "C": "Abgänge",
+   "D": "Verbund | Leben",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "79": {
+   "A": "7OA",
+   "C": "Offene Arbeitsgüter Gesamt",
+   "D": "OPAG | Gesamt",
+   "H": "Externe Serviceparameter"
+  },
+  "80": {
+   "A": "7OB",
+   "C": "Offene Arbeitsgüter",
+   "D": "OPAG | Gesundheit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "81": {
+   "A": "7OC",
+   "C": "Offene Arbeitsgüter",
+   "D": "OPAG | Komposit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "82": {
+   "A": "7OD",
+   "C": "Offene Arbeitsgüter",
+   "D": "OPAG | Leben",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "83": {
+   "A": "7OE",
+   "C": "Zugänge Gesamt",
+   "D": "OPAG | Gesamt",
+   "H": "Externe Serviceparameter"
+  },
+  "84": {
+   "A": "7OF",
+   "C": "Zugänge",
+   "D": "OPAG | Gesundheit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "85": {
+   "A": "7OG",
+   "C": "Zugänge",
+   "D": "OPAG | Komposit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "86": {
+   "A": "7OH",
+   "C": "Zugänge",
+   "D": "OPAG | Leben",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "87": {
+   "A": "7OI",
+   "C": "Abgänge Gesamt",
+   "D": "OPAG | Gesamt",
+   "H": "Externe Serviceparameter"
+  },
+  "88": {
+   "A": "7OJ",
+   "C": "Abgänge",
+   "D": "OPAG | Gesundheit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "89": {
+   "A": "7OK",
+   "C": "Abgänge",
+   "D": "OPAG | Komposit",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "90": {
+   "A": "7OL",
+   "C": "Abgänge",
+   "D": "OPAG | Leben",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "91": {
+   "A": "7a",
+   "B": "Bestandsübertragung",
+   "C": "Offene Vorgänge",
+   "D": "Gesamt"
+  },
+  "92": {
+   "A": "7b",
+   "C": "Offene Vorgänge",
+   "D": "HSB 4 K  (Gesundheit)",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "93": {
+   "A": "7c",
+   "C": "Offene Vorgänge",
+   "D": "HSB 4 K # (Kombo/LV)",
+   "E": "Amend",
+   "H": "Externe Serviceparameter"
+  },
+  "94": {
+   "A": "7d",
+   "C": "Offene Vorgänge",
+   "D": "Maklervertrieb (OD)",
+   "E": "H:\\MaklerBUe",
+   "H": "Externe Serviceparameter"
+  },
+  "95": {
+   "A": "7e",
+   "C": "Zugänge Gesamt",
+   "D": "Gesamt",
+   "H": "Externe Serviceparameter"
+  },
+  "96": {
+   "C": "Zugänge",
+   "D": "HSB 4 K (Gesundheit)",
+   "E": "Amend"
+  },
+  "97": {
+   "C": "Zugänge",
+   "D": "HSB 4 K  (Kombo/LV)",
+   "E": "Amend"
+  },
+  "98": {
+   "C": "Zugänge",
+   "D": "Maklervertrieb",
+   "E": "H:\\MaklerBUe"
+  },
+  "99": {
+   "A": "7f",
+   "C": "Abgänge Gesamt",
+   "D": "Gesamt",
+   "H": "Externe Serviceparameter"
+  },
+  "100": {
+   "C": "Abgänge",
+   "D": "HSB 4 K  (Gesundheit)",
+   "E": "Amend"
+  },
+  "101": {
+   "C": "Abgänge",
+   "D": "HSB 4 K  (Kombo/LV)",
+   "E": "Amend"
+  },
+  "102": {
+   "C": "Abgänge",
+   "D": "Maklervertrieb",
+   "E": "H:\\MaklerBUe"
+  },
+  "103": {
+   "B": "Provisionsreklamation AO",
+   "C": "Offene Vorgänge",
+   "D": "Provisionsreklamation EASY (ab 01.2024 - heute)",
+   "E": "Kneissler/ Freytag",
+   "H": "Externe Einflussparameter"
+  },
+  "104": {
+   "C": "Offene Vorgänge",
+   "D": "Provisionsreklamation Online-Formular (ab 02.06.2025 - heute)"
+  },
+  "105": {
+   "A": "8a",
+   "C": "Offene Vorgänge",
+   "D": "Gesamt"
+  },
+  "106": {
+   "C": "Zugänge",
+   "D": "Provisionsreklamation EASY (ab 01.2024 - heute)",
+   "H": "Externe Einflussparameter"
+  },
+  "107": {
+   "C": "Zugänge",
+   "D": "Provisionsreklamation Online-Formular (ab 02.06.2025 - heute)"
+  },
+  "108": {
+   "A": "8b",
+   "C": "Zugänge",
+   "D": "Gesamt"
+  },
+  "109": {
+   "C": "Abgänge",
+   "D": "Provisionsreklamation EASY (ab 01.2024 - heute)",
+   "H": "Externe Einflussparameter"
+  },
+  "110": {
+   "C": "Abgänge",
+   "D": "Provisionsreklamation Online-Formular (ab 02.06.2025 - heute)"
+  },
+  "111": {
+   "A": "8c",
+   "C": "Abgänge",
+   "D": "Gesamt"
+  },
+  "112": {
+   "A": "8d",
+   "C": "Offene Vorgänge",
+   "D": "Provisionsreklamation Ticket-System \n(ab 12.2023 – 06.2024)",
+   "E": "Kneissler/ Freytag",
+   "H": "Externe Einflussparameter"
+  },
+  "113": {
+   "A": "8e",
+   "B": "Provisionsreklamation Makler",
+   "C": "Offene Vorgänge",
+   "E": "Freytag / Kneissler"
+  },
+  "114": {
+   "A": 9,
+   "B": "Haftungsdach",
+   "C": "Offene Vorgänge",
+   "E": "Lürken/Kraus",
+   "H": "TBD"
+  },
+  "115": {
+   "A": "10a",
+   "B": "Arbeitsanweisung",
+   "C": "Offene Vorgänge",
+   "E": "Mey/ Bauer",
+   "H": "Intern"
+  },
+  "116": {
+   "A": "10b",
+   "B": "techn. Arbeitsanweisung",
+   "C": "Offene Vorgänge",
+   "E": "Mey/ Bauer"
+  },
+  "117": {
+   "A": "11a",
+   "B": "Defekt Fixing Sev 2+3+4 (CPE)",
+   "C": "Offene Vorgänge",
+   "E": "Fröhlich/ Richartz/ Mey",
+   "H": "Externe Einflussparameter"
+  },
+  "118": {
+   "A": "11b",
+   "C": "Sev 1+2",
+   "E": "Fröhlich/ Richartz/ Mey",
+   "H": "Externe Einflussparameter"
+  },
+  "119": {
+   "A": "11c",
+   "C": "Sev 3",
+   "E": "Fröhlich/ Richartz/ Mey",
+   "H": "Externe Einflussparameter"
+  },
+  "120": {
+   "A": "11d",
+   "C": "Sev 4",
+   "E": "Fröhlich/ Richartz/ Mey",
+   "H": "Externe Einflussparameter"
+  },
+  "121": {
+   "A": "11e",
+   "C": "Zugänge",
+   "E": "Fröhlich/ Richartz/ Mey",
+   "H": "Externe Einflussparameter"
+  },
+  "122": {
+   "C": "Sev 1+2 Zugänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "123": {
+   "C": "Sev 3 Zugänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "124": {
+   "C": "Sev 4 Zugänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "125": {
+   "A": "11f",
+   "C": "Abgänge",
+   "E": "Fröhlich/ Richartz/ Mey",
+   "H": "Externe Einflussparameter"
+  },
+  "126": {
+   "C": "Sev 1+2 Abgänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "127": {
+   "C": "Sev 3 Abgänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "128": {
+   "C": "Sev 4 Abgänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "129": {
+   "A": "11g",
+   "B": "Defects operativer Betrieb",
+   "C": "Summe offene Vorgäne",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "130": {
+   "A": "11h",
+   "C": "Sev1+2",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "131": {
+   "A": "11i",
+   "C": "Sev3 (Linie & nicht Reporting relevant)",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "132": {
+   "A": "11j",
+   "C": "Sev 4 (unkritisch/ undefiniert, ab 24.01.2026)",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "133": {
+   "A": "11k",
+   "C": "Summe Zugänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "134": {
+   "C": "Sev1+2 - Zugänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "135": {
+   "C": "Sev3 (Linie & nicht Reporting relevant) - Zugänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "136": {
+   "C": "Sev 4 (unkritisch/ undefiniert, ab 24.01.2026) - Zugänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "137": {
+   "A": "11l",
+   "C": "Summe Abgänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "138": {
+   "C": "Sev1+2 - Abgänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "139": {
+   "C": "Sev3 (Linie & nicht Reporting relevant) - Abgänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "140": {
+   "C": "Sev 4 (unkritisch/ undefinier, ab 24.01.2026) - Abgänge",
+   "E": "Fröhlich/ Richartz/ Mey"
+  },
+  "141": {
+   "A": 12,
+   "B": "Revisionsanforderungen\n(Sonderuntersuchungs- & Revisionsbereichte)",
+   "C": "Maßnahmen",
+   "E": "Wielpütz/ Buchkremer",
+   "H": "Intern"
+  },
+  "142": {
+   "A": "13a",
+   "B": "Watchlist",
+   "C": "Überwachte VNR´s",
+   "E": "Brückner/ Beizerov",
+   "H": "Externe Einflussparameter"
+  },
+  "143": {
+   "A": "13b",
+   "B": "Watchlist",
+   "C": "VNR-Treffer",
+   "E": "Brückner/ Beizerov"
+  },
+  "144": {
+   "A": "13c",
+   "B": "Watchlist",
+   "C": "In Arbeit (NEW und IN WORK)",
+   "E": "Brückner/ Beizerov"
+  },
+  "145": {
+   "A": "13d",
+   "B": "Watchlist",
+   "C": "Erledigt (DONE_OK/_NR/_COR)",
+   "E": "Brückner/ Beizerov"
+  },
+  "146": {
+   "A": 14,
+   "B": "Workaround",
+   "C": "Offene Vorgänge",
+   "E": "Bauer/ Richartz",
+   "H": "Externe Einflussparameter"
+  },
+  "147": {
+   "A": 15,
+   "B": "Generalquittung - Restantenmanagement",
+   "C": "Offene Vorgänge",
+   "E": "Müßigbrodt",
+   "H": "Extern Sonderaktionen"
+  },
+  "148": {
+   "A": 16
+  },
+  "149": {
+   "A": 17,
+   "H": "Externe Einflussparameter"
+  },
+  "150": {
+   "A": "18a",
+   "B": "Neueinstellungen",
+   "C": "Vorgänge in Bearbeitung",
+   "E": "Mey/ Richartz",
+   "H": "Externe Einflussparameter"
+  },
+  "151": {
+   "A": "18b",
+   "C": "Offene Vorgänge",
+   "E": "Mey/ Richartz",
+   "H": "Externe Einflussparameter"
+  },
+  "152": {
+   "A": "18c",
+   "C": "Eingang",
+   "E": "Mey/ Richartz",
+   "H": "Externe Einflussparameter"
+  },
+  "153": {
+   "A": "18d",
+   "H": "Externe Einflussparameter"
+  },
+  "154": {
+   "A": "18e",
+   "C": "Rückgabe an RD",
+   "E": "Mey/ Richartz"
+  },
+  "155": {
+   "A": "18f",
+   "C": "warten auf Unterschrift",
+   "E": "Mey/ Richartz"
+  },
+  "156": {
+   "A": 19,
+   "B": "Buchauszug",
+   "C": "Offene Vorgänge",
+   "E": "Amend/ Zeitz"
+  },
+  "157": {
+   "A": 20,
+   "B": "Ausgleichsanspruch",
+   "C": "Offene Vorgänge",
+   "E": "Kneissler/ Kirsten"
+  }
+ },
+ "daten": [
+  [
+   "I",
+   "2024-02-02"
+  ],
+  [
+   "K",
+   "2024-02-08"
+  ],
+  [
+   "M",
+   "2024-02-15"
+  ],
+  [
+   "O",
+   "2024-02-22"
+  ],
+  [
+   "Q",
+   "2024-02-29"
+  ],
+  [
+   "S",
+   "2024-03-07"
+  ],
+  [
+   "U",
+   "2024-03-14"
+  ],
+  [
+   "W",
+   "2024-03-21"
+  ],
+  [
+   "Y",
+   "2024-03-28"
+  ],
+  [
+   "AA",
+   "2024-04-04"
+  ],
+  [
+   "AC",
+   "2024-04-11"
+  ],
+  [
+   "AE",
+   "2024-04-18"
+  ],
+  [
+   "AG",
+   "2024-04-25"
+  ],
+  [
+   "AI",
+   "2024-05-02"
+  ],
+  [
+   "AK",
+   "2024-05-08"
+  ],
+  [
+   "AM",
+   "2024-05-16"
+  ],
+  [
+   "AO",
+   "2024-05-23"
+  ],
+  [
+   "AQ",
+   "2024-05-31"
+  ],
+  [
+   "AS",
+   "2024-06-13"
+  ],
+  [
+   "AU",
+   "2024-06-20"
+  ],
+  [
+   "AW",
+   "2024-06-27"
+  ],
+  [
+   "AY",
+   "2024-07-04"
+  ],
+  [
+   "BA",
+   "2024-07-11"
+  ],
+  [
+   "BC",
+   "2024-07-18"
+  ],
+  [
+   "BE",
+   "2024-07-25"
+  ],
+  [
+   "BG",
+   "2024-08-01"
+  ],
+  [
+   "BI",
+   "2024-08-08"
+  ],
+  [
+   "BK",
+   "2024-08-16"
+  ],
+  [
+   "BM",
+   "2024-08-22"
+  ],
+  [
+   "BO",
+   "2024-08-29"
+  ],
+  [
+   "BQ",
+   "2024-09-05"
+  ],
+  [
+   "BS",
+   "2024-09-12"
+  ],
+  [
+   "BU",
+   "2024-09-19"
+  ],
+  [
+   "BW",
+   "2024-09-26"
+  ],
+  [
+   "BY",
+   "2024-10-02"
+  ],
+  [
+   "CA",
+   "2024-10-10"
+  ],
+  [
+   "CC",
+   "2024-10-17"
+  ],
+  [
+   "CE",
+   "2024-10-24"
+  ],
+  [
+   "CG",
+   "2024-10-31"
+  ],
+  [
+   "CI",
+   "2024-11-07"
+  ],
+  [
+   "CK",
+   "2024-11-14"
+  ],
+  [
+   "CM",
+   "2024-11-21"
+  ],
+  [
+   "CO",
+   "2024-11-28"
+  ],
+  [
+   "CQ",
+   "2024-12-05"
+  ],
+  [
+   "CS",
+   "2024-12-12"
+  ],
+  [
+   "CU",
+   "2024-12-19"
+  ],
+  [
+   "CW",
+   "2025-01-03"
+  ],
+  [
+   "CY",
+   "2025-01-06"
+  ],
+  [
+   "DA",
+   "2025-01-17"
+  ],
+  [
+   "DC",
+   "2025-01-24"
+  ],
+  [
+   "DE",
+   "2025-01-31"
+  ],
+  [
+   "DG",
+   "2025-02-07"
+  ],
+  [
+   "DI",
+   "2025-02-14"
+  ],
+  [
+   "DK",
+   "2025-02-21"
+  ],
+  [
+   "DM",
+   "2025-02-28"
+  ],
+  [
+   "DO",
+   "2025-03-07"
+  ],
+  [
+   "DQ",
+   "2025-03-14"
+  ],
+  [
+   "DS",
+   "2025-03-21"
+  ],
+  [
+   "DU",
+   "2025-03-28"
+  ],
+  [
+   "DW",
+   "2025-04-04"
+  ],
+  [
+   "DY",
+   "2025-04-11"
+  ],
+  [
+   "EA",
+   "2025-04-17"
+  ],
+  [
+   "EC",
+   "2025-04-25"
+  ],
+  [
+   "EE",
+   "2025-05-02"
+  ],
+  [
+   "EG",
+   "2025-05-09"
+  ],
+  [
+   "EI",
+   "2025-05-16"
+  ],
+  [
+   "EK",
+   "2025-05-23"
+  ],
+  [
+   "EM",
+   "2025-05-30"
+  ],
+  [
+   "EO",
+   "2025-06-06"
+  ],
+  [
+   "EQ",
+   "2025-06-13"
+  ],
+  [
+   "ES",
+   "2025-06-20"
+  ],
+  [
+   "EU",
+   "2025-06-27"
+  ],
+  [
+   "EW",
+   "2025-07-04"
+  ],
+  [
+   "EY",
+   "2025-07-11"
+  ],
+  [
+   "FA",
+   "2025-07-18"
+  ],
+  [
+   "FC",
+   "2025-07-25"
+  ],
+  [
+   "FE",
+   "2025-08-01"
+  ],
+  [
+   "FG",
+   "2025-08-08"
+  ],
+  [
+   "FI",
+   "2025-08-15"
+  ],
+  [
+   "FK",
+   "2025-08-22"
+  ],
+  [
+   "FM",
+   "2025-08-29"
+  ],
+  [
+   "FO",
+   "2025-09-05"
+  ],
+  [
+   "FQ",
+   "2025-09-12"
+  ],
+  [
+   "FS",
+   "2025-09-19"
+  ],
+  [
+   "FU",
+   "2025-09-26"
+  ],
+  [
+   "FW",
+   "2025-10-03"
+  ],
+  [
+   "FY",
+   "2025-10-10"
+  ],
+  [
+   "GA",
+   "2025-10-17"
+  ],
+  [
+   "GC",
+   "2025-10-24"
+  ],
+  [
+   "GE",
+   "2025-10-31"
+  ],
+  [
+   "GG",
+   "2025-11-07"
+  ],
+  [
+   "GI",
+   "2025-11-14"
+  ],
+  [
+   "GK",
+   "2025-11-21"
+  ],
+  [
+   "GM",
+   "2025-11-28"
+  ],
+  [
+   "GO",
+   "2025-12-05"
+  ],
+  [
+   "GQ",
+   "2025-12-12"
+  ],
+  [
+   "GS",
+   "2025-12-19"
+  ],
+  [
+   "GU",
+   "2025-12-26"
+  ],
+  [
+   "GW",
+   "2026-01-02"
+  ],
+  [
+   "GY",
+   "2026-01-09"
+  ],
+  [
+   "HA",
+   "2026-01-16"
+  ],
+  [
+   "HC",
+   "2026-01-23"
+  ],
+  [
+   "HE",
+   "2026-01-30"
+  ],
+  [
+   "HG",
+   "2026-02-06"
+  ],
+  [
+   "HI",
+   "2026-02-13"
+  ],
+  [
+   "HK",
+   "2026-02-20"
+  ],
+  [
+   "HM",
+   "2026-02-27"
+  ],
+  [
+   "HO",
+   "2026-03-06"
+  ],
+  [
+   "HQ",
+   "2026-03-13"
+  ],
+  [
+   "HS",
+   "2026-03-20"
+  ],
+  [
+   "HU",
+   "2026-03-27"
+  ],
+  [
+   "HW",
+   "2026-04-03"
+  ],
+  [
+   "HY",
+   "2026-04-10"
+  ],
+  [
+   "IA",
+   "2026-04-17"
+  ],
+  [
+   "IC",
+   "2026-04-24"
+  ],
+  [
+   "IE",
+   "2026-05-01"
+  ],
+  [
+   "IG",
+   "2026-05-08"
+  ],
+  [
+   "II",
+   "2026-05-15"
+  ],
+  [
+   "IK",
+   "2026-05-22"
+  ],
+  [
+   "IM",
+   "2026-05-29"
+  ],
+  [
+   "IO",
+   "2026-06-05"
+  ],
+  [
+   "IQ",
+   "2026-06-12"
+  ],
+  [
+   "IS",
+   "2026-06-19"
+  ],
+  [
+   "IU",
+   "2026-06-26"
+  ],
+  [
+   "IW",
+   "2026-07-03"
+  ],
+  [
+   "IY",
+   "2026-07-10"
+  ],
+  [
+   "JA",
+   "2026-07-17"
+  ],
+  [
+   "JC",
+   "2026-07-24"
+  ],
+  [
+   "JE",
+   "2026-07-31"
+  ],
+  [
+   "JG",
+   "2026-08-07"
+  ],
+  [
+   "JI",
+   "2026-08-14"
+  ],
+  [
+   "JK",
+   "2026-08-21"
+  ],
+  [
+   "JM",
+   "2026-08-28"
+  ],
+  [
+   "JO",
+   "2026-09-04"
+  ],
+  [
+   "JQ",
+   "2026-09-11"
+  ],
+  [
+   "JS",
+   "2026-09-18"
+  ],
+  [
+   "JU",
+   "2026-09-25"
+  ],
+  [
+   "JW",
+   "2026-10-02"
+  ],
+  [
+   "JY",
+   "2026-10-09"
+  ],
+  [
+   "KA",
+   "2026-10-16"
+  ],
+  [
+   "KC",
+   "2026-10-23"
+  ],
+  [
+   "KE",
+   "2026-10-30"
+  ],
+  [
+   "KG",
+   "2026-11-06"
+  ],
+  [
+   "KI",
+   "2026-11-13"
+  ],
+  [
+   "KK",
+   "2026-11-20"
+  ],
+  [
+   "KM",
+   "2026-11-27"
+  ],
+  [
+   "KO",
+   "2026-12-04"
+  ],
+  [
+   "KQ",
+   "2026-12-11"
+  ],
+  [
+   "KS",
+   "2026-12-18"
+  ],
+  [
+   "KU",
+   "2026-12-25"
+  ],
+  [
+   "KW",
+   "2027-01-01"
+  ],
+  [
+   "KY",
+   "2027-01-08"
+  ],
+  [
+   "LA",
+   "2027-01-15"
+  ],
+  [
+   "LC",
+   "2027-01-22"
+  ],
+  [
+   "LE",
+   "2027-01-29"
+  ],
+  [
+   "LG",
+   "2027-02-05"
+  ]
+ ],
+ "merges": [
+  "B150:B155",
+  "B39:B46",
+  "B23:B38",
+  "B64:B66",
+  "E103:E111",
+  "B47:B62",
+  "B3:B21",
+  "B91:B102",
+  "B103:B112",
+  "B117:B128",
+  "B129:B140",
+  "B67:B90"
+ ],
+ "breiten": {
+  "A": 3.5703125,
+  "B": 38.42578125,
+  "C": 39.85546875,
+  "D": 15.85546875,
+  "E": 17.140625,
+  "F": 8.7109375,
+  "G": 19.42578125,
+  "H": 24.42578125
+ },
+ "bue_zeilen": [
+  67,
+  68,
+  69,
+  70,
+  71,
+  72,
+  73,
+  74,
+  75,
+  76,
+  77,
+  78,
+  79,
+  80,
+  81,
+  82,
+  83,
+  84,
+  85,
+  86,
+  87,
+  88,
+  89,
+  90
+ ]
+}

@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+/* === MODUS-FARBEN (VST-Cockpit: Oliv) ===
+   Der Kopf hat in BÜ, Provisionsreklamation, Vertriebsarbeitsplatz und
+   VST-Cockpit dieselben Maße (163 px), nur die Farbe wechselt: Bordeaux,
+   Navy, Bild, Oliv. Oliv ist derselbe Ton wie der Banking-Modus des
+   Vertriebsarbeitsplatzes; --mode-accent ist die Linie unter dem aktiven Reiter. */
+:root {
+  --mode-primary: #46552b;
+  --mode-primary-light: #61753a;
+  --mode-gradient: linear-gradient(135deg, #171d10 0%, #35451f 45%, #52683a 100%);
+  --mode-accent: #a8952f;
+}
+
+@layer base {
+  html {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #0f172a;
+    background-color: #f8fafc;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-width: 1024px;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* === KOPFLEISTE ===
+   Glasflächen für Chips, Auswahlfelder und Knöpfe auf dem dunklen Kopf, wie
+   im Vertriebsarbeitsplatz. */
+.header-glass {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+:is(button, select).header-glass:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* === ANIMATIONEN === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Live-Eingang, Dashboard-Aufbau und Skelett-Schimmer */
+@keyframes tickerIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes aufbauen {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes flaecheEin {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes schimmer {
+  0% { background-position: -460px 0; }
+  100% { background-position: 460px 0; }
+}
+.skelett {
+  background-color: #eef0ec;
+  background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 100%);
+  background-size: 460px 100%;
+  background-repeat: no-repeat;
+  animation: schimmer 1.3s linear infinite;
+}
+
+@layer utilities {
+  .animate-ticker-in {
+    animation: tickerIn 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-aufbauen {
+    animation: aufbauen 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-flaeche-ein {
+    animation: flaecheEin 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-feature-settings: 'tnum';
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 300ms ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 200ms ease-out forwards;
+  }
+}

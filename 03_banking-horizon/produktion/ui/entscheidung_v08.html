@@ -1,0 +1,133 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Banking Operations 2030 — Eine Entscheidung (v08)</title>
+<!--
+  14:00, die Handyseite. Dritter Anlauf, aus der Review-Datenbank:
+  "Change the screen to information that displays the new approved logic and
+  shows the number of cases that ran under the new policy. Maybe show pattern
+  resolved, no follow-up mistakes detected."
+
+  Also kein Vorschlag mehr, sondern die WIRKUNG der Logik, die sie um 11:15
+  zertifiziert hat. Damit schliesst sich der Bogen des Tages: 08:15 faellt das
+  Muster auf, 09:00 uebernimmt es das Team, 10:30 prueft sie die Route, 11:15
+  zertifiziert sie die Regel — und um 14:00 sieht sie nach, was die Regel
+  seither getan hat. Sie entscheidet hier nichts mehr; genau das sagt die
+  Hypothese der Station.
+
+  Wie Overnight Report (07:00) und Tagesuebersicht (07:45): austauschbar,
+  ohne dass ein Bild neu entstehen muss.
+-->
+<style>
+  :root {
+    /* Bankpalette wie auf den Bildschirmen (stationen_v08.py, DB_FARBEN):
+       Grund bleibt schwarz, Karten mit einem Hauch Dark Blue, Akzent Bright
+       Blue 52|166|220, Schrift Ice Blue. Bernstein bleibt fuer "wartet". */
+    --grund: #101317; --karte: #141a2b; --rand: #242b48; --schrift: #ecf4fc;
+    --leise: #93a3bb; --gruen: #34a6dc; --bernstein: #d29a3c;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 900px; height: 1950px; overflow: hidden; }
+  body {
+    background: var(--grund); color: var(--schrift);
+    font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif;
+    padding: 62px 48px 52px;
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .leiste { display: flex; justify-content: space-between; align-items: center;
+    font-size: 28px; color: var(--leise); }
+  .leiste b { color: var(--schrift); font-weight: 600; }
+  .leiste .rechts { display: flex; align-items: center; gap: 18px; }
+  .leiste .marke-db { width: 50px; height: 50px; flex: none; border-radius: 10px; object-fit: contain; }
+  header h1 { font-size: 56px; font-weight: 700; letter-spacing: -0.02em; }
+  header p { margin-top: 12px; font-size: 30px; color: var(--leise); line-height: 1.3; }
+
+  .karte {
+    background: var(--karte); border: 1px solid var(--rand); border-radius: 22px;
+    padding: 30px; opacity: 0; transform: translateY(14px);
+  }
+  .karte h2 { font-size: 24px; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--leise); margin-bottom: 18px; }
+  .plan { font-size: 33px; font-weight: 600; line-height: 1.3; }
+  .plan em { font-style: normal; color: var(--gruen); font-weight: 700; }
+  .dazu { margin-top: 12px; font-size: 26px; color: var(--leise); line-height: 1.35; }
+
+  .pruef { display: flex; flex-direction: column; gap: 16px; }
+  .zeile { display: flex; justify-content: space-between; align-items: center;
+    font-size: 28px; }
+  .zeile .ok { color: var(--gruen); font-weight: 700; font-size: 24px; }
+
+  .frei {
+    margin-top: auto;
+    background: rgba(210, 154, 60, 0.10); border: 1px solid rgba(210, 154, 60, 0.5);
+    border-radius: 22px; padding: 30px; opacity: 0; transform: translateY(14px);
+  }
+  .frei .marke { font-size: 22px; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--bernstein); margin-bottom: 12px; }
+  .frei p { font-size: 30px; font-weight: 600; line-height: 1.3; }
+  .balkenrahmen { margin-top: 20px; height: 8px; border-radius: 99px;
+    background: var(--rand); overflow: hidden; }
+  .balkenrahmen i { display: block; height: 100%; width: 0; background: var(--bernstein); }
+</style>
+
+<div class="leiste"><b>14:00</b><span class="rechts">Risk &middot; Controls<img class="marke-db" src="db_logo.png" alt="Deutsche Bank"></span></div>
+<header>
+  <h1>The logic she certified.</h1>
+  <p>Garnishment logic v4.3 &mdash; live since 11:42, watched by the second line.</p>
+</header>
+
+<div class="karte" data-ein="0.05">
+  <h2>RUNNING UNDER THE NEW LOGIC</h2>
+  <div style="display:flex;align-items:baseline;gap:16px;margin-top:6px">
+    <strong data-zahl="412" style="font-size:62px;font-weight:700;color:var(--gruen);
+      letter-spacing:-0.02em">412</strong>
+    <span class="dazu" style="margin:0">cases decided since 11:42<br>&mdash; none of them by a human</span>
+  </div>
+</div>
+
+<div class="karte pruef" data-ein="0.28">
+  <h2>THE PATTERN FROM THIS MORNING</h2>
+  <div class="zeile"><span>34 under-calculated exemptions</span><span class="ok">ALL CORRECTED</span></div>
+  <div class="zeile"><span>Correction applied retroactively</span><span class="ok">DONE 11:58</span></div>
+  <div class="zeile"><span>Follow-up mistakes detected</span><span class="ok">NONE</span></div>
+  <div class="zeile"><span>Second line watching live</span><span class="ok">NO FINDINGS</span></div>
+</div>
+
+<div class="karte" data-ein="0.45">
+  <h2>FROM CERTIFICATION TO PRODUCTION</h2>
+  <p class="plan" style="font-size:28px">27 minutes &mdash; <em>no roadmap slot</em>, no release train.</p>
+  <p class="dazu">11:15 you edited the rule &middot; 11:38 tests and rollback path green &middot;
+  11:42 in production across the fleet.</p>
+</div>
+
+<div class="karte pruef" data-ein="0.52">
+  <h2>WHAT THE RULE DECIDED, WITHOUT ASKING</h2>
+  <div class="zeile"><span>Exemption recalculated from the register</span>
+    <span class="ok">388</span></div>
+  <div class="zeile"><span>Passed through unchanged</span><span class="ok">24</span></div>
+  <div class="zeile"><span>Escalated to a human</span><span class="ok">0</span></div>
+</div>
+
+<div class="frei" data-ein="0.68"
+     style="background:rgba(52,160,106,0.10);border-color:rgba(52,160,106,0.5)">
+  <span class="marke" style="color:var(--gruen)">NOTHING TO APPROVE HERE</span>
+  <p>You certified the rule once. 184,000 decisions a year now run on it &mdash;
+  you are reading the result, not signing a case.</p>
+  <div class="balkenrahmen"><i style="background:var(--gruen)"></i></div>
+</div>
+
+<script>
+  const teile = [...document.querySelectorAll('[data-ein]')]
+  const balken = document.querySelector('.balkenrahmen i')
+  const DAUER = 8
+  window.setT = (sek) => {
+    const t = Math.max(0, Math.min(1, sek / DAUER))
+    for (const z of teile) {
+      const ab = parseFloat(z.dataset.ein)
+      const f = Math.max(0, Math.min(1, (t - ab) / 0.14))
+      z.style.opacity = f
+      z.style.transform = `translateY(${(1 - f) * 14}px)`
+    }
+    balken.style.width = `${Math.min(1, t / 0.9) * 100}%`
+  }
+  window.setT(DAUER)
+</script>

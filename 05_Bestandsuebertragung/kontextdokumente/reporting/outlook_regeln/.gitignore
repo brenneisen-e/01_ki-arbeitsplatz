@@ -1,0 +1,7 @@
+# Ergebnisse und Exporte nicht einchecken (Regel-Export mit Postfach- und Empfaengerdaten)
+*.xlsx
+*.xlsm
+*.pdf
+*.png
+*.rwz
+__pycache__/

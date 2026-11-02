@@ -1,0 +1,1699 @@
+{
+ "titel": "Bestandsübertragung an Makler Komposit_LV",
+ "untertitel": "AAW nach ZAV – Version 1 – Einsatz KI-Deckblatt (ohne Prüf-Bot) – Entwurf",
+ "geltungshinweis": "Diese Fassung gilt für Postkorbvorgänge, die Celonis aus den Maklermails klassifiziert und mit KI-Deckblatt über EMWS eröffnet hat (GeVo 108, Pilot „Makler BÜ meets KI“). Der Prüf-Bot ist in dieser Version noch nicht im Einsatz: Die Mitarbeitenden bearbeiten weiter manuell, nehmen die Angaben des KI-Deckblatts aber als gegeben und prüfen Maklervollmacht und Mail nicht mehr selbst. Nachgelagert bleiben 72h-Bot und BÜ-Bot wie heute. Vorgänge, die nicht über Celonis eröffnet wurden, werden weiter nach der bisherigen AAW (Stand 01.06.2024) bearbeitet; für von Celonis eröffnete Vorgänge ohne KI-Deckblatt gilt 1.3. Gültig ab: [OFFEN: Datum der Produktivsetzung KI-Deckblatt]. Status: Entwurf vom 15.10.2026, nicht veröffentlicht, Freigabe durch Fachbereich HSB4 K / HSB4 B ausstehend. Version 2 (Prüf-Bot im Einsatz) folgt als eigene Fassung.",
+ "kapitel": [
+  {
+   "nummer": "0",
+   "titel": "Dokumentangaben",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Angabe",
+      "Inhalt"
+     ],
+     "zeilen": [
+      [
+       "Dokumentart",
+       "AAW nach ZAV"
+      ],
+      [
+       "Fachlicher Ansprechpartner",
+       "Mareike Schlüter / Alexandra Mai (HSB4 B / HSB4 K)"
+      ],
+      [
+       "Operativer Ansprechpartner",
+       "Amend, Dirk (HSB4 K)"
+      ],
+      [
+       "Weitere Mitwirkende",
+       "Projekt Makler BÜ meets KI [OFFEN: Namen ergänzen]"
+      ],
+      [
+       "Qualitätsgesichert von",
+       "[OFFEN: QS für diese Fassung; bisher Schneider, Silvia (HSB4 B)]"
+      ],
+      [
+       "Fachliche Gültigkeit",
+       "ERGO AO / 55 plus / ERGO Makler/KOOP [OFFEN: ARA-Leitfaden nennt zusätzlich ERGO Pro]"
+      ],
+      [
+       "Status",
+       "Entwurf (bisherige Fassung: veröffentlicht)"
+      ],
+      [
+       "Vertraulichkeitsstufe",
+       "vertraulich"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "1",
+   "titel": "Allgemeine Hinweise",
+   "ebene": 1,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Alle Bestandsübertragungen VM Makler werden bei HSB4 K / HSB4 B bearbeitet.",
+      "Bestandsübertragungen Makler Makler erfolgen durch ODPB3 D / KBIG D."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "1.1",
+   "titel": "Gruppenpostfächer und Postkörbe",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Zweck",
+      "Bezeichnung",
+      "Stand"
+     ],
+     "zeilen": [
+      [
+       "Gruppenpostfach (Eingang der Maklermails)",
+       "bestandsuebertragungen@ergo.de, zusätzlich maklerauftraege@ergo.de; die Mails liest künftig Celonis aus",
+       "geändert [OFFEN: Schreibweise bestandsuebertragung@ / bestandsuebertragungen@ abgleichen]"
+      ],
+      [
+       "Postkorbeingang Vorgänge mit KI-Deckblatt",
+       "[OFFEN: Postkorb, in den Celonis in Version 1 eröffnet. Laut PDD ist der Startpostkorb „MV 23724 BÜ Prüf BOT“ (Themenpostkorb, Nr. 23724) für den Prüf-Bot vorgesehen; eröffnet Celonis in Version 1 dort, und wer entnimmt die Vorgänge? Bisher HSB2 B - Support & Accounting AO B]",
+       "geändert"
+      ],
+      [
+       "Postkorb 72h-Bot",
+       "PVBHH 72 - Erstinformation",
+       "unverändert"
+      ],
+      [
+       "Postkorb Bestandsübertragungs-Bot",
+       "BÜ Bot non KV",
+       "unverändert"
+      ],
+      [
+       "Ablehnungsmails (Quicksteps)",
+       "im Gruppenpostfach bestandsuebertragungen@ergo.de unter „Quicksteps“",
+       "unverändert"
+      ],
+      [
+       "Fehlerliste KI-Deckblatt (Excel)",
+       "gemeinsame Excel-Datei unter <Pfad Fehlerliste>",
+       "neu"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "1.2",
+   "titel": "Eingang über Celonis und KI-Deckblatt",
+   "ebene": 2,
+   "aenderung": "neu",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Celonis übernimmt die Maklermails aus den Gruppenpostfächern, klassifiziert jede Mail und erstellt dazu das KI-Deckblatt („Makler BÜ – KI Deckblatt“). Gesteuert wird über zwei Deckblattfelder: Klassifikation (was ist das Anliegen) und BÜ-Wunsch vorhanden (folgt eine Bestandsübertragung)."
+    },
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Weg",
+      "Anliegen laut Deckblatt",
+      "Was passiert",
+      "Was heißt das für HSB4 K / B"
+     ],
+     "zeilen": [
+      [
+       "A",
+       "BÜ-Vorgang (Maklervollmacht oder Betreuungswunsch MFA), Kündigung Maklervollmacht mit BÜ-Wunsch",
+       "Celonis eröffnet den Postkorbvorgang über EMWS (GeVo 108 „Bestandsübertragung“) mit E-Mail, allen Anhängen und KI-Deckblatt; keine Mail an KWAD",
+       "Vorgang kommt direkt in den Postkorb und wird nach dieser AAW bearbeitet"
+      ],
+      [
+       "B",
+       "VN-Wechsel, WEG-Wechsel, Kündigung Versicherungsvertrag, Verkürzung Kündigungsfrist, sonstige Fachthemen, Nicht-Standard – jeweils mit BÜ-Wunsch",
+       "Mail mit Deckblatt und Hinweistext an kwad@ergo.de; Eingangsmanagement eröffnet Sparten-GeVo und BÜ-GeVo als Zusatzwunsch; die Sparte bearbeitet zuerst und leitet danach den BÜ-GeVo weiter",
+       "BÜ-GeVo kommt erst nach der Spartenbearbeitung; das bisherige Vorab-Weiterleiten an die Sparte (8.1) entfällt dafür [OFFEN: Zielpostkorb der Weiterleitung in Version 1]"
+      ],
+      [
+       "C",
+       "dieselben Anliegen ohne BÜ-Wunsch, Kein-Makler-Vorgang",
+       "Mail mit Deckblatt und Hinweistext an KWAD; nur Sparten-GeVo, kein BÜ-GeVo",
+       "Kein Vorgang für HSB4 K / B"
+      ]
+     ]
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "BÜ-GeVo, der nach Spartenbearbeitung weitergeleitet wurde (Zusatzwunsch, KI-Deckblatt an der Mail): nach dieser AAW bearbeiten. Die Spartenbearbeitung ist erledigt, deshalb nicht erneut an die Sparte senden. [OFFEN: Zielpostkorb.]",
+      "Nennt eine Mail mehrere Versicherungsnummern, eröffnet Celonis je VNR einen eigenen Postkorbvorgang mit derselben E-Mail und eigenem Deckblatt. Im Feld Versicherungsnummer steht die VNR des eigenen Vorgangs an erster Stelle, danach die übrigen (Beispiel: Vorgang zu 123: „123; 124; 125“, Vorgang zu 124: „124; 123; 125“). Bearbeitung dieser Vorgänge siehe 2.1 Schritt 2.",
+      "Ab der fünften Nummer läuft die Aufzählung im Feld Versicherungsnummer 2 weiter.",
+      "Die VNR auf dem Deckblatt ist normiert: zwei Buchstaben Spartenkürzel und neun Ziffern, links mit Nullen aufgefüllt. Konnte die KI keine VNR oder Sparte bestimmen, steht dort „Manuelle Prüfung VNR/Sparte“.",
+      "Ein Reminder (Erinnerung des Maklers) ist keine eigene Klassifikation, sondern das Feld Reminder/Wiedervorlage = ja; er folgt dem Weg seines Anliegens."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Die neue Klassifikationsliste (u. a. Kündigung Maklervollmacht, Kündigung Versicherungsvertrag, Verkürzung Kündigungsfrist) ist zur Bestätigung gestellt; die Datenpool-Feldliste V1.9 führt noch die alte Werteliste. Bis zur Bestätigung gelten die Werte, die tatsächlich auf dem Deckblatt erscheinen.]"
+    }
+   ]
+  },
+  {
+   "nummer": "1.3",
+   "titel": "Grundsatz: KI-Deckblatt als gegeben nehmen",
+   "ebene": 2,
+   "aenderung": "neu",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Die Angaben des KI-Deckblatts sind maßgeblich. Maklervollmacht, Betreuungswunsch und Mail werden nicht mehr selbst geprüft.",
+      "Das gilt insbesondere für: MV enthalten, MV-Status, MV auf Makler ausgestellt, MV vollumfänglich, Unterschrift Kunde, Untervollmacht erteilt, Unterschriftsdatum, Eingangsdatum, Klassifikation, BÜ-Wunsch vorhanden, Prüfung Unterlagen.",
+      "Deckblattdaten direkt für die Eingabe in die Systeme nutzen (Agenturnummer, Vermittlernummer, VNR, Kundendaten, Eingangsdatum), siehe 2.1.2.",
+      "Fällt bei der weiteren Bearbeitung auf, dass das Deckblatt nicht stimmt, den Fehler unter der Vorgangs-ID in die Fehlerliste KI-Deckblatt (Excel) eintragen (2.2) und mit dem richtigen Wert weiterarbeiten.",
+      "Zeigt ein Feld „nicht prüfbar“, nur diesen Punkt in der Maklervollmacht selbst prüfen (Anforderungen laut PVC2D, Dokument „Bestandsübertragung_Anforderungen an die Maklervollmacht.pdf“) und in die Fehlerliste KI-Deckblatt eintragen.",
+      "Vorgang von Celonis eröffnet (GeVo 108 über EMWS), aber kein KI-Deckblatt im Vorgang: Maklervollmacht nach bisheriger AAW selbst prüfen und den Fall in die Fehlerliste KI-Deckblatt eintragen.",
+      "Vorgänge, die nicht über Celonis eröffnet wurden: nach bisheriger AAW bearbeiten, keinen Eintrag in die Fehlerliste KI-Deckblatt.",
+      "Die Felder Zusammenfassung und Hinweis des Deckblatts sind KI-Freitext. Sie dienen der Orientierung; maßgeblich sind die Einzelfelder."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "2",
+   "titel": "Arbeitsanweisung",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Die bisherige „Manuelle Vorabprüfung“ wird zur Vorabprüfung anhand des KI-Deckblatts. Anbindung, Kundenverbindung und Sonderfälle werden weiter in den Systemen geprüft, die Eingaben dafür kommen aus dem Deckblatt."
+    }
+   ]
+  },
+  {
+   "nummer": "2.1",
+   "titel": "Vorabprüfung anhand des KI-Deckblatts",
+   "ebene": 2,
+   "aenderung": "neu",
+   "bloecke": [
+    {
+     "art": "nummern",
+     "punkte": [
+      "Vorgang aus dem Postkorb entnehmen, KI-Deckblatt öffnen.",
+      "Zugehörige Vorgänge bündeln: Weitere VNR im Feld Versicherungsnummer bzw. Versicherungsnummer 2 prüfen. Jede weitere VNR ist ein eigener Postkorbvorgang mit derselben Mail. Alle diese Vorgänge in den eigenen PK holen und gemeinsam bearbeiten. Nur ein Vorgang erhält die Notiz 1515 an den Bot. Alle übrigen mit Hinweis auf die VNR der Bot-Notiz ablegen (8.1).",
+      "Deckblattfelder auswerten (2.1.1).",
+      "OB728 mit der Agentur-Nr, Scout mit VNR und Kundendaten aus dem Deckblatt aufrufen (2.1.2 bis 2.1.4).",
+      "Fachregeln Kapitel 3 bis 5 anwenden; manuelle Fälle nach 2.1.5.",
+      "Notiz 1515 mit den Deckblattdaten befüllen (8.1.4).",
+      "Abweichungen zwischen Deckblatt und Dokument oder System sofort in die Fehlerliste KI-Deckblatt eintragen (2.2)."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "Schritt 2 verhindert doppelte Bot-Aufträge und doppelte Ablöse für dieselbe Kundenverbindung. Er ersetzt nicht die Prüfung, welche Verträge der Makler insgesamt anfordert (8.1.4)."
+    }
+   ]
+  },
+  {
+   "nummer": "2.1.1",
+   "titel": "Auswertung der Deckblattfelder (ersetzt die Prüfung der Maklervollmacht)",
+   "ebene": 3,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Bisherige Voraussetzungen bleiben fachlich bestehen: vollumfängliche Maklervollmacht und separater Bestandsübertragungswunsch; Name und Unterschrift des VN, ggf. Datum; ggf. Untervollmacht für einen Maklerpool; Eingangsdatum der Maklervollmacht mit BÜ-Wunsch. Ob sie erfüllt sind, ergibt sich künftig aus dem Deckblatt:"
+    },
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Deckblattfeld",
+      "Wert",
+      "Vorgehen"
+     ],
+     "zeilen": [
+      [
+       "Typ",
+       "Makler",
+       "Maklervollmacht erforderlich; MV-Felder auswerten"
+      ],
+      [
+       "Typ",
+       "leer oder Fremdversicherungsunternehmen",
+       "Wie Makler"
+      ],
+      [
+       "Typ",
+       "MFA (Mehrfachagent)",
+       "Schriftlicher Betreuungswunsch des VN reicht; MV-Felder stehen auf N/A. BÜ-Wunsch = ja und „MV auf Makler ausgestellt“ = ja (Betreuungswunsch auf den MFA ausgestellt): weiter. „MV auf Makler ausgestellt“ ungleich ja: keine BÜ, Ablehnung „Betreuungswunsch nicht auf MFA ausgestellt“ (2.1.5)"
+      ],
+      [
+       "Typ",
+       "Courtagefortzahler",
+       "Nach 3.1.1 vorgehen (BÜ auf -9978 der übergeordneten AO-RD, keine Ablöse). Maßgeblich ist OB728"
+      ],
+      [
+       "Typ",
+       "Kontaktgeber",
+       "[OFFEN: Vorgehen; die AAW regelt den Fall nicht, die PDD sieht „Keine Bestandsübertragung möglich“ vor]"
+      ],
+      [
+       "Klassifikation",
+       "BÜ-Vorgang",
+       "Weiter nach dieser AAW"
+      ],
+      [
+       "Klassifikation",
+       "Kündigung Maklervollmacht",
+       "[OFFEN: Bearbeitung (BÜ in den Freibestand) fachlich noch zu bestätigen; bis dahin wie bisher nach HLF Widerruf MV]"
+      ],
+      [
+       "Klassifikation",
+       "Anliegen aus Weg B (z. B. VN-Wechsel), BÜ-GeVo von der Sparte weitergeleitet",
+       "Spartenbearbeitung ist erledigt: weiter nach dieser AAW, nicht erneut an die Sparte senden (1.2)"
+      ],
+      [
+       "Klassifikation",
+       "anderer Wert, obwohl Vorgang über Weg A im Postkorb",
+       "Inhalt der Mail sichten; ist es eine Kündigung oder Vertragsänderung, Vorgang mit Bearbeitungshinweis an die Sparte (wie bisher 8.1); „falsch klassifiziert“ in die Fehlerliste KI-Deckblatt"
+      ],
+      [
+       "BÜ-Wunsch vorhanden",
+       "ja",
+       "Weiter"
+      ],
+      [
+       "BÜ-Wunsch vorhanden",
+       "nein",
+       "Typ Makler: [OFFEN: AAW und ARA verlangen einen separaten BÜ-Wunsch, die Steuerlogik vom 23.09.2026 nicht. Bis zur Klärung: keine BÜ, Ablehnung über Quickstep „<Name des Quickstep>“ (OFFEN).] Typ MFA: keine BÜ, Ablehnung; der Betreuungswunsch ist der einzige Auftrag"
+      ],
+      [
+       "MV enthalten",
+       "ja",
+       "Weiter"
+      ],
+      [
+       "MV enthalten",
+       "nein",
+       "Maklervollmacht fehlt: Ablehnung nach 2.1.5 (Grundlage ARA Kapitel 5: zwingende Inhalte der Maklervollmacht fehlen). [OFFEN: Quickstep für „MV fehlt“ benennen.]"
+      ],
+      [
+       "MV enthalten",
+       "N/A",
+       "Nur bei Typ MFA zulässig. Bei Typ Makler in die Fehlerliste KI-Deckblatt eintragen"
+      ],
+      [
+       "MV-Status",
+       "OK",
+       "Weiter"
+      ],
+      [
+       "MV-Status",
+       "MV unvollständig",
+       "Ablehnung nach 2.1.5"
+      ],
+      [
+       "MV-Status",
+       "MV fehlt, kein Anhang",
+       "Ablehnung nach 2.1.5 (Grundlage ARA Kapitel 5: zwingende Inhalte der Maklervollmacht fehlen). [OFFEN: Quickstep für „MV fehlt“ benennen.]"
+      ],
+      [
+       "MV-Status",
+       "nicht prüfbar",
+       "Diesen Punkt in der Maklervollmacht selbst prüfen (Anforderungen PVC2D) und in die Fehlerliste KI-Deckblatt eintragen"
+      ],
+      [
+       "MV-Status",
+       "N/A",
+       "Nur bei Typ MFA zulässig. Bei Typ Makler in die Fehlerliste KI-Deckblatt eintragen"
+      ],
+      [
+       "MV auf Makler ausgestellt",
+       "ja",
+       "Weiter"
+      ],
+      [
+       "MV auf Makler ausgestellt",
+       "nein",
+       "Vollmacht gilt nicht für diesen Makler: Ablehnung nach 2.1.5"
+      ],
+      [
+       "MV auf Makler ausgestellt",
+       "nicht prüfbar",
+       "Diesen Punkt in der Maklervollmacht selbst prüfen (Anforderungen PVC2D) und in die Fehlerliste KI-Deckblatt eintragen"
+      ],
+      [
+       "MV vollumfänglich",
+       "ja",
+       "Weiter"
+      ],
+      [
+       "MV vollumfänglich",
+       "teilweise, nein",
+       "Ablehnung „MV nicht vollumfänglich“ nach 2.1.5; Ausnahme MLP / ZSH (siehe unten)"
+      ],
+      [
+       "MV vollumfänglich",
+       "nicht prüfbar",
+       "Diesen Punkt in der Maklervollmacht selbst prüfen (Anforderungen PVC2D) und in die Fehlerliste KI-Deckblatt eintragen"
+      ],
+      [
+       "MV vollumfänglich",
+       "N/A",
+       "Nur bei Typ MFA zulässig. Bei Typ Makler in die Fehlerliste KI-Deckblatt eintragen"
+      ],
+      [
+       "Unterschrift Kunde",
+       "ja",
+       "Weiter"
+      ],
+      [
+       "Unterschrift Kunde",
+       "nein",
+       "Unterschrift des VN fehlt: Ablehnung nach 2.1.5"
+      ],
+      [
+       "Unterschrift Kunde",
+       "nicht prüfbar",
+       "Diesen Punkt in der Maklervollmacht selbst prüfen (Anforderungen PVC2D) und in die Fehlerliste KI-Deckblatt eintragen"
+      ],
+      [
+       "Pool und Untervollmacht erteilt",
+       "Pool gefüllt und Untervollmacht = nein",
+       "In Notiz 1515 „Untervollmacht fehlt“ auswählen. Bei fehlender UV wird eine Ablehnungsmail an den Makler geschrieben und der Vertrag auf -9978 geschlüsselt (8.1.4)"
+      ],
+      [
+       "Pool und Untervollmacht erteilt",
+       "alle übrigen Fälle, auch MFA mit Untervollmacht N/A",
+       "In Notiz 1515 „Mit BÜ-Wunsch“ auswählen"
+      ],
+      [
+       "Nachname MV / Vorname MV",
+       "Vollmachtgeber",
+       "Mit dem VN in Scout abgleichen (2.1.4, 3.1.4). Weicht der VN ab: steht im Dokument der richtige VN, Fehler in die Fehlerliste KI-Deckblatt; ist die Vollmacht tatsächlich nicht vom VN, Ablehnung „MV nicht für VN“"
+      ],
+      [
+       "Eingangsdatum",
+       "TT.MM.JJJJ",
+       "Eingangsdatum der BÜ für Notiz 1515 und Ablöseberechnung"
+      ],
+      [
+       "Eingangsdatum",
+       "leer",
+       "Eröffnungsdatum des Postkorbvorgangs verwenden. In die Fehlerliste KI-Deckblatt nur eintragen, wenn das Dokument ein Eingangsdatum zeigt"
+      ],
+      [
+       "Unterschriftsdatum",
+       "TT.MM.JJJJ",
+       "Nur Information"
+      ],
+      [
+       "Prüfung Unterlagen",
+       "Vollständig, leer, Reminder - keine Vollst.-Prüfung",
+       "Keine Mängel gemeldet"
+      ],
+      [
+       "Prüfung Unterlagen",
+       "BÜ-Wunsch fehlt, MV fehlt, MV unvollständig, VN-Unterschrift fehlt",
+       "Entscheidend sind die Einzelfelder (MV-Status, MV vollumfänglich, Unterschrift Kunde, MV auf Makler ausgestellt). Prüfung Unterlagen ist nur ein Hinweis. Widerspricht der Wert den Einzelfeldern, nach den Einzelfeldern entscheiden und den Widerspruch in die Fehlerliste KI-Deckblatt eintragen"
+      ],
+      [
+       "Vertragsstatus",
+       "aktuell, historisch, gekündigt, nicht geprüft",
+       "Nur Information; maßgeblich ist der Status in Scout (3.1.3)"
+      ],
+      [
+       "Reminder/Wiedervorlage",
+       "ja",
+       "Prüfen, ob zur VNR schon ein Vorgang oder eine Notiz 1515 besteht. Wenn ja: Vorgang mit Hinweis auf die VNR der Bot-Notiz ablegen (wie 8.1). Wenn nein: als neuen Auftrag bearbeiten. [OFFEN: fachlich bestätigen.]"
+      ]
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Werteliste Typ in Feldliste V1.9 (Makler, MFA) und PDD v12 (zusätzlich Courtagefortzahler, Kontaktgeber, leer und Fremdversicherungsunternehmen wie Makler) abgleichen.]"
+    },
+    {
+     "art": "hinweis",
+     "text": "MLP / ZSH: Ab Juli 2021 reichen MLP und ZSH auch eingeschränkte Maklervollmachten für LV und KV ein. Nach Absprache mit Herrn Fröhlich, ODPPD, werden die eingeschränkten Vollmachten für die Bestandsübertragung anerkannt. Die Bestandsübertragung wird durchgeführt und ein Hinweis an die Sparte (VA250) gegeben; dort wird entschieden, ob eine Hinterlegung der MV erfolgt. Das Deckblatt kennzeichnet MLP / ZSH nicht gesondert: Steht bei Vermittler oder Pool MLP bzw. ZSH und bei MV vollumfänglich „teilweise“ oder „nein“, gilt diese Ausnahme; kein Eintrag in die Fehlerliste KI-Deckblatt. [OFFEN: Erkennung über Feld Vermittler/Pool bestätigen.]"
+    },
+    {
+     "art": "hinweis",
+     "text": "Untervollmacht erteilt steht nur dann auf „ja“, wenn eine Untervollmacht vorliegt, der Unterbevollmächtigte namentlich benannt ist und die Übertragung an genau diesen erkennbar ist. Welches Kriterium fehlt, steht im Deckblattfeld „Hinweis“."
+    }
+   ]
+  },
+  {
+   "nummer": "2.1.2",
+   "titel": "Deckblattdaten in die Systeme übernehmen",
+   "ebene": 3,
+   "aenderung": "neu",
+   "bloecke": [
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Deckblattfeld",
+      "Verwendung",
+      "Hinweis"
+     ],
+     "zeilen": [
+      [
+       "Versicherungsnummer (eigene VNR an erster Stelle), Versicherungsnummer 2",
+       "Vertrag in Scout, SV001 / KM001 aufrufen; Versicherungsscheinnummer in SAP ICM (4.1); VNR in Notiz 1515",
+       "Weitere VNR zeigen, welche Verträge der Makler insgesamt anfordert und welche Vorgänge zur selben Mail gehören (2.1 Schritt 2)"
+      ],
+      [
+       "Sparte",
+       "Verwaltungssystemschlüssel in SAP ICM (z. B. SV); Zuordnung Komposit / Leben",
+       "„Manuelle Prüfung VNR/Sparte“: VNR aus dem Dokument ermitteln; Eintrag in die Fehlerliste KI-Deckblatt nur, wenn die VNR im Dokument ein Spartenkürzel hat (nicht bei Gruppenleben, 8.1.6)"
+      ],
+      [
+       "Nachname, Vorname, Geburtsdatum, Straße, PLZ, Ort (Kunde)",
+       "Kundensuche in Scout / IS011",
+       "Geburtsdatum kann noch als Zahlenwert erscheinen (z. B. 869443200000); dann aus dem Dokument nehmen"
+      ],
+      [
+       "Agentur-Nr",
+       "Suche in OB728 (2.1.3); Agt.-Nr. in Notiz 1515; BeMaS",
+       "Ersetzt das Heraussuchen der neuen Agt.-Nr. aus OB728, wenn der Makler eine Nummer angegeben hat. Ohne Präfix „A“, 7 bis 9 Ziffern, achtstellig = neue Agentur nach ZAV. Leer: wie bisher aus OB728 heraussuchen"
+      ],
+      [
+       "Vermittlernummer",
+       "P-Nr. in Notiz 1515",
+       "P-Nr. = Vermittlernummer aus dem Deckblatt, links mit Nullen auf 7 Stellen aufgefüllt. Leer: P-Nr. wie bisher in OB728 lesen. [OFFEN: Format im Notizfeld der manuellen Notiz bestätigen.]"
+      ],
+      [
+       "Vermittler",
+       "Maklername in Notiz 1515",
+       "Mit dem Namen in OB728 abgleichen"
+      ],
+      [
+       "Pool und Untervollmacht erteilt",
+       "Auswahl „Mit BÜ-Wunsch“ oder „Untervollmacht fehlt“ in Notiz 1515",
+       "Regel siehe 2.1.1"
+      ],
+      [
+       "E-Mail (Makler)",
+       "ggf. Mail-Anschrift in Notiz 1515; Empfänger der Quickstep-Mails (5.1.5)",
+       "Absenderadresse der Mail; kann eine Pool-Adresse oder bei weitergeleiteten Mails eine interne @ergo-Adresse sein. Nur übernehmen, wenn sie keine interne @ergo-Adresse ist. [OFFEN: Für Version 1 festlegen, ob die Adresse aus OB729 oder der Sonderliste TOP-Makler Vorrang hat.]"
+      ],
+      [
+       "Eingangsdatum",
+       "Eingangsdatum der BÜ in Notiz 1515; Eingang MV in der Ablöseberechnung (5.1)",
+       "Leer: Eröffnungsdatum des Postkorbvorgangs (2.1.1)"
+      ]
+     ]
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Werte aus dem Deckblatt kopieren, nicht abtippen.",
+      "Wo das System führt (OB728, Scout, SAP ICM), gilt der Systemwert. Wird ein Deckblattwert im System nicht gefunden oder weicht er ab, Eintrag in die Fehlerliste KI-Deckblatt und mit dem Systemwert bzw. dem Wert aus dem Dokument weiterarbeiten."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "2.1.3",
+   "titel": "Anbindung prüfen (OB728)",
+   "ebene": 3,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "OB728 mit der Agentur-Nr aus dem Deckblatt aufrufen. Prüfen:"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Aktiv / Courtagefortzahler",
+      "Makler / Mehrfachagent (mit dem Typ auf dem Deckblatt abgleichen; Abweichung in die Fehlerliste KI-Deckblatt, maßgeblich ist OB728)",
+      "Vermittlerinkasso / Direktinkasso"
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "2.1.4",
+   "titel": "Kundenverbindung prüfen (Scout; Außendienstübersicht)",
+   "ebene": 3,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Kunden mit VNR und Kundendaten aus dem Deckblatt in Scout aufrufen. Prüfen:"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Versicherungsart",
+      "Status",
+      "Beziehung (VN laut Scout = Vollmachtgeber laut Deckblatt, Nachname MV / Vorname MV)",
+      "Vertriebskanal",
+      "Betreuer",
+      "Einen Mitarbeitervertrag erkennt man an der roten Figur in Scout.",
+      "Mitarbeiterverträge können ablösefrei auf Makler und Mehrfachagenten übertragen werden."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "2.1.5",
+   "titel": "Prüfung manuelle Bearbeitung",
+   "ebene": 3,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Ablehnung – Auslöser sind jetzt die Deckblattwerte nach 2.1.1: MV nicht für VN, MV nicht vollumfänglich (wie bisher); zusätzlich MV fehlt / kein Anhang / MV enthalten = nein, MV unvollständig, MV nicht auf Makler ausgestellt, Unterschrift des VN fehlt; bei MFA BÜ-Wunsch nicht vorhanden oder Betreuungswunsch nicht auf MFA ausgestellt",
+      "BÜ von Makler auf AO",
+      "Besondere Bestände z. B. Harley-Davidson oder BMW",
+      "Moped",
+      "Unbesetzter Bestand, keine bekannte Direktnummer",
+      "Bestand Beratungscenter Düsseldorf",
+      "Kautionsversicherung: weiterleiten an Herrn Knechten (KTD)",
+      "Gruppenleben",
+      "LG / GV an den Fachbereich",
+      "Ablehnungsmails sind im Gruppenpostfach bestandsuebertragungen@ergo.de unter „Quicksteps“ vorhanden."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Für die neu aufgenommenen Ablehnungsgründe (MV fehlt, MV unvollständig, MV nicht auf Makler ausgestellt, Unterschrift VN fehlt, BÜ-Wunsch fehlt, Betreuungswunsch nicht auf MFA ausgestellt) die zu nutzenden Quicksteps benennen. Grundlage für Ablehnungen über die AAW hinaus ist ARA Kapitel 5.]"
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Der ARA-Leitfaden sieht bei nicht vollumfänglicher MV oder fehlender Unterschrift des VN vor, die fehlenden Unterlagen beim Makler anzufordern (Verträge bleiben beim bisherigen Inhaber), die AAW eine Ablehnung per Quickstep. Bis zur Klärung gilt die Ablehnung.]"
+    }
+   ]
+  },
+  {
+   "nummer": "2.2",
+   "titel": "Fehler im KI-Deckblatt erfassen (Fehlerliste KI-Deckblatt)",
+   "ebene": 2,
+   "aenderung": "neu",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Jeder Fehler des KI-Deckblatts wird in der gemeinsamen Fehlerliste KI-Deckblatt (Excel) unter der Vorgangs-ID eingetragen. Die Liste liegt unter <Pfad Fehlerliste>. Sie dient der Verbesserung des Deckblatts im Pilot; sie ersetzt keine Bearbeitung. Nicht zu verwechseln mit der Fehlerliste (Prüfnotizen) des Prüf-Bots ab Version 2."
+    },
+    {
+     "art": "absatz",
+     "text": "Eintragen, wenn:"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "der Vorgang von Celonis eröffnet wurde, das KI-Deckblatt aber fehlt oder nicht lesbar ist,",
+      "ein Feld leer ist, obwohl die Angabe im Dokument steht,",
+      "ein Wert nicht mit dem Dokument oder dem System übereinstimmt (z. B. falsche Agentur-Nr, falsche VNR oder Sparte, falscher Vollmachtgeber, falsches Eingangsdatum, Typ weicht von OB728 ab, MV-Status „OK“ trotz fehlender Unterschrift),",
+      "Prüfung Unterlagen den Einzelfeldern widerspricht,",
+      "bei Typ Makler ein MV-Feld auf N/A steht,",
+      "die Mail falsch klassifiziert ist oder der BÜ-Wunsch falsch gesetzt ist,",
+      "ein Feld „nicht prüfbar“ zeigt, oder „Manuelle Prüfung VNR/Sparte“, obwohl die VNR im Dokument ein Spartenkürzel hat (nicht bei Gruppenleben, 8.1.6),",
+      "eine BE des BÜ-Bots auf einen aus dem Deckblatt übernommenen Wert zurückgeht (9),",
+      "zu einer VNR ein Vorgang doppelt oder gar nicht eröffnet wurde."
+     ]
+    },
+    {
+     "art": "nummern",
+     "punkte": [
+      "Vorgangs-ID notieren: Vorgangs-ID = laufende Nummer des Postkorbvorgangs (wie Vorgang-Lfd-Nr in der PDD); die Laufende Nummer auf dem Deckblatt ist entfallen. [OFFEN: Bestätigung durch den Fachbereich.]",
+      "Je fehlerhaftem Feld eine Zeile in der Fehlerliste KI-Deckblatt anlegen.",
+      "Mit dem richtigen Wert aus Dokument bzw. System weiterbearbeiten; die Bearbeitung wartet nicht auf die Fehlerliste KI-Deckblatt."
+     ]
+    },
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Spalte (Vorschlag)",
+      "Inhalt"
+     ],
+     "zeilen": [
+      [
+       "Vorgangs-ID",
+       "laufende Nummer des Postkorbvorgangs"
+      ],
+      [
+       "VNR",
+       "VNR des Vorgangs (erste VNR auf dem Deckblatt)"
+      ],
+      [
+       "Datum",
+       "Datum der Erfassung, TT.MM.JJJJ"
+      ],
+      [
+       "Mitarbeiter/in",
+       "Kürzel"
+      ],
+      [
+       "Deckblattfeld",
+       "z. B. Agentur-Nr, MV-Status, Klassifikation"
+      ],
+      [
+       "Wert laut Deckblatt",
+       "wie angezeigt; bei Namens- und Adressfeldern nur „Name abweichend“ bzw. „Adresse abweichend“"
+      ],
+      [
+       "Richtiger Wert / Fundstelle",
+       "Korrektur mit Quelle (Dokument, Seite; System, Maske); bei Namens- und Adressfeldern nur die Fundstelle, nicht den Wert"
+      ],
+      [
+       "Fehlerart",
+       "Auswahl: Deckblatt fehlt, Feld leer, Wert falsch, falsch klassifiziert, nicht prüfbar, Widerspruch Prüfung Unterlagen, Vorgang doppelt/fehlt, Sonstiges"
+      ],
+      [
+       "Auswirkung",
+       "z. B. keine, Ablehnung statt BÜ, BÜ statt Ablehnung, andere Agentur, BE des BÜ-Bots"
+      ],
+      [
+       "Bemerkung",
+       "Freitext"
+      ]
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "Datenschutz: Bei Namens- und Adressfeldern nur „Name abweichend“ bzw. „Adresse abweichend“ eintragen, nicht den Wert. Vorgangs-ID und VNR genügen zur Zuordnung. [OFFEN: Spalten, Ablage, Verantwortliche für die Auswertung und Rückmeldung an das Projekt sind noch festzulegen; die Spalten oben sind ein Vorschlag.]"
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Soll zusätzlich in der Ablagenotiz (Scout) vermerkt werden, dass ein Fehler in der Fehlerliste KI-Deckblatt erfasst wurde? Die Zuordnung läuft bereits über die Vorgangs-ID.]"
+    }
+   ]
+  },
+  {
+   "nummer": "3.1",
+   "titel": "Allgemeine Bearbeitung",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Die folgenden fachlichen Regeln gelten unverändert. Die Daten zum Aufruf (VNR, Agentur-Nr, Kunde) kommen aus dem KI-Deckblatt."
+    }
+   ]
+  },
+  {
+   "nummer": "3.1.1",
+   "titel": "Makleranbindung prüfen",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Aktiv / Courtagefortzahler"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Aktiv: BÜ kann wie gewünscht erfolgen.",
+      "Courtagefortzahler: Ist der Makler laut OB728 Courtagefortzahler, werden die Verträge nicht auf den Makler übertragen.",
+      "BÜ auf -9978 der übergeordneten AO-RD.",
+      "Keine Ablöseberechnung."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Makler / Mehrfachagent"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Für eine Bestandsübertragung auf einen Makler wird immer eine gültige Maklervollmacht benötigt; ob sie vorliegt, ergibt sich aus dem KI-Deckblatt (2.1.1).",
+      "Für eine Bestandsübertragung auf einen Mehrfachagenten reicht ein schriftlicher Betreuungswunsch des VN aus (Deckblatt: Typ MFA, BÜ-Wunsch vorhanden = ja).",
+      "Weicht der Typ auf dem Deckblatt von OB728 ab, gilt OB728. Abweichung in die Fehlerliste KI-Deckblatt eintragen."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Vermittlerinkasso / Direktinkasso"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Der Makler behält sich die BP ein und leitet die Beiträge des Kunden an die ERGO weiter."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "Es dürfen keine LV-, FL-, LF-Verträge ins Vermittlerinkasso übertragen werden."
+    }
+   ]
+  },
+  {
+   "nummer": "3.1.2",
+   "titel": "Versicherungsart prüfen",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Gruppenlebensversicherungen"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Werden nicht durch HSB4 K / B bearbeitet. Abgabe an die jeweilige Sparte.",
+      "Erkennbar am Spartenkürzel „GV“ oder an Lebensverträgen, die nicht mit LV, LF, FL beginnen.",
+      "Notiz an den jeweiligen Ansprechpartner des zuständigen Fachbereichs laut Scout mit den Inhalten: Prüfung der Vollmacht ok (hier: laut KI-Deckblatt); Bitte um Bestandsübertragung; BÜ auf Agenturnummer XXX-XXXX (Agentur-Nr aus dem Deckblatt)."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Rahmenverträge"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Erkennt man in Scout.",
+      "Vorgang mit Hinweis „Ist eine BÜ auf den Makler möglich? Antwort bitte an Absender geben, danke.“ an die jeweilige Sparte senden."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Gruppenunfall"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Alle Verträge der Gruppenunfallversicherung werden übertragen.",
+      "Ablöse jedoch nur für den Hauptvertrag, zu erkennen in Scout an den Buchungen.",
+      "Zwei Möglichkeiten zur Ablöseberechnung: Alle Unterverträge werden einzeln berechnet und der Hauptvertrag ist ablösefrei, oder im Hauptvertrag wird Ablöse berechnet und alle darunterliegenden Unterverträge sind ablösefrei."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Betriebliche Altersvorsorge"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Als Versicherungsnehmer ist die ERGO hinterlegt.",
+      "Kunde ist jedoch die versicherte Person / der Beitragszahler: Die Maklervollmacht muss von der versicherten Person / dem Beitragszahler vorliegen (Abgleich mit Nachname MV / Vorname MV auf dem Deckblatt; Abweichung zum VN ist hier kein Deckblattfehler).",
+      "BÜ vornehmen."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Gewerbe-Industrie (Feuerversicherung) und Ertragsausfall"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Dürfen nicht übertragen werden.",
+      "Prüfung der Feuerversicherung unter „allgemeine Vertragsdaten“.",
+      "Ertragsausfall kann an der Versicherungsart erkannt werden.",
+      "Vorgang mit Hinweis „Bitte BÜ prüfen und bearbeiten“ an die jeweilige Sparte senden."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Bausparen, VK, WR, MEAG"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Werden bei der BÜ außer Acht gelassen.",
+      "Bei explizitem BÜ-Wunsch: BÜ auf 9978 und Ablehnungsmail.",
+      "Anforderung durch VM: siehe HLF Widerruf MV."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "ERV"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "MV per Mail an info@ergo-reiseversicherung.de senden. [OFFEN: ARA-Leitfaden nennt bestandsuebertragung@ergo-reiseversicherung.de]"
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "KR-Flotte"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Der fachliche Grundsatz ist: ein Mantel = ein Vertriebspartner und damit eine OE-Nr. für alle Verträge unter diesem Mantel.",
+      "Stornierte und beendete Verträge werden ablösefrei mitübertragen.",
+      "Vor allem Firmenkunden haben oftmals nicht nur eine KNR. Daher zunächst prüfen, ob weitere KNR für diese Firma / diesen VN bestehen. Hierzu die Anwendung KM001 in Quick nutzen.",
+      "Hierfür wird die VNR benötigt, die mit KR2000… (Mantelnummer) beginnt.",
+      "Gibt es in Scout keine KR2000…-VNR: Jeder Flotten-Kunde hat eine KR1000…-VNR (Niederlassungsnummer); gibt man diese in KM001 ein, erhält man mittig die Anzeige der KR2000…-Nummer.",
+      "Die Mantelnummer in KM001 mit „fq“ anstatt KR eingeben.",
+      "Die folgende Anzeige zeigt alle Kundenverbindungen unter Nennung der KR1000…-VNR.",
+      "Damit die Kundenverbindungen in Scout finden.",
+      "Für jede Kundenverbindung muss eine Maklervollmacht vorliegen, da Flotten generell von nur einer Person betreut werden. Das KI-Deckblatt bezieht sich nur auf die eingereichte Mail: Ob für die übrigen Kundenverbindungen Vollmachten vorliegen, wird anhand der eingereichten Unterlagen geprüft.",
+      "Fehlt die Maklervollmacht zu den restlichen Kunden, Mail über den Quickstep „Ablehnung Flotte“ an den Makler; Vorgang kann abgelegt werden.",
+      "Liegen die benötigten Vollmachten vor, BÜ zu allen aktuellen Kunden vornehmen.",
+      "Anschließend für die Übertragung der Mantel- und Niederlassungsnummer Mail an den Fachbereich mit dem Quickstep „Info KBI“: kbi-kraftfahrt-flottengeschaeft1@ergo.de, kbi-kraftfahrt-flottengeschaeft2@ergo.de.",
+      "In Scout ersichtlich unter „Ansprechpartner“ – „Verwaltende Stelle“."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Beitrag eines Sachvertrages beträgt 0,00 EUR im Maklerbestand"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "In der Regel Transportversicherungen.",
+      "BÜ erst nach Rücksprache mit der Sparte (wie Rahmenvertrag)."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "3.1.3",
+   "titel": "Status",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Aktuell, vordatiert: BÜ; ggf. Ablöse",
+      "Beitragsfrei: BÜ; keine Ablöse",
+      "Beendet: BÜ; ggf. Ablöse",
+      "Historisch: keine BÜ; Ablehnung an Makler",
+      "Antrag (S): keine Bearbeitung; Ablage"
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "Maßgeblich ist der Status in Scout. Das Deckblattfeld Vertragsstatus ist nur Information; weicht es ab, Eintrag in die Fehlerliste KI-Deckblatt."
+    }
+   ]
+  },
+  {
+   "nummer": "3.1.4",
+   "titel": "Beziehung",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Nur „VN“ oder „VN/VP“ bearbeiten.",
+      "Der Vollmachtgeber steht auf dem Deckblatt (Nachname MV / Vorname MV) und muss der VN sein (Ausnahme bAV, siehe 3.1.2)."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "3.1.5",
+   "titel": "Vertriebskanal des Vertrages",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "EMV-Agentur: Weiterleitung an „ODPB3 D - Verwaltung Makler/Koop. Personenversicherung“",
+      "Hybrider Kunde: Bearbeitung durch HSB4 K / B; BÜ; ablösefrei",
+      "Bankenkooperation HVB: alle Verträge; BÜ; keine Mails",
+      "ERGO Beratungscenter Düsseldorf: BÜ; keine Mails; keine Ablöse"
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "3.1.6",
+   "titel": "Betreuer",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Unbesetzte Agenturen: BÜ; keine Ablöse"
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "3.1.7",
+   "titel": "BÜ -9978",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Keine Ablöseberechnung",
+      "BÜ auf -9978 der führenden AO-RD",
+      "Mail an Makler, KWAD (VA250)",
+      "In der VA250 wird der bevollmächtigte Makler als Anspruchsteller hinterlegt. Dies erfolgt durch die jeweilige Sparte, daher muss die Maklervollmacht per Mail-Vorlage an KWAD gesendet werden."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Laut ARA-Leitfaden wird bei fehlender Untervollmacht (Makler-Pool) der Makler nicht in VA250 hinterlegt und die Untervollmacht angefordert.]"
+    }
+   ]
+  },
+  {
+   "nummer": "3.1.8",
+   "titel": "Mahnverfahren",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Verträge im gerichtlichen Mahnverfahren erkennt man in Scout: Inkassoübersicht – Mahnaktivitäten – rotes Ausrufezeichen.",
+      "BÜ auf 9978; keine Ablöse."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "4.1",
+   "titel": "Report aus SAP ICM",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Provisionsdaten werden aus SAP ICM ausgelesen."
+    },
+    {
+     "art": "nummern",
+     "punkte": [
+      "ERGO SAP aufrufen.",
+      "ICM EC1 Provisionsverwaltung auswählen.",
+      "Transaktionscode /ERGO/YV_ONC_SETLMT aus dem Ordner Reporting auswählen.",
+      "Unter „Steuerung“ den Punkt „Konkrete Provisionsbuchung“ wählen.",
+      "Verwaltungssystemschlüssel = Feld Sparte aus dem Deckblatt (z. B. SV). Versicherungsscheinnummer = VNR aus dem Deckblatt ohne das Spartenkürzel.",
+      "„Ausführen“ (F8) klicken."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Ob ICM die 9-stellige Nummer mit führenden Nullen annimmt oder ob die Nullen entfernt werden müssen (AAW-Beispiel 97342487).]"
+    }
+   ]
+  },
+  {
+   "nummer": "4.1.1",
+   "titel": "Prüfung Stornohaftung",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "hinweis",
+     "text": "Gilt nur für Leben."
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Im Feld „HaftEnde“ wird das Stornohaftungsdatum angezeigt.",
+      "Liegt das Datum in der Zukunft, besteht für den Vertrag Stornohaftung.",
+      "BÜ auf 9978.",
+      "Ablehnungsmail an Makler."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "4.1.2",
+   "titel": "Provisionssatz VM",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Im Feld „VSatz“ wird der Provisionssatz der letzten gezahlten Sollstellung angezeigt.",
+      "Vorher PB550."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "4.1.3",
+   "titel": "Sollstellung",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Das Sollstellungsdatum wird mithilfe der SV001 ermittelt (2 x Enter).",
+      "Hauptfälligkeit in der Zukunft: Hauptfälligkeit mit vorangegangenem Jahr ansetzen und die Zahlweise so oft addieren, bis das Datum größer oder gleich dem Tagesdatum ist.",
+      "Hauptfälligkeit in der Vergangenheit: Hauptfälligkeit mit aktuellem Jahr ansetzen und die Zahlweise so oft addieren, bis das Datum größer oder gleich dem Tagesdatum ist."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "4.1.4",
+   "titel": "Beitrag",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Komposit: Beitrag aus Scout (ratierlicher Nettobeitrag) auslesen und mit der Zahlweise multiplizieren.",
+      "KR: Beitrag aus Scout (Netto-Jahresbeitrag insgesamt) auslesen. Keine Multiplikation mit der Zahlweise."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "5.1",
+   "titel": "Ablöseberechnung",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Bei LF- und FL-Verträgen wird keine Ablösezahlung fällig.",
+      "Es gibt 7 gängige Varianten der Ablöseberechnung. Zu prüfen ist, ob es sich um einen Jahresvertrag oder einen Mehrjahresvertrag handelt."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Benötigte Daten:"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Vertragsbeginn: in SV001 / KM001 ermitteln; wenn nötig mit PF23 zurückblättern, bis sich das Ablaufdatum das erste Mal ändert, und mit PF24 einmal vor; so erhält man den relevanten Vertragsbeginn.",
+      "Nächstmöglicher KÜ-Termin: entweder das Ablaufdatum (Jahresvertrag), das Verlängert-bis-Datum (Jahresvertrag) oder Vertragsbeginn + 3 Jahre (Mehrjahresvertrag).",
+      "Eingang MV: Eingangsdatum laut KI-Deckblatt; leer: Eröffnungsdatum des Postkorbvorgangs (2.1.1)."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "5.1.1",
+   "titel": "Mehrjahresvertrag",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "In SV001 mit PF23 zurückspringen, bis sich das Ablaufdatum das erste Mal ändert, danach mit PF24 einmal vor: relevanter Vertragsbeginn. Ist die Zeitspanne zwischen Vertragsbeginn und Ablaufdatum größer als 3 Jahre, handelt es sich um einen Mehrjahresvertrag."
+    },
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Variante",
+      "Fall",
+      "Regel",
+      "Beispiel"
+     ],
+     "zeilen": [
+      [
+       "1",
+       "Eingang MV im 1. Jahr",
+       "Im 1. Versicherungsjahr wird AP an den Vermittler gezahlt, daher wird erst ab dem 2. Versicherungsjahr BP zu 50 % ausgeglichen (max. 24 Monate).",
+       "Vertragsbeginn 01.01.2020; nächstmöglicher KÜ-Termin 01.01.2023; KÜ-Frist 30.09.2022; Eingang MV 10.03.2020; Zahlweise monatlich"
+      ],
+      [
+       "2",
+       "Eingang MV im 2. oder 3. Jahr",
+       "Die BP wird immer ab der nächsten Sollstellung zu 50 % ausgeglichen.",
+       "Vertragsbeginn 01.01.2019; nächstmöglicher KÜ-Termin 01.01.2022; KÜ-Frist 30.09.2021; Eingang MV 10.03.2020; Zahlweise monatlich"
+      ],
+      [
+       "3",
+       "Eingang MV im 4. oder 5. Jahr",
+       "Es wird keine Ablöse fällig.",
+       ""
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "5.1.2",
+   "titel": "Jahresvertrag",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Ein Jahresvertrag liegt vor, wenn die Zeitspanne zwischen Beginndatum und Ablaufdatum kleiner als 3 Jahre ist oder bereits ein Verlängert-bis-Datum zu erkennen ist (SV001)."
+    },
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Variante",
+      "Fall",
+      "Regel",
+      "Beispiel"
+     ],
+     "zeilen": [
+      [
+       "4a",
+       "Jahresvertrag, MV innerhalb der KÜ-Frist (Komposit 3 Monate; KR 1 Monat)",
+       "Die MV geht vor dem Ende der KÜ-Frist ein, daher bleibt der nächstmögliche KÜ-Termin. Bis zu diesem Datum hat der Vorvermittler Anspruch auf BP. Ab der nächsten BP-Auszahlung erhält der Makler die Courtage; für diesen Zeitraum wird die BP zu 100 % ausgeglichen.",
+       "Vertragsbeginn 01.01.2020; nächstmöglicher KÜ-Termin 01.01.2021; KÜ-Frist 30.09.2020; Eingang MV 10.03.2020 (BP-Lauf 06.03.2020); Zahlweise monatlich; Ausgleich 01.05.2020 bis 01.01.2021 zu 100 %"
+      ],
+      [
+       "4b",
+       "Jahresvertrag, MV außerhalb der KÜ-Frist (Komposit 3 Monate; KR 1 Monat)",
+       "Die MV geht außerhalb der KÜ-Frist ein.",
+       "Vertragsbeginn 01.01.2019; nächstmöglicher KÜ-Termin 01.01.2021; KÜ-Frist 30.09.2019; Eingang MV 10.10.2019 (BP-Lauf 11.10.2019); Zahlweise monatlich"
+      ],
+      [
+       "5a",
+       "Jahresvertrag im 1. Versicherungsjahr, MV innerhalb der KÜ-Frist",
+       "Keine Ablösezahlung, da bereits Abschlussprovision gezahlt wurde.",
+       ""
+      ],
+      [
+       "5b",
+       "Jahresvertrag im 1. Versicherungsjahr, MV außerhalb der KÜ-Frist",
+       "Der Vertrag hat sich um 1 Jahr verlängert. Für das 1. Vertragsjahr weiterhin keine Ablösezahlung; für das folgende Versicherungsjahr Ablöse bis zum nächstmöglichen Kündigungstermin zu 100 %.",
+       ""
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "5.1.3",
+   "titel": "Allgemeine Ablöseberechnung",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Ratierlicher Nettobeitrag (Komposit) aus Scout bzw. Netto-Jahresbeitrag insgesamt (KR) aus Scout",
+      "geteilt durch 12",
+      "mal Monate der Ablöse",
+      "mal Provisionssatz des VM aus ICM",
+      "mal 50 % (bei Mehrjahresvertrag)",
+      "= Ablösebetrag"
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "5.1.4",
+   "titel": "Rechenzettel befüllen",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Ist eine Ablöse zu zahlen, muss ein Rechenzettel befüllt werden.",
+      "Rechenzettel: [Link wie bisher]",
+      "Anleitung: H:\\BUe_Komposit_LV_Makler_AO\\Handlungsleitfaden\\Anhang\\Beschreibung Rechenzettel Ablöse_Makler.docx"
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "5.1.5",
+   "titel": "Mailschreibung mit Quicksteps",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Siehe Punkt 2.1.5.",
+      "Empfänger der Quickstep-Mail wie bisher. Die Deckblatt-E-Mail nur übernehmen, wenn sie keine interne @ergo-Adresse ist. [OFFEN: Für Version 1 festlegen, ob die Adresse aus OB729 oder der Sonderliste TOP-Makler Vorrang hat.]"
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "6.1",
+   "titel": "Ablagenotiz; Ablage; Weiterleitung",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Ablagenotiz (Scout) – zu notieren:"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Um welchen GEVO es sich handelt (mit Ablöse, ohne Ablöse etc.)",
+      "Welche Mails versendet wurden (Info an …)",
+      "Unter welcher VNR die Bot-Notiz erstellt wurde"
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Vermerk „Fehler KI-Deckblatt in Fehlerliste KI-Deckblatt erfasst“ in der Ablagenotiz gewünscht? Die Ablagenotiz liegt kundenbezogen in Scout; die Zuordnung läuft bereits über die Vorgangs-ID.]"
+    },
+    {
+     "art": "absatz",
+     "text": "Ablage (Postkorb)"
+    },
+    {
+     "art": "absatz",
+     "text": "Weiterleitung"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Ggf. Vorgang an die Sparte weiterleiten.",
+      "Sollen mehrere VNR an verschiedene Sparten weitergeleitet werden, Folgendes beachten:"
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "Wichtig: Keine Leben-VNR in einen bestehenden Komposit-Vorgang (SV, KR, DA etc.) eröffnen und umgekehrt."
+    }
+   ]
+  },
+  {
+   "nummer": "7",
+   "titel": "BeMaS",
+   "ebene": 1,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "BÜ an Makler / 9978 durchführen.",
+      "Kontrolle am nächsten Tag.",
+      "Historische Verträge müssen aus datenschutz- und wettbewerbsrechtlichen Gründen in einen Freibestand übertragen werden. Dem Bestandsinhaber wird damit der Zugriff auf die Daten entzogen. Erfolgt bereits beim 72h-Bot.",
+      "Dazu können die historischen Verträge der Kundenverbindung bei der eigentlichen BeMaS-Übertragung (an Makler, AO etc.) mit ausgewählt werden. BeMaS schlüsselt die historischen Verträge dann automatisch in den jeweiligen Freibestand und die aktiven Verträge auf den angegebenen Bestand.",
+      "Historische Flottenverträge dürfen nicht mit ausgewählt / übertragen werden (siehe KR-Flotte)."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "8.1",
+   "titel": "Robotics",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Grundsätzlich ist eine bevorzugte Bearbeitung durch den Robotics-Prozess vorgesehen.",
+      "Kündigungen und Vertragsänderungen mit BÜ-Wunsch werden künftig über Weg B zuerst von der Sparte bearbeitet (1.2). Liegt in einem Vorgang aus Weg A trotzdem eine Kündigung oder Vertragsänderung vor, den Vorgang wie bisher vor der Bot-Bearbeitung mit Bearbeitungshinweis an die Sparte senden und „falsch klassifiziert“ in die Fehlerliste KI-Deckblatt eintragen.",
+      "Im Anschluss wird eine Notiz zur Kundennummer angelegt.",
+      "Nur ein PK-Vorgang mit Notiz an den Bot.",
+      "Da Celonis je VNR einen eigenen Vorgang eröffnet, gehören mehrere Vorgänge mit derselben Mail zusammen (erkennbar an den weiteren VNR auf dem Deckblatt, 2.1 Schritt 2). Alle anderen PK-Vorgänge sind mit einem Hinweis auf die VNR mit der Roboter-Notiz abzulegen (Beispiel: BÜ unter SV… / Bot-Notiz unter SV…).",
+      "Bei Folgearbeiten, z. B. Kopie von Unterlagen, wird der GEVO Bestandsübertragung abgelegt; anschließend Weiterleitung des PK-Vorgangs über die Zuständigkeit.",
+      "Sind keine Folgearbeiten (WL an die Fachabteilung) außerhalb der Bestandsübertragung erforderlich, ist der GEVO „Notiz Roboter“ ausreichend.",
+      "Es müssen keine Postkorbvorgänge zusammengeführt werden. Für die PK-Weiterleitung an den Fachbereich muss immer ein GEVO vorhanden sein, der nicht BÜ ist.",
+      "Der Roboter legt nach erfolgreicher Bearbeitung alle GEVO „Bestandsübertragung“ und „Notiz Roboter“ ab und leitet alle anderen GEVO an die entsprechende Sparte weiter."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "Wichtig: Keine Leben-VNR in einen bestehenden Komposit-Vorgang (SV, KR, DA etc.) eröffnen und umgekehrt."
+    },
+    {
+     "art": "hinweis",
+     "text": "In Version 1 gilt die bisherige Regel „eine Notiz an den Bot“. Die Prüf-Bot-PDD (je VNR ein eigener Auftrag mit eigener Notiz) gilt erst ab Version 2."
+    }
+   ]
+  },
+  {
+   "nummer": "8.1.1",
+   "titel": "Tätigkeiten BOT",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Erstellen und Versand der Erstinformationen an das GPF der RD und den Bestandsinhaber",
+      "Erstellen aller Berechnungen (Ablöse Makler, Ablöse AO-VP)",
+      "Erstellen, Versand und Archivierung der Abrechnungsmails an AO und Makler",
+      "Erstellen und Versand der Ablehnungsmails an Makler",
+      "Zusammenführung der Abrechnungsdaten je Kalendermonat für die Abrechnung",
+      "Erstellen der BeMaS-Tabelle und Abgabe an BeMaS",
+      "Abschlussnotiz / Bearbeitungshinweis",
+      "Schließen des PK-Vorgangs",
+      "Weiterleitung der erforderlichen GEVO in die Fachbereiche",
+      "Ablage zur KNR durch den Bot: H:\\RCC_Bestandsuebertragung\\Kundennummer"
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Bricht die Bearbeitung durch den Roboter ab, etwa weil Daten fehlen oder nicht ausgelesen werden können, wird der PK-Vorgang direkt an den Sachbearbeiter zur manuellen Bearbeitung zurückgegeben."
+    }
+   ]
+  },
+  {
+   "nummer": "8.1.2",
+   "titel": "Ausschlussfaktoren – manuelle Bearbeitung",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Siehe Punkt 2.1.5."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "8.1.3",
+   "titel": "Tätigkeit Sachbearbeiter",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "nummern",
+     "punkte": [
+      "Entnahme aus dem Postkorb [OFFEN: Postkorb Version 1, siehe 1.1; bisher HSB2 B - Support & Accounting AO B].",
+      "KI-Deckblatt auswerten (2.1.1); die Prüfung der Maklervollmacht (VN = Vollmachtgeber, Untervollmacht, Unterschrift, vollumfängliche Maklervollmacht) entfällt, maßgeblich sind die Deckblattwerte.",
+      "VA250 (Abgabe an den Fachbereich): Leben – Makler muss immer in der VA250 hinterlegt werden; MFA wird nicht in der VA250 hinterlegt; Komposit – wenn BÜ auf Makler erfolgt, muss der Makler aus der VA250 gelöscht werden (Notiz).",
+      "Kundenverbindung prüfen: Sind alle Verträge vom Makler angefordert worden? Die angeforderten VNR stehen im Deckblatt (Versicherungsnummer, Versicherungsnummer 2).",
+      "Alle eröffneten und angeforderten Verträge in den eigenen PK holen (2.1 Schritt 2).",
+      "Agt.-Nr. des Maklers aus dem Deckblatt übernehmen und in OB728 prüfen; nur wenn das Feld leer ist oder die Nummer in OB728 nicht passt, die neue Agt.-Nr. wie bisher aus OB728 heraussuchen (angegebene Nummer auf dem Maklerschreiben beachten)."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "8.1.4",
+   "titel": "Notiz 1515 – Bestandsübertragung Robotics",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Nur zu einer Vertragsnummer erstellen.",
+      "Die Notizvorlage ist in 3 Abschnitte eingeteilt.",
+      "Pflichtfelder sind in der Vorlage mit Stern gekennzeichnet.",
+      "Optionspunkte bedeuten immer eine Auswahl zwischen verschiedenen Möglichkeiten.",
+      "Auswahlkästchen bedeuten immer eine Kann-Auswahl; hier muss keine Auswahl getroffen werden.",
+      "Freitextfelder sind immer im Kontext zu befüllen.",
+      "Eingaben sind immer mit Komma, Semikolon, Leerzeichen oder Zeilenumbruch zu trennen.",
+      "Feldquellen (Eingangsdatum, Maklername, Agt.-Nr., P-Nr., ggf. Mail-Anschrift, Mit BÜ-Wunsch / Untervollmacht fehlt, VNR) siehe 2.1.2.",
+      "Bei fehlender UV wird eine Ablehnungsmail an den Makler geschrieben und der Vertrag auf -9978 geschlüsselt.",
+      "Bei Rahmenvertrag / Fremdleitmerkmal prüfen, ob dieser übertragbar ist oder nicht; in der Notiz auswählen und VNR angeben.",
+      "BMW, Harley-Davidson und Suzuki (als Ansprechpartner in Scout hinterlegt) werden nicht übertragen und abgelehnt.",
+      "Sind alle aktuellen Verträge angefordert: „gesamte Kundenverbindung“ auswählen. Historische Verträge, KV und Finanzprodukte (VK, BK) werden dann nicht beachtet.",
+      "Sind einzelne Verträge angefordert: „angegebene VNR beachten“ auswählen und im Feld angeben (auch die VNR, zu der die Notiz eröffnet ist). Hier können auch historische Verträge angegeben werden; sie werden dann berücksichtigt (Ablehnung der BÜ).",
+      "Sind nicht alle Verträge angefordert: „angegebene VNR nicht beachten“ auswählen und die VNR angeben, die nicht bearbeitet werden sollen.",
+      "Eröffnung eines Vorgangs unter „sonstiges“ mit Angabe VNR und lfd. Nr."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "Welche Verträge angefordert sind, ergibt sich aus den VNR auf dem Deckblatt und dem Mailtext. Das Deckblattfeld Umfang (Einzel / Gesamt) ist noch nicht im Deckblatt enthalten. [OFFEN: Sobald es kommt, Zuordnung Gesamt = „gesamte Kundenverbindung“, Einzel = „angegebene VNR beachten“ fachlich bestätigen.]"
+    }
+   ]
+  },
+  {
+   "nummer": "8.1.5",
+   "titel": "Bot-Weiterleitung",
+   "ebene": 2,
+   "aenderung": "unveraendert",
+   "bloecke": [
+    {
+     "art": "punkte",
+     "punkte": [
+      "Vorgang, zu dem die Bot-Notiz erstellt wurde, immer an „PVBHH 72 - Erstinformation“; automatische Weiterleitung an den BÜ-Bot zur Bearbeitung („BÜ Bot non KV“)."
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "[OFFEN: Die PDD Vorprüfung BÜ nennt dafür „HSB4 K 72 - Erstinformation“; Bezeichnung und Postkorbnummer abgleichen.]"
+    }
+   ]
+  },
+  {
+   "nummer": "8.1.6",
+   "titel": "Besonderheiten",
+   "ebene": 2,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Flotte"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Historische Verträge müssen manuell auf den Makler übertragen werden.",
+      "Mantel- und Niederlassungsnummer dürfen nicht in die Bot-Notiz eingetragen werden.",
+      "Mail an Fachbereich (siehe Quicksteps)."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Gruppenleben"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Haben keine Spartenkürzel.",
+      "Neu: Das Deckblatt zeigt dann ggf. „Manuelle Prüfung VNR/Sparte“; das ist kein Deckblattfehler, kein Eintrag in die Fehlerliste KI-Deckblatt."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Gruppenunfall"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Der Kopfvertrag ist die Summe der Beiträge der Unterverträge, enthält keine Provisionszahlung und muss mit übertragen werden."
+     ]
+    },
+    {
+     "art": "absatz",
+     "text": "Großkunden"
+    },
+    {
+     "art": "punkte",
+     "punkte": [
+      "Manuelle Vorabinfo; Bearbeitung für einzelne Verträge über den Bot möglich."
+     ]
+    }
+   ]
+  },
+  {
+   "nummer": "9",
+   "titel": "Detaillierte Hinweise zur Arbeitsanweisung",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "absatz",
+     "text": "Business Exception (BE) des BÜ-Bots: Sie kommen zum Notizersteller zurück; manuelle Bearbeitung notwendig."
+    },
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Meldung",
+      "Bedeutung",
+      "Vorgehen"
+     ],
+     "zeilen": [
+      [
+       "Keine VNR mehr zur Bearbeitung vorhanden.",
+       "Es ist nur ein historischer Vertrag zur Bearbeitung vorhanden und dieser wurde in der Bot-Notiz nicht angegeben.",
+       "Manuelle Ablehnung"
+      ],
+      [
+       "SE : SCSD1001: Fehlermeldung vom Host",
+       "Es wurde ein nicht vorhandener Vertrag berücksichtigt.",
+       "Fehlermeldung kann ignoriert werden"
+      ],
+      [
+       "BE : PS210 - Agenturnummer für zPH nicht gefüllt",
+       "",
+       "Weiterleitung an HSB4 B - Support & Accounting AO D mit Hinweis zPH"
+      ]
+     ]
+    },
+    {
+     "art": "hinweis",
+     "text": "Neu: Geht eine BE auf einen aus dem KI-Deckblatt übernommenen Wert zurück (z. B. falsche Agentur-Nr oder VNR), zusätzlich Eintrag in die Fehlerliste KI-Deckblatt (2.2)."
+    }
+   ]
+  },
+  {
+   "nummer": "10",
+   "titel": "Änderungshistorie",
+   "ebene": 1,
+   "aenderung": "geaendert",
+   "bloecke": [
+    {
+     "art": "tabelle",
+     "kopf": [
+      "Gültig von",
+      "Gültig bis",
+      "Beschreibung der Änderung",
+      "Erfasser"
+     ],
+     "zeilen": [
+      [
+       "01.06.2024",
+       "Lfd.",
+       "Zusammenfassung der ICM Unterlagen",
+       "Alexandra Mai / Mareike Schlüter"
+      ],
+      [
+       "[OFFEN]",
+       "[OFFEN]",
+       "Entwurf Version 1 vom 15.10.2026 – KI-Deckblatt: Eingang über Celonis/EMWS mit KI-Deckblatt, Deckblattwerte ersetzen die manuelle Prüfung von Maklervollmacht und Mail, Deckblattdaten für die Systemeingabe, Bündelung der Vorgänge je Mail, Fehlerliste KI-Deckblatt unter Vorgangs-ID",
+       "Entwurf Projekt Makler BÜ meets KI"
+      ]
+     ]
+    }
+   ]
+  }
+ ],
+ "aenderungsuebersicht": [
+  {
+   "bereich": "Dokumentangaben",
+   "bisher": "Status veröffentlicht, QS Silvia Schneider",
+   "neu": "Status Entwurf; QS und Mitwirkende offen"
+  },
+  {
+   "bereich": "1.1 Gruppenpostfächer und Postkörbe",
+   "bisher": "Mails aus bestandsuebertragungen@ergo.de, Postkorbeingang HSB2 B - Support & Accounting AO B",
+   "neu": "Celonis liest die Postfächer aus und eröffnet über EMWS; Postkorb in Version 1 offen (Startpostkorb laut PDD „MV 23724 BÜ Prüf BOT“); Fehlerliste KI-Deckblatt (Excel) neu"
+  },
+  {
+   "bereich": "1.2 Eingang über Celonis und KI-Deckblatt (neu)",
+   "bisher": "Keine Klassifikation; Sachbearbeitung sichtet die Mail",
+   "neu": "Wege A/B/C nach Klassifikation und BÜ-Wunsch; je VNR ein Vorgang mit eigenem Deckblatt; BÜ-GeVo aus Weg B nach Spartenbearbeitung nicht erneut an die Sparte"
+  },
+  {
+   "bereich": "1.3 Grundsatz Deckblatt als gegeben (neu)",
+   "bisher": "-",
+   "neu": "Deckblattangaben maßgeblich; keine Prüfung von MV und Mail; eigene Prüfung nur bei „nicht prüfbar“ oder fehlendem Deckblatt in einem Celonis-Vorgang; Vorgänge ohne Celonis nach bisheriger AAW"
+  },
+  {
+   "bereich": "2.1 Vorabprüfung (Ablauf)",
+   "bisher": "Manuelle Vorabprüfung",
+   "neu": "Sieben Schritte: entnehmen, zugehörige Vorgänge derselben Mail bündeln (eine Notiz an den Bot), Deckblatt auswerten, Systeme aufrufen, Fachregeln, Notiz 1515, Fehlerliste"
+  },
+  {
+   "bereich": "2.1.1 Prüfung der Maklervollmacht",
+   "bisher": "Manuelle Prüfung: vollumfängliche MV, separater BÜ-Wunsch, Name und Unterschrift VN, Untervollmacht, Eingangsdatum",
+   "neu": "Auswertungstabelle der Deckblattfelder mit Folge je Wert, inkl. „nicht prüfbar“, N/A, weiterer Typ-Werte, Reminder; Prüfung Unterlagen nur Hinweis, Einzelfelder entscheiden; Eingangsdatum leer = Eröffnungsdatum; MLP/ZSH-Ausnahme bleibt"
+  },
+  {
+   "bereich": "2.1.2 Deckblattdaten übernehmen (neu)",
+   "bisher": "Agt.-Nr. aus OB728 heraussuchen, Daten manuell zusammentragen",
+   "neu": "Agentur-Nr, Vermittlernummer (7 Stellen), VNR, Sparte, Kunde, E-Mail (nicht bei interner @ergo-Adresse), Eingangsdatum aus dem Deckblatt in OB728, Scout, ICM und Notiz 1515"
+  },
+  {
+   "bereich": "2.1.3 / 2.1.4 Anbindung, Kundenverbindung (bisher 2.1.2 / 2.1.3)",
+   "bisher": "Aufruf mit selbst ermittelten Daten",
+   "neu": "Aufruf mit Deckblattdaten; Abgleich Typ und Vollmachtgeber"
+  },
+  {
+   "bereich": "2.1.5 Prüfung manuelle Bearbeitung (bisher 2.1.4)",
+   "bisher": "Ablehnung nach eigener MV-Prüfung (MV nicht für VN, nicht vollumfänglich)",
+   "neu": "Ablehnung ausgelöst durch Deckblattwerte; zusätzliche Ablehnungsgründe (MV fehlt, unvollständig, nicht auf Makler, Unterschrift fehlt, MFA-Fälle) mit Quicksteps offen; übrige Fälle unverändert"
+  },
+  {
+   "bereich": "2.2 Fehlerliste KI-Deckblatt (neu)",
+   "bisher": "-",
+   "neu": "Fehler des Deckblatts je Feld unter der Vorgangs-ID (laufende Nummer des Postkorbvorgangs) in gemeinsamer Excel; Spaltenvorschlag; keine Namens- und Adresswerte"
+  },
+  {
+   "bereich": "3.1 Allgemeine Bearbeitung",
+   "bisher": "Fachregeln Versicherungsart, Status, Beziehung, Vertriebskanal, Betreuer, -9978, Mahnverfahren",
+   "neu": "Inhaltlich unverändert; Hinweise zur Nutzung der Deckblattdaten (OB728 entscheidet über den Typ, Status nur Info, Vollmachtgeber, bAV, Flotte)"
+  },
+  {
+   "bereich": "4.1 SAP ICM",
+   "bisher": "Kürzel und VNR manuell",
+   "neu": "Verwaltungssystemschlüssel = Sparte, Versicherungsscheinnummer = VNR ohne Spartenkürzel aus dem Deckblatt; führende Nullen offen"
+  },
+  {
+   "bereich": "5.1 Ablöseberechnung",
+   "bisher": "Eingang MV aus den Unterlagen",
+   "neu": "Eingangsdatum laut Deckblatt, leer Eröffnungsdatum; Varianten unverändert"
+  },
+  {
+   "bereich": "5.1.5 Quicksteps",
+   "bisher": "Siehe 2.1.4",
+   "neu": "Siehe 2.1.5; Empfänger wie bisher, Deckblatt-E-Mail nur ohne interne @ergo-Adresse"
+  },
+  {
+   "bereich": "6.1 Ablagenotiz",
+   "bisher": "GEVO, Mails, VNR der Bot-Notiz",
+   "neu": "Unverändert; Vermerk zur Fehlerliste KI-Deckblatt als offene Frage"
+  },
+  {
+   "bereich": "8.1 Robotics",
+   "bisher": "Kündigungen/Vertragsänderungen immer vorab an die Sparte",
+   "neu": "Läuft über Weg B; nur noch bei Fehlklassifikation manuell; eine Notiz an den Bot, übrige Vorgänge derselben Mail mit Hinweis ablegen; Regel der Prüf-Bot-PDD erst ab Version 2"
+  },
+  {
+   "bereich": "8.1.3 Tätigkeit Sachbearbeiter",
+   "bisher": "MV prüfen, Agt.-Nr. aus OB728 heraussuchen",
+   "neu": "Deckblatt auswerten, Agt.-Nr. übernehmen und in OB728 prüfen"
+  },
+  {
+   "bereich": "8.1.4 Notiz 1515",
+   "bisher": "Felder manuell befüllen",
+   "neu": "Feldquellen siehe 2.1.2; Auswahlregeln unverändert"
+  },
+  {
+   "bereich": "8.1.6 Besonderheiten",
+   "bisher": "Gruppenleben ohne Spartenkürzel",
+   "neu": "Zusatz: „Manuelle Prüfung VNR/Sparte“ ist bei Gruppenleben kein Deckblattfehler"
+  },
+  {
+   "bereich": "9 Detaillierte Hinweise (BE)",
+   "bisher": "Drei BE-Meldungen",
+   "neu": "Unverändert, ergänzt um Eintrag in die Fehlerliste KI-Deckblatt bei BE durch Deckblattwerte"
+  },
+  {
+   "bereich": "Kapitel 7 BeMaS, 8.1.1, 8.1.2, 8.1.5",
+   "bisher": "wie AAW",
+   "neu": "unverändert übernommen (8.1.2 Verweis auf 2.1.5 angepasst)"
+  }
+ ],
+ "offene_punkte": [
+  "Postkorb, in den Celonis in Version 1 eröffnet, solange der Prüf-Bot nicht läuft: Laut PDD/Projekthistorie (23.09.2026) ist der Startpostkorb „MV 23724 BÜ Prüf BOT“ (Themenpostkorb, Nr. 23724). Eröffnet Celonis in Version 1 dort, und wer entnimmt die Vorgänge? Bisher HSB2 B - Support & Accounting AO B, ARA nennt HSB4K – Service & Abrechnung AO F.",
+  "Fehlerliste KI-Deckblatt (Excel): Ablage <Pfad Fehlerliste>, endgültige Spalten, Verantwortliche für Auswertung und Rückmeldung; Bestätigung, dass Vorgangs-ID = laufende Nummer des Postkorbvorgangs; ob zusätzlich ein Vermerk in der Ablagenotiz gewünscht ist.",
+  "Neue Klassifikationsliste (u. a. Kündigung Maklervollmacht) zur Bestätigung gestellt; Feldliste V1.9 führt noch die alte Werteliste; Bearbeitung „Kündigung Maklervollmacht“ (BÜ in den Freibestand) nicht geregelt.",
+  "Werteliste Typ: Feldliste V1.9 (Makler, MFA) gegen PDD v12 (zusätzlich Courtagefortzahler, Kontaktgeber, leer/Fremdversicherungsunternehmen wie Makler); Vorgehen bei Kontaktgeber in der AAW nicht geregelt.",
+  "BÜ-Wunsch = nein beim Makler: AAW und ARA verlangen separaten Wunsch, Steuerlogik vom 23.09.2026 leitet trotzdem als BÜ-Vorgang weiter; Quickstep für die Ablehnung benennen.",
+  "Quicksteps für die neu aufgenommenen Ablehnungsgründe benennen (MV fehlt / kein Anhang, MV unvollständig, MV nicht auf Makler, Unterschrift VN fehlt, MFA-Fälle); Grundlage ARA Kapitel 5.",
+  "Nicht vollumfängliche MV oder fehlende Unterschrift: Ablehnung (AAW) gegen Anforderung der Unterlagen (ARA).",
+  "MLP / ZSH: Erkennung über Feld Vermittler/Pool bestätigen; ARA sagt, Vollmachten von MLP/ZSH generell in der eingereichten Form annehmen, AAW nur eingeschränkte für LV und KV.",
+  "Reminder-Vorgänge: Ablage mit Hinweis auf bestehende Bot-Notiz bzw. Bearbeitung als neuer Auftrag fachlich bestätigen.",
+  "Mehrere VNR: In Version 1 gilt die AAW-Regel (eine Notiz an den Bot, übrige Vorgänge ablegen); Steuerlogik und Prüf-Bot-PDD (je VNR ein Auftrag) erst ab Version 2 – Abstimmung mit dem heutigen BÜ-Bot zum Übergang.",
+  "Deckblattfeld Umfang (Einzel/Gesamt) und Unterlagenanforderung noch nicht im Deckblatt; Zuordnung zu den Notizauswahlen.",
+  "Weg B in Version 1: Zielpostkorb, in den die Sparte den BÜ-GeVo weiterleitet; Doppelanforderung von Unterlagen.",
+  "E-Mail-Empfänger in Version 1: Vorrang OB729 oder Sonderliste TOP-Makler; Deckblatt-E-Mail nur ohne interne @ergo-Adresse.",
+  "Format der P-Nr. (links auf 7 Stellen aufgefüllt) im Notizfeld der manuellen Notiz bestätigen.",
+  "SAP ICM: ob die 9-stellige normierte VNR mit führenden Nullen angenommen wird oder die Nullen zu entfernen sind (AAW-Beispiel 97342487).",
+  "Bezeichnung des 72h-Postkorbs: PVBHH 72 - Erstinformation (AAW) gegen HSB4 K 72 - Erstinformation (PDD).",
+  "Postfach-Schreibweise bestandsuebertragung@ gegen bestandsuebertragungen@ergo.de.",
+  "ERV-Adresse: info@ergo-reiseversicherung.de (AAW) gegen bestandsuebertragung@ergo-reiseversicherung.de (ARA).",
+  "Widersprüche AAW/ARA ohne Deckblattbezug, unverändert übernommen: Rahmenverträge (Anfrage an Sparte gegen Ablehnung), bAV Bestand 88214-9400, fehlende UV (VA250 und Anforderung der UV), Status beendet/storniert und gekündigte Verträge, Ablöse 1. Jahr bei Jahresverträgen.",
+  "Geburtsdatum erscheint im Deckblatt teils als Zahlenwert; Sparten-Liste der Feldliste ohne „KR“.",
+  "Gültigkeitsdatum und Freigabe dieser Fassung; Version 2 (Prüf-Bot im Einsatz) folgt als eigene Fassung."
+ ]
+}

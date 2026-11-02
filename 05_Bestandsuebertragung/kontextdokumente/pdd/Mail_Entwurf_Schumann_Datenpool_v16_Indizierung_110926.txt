@@ -1,0 +1,33 @@
+Hallo Herr Schumann,
+
+anbei der aktuelle Stand der Datenpoolfelder als Version 1.6; sie ersetzt die Version 1.2 aus meiner Mail vom 07.09. Nachgereicht sind außerdem die fehlenden Angaben: Die Clarity-ID lautet ID-1006080 (Modernization of Broker Sales IT).
+
+Mit der Einrichtung der Datenpoolfelder starten Sie bitte wie besprochen. Die Feldliste in Version 1.6 ist aus unserer Sicht final, die Planung ab KW38 passt für uns.
+
+Das finale KI-Deckblatt kommt direkt von Celonis. Herr Schwarz, bitte stellen Sie es Herrn Schumann zu, sobald die aktuelle Version vorliegt; in der Anforderungsbeschreibung ist derzeit noch der alte Stand hinterlegt.
+
+Ergänzung zum fachlichen Umfang
+
+Im Kleinauftrag stehen die beiden Lösungsoptionen bisher als Alternativen nebeneinander. Nach dem aktuellen Stand der fachlichen Abstimmung brauchen wir beide Wege, allerdings für unterschiedliche Fallgruppen:
+
+- Bestandsübertragungen: Celonis eröffnet den Postkorbvorgang über EWMS und beschreibt die Datenpoolfelder selbst. Das ist der bevorzugte Weg und entspricht Option a).
+- Alle übrigen Fälle: Sie kommen nicht über EWMS, sondern werden von Celonis mit dem KI-Deckblatt wie bisher über kwad@ergo.de eingereicht. Hier brauchen wir eine verbesserte Indizierung, damit die Vorgänge in der richtigen Sparte landen und nicht als Bestandsübertragung eröffnet werden.
+
+Zwei Beispiele, warum das für uns wichtig ist:
+
+- Ein VN-Wechsel mit anschließendem Bestandsübertragungswunsch muss zuerst als VN-Wechsel in die zuständige Sparte. Wird er als Bestandsübertragung eröffnet, läuft er in die falsche Bearbeitung und muss später umgehängt werden.
+- Eine Maklervollmacht, die lediglich mit einer Adressänderung verbunden ist, ist keine Bestandsübertragung und darf keinen entsprechenden Vorgang erzeugen.
+
+Unser Vorschlag dafür
+
+Die Einordnung liegt aus der KI-Strukturierung bereits vor. Wir geben sie im KI-Deckblatt im Feld BUE_KLASSIFIKATION mit, unter anderem mit den Ausprägungen VN-Wechsel, WEG-Wechsel, Kündigung Versicherungsvertrag, Verkürzung Kündigungsfrist und Sonstige Fachthemen. Die AIDA-OCR könnte diese Angabe auslesen und für die Indizierung nutzen. Das Eingangsmanagement kann der Klassifikation folgen oder selbst indizieren; entscheidend ist, dass in diesen Fällen kein GeVo Bestandsübertragung eröffnet wird.
+
+Damit diese Mails im Eingangsmanagement sofort erkennbar sind, versehen wir sie gerne zusätzlich mit einer eigenen Betreffkennzeichnung, analog zu dem in der Anforderungsbeschreibung bereits vorgesehenen Präfix.
+
+Nächste Schritte
+
+Die OCR-Auslesung der Deckblätter ist von der Einrichtung der Datenpoolfelder unabhängig und soll diese nicht aufhalten. Falls dazu Klärungsbedarf besteht, stelle ich gerne kurzfristig einen Termin ein; im Anschluss können Sie den zusätzlichen Aufwand einschätzen.
+
+Beste Grüße
+
+Eike Brenneisen

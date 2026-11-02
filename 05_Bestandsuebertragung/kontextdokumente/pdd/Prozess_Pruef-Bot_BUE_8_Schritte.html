@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prüf-Bot Bestandsübertragung – Prozess in acht Schritten</title>
+<style>
+:root{
+  --rot:#BF1528; --rot-l:#FBEAEC; --teal:#0F94A7; --teal-d:#0B6F7D; --teal-l:#E7F4F6;
+  --gelb:#A9660A; --gelb-l:#FCF2E4; --gruen:#1F7A3D; --gruen-l:#E8F3EB;
+  --grau:#5E6366; --grau-2:#8A9095; --linie:#E3E7E9; --flaeche:#F7F8F9; --sw:#15181A; --weiss:#fff;
+  --schrift:"Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--weiss);color:var(--sw);font-family:var(--schrift);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1320px;margin:0 auto;padding:0 28px}
+a{color:var(--teal-d)}
+
+/* Kopf */
+header.top{border-top:5px solid var(--rot);background:var(--weiss);padding:34px 0 26px}
+.marke{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--grau-2);font-weight:600;margin-bottom:10px}
+h1{font-size:34px;line-height:1.2;margin:0 0 12px;font-weight:700;letter-spacing:-.01em}
+.lead{font-size:18px;color:var(--grau);max-width:74ch;margin:0 0 18px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 10px;font-size:13px;color:var(--grau)}
+.meta span{background:var(--flaeche);border:1px solid var(--linie);border-radius:999px;padding:4px 11px}
+
+/* Steuerleiste */
+.steuer{position:sticky;top:0;z-index:20;background:var(--weiss);border-top:1px solid var(--linie);border-bottom:1px solid var(--linie);padding:10px 0}
+.steuer .wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+.gruppe{display:flex;align-items:center;gap:8px}
+.gruppe > b{font-size:12px;font-weight:600;color:var(--grau-2);text-transform:uppercase;letter-spacing:.07em}
+button.f{font:inherit;font-size:13px;padding:5px 13px;border:1px solid var(--linie);background:var(--weiss);color:var(--grau);border-radius:999px;cursor:pointer;transition:.15s}
+button.f:hover{border-color:var(--teal);color:var(--teal-d)}
+button.f[aria-pressed="true"]{background:var(--teal-d);border-color:var(--teal-d);color:#fff}
+
+/* Übersicht – sticky Schrittleiste */
+.kettenleiste{position:sticky;top:var(--kopfhoehe,56px);z-index:15;background:var(--weiss);border-bottom:1px solid var(--linie);box-shadow:0 2px 6px rgba(20,24,26,.06);padding:8px 0 9px}
+.kette{display:flex;flex-wrap:wrap;gap:5px}
+.kette a{flex:1 1 128px;min-width:128px;text-decoration:none;display:block;padding:7px 11px 8px;background:var(--flaeche);border:1px solid var(--linie);border-radius:3px;position:relative;transition:.15s}
+.kette a:hover{border-color:var(--teal);background:var(--teal-l)}
+.kette a .n{font-size:11px;font-weight:700;color:var(--teal-d);letter-spacing:.06em}
+.kette a .b{display:block;font-size:12.5px;font-weight:600;color:var(--sw);margin-top:1px;line-height:1.25;overflow-wrap:anywhere;hyphens:auto}
+.kette a.markiert .n::after{content:" · neu";color:var(--rot)}
+.kette a.aktiv{border-color:var(--teal-d);background:var(--teal-l);box-shadow:inset 0 -3px 0 var(--teal-d)}
+.kette a.aktiv .b{color:var(--teal-d)}
+.fluss{font-size:14px;color:var(--grau);margin:0 0 30px;padding:11px 14px;background:var(--flaeche);border-left:3px solid var(--teal);border-radius:0 3px 3px 0}
+
+/* Ueberblick */
+.ueber{margin:0 0 34px}
+.uk{display:flex;align-items:baseline;gap:10px;margin:0 0 4px}
+.uk b{font-size:17px}
+.uk span{font-size:13px;color:var(--grau-2)}
+.uz{display:flex;gap:15px;padding:13px 12px 13px 10px;border-bottom:1px solid var(--linie);text-decoration:none;color:inherit;transition:.12s;border-radius:3px}
+.uz:first-of-type{border-top:1px solid var(--linie)}
+.uz:hover{background:var(--teal-l)}
+.uz .n{flex:0 0 auto;width:29px;height:29px;border-radius:50%;background:var(--teal-d);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.uz.istneu .n{background:var(--rot)}
+.uz .k{font-weight:700;font-size:15.5px;margin:0 0 3px;color:var(--sw)}
+.uz .k em{font-style:normal;color:var(--rot);font-size:12px;letter-spacing:.04em;margin-left:7px}
+.uz .frage{margin:0 0 4px;font-size:14.5px;font-weight:600;color:var(--teal-d);max-width:92ch}
+.uz .z{margin:0;color:var(--grau);font-size:14.5px;line-height:1.5;max-width:92ch}
+.uz .meta{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px}
+.uz .meta .tag{font-size:11px;padding:2px 8px}
+.tag.stopp{background:var(--rot-l);border-color:#F2CDD2;color:var(--rot);font-weight:700}
+
+/* Abschnitt */
+section.schritt{border-top:1px solid var(--linie);padding:34px 0 8px;scroll-margin-top:var(--sprung,150px)}
+.kopfzeile{display:flex;gap:18px;align-items:flex-start}
+.ziffer{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--teal-d);color:#fff;font-weight:700;font-size:19px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.schritt.istneu .ziffer{background:var(--rot)}
+h2{font-size:23px;line-height:1.3;margin:0 0 6px;font-weight:700;letter-spacing:-.01em}
+.ziel{color:var(--grau);margin:0 0 12px;max-width:80ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.tag{font-size:11.5px;padding:3px 9px;border-radius:3px;background:var(--flaeche);border:1px solid var(--linie);color:var(--grau);white-space:nowrap}
+.tag.sys{background:var(--teal-l);border-color:#CDE7EB;color:var(--teal-d);font-weight:600}
+.tag.neu{background:var(--rot);border-color:var(--rot);color:#fff;font-weight:700;letter-spacing:.04em}
+.pdd{font-size:12.5px;color:var(--grau);margin:10px 0 0;padding:8px 12px;background:var(--flaeche);border:1px dashed var(--linie);border-radius:3px}
+.pdd b{color:var(--sw);font-weight:600}
+
+.schalter{margin-left:auto;flex:0 0 auto;font:inherit;font-size:12px;padding:5px 12px;border:1px solid var(--linie);background:var(--weiss);color:var(--grau);border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap}
+.schalter:hover{border-color:var(--teal);color:var(--teal-d)}
+.schritt.zu > ol.us,.schritt.zu > .callout,.schritt.zu .pdd{display:none}
+.schritt.zu{padding-bottom:20px}
+.schritt.zu .ziffer{background:var(--grau-2)}
+.schritt.zu.istneu .ziffer{background:var(--rot)}
+
+/* Unterschritte */
+ol.us{list-style:none;margin:18px 0 0 60px;padding:0;border-left:2px solid var(--linie)}
+ol.us > li{position:relative;padding:0 0 20px 26px}
+ol.us > li::before{content:attr(data-nr);position:absolute;left:-11px;top:2px;width:20px;height:20px;border-radius:50%;background:var(--weiss);border:2px solid var(--linie);color:var(--grau-2);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+ol.us > li.be::before{border-color:var(--rot);color:var(--rot)}
+ol.us > li.notiz::before{border-color:var(--gelb);color:var(--gelb)}
+ol.us > li.abzweig::before{border-color:var(--grau-2)}
+.ut{font-weight:650;font-size:16px;margin:0 0 3px}
+.ud{margin:0;color:var(--grau);max-width:88ch}
+/* Rechte Spalte: Datenpoolfeld und Pruefgegenstand */
+.zeile{display:grid;grid-template-columns:minmax(0,1fr) 262px;gap:20px;align-items:start}
+.feldbox{border:1px solid var(--linie);border-left:3px solid var(--teal);border-radius:3px;background:#F6F9FA;padding:10px 13px}
+.feldbox .fk{margin:0 0 2px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grau-2);font-weight:700}
+.feldbox .fv{margin:0 0 11px;font-size:13px;line-height:1.5;color:var(--text)}
+.feldbox .fv:last-child{margin-bottom:0}
+.feldbox .fv code{font-size:11.5px;overflow-wrap:anywhere}
+.feldbox .fv.nichts{color:var(--grau-2)}
+/* Stand gegenueber der PDD */
+.pstandbox{margin:0 0 10px;border-radius:3px;overflow:hidden}
+.pstand{display:block;padding:4px 9px;font-size:11px;font-weight:700;
+  letter-spacing:.04em;text-transform:uppercase;line-height:1.35}
+.pstandort{margin:0;padding:6px 9px 7px;font-size:12px;line-height:1.45;color:var(--grau)}
+.pstandort code{font-size:11px}
+.pstandbox.da{background:#EEF1F2} .pstand.da{color:var(--grau)}
+.pstandbox.anders{background:#E4F1F3} .pstand.anders{color:var(--teal-d)} .pstandbox.anders .pstandort{color:#0A5A66}
+.pstandbox.neu{background:var(--rot-l)} .pstand.neu{color:var(--rot)} .pstandbox.neu .pstandort{color:#6E0E19}
+.pstandbox.weg{background:#EEF1F2} .pstand.weg{color:var(--grau-2);text-decoration:line-through}
+.pstandbox.aussen{background:#EEF1F2} .pstand.aussen{color:var(--grau-2)}
+/* Abstimmungsstand je Schritt */
+.marken{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:10px}
+ol.us > li .marken{margin-top:9px;padding-top:9px;border-top:1px dashed var(--linie)}
+.mk{font-family:inherit;font-size:11.5px;font-weight:600;border:1px solid var(--linie);background:var(--weiss);
+  border-radius:999px;padding:3px 10px;cursor:pointer;color:var(--grau-2);display:inline-flex;align-items:center;gap:5px;transition:.12s}
+.mk svg{width:12px;height:12px;flex:none}
+.mk:hover{border-color:var(--teal);color:var(--teal-d)}
+.mk.an.ok{background:#E9F5EC;border-color:var(--gruen);color:var(--gruen)}
+.mk.an.pr{background:#FBF2E2;border-color:var(--gelb);color:var(--gelb)}
+.mk.weg{margin-left:auto;font-weight:500}
+.mform{display:none;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:9px;padding:10px 12px;
+  background:var(--flaeche);border:1px solid var(--linie);border-radius:3px}
+.mform.auf{display:flex}
+.mform label{display:block;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--grau-2);font-weight:700;margin-bottom:3px}
+.mform input{font-family:inherit;font-size:13.5px;padding:5px 8px;border:1px solid var(--linie);border-radius:3px;background:var(--weiss);color:var(--text)}
+.mform .was{flex:1 1 280px} .mform .was input{width:100%}
+.mform .wer{flex:0 1 190px} .mform .wer input{width:100%}
+.mstand{font-size:12.5px;line-height:1.45;margin:9px 0 0;padding:8px 11px;border-radius:3px;display:none}
+.mstand.an{display:block}
+.mstand.ok{background:#E9F5EC;color:#155C2E}
+.mstand.pr{background:#FBF2E2;color:#7A4A06}
+.mstand b{font-weight:700}
+.fahne{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;
+  margin-left:8px;vertical-align:-3px;flex:none}
+.fahne svg{width:12px;height:12px}
+.fahne.ok{background:var(--gruen);color:#fff} .fahne.pr{background:var(--gelb);color:#fff}
+.kette a .fahne{width:15px;height:15px;margin-left:5px} .kette a .fahne svg{width:10px;height:10px}
+.zaehlmarken{font-size:12.5px;color:var(--grau);margin-left:auto;display:flex;gap:12px;align-items:center}
+.zaehlmarken b{font-weight:700;color:var(--text)}
+.markenwerkzeug{display:flex;gap:7px;align-items:center}
+.markenhinweis{font-size:12px;color:var(--grau-2);margin:6px 0 0;width:100%}
+@media print{.mk,.mform{display:none !important}}
+/* Kleine Prozessskizze im Feldkasten */
+.skizze{margin:0}
+.skizze .bed{margin:0;font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;font-size:11.5px;line-height:1.5;
+  color:var(--text);background:#fff;border:1px solid var(--linie);border-radius:3px;padding:5px 7px}
+.skizze .bed code{font-size:11.5px;padding:0 2px}
+.skizze .bed .einzug{display:inline-block;padding-left:2.2em}
+.skizze .zw{position:relative;display:flex;align-items:flex-start;gap:6px;margin-top:5px;padding-left:15px}
+.skizze .zw::before{content:"";position:absolute;left:5px;top:-5px;width:7px;height:13px;
+  border-left:1px solid var(--linie);border-bottom:1px solid var(--linie);border-bottom-left-radius:2px}
+.skizze .jn{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--grau-2);min-width:31px;white-space:nowrap;padding-top:2px}
+.erg{display:inline-flex;align-items:flex-start;gap:4px;font-size:12.5px;line-height:1.4;font-weight:600}
+.erg svg{width:13px;height:13px;flex:none;margin-top:1px}
+.erg.ok{color:var(--gruen)}
+.erg.be{color:var(--rot)}
+.erg.notiz{color:var(--gelb)}
+.erg.weg{color:var(--teal-d);font-weight:550}
+.feldbox.leer{border-left-color:var(--linie);background:#FAFBFB}
+.ast .feldbox{margin-top:9px}
+@media (max-width:1100px){.zeile{grid-template-columns:minmax(0,1fr)}}
+.ausgang{display:inline-flex;align-items:center;gap:6px;margin-top:7px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:3px}
+.ausgang::before{content:"";width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.ausgang.be{background:var(--rot-l);color:var(--rot)} .ausgang.be::before{background:var(--rot)}
+.ausgang.notiz{background:var(--gelb-l);color:var(--gelb)} .ausgang.notiz::before{background:var(--gelb)}
+.ausgang.weiter{background:var(--gruen-l);color:var(--gruen)} .ausgang.weiter::before{background:var(--gruen)}
+.ausgang.abzweig{background:var(--flaeche);color:var(--grau)} .ausgang.abzweig::before{background:var(--grau-2)}
+.ausgang.entfaellt{background:#EDEFF0;color:var(--grau);text-decoration:line-through;text-decoration-thickness:1px} .ausgang.entfaellt::before{background:var(--grau-2);text-decoration:none}
+ol.us > li.entfaellt::before{border-color:var(--grau-2);color:var(--grau-2);border-style:dotted}
+ol.us > li.entfaellt .ut{color:var(--grau)}
+.zelle{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:3px;white-space:nowrap}
+.zelle.ja{background:var(--gruen-l);color:var(--gruen)}
+.zelle.nein{background:var(--rot-l);color:var(--rot)}
+.zelle.egal{background:var(--flaeche);color:var(--grau-2)}
+.zelle.fehlt{background:var(--gelb-l);color:var(--gelb)}
+td.urteil{font-weight:650}
+.tag.streichen{background:#EDEFF0;border-color:#D8DCDE;color:var(--grau);font-weight:700;letter-spacing:.03em}
+.usref{display:block;margin-top:5px;font-size:12px;color:var(--grau-2);line-height:1.45}
+.usref b{color:var(--grau);font-weight:700}
+
+/* Gabelung Makler / Mehrfachagent */
+ol.us > li.gabelung::before{border-color:var(--teal-d);color:var(--teal-d);border-style:dashed}
+.gabel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.gabel::before{content:"";grid-column:1/-1;height:12px;margin-bottom:-6px;
+  background:linear-gradient(var(--linie),var(--linie)) center top/2px 6px no-repeat,
+             linear-gradient(var(--linie),var(--linie)) center 6px/50% 2px no-repeat,
+             linear-gradient(var(--linie),var(--linie)) 25% 6px/2px 6px no-repeat,
+             linear-gradient(var(--linie),var(--linie)) 75% 6px/2px 6px no-repeat}
+.ast{border:1px solid var(--linie);border-radius:3px;overflow:hidden;transition:.15s}
+.ast > h4{margin:0;padding:7px 13px;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:#fff;font-weight:700}
+.ast.makler > h4{background:var(--teal-d)}
+.ast.mfa > h4{background:#55606B}
+.ast.kv > h4{background:var(--teal-d)}
+.ast.kl > h4{background:#55606B}
+.ast > ul{list-style:none;margin:0;padding:13px}
+.ast > ul > li{margin-bottom:12px}
+.ast > ul > li:last-child{margin-bottom:0}
+.ast .zt{font-weight:650;font-size:14.5px;display:block;margin-bottom:2px}
+.ast .zd{color:var(--grau);font-size:14px;margin:0}
+.ast.gedimmt{opacity:.32;filter:grayscale(.6)}
+.ast .ausgang{font-size:11.5px;padding:2px 8px;margin-top:5px}
+
+/* Begruendung */
+.warum{margin:7px 0 0;font-size:13.5px;line-height:1.5;color:#0A5A66;background:var(--teal-l);padding:7px 12px;border-radius:3px;max-width:86ch}
+.warum b{font-weight:700;color:var(--teal-d)}
+.ast .warum{font-size:12.5px;padding:6px 9px;margin-top:5px}
+
+/* Callouts */
+.callout{margin:16px 0 0 60px;padding:13px 16px;border-radius:3px;font-size:14.5px;line-height:1.5}
+.callout b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.callout.ersetzt{background:var(--rot-l);color:#6E0E19} .callout.ersetzt b{color:var(--rot)}
+.callout.hinweis{background:var(--flaeche);color:var(--grau);border-left:3px solid var(--linie)} .callout.hinweis b{color:var(--grau-2)}
+.callout.idee{background:var(--teal-l);color:#0A5A66;border-left:3px solid var(--teal)} .callout.idee b{color:var(--teal-d)}
+
+/* Tabellen */
+table{width:100%;border-collapse:collapse;margin:14px 0 0;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--linie)}
+thead th{background:var(--teal-d);color:#fff;font-size:12.5px;font-weight:600;border-bottom:none}
+tbody tr:nth-child(even){background:var(--flaeche)}
+td code,.code,code{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:12.5px;background:#EEF1F2;padding:1px 5px;border-radius:2px;color:#243238;white-space:nowrap}
+/* Farbcode: System fett, Datenpoolfeld dunkelblau, im Lauf erzeugte Variable dunkelgruen */
+b.sys{font-weight:700;color:inherit}
+.callout b.sys,.warum b.sys,.usref b.sys,td b.sys,.pstandort b.sys{display:inline;font-size:inherit;letter-spacing:normal;
+  text-transform:none;margin:0;color:inherit}
+.ud code,.zd code,.usref code,.ziel code,.callout code,.warum code,.pdd code{padding:0 3px;font-size:12px}
+code.dp{background:#E7EEF7;color:#123E73}
+code.var{background:#E8F3EA;color:#14572C}
+code.bek{background:#FAE9EB;color:#8C0F1E}
+.legendefarben{font-size:12.5px;color:var(--grau);margin:6px 0 0;width:100%}
+.legendefarben code{font-size:11.5px}
+.mini{font-size:12.5px;color:var(--grau-2)}
+
+/* Listen-Boxen */
+.spalten{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-top:18px}
+.box{border:1px solid var(--linie);border-radius:3px;padding:16px 18px}
+.box h3{margin:0 0 10px;font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+.box.be h3{color:var(--rot)} .box.no h3{color:var(--gelb)} .box.weg h3{color:var(--grau-2)}
+.box ul{margin:0;padding-left:18px;color:var(--grau);font-size:14px}
+.box ul li{margin-bottom:4px}
+.box.weg ul li{text-decoration:line-through}
+
+footer{border-top:1px solid var(--linie);margin-top:46px;padding:22px 0 60px;font-size:13px;color:var(--grau-2)}
+.versteckt{display:none !important}
+@media print{
+  .steuer,.kettenleiste,.schalter{display:none}
+  .schritt.zu > ol.us,.schritt.zu > .callout,.schritt.zu .pdd{display:block !important}
+  body{font-size:11pt}
+  section.schritt{break-inside:avoid;page-break-inside:avoid}
+  .versteckt{display:block !important}
+}
+@media(max-width:700px){
+  .wrap{padding:0 18px} h1{font-size:26px} ol.us,.callout{margin-left:0}
+  .gabel{grid-template-columns:1fr} .gabel::before{display:none}
+  .kopfzeile{gap:12px} .ziffer{width:34px;height:34px;font-size:16px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="marke">ERGO · Makler BÜ meets KI · Prüf-Bot Bestandsübertragung</div>
+  <h1>Der Prüfprozess in acht Schritten</h1>
+  <p class="lead">Was der Prüf-Bot von der eingehenden Makler-Mail bis zur Übergabe an den BÜ-Bot tut — und an welcher Stelle er einen Vorgang an einen Menschen zurückgibt. Neu ist Schritt 3: Die Identität des Kunden wird über eine Partnersuche in IS011 festgestellt, statt einzelne Stammdatenfelder in IS100 zeichengenau zu vergleichen.</p>
+  <div class="meta">
+    <span>Stand 21.09.2026</span>
+    <span>Grundlage: PDD Vorprüfung BÜ Gesundheit/KV, Fassung 16.09.2026</span>
+    <span>Komposit/Leben-PDD ab 22.09.</span>
+    <span>Vorschlag, fachlich noch nicht abgestimmt</span>
+  </div>
+</div></header>
+
+<div class="steuer"><div class="wrap">
+  <div class="gruppe"><b>Sparte</b>
+    <button class="f" data-sparte="alle" aria-pressed="true">Beide</button>
+    <button class="f" data-sparte="kv" aria-pressed="false">Krankenversicherung</button>
+    <button class="f" data-sparte="kl" aria-pressed="false">Komposit / Leben</button>
+  </div>
+  <div class="gruppe"><b>Vermittler</b>
+    <button class="f" data-typ="alle" aria-pressed="true">Beide</button>
+    <button class="f" data-typ="makler" aria-pressed="false">Makler</button>
+    <button class="f" data-typ="mfa" aria-pressed="false">Mehrfachagent</button>
+  </div>
+  <div class="gruppe"><b>Ansicht</b>
+    <button class="f" id="nurBE" aria-pressed="false">Nur Abbruchgründe</button>
+    <button class="f" id="nurOffen" aria-pressed="false">Nur ungeklärte</button>
+    <span class="zaehlmarken" id="zaehlmarken"></span>
+    <span class="markenwerkzeug">
+      <button class="mk" id="standSpeichern">Stand speichern</button>
+      <button class="mk" id="standLaden">Stand laden</button>
+      <input type="file" id="standDatei" accept="application/json,.json" hidden>
+    </span>
+  </div>
+  <div class="gruppe" style="margin-left:auto"><span class="mini" id="zaehler"></span></div>
+  <p class="legendefarben">Farbcode im Text: <b class="sys">Systeme</b> fett, Felder aus dem Datenpool
+    <code class="dp">&lt;BUE_KUNDE_GEBDAT&gt;</code> dunkelblau, im Lauf erzeugte Variablen
+    <code class="var">&lt;Vorgang-VNR&gt;</code> dunkelgrün, die <code class="bek">&lt;BE-Klassifikation&gt;</code> dunkelrot.</p>
+  <p class="markenhinweis">Oben in jedem Feldkasten steht, wie der Schritt zur heutigen PDD steht:
+    <b>So in der PDD</b> — unverändert übernommen; <b>In der PDD, an anderer Stelle</b> — vorhanden, aber in einem
+    anderen Kapitel oder nur als Feldbeschreibung, also beim Überarbeiten zu verschieben; <b>Neu</b> — bisher nicht
+    beschrieben; <b>Streichvorschlag</b> — steht in der PDD, wird fachlich nicht mehr gebraucht;
+    <b>Nicht Teil der PDD</b> — gehört zu Celonis, nicht zum Prüf-Bot. Unter der Marke steht jeweils die Stelle:
+    das Kapitel, in dem der Schritt heute beschrieben ist, bei neuen Schritten, was sie ersetzen oder wo sie zu
+    ergänzen sind.</p>
+  <p class="markenhinweis">Bestätigungen und Prüfvermerke bleiben im Browser dieses Rechners erhalten. Zum Weitergeben oder Sichern „Stand speichern“ — die Datei lässt sich auf einem anderen Rechner über „Stand laden“ wieder einlesen.</p>
+</div></div>
+
+<div class="kettenleiste"><div class="wrap"><nav class="kette" id="kette"></nav></div></div>
+
+<main class="wrap">
+  <div class="ueber" id="ueberblick"></div>
+  <div id="inhalt"></div>
+  <section class="schritt" id="is011umfang">
+    <div class="kopfzeile">
+      <div class="ziffer" style="background:var(--rot)">I</div>
+      <div style="flex:1">
+        <h2>Was könnte IS011 in den Schritten 4 und 5 übernehmen?</h2>
+        <p class="ziel">Die Frage ist nicht „IS011 oder OB726“, sondern: Welche der sieben Einzelinformationen, die der Bot heute aus drei Hostmasken liest, führt das Partnersystem ohnehin?</p>
+        <div class="tags"><span class="tag neu">ZUR ENTSCHEIDUNG</span><span class="tag sys">IS011</span><span class="tag">OB726</span><span class="tag">GH040</span><span class="tag">EOS</span><span class="tag">VA230</span></div>
+      </div>
+    </div>
+
+    <div style="margin-left:60px">
+      <p style="margin:18px 0 0"><b>Der Ausgangspunkt.</b> Bis zum 21.09. suchte der Bot den übernehmenden Vermittler in OB726 mit einer Nummer — der Agenturnummer oder der Personalnummer — und verglich den dort angezeigten Namen zeichengenau mit dem Namen aus dem Auftrag. Schritt 5 ist inzwischen auf die Suche im Partnersystem umgestellt; dieser Abschnitt hält fest, welche Einzelinformationen dabei von IS011 kommen können und welche nicht. Die erste Überlegung war, dieselbe Nummer gegen IS011 zu stellen; der weiter gehende Vorschlag darunter dreht die Suche um.</p>
+
+      <p style="margin:16px 0 0"><b>Was der Bot in den Schritten 4 und 5 tatsächlich braucht.</b></p>
+      <table>
+        <thead><tr><th style="width:24%">Information</th><th style="width:14%">heute aus</th><th style="width:17%">Art der Information</th><th style="width:13%">aus IS011?</th><th>Anmerkung</th></tr></thead>
+        <tbody>
+          <tr><td><b>Gibt es den Vermittler zu dieser Nummer?</b></td><td>OB726</td><td>Partnerstamm</td><td><span class="zelle ja">sehr wahrscheinlich</span></td><td>Die Suche liefe mit derselben Nummer, nur gegen das Partnersystem.</td></tr>
+          <tr><td><b>Name des Vermittlers</b></td><td>OB726</td><td>Partnerstamm</td><td><span class="zelle ja">ja</span></td><td>Wird für die Notiz und für den Abgleich gegen den Datenpool gebraucht.</td></tr>
+          <tr><td><b>Besteht Zusammenarbeit? (Zusatz „INAKTIV“ im Namensfeld)</b></td><td>OB726</td><td>Behelf: Status steckt im Namenstext</td><td><span class="zelle ja">ja, und sauberer</span></td><td>Ein echtes Statusfeld ist robuster, als einen Suchbegriff aus einem Namen zu lesen. Genau solche Behelfe brechen, wenn sich eine Maske ändert.</td></tr>
+          <tr><td><b>Personalnummer zur Agenturnummer</b></td><td>OB726-Kopfzeile</td><td>Beziehung Agentur zu Vermittler</td><td><span class="zelle fehlt">zu prüfen</span></td><td>Führt IS011 die Beziehung, entfällt das Auslesen der Kopfzeile samt Entfernen von Präfix und Trennzeichen und dem Erhalt führender Nullen.</td></tr>
+          <tr><td><b>Anbindungsstatus („Status der Beschäftigung“)</b></td><td>GH040</td><td>Vertriebs- und Beschäftigungsdaten</td><td><span class="zelle nein">eher nicht</span></td><td>Das ist die eigentliche Zulassungsfrage. Solange sie nicht im Partnerstamm steht, bleibt GH040 die führende Quelle.</td></tr>
+          <tr><td><b>Stammagentur des Vermittlers</b></td><td>EOS</td><td>Vertriebsstruktur</td><td><span class="zelle fehlt">zu prüfen</span></td><td>Wird nur gebraucht, um die Agenturnummer für die Notiz zu füllen.</td></tr>
+          <tr><td><b>E-Mail-Adresse des Vermittlers</b></td><td>OB726 und Datenpool</td><td>Partnerstamm, Kommunikationsdaten</td><td><span class="zelle ja">ja</span></td><td>Typische Partnerinformation.</td></tr>
+          <tr><td><b>Betreuende Agentur am Vertrag (Schritt 4)</b></td><td>VA230</td><td>Vertragsdaten</td><td><span class="zelle nein">nein</span></td><td>Die Zuordnung Vertrag zu Betreuer hängt am Vertrag, nicht am Partner.</td></tr>
+          <tr><td><b>Poolzugehörigkeit des Maklers</b></td><td>heute nur aus der Mail, Feld <code>BUE_POOL</code></td><td>Partnerbeziehung</td><td><span class="zelle ja">zu prüfen, wäre ein Gewinn</span></td><td>Käme die Poollage aus dem System statt aus dem KI-Deckblatt, wäre die Untervollmachtsprüfung belastbarer.</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin:20px 0 0"><b>Der Vorschlag vom 21.09.: die Suche umdrehen.</b> Bisher stand die Frage so: Nehmen wir für dieselbe
+      Nummer IS011 statt OB726? Der Vorschlag geht weiter — nicht die Nummer ist der Einstieg, sondern der Vermittler wird wie der Kunde in
+      Schritt 3 über seine Merkmale gesucht, und die eingereichte Nummer bestätigt den Treffer. Der Datenpool liefert dafür alles Nötige:
+      <code>BUE_VERMITTLER_NAME</code>, <code>BUE_MAKLER_PLZ</code>, <code>BUE_MAKLER_ORT</code> und <code>BUE_MAKLER_STRASSE</code>.</p>
+
+      <ol style="margin:12px 0 0;padding-left:20px;line-height:1.6">
+        <li>In IS011 mit Name und Postleitzahl des Maklers suchen, wie beim Kunden tolerant statt zeichengenau.</li>
+        <li>Alle Treffer mit der Rolle Vermittler übernehmen — Mehrfachtreffer sind unkritisch, etwa bei mehreren Standorten eines Maklerhauses.</li>
+        <li>Je Treffer die geführten Ordnungsbegriffe lesen, also Agenturnummer und Personalnummer.</li>
+        <li>Prüfen, ob einer der Treffer die im Auftrag eingereichte Nummer führt — gleich welche der beiden es ist.</li>
+        <li>Passt eine, ist der Vermittler bestätigt: Der Name aus dem Auftrag und die Nummer aus dem Auftrag zeigen auf denselben Partner.</li>
+      </ol>
+
+      <p style="margin:14px 0 0"><b>Was das besser macht.</b> Drei Dinge. <b>Erstens</b> fällt der zeichengenaue Namensvergleich weg. Heute
+      löst <code>&lt;OB726-Name&gt;</code> ungleich <code>&lt;BUE_VERMITTLER_NAME&gt;</code> eine Prüfnotiz aus — bei Firmennamen mit „GmbH &amp; Co. KG“,
+      „u.“ statt „und“ oder „Vers.-Makler“ ist das eine Fehlerquelle ohne fachlichen Gehalt, und jede dieser Notizen zieht am Ende eine
+      Nachbearbeitung nach sich. <b>Zweitens</b> wird die Identität von zwei Seiten belegt statt von einer: Heute vertraut der Bot der Nummer
+      und merkt eine Namensabweichung nur an. Ein Zahlendreher, der zufällig auf einen anderen bestehenden Vermittler führt, fällt nur über
+      den Namensvergleich auf — also über genau die Prüfung, die an Schreibweisen scheitert. <b>Drittens</b> entfällt die Doppelstruktur:
+      Die heutige Weiche „Agenturnummer oder Personalnummer als Einstieg“ und die beiden parallel beschriebenen Wege werden zu einem Weg,
+      in dem die gelieferte Nummer nur noch Bestätigung ist.</p>
+
+      <p style="margin:14px 0 0"><b>Was es nicht ersetzt.</b> Die Zulassungsfrage bleibt: Ob der Vermittler aktiv angebunden ist, steht nach
+      heutigem Stand in GH040 und nicht im Partnerstamm. Ebenso die Stammagentur aus EOS, solange IS011 die Beziehung nicht führt. Der
+      Vorschlag ersetzt also die Identitätsprüfung, nicht die Zulassungsprüfung.</p>
+
+      <p style="margin:14px 0 0"><b>Was dafür geklärt sein muss.</b> Führt IS011 Vermittler überhaupt als Partner, und stehen dort Agentur-
+      und Personalnummer als Ordnungsbegriffe? Das ist die tragende Annahme; ohne sie fällt der Vorschlag. Dazu drei kleinere Punkte:
+      Die Postleitzahl aus der Mail ist die des Briefkopfs und kann von der im Partnersystem hinterlegten abweichen, etwa Filiale gegen
+      Zentrale — sie taugt deshalb als Suchmerkmal, nicht als hartes Kriterium; dafür braucht es eine Bewertung wie beim Kunden. Führt der
+      Partnerstamm ein echtes Statusfeld, ersetzt es den Behelf, „INAKTIV“ aus dem Namenstext zu lesen. Und offen bleibt, was gelten soll,
+      wenn der Auftrag gar keine Nummer nennt: Heute ist das ein Abbruch; mit der Suche wäre der Vermittler auffindbar, nur eben ohne
+      Bestätigung von der zweiten Seite.</p>
+
+      <div class="callout idee"><b>Einschätzung</b>
+        Wenn IS011 die ersten vier Zeilen und die E-Mail-Adresse führt, schrumpft OB726 in Schritt 5 auf nichts zusammen. Übrig blieben eine Abfrage im Partnersystem und die Statusabfrage in GH040, statt heute drei Hostmasken samt Formatbereinigung der Nummern. Für einen Roboter ist das ein spürbarer Gewinn an Stabilität, weil jede Bildschirmmaske eine potenzielle Fehlerquelle bei Änderungen ist. Die entscheidende Rückfrage an das Partnerteam lautet deshalb nicht „geht das überhaupt“, sondern konkret: Führt IS011 zum Vermittler den Anbindungsstatus, die Beziehung zur Agentur und die Poolzugehörigkeit? Je nach Antwort bleiben von den drei Systemen eines oder zwei übrig.
+      </div>
+      <div class="pdd"><b>In der PDD beschrieben:</b> Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“ mit den Schritten „Agenturnummer (A,…) des übernehmenden Maklers (Anwendung OB726)“, „Vermittler-Nr. (PNR) des übernehmenden Maklers (Anwendung OB726)“ und „Agentur-Nr. (A,…) des Bestandsinhabers ermitteln“. Eine Umstellung auf IS011 würde dieses Kapitel neu schreiben.</div>
+    </div>
+  </section>
+
+  <section class="schritt" id="vollmacht">
+    <div class="kopfzeile">
+      <div class="ziffer" style="background:var(--grau)">V</div>
+      <div style="flex:1">
+        <h2>Vertiefung: Makler, Pool und Untervollmacht</h2>
+        <p class="ziel">Die Vollmachtslage entscheidet zweimal: Sie kann den Vorgang sofort beenden, und sie bestimmt die Zeile „Bearbeitung nach“ in der Notiz an den BÜ-Bot.</p>
+        <div class="tags">
+          <span class="tag sys">Datenpool</span><span class="tag">Feldbewertung durch Celonis</span><span class="tag">keine Hostzugriffe</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-left:60px">
+      <p style="margin:18px 0 0"><b>Die Ausgangslage.</b> Ein Makler kann direkt beim Versicherer angebunden sein oder über einen Maklerpool beziehungsweise Abwickler einreichen. Reicht ein Pool ein, ist die Maklervollmacht des Kunden in aller Regel auf den Pool ausgestellt. Damit der Bestand trotzdem auf den einzelnen Makler übertragen werden kann, braucht es eine Untervollmacht. Der Mehrfachagent wiederum arbeitet ohne Maklervollmacht; bei ihm zählt der unterschriebene Betreuungswunsch.</p>
+
+      <p style="margin:16px 0 0"><b>Die drei Felder, auf die es ankommt.</b></p>
+      <table>
+        <thead><tr><th style="width:23%">Feld im Datenpool</th><th style="width:22%">Ausprägungen</th><th>Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><code>BUE_POOL</code></td><td>Poolname oder leer</td><td>Maklerpool beziehungsweise Abwickler, über den eingereicht wird. Leer heißt: Der Makler reicht direkt ein. Das Feld wird in die Notiz übernommen.</td></tr>
+          <tr><td><code>BUE_UV_ERTEILT</code></td><td>ja · nein · N/A</td><td>Untervollmacht erteilt. „ja“ setzt drei Dinge zugleich voraus: Eine Untervollmacht liegt vor, der Unterbevollmächtigte ist namentlich benannt, und aus den Unterlagen ist erkennbar, dass die Übertragung an genau diesen Unterbevollmächtigten erfolgen soll. N/A gilt beim Mehrfachagenten.</td></tr>
+          <tr><td><code>BUE_MV_STATUS</code></td><td>OK · MV unvollständig · MV fehlt · kein Anhang · nicht prüfbar · N/A</td><td>Zusammenfassender Status der Maklervollmacht. Die Einzelbewertungen (auf den Makler ausgestellt, vollumfänglich, vom Kunden unterschrieben) sind zusätzlich in <code>BUE_PRUEFUNG_UNTERLAGEN</code> gebündelt.</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin:20px 0 0"><b>Drei Rollen, die man auseinanderhalten muss.</b> Der <b>Vollmachtgeber</b> ist der Kunde, er unterschreibt. Der <b>Vollmachtnehmer</b> ist derjenige, auf den die Vollmacht ausgestellt ist — der Makler selbst oder der Pool. Das <b>Übertragungsziel</b> ist der Vermittler, der am Ende in der Notiz steht und den Bestand bekommt. Bei direkter Einreichung fallen Vollmachtnehmer und Übertragungsziel zusammen; bei einem Pool nicht, und genau dafür gibt es die Untervollmacht.</p>
+
+      <p style="margin:16px 0 0"><b>Was in welcher Konstellation passiert.</b></p>
+      <table>
+        <thead><tr><th style="width:18%">Konstellation</th><th style="width:19%">Felder im Deckblatt</th><th style="width:23%">Auf wen wird übertragen?</th><th style="width:20%">Wirkung auf die Prüfung</th><th>Zeile „Bearbeitung nach“ in der Notiz</th></tr></thead>
+        <tbody>
+          <tr><td><b>Makler reicht direkt ein</b></td><td><code>BUE_POOL</code> leer, Vollmacht vom Kunden unterschrieben</td><td>auf den <b>übernehmenden Makler</b> selbst. Vollmachtnehmer und Übertragungsziel sind dieselbe Person. In der Notiz steht seine Agenturnummer aus dem Datenpool beziehungsweise seine Stammagentur aus EOS.</td><td>läuft durch</td><td><b>mit BÜ</b></td></tr>
+          <tr><td><b>Einreichung über einen Pool, Untervollmacht liegt vor</b></td><td><code>BUE_POOL</code> gefüllt, <code>BUE_UV_ERTEILT</code> = ja</td><td>auf den <b>namentlich benannten Unterbevollmächtigten</b>, also den einzelnen Makler. Die Vollmacht liegt beim Pool, die Untervollmacht ist der Nachweis, dass an genau diesen Makler übertragen werden soll.</td><td>läuft durch</td><td><b>BÜ mit UV</b></td></tr>
+          <tr><td><b>Einreichung über einen Pool, keine Untervollmacht</b></td><td><code>BUE_POOL</code> gefüllt, <code>BUE_UV_ERTEILT</code> = nein</td><td><b>offen.</b> Die Notiz nennt weiterhin den übernehmenden Makler, obwohl die Vollmacht auf den Pool lautet. Ob in diesem Fall überhaupt übertragen werden darf, auf den Pool übertragen wird oder die Sachbearbeitung entscheidet, ist fachlich zu klären.</td><td>läuft durch, ohne Business Exception</td><td><b>UV fehlt</b> — der Hinweis an die Sachbearbeitung</td></tr>
+          <tr><td><b>Mehrfachagent</b></td><td><code>BUE_VERMITTLER_TYP</code> = MFA, alle Vollmachtsfelder N/A</td><td>auf den <b>Mehrfachagenten</b>. Grundlage ist nicht die Vollmacht, sondern der unterschriebene Betreuungswunsch.</td><td>stattdessen: Der Betreuungswunsch muss auf den Mehrfachagenten lauten und unterschrieben sein, sonst Business Exception</td><td><b>mit BÜ</b></td></tr>
+          <tr><td><b>Unterschrift des Versicherungsnehmers fehlt</b> (nur Makler)</td><td><code>BUE_MV_UNTERSCHRIFT_KUNDE</code> ungleich ja</td><td><b>keine Übertragung.</b> Ohne Unterschrift ist die Maklervollmacht nicht wirksam; der Vorgang geht in die Nachbearbeitung. Beim Mehrfachagenten greift das Kriterium nicht, dort gibt es keine Maklervollmacht.</td><td><span class="ausgang be" style="margin:0">Business Exception: Unterschrift VN fehlt</span></td><td>—</td></tr>
+          <tr><td><b>Vollmacht unvollständig oder fehlend</b></td><td><code>BUE_PRUEFUNG_UNTERLAGEN</code> ungleich „Vollständig“ und „Anforderung Unterlagen“ = nein</td><td><b>keine automatische Übertragung.</b> Die Prüfnotiz landet in der Fehlerliste; im Test auf die Fehlerliste wird daraus die Business Exception „Nachprüfung erforderlich“, und die Sachbearbeitung entscheidet.</td><td><span class="ausgang notiz" style="margin:0">Prüfnotiz: Unterlagen nicht vollständig</span></td><td>—, es wird keine Notiz erstellt</td></tr>
+          <tr><td><b>Unterlagen unvollständig, Anforderung beim Makler vorgesehen</b></td><td><code>BUE_ANF_UNTERLAGEN</code> = ja</td><td>auf den übernehmenden Makler nach der jeweiligen Poollage. Die fehlenden Unterlagen werden über die Notiz beim übernehmenden Makler angefordert.</td><td>läuft durch, keine Prüfnotiz</td><td>nach Poollage, zusätzlich „Anforderung von Unterlagen“</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout hinweis"><b>Entscheidung vom 02.09.2026 (K. Rypa, Maklerservice)</b>
+        Statt zweier Felder für „Untervollmacht erteilt“ und „Untervollmacht fehlt“ gibt es nur noch <code>BUE_UV_ERTEILT</code> mit ja und nein. Welche der drei Bedingungen im Fall „nein“ verletzt ist, teilt das Deckblatt im Feld „Hinweise“ mit.</div>
+      <div class="pdd"><b>In der PDD beschrieben:</b> Ausschlusskriterien im Kapitel „Vorprüfung – Ausschlusskriterien“; die Ableitung der Zeile „Bearbeitung nach“ im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“. Die Felder stehen in der „Tabelle der genutzten Variablen“.</div>
+      <div class="callout idee"><b>Zu klären</b>
+        Bei „UV fehlt“ läuft der Vorgang heute ohne Business Exception durch: Die Notiz nennt den übernehmenden Makler als Übertragungsziel, obwohl die Vollmacht auf den Pool lautet, und weist die Sachbearbeitung nur über die Zeile „UV fehlt“ darauf hin. Zu entscheiden ist, ob das so bleiben soll, ob stattdessen auf den Pool übertragen wird oder ob der Fall ein eigenes Prüfergebnis bekommt und in die Nachbearbeitung geht.</div>
+    </div>
+  </section>
+
+  <section class="schritt" id="notiz">
+    <div class="kopfzeile">
+      <div class="ziffer" style="background:var(--grau)">N</div>
+      <div style="flex:1">
+        <h2>Vertiefung: Die Notiz Feld für Feld</h2>
+        <p class="ziel">Die Notiz ist die Übergabe an den BÜ-Bot. Der Prüf-Bot schreibt den Bestand nicht selbst um — alles, was danach passiert, steht in diesen Feldern.</p>
+        <div class="tags">
+          <span class="tag sys">Vorlage 1515 – Bestandsübertragung Robotics PB</span><span class="tag">Komposit und Leben</span><span class="tag">KV-Variante BOT2011 offen</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-left:60px">
+      <p style="margin:18px 0 0"><b>Grundlage.</b> Die folgenden Felder und Ausprägungen sind der Maske „Telefonnotiz erstellen“ mit der Vorlage
+      „1515 – Bestandsübertragung Robotics PB“ entnommen. Sie gilt für Komposit und Leben. Für die Krankenversicherung nennt die PDD die
+      Vorlage BOT2011; deren Maske liegt noch nicht vor, ebenso ist offen, ob die Notiz über die Vorlage bestückt oder als Freitext mit
+      gleichem Aufbau erstellt wird. Pflichtfelder sind in der Maske mit einem Stern gekennzeichnet.</p>
+
+      <p style="margin:16px 0 0"><b>Die Felder und ihre Ausprägungen.</b></p>
+      <table>
+        <thead><tr><th style="width:20%">Feld in der Maske</th><th style="width:26%">Ausprägungen</th><th>Woher der Wert kommt</th></tr></thead>
+        <tbody>
+          <tr><td><b>Eingangsdatum</b> (Pflicht)</td><td>Datum, tt.mm.jjjj</td><td><code>Eingangsdatum-BUE</code> aus <code>BUE_MV_EINGANGSDATUM</code>. Ist das Feld leer, gilt das Eröffnungsdatum des Postkorbvorgangs. In der PDD-Notizbestückung ist das Feld bisher nicht aufgeführt.</td></tr>
+          <tr><td><b>Maklername</b> (Pflicht)</td><td>Freitext, bis 60 Zeichen</td><td>der Name des in IS011 bestätigten Partners — nicht der Wortlaut aus dem Auftrag. Beide müssen nicht zeichengenau übereinstimmen; belegt ist die Identität über die Nummer.</td></tr>
+          <tr><td><b>Agenturnummer</b> (Pflicht)</td><td>7- bis 9-stellige Zahl</td><td><code>BUE_AGENTUR_NR</code> beim Einstieg über die Agenturnummer, sonst die Stammagentur <code>AGT-Uebernehmer</code> aus EOS.</td></tr>
+          <tr><td><b>Personalnummer</b> (Pflicht)</td><td>nur Ziffern, führende Nullen bleiben erhalten</td><td><code>OB726-PNR</code> beziehungsweise <code>BUE_VERMITTLER_NR</code>. Die Maske bestätigt die Bezeichnung „Personalnummer“; OB726 zeigt dieselbe Nummer als „Vermittler-Nr. (PNR)“.</td></tr>
+          <tr><td><b>E-Mail aufnehmender Makler</b></td><td>Freitext</td><td><code>Makler-Email</code> in fester Reihenfolge: Sonderliste TOP-Makler, sonst <code>BUE_MAKLER_EMAIL</code>, sonst die in OB729 hinterlegte Adresse. Endet sie auf <code>@ergo.de</code>, steht dazu die Prüfnotiz „Absender ist eine interne ERGO-Adresse“.</td></tr>
+          <tr><td><b>Bearbeitung nach</b> (Pflicht)</td><td>genau eine Auswahl: <b>Mit BÜ-Wunsch</b> · <b>Untervollmacht fehlt</b></td><td>aus der Vollmachtslage: Mehrfachagent und Makler ohne Poolbesonderheit ergeben „Mit BÜ-Wunsch“, Makler mit Pool und ohne Untervollmacht ergibt „Untervollmacht fehlt“. <b>Offen:</b> Die PDD-Kaskade kennt zusätzlich den Wert „BÜ mit UV“ für den Makler mit erteilter Untervollmacht; in der Maske gibt es dafür keine Auswahl.</td></tr>
+          <tr><td><b>Rahmenvertrag übertragbar</b></td><td>Kennzeichen mit Freitextfeld</td><td><b>Offen:</b> In der PDD gibt es dazu keine Regel — dort werden Rahmenverträge wie alle anderen Verträge behandelt. Wer das Kennzeichen setzt und woraus, ist festzulegen.</td></tr>
+          <tr><td><b>Rahmenvertrag nicht übertragbar</b></td><td>Kennzeichen mit Freitextfeld</td><td>wie vor.</td></tr>
+          <tr><td><b>Betroffene VNR</b> (Pflicht)</td><td>genau eine Auswahl: <b>gesamte Kundenverbindung</b> · <b>angegebene VNR nicht beachten</b> · <b>angegebene VNR beachten</b></td><td>aus <code>BUE_UMFANG</code>: „Gesamt“ ergibt „gesamte Kundenverbindung“, „Einzel“ ergibt „angegebene VNR beachten“. <b>Offen:</b> Für „angegebene VNR nicht beachten“ nennt die PDD keinen Fall.</td></tr>
+          <tr><td><b>VNR</b></td><td>Freitext, mehrere Nummern</td><td>die führende <code>Vorgang-VNR</code> — sie allein wird geprüft und übertragen. Stehen weitere Nummern desselben Kunden zur Übertragung an, kommen sie nachrichtlich dazu, damit der Zusammenhang der Vorgänge erkennbar bleibt (<code>BUE_VNR</code>, <code>BUE_VNR_2</code>; welche Liste genau, ist offen).</td></tr>
+          <tr><td><b>Folgearbeit für Komposit</b></td><td>Mehrfachauswahl: <b>Police / Vertragsspiegel / Vertragsauszug / Ersatzrechnung usw.</b> · <b>Schadenaufstellung / Schadenrenta usw.</b> · <b>Sonstige Unterlagen</b></td><td>aus dem Datenpoolfeld <code>BUE_ART_UNTERLAGEN</code>, gesetzt nur wenn <code>BUE_ANF_UNTERLAGEN</code> = ja. Das Feld ist heute Freitext; seit V1.2 steht der Vorschlag, seine Werteliste genau auf diese drei Kennzeichen festzulegen und Freitext nur ergänzend zuzulassen (OFFEN 6 im Datenpool-Antrag, Abstimmung mit ODPBD und MSU läuft).</td></tr>
+          <tr><td><b>Sonstiges: Dokumente für weitere VNR hochladen / eröffnen</b></td><td>Kennzeichen</td><td><b>Offen:</b> In der PDD gibt es dazu keine Regel. Zu klären, ob der Bot das Kennzeichen setzen soll, etwa wenn der Auftrag mehrere Versicherungsnummern nennt.</td></tr>
+          <tr><td><b>Freitextfeld „Komposit / Leben / KV“</b></td><td>Freitext</td><td><b>Offen:</b> Verwendung und Inhalt sind festzulegen.</td></tr>
+          <tr><td><b>Laufende Nr. aus Vorgangsdatenbank</b></td><td>Ziffern; mehrere Nummern nur mit Komma getrennt</td><td><code>Vorgang-Lfd-Nr</code>, der Ordnungsbegriff des Prüf-Bots. Die Maske erlaubt ausdrücklich mehrere Nummern.</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin:16px 0 0"><b>Was in der Maske fehlt.</b> Die PDD führt für die Krankenversicherung ein Feld „KNR Makler“ mit dem Vermerk,
+      dass Quelle und Erfordernis noch zu bestätigen sind. In der Vorlage 1515 gibt es dieses Feld nicht. Entweder ist es eine Besonderheit der
+      KV-Variante, oder es entfällt.</p>
+    </div>
+  </section>
+  <section class="schritt" id="ergebnisse">
+    <div class="kopfzeile">
+      <div class="ziffer" style="background:var(--grau)">E</div>
+      <div style="flex:1">
+        <h2>Alle Ergebnisse auf einen Blick</h2>
+        <p class="ziel">Ein Abbruchgrund beendet den Vorgang sofort. Eine Prüfnotiz wird gesammelt und erst im Test auf die Fehlerliste bewertet.</p>
+      </div>
+    </div>
+    <div class="spalten" style="margin-left:60px">
+      <div class="box be"><h3>Abbruchgründe (Business Exception)</h3><ul id="lbe"></ul></div>
+      <div class="box no"><h3>Prüfnotizen (weich, werden gesammelt)</h3><ul id="lno"></ul></div>
+      <div class="box weg"><h3>Entfallen mit IS011</h3><ul id="lweg"></ul>
+        <p class="mini" style="margin:10px 0 0">Diese fünf Prüfnotizen entstehen heute aus dem Feldvergleich in IS100, jede als eigene Abfrage. Mit der Partnersuche entfallen der Scout-Service-Aufruf und die Normalisierungsregeln für die Straße. Ob zwei davon — Nachname und Geburtsdatum — als zusammengefasste Plausibilitätsnotiz zurückkommen, entscheidet die Bewertungsmatrix weiter oben.</p></div>
+    </div>
+  </section>
+
+  <section class="schritt" id="pddfolgen">
+    <div class="kopfzeile">
+      <div class="ziffer" style="background:var(--grau)">P</div>
+      <div style="flex:1">
+        <h2>Was das für die PDD bedeutet</h2>
+        <p class="ziel">Diese Übersicht ordnet den Ablauf nach Prüffragen. Die PDD folgt einer anderen Gliederung; hier die Zuordnung und die Stellen, die zu ändern wären.</p>
+      </div>
+    </div>
+    <div style="margin-left:60px">
+      <table>
+        <thead><tr><th style="width:24%">Schritt dieser Übersicht</th><th style="width:34%">Kapitel in der PDD</th><th>Änderungsbedarf</th></tr></thead>
+        <tbody>
+          <tr><td>1 Vorgang eröffnen</td><td>Eröffnung Postkorbvorgang und Daten im Datenpool; Details zum Startereignis</td><td>VDB-Abruf und „ein Vorgang je VNR“ ergänzen; Schreibweise EMWS; Umfang „Gesamt“ entfällt, wenn die VDB den Umfang bereits auflöst</td></tr>
+          <tr><td>2 BE aus dem Deckblatt</td><td>Vorprüfung – Ausschlusskriterien</td><td>als geschlossener Block dargestellt: alle harten Kriterien aus dem Deckblatt an einer Stelle, vor dem ersten Hostzugriff. <b>Zu ändern:</b> Die Abfrage <code>BUE_MV_UNTERSCHRIFT_KUNDE</code> steht heute außerhalb der Weiche und gilt dadurch auch für den Mehrfachagenten; sie gehört in den Makler-Zweig, weil die Unterschrift auf der Maklervollmacht steht. Zu entscheiden bleibt, ob harte BE künftig ausschließlich hier entstehen und die Systemschritte nur noch Befunde für die Fehlerliste liefern</td></tr>
+          <tr><td>3 Kunde</td><td>I. VN – Stammdaten + VNR, Abschnitte Namensprüfung, Geburtsdatum und Adressprüfung (IS100)</td><td><b>Neu zu schreiben:</b> die drei Abschnitte werden durch einen Schritt „Partnersuche in IS011 und Abgleich der Kundennummer“ ersetzt; Variablen <code>IS100-*</code> entfallen, <code>IS011-KNR</code> kommt hinzu; die vier Einzel-Prüfnotizen werden durch die Bewertungsmatrix ersetzt; der Abgleich des Vollmachtgebers gegen den Partner wird als eigener Prüfschritt aufgenommen; Systemtabelle und Ablaufdiagramm nachziehen</td></tr>
+          <tr><td>4 Abgebender Bestandsinhaber</td><td>II. Übernehmender Makler, Abschnitt „Agentur-Nr. des Bestandsinhabers ermitteln“</td><td>eigenes Kapitel daraus machen, damit der abgebende Teil nicht im Kapitel des Übernehmers steht</td></tr>
+          <tr><td>5 Übernehmender Makler</td><td>II. Übernehmender Makler – Agenturnummer / Vermittler-Nr. (PNR)</td><td><b>Kapitel neu schreiben:</b> Suche in IS011 über Name und Postleitzahl, Bestätigung über die eingereichte Agentur- oder Personalnummer; die beiden OB726-Einstiege und der zeichengenaue Namensabgleich entfallen. In der Werteliste der BE-Klassifikation entfallen „Agenturnummer nicht vorhanden“ und „Personalnummer / PNR nicht vorhanden“, neu sind „Vermittler in IS011 nicht gefunden“ und „Vermittler und Nummer passen nicht zusammen“; die Prüfnotiz „Name übernehmender Makler abweichend“ entfällt. Abgleich des Vollmachtgebers bleibt in Schritt 3, weil er den gefundenen Partner voraussetzt; <b>Begriffe vereinheitlichen</b>: Das Datenpoolfeld heißt „Personalnummer“, das Kapitel und die Variable sprechen von „Vermittler-Nr. (PNR)“, das Notizfeld wieder von „Personalnummer“. Außerdem verweist die Variablentabelle bei <code>OB726-PNR</code> auf die Schritte „Variante A“ und „Variante B“, während das Kapitel andere Schrittnamen führt</td></tr>
+          <tr><td>6 Vertrag</td><td>I. VN – Stammdaten + VNR, Abschnitt „VNR-Prüfung (VA230)“</td><td>eigenes Kapitel; Bezeichnung der Business Exception für nicht aktuelle Verträge festlegen; <b>Auslesen des Felds „Sparte“ und die Variable <code>VA230-Sparte</code> streichen</b>, da der Postkorbvorgang je Sparte den passenden Prüf-Bot startet und die Notizvariante damit feststeht</td></tr>
+          <tr><td>7 Anforderung Unterlagen</td><td>kein eigenes Kapitel; zwei Zeilen im Kapitel „Notizbestückung“, Abschnitt „Sonstiges“</td><td><b>neues Kapitel nach dem Vertrag</b> für <code>BUE_ANF_UNTERLAGEN</code> und <code>BUE_ART_UNTERLAGEN</code>, das zugleich den Unterschied festhält: <code>BUE_PRUEFUNG_UNTERLAGEN</code> bewertet die eingereichten Unterlagen (Schritt 2, Prüfnotiz), <code>BUE_ANF_UNTERLAGEN</code> steuert die Anforderung beim übernehmenden Makler (Notiz)</td></tr>
+          <tr><td>8 Abschluss</td><td>III. Test auf Fehlerliste; Prozessende mit Status completed samt Notizbestückung; Prozessende mit Status Exception (BE-Handling)</td><td><b>Routing je Sparte ausformulieren.</b> Heute nennt das BE-Handling nur den Themenpostkorb HSB4K MV. Zu ergänzen: Krankenversicherung immer HSB4K MV; Komposit und Leben nach abgebendem Bestandsinhaber — Makler in die Nachbearbeitung ODPB, alle übrigen Fälle einschließlich nicht ermittelbarem Bestandsinhaber in den Themenpostkorb HSB4K KO. Gleiches Routing für harte Business Exceptions und für „Nachprüfung erforderlich“. Ebenso zu ergänzen: der Weg ohne Befund für Komposit und Leben und die Entscheidung zwischen Prozessende-Variante A und B</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="schritt" id="offen">
+    <div class="kopfzeile">
+      <div class="ziffer" style="background:var(--grau)">O</div>
+      <div style="flex:1"><h2>Offene Punkte</h2>
+      <p class="ziel">Vor der Finalisierung der KV-PDD und dem Start der Komposit/Leben-PDD am 22.09. zu klären.</p></div>
+    </div>
+    <div style="margin-left:60px"><table><thead><tr><th style="width:24%">Thema</th><th>Frage</th></tr></thead><tbody id="toffen"></tbody></table></div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  Vertraulich, eingeschränkte Verteilung. Erstellt für die Abstimmung des Prüf-Bots Bestandsübertragung. Grundlage: PDD Vorprüfung BÜ Gesundheit/KV in der Fassung vom 16.09.2026, Datenpool-Feldliste V1.7 sowie die Abstimmungen vom 02.09., 11.09., 15.09. und 17.09.2026.
+</div></footer>
+<script>
+const SCHRITTE=[
+{nr:1,kurz:"Vorgang eröffnen",
+ titel:"Vorgangseröffnung: Celonis strukturiert die Mail und eröffnet je Versicherungsnummer einen Postkorbvorgang",
+ ziel:"Aus einer Makler-Mail wird ein maschinenlesbarer Einzelvorgang, der den Prüf-Bot der Sparte startet.",
+ systeme:["Celonis Action Flow","VDB","EMWS-Schnittstelle","Postkorb","Datenpool"],
+ pdd:"Kapitel „Eröffnung Postkorbvorgang und Daten im Datenpool“ sowie „Details zum Startereignis“. Was Celonis vor der Eröffnung tut, ist nicht Gegenstand der PDD; dort beginnt der Ablauf mit dem fertigen Postkorbvorgang.",
+ us:[
+  {t:"Mail klassifizieren, extrahieren, interpretieren",d:"Der Celonis Action Flow liest Mail und Anhänge, erkennt das Anliegen über einen Agenten je Geschäftsvorfall, gleicht die Agenturnummer über EMMA ab (Makler oder Mehrfachagent) und erzeugt das KI-Deckblatt.",aus:"weiter",ref:"nicht in der PDD, Ausbaustufe 2 Celonis"},
+  {t:"Weiche: Ist es eine Bestandsübertragung?",d:"Nur Bestandsübertragungen von Maklern und Mehrfachagenten sowie die Kündigung der Maklervollmacht werden als Postkorbvorgang eröffnet. Alle übrigen Anliegen — VN-Wechsel, WEG-Wechsel, Kündigung des Versicherungsvertrags, Verkürzung der Kündigungsfrist, sonstige Fachthemen — gehen mit demselben KI-Deckblatt an KWAD und werden dort in die zuständige Sparte indiziert.",aus:"abzweig",ausText:"kein BÜ-Anliegen: an KWAD, kein Postkorbvorgang",ref:"Abstimmung M. Koch und H. Schumann vom 11.09.2026"},
+  {t:"Alle betroffenen Versicherungsnummern über die VDB abrufen",d:"Celonis ermittelt vor der Eröffnung über die VDB alle Versicherungsnummern des Kunden, die übertragen werden sollen. Damit ist jeder Vorgang eine Einzel-Bestandsübertragung; der Umfang „gesamte Kundenverbindung“ ist bereits hier aufgelöst.",aus:"weiter",ref:"neu gegenüber der PDD-Fassung vom 16.09."},
+  {t:"Postkorbvorgang je Versicherungsnummer eröffnen",d:"Über die EMWS-Schnittstelle wird je Versicherungsnummer ein Vorgang im Postkorb „MV 23724 BÜ Prüf BOT“ angelegt. Schlüssel sind GeVo 108 für Komposit und Leben und Dokumenttyp 02015 für die Krankenversicherung. EMWS ist dabei nur die Schnittstelle zur Eröffnung, kein eigener Bearbeitungsschritt.",aus:"weiter",ref:"Datenpool-Antrag V1.7 vom 17.09.2026"},
+  {t:"Datenpool beschreiben und Prüf-Bot starten",d:"Celonis füllt die 35 Felder BUE_* im Datensatz zum Vorgang und legt den Postkorbvorgang im Themenpostkorb der Sparte ab. Damit ist die Eröffnung abgeschlossen. Der Vorgang im Themenpostkorb ist der Trigger, der den Prüf-Bot Krankenversicherung oder Komposit/Leben anstößt; was der Bot dann tut, beginnt mit Schritt 2.",aus:"weiter",ref:"PDD, Eröffnung Postkorbvorgang und Daten im Datenpool"}
+ ]},
+{nr:2,kurz:"BE aus dem Deckblatt",
+ titel:"Business Exceptions aus dem Deckblatt: alles, was ohne Systemzugriff entschieden werden kann",
+ ziel:"Jedes harte Kriterium, das sich allein aus dem KI-Deckblatt ergibt, wird hier abgearbeitet — bevor der Bot das erste Hostsystem öffnet.",
+ systeme:["EWMS-Themenpostkorb","Datenpool","keine Hostzugriffe"],
+ pdd:"Kapitel „Start“ und „Eröffnung Postkorbvorgang und Daten im Datenpool“ für den Einstieg, danach Kapitel „Vorprüfung – Ausschlusskriterien“. Die Reihenfolge der WENN-Abfragen ist dort verbindlich beschrieben; die Unterschriftsprüfung steht dort noch außerhalb der Weiche und ist in den Makler-Zweig zu verschieben.",
+ us:[
+  {t:"Vorgang aus dem Themenpostkorb nehmen und den Durchlauf starten",d:"Der Bot arbeitet den neuen Themenpostkorb seiner Sparte ab und öffnet dort den nächsten Postkorbvorgang. Er liest die laufende Vorgangsnummer als Ordnungsbegriff des Durchlaufs und die Versicherungsnummer, mit der Celonis den Vorgang eröffnet hat — sie bleibt für den gesamten Durchlauf die führende Nummer und ist der Einstieg für jeden Hostaufruf. Danach wechselt er in den Datenpool, liest die 35 Felder zu diesem Vorgang und setzt die Variablen für das BE-Handling zurück: Business Exception, BE-Klassifikation und Fehlerliste stehen zu Beginn auf leer.",aus:"weiter"},
+  {t:"Klassifikation",d:"Ist die Klassifikation im KI-Deckblatt nicht „BÜ-Vorgang“, endet die Prüfung sofort.",aus:"be",ausText:"Kein BÜ-Vorgang"},
+  {t:"Bestandsübertragungs-Wunsch",d:"Enthält die Mail keinen ausformulierten Auftrag zur Bestandsübertragung, endet die Prüfung.",aus:"be",ausText:"BÜ-Wunsch nicht vorhanden"},
+  {t:"Erinnerung oder Reminder",d:"Die PDD steuert Vorgänge mit <BUE_REMINDER> = „ja“ heute als Business Exception aus. Am 22.09.2026 entschieden: Diese Prüfung entfällt. Eine Erinnerung wird wie jeder andere Vorgang geprüft; ob sie zu einem Doppelvorgang führt, entscheidet sich ohnehin an der Versicherungsnummer.",aus:"entfaellt"},
+  {t:"Weiche: Makler oder Mehrfachagent?",d:"Der Vermittlertyp steht im KI-Deckblatt; Celonis leitet ihn aus dem EMMA-Abgleich der Agenturnummer ab. Ab hier gelten unterschiedliche Kriterien: Der Makler braucht eine Maklervollmacht, der Mehrfachagent einen Betreuungswunsch.",aus:"gabel",
+   zweig:{makler:[
+     {t:"Maklervollmacht vom Versicherungsnehmer unterschrieben",d:"Die Unterschrift steht auf der Maklervollmacht. Fehlt sie, ist die Vollmacht nicht wirksam und es gibt keine Grundlage für die Übertragung. Das Kriterium gilt ausschließlich im Makler-Zweig — der Mehrfachagent arbeitet ohne Maklervollmacht.",aus:"be",ausText:"Unterschrift VN fehlt"},
+     {t:"Vollmacht auf den übernehmenden Makler ausgestellt",d:"Lautet die Vollmacht auf einen anderen Makler als den, der den Auftrag stellt, fehlt die Grundlage für die Übertragung. Heute geht diese Bewertung im Feld „Prüfung Unterlagen“ auf und wirkt damit nur als Prüfnotiz.",aus:"notiz",ausText:"Unterlagen nicht vollständig"},
+     {t:"Vollständigkeit der Unterlagen",d:"Sind die Unterlagen unvollständig und ist keine Anforderung beim Makler vorgesehen („Anforderung Unterlagen“ = nein), merkt der Bot eine Prüfnotiz und prüft weiter. Steht das Feld auf „ja“, entsteht keine Prüfnotiz; die Unterlagen werden am Ende über die Notiz beim übernehmenden Makler angefordert.",aus:"notiz",ausText:"Unterlagen nicht vollständig"},
+     {t:"Pool und Untervollmacht bewerten",d:"Ist die Vollmacht auf einen Maklerpool ausgestellt, entscheidet die Untervollmacht, ob der Bestand auf den einzelnen Makler übertragen werden darf. Das Ergebnis bestimmt später die Zeile „Bearbeitung nach“ in der Notiz. Einzelheiten im Abschnitt „Makler, Pool und Untervollmacht“ weiter unten.",aus:"weiter"}
+   ],mfa:[
+     {t:"Keine Maklervollmacht erforderlich",d:"Alle Vollmachtsfelder stehen auf N/A und werden nicht geprüft; auch die Untervollmacht entfällt. Damit entfällt im MFA-Zweig auch die Unterschriftsprüfung: Die Unterschrift steht auf der Maklervollmacht, die es hier nicht gibt. Das Feld „Prüfung Unterlagen“ gilt im MFA-Zweig ebenfalls nicht.",aus:"weiter"},
+     {t:"Betreuungswunsch muss auf den Mehrfachagenten lauten",d:"Ist der Betreuungswunsch nicht auf den Mehrfachagenten ausgestellt, endet der Vorgang sofort. Das ist im MFA-Zweig ein hartes Kriterium.",aus:"be",ausText:"Betreuungswunsch nicht auf MFA ausgestellt"},
+     {t:"Ergebnis für die Notiz",d:"Die Zeile „Bearbeitung nach“ lautet beim Mehrfachagenten immer: mit BÜ.",aus:"weiter"}
+   ]}}
+ ],
+ ideeTitel:"Änderungsbedarf in der PDD",
+ idee:"Die Abfrage <BUE_MV_UNTERSCHRIFT_KUNDE> steht dort heute außerhalb der Weiche und wirkt damit für beide Vermittlertypen. Das ist fachlich falsch. Die Unterschrift steht auf der Maklervollmacht, und beim Mehrfachagenten gibt es keine Maklervollmacht — für ihn zählt allein der Betreuungswunsch. Die Abfrage ist in den Makler-Zweig zu verschieben.",
+ hinweis:"Warum alles an dieser Stelle steht: Jedes harte Kriterium, das sich allein aus dem Deckblatt ergibt, wird hier entschieden — vor dem ersten Hostzugriff. Vorgänge, die ohnehin ausgesteuert werden, kosten so keine Systemaufrufe. Daraus folgt ein klarer Schnitt: Was hier greift, beendet den Vorgang sofort. Alles, was in den Schritten 3 bis 6 auffällt, ist ein Prüfbefund, der in der Fehlerliste gesammelt und erst in Schritt 7 bewertet wird. Heute hält die PDD diesen Schnitt noch nicht durch — auch die Systemschritte lösen harte Business Exceptions aus, etwa „VNR nicht korrekt“, „Vertrag nicht aktuell“, „Agenturnummer nicht vorhanden“ oder „Keine Zusammenarbeit“. Ob wir das vereinheitlichen, ist zu entscheiden."},
+{nr:3,kurz:"Kunde",
+ titel:"Kunde: Gehört der Vertrag zu dem Kunden, der die Vollmacht erteilt hat?",
+ ziel:"Die Identität des Kunden wird über eine Partnersuche festgestellt und über die Versicherungsnummer belegt. Die Vollmachtskriterien aus dem Deckblatt sind zu diesem Zeitpunkt bereits in Schritt 2 geprüft.",
+ systeme:["IS011 Partnersystem","Datenpool"],
+ pdd:"Heute: Kapitel „I. VN – Stammdaten + VNR“ mit den Abschnitten „Namensprüfung (IS100)“, „Geburtsdatum (IS100)“ und „Adressprüfung (IS100)“. Diese Abschnitte sind neu zu schreiben.",
+ us:[
+  {t:"Partner in IS011 suchen",d:"Gesucht wird mit den Angaben aus dem Auftrag: Vorname, Nachname, Geburtsdatum, Postleitzahl und die ersten zwei Buchstaben der Straße. Die Suche nutzt damit die Toleranz des Partnersystems, statt einzelne Felder zeichengenau zu vergleichen. Findet sie gar keinen Partner, endet der Vorgang.",aus:"be",ausText:"Kunde in IS011 nicht gefunden",ref:"neu, Vorschlag T. Juraschek vom 17.09.2026"},
+  {t:"Alle Treffer mit dem Status „VN“ übernehmen",d:"Mehrere Treffer sind unkritisch: Der Bot übernimmt jede gefundene Kundennummer, die den Status „VN“, also Versicherungsnehmer, trägt. Eine Eingrenzung auf genau einen Partner ist nicht nötig.",aus:"weiter",ref:"Präzisierung vom 21.09.2026"},
+  {t:"Zu jeder Kundennummer die Versicherungsnummern abrufen",d:"Über eine Schnittstelle wird je Kundennummer ermittelt, welche Versicherungsnummern an ihr hängen.",aus:"weiter",ref:"Schnittstelle noch zu benennen"},
+  {t:"Vorgangs-VNR unter den Treffern suchen",d:"Führt eine der Kundennummern die Versicherungsnummer, mit der der Vorgang eröffnet wurde, ist der Kunde bestätigt und diese Kundennummer ist die richtige. Findet sich die Nummer bei keiner, endet der Vorgang.",aus:"be",ausText:"keine Kundennummer führt die Vorgangs-VNR"},
+  {t:"Geburtsdatum abgleichen",d:"Weitere Stammdaten werden nicht mehr verglichen. Nur das Geburtsdatum wird geprüft, und auch das nur, wenn der Auftrag eines nennt: Weicht es vom Geburtsdatum des gefundenen Partners ab, merkt der Bot eine Prüfnotiz in der Fehlerliste und prüft weiter. Fehlt die Angabe, entfällt die Prüfung. Entschieden am 22.09.2026.",aus:"notiz",ausText:"Geburtsdatum abweichend"}
+
+ ],
+ ersetzt:"Ersetzt die bisherigen Einzelprüfungen in IS100 über den Scout-Service: Nachname, Vorname, Geburtsdatum, Straße mit zweistufigem Vergleich und Normalisierung von „Straße“ zu „Str.“ sowie Postleitzahl, jeweils mit eigener Prüfnotiz. Damit entfallen fünf Prüfnotizen, der Aufruf des Scout-Service und die Normalisierungsregeln. Der Bot prüft stattdessen, was fachlich gemeint ist: Gehört dieser Vertrag zu diesem Kunden?",
+ hinweis:"Mehrere Treffer sind ausdrücklich kein Problem: Der Bot prüft alle Kundennummern mit dem Status „VN“ gegen die Versicherungsnummer des Vorgangs. Erst wenn keine davon passt, endet der Vorgang. Wie streng die Stammdaten danach bewertet werden, entscheidet die Bewertungsmatrix weiter unten; sie ist ein Vorschlag und noch abzustimmen. Offen sind außerdem die Pflichtfelder und die Toleranz der Suche, das Verhalten bei Namensvarianten und Umlauten, der Umgang mit juristischen Personen ohne Geburtsdatum sowie die Benennung der Schnittstelle, die je Kundennummer die Versicherungsnummern liefert."},
+{nr:4,kurz:"Abgebender Makler",
+ titel:"Abgebender Bestandsinhaber: Wer betreut den Vertrag heute?",
+ ziel:"Der bisherige Bestandsinhaber wird ermittelt; sein Vertriebskanal steuert später Frist und Nachbearbeitung.",
+ systeme:["VA230","GH040"],
+ pdd:"Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Abschnitt „Agentur-Nr. (A,…) des Bestandsinhabers ermitteln“. Der abgebende Teil steht dort am Ende des Kapitels zum Übernehmer.",
+ us:[
+  {t:"Agenturnummer des Bestandsinhabers lesen",d:"VA230 mit der Vorgangs-VNR öffnen und das Feld hinter „Betreuung“ auslesen. Das ist die Agentur, die den Vertrag heute betreut.",aus:"weiter"},
+  {t:"Personalnummer des Bestandsinhabers über OB726 holen",d:"GH040 arbeitet mit der Personalnummer, VA230 liefert aber nur die Agenturnummer. Der Bot öffnet deshalb OB726 mit der Agenturnummer des Bestandsinhabers und liest dort die Personalnummer. Ergänzt am 22.09.2026.",aus:"weiter"},
+  {t:"Anbindung des Bestandsinhabers prüfen",d:"GH040 mit dieser Personalnummer öffnen und in der Zeile „Status der Beschäftigung“ den Wert hinter dem Gleichheitszeichen lesen. Ist er nicht „aktiv“, merkt der Bot eine Prüfnotiz und prüft weiter.",aus:"notiz",ausText:"Anbindung Bestandsinhaber nicht aktiv"},
+  {t:"Vertriebskanal bestimmen",d:"Komposit und Leben: Der Bot stellt fest, ob der Bestandsinhaber Makler oder Ausschließlichkeitsorganisation ist. Das entscheidet in Schritt 7 über die Nachbearbeitung und darüber, ob der 72-Stunden-BOT eingeschaltet wird. Krankenversicherung: keine Kanalprüfung im Prüf-Bot, der 72-Stunden-BOT erkennt die Ausschließlichkeit selbst.",aus:"weiter",sparte:"kl",ref:"PDD Komposit/Leben, Kapitel II"}
+ ],
+ idee:"Auch hier stellt sich die Frage nach IS011. Die betreuende Agentur hängt allerdings am Vertrag und nicht am Partner, deshalb bleibt VA230 dafür die Quelle. Interessanter ist die Poolzugehörigkeit, die heute nur aus dem KI-Deckblatt kommt. Die vollständige Aufschlüsselung steht im Abschnitt „Was könnte IS011 in den Schritten 4 und 5 übernehmen“ weiter unten."},
+{nr:5,kurz:"Aufnehmender Makler",
+ titel:"Übernehmender Makler: Gibt es ihn, ist er der im Auftrag genannte, und besteht eine aktive Zusammenarbeit?",
+ ziel:"Ob die Vollmacht auf diesen Vermittler lautet, ist bereits in Schritt 2 aus dem Deckblatt bewertet. Hier geht es um Existenz, Identität über den Namen und die Zulassung. Nebenbei werden die Nummern für die Notiz ermittelt.",
+ systeme:["OB726","GH040","EOS"],
+ pdd:"Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“ mit den beiden Einstiegen „Agenturnummer (A,…) des übernehmenden Maklers (OB726)“ und „Vermittler-Nr. (PNR) des übernehmenden Maklers (OB726)“.",
+ us:[
+  {t:"Einstieg wählen",d:"Liefert der Datenpool eine Agenturnummer, steigt der Bot mit ihr in OB726 ein — im Format aus EMMA, ohne Präfix A und ohne Trennzeichen — und liest dort die Personalnummer. Liefert der Datenpool nur die Personalnummer, ist diese der Einstieg und die Stammagentur wird über EOS ermittelt.",aus:"weiter"},
+  {t:"Vermittler vorhanden?",d:"Zeigt OB726 keine Daten an oder enthält der angezeigte Ordnungsbegriff die gesuchte Nummer nicht, endet der Vorgang.",aus:"be",ausText:"Agenturnummer bzw. Personalnummer nicht vorhanden"},
+  {t:"Name gegen den Auftrag abgleichen",d:"Der in OB726 angezeigte Name wird mit dem Vermittlernamen aus dem Auftrag verglichen. Weicht er ab, entsteht eine Prüfnotiz und die Prüfung läuft weiter; über die Fehlerliste wird daraus am Ende eine Business Exception.",aus:"notiz",ausText:"Name übernehmender Makler abweichend"},
+  {t:"Zusammenarbeit prüfen",d:"Enthält der Name in OB726 den Zusatz „INAKTIV“, besteht keine Zusammenarbeit und der Vorgang endet sofort.",aus:"be",ausText:"Keine Zusammenarbeit"},
+  {t:"Personalnummer (PNR) ermitteln",d:"Aus der Kopfzeile von OB726 wird die Personalnummer gelesen — dort angezeigt als „P,216697“ —, Präfix P und Trennzeichen werden entfernt, führende Nullen bleiben erhalten. Fehlt sie, endet der Vorgang.",aus:"be",ausText:"Personalnummer / PNR nicht vorhanden"},
+  {t:"Anbindung prüfen",d:"GH040 mit der bereinigten Personalnummer öffnen und die Zeile „Status der Beschäftigung“ auswerten. Ist der Status nicht „aktiv“, endet der Vorgang.",aus:"be",ausText:"Keine Zusammenarbeit"},
+  {t:"Stammagentur über EOS",d:"Beim Einstieg über die Personalnummer wird in EOS die zugeordnete Stammagentur ermittelt; ihre Agenturnummer wird für die Notiz gebraucht. Ist sie nicht ermittelbar, entsteht eine Prüfnotiz.",aus:"notiz",ausText:"Stammagentur nicht ermittelbar"},
+  {t:"E-Mail-Adresse ermitteln",d:"Gemeinsamer Abschluss beider Einstiege. Die Adresse wird in fester Reihenfolge aus drei Quellen bestimmt: Erstens die einmalig festgelegte Sonderliste TOP-Makler, geschlagen über die Personalnummer — steht der Vermittler dort, gilt deren Adresse und die übrigen Quellen werden nicht mehr gelesen. Zweitens die vom Absender ausgelesene Adresse aus dem Datenpool. Drittens die in OB729 zur Agenturnummer hinterlegte Adresse. Ist die gefundene Adresse eine interne ERGO-Adresse, entsteht eine Prüfnotiz. Bleibt sie nach allen drei Quellen leer, entsteht keine Prüfnotiz. Der Prüf-Bot versendet selbst nichts an diese Adresse; sie dient allein der Prüfnotiz und der späteren Rückmeldung.",aus:"notiz",ausText:"Absender ist eine interne ERGO-Adresse"}
+ ],
+ ideeTitel:"Am 22.09.2026 verworfen",
+ idee:"Vorgeschlagen war, die Suche umzudrehen: nicht mit der Nummer in OB726 einsteigen, sondern den Vermittler in IS011 über Name und Postleitzahl suchen und die eingereichte Agentur- oder Personalnummer als Bestätigung des Treffers verwenden. Passt eine Nummer zu einem gefundenen Partner, zeigen Name und Nummer aus dem Auftrag auf dieselbe Person — die Identität ist damit von zwei Seiten belegt statt nur von einer, und der zeichengenaue Namensvergleich entfällt. Die Zulassungsprüfung in GH040 bleibt davon unberührt. Der Fachbereich hat den Vorschlag am 22.09.2026 verworfen: Für den Vermittler bleibt es beim Einstieg über die Nummer in OB726. Die Aufschlüsselung steht weiterhin im Abschnitt „Was könnte IS011 in den Schritten 4 und 5 übernehmen“ weiter unten. — Die frühere Überlegung dazu: Warum wird hier mit einer Nummer in OB726 gesucht und nicht in IS011? Berechtigte Frage: Der Bot sucht ohnehin über die Agentur- oder Personalnummer, die Toleranz einer Partnersuche spielt also gar keine Rolle. Entscheidend ist, welches System welche Angabe führt. Die Aufschlüsselung aller sieben Einzelinformationen steht im Abschnitt „Was könnte IS011 in den Schritten 4 und 5 übernehmen“ weiter unten.",
+ hinweis:"Der dritte Beleg der Identitätskette: Die Vollmacht nennt einen Vermittler (Schritt 2), der Auftrag nennt eine Nummer, und das Bestandssystem zeigt zu dieser Nummer einen Namen. Nur wenn alle drei dieselbe Person meinen, ist die Übertragung gedeckt. — Eine Nummer, drei Namen: Das Deckblattfeld heißt „Personalnummer“ (Variable <BUE_VERMITTLER_NR>), OB726 zeigt sie in der Kopfzeile als „Vermittler-Nr. (PNR)“ an, und in der Notiz an den BÜ-Bot heißt das Feld wieder „Personalnummer“. Gemeint ist durchgehend dasselbe. Heute ist von der Kette nur das dritte Glied hart abgesichert, also Existenz und aktive Anbindung; die beiden Abgleiche davor sind im Makler-Zweig Prüfnotizen. Getrennt zu halten sind außerdem die Stammagentur des Übernehmers aus EOS und der bisherige Bestandsinhaber aus VA230: Die Stammagentur des Übernehmers ist nicht die am Vertrag hinterlegte Agentur."},
+{nr:6,kurz:"Vertrag",
+ titel:"Vertrag: Kann dieser Vertrag überhaupt übertragen werden?",
+ ziel:"Der Vertrag muss existieren und aktuell sein; historische oder beendete Verträge werden ausgesteuert.",
+ systeme:["VA230"],
+ pdd:"Kapitel „I. VN – Stammdaten + VNR“, Abschnitt „VNR-Prüfung (Anwendung VA230)“. Dort steht die Prüfung heute vor den Stammdaten.",
+ us:[
+  {t:"Vertrag existiert",d:"Die PDD prüft heute über das Feld „urspr. Vers.beginn“, ob es zur Versicherungsnummer überhaupt einen Vertrag gibt. Am 22.09.2026 entschieden: Diese Prüfung entfällt. Die Vorgangs-VNR stammt aus dem VDB-Abruf und ist damit eine echte Nummer; VA230 wird für den Vertragsstatus ohnehin geöffnet.",aus:"entfaellt"},
+  {t:"Vertragsstatus",d:"Nur ein Vertrag mit dem Status „aktuell“ wird weiterverarbeitet. Jeder andere Status führt zur Aussteuerung; die Bezeichnung der Business Exception legt der Fachbereich noch fest.",aus:"be",ausText:"Vertrag nicht aktuell, Bezeichnung offen"},
+  {t:"Sparte auslesen",d:"Die PDD liest im Schritt „VNR-Prüfung (Anwendung VA230)“ heute auch das Feld „Sparte“ aus und führt es als <VA230-Sparte> nachrichtlich mit. Gebraucht wird der Wert nirgends: Der Postkorbvorgang startet je Sparte den passenden Prüf-Bot, damit steht die Sparte implizit fest und mit ihr die Notizvariante BOT2011 oder BOT1515.",aus:"entfaellt",ausText:"Vorschlag: in der PDD streichen"},
+  {t:"Keine Sonderbehandlung",d:"Rahmenverträge und Verträge im Mahnverfahren werden wie alle anderen geprüft. Ein Widerruf wird im Prüf-Bot nicht geprüft: Die Verarbeitung erfolgt taggleich, später eingehende Widerrufe fängt der BÜ-Bot über die Weiterleitungssperre ab.",aus:"weiter"}
+ ],
+ hinweis:"Grau und durchgestrichen markierte Schritte stehen noch in der PDD, werden fachlich aber nicht mehr gebraucht. Sie bleiben hier sichtbar, damit beim nächsten Überarbeiten klar ist, was zu streichen ist."}, 
+{nr:7,kurz:"Anforderung Unterlagen",
+ titel:"Anforderung von Unterlagen: Was beim übernehmenden Makler angefordert werden soll",
+ ziel:"Hier geht es nicht um fehlende Unterlagen — deren Vollständigkeit ist in Schritt 2 bewertet. Hier geht es allein um die Frage, ob beim übernehmenden Makler Unterlagen angefordert werden sollen und welche. Die Antwort wirkt nicht auf die Prüfung, sondern auf die Notiz.",
+ systeme:["Datenpool","Notizmaske"],
+ pdd:"Heute kein eigenes Kapitel. Die Abfrage steht im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Abschnitt „Sonstiges“; die Feldbeschreibungen stehen in der „Tabelle der genutzten Variablen“.",
+ us:[
+  {t:"Sollen beim übernehmenden Makler Unterlagen angefordert werden?",d:"Celonis liest die Frage aus dem Auftrag und legt das Ergebnis in „Anforderung Unterlagen“ ab. Bei „ja“ entsteht weder eine Business Exception noch eine Prüfnotiz — die Anforderung läuft über die Notiz, der Vorgang kann dunkel weiterlaufen. Bei „nein“ wird nichts angefordert; die Notiz enthält dazu keine Zeile.",aus:"weiter"},
+  {t:"Art der Unterlagen lesen",d:"Nur bei „Anforderung Unterlagen“ = ja wird anschließend das Datenpoolfeld „Art der Unterlagen“ (<BUE_ART_UNTERLAGEN>) gelesen — dann ist es Pflichtfeld, sonst wird es nicht ausgewertet. Heute ist es als Freitext geführt, mehrere Angaben semikolongetrennt. Die Notizmaske gibt für Komposit und Leben aber genau drei Kennzeichen vor: „Police / Vertragsspiegel / Vertragsauszug / Ersatzrechnung usw.“, „Schadenaufstellung / Schadenrenta usw.“ und „Sonstige Unterlagen“. Deshalb steht seit V1.2 der Vorschlag im Datenpool, die Ausprägungen genau auf diese drei Kennzeichen festzulegen und Freitext nur ergänzend zuzulassen. Die Abstimmung dazu läuft mit ODPBD und MSU (OFFEN 6 im Datenpool-Antrag).",aus:"weiter"},
+  {t:"Kennzeichen in der Notiz setzen",d:"Bei Komposit und Leben setzt der Bot die zutreffenden Kennzeichen im Notizabschnitt „Folgearbeit für Komposit“; mehrere sind möglich. Der BÜ-Bot beziehungsweise die Folgebearbeitung fordert die Unterlagen dann beim Makler an. Die Feldliste der Notiz steht im Abschnitt „Die Notiz Feld für Feld“ weiter unten.",aus:"weiter"},
+  {t:"Was gilt, wenn der Vorgang ohnehin ausgesteuert wird",d:"Geht der Vorgang wegen einer Business Exception oder wegen gefüllter Fehlerliste in die Nachbearbeitung, entsteht keine Notiz — und damit auch keine Anforderung. Die Sachbearbeitung sieht im Bearbeitungshinweis, was offen ist, und fordert selbst an.",aus:"weiter"}
+ ],
+ ideeTitel:"Änderungsbedarf in der PDD",
+ idee:"Die Anforderung von Unterlagen steht heute nur als zwei Zeilen im Kapitel zur Notizbestückung, obwohl sie ein eigener fachlicher Vorgang mit eigenem Pflichtfeld ist. Vorschlag: ein eigenes Kapitel „Anforderung von Unterlagen“ nach dem Kapitel zum Vertrag. Es hält zugleich den heute leicht zu verwechselnden Unterschied fest: „Prüfung Unterlagen“ bewertet das Eingereichte, „Anforderung Unterlagen“ steuert, was nachgefordert wird."},
+{nr:8,kurz:"Abschluss",
+ titel:"Abschluss: Notiz bestücken, übergeben oder an die Sachbearbeitung geben",
+ ziel:"Erst hier fällt die Entscheidung, und zwar über alle Prüfungen zusammen. Der Weg danach hängt von zwei Dingen ab: ob ein Befund vorliegt und um welche Sparte es geht.",
+ systeme:["Notiz BOT2011 / BOT1515","72-Stunden-BOT","BÜ-Bot","Postkorb"],
+ pdd:"Kapitel „III. Test auf Fehlerliste“, „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“ samt „Notizbestückung von Prüf-Bot auf BÜ-Bot“ sowie „Prozessende mit Status Exception: BE-Handling“.",
+ us:[
+  {t:"Test auf die Fehlerliste",d:"Alle Einzelprüfungen sind durchlaufen. Enthält <Fehlerliste> mindestens eine Prüfnotiz, wird daraus jetzt eine Business Exception. Eine einzelne Abweichung hat den Vorgang also nie vorzeitig beendet — sie wird hier gemeinsam mit allen anderen bewertet.",aus:"be",ausText:"Nachprüfung erforderlich"},
+  {t:"Bearbeitungshinweis füllen",d:"Jeder Vorgang mit Befund bekommt denselben Bearbeitungshinweis, gleich ob die Business Exception aus Schritt 2 stammt oder erst hier entstanden ist: die <BE-Klassifikation> als Grund, die vollständige <Fehlerliste> mit jeder einzelnen Prüfnotiz und die führende Versicherungsnummer des Vorgangs. Geprüft und entschieden wird ausschließlich über diese eine Nummer. Nachrichtlich gehören trotzdem die übrigen Nummern dazu, die zur Übertragung anstehen — sonst sieht die Sachbearbeitung nicht, dass zu demselben Kunden weitere Vorgänge laufen. Der Unterschied zwischen beiden Fällen liegt nur im Inhalt: Eine harte Business Exception nennt einen Grund, „Nachprüfung erforderlich“ nennt jeden gesammelten Befund einzeln. Status im Reporting: Referred.",aus:"be",ausText:"Nachbearbeitung durch die Sachbearbeitung"},
+  {t:"Weiche: Wohin geht ein Vorgang mit Befund?",d:"Das Routing ist für harte Business Exceptions und für „Nachprüfung erforderlich“ identisch. Es unterscheidet sich allein nach Sparte — und bei Komposit und Leben zusätzlich danach, wer den Bestand heute hält.",aus:"gabel",aeste:"sparte",
+   zweig:{kv:[
+     {t:"Immer Themenpostkorb HSB4K MV",d:"Jeder Vorgang der Krankenversicherung mit Befund geht in den Themenpostkorb HSB4K MV. Eine weitere Unterscheidung gibt es nicht; der abgebende Bestandsinhaber spielt für das Routing keine Rolle.",aus:"be",ausText:"Themenpostkorb HSB4K MV"},
+     {t:"Befunde für die Sachbearbeitung sichtbar machen",d:"Die Sachbearbeitung soll nicht erneut prüfen, sondern auf dem Prüfergebnis aufsetzen. Sie sieht den Bearbeitungshinweis am Postkorbvorgang. Ob die Befunde bei der Krankenversicherung zusätzlich in einer Übersicht geführt werden, ist noch zu klären.",aus:"weiter"}
+   ],kl:[
+     {t:"Abgebenden Bestandsinhaber heranziehen",d:"Aus Schritt 4 ist bekannt, wer den Vertrag heute betreut. Dieser Wert entscheidet jetzt über den Zielpostkorb.",aus:"weiter"},
+     {t:"Abgebender ist ein Makler",d:"Der Vorgang geht in die Nachbearbeitung nach ODPB. Dort liegt die Maklerbetreuung für Komposit und Leben.",aus:"be",ausText:"Nachbearbeitung ODPB"},
+     {t:"Alle übrigen Fälle",d:"Ausschließlichkeitsorganisation, ein anderer Vermittlertyp — und ausdrücklich auch der Fall, dass sich der abgebende Bestandsinhaber nicht ermitteln lässt: Der Vorgang geht in den Themenpostkorb HSB4K KO.",aus:"be",ausText:"Themenpostkorb HSB4K KO"}
+   ]}},
+  {t:"Notiz anlegen",d:"Nur ohne Befund. Der Bot legt die Telefonnotiz an: Vorlage 1515 „Bestandsübertragung Robotics PB“ für Komposit und Leben, BOT2011 für die Krankenversicherung. Ob die Vorlage bestückt oder eine Freitextnotiz mit gleichem Aufbau erzeugt wird, ist noch zu bestätigen.",aus:"weiter"},
+  {t:"Feld „Eingangsdatum“",d:"Pflichtfeld. Gefüllt aus dem Eingangsdatum der Maklervollmacht. Ist das Feld leer, gilt das Eröffnungsdatum des Postkorbvorgangs.",aus:"weiter"},
+  {t:"Feld „Maklername“",d:"Pflichtfeld. Gefüllt mit dem Namen aus dem Bestandssystem, nicht mit dem Wortlaut aus dem Auftrag.",aus:"weiter"},
+  {t:"Feld „Agenturnummer“",d:"Pflichtfeld. Beim Einstieg über die Agenturnummer der Wert aus dem Datenpool, beim Einstieg über die Personalnummer die Stammagentur aus EOS.",aus:"weiter"},
+  {t:"Feld „Personalnummer“",d:"Pflichtfeld. Die in Schritt 5 aus OB726 gelesene Personalnummer, ohne Präfix und Trennzeichen, führende Nullen bleiben erhalten.",aus:"weiter"},
+  {t:"Feld „E-Mail aufnehmender Makler“",d:"Die in Schritt 5 ermittelte Adresse: Sonderliste TOP-Makler, sonst Datenpool, sonst die zur Agenturnummer hinterlegte Adresse.",aus:"weiter"},
+  {t:"Auswahl „Bearbeitung nach“",d:"Pflichtfeld mit genau zwei Auswahlen: „Mit BÜ-Wunsch“ oder „Untervollmacht fehlt“. Die Vollmachtslage aus Schritt 2 entscheidet. Die PDD-Kaskade kennt zusätzlich „BÜ mit UV“; dafür gibt es in der Maske keine Auswahl.",aus:"weiter"},
+  {t:"Kennzeichen „Rahmenvertrag“",d:"Die Maske führt „Rahmenvertrag übertragbar“ und „Rahmenvertrag nicht übertragbar“, jeweils mit Freitextfeld. In der PDD gibt es dazu keine Regel; Rahmenverträge werden dort wie alle anderen Verträge behandelt. Wer das Kennzeichen setzt und woraus, ist festzulegen.",aus:"weiter"},
+  {t:"Auswahl „Betroffene VNR“",d:"Pflichtfeld mit drei Auswahlen. „Gesamt“ ergibt „gesamte Kundenverbindung“, sonst „angegebene VNR beachten“. Für „angegebene VNR nicht beachten“ nennt die PDD keinen Fall.",aus:"weiter"},
+  {t:"Feld „VNR“",d:"Die führende Versicherungsnummer des Vorgangs. Stehen weitere Nummern desselben Kunden zur Übertragung an, kommen sie nachrichtlich dazu, damit der Zusammenhang der Vorgänge erkennbar bleibt.",aus:"weiter"},
+  {t:"Kennzeichen „Folgearbeit für Komposit“",d:"Die Kennzeichen aus Schritt 7 werden gesetzt: Police, Vertragsspiegel, Vertragsauszug und Ersatzrechnung; Schadenaufstellung und Schadenrenta; sonstige Unterlagen. Mehrere sind möglich.",aus:"weiter"},
+  {t:"Kennzeichen „Dokumente für weitere VNR hochladen“",d:"Die Maske führt dieses Kennzeichen im Abschnitt „Sonstiges“. In der PDD gibt es dazu keine Regel. Zu klären, ob der Bot es setzen soll, etwa wenn der Auftrag mehrere Versicherungsnummern nennt.",aus:"weiter"},
+  {t:"Feld „Laufende Nr. aus Vorgangsdatenbank“",d:"Die laufende Vorgangsnummer aus Schritt 2, der Ordnungsbegriff des Durchlaufs. Die Maske erlaubt mehrere Nummern, mit Komma getrennt.",aus:"weiter"},
+  {t:"Notiz speichern",d:"Die vollständig gefüllte Telefonnotiz wird am Vorgang gespeichert.",aus:"weiter"},
+  {t:"Weiche: Wohin geht ein Vorgang ohne Befund?",d:"Auch der saubere Weg läuft je Sparte unterschiedlich. Gemeinsam ist beiden: Die Vorabinformationsfrist von 72 Stunden gilt nur, wenn der abgebende Bestandsinhaber der Ausschließlichkeit zugeordnet ist.",aus:"gabel",aeste:"sparte",
+   zweig:{kv:[
+     {t:"Immer über den 72-Stunden-BOT",d:"Der Prüf-Bot prüft den Vertriebskanal des abgebenden Bestandsinhabers nicht selbst. Er übergibt jeden freigegebenen Vorgang mit der Notiz an den 72-Stunden-BOT. Dieser erkennt selbst, ob der Bestandsinhaber der Ausschließlichkeit zugeordnet ist, gibt in diesem Fall die 72-Stunden-Information aus und leitet alle übrigen Vorgänge ohne Wartezeit an den BÜ-Bot weiter.",aus:"weiter"}
+   ],kl:[
+     {t:"Ausschließlichkeit: erst nach 72 Stunden",d:"Ist der abgebende Bestandsinhaber der Ausschließlichkeit zugeordnet, läuft der Vorgang über den 72-Stunden-BOT; die Vorabinformationsfrist wird gewahrt.",aus:"weiter"},
+     {t:"Makler: direkt an den BÜ-Bot",d:"Gibt ein Makler den Bestand ab, ist keine Frist zu wahren. Der Vorgang geht mit der Notiz unmittelbar an den BÜ-Bot BOT1515.",aus:"weiter"}
+   ]}},
+  {t:"Vorgang abschließen",d:"Der ursprüngliche Postkorbvorgang wird abgelegt beziehungsweise als vollständig bearbeitet gekennzeichnet. Ob der bestehende Vorgang weitergeleitet oder ein neuer Vorgang eröffnet wird, ist in der PDD noch als Variante A oder B offen. Der Status „completed“ wird nur gesetzt, wenn Notiz und Weiterleitung erfolgreich ausgeführt wurden.",aus:"weiter"}
+ ],
+ hinweis:"Die Sparte wird hier nicht abgefragt. Der Postkorbvorgang startet je Sparte den passenden Prüf-Bot; welcher Zweig gilt, steht damit von Anfang an fest. Die Weichen sind hier nur dargestellt, weil beide Sparten in einem Dokument beschrieben sind. Für Komposit und Leben sind die Zielpostkörbe und der Weg über den 72-Stunden-BOT noch zu bestätigen; die PDD dazu entsteht ab dem 22.09."}
+];
+const BE_LISTE=["Kein BÜ-Vorgang","BÜ-Wunsch nicht vorhanden","Unterschrift VN fehlt","Betreuungswunsch nicht auf MFA ausgestellt","Kunde in IS011 nicht gefunden (neu)","keine Kundennummer führt die Vorgangs-VNR (neu)","Vertrag nicht aktuell (Bezeichnung offen)","Agenturnummer nicht vorhanden","Personalnummer / PNR nicht vorhanden","Keine Zusammenarbeit","Nachprüfung erforderlich"];
+const NOTIZ_LISTE=["Unterlagen nicht vollständig","Geburtsdatum abweichend","Name übernehmender Makler abweichend","Stammagentur nicht ermittelbar","Anbindung Bestandsinhaber nicht aktiv","Absender ist eine interne ERGO-Adresse","Vermittlertyp abweichend"];
+const ENTFALLEN=["Nachname abweichend","Vorname abweichend","Geb.-Datum abweichend","Straße abweichend","PLZ abweichend"];
+const OFFEN=[["IS011 Suchlogik","Welche Felder sind Pflicht, wie verhält sich die Suche bei Namensvarianten und Umlauten, und lässt sich die Straße als Teilstring mit zwei Buchstaben suchen?"],["Bewertungsmatrix","Welche Kombination aus Nachname, Vorname, Geburtsdatum, Postleitzahl und Straße gilt als bestätigt, welche als Prüfnotiz, welche als Abbruch? Der Vorschlag steht im Abschnitt „Wann gilt der Kunde als bestätigt“."],["Abgleich mit der Maklervollmacht","Wie streng wird der Name des Vollmachtgebers gegen den Partner geprüft, und was gilt bei Firmen gegenüber natürlichen Personen?"],["Vollmacht auf den richtigen Makler","Soll „Vollmacht lautet nicht auf den übernehmenden Makler“ im Makler-Zweig eine eigene Business Exception werden, statt in „Unterlagen nicht vollständig“ aufzugehen?"],["Harte BE nur aus dem Deckblatt?","Schritt 2 bündelt alle harten Kriterien, die ohne Systemzugriff entschieden werden können. Heute lösen auch die Systemschritte harte BE aus. Soll dort künftig jeder Befund in die Fehlerliste laufen und erst am Ende bewertet werden?"],["Obergrenze Treffer","Gibt es eine sinnvolle Obergrenze, ab der die Trefferliste zu groß für die Einzelprüfung wird?"],["Schnittstelle KNR zu VNR","Welche Schnittstelle liefert je Kundennummer die zugehörigen Versicherungsnummern, und wie schnell antwortet sie bei mehreren Treffern?"],["Juristische Personen","Ohne Geburtsdatum: Reichen Name, Postleitzahl und Straße für eine eindeutige Suche, oder bleibt dort der bisherige Abgleich?"],["Vermittler über IS011","Tragende Annahme des umgestellten Schritts 5: Führt IS011 Vermittler als Partner, und stehen Agentur- und Personalnummer dort als Ordnungsbegriffe? Offen außerdem, ob das Partnersystem ein echtes Statusfeld, die Klassifizierung und die Poolzugehörigkeit führt. Davon hängt ab, ob GH040 und EOS daneben noch gebraucht werden."],["Bewertungsmatrix Vermittler","Wie streng müssen Name und Postleitzahl des Maklers übereinstimmen, damit ein Treffer gilt? Die Postleitzahl aus dem Briefkopf kann von der hinterlegten abweichen (Filiale gegen Zentrale). Dafür braucht es eine eigene Matrix wie beim Kunden."],["Vermittler ohne Nummer im Auftrag","Heute ist eine fehlende Agentur- und Personalnummer ein Abbruch. Mit der Suche wäre der Vermittler auffindbar, nur ohne Bestätigung von der zweiten Seite. Reicht ein eindeutiger Treffer, oder bleibt es beim Abbruch?"],["Untervollmacht","Bleibt „UV fehlt“ ohne Business Exception, oder braucht der Fall ein eigenes Prüfergebnis?"],["Bezeichnungen","Wortlaut der neuen Business Exceptions rund um IS011 und für nicht aktuelle Verträge."],["Komposit und Leben","Ausschlusskriterien und Ermittlung des Vertriebskanals werden im PDD ab 22.09. konkretisiert."],["Postkörbe","Postkorbnummern für HSB4K MV, HSB4K KO und für die Nachbearbeitung in ODPB."],["Übersicht der Befunde bei KV","Sieht die Sachbearbeitung die gesammelten Prüfbefunde ausschließlich im Bearbeitungshinweis am Postkorbvorgang, oder gibt es dafür eine eigene Übersicht? Bezeichnung und Inhalt sind zu bestätigen."],["Routing Komposit und Leben","Bestätigung der Regel: abgebender Makler in die Nachbearbeitung ODPB, alle übrigen Fälle einschließlich nicht ermittelbarem Bestandsinhaber in den Themenpostkorb HSB4K KO."],["Bearbeitung nach: dritter Wert","Die Notizmaske lässt nur „Mit BÜ-Wunsch“ oder „Untervollmacht fehlt“ zu. Die PDD-Kaskade erzeugt zusätzlich „BÜ mit UV“. Entfällt der Wert, oder fehlt in der Maske eine Auswahl?"],["Betroffene VNR: dritte Auswahl","Für „angegebene VNR nicht beachten“ nennt die PDD keinen Fall. Wann ist die Auswahl zu setzen?"],["Rahmenvertrag-Kennzeichen","Die Maske führt „Rahmenvertrag übertragbar“ und „nicht übertragbar“ mit Freitext. Die PDD behandelt Rahmenverträge wie alle anderen Verträge. Wer setzt die Kennzeichen, und woraus?"],["Art der Unterlagen: Werteliste","Das Datenpoolfeld „Art der Unterlagen“ ist heute Freitext, die Notiz kennt für Komposit und Leben drei feste Kennzeichen. Der Vorschlag aus V1.2 — Werteliste genau entlang dieser drei plus ergänzender Freitext — ist mit ODPBD und MSU abzustimmen (OFFEN 6 im Datenpool-Antrag). Offen bleibt zudem, ob die Feldlänge von 50 Zeichen reicht."],["Notizmaske Krankenversicherung","Die Maske zur Vorlage BOT2011 liegt noch nicht vor. Ob die Felder denen der Vorlage 1515 entsprechen und ob „KNR Makler“ dort wirklich existiert, ist zu prüfen."],["Welche VNR-Liste steht nachrichtlich im Hinweis","Geprüft wird allein die führende <Vorgang-VNR>. Daneben soll erkennbar bleiben, welche weiteren Nummern desselben Kunden zur Übertragung anstehen. Kommt diese Liste aus <BUE_VNR> und <BUE_VNR_2> (die im Auftrag genannten Nummern aus der KI-Auslesung) oder aus dem VDB-Abruf (die tatsächlich eröffneten Vorgänge)? Beides kann auseinanderfallen, wenn der Auftrag pauschal formuliert ist."],["Sonderliste TOP-Makler","Die Liste wird einmalig festgelegt und danach nicht mehr geändert; ein Pflegeprozess ist nicht erforderlich. Zu klären bleibt nur, wo sie technisch liegt, damit der Bot sie über die Personalnummer schlagen kann, und wer die Inhalte einmalig liefert."],["Prozessende Variante A oder B","Wird der bestehende Vorgang mit der Notiz an den 72-Stunden-BOT weitergeleitet, oder wird er abgelegt und ein neuer Vorgang eröffnet? In der PDD steht beides als TBD."]];
+
+const STAND={"Notiz anlegen": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, erste Zeile."], "Feld „Eingangsdatum“": ["anders", "Feldbeschreibung in der „Tabelle der genutzten Variablen“; im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“ fehlt das Feld."], "Feld „Maklername“": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, erste Zeile."], "Feld „Agenturnummer“": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, erste Zeile."], "Feld „Personalnummer“": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, erste Zeile."], "Feld „E-Mail aufnehmender Makler“": ["anders", "In der Maske 1515 vorhanden, im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“ nicht beschrieben."], "Auswahl „Bearbeitung nach“": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, WENN-Kaskade."], "Kennzeichen „Rahmenvertrag“": ["neu", "Zu ergänzen im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“; die Maske 1515 führt die Kennzeichen, die PDD kennt sie nicht."], "Auswahl „Betroffene VNR“": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, erste Zeile."], "Feld „VNR“": ["anders", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „VNR“ — die Herkunft der nachrichtlichen Liste ist noch festzulegen."], "Kennzeichen „Folgearbeit für Komposit“": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Abschnitt „Sonstiges“."], "Kennzeichen „Dokumente für weitere VNR hochladen“": ["neu", "Zu ergänzen im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“; die Maske 1515 führt das Kennzeichen, die PDD kennt es nicht."], "Feld „Laufende Nr. aus Vorgangsdatenbank“": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, erste Zeile."], "Notiz speichern": ["da", "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, letzte Zeile."], "Einstieg wählen": ["da", "Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, einleitende WENN-Abfrage."], "Vermittler vorhanden?": ["da", "Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, beide OB726-Schritte, jeweils erste Zeile."], "Name gegen den Auftrag abgleichen": ["da", "Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Zeile „Feld Name des Maklers“."], "Personalnummer (PNR) ermitteln": ["da", "Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Zeile „Feld Vermittler-Nr. (PNR)“ in der Kopfzeile."], "Stammagentur über EOS": ["da", "Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Zeile „EOS, Zuordnung Vermittler-Nr. zu Stammagentur“."], "Vermittlertyp abgleichen": ["da", "Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Schritt „Feld Klassifizierung neben PNR“ (OB726)."], "Geburtsdatum abgleichen": ["anders", "Kapitel „I. VN – Stammdaten + VNR“, Schritt „Geburtsdatum (Anwendung IS100)“ — bleibt als einzige Stammdatenprüfung; Namens- und Adressprüfung entfallen (22.09.2026)."], "Personalnummer des Bestandsinhabers über OB726 holen": ["neu", "Zu ergänzen in Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Schritt „Agentur-Nr. des Bestandsinhabers ermitteln“: GH040 arbeitet mit der Personalnummer, VA230 liefert nur die Agenturnummer."], "Vorgang aus dem Themenpostkorb nehmen und den Durchlauf starten": ["da","Kapitel „Start“ und „Eröffnung Postkorbvorgang und Daten im Datenpool“; die Nummern der neuen Themenpostkörbe sind noch nachzutragen."], "Mail klassifizieren, extrahieren, interpretieren": ["aussen","Celonis-Ausbaustufe 2. Die PDD beginnt erst mit dem fertigen Postkorbvorgang."],"Weiche: Ist es eine Bestandsübertragung?": ["aussen","Abstimmung M. Koch und H. Schumann vom 11.09.2026, kein PDD-Schritt."],"Alle betroffenen Versicherungsnummern über die VDB abrufen": ["neu","Zu ergänzen in Kapitel „Eröffnung Postkorbvorgang und Daten im Datenpool“."],"Postkorbvorgang je Versicherungsnummer eröffnen": ["da","Kapitel „Eröffnung Postkorbvorgang und Daten im Datenpool“, Schritt „Werte aus dem EWMS-Postkorb“."],"Datenpool beschreiben und Prüf-Bot starten": ["da","Kapitel „Eröffnung Postkorbvorgang und Daten im Datenpool“, Schritt „Werte aus dem Datenpool“."],"Klassifikation": ["da","Kapitel „Vorprüfung – Ausschlusskriterien“, erste WENN-Abfrage."],"Bestandsübertragungs-Wunsch": ["da","Kapitel „Vorprüfung – Ausschlusskriterien“, zweite WENN-Abfrage."],"Erinnerung oder Reminder": ["weg","Kapitel „Vorprüfung – Ausschlusskriterien“, dritte WENN-Abfrage — am 22.09.2026 gestrichen."],"Weiche: Makler oder Mehrfachagent?": ["anders","Kapitel „Vorprüfung – Ausschlusskriterien“, vierte WENN-Abfrage — dort nicht als eigene Weiche dargestellt."],"makler:Maklervollmacht vom Versicherungsnehmer unterschrieben": ["anders","Kapitel „Vorprüfung – Ausschlusskriterien“, aber außerhalb der Weiche; gehört in den Makler-Zweig."],"makler:Vollmacht auf den übernehmenden Makler ausgestellt": ["anders","Nur als Feldbeschreibung zu <BUE_MV_AUF_MAKLER> in der „Tabelle der genutzten Variablen“."],"makler:Vollständigkeit der Unterlagen": ["da","Kapitel „Vorprüfung – Ausschlusskriterien“, letzte WENN-Abfrage."],"makler:Pool und Untervollmacht bewerten": ["anders","Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Bearbeitung nach“."],"mfa:Keine Maklervollmacht erforderlich": ["da","Kapitel „Vorprüfung – Ausschlusskriterien“, Hinweistext am Kapitelende."],"mfa:Betreuungswunsch muss auf den Mehrfachagenten lauten": ["da","Kapitel „Vorprüfung – Ausschlusskriterien“, verschachtelte WENN-Abfrage."],"mfa:Ergebnis für die Notiz": ["anders","Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Bearbeitung nach“."],"Partner in IS011 suchen": ["neu","Ersetzt den Schritt „Namensprüfung (IS100)“ in Kapitel „I. VN – Stammdaten + VNR“."],"Alle Treffer mit dem Status „VN“ übernehmen": ["neu","Bisher kein PDD-Schritt."],"Zu jeder Kundennummer die Versicherungsnummern abrufen": ["neu","Bisher kein PDD-Schritt."],"Vorgangs-VNR unter den Treffern suchen": ["neu","Ersetzt „Geburtsdatum (IS100)“ und „Adressprüfung (IS100)“ in Kapitel „I. VN – Stammdaten + VNR“."],"Agenturnummer des Bestandsinhabers lesen": ["anders","Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Schritt „Agentur-Nr. des Bestandsinhabers ermitteln“ — also im Kapitel des Übernehmers."],"Anbindung des Bestandsinhabers prüfen": ["anders","Derselbe Schritt, zweite Zeile (GH040)."],"Vertriebskanal bestimmen": ["weg","Nur in der PDD Komposit/Leben, Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“; in der KV-PDD am 10.09.2026 gestrichen."],"Vermittlertyp abgleichen": ["anders","Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Schritt „Feld Klassifizierung neben PNR“ — heute aus OB726."],"Zusammenarbeit prüfen": ["anders","Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Zeile „Feld Name des Maklers“, Abfrage auf den Zusatz „INAKTIV“."],"Anbindung prüfen": ["da","Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Zeile GH040 „Status der Beschäftigung“."],"E-Mail-Adresse ermitteln": ["da","Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, gemeinsamer Abschluss am Kapitelende."],"Vertrag existiert": ["weg","Kapitel „I. VN – Stammdaten + VNR“, Schritt „VNR-Prüfung (VA230)“, Feld „urspr. Vers.beginn“ — am 22.09.2026 gestrichen."],"Vertragsstatus": ["da","Derselbe Schritt, Feld „Status“."],"Sparte auslesen": ["weg","Derselbe Schritt, Feld „Sparte“ mit der Variablen <VA230-Sparte>."],"Keine Sonderbehandlung": ["da","Hinweistext am Ende von Kapitel „Prozessende mit Status Exception: BE-Handling“."],"Sollen beim übernehmenden Makler Unterlagen angefordert werden?": ["anders","Feldbeschreibung zu <BUE_ANF_UNTERLAGEN> in der „Tabelle der genutzten Variablen“, Wirkung im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“."],"Art der Unterlagen lesen": ["anders","Feldbeschreibung zu <BUE_ART_UNTERLAGEN> in der „Tabelle der genutzten Variablen“."],"Kennzeichen in der Notiz setzen": ["da","Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Abschnitt „Sonstiges“."],"Was gilt, wenn der Vorgang ohnehin ausgesteuert wird": ["neu","Ergibt sich aus Kapitel „Prozessende mit Status Exception: BE-Handling“, ist dort aber nicht ausgeschrieben."],"Test auf die Fehlerliste": ["da","Kapitel „III. Test auf Fehlerliste“."],"Bearbeitungshinweis füllen": ["da","Kapitel „Prozessende mit Status Exception: BE-Handling“."],"Weiche: Wohin geht ein Vorgang mit Befund?": ["neu","Zu ergänzen in Kapitel „Prozessende mit Status Exception: BE-Handling“; dort steht heute nur HSB4K MV."],"kv:Immer Themenpostkorb HSB4K MV": ["da","Kapitel „Prozessende mit Status Exception: BE-Handling“; Postkorbnummer im Kapitel „Details zum Startereignis“ noch offen."],"kv:Befunde für die Sachbearbeitung sichtbar machen": ["da","Kapitel „Prozessende mit Status Exception: BE-Handling“, Hinweis zum Bearbeitungshinweis."],"kl:Abgebenden Bestandsinhaber heranziehen": ["anders","Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, Schritt „Agentur-Nr. des Bestandsinhabers ermitteln“."],"kl:Abgebender ist ein Makler": ["neu","Zu ergänzen in der PDD Komposit/Leben ab 22.09.2026."],"kl:Alle übrigen Fälle": ["neu","Zu ergänzen in der PDD Komposit/Leben ab 22.09.2026."],"Weiche: Wohin geht ein Vorgang ohne Befund?": ["anders","Kapitel „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“ — dort steht heute nur der KV-Weg."],"kv:Immer über den 72-Stunden-BOT": ["da","Kapitel „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“, Hinweistext zu Kapitelbeginn."],"kl:Ausschließlichkeit: erst nach 72 Stunden": ["neu","Zu ergänzen in der PDD Komposit/Leben ab 22.09.2026."],"kl:Makler: direkt an den BÜ-Bot": ["neu","Zu ergänzen in der PDD Komposit/Leben ab 22.09.2026."],"Vorgang abschließen": ["da","Kapitel „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“, letzte Zeile (Variante A oder B noch offen)."]};
+const FELD={"Notiz anlegen": {"f": "keines — die Sparte steht über den startenden Prüf-Bot fest", "w": "Nur ohne Befund"}, "Feld „Eingangsdatum“": {"f": "Eingangsdatum — <BUE_MV_EINGANGSDATUM>", "b": "<BUE_MV_EINGANGSDATUM> = leer", "j": "ok:Eröffnungsdatum des Postkorbvorgangs", "n": "ok:Eingangsdatum aus dem Datenpool"}, "Feld „Maklername“": {"f": "keines — <OB726-Name> aus Schritt 5", "w": "Pflichtfeld"}, "Feld „Agenturnummer“": {"f": "Agenturnummer — <BUE_AGENTUR_NR>, ersatzweise <AGT-Uebernehmer> aus EOS", "b": "<BUE_AGENTUR_NR> = leer", "j": "ok:Stammagentur aus EOS", "n": "ok:Agenturnummer aus dem Datenpool"}, "Feld „Personalnummer“": {"f": "Personalnummer — <BUE_VERMITTLER_NR> bzw. <OB726-PNR>", "w": "Pflichtfeld"}, "Feld „E-Mail aufnehmender Makler“": {"f": "E-Mail Makler — <BUE_MAKLER_EMAIL> bzw. <Makler-Email> aus Schritt 5", "w": "Die in Schritt 5 ermittelte Adresse: Sonderliste TOP-Makler, sonst Datenpool, sonst die zur Agenturnummer hinterlegte Adresse."}, "Auswahl „Bearbeitung nach“": {"f": "Vermittlertyp, Pool, UV erteilt — <BUE_VERMITTLER_TYP>, <BUE_POOL>, <BUE_UV_ERTEILT>", "b": "<BUE_POOL> ≠ leer UND <BUE_UV_ERTEILT> = „nein“", "j": "ok:Untervollmacht fehlt", "n": "ok:Mit BÜ-Wunsch"}, "Kennzeichen „Rahmenvertrag“": {"f": "keines", "b": "Regel offen", "j": "weg:noch nicht festgelegt", "n": "weg:noch nicht festgelegt"}, "Auswahl „Betroffene VNR“": {"f": "Umfang — <BUE_UMFANG>", "b": "<BUE_UMFANG> = „Gesamt“", "j": "ok:gesamte Kundenverbindung", "n": "ok:angegebene VNR beachten"}, "Feld „VNR“": {"f": "Versicherungsnummern — <Vorgang-VNR>, nachrichtlich <BUE_VNR>, <BUE_VNR_2>", "w": "Die führende Versicherungsnummer des Vorgangs"}, "Kennzeichen „Folgearbeit für Komposit“": {"f": "Anforderung Unterlagen, Art der Unterlagen — <BUE_ANF_UNTERLAGEN>, <BUE_ART_UNTERLAGEN>", "b": "<BUE_ANF_UNTERLAGEN> = „ja“", "j": "ok:zutreffende Kennzeichen setzen", "n": "ok:keine Kennzeichen"}, "Kennzeichen „Dokumente für weitere VNR hochladen“": {"f": "keines", "b": "Regel offen", "j": "weg:noch nicht festgelegt", "n": "weg:noch nicht festgelegt"}, "Feld „Laufende Nr. aus Vorgangsdatenbank“": {"f": "keines — <Vorgang-Lfd-Nr> aus Schritt 2", "w": "Die laufende Vorgangsnummer aus Schritt 2, der Ordnungsbegriff des Durchlaufs"}, "Notiz speichern": {"f": "keines", "w": "Die vollständig gefüllte Telefonnotiz wird am Vorgang gespeichert."}, "Geburtsdatum abgleichen": {"f": "Geburtsdatum des Kunden — <BUE_KUNDE_GEBDAT>", "b": "<BUE_KUNDE_GEBDAT> ≠ leer UND ≠ Geburtsdatum des Partners", "j": "notiz:Geburtsdatum abweichend", "n": "ok:weiter"}, "Personalnummer des Bestandsinhabers über OB726 holen": {"f": "keines — OB726, Einstieg über die Agenturnummer aus Schritt 4.1", "w": "die Personalnummer des Bestandsinhabers; GH040 arbeitet nur mit ihr"}, "Vorgang aus dem Themenpostkorb nehmen und den Durchlauf starten": {"f": "alle 35 Felder; der Einstieg kommt aus dem Postkorb (<Vorgang-Lfd-Nr>, <Vorgang-VNR>)","w": "Ordnungsbegriff und führende Versicherungsnummer setzen, Datenpool lesen, <BE>, <BE-Klassifikation> und <Fehlerliste> auf leer setzen"}, "Mail klassifizieren, extrahieren, interpretieren": {"f": "keines — der Datenpool entsteht erst danach","w": "die KI erzeugt das Deckblatt und füllt daraus später alle 35 Felder"},"Weiche: Ist es eine Bestandsübertragung?": {"f": "Klassifikation, später <BUE_KLASSIFIKATION>","b": "Anliegen = BÜ Makler · BÜ MFA · Kündigung Maklervollmacht","j": "weg:Postkorbvorgang eröffnen","n": "weg:mit demselben Deckblatt an KWAD"},"Alle betroffenen Versicherungsnummern über die VDB abrufen": {"f": "Versicherungsnummer, Versicherungsnummer 2, Sparte — <BUE_VNR>, <BUE_VNR_2>, <BUE_SPARTE>","w": "die VDB liefert alle zu übertragenden Nummern; führend ist danach je Vorgang die <Vorgang-VNR>, die beiden Datenpoolfelder laufen nachrichtlich mit und zeigen den Zusammenhang"},"Postkorbvorgang je Versicherungsnummer eröffnen": {"f": "keines — Vorgang-Lfd-Nr und Vorgang-VNR kommen aus dem Postkorb","w": "je Versicherungsnummer entsteht ein eigener Vorgang"},"Datenpool beschreiben und Prüf-Bot starten": {"f": "alle 35 Felder","w": "<BE>, <BE-Klassifikation> und <Fehlerliste> werden auf leer gesetzt"},"Klassifikation": {"f": "Klassifikation — <BUE_KLASSIFIKATION>","b": "<BUE_KLASSIFIKATION> ≠ „BÜ-Vorgang“","j": "be:Kein BÜ-Vorgang","n": "ok:weiter"},"Bestandsübertragungs-Wunsch": {"f": "BÜ-Wunsch vorhanden — <BUE_WUNSCH_VORHANDEN>","b": "<BUE_WUNSCH_VORHANDEN> = „nein“","j": "be:BÜ-Wunsch nicht vorhanden","n": "ok:weiter"},"Erinnerung oder Reminder": {"f": "Reminder — <BUE_REMINDER>","b": "<BUE_REMINDER> = „ja“","j": "be:Erinnerung / Reminder","n": "ok:weiter"},"Weiche: Makler oder Mehrfachagent?": {"f": "Vermittlertyp — <BUE_VERMITTLER_TYP>","b": "<BUE_VERMITTLER_TYP> = „MFA“","j": "weg:Mehrfachagenten-Zweig","n": "weg:Makler-Zweig"},"makler:Maklervollmacht vom Versicherungsnehmer unterschrieben": {"f": "Unterschrift Kunde — <BUE_MV_UNTERSCHRIFT_KUNDE>","b": "<BUE_MV_UNTERSCHRIFT_KUNDE> ≠ „ja“","j": "be:Unterschrift VN fehlt","n": "ok:weiter"},"makler:Vollmacht auf den übernehmenden Makler ausgestellt": {"f": "MV auf Makler — <BUE_MV_AUF_MAKLER>","b": "<BUE_MV_AUF_MAKLER> ≠ „ja“","j": "notiz:Unterlagen nicht vollständig","n": "ok:weiter"},"makler:Vollständigkeit der Unterlagen": {"f": "Prüfung Unterlagen, Anforderung Unterlagen — <BUE_PRUEFUNG_UNTERLAGEN>, <BUE_ANF_UNTERLAGEN>","b": "<BUE_PRUEFUNG_UNTERLAGEN> ≠ „Vollständig“\nUND <BUE_ANF_UNTERLAGEN> = „nein“","j": "notiz:Unterlagen nicht vollständig","n": "ok:weiter"},"makler:Pool und Untervollmacht bewerten": {"f": "Pool, UV erteilt — <BUE_POOL>, <BUE_UV_ERTEILT>","w": "bestimmt die Auswahl „Bearbeitung nach“ in der Notiz"},"mfa:Keine Maklervollmacht erforderlich": {"f": "MV enthalten, MV Status, MV vollumfänglich, UV erteilt — alle N/A","w": "die Felder werden übersprungen, auch die Unterschrift"},"mfa:Betreuungswunsch muss auf den Mehrfachagenten lauten": {"f": "MV auf Makler — <BUE_MV_AUF_MAKLER>","b": "<BUE_MV_AUF_MAKLER> ≠ „ja“","j": "be:Betreuungswunsch nicht auf MFA ausgestellt","n": "ok:weiter"},"mfa:Ergebnis für die Notiz": {"f": "Vermittlertyp — <BUE_VERMITTLER_TYP>","w": "die Notiz erhält die Auswahl „Mit BÜ-Wunsch“"},"Partner in IS011 suchen": {"f": "Kunde Vorname, Nachname, Geburtsdatum, PLZ, Straße — <BUE_KUNDE_VORNAME>, <BUE_KUNDE_NACHNAME>, <BUE_KUNDE_GEBDAT>, <BUE_KUNDE_PLZ>, <BUE_KUNDE_STRASSE>","b": "Trefferliste IS011 = leer","j": "be:Kunde in IS011 nicht gefunden (neu)","n": "ok:weiter mit allen Treffern"},"Alle Treffer mit dem Status „VN“ übernehmen": {"f": "keines — das Ergebnis kommt aus IS011","b": "Treffer: Status = „VN“","j": "ok:Kundennummer wird übernommen","n": "weg:Treffer bleibt unberücksichtigt"},"Zu jeder Kundennummer die Versicherungsnummern abrufen": {"f": "keines — die Nummern kommen über eine Schnittstelle","w": "je Kundennummer werden die zugehörigen Versicherungsnummern geholt"},"Vorgangs-VNR unter den Treffern suchen": {"f": "keines — maßgeblich ist die Vorgangs-VNR aus dem Postkorb","b": "keine Kundennummer führt die <Vorgang-VNR>","j": "be:keine KNR führt die Vorgangs-VNR (neu)","n": "ok:Kunde bestätigt"},"Agenturnummer des Bestandsinhabers lesen": {"f": "keines — VA230, Feld „Betreuung“","w": "der Wert geht als <VA230-AGT-Inhaber> in die Notiz"},"Anbindung des Bestandsinhabers prüfen": {"f": "keines — GH040, Zeile „Status der Beschäftigung“","b": "Status der Beschäftigung ≠ „aktiv“","j": "notiz:Anbindung Bestandsinhaber nicht aktiv","n": "ok:weiter"},"Vertriebskanal bestimmen": {"f": "keines","w": "in der KV-PDD am 10.09. gestrichen; der 72-Stunden-BOT stellt den Kanal selbst fest"},"Vertrag existiert": {"f": "keines — VA230, Feld „urspr. Vers.beginn“","b": "Feld = leer","j": "be:VNR nicht korrekt / nicht vorhanden","n": "ok:weiter"},"Vertragsstatus": {"f": "keines — VA230","b": "Status ≠ „aktuell“","j": "be:Vertrag nicht aktuell (Bezeichnung offen)","n": "ok:weiter"},"Sparte auslesen": {"f": "Sparte — <BUE_SPARTE>","w": "nur nachrichtlich; der Schritt kann entfallen"},"Keine Sonderbehandlung": {"f": "keines","w": "Rahmenverträge und Verträge im Mahnverfahren laufen mit"},"Sollen beim übernehmenden Makler Unterlagen angefordert werden?": {"f": "Anforderung Unterlagen — <BUE_ANF_UNTERLAGEN>","b": "<BUE_ANF_UNTERLAGEN> = „ja“","j": "ok:Kennzeichen in der Notiz, keine Prüfnotiz","n": "ok:keine Zeile in der Notiz"},"Art der Unterlagen lesen": {"f": "Art der Unterlagen — <BUE_ART_UNTERLAGEN>","w": "Pflichtfeld nur bei Anforderung = „ja“; Werteliste in Abstimmung"},"Kennzeichen in der Notiz setzen": {"f": "Art der Unterlagen — <BUE_ART_UNTERLAGEN>","w": "setzt die Kennzeichen unter „Folgearbeit für Komposit“"},"Was gilt, wenn der Vorgang ohnehin ausgesteuert wird": {"f": "Prüfung Unterlagen — <BUE_PRUEFUNG_UNTERLAGEN>","w": "ohne Notiz steht die Prüfnotiz im Bearbeitungshinweis"},"Test auf die Fehlerliste": {"f": "keines — maßgeblich ist die <Fehlerliste> des Bots","b": "<Fehlerliste> ≠ leer","j": "be:Nachprüfung erforderlich","n": "ok:Notiz bestücken"},"Bearbeitungshinweis füllen": {"f": "Versicherungsnummern — <BUE_VNR>, <BUE_VNR_2>, nur nachrichtlich","w": "Grund, alle Befunde und die führende <Vorgang-VNR> gehen in den Hinweis; die übrigen zur Übertragung anstehenden Nummern nur als Zusammenhang"},"Weiche: Wohin geht ein Vorgang mit Befund?": {"f": "keines — die Sparte steht über den startenden Prüf-Bot fest","b": "Sparte = Krankenversicherung","j": "weg:Themenpostkorb HSB4K MV","n": "weg:Komposit und Leben: nach abgebendem Bestandsinhaber"},"kv:Immer Themenpostkorb HSB4K MV": {"f": "keines","w": "fester Zielpostkorb, unabhängig vom abgebenden Vermittler"},"kv:Befunde für die Sachbearbeitung sichtbar machen": {"f": "keines","w": "die Befunde stehen im Bearbeitungshinweis am Postkorbvorgang"},"kl:Abgebenden Bestandsinhaber heranziehen": {"f": "keines — der Wert stammt aus Schritt 4 (VA230)","b": "Bestandsinhaber = Makler","j": "weg:Nachbearbeitung ODPB","n": "weg:Themenpostkorb HSB4K KO"},"kl:Abgebender ist ein Makler": {"f": "keines","w": "Ziel ist die Nachbearbeitung in ODPB"},"kl:Alle übrigen Fälle": {"f": "keines","w": "Ziel ist HSB4K KO, auch bei nicht ermittelbarem Bestandsinhaber"},"Weiche: Wohin geht ein Vorgang ohne Befund?": {"f": "keines — die Sparte steht über den startenden Prüf-Bot fest","b": "Sparte = Krankenversicherung","j": "weg:immer über den 72-Stunden-BOT","n": "weg:Komposit und Leben: nach abgebendem Bestandsinhaber"},"kv:Immer über den 72-Stunden-BOT": {"f": "keines","w": "der 72-Stunden-BOT stellt den Vertriebskanal selbst fest"},"kl:Ausschließlichkeit: erst nach 72 Stunden": {"f": "keines","w": "Weg über den 72-Stunden-BOT, die Frist wird gewahrt"},"kl:Makler: direkt an den BÜ-Bot": {"f": "keines","w": "ohne Frist direkt an den BÜ-Bot 1515"},"Vorgang abschließen": {"f": "keines","w": "Status „completed“ nur bei erfolgreicher Notiz und Weiterleitung"}};
+const WARUM={"Notiz anlegen": "Der Prüf-Bot schreibt den Bestand nicht um. Die Notiz ist die Übergabe an den BÜ-Bot; ohne sie passiert nichts.", "Feld „Eingangsdatum“": "Die Folgebearbeitung braucht den Fristbeginn. Ohne Datum ließe sich nicht beurteilen, wie lange der Auftrag schon liegt.", "Feld „Maklername“": "Der Name aus dem System ist der gepflegte; der Auftrag kann eine Schreibweise enthalten, die es so nicht gibt.", "Feld „Agenturnummer“": "Der BÜ-Bot schreibt den Bestand auf eine Agentur um. Ohne Agenturnummer fehlt ihm das Ziel.", "Feld „Personalnummer“": "Das Deckblattfeld, die OB726-Kopfzeile und dieses Notizfeld meinen dieselbe Nummer. Die Bezeichnungen unterscheiden sich, der Inhalt nicht.", "Feld „E-Mail aufnehmender Makler“": "Die Rückmeldung an den Makler geht an diese Adresse. Der Prüf-Bot versendet selbst nichts, der BÜ-Bot braucht sie aber.", "Auswahl „Bearbeitung nach“": "Sie entscheidet, auf wen übertragen wird — auf den Makler selbst oder unter Untervollmacht.", "Kennzeichen „Rahmenvertrag“": "Ein Pflichtfeld der Maske ohne Regel bleibt im Betrieb leer oder wird geraten. Beides ist schlechter als eine Entscheidung.", "Auswahl „Betroffene VNR“": "Die Folgebearbeitung muss wissen, ob ein einzelner Vertrag oder die ganze Verbindung gemeint ist.", "Feld „VNR“": "Geprüft und übertragen wird nur die führende Nummer. Die übrigen zeigen der Sachbearbeitung, dass weitere Vorgänge laufen.", "Kennzeichen „Folgearbeit für Komposit“": "Die Anforderung aus Schritt 7 wirkt erst, wenn sie in der Notiz steht.", "Kennzeichen „Dokumente für weitere VNR hochladen“": "Ohne Regel bleibt offen, wer die Dokumente zu den weiteren Nummern bereitstellt.", "Feld „Laufende Nr. aus Vorgangsdatenbank“": "Sie verbindet Notiz, Postkorbvorgang und Reporting. Ohne sie lässt sich später nicht nachvollziehen, welcher Durchlauf die Notiz erzeugt hat.", "Notiz speichern": "Erst die gespeicherte Notiz ist die Übergabe. Bricht der Bot davor ab, hat der BÜ-Bot nichts.", "Geburtsdatum abgleichen": "Die Versicherungsnummer belegt, dass der Vertrag zu diesem Partner gehört. Das Geburtsdatum ist die einzige Gegenprobe, die ohne Schreibweisenstreit auskommt — Namen und Adressen sind dafür zu unzuverlässig.", "Personalnummer des Bestandsinhabers über OB726 holen": "GH040 kennt nur die Personalnummer. Ohne diesen Zwischenschritt liefe die Anbindungsprüfung des abgebenden Vermittlers ins Leere.", "Vorgang aus dem Themenpostkorb nehmen und den Durchlauf starten": "Der Bot bekommt keinen Anruf, er holt sich die Arbeit. Der Themenpostkorb ist die Warteschlange, die laufende Vorgangsnummer hält Prüfung, Reporting und Wiederanlauf zusammen, und die zurückgesetzten Variablen verhindern, dass Befunde aus dem vorigen Vorgang mitwandern.", "kv:Immer Themenpostkorb HSB4K MV": "In der Krankenversicherung liegt die Bearbeitung von Maklervollmachten in einer Einheit. Eine Verzweigung nach abgebendem Vermittler gäbe es dort nichts zu entscheiden.", "kv:Befunde für die Sachbearbeitung sichtbar machen": "Eine Aussteuerung ohne Begründung führt dazu, dass der Vorgang von vorn geprüft wird. Der Nutzen der Automatisierung entsteht erst, wenn das Prüfergebnis weiterverwendet wird.", "kl:Abgebender ist ein Makler": "Maklerbestände in Komposit und Leben werden in ODPB bearbeitet. Ein Vorgang im Postkorb der Ausschließlichkeitsbetreuung würde dort nur weitergereicht.", "kv:Immer über den 72-Stunden-BOT": "Die Frist hängt am abgebenden Vermittler, nicht am Vorgang. Der 72-Stunden-BOT stellt das ohnehin fest; eine zweite Prüfung im Prüf-Bot wäre doppelte Arbeit mit doppeltem Pflegeaufwand.", "kl:Ausschließlichkeit: erst nach 72 Stunden": "Der abgebende Vertreter hat Anspruch darauf, vor dem Verlust des Bestands informiert zu werden. Die Frist sichert ihm die Gelegenheit zur Rückfrage beim Kunden.", "kl:Makler: direkt an den BÜ-Bot": "Zwischen zwei Maklern gibt es keine Vorabinformationsfrist. Eine Wartezeit würde die Übertragung ohne fachlichen Grund verzögern.", "Sollen beim übernehmenden Makler Unterlagen angefordert werden?": "Eine Anforderung ist kein Prüfergebnis, sondern eine Folgearbeit. Sie gehört deshalb in die Notiz und nicht in die Fehlerliste.", "Art der Unterlagen lesen": "Ohne die Arten bliebe in der Notiz nur der Hinweis, dass etwas angefordert wird — die Folgebearbeitung müsste den Auftrag erneut lesen.", "Kennzeichen in der Notiz setzen": "Die Anforderung wirkt erst, wenn sie in der Notiz steht; der Prüf-Bot selbst fordert nichts an.", "Was gilt, wenn der Vorgang ohnehin ausgesteuert wird": "Ohne diese Klarstellung bliebe offen, wer die Unterlagen anfordert, wenn gar keine Notiz entsteht.", "Test auf die Fehlerliste": "Eine einzelne Abweichung soll den Vorgang nicht beenden. Erst die Summe aller Befunde entscheidet — das hält die Zahl der Rückläufer klein und gibt der Sachbearbeitung ein vollständiges Bild statt des ersten Treffers.", "Bearbeitungshinweis füllen": "Die Sachbearbeitung soll nicht erneut prüfen, sondern auf dem Prüfergebnis aufsetzen. Dafür muss jeder Befund am Vorgang stehen, nicht nur der Grund der Aussteuerung.", "Weiche: Wohin geht ein Vorgang mit Befund?": "Bestandsübertragungen werden je nach Sparte und abgebendem Vermittler von unterschiedlichen Einheiten bearbeitet. Ein Vorgang im falschen Postkorb liegt so lange, bis ihn jemand von Hand umhängt.", "kl:Abgebenden Bestandsinhaber heranziehen": "Bei Komposit und Leben entscheidet nicht die Sparte allein, sondern wer den Bestand heute hält. Der Wert liegt aus Schritt 4 bereits vor und muss nicht erneut gelesen werden.", "kl:Alle übrigen Fälle": "Ohne einen definierten Auffangweg bliebe ein Vorgang ohne erkennbaren Bestandsinhaber liegen. Deshalb ist auch der Nichtbefund einem Postkorb zugeordnet.", "Weiche: Wohin geht ein Vorgang ohne Befund?": "Auch ein sauberer Vorgang darf nicht sofort umgeschrieben werden: Gibt die Ausschließlichkeit den Bestand ab, ist sie vorab zu informieren.", "Vorgang abschließen": "Bleibt der Vorgang offen im Postkorb stehen, wird er ein zweites Mal bearbeitet. Der Status wird deshalb erst nach erfolgreicher Notiz und Weiterleitung gesetzt.", "Mail klassifizieren, extrahieren, interpretieren": "Ohne maschinelle Strukturierung müsste die Sachbearbeitung jede Mail lesen und von Hand indizieren. Die Klassifikation ist zugleich die Grundlage für jede spätere Weiche im Prozess.", "Weiche: Ist es eine Bestandsübertragung?": "Ein VN-Wechsel oder eine Kündigung, die als Bestandsübertragung eröffnet wird, landet in der falschen Bearbeitung und muss später umgehängt werden. Die Trennung vor der Eröffnung vermeidet genau das.", "Alle betroffenen Versicherungsnummern über die VDB abrufen": "Der Auftrag nennt oft nur einen Teil der Verträge oder pauschal die gesamte Kundenverbindung. Erst der VDB-Abruf macht daraus konkrete Nummern, die einzeln geprüft werden können.", "Postkorbvorgang je Versicherungsnummer eröffnen": "Ein Vorgang je Nummer hält Prüfung und Ergebnis eindeutig. Im Test am 15.09. hat der BÜ-Bot bei zwei Vorgängen derselben Kundenverbindung die Ablöse doppelt verbucht; ein Vorgang je VNR schließt das aus.", "Datenpool beschreiben und Prüf-Bot starten": "Der Bot kann die Mail nicht selbst lesen, er braucht die Angaben strukturiert im Datenpool. Der Postkorbvorgang ist zugleich Startsignal und Ordnungsbegriff für Reporting und Wiederanlauf.", "Klassifikation": "Jeder Hostzugriff kostet Zeit. Steht schon im Deckblatt, dass es keine Bestandsübertragung ist, wäre jede weitere Prüfung verschwendet.", "Bestandsübertragungs-Wunsch": "Ohne ausformulierten Auftrag fehlt die Grundlage für die Übertragung. Eine Maklervollmacht im Anhang allein ist noch kein Auftrag.", "Erinnerung oder Reminder": "Eine Erinnerung ist kein neuer Auftrag. Würde sie geprüft und übertragen, entstünde ein Doppelvorgang zum bereits laufenden Fall.", "Weiche: Makler oder Mehrfachagent?": "Beide haben unterschiedliche Grundlagen: der Makler eine Maklervollmacht des Kunden, der Mehrfachagent einen Betreuungswunsch. Ohne diese Unterscheidung würden beim Mehrfachagenten Vollmachtsfelder geprüft, die es dort gar nicht gibt.", "makler:Vollständigkeit der Unterlagen": "Fehlende Unterlagen sind kein Grund abzubrechen, sondern ein Grund nachzufragen. Deshalb Prüfnotiz statt Aussteuerung.", "makler:Vollmachtsfelder werden gebündelt bewertet": "Die fachliche Bewertung hat Celonis bereits vorgenommen. Der Bot soll sie nicht ein zweites Mal nachrechnen, sondern auf dem Ergebnis aufsetzen.", "mfa:Keine Maklervollmacht erforderlich": "Der Mehrfachagent handelt im Auftrag des Versicherers, nicht des Kunden. Eine Maklervollmacht gibt es in dieser Konstellation nicht.", "mfa:Betreuungswunsch muss auf den Mehrfachagenten lauten": "Ohne Bezug auf genau diesen Mehrfachagenten fehlt die Grundlage, den Bestand auf ihn umzuschreiben.", "Partner in IS011 suchen": "Der Vertrag darf nur übertragen werden, wenn der Auftraggeber auch der Versicherungsnehmer ist. Eine Suche über mehrere Merkmale zugleich ist robuster als der Vergleich einzelner Felder, deren Schreibweise abweichen kann.", "Alle Treffer mit dem Status „VN“ übernehmen": "Kunden treten im Partnersystem mehrfach auf, etwa mit alter und neuer Adresse. Ein einzelner eindeutiger Treffer ist die Ausnahme; deshalb werden alle VN-Treffer weiterverfolgt statt den Vorgang auszusteuern.", "Zu jeder Kundennummer die Versicherungsnummern abrufen": "Erst die Verbindung von Kundennummer zu Versicherungsnummern erlaubt die eigentliche Aussage: Gehört dieser Vertrag zu diesem Kunden?", "Vorgangs-VNR unter den Treffern suchen": "Das ist der eigentliche Identitätsnachweis. Passt eine Kundennummer zur Versicherungsnummer des Vorgangs, ist jeder weitere Stammdatenvergleich überflüssig.",
+"makler:Maklervollmacht vom Versicherungsnehmer unterschrieben": "Die Unterschrift des Versicherungsnehmers ist das, was die Vollmacht trägt. Ohne sie ist die Vollmacht nicht wirksam, wie vollständig die übrigen Unterlagen auch sein mögen.",
+"makler:Vollmacht auf den übernehmenden Makler ausgestellt": "Der Kunde bevollmächtigt eine bestimmte Person. Lautet die Vollmacht auf einen anderen Makler, fehlt die Grundlage für die Übertragung.",
+"makler:Pool und Untervollmacht bewerten": "Ist die Vollmacht auf den Pool ausgestellt, darf der einzelne Makler nur mit Untervollmacht übernehmen. Ohne diese Unterscheidung liefe der Bestand auf den falschen Vermittler.",
+"mfa:Ergebnis für die Notiz": "Der BÜ-Bot erwartet die Zeile in jedem Fall, auch wenn es beim Mehrfachagenten nichts zu unterscheiden gibt.",
+"Weiche: Vollmacht oder Betreuungswunsch?": "Die Unterschrift des Kunden trägt die Übertragung. Fehlt sie, ist der Auftrag nicht wirksam, wie vollständig die übrigen Angaben auch sein mögen.", "makler:Maklervollmacht liegt unterschrieben vor": "Die Vollmacht ist die Rechtsgrundlage dafür, dass der neue Makler den Bestand betreuen darf.", "makler:Einreichung über einen Pool": "Ist die Vollmacht auf den Pool ausgestellt, darf der einzelne Makler nur mit Untervollmacht übernehmen. Ohne diese Unterscheidung liefe der Bestand auf den falschen Vermittler.", "makler:Ergebnis für die Notiz": "Die Sachbearbeitung und der BÜ-Bot müssen die Vollmachtslage erkennen, ohne die Unterlagen erneut zu bewerten.", "mfa:Betreuungswunsch liegt unterschrieben vor": "Der Betreuungswunsch tritt an die Stelle der Vollmacht. Ohne Unterschrift fehlt der Wille des Kunden.", "mfa:Keine Untervollmacht": "Ein Mehrfachagent ist nicht über einen Maklerpool angebunden; die Frage nach der Untervollmacht stellt sich nicht.", "mfa:Ergebnis für die Notiz": "Der BÜ-Bot erwartet die Zeile in jedem Fall, auch wenn es hier nichts zu unterscheiden gibt.", "Agenturnummer des Bestandsinhabers lesen": "Die Übertragung wechselt den Bestand von einem Vermittler zum anderen. Wer heute betreut, gehört deshalb zum Vorgang und in die Notiz.", "Anbindung des Bestandsinhabers prüfen": "Ist der abgebende Vermittler nicht mehr aktiv, ist die Betreuungs- und Provisionslage unklar. Das ist kein Abbruchgrund, aber die Sachbearbeitung soll es sehen.", "Vertriebskanal bestimmen": "Bei Ausschließlichkeitsbestand gilt eine Vorabinformationsfrist von 72 Stunden. Ohne diese Information würde der Bestand ohne Frist übertragen.", "Weiche: Lautet die Vollmacht auf genau diesen Vermittler?": "Der Kunde bevollmächtigt eine bestimmte Person. Lautet die Vollmacht auf einen anderen Makler als den, der den Auftrag stellt, fehlt die Grundlage für die Übertragung — unabhängig davon, ob dieser Makler existiert und aktiv angebunden ist.",
+"makler:Makler-Zweig: heute ein weiches Kriterium": "So ist es heute in der PDD beschrieben: Celonis bündelt die Vollmachtsbewertung, der Bot setzt darauf auf.",
+"makler:Zur Diskussion: eigenes hartes Kriterium?": "Die Sachbearbeitung sieht im Bearbeitungshinweis heute nur „Unterlagen nicht vollständig“ und muss selbst herausfinden, woran es lag.",
+"mfa:MFA-Zweig: hartes Kriterium": "Ohne Bezug auf genau diesen Mehrfachagenten fehlt die Grundlage, den Bestand auf ihn umzuschreiben.",
+"mfa:Keine Maklervollmacht im Spiel": "Der Mehrfachagent handelt im Auftrag des Versicherers; eine Maklervollmacht gibt es dort nicht.", "Vertrag existiert": "Eine Versicherungsnummer im Auftrag ist noch kein Vertrag. Tippfehler und veraltete Nummern kommen regelmäßig vor.", "Vertragsstatus": "Ein beendeter oder historischer Vertrag kann nicht übertragen werden; der Auftrag ginge ins Leere.",
+"Sparte auslesen": "Der Schritt steht noch in der PDD und ist deshalb hier aufgeführt. Er kann gestrichen werden, weil die Beschreibung sonst einen Hostzugriff verlangt, dessen Ergebnis niemand auswertet.", "Sparte": "Die Sparte bestimmt die Notizvariante und den nachgelagerten Bot. Sie wird mitgeführt, damit das Ergebnis nachvollziehbar bleibt.", "Keine Sonderbehandlung": "Rahmenverträge und Mahnverfahren wurden fachlich geprüft und brauchen keine eigene Regel. Der Widerruf ist zeitlich entkoppelt und wird bewusst an anderer Stelle abgefangen.", "Test auf die Fehlerliste": "Erst am Ende steht fest, ob die gesammelten Abweichungen zusammen eine manuelle Prüfung rechtfertigen. Ein Abbruch beim ersten Fehler würde deutlich mehr Vorgänge aussteuern.", "Notiz bestücken": "Die Notiz ist die Schnittstelle zum BÜ-Bot; er liest daraus, was zu tun ist. Fehlt ein Feld, bleibt der Folgeprozess stehen.", "Übergabe Krankenversicherung": "Die Frist ist im 72-Stunden-BOT bereits umgesetzt. Der Prüf-Bot muss den Vertriebskanal deshalb nicht selbst bestimmen.", "Übergabe Komposit und Leben": "Dort gibt es diese Vorschaltung nicht. Also entscheidet der Prüf-Bot anhand des abgebenden Bestandsinhabers, welcher Weg gilt.", "Vorgang abschließen": "Ohne sauberen Abschluss bliebe der Vorgang im Postkorb liegen und würde ein zweites Mal bearbeitet.", "Weg bei Business Exception oder Fehler": "Die Sachbearbeitung soll auf dem Prüfergebnis aufsetzen und nicht von vorn beginnen. Wohin der Fall geht, hängt davon ab, wer ihn fachlich bearbeiten kann."};
+const PDDREF={"Notiz anlegen": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, erste Zeile (TBD: Vorlage oder Freitext).", "Feld „Eingangsdatum“": "Feldbeschreibung <BUE_MV_EINGANGSDATUM>; in der Notizbestückung bisher nicht aufgeführt.", "Feld „Maklername“": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Maklername/MFA-Name“ = <OB726-Name>.", "Feld „Agenturnummer“": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Agenturnummer“.", "Feld „Personalnummer“": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Personalnummer“ (in der PDD-Variablentabelle „Vermittler-Nr. (PNR)“).", "Feld „E-Mail aufnehmender Makler“": "In der Maske 1515 vorhanden; in der PDD-Notizbestückung bisher nicht aufgeführt.", "Auswahl „Bearbeitung nach“": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, WENN-Kaskade über <BUE_VERMITTLER_TYP>, <BUE_POOL> und <BUE_UV_ERTEILT>.", "Kennzeichen „Rahmenvertrag“": "kein PDD-Schritt. Zu ergänzen oder ausdrücklich auszuschließen.", "Auswahl „Betroffene VNR“": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Betroffene VNR“.", "Feld „VNR“": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „VNR“; welche Liste nachrichtlich einzutragen ist, ist offen.", "Kennzeichen „Folgearbeit für Komposit“": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Abschnitt „Sonstiges“.", "Kennzeichen „Dokumente für weitere VNR hochladen“": "kein PDD-Schritt. Zu ergänzen oder ausdrücklich auszuschließen.", "Feld „Laufende Nr. aus Vorgangsdatenbank“": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Laufende Nr. aus Vorgangsdatenbank“.", "Notiz speichern": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, letzte Zeile „Telefonnotiz speichern“.", "Geburtsdatum abgleichen": "PDD-Schritt „Geburtsdatum (Anwendung IS100)“ in Kapitel „I. VN – Stammdaten + VNR“. Die Schritte „Namensprüfung“ und „Adressprüfung“ entfallen ersatzlos.", "Personalnummer des Bestandsinhabers über OB726 holen": "noch kein PDD-Schritt. Zu ergänzen im Kapitel „II. Übernehmender Makler“, Schritt „Agentur-Nr. des Bestandsinhabers ermitteln“.", "Einstieg wählen": "einleitende WENN-Abfrage in Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“ (<BUE_AGENTUR_NR> = leer). Das Datenpoolfeld heißt dort „Personalnummer“, die Variable <BUE_VERMITTLER_NR>.", "Vermittler vorhanden?": "PDD-Schritt „Agenturnummer (A,…) des übernehmenden Maklers (Anwendung OB726)“ bzw. „Vermittler-Nr. (PNR) des übernehmenden Maklers (Anwendung OB726)“, jeweils erste Zeile.", "Name gegen den Auftrag abgleichen": "dieselben beiden PDD-Schritte, Zeile „Feld Name des Maklers“, Abgleich <OB726-Name> gegen <BUE_VERMITTLER_NAME>.", "Personalnummer (PNR) ermitteln": "PDD-Schritt „Agenturnummer (A,…) des übernehmenden Maklers (Anwendung OB726)“, Zeile „Feld Vermittler-Nr. (PNR)“ in der Kopfzeile. Die Variable heißt dort <OB726-PNR> und füllt das Notizfeld „Personalnummer“.", "Stammagentur über EOS": "derselbe PDD-Schritt, Zeile „EOS, Zuordnung Vermittler-Nr. zu Stammagentur“ (<AGT-Uebernehmer>).", "Zusammenarbeit prüfen": "dieselben beiden PDD-Schritte, Zeile „Feld Name des Maklers“, Abfrage auf den Zusatz „INAKTIV“.", "Anbindung prüfen": "PDD-Schritt „Vermittler-Nr. (PNR) des übernehmenden Maklers (Anwendung OB726)“, Zeile GH040 „Status der Beschäftigung“.", "E-Mail-Adresse ermitteln": "„Gemeinsamer Abschluss für beide Einstiege: E-Mail-Adresse des übernehmenden Vermittlers ermitteln“ am Ende von Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“; WENN-Kaskade Sonderliste TOP-Makler (über <OB726-PNR>), <BUE_MAKLER_EMAIL>, OB729. Die Anwendung OB729 ist im Kapitel „Verwendete Systeme“ noch zu bestätigen.", "Vorgang aus dem Themenpostkorb nehmen und den Durchlauf starten": "Kapitel „Start“ und „Eröffnung Postkorbvorgang und Daten im Datenpool“ mit den Schritten „Werte aus dem EWMS-Postkorb“ (Vorgang-Lfd-Nr, Vorgang-VNR) und „Werte aus dem Datenpool“ (35 Felder, Initialisierung von BE, BE-Klassifikation und Fehlerliste); Postkorb und GeVo-Nummer im Kapitel „Details zum Startereignis“.", "Sollen beim übernehmenden Makler Unterlagen angefordert werden?": "Feldbeschreibung <BUE_ANF_UNTERLAGEN>: „Kennzeichen, ob beim übernehmenden Makler Unterlagen angefordert werden müssen“, Pflichtfeld, Werte ja und nein.", "Art der Unterlagen lesen": "Feldbeschreibung <BUE_ART_UNTERLAGEN>: „Art der anzufordernden Unterlagen“, Pflichtfeld wenn <BUE_ANF_UNTERLAGEN> = ja, Freitext mit Semikolon getrennt.", "Kennzeichen in der Notiz setzen": "PDD-Schritt „Notizmaske, Abschnitt Sonstiges“ im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“; danach „Telefonnotiz speichern“. Die PDD spricht dort von einem Kennzeichen und Freitextzeilen, die Maske 1515 von drei festen Kennzeichen unter „Folgearbeit für Komposit“.", "Was gilt, wenn der Vorgang ohnehin ausgesteuert wird": "ergibt sich aus Kapitel „Prozessende mit Status Exception: BE-Handling“; als Satz ist es dort nicht ausgeschrieben.", "Test auf die Fehlerliste": "Kapitel „III. Test auf Fehlerliste“ (<Fehlerliste> <> leer, <BE-Klassifikation> = „Nachprüfung erforderlich“).", "Bearbeitungshinweis füllen": "Kapitel „Prozessende mit Status Exception: BE-Handling“. Dort gehen <BUE_VNR> und <BUE_VNR_2> nachrichtlich in den Hinweis ein. Das ist weiterhin sinnvoll, aber klarzustellen: Geprüft und entschieden wird allein über die führende <Vorgang-VNR>; die Liste zeigt nur den Zusammenhang. Zu klären ist, welche Liste das sein soll — die im Auftrag genannten Nummern aus der KI-Auslesung oder die über die VDB ermittelten, die tatsächlich zur Übertragung anstehen.", "Weiche: Wohin geht ein Vorgang mit Befund?": "Kapitel „Prozessende mit Status Exception: BE-Handling“. Dort steht heute nur der Themenpostkorb HSB4K MV; die Unterscheidung nach Sparte und abgebendem Bestandsinhaber ist zu ergänzen.", "kv:Immer Themenpostkorb HSB4K MV": "Kapitel „Prozessende mit Status Exception: BE-Handling“ sowie Kapitel „Details zum Startereignis“ (Postkorb-Nr. TBD).", "kv:Befunde für die Sachbearbeitung sichtbar machen": "Kapitel „Prozessende mit Status Exception: BE-Handling“, Hinweis zum Bearbeitungshinweis.", "kl:Abgebenden Bestandsinhaber heranziehen": "PDD-Schritt „Agentur-Nr. (A,…) des Bestandsinhabers ermitteln“ in Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“ (<VA230-AGT-Inhaber>).", "kl:Abgebender ist ein Makler": "noch kein PDD-Schritt. Zu ergänzen in der PDD Komposit/Leben ab 22.09.", "kl:Alle übrigen Fälle": "noch kein PDD-Schritt. Zu ergänzen in der PDD Komposit/Leben ab 22.09.", "Weiche: Wohin geht ein Vorgang ohne Befund?": "Kapitel „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“. Dort steht heute nur der KV-Weg über den 72-Stunden-BOT.", "kv:Immer über den 72-Stunden-BOT": "Hinweistext zu Beginn von Kapitel „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“.", "kl:Ausschließlichkeit: erst nach 72 Stunden": "noch kein PDD-Schritt. Zu ergänzen in der PDD Komposit/Leben ab 22.09.", "kl:Makler: direkt an den BÜ-Bot": "noch kein PDD-Schritt. Zu ergänzen in der PDD Komposit/Leben ab 22.09.", "Vorgang abschließen": "letzte Zeile in Kapitel „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“ (Variante A oder B, TBD Fachbereich und Robotics).", "Mail klassifizieren, extrahieren, interpretieren": "kein PDD-Schritt. Die PDD beginnt mit dem fertigen Postkorbvorgang; dieser Teil gehört zur Celonis-Ausbaustufe 2.", "Weiche: Ist es eine Bestandsübertragung?": "kein PDD-Schritt. Grundlage ist die Abstimmung mit M. Koch und H. Schumann vom 11.09.2026.", "Alle betroffenen Versicherungsnummern über die VDB abrufen": "noch kein PDD-Schritt. Zu ergänzen in Kapitel „Eröffnung Postkorbvorgang und Daten im Datenpool“.", "Postkorbvorgang je Versicherungsnummer eröffnen": "PDD-Schritt „Werte aus dem EWMS-Postkorb“ in Kapitel „Eröffnung Postkorbvorgang und Daten im Datenpool“; Postkorb und GeVo-Nummer im Kapitel „Details zum Startereignis“.", "Datenpool beschreiben und Prüf-Bot starten": "PDD-Schritt „Werte aus dem Datenpool“ in Kapitel „Eröffnung Postkorbvorgang und Daten im Datenpool“ (Liste der 35 Felder, Initialisierung von BE, BE-Klassifikation und Fehlerliste).", "Klassifikation": "erste WENN-Abfrage in Kapitel „Vorprüfung – Ausschlusskriterien“ (<BUE_KLASSIFIKATION>).", "Bestandsübertragungs-Wunsch": "zweite WENN-Abfrage in Kapitel „Vorprüfung – Ausschlusskriterien“ (<BUE_WUNSCH_VORHANDEN>).", "Erinnerung oder Reminder": "dritte WENN-Abfrage in Kapitel „Vorprüfung – Ausschlusskriterien“ (<BUE_REMINDER>).", "Weiche: Makler oder Mehrfachagent?": "vierte WENN-Abfrage in Kapitel „Vorprüfung – Ausschlusskriterien“ (<BUE_VERMITTLER_TYP> = „MFA“). Als eigene Weiche ist sie dort nicht dargestellt.", "makler:Vollständigkeit der Unterlagen": "letzte WENN-Abfrage in Kapitel „Vorprüfung – Ausschlusskriterien“ (<BUE_PRUEFUNG_UNTERLAGEN> und <BUE_ANF_UNTERLAGEN>).", "makler:Vollmachtsfelder werden gebündelt bewertet": "Hinweistext am Ende von Kapitel „Vorprüfung – Ausschlusskriterien“.", "mfa:Keine Maklervollmacht erforderlich": "Hinweistext am Ende von Kapitel „Vorprüfung – Ausschlusskriterien“ („Bei Mehrfachagenten gibt es keine Maklervollmacht“).", "mfa:Betreuungswunsch muss auf den Mehrfachagenten lauten": "verschachtelte WENN-Abfrage in Kapitel „Vorprüfung – Ausschlusskriterien“ (<BUE_VERMITTLER_TYP> = „MFA“ und <BUE_MV_AUF_MAKLER> <> „ja“).", "Partner in IS011 suchen": "ersetzt den PDD-Schritt „Namensprüfung (Anwendung IS100)“ in Kapitel „I. VN – Stammdaten + VNR“.", "Alle Treffer mit dem Status „VN“ übernehmen": "neu, bisher kein PDD-Schritt.", "Zu jeder Kundennummer die Versicherungsnummern abrufen": "neu, bisher kein PDD-Schritt.", "Vorgangs-VNR unter den Treffern suchen": "ersetzt die PDD-Schritte „Geburtsdatum (Anwendung IS100)“ und „Adressprüfung (Anwendung IS100)“ in Kapitel „I. VN – Stammdaten + VNR“.",
+"makler:Maklervollmacht vom Versicherungsnehmer unterschrieben": "WENN-Abfrage <BUE_MV_UNTERSCHRIFT_KUNDE> in Kapitel „Vorprüfung – Ausschlusskriterien“; sie steht dort noch außerhalb der Weiche und ist in den Makler-Zweig zu verschieben.",
+"makler:Vollmacht auf den übernehmenden Makler ausgestellt": "Feldbeschreibung zu <BUE_MV_AUF_MAKLER>: „Makler: Bewertung bereits in BUE_PRUEFUNG_UNTERLAGEN enthalten“.",
+"makler:Pool und Untervollmacht bewerten": "Ableitung der Zeile „Bearbeitung nach“ im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“ (<BUE_POOL> und <BUE_UV_ERTEILT>).",
+"mfa:Ergebnis für die Notiz": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Bearbeitung nach“ = „mit BÜ“.",
+"Weiche: Vollmacht oder Betreuungswunsch?": "WENN-Abfrage <BUE_MV_UNTERSCHRIFT_KUNDE> in Kapitel „Vorprüfung – Ausschlusskriterien“.", "makler:Maklervollmacht liegt unterschrieben vor": "WENN-Abfrage <BUE_MV_UNTERSCHRIFT_KUNDE> in Kapitel „Vorprüfung – Ausschlusskriterien“.", "makler:Einreichung über einen Pool": "Ableitung der Zeile „Bearbeitung nach“ im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“ (<BUE_POOL> und <BUE_UV_ERTEILT>).", "makler:Ergebnis für die Notiz": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Bearbeitung nach“.", "mfa:Betreuungswunsch liegt unterschrieben vor": "WENN-Abfrage <BUE_MV_UNTERSCHRIFT_KUNDE> in Kapitel „Vorprüfung – Ausschlusskriterien“, gilt für beide Zweige.", "mfa:Keine Untervollmacht": "Hinweistext im Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“ (<BUE_UV_ERTEILT> = N/A bei MFA).", "mfa:Ergebnis für die Notiz": "Kapitel „Notizbestückung von Prüf-Bot auf BÜ-Bot“, Feld „Bearbeitung nach“ = „mit BÜ“.", "Agenturnummer des Bestandsinhabers lesen": "PDD-Schritt „Agentur-Nr. (A,…) des Bestandsinhabers ermitteln“ in Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“, erste Zeile (VA230, Feld „Betreuung“).", "Anbindung des Bestandsinhabers prüfen": "derselbe PDD-Schritt „Agentur-Nr. (A,…) des Bestandsinhabers ermitteln“, zweite Zeile (GH040, Zeile „Status der Beschäftigung“).", "Vertriebskanal bestimmen": "nur in der PDD Komposit/Leben, Kapitel „II. Übernehmender Makler – Agenturnummer/Vermittler-Nr. (PNR)“; in der KV-PDD am 10.09. gestrichen.", "Weiche: Lautet die Vollmacht auf genau diesen Vermittler?": "in der PDD nicht in Kapitel II, sondern im Kapitel „Vorprüfung – Ausschlusskriterien“ über <BUE_MV_AUF_MAKLER>; die Feldbeschreibung steht in der „Tabelle der genutzten Variablen“.",
+"makler:Makler-Zweig: heute ein weiches Kriterium": "Feldbeschreibung zu <BUE_MV_AUF_MAKLER>: „Makler: Bewertung bereits in BUE_PRUEFUNG_UNTERLAGEN enthalten“.",
+"makler:Zur Diskussion: eigenes hartes Kriterium?": "bisher nicht in der PDD; wäre als eigene BE-Klassifikation aufzunehmen.",
+"mfa:MFA-Zweig: hartes Kriterium": "verschachtelte WENN-Abfrage in Kapitel „Vorprüfung – Ausschlusskriterien“ (<BUE_VERMITTLER_TYP> = „MFA“ und <BUE_MV_AUF_MAKLER> <> „ja“).",
+"mfa:Keine Maklervollmacht im Spiel": "Hinweistext am Ende von Kapitel „Vorprüfung – Ausschlusskriterien“.", "Vertrag existiert": "PDD-Schritt „VNR-Prüfung (Anwendung VA230)“ in Kapitel „I. VN – Stammdaten + VNR“, Feld „urspr.Vers.beginn Vertragsbeginn“.", "Vertragsstatus": "derselbe PDD-Schritt „VNR-Prüfung (Anwendung VA230)“, Feld „Status“.",
+"Sparte auslesen": "derselbe PDD-Schritt „VNR-Prüfung (Anwendung VA230)“ in Kapitel „I. VN – Stammdaten + VNR“, Feld „Sparte“ samt Variable <VA230-Sparte> – dieser Teil des Schritts ist zu streichen.", "Sparte": "derselbe PDD-Schritt „VNR-Prüfung (Anwendung VA230)“, Feld „Sparte“ (nur nachrichtlich).", "Keine Sonderbehandlung": "Hinweistext am Ende des Kapitels „Prozessende mit Status Exception: BE-Handling“ (Rahmenverträge und Mahnverfahren); der Widerruf ist im Stand vom 10.09. dokumentiert.", "Test auf die Fehlerliste": "PDD-Schritt „Test auf Fehlerliste“ im Kapitel „III. Test auf Fehlerliste“.", "Notiz bestücken": "Kapitel „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“, Schritt „Notizbestückung von Prüf-Bot auf BÜ-Bot“.", "Übergabe Krankenversicherung": "Hinweistext im Kapitel „Prozessende mit Status completed: Weiterleitung an den BÜ-Bot“.", "Übergabe Komposit und Leben": "nur in der PDD Komposit/Leben; in der KV-PDD nicht enthalten.", "Vorgang abschließen": "Schritt „Prozessende“ im Kapitel „Prozessende mit Status completed“ (Variante A oder B noch offen).", "Weg bei Business Exception oder Fehler": "Kapitel „Prozessende mit Status Exception: BE-Handling“ mit der Werteliste der BE-Klassifikationen."};
+const ZUS={"1": ["Was beauftragt der Makler, und welche Verträge sind betroffen?", "Aus der eingehenden Mail wird ein bearbeitbarer Vorgang. Die KI erfasst das Anliegen des Maklers und ermittelt, welche Verträge des Kunden übertragen werden sollen. Je Vertrag entsteht ein eigener Vorgang, damit jede Entscheidung eindeutig einem Vertrag zugeordnet bleibt. Anliegen, die keine Bestandsübertragung sind, werden an die zuständige Fachabteilung gegeben."], "2": ["Liegt ein Auftrag zur Bestandsübertragung vor?", "Vor allen weiteren Prüfungen wird geklärt, ob in der Mail ein Auftrag steht oder lediglich eine Erinnerung an einen bereits laufenden Vorgang, und ob die erforderlichen Unterlagen beiliegen. Hier zeigt sich auch, ob ein Makler oder ein Mehrfachagent den Bestand übernehmen will; für beide gelten unterschiedliche Regeln. Der Makler braucht eine vom Versicherungsnehmer unterschriebene Maklervollmacht, der Mehrfachagent einen auf ihn lautenden Betreuungswunsch."], "3": ["Gehört der Vertrag zu dem Kunden, der die Vollmacht erteilt hat?", "Der im Auftrag genannte Kunde muss der Versicherungsnehmer genau dieses Vertrags sein, und der Vollmachtgeber muss derselbe sein. Trifft das nicht zu, besteht keine Grundlage für die Übertragung. Neu ist das Verfahren: eine Suche im Partnersystem anstelle des Vergleichs einzelner Adressfelder."], "4": ["Wer betreut den Vertrag bisher?", "Mit der Übertragung verliert der bisherige Vermittler den Bestand. Deshalb wird festgestellt, wer den Vertrag heute betreut. Gehört dieser Vermittler zur Ausschließlichkeitsorganisation, ist er vorab zu informieren, und es gilt eine Frist von 72 Stunden, bevor umgeschrieben wird."], "5": ["Ist der übernehmende Makler der Bevollmächtigte, und besteht eine aktive Zusammenarbeit?", "Der übernehmende Makler muss derjenige sein, auf den der Kunde die Vollmacht ausgestellt hat. Dafür wird er im Partnersystem über Namen und Anschrift gesucht; die im Auftrag genannte Vermittlernummer muss zu dem gefundenen Partner gehören. Erst dann steht fest, dass Name und Nummer dieselbe Person meinen. Zusätzlich muss eine aktive Zusammenarbeit mit der ERGO bestehen: Auf einen nicht mehr angebundenen Vermittler darf kein Bestand übertragen werden."], "6": ["Ist der Vertrag übertragbar?", "Der Vertrag, auf den sich der Auftrag bezieht, muss existieren und noch laufen. Ein beendeter oder historischer Vertrag kann nicht übertragen werden. Rahmenverträge und Verträge im Mahnverfahren werden dabei wie alle anderen behandelt."], "7": ["Sollen beim übernehmenden Makler Unterlagen angefordert werden, und welche?", "Das ist keine Prüfung, sondern eine Folgearbeit — und etwas anderes als die Vollständigkeit der eingereichten Unterlagen aus Schritt 2. Sagt der Auftrag, dass etwas anzufordern ist, hält die Notiz das fest und führt jede Unterlagenart einzeln auf; die Folgebearbeitung fordert sie beim Makler an, der Vorgang läuft dunkel weiter. Ist nichts anzufordern, enthält die Notiz dazu keine Zeile."], "8": ["Dunkelverarbeitung oder Nachbearbeitung durch die Sachbearbeitung?", "Die Entscheidung fällt erst jetzt, und zwar über alle Prüfungen zusammen statt beim ersten Befund. Ist nichts verletzt, wird die Notiz geschrieben und der Vorgang weitergegeben. Andernfalls erhält die Sachbearbeitung ihn mit dem vollständigen Prüfergebnis. Wohin er geht, hängt von der Sparte ab und bei Komposit und Leben zusätzlich davon, wer den Bestand heute hält."]};
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+// Variablennamen in spitzen Klammern als Code auszeichnen
+const SYSRE=/\b(OB726|OB729|GH040|VA230|EOS|IS011|IS100|EWMS|EMWS|KWAD|VDB|Celonis)\b/g;
+// Systeme fett, Datenpoolfelder dunkelblau, im Lauf erzeugte Variablen dunkelgruen
+const reich=s=>esc(s)
+  .replace(/&lt;([A-Za-z0-9_\-]+)&gt;/g,(m,n)=>`<code class="${n.indexOf("BUE_")===0?"dp":(n==="BE-Klassifikation"?"bek":"var")}">&lt;${n}&gt;</code>`)
+  .replace(/\bBUE_[A-Z0-9_]+\b/g,m=>`<code class="dp">${m}</code>`)
+  .replace(SYSRE,'<b class="sys">$1</b>');
+const feldHtml=reich;
+const MARKENIKON={
+ ok:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+ pr:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5v7M12 17.5h.01"/></svg>'};
+const markenBlock=k=>`<div class="marken" data-mk="${k}">
+  <button type="button" class="mk ok" data-akt="ok">${MARKENIKON.ok}<span>Bestätigt</span></button>
+  <button type="button" class="mk pr" data-akt="form">${MARKENIKON.pr}<span>Zu prüfen</span></button>
+  <button type="button" class="mk weg" data-akt="weg">Marke entfernen</button>
+ </div>
+ <form class="mform" data-mform="${k}">
+  <div class="was"><label>Was ist zu prüfen?</label><input type="text" name="was" placeholder="z. B. Wortlaut der Business Exception"></div>
+  <div class="wer"><label>Von wem?</label><input type="text" name="wer" placeholder="Name"></div>
+  <button type="submit" class="mk pr">Merken</button>
+ </form>
+ <p class="mstand" data-mstand="${k}"></p>`;
+const IKON={
+ ok:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+ be:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+ notiz:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16h.01"/></svg>',
+ weg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12.5 6l6 6-6 6"/></svg>'};
+const ausgangHtml=s=>{const i=s.indexOf(":"),art=s.slice(0,i),txt=s.slice(i+1);
+  return `<span class="erg ${art}">${IKON[art]||IKON.weg}<span>${feldHtml(txt)}</span></span>`;};
+const bedHtml=s=>{
+  const istBedingung=/[=≠]|enthält|endet auf|leer/.test(s);
+  let x=s.replace(/\s*\n\s*/g," ").replace(/\s+(UND|ODER)\s+/g,"\n$1 ");
+  if(istBedingung) x="WENN "+x;
+  const zeilen=x.split("\n");
+  return zeilen.map((z,i)=>(i?'<span class="einzug">':"")+reich(z)+(i?"</span>":"")).join("<br>");
+};
+const PSTAND={da:"So in der PDD",anders:"In der PDD, an anderer Stelle",neu:"Neu",
+  weg:"In der PDD, Streichvorschlag",aussen:"Nicht Teil der PDD"};
+const kasten=k=>{const f=FELD[k]; if(!f) return "";
+  const leer=f.f.indexOf("keines")===0, st=STAND[k];
+  const marke = st?`<div class="pstandbox ${st[0]}"><span class="pstand ${st[0]}">${PSTAND[st[0]]}</span>${st[1]?`<p class="pstandort">${feldHtml(st[1])}</p>`:""}</div>`:"";
+  const pruef = f.b
+    ? `<p class="fk">Prüfung</p><div class="skizze"><p class="bed">${bedHtml(f.b)}</p>`
+      +`<div class="zw"><span class="jn">ja</span>${ausgangHtml(f.j)}</div>`
+      +`<div class="zw"><span class="jn">nein</span>${ausgangHtml(f.n)}</div></div>`
+    : `<p class="fk">Keine Prüfung</p><p class="fv nichts">${feldHtml(f.w)}</p>`;
+  return `<aside class="feldbox${leer?" leer":""}">${marke}<p class="fk">Datenpoolfeld</p><p class="fv">${feldHtml(f.f)}</p>${pruef}</aside>`;};
+const AUSTEXT={be:"BE-Klassifikation",notiz:"Prüfnotiz",weiter:"weiter",abzweig:"Abzweig",gabel:"Weiche",entfaellt:"entfällt"};
+const kette=document.getElementById("kette"), inhalt=document.getElementById("inhalt");
+kette.innerHTML=SCHRITTE.map(s=>`<a href="#s${s.nr}" class="${s.neu?'markiert':''}"><span class="n">Schritt ${s.nr}</span><span class="b">${esc(s.kurz)}</span></a>`).join("");
+inhalt.innerHTML=SCHRITTE.map(s=>{
+  const us=s.us.map((u,i)=>{
+    const aus=u.aus||"weiter";
+    const txt=u.ausText?`${AUSTEXT[aus]}: ${esc(u.ausText)}`:AUSTEXT[aus];
+    const sp=u.sparte?`<span class="tag" style="margin-left:6px">${u.sparte==='kv'?'nur Krankenversicherung':'nur Komposit / Leben'}</span>`:"";
+    if(u.zweig){
+      const AESTE = u.aeste==="sparte" ? [["kv","Krankenversicherung"],["kl","Komposit und Leben"]] : [["makler","Makler"],["mfa","Mehrfachagent (MFA)"]];
+      const dim = u.aeste==="sparte" ? "data-sp" : "data-typ";
+      const ast=(k,titel)=>`<div class="ast ${k}" ${dim}="${k}"><h4>${titel}</h4><ul>${u.zweig[k].map(z=>{
+        const za=z.aus||"weiter"; const zt=z.ausText?`${AUSTEXT[za]}: ${esc(z.ausText)}`:AUSTEXT[za];
+        const zw=WARUM[k+":"+z.t]||WARUM[z.t];
+        return `<li><span class="zt">${esc(z.t)}</span><p class="zd">${reich(z.d)}</p>${zw?`<p class="warum"><b>Warum:</b> ${reich(zw)}</p>`:""}<span class="ausgang ${za}">${zt}</span>${(PDDREF[k+":"+z.t]||PDDREF[z.t])?`<span class="usref"><b>In der PDD:</b> ${reich(PDDREF[k+":"+z.t]||PDDREF[z.t])}</span>`:""}${kasten(k+":"+z.t)||kasten(z.t)}${markenBlock(k+":"+z.t)}</li>`;}).join("")}</ul></div>`;
+      return `<li class="gabelung" data-aus="gabel" data-sparte="${u.sparte||'beide'}" data-nr="${s.nr}.${i+1}">
+        <div class="zeile"><div>
+          <p class="ut">${esc(u.t)}${sp}</p><p class="ud">${reich(u.d)}</p>
+          ${WARUM[u.t]?`<p class="warum"><b>Warum:</b> ${reich(WARUM[u.t])}</p>`:""}
+        </div>${kasten(u.t)}</div>
+        <div class="gabel">${AESTE.map(([k,l])=>ast(k,l)).join("")}</div>
+        ${PDDREF[u.t]?`<span class="usref" style="margin-top:10px"><b>In der PDD:</b> ${reich(PDDREF[u.t])}</span>`:""}${u.ref?`<span class="usref">Herkunft: ${esc(u.ref)}</span>`:""}
+        ${markenBlock(u.t)}</li>`;
+    }
+    return `<li class="${aus}" data-aus="${aus}" data-sparte="${u.sparte||'beide'}" data-nr="${s.nr}.${i+1}">
+      <div class="zeile"><div>
+        <p class="ut">${esc(u.t)}${sp}${aus==="entfaellt"?'<span class="tag streichen" style="margin-left:6px">kann entfallen</span>':""}</p><p class="ud">${reich(u.d)}</p>
+        ${WARUM[u.t]?`<p class="warum"><b>Warum:</b> ${reich(WARUM[u.t])}</p>`:""}
+        <span class="ausgang ${aus}">${txt}</span>
+        ${PDDREF[u.t]?`<span class="usref"><b>In der PDD:</b> ${reich(PDDREF[u.t])}</span>`:""}${u.ref?`<span class="usref">Herkunft: ${esc(u.ref)}</span>`:""}
+        ${markenBlock(u.t)}
+      </div>${kasten(u.t)}</div></li>`;}).join("");
+  return `<section class="schritt ${s.neu?'istneu':''}" id="s${s.nr}" data-schritt="${s.nr}">
+    <div class="kopfzeile"><div class="ziffer">${s.nr}</div><div style="flex:1">
+      <h2>${esc(s.titel)}</h2><p class="ziel">${reich(s.ziel)}</p>
+      <div class="tags">${s.neu?'<span class="tag neu">NEU</span>':''}${s.systeme.map(x=>`<span class="tag sys">${esc(x)}</span>`).join("")}</div>
+      <div class="pdd"><b>In der PDD beschrieben:</b> ${reich(s.pdd)}</div>
+      ${markenBlock("s"+s.nr)}
+    </div><button class="schalter" aria-expanded="true">einklappen</button></div>
+    <ol class="us">${us}</ol>
+    ${s.ersetzt?`<div class="callout ersetzt"><b>Was dadurch entfällt</b>${reich(s.ersetzt)}</div>`:""}
+    ${s.idee?`<div class="callout idee"><b>${esc(s.ideeTitel||"Idee zur Diskussion")}</b>${reich(s.idee)}</div>`:""}
+    ${s.hinweis?`<div class="callout hinweis"><b>Hinweis</b>${reich(s.hinweis)}</div>`:""}
+  </section>`;}).join("");
+
+// Ueberblick: was in jedem Oberschritt passiert
+const zaehleBE=s=>s.us.reduce((n,u)=>n+(u.aus==="be"?1:0)+(u.zweig?Object.values(u.zweig).flat().filter(z=>z.aus==="be").length:0),0);
+document.getElementById("ueberblick").innerHTML =
+  `<div class="uk"><b>Überblick: Was in jedem Schritt passiert</b><span>Fachlich, ohne Systemnamen. Ein Klick springt in den Schritt.</span></div>` +
+  SCHRITTE.map(s=>{
+    const be=zaehleBE(s);
+    return `<a class="uz ${s.neu?'istneu':''}" href="#s${s.nr}">
+      <span class="n">${s.nr}</span>
+      <span style="flex:1">
+        <p class="k">${esc(s.kurz.replace(/\u00AD/g,""))}${s.neu?'<em>NEU</em>':''}</p>
+        <p class="frage">${esc(ZUS[s.nr][0])}</p>
+        <p class="z">${esc(ZUS[s.nr][1])}</p>
+        ${be?`<span class="meta"><span class="tag stopp">${be} ${be===1?'Business Exception definiert':'Business Exceptions definiert'}</span></span>`:""}
+      </span></a>`;}).join("");
+
+const li=(id,arr)=>document.getElementById(id).innerHTML=arr.map(x=>`<li>${esc(x)}</li>`).join("");
+li("lbe",BE_LISTE); li("lno",NOTIZ_LISTE); li("lweg",ENTFALLEN);
+document.getElementById("toffen").innerHTML=OFFEN.map(([a,b])=>`<tr><td><b>${esc(a)}</b></td><td>${esc(b)}</td></tr>`).join("");
+
+let sparte="alle", typ="alle", nurBE=false, nurOffen=false;
+
+/* ---- Abstimmungsstand: bestätigt oder zu prüfen, je Schritt ---- */
+const SPEICHER="bue-pruefprozess-marken";
+let MARKEN={};
+try{ MARKEN=JSON.parse(localStorage.getItem(SPEICHER)||"{}")||{}; }catch(e){ MARKEN={}; }
+function markenSichern(){ try{ localStorage.setItem(SPEICHER,JSON.stringify(MARKEN)); }catch(e){} }
+function fahne(st){ return st?`<span class="fahne ${st}" title="${st==="ok"?"bestätigt":"zu prüfen"}">${MARKENIKON[st]}</span>`:""; }
+
+function markenZeichnen(){
+  document.querySelectorAll("[data-mk]").forEach(zeile=>{
+    const k=zeile.dataset.mk, m=MARKEN[k];
+    zeile.querySelectorAll(".mk").forEach(b=>b.classList.toggle("an", !!m && ((b.dataset.akt==="ok"&&m.s==="ok")||(b.dataset.akt==="form"&&m.s==="pr"))));
+    zeile.querySelector(".mk.weg").style.visibility = m?"visible":"hidden";
+    const stand=document.querySelector(`[data-mstand="${CSS.escape(k)}"]`);
+    if(stand){
+      stand.className="mstand"+(m?" an "+m.s:"");
+      if(m && m.s==="ok") stand.innerHTML="<b>Bestätigt.</b>"+(m.wer?" Von "+esc(m.wer)+".":"")+(m.am?" Am "+esc(m.am)+".":"");
+      else if(m) stand.innerHTML="<b>Zu prüfen:</b> "+esc(m.was||"ohne nähere Angabe")+(m.wer?" — <b>durch "+esc(m.wer)+"</b>":"")+(m.am?" (vermerkt am "+esc(m.am)+")":"");
+      else stand.textContent="";
+    }
+  });
+  /* Fahne am Ober- und Unterschritt */
+  document.querySelectorAll(".schritt[data-schritt]").forEach(sec=>{
+    const h=sec.querySelector(".kopfzeile h2"); if(!h) return;
+    h.querySelectorAll(".fahne").forEach(f=>f.remove());
+    const m=MARKEN["s"+sec.dataset.schritt]; if(m) h.insertAdjacentHTML("beforeend",fahne(m.s));
+  });
+  document.querySelectorAll("ol.us > li").forEach(li=>{
+    const zeile=li.querySelector(":scope .marken"); if(!zeile) return;
+    const ziel=li.querySelector(".ut"); if(!ziel) return;
+    ziel.querySelectorAll(".fahne").forEach(f=>f.remove());
+    const m=MARKEN[zeile.dataset.mk]; if(m) ziel.insertAdjacentHTML("beforeend",fahne(m.s));
+  });
+  document.querySelectorAll(".ast > ul > li").forEach(li=>{
+    const zeile=li.querySelector(".marken"), ziel=li.querySelector(".zt");
+    if(!zeile||!ziel) return;
+    ziel.querySelectorAll(".fahne").forEach(f=>f.remove());
+    const m=MARKEN[zeile.dataset.mk]; if(m) ziel.insertAdjacentHTML("beforeend",fahne(m.s));
+  });
+  /* Fahne in der Schrittleiste */
+  document.querySelectorAll(".kette a").forEach(a=>{
+    a.querySelectorAll(".fahne").forEach(f=>f.remove());
+    const m=MARKEN["s"+a.getAttribute("href").replace("#s","")];
+    if(m) a.querySelector(".n").insertAdjacentHTML("beforeend",fahne(m.s));
+  });
+  const w=Object.values(MARKEN);
+  const ok=w.filter(x=>x.s==="ok").length, pr=w.filter(x=>x.s==="pr").length;
+  const z=document.getElementById("zaehlmarken");
+  z.innerHTML = (ok||pr) ? `<span><b>${ok}</b> bestätigt</span><span><b>${pr}</b> zu prüfen</span><button class="mk" id="allesWeg">Alle Marken löschen</button>` : "";
+  const aw=document.getElementById("allesWeg");
+  if(aw) aw.addEventListener("click",()=>{ if(confirm("Alle Marken in diesem Dokument löschen?")){ MARKEN={}; markenSichern(); markenZeichnen(); anwenden(); } });
+  anwenden();
+}
+const heute=()=>new Date().toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric"});
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".mk[data-akt]"); if(!b) return;
+  const k=b.closest("[data-mk]").dataset.mk, akt=b.dataset.akt;
+  const form=document.querySelector(`[data-mform="${CSS.escape(k)}"]`);
+  if(akt==="ok"){ MARKEN[k]={s:"ok",wer:(MARKEN[k]&&MARKEN[k].wer)||"",am:heute()}; if(form) form.classList.remove("auf"); }
+  else if(akt==="weg"){ delete MARKEN[k]; if(form) form.classList.remove("auf"); }
+  else if(akt==="form" && form){
+    form.classList.toggle("auf");
+    if(form.classList.contains("auf")){
+      form.was.value=(MARKEN[k]&&MARKEN[k].was)||""; form.wer.value=(MARKEN[k]&&MARKEN[k].wer)||"";
+      form.was.focus(); return;
+    }
+  }
+  markenSichern(); markenZeichnen();
+});
+document.addEventListener("submit",e=>{
+  const form=e.target.closest("[data-mform]"); if(!form) return;
+  e.preventDefault();
+  const k=form.dataset.mform;
+  MARKEN[k]={s:"pr",was:form.was.value.trim(),wer:form.wer.value.trim(),am:heute()};
+  form.classList.remove("auf"); markenSichern(); markenZeichnen();
+});
+function anwenden(){
+  let sicht=0;
+  document.querySelectorAll("ol.us > li").forEach(el=>{
+    const s=el.dataset.sparte, a=el.dataset.aus;
+    const okS = sparte==="alle" || s==="beide" || s===sparte;
+    const okB = !nurBE || a==="be" || a==="gabel";
+    const zeile=el.querySelector(":scope .marken");
+    const eigen=zeile?MARKEN[zeile.dataset.mk]:null;
+    const okO = !nurOffen || !eigen || eigen.s==="pr";
+    el.classList.toggle("versteckt", !(okS&&okB&&okO));
+    if(okS&&okB&&okO) sicht++;
+  });
+  document.querySelectorAll(".ast[data-typ]").forEach(el=>{
+    el.classList.toggle("gedimmt", typ!=="alle" && el.dataset.typ!==typ);
+  });
+  document.querySelectorAll(".ast[data-sp]").forEach(el=>{
+    el.classList.toggle("gedimmt", sparte!=="alle" && el.dataset.sp!==sparte);
+  });
+  document.getElementById("zaehler").textContent = sicht+" von "+document.querySelectorAll("ol.us > li").length+" Prüfschritten sichtbar";
+}
+document.querySelectorAll(".steuer button[data-sparte]").forEach(b=>b.addEventListener("click",()=>{
+  sparte=b.dataset.sparte;
+  document.querySelectorAll(".steuer button[data-sparte]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+  anwenden();
+}));
+document.querySelectorAll("[data-typ]").forEach(b=>{ if(b.tagName!=="BUTTON") return;
+  b.addEventListener("click",()=>{ typ=b.dataset.typ;
+    document.querySelectorAll("button[data-typ]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    anwenden(); });
+});
+/* Stand als Datei sichern und wieder einlesen */
+function standName(){ const d=new Date();
+  const z=n=>String(n).padStart(2,"0");
+  return `Abstimmungsstand_Pruefprozess_${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}.json`; }
+document.getElementById("standSpeichern").addEventListener("click",()=>{
+  const inhalt={dokument:"Prüfprozess Bestandsübertragung, acht Schritte",stand:heute(),marken:MARKEN};
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(inhalt,null,1)],{type:"application/json"}));
+  a.download=standName(); a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+const datei=document.getElementById("standDatei");
+document.getElementById("standLaden").addEventListener("click",()=>datei.click());
+datei.addEventListener("change",()=>{
+  const f=datei.files&&datei.files[0]; if(!f) return;
+  const leser=new FileReader();
+  leser.onload=()=>{
+    try{
+      const d=JSON.parse(leser.result);
+      const neu=d&&d.marken&&typeof d.marken==="object"?d.marken:null;
+      if(!neu) throw new Error("keine Marken in der Datei");
+      const anzahl=Object.keys(MARKEN).length;
+      if(anzahl && !confirm(`In diesem Dokument sind ${anzahl} Marken gesetzt. Durch den geladenen Stand ersetzen?`)) return;
+      MARKEN=neu; markenSichern(); markenZeichnen();
+    }catch(e){ alert("Die Datei konnte nicht gelesen werden: "+e.message); }
+    finally{ datei.value=""; }
+  };
+  leser.readAsText(f);
+});
+const no=document.getElementById("nurOffen");
+no.addEventListener("click",()=>{nurOffen=!nurOffen;no.setAttribute("aria-pressed",String(nurOffen));anwenden();});
+const nb=document.getElementById("nurBE");
+nb.addEventListener("click",()=>{nurBE=!nurBE;nb.setAttribute("aria-pressed",String(nurBE));anwenden();});
+markenZeichnen();
+
+// Schritte ein- und ausklappen; Schritt 1 startet eingeklappt
+function klapp(sec, zu){
+  sec.classList.toggle("zu", zu);
+  const b=sec.querySelector(".schalter");
+  if(b){ b.textContent = zu ? "ausklappen" : "einklappen"; b.setAttribute("aria-expanded", String(!zu)); }
+}
+document.querySelectorAll(".schritt .schalter").forEach(b=>{
+  b.addEventListener("click",()=>klapp(b.closest(".schritt"), !b.closest(".schritt").classList.contains("zu")));
+});
+klapp(document.getElementById("s1"), true);
+document.querySelectorAll(".kette a, .uz").forEach(a=>a.addEventListener("click",()=>{
+  const ziel=document.querySelector(a.getAttribute("href"));
+  if(ziel && ziel.classList.contains("zu")) klapp(ziel, false);
+}));
+
+// Hoehe der beiden Leisten messen, damit die Schrittleiste sauber andockt und Sprungziele passen
+const steuerEl=document.querySelector(".steuer"), kettenEl=document.querySelector(".kettenleiste");
+function leisten(){
+  const h=Math.round(steuerEl.getBoundingClientRect().height);
+  document.documentElement.style.setProperty("--kopfhoehe", h+"px");
+  document.documentElement.style.setProperty("--sprung", (h+Math.round(kettenEl.getBoundingClientRect().height)+14)+"px");
+}
+leisten();
+window.addEventListener("resize", leisten);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(leisten);
+
+// Aktiven Schritt in der Leiste markieren
+const chips=[...document.querySelectorAll(".kette a")];
+const ziele=chips.map(a=>document.querySelector(a.getAttribute("href"))).filter(Boolean);
+function aktiv(){
+  const grenze=(parseInt(getComputedStyle(document.documentElement).getPropertyValue("--sprung"))||150)+20;
+  let treffer=-1;
+  ziele.forEach((sec,i)=>{ if(sec.getBoundingClientRect().top<=grenze) treffer=i; });
+  chips.forEach((c,i)=>c.classList.toggle("aktiv", i===treffer));
+}
+let warte=false;
+window.addEventListener("scroll",()=>{ if(warte) return; warte=true; requestAnimationFrame(()=>{aktiv();warte=false;}); },{passive:true});
+aktiv();
+</script>
+</body></html>

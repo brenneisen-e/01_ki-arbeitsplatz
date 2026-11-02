@@ -1,0 +1,22 @@
+name = "bank-der-zukunft-2035"
+compatibility_date = "2026-04-29"
+pages_build_output_dir = "dist"
+
+# Geteilter Content-Editor (In-Tool bearbeiten & speichern) — Persistenz über KV.
+# Einmalig einrichten (Cloudflare-Account nötig), dann diesen Block aktivieren:
+#   npx wrangler kv namespace create CONTENT_KV
+#   -> zurueckgegebene id unten eintragen und die drei Zeilen einkommentieren.
+# Alternativ im Pages-Dashboard: Settings -> Functions -> KV namespace bindings,
+# Variable CONTENT_KV auf den Namespace binden. Solange nicht gebunden, laeuft der
+# Editor sauber auf localStorage (nicht geteilt) weiter.
+# [[kv_namespaces]]
+# binding = "CONTENT_KV"
+# id = "HIER_KV_NAMESPACE_ID_EINTRAGEN"
+
+# Bild-Upload im Editor (Platzhalter/Demo-Bilder ersetzen) — Speicher über R2.
+# Einmalig: npx wrangler r2 bucket create bdz-content-assets
+# dann diesen Block aktivieren (oder im Pages-Dashboard als CONTENT_R2 binden).
+# Ohne Bindung bleibt der Upload deaktiviert; Standardbilder bleiben erhalten.
+# [[r2_buckets]]
+# binding = "CONTENT_R2"
+# bucket_name = "bdz-content-assets"

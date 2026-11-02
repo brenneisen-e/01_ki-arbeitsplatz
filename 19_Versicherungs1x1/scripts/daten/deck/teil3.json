@@ -1,0 +1,2306 @@
+{
+  "teil": "teil3",
+  "folien": "48-71",
+  "neueKapitel": [
+    {
+      "id": "geschaeftsmodell",
+      "title": "Geschäftsmodell und Kennzahlen",
+      "subtitle": "Woher der Gewinn kommt, wie die GuV aufgebaut ist und welche Kennzahlen zählen",
+      "icon": "coins",
+      "heroStat": {
+        "value": 75,
+        "unit": "%",
+        "label": "Anteil festverzinslicher Anlagen im Portfolio der Lebensversicherer (2025)"
+      },
+      "quickStats": [
+        {
+          "value": 100,
+          "unit": "%",
+          "label": "Pflichtgrenze der Solvency-II-Quote für alle Sparten"
+        },
+        {
+          "value": 8,
+          "unit": "%",
+          "label": "Eigenkapitalkosten als Messlatte für den Return on Equity"
+        },
+        {
+          "value": 5,
+          "unit": "%",
+          "label": "Kostenquote eines Rückversicherers (Erstversicherer: 25 bis 30 %)"
+        }
+      ],
+      "subChapters": [
+        {
+          "id": "ertragsquellen",
+          "title": "Ertragsquellen",
+          "icon": "git-branch",
+          "subtitle": "Operating Profit als Summe aus Versicherungstechnik und Kapitalanlage",
+          "kurzgesagt": [
+            "Der Operating Profit eines Erstversicherers ist die Summe aus versicherungstechnischem Ergebnis und Kapitalanlageergebnis.",
+            "Die Versicherungstechnik beschafft das Kapital, das Investment erzeugt die Rendite: Zwischen Prämieneinnahme und Schadenzahlung vergehen Tage bis Jahrzehnte, und dieser Float wird angelegt.",
+            "Welcher Motor trägt, hängt an der Sparte: In SHUK dominiert die Versicherungstechnik, in der Lebensversicherung entsteht der Gewinn primär aus der Zinsmarge, die Krankenversicherung ist ein Hybridmodell."
+          ],
+          "lernziele": [
+            "den Operating Profit in seine zwei Bestandteile zerlegen",
+            "die Mechanik des Float erklären",
+            "je Sparte benennen, welcher Ergebnismotor dominiert"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Zwei Motoren, eine Gewinnrechnung",
+              "content": "Ein Erstversicherer verdient auf zwei Wegen gleichzeitig. Das Sektortraining schreibt das als einfache Gleichung: <code>Operating Profit = versicherungstechnisches Ergebnis + Kapitalanlageergebnis</code>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 67</span></span> Beide Teile hängen zusammen, denn die Versicherungstechnik beschafft das Kapital – idealerweise kostenlos oder mit Gewinn –, und das Investment erzeugt daraus die Rendite. Während SHUK seine Marge im kurzfristigen Underwriting erzielt, wirken Leben und Kranken als langfristige Asset-Manager, mit massiven Auswirkungen auf die Gewinnquellen."
+            },
+            {
+              "type": "paragraph",
+              "title": "Das versicherungstechnische Ergebnis",
+              "content": "<strong>Mechanik:</strong> Der Versicherer nimmt Prämien von vielen ein, um die Schäden von wenigen zu bezahlen – das Risikokollektiv aus dem Kapitel Grundlagen. <strong>Berechnung:</strong> Prämieneinnahmen minus Schadenzahlungen minus Kosten für Vertrieb und Verwaltung. <strong>Ziel:</strong> Die Prämie muss mindestens die erwarteten Leistungsaufwände plus die Betriebskosten decken. Genau dieses Verhältnis misst in der Schaden- und Unfallversicherung die Combined Ratio."
+            },
+            {
+              "type": "paragraph",
+              "title": "Das Kapitalanlagegeschäft und der Float",
+              "content": "<strong>Mechanik:</strong> Zwischen dem Zeitpunkt der Prämieneinnahme und der Schadenzahlung vergeht Zeit – Tage bis Jahrzehnte. Dieses Geld nennt man <strong>Float</strong>; der Versicherer legt es am Kapitalmarkt an. <strong>Berechnung:</strong> Das Kapitalanlageergebnis ist das Investment Income abzüglich Zinsaufwendungen und Abschreibungen. Der Float ist damit kein Nebenprodukt, sondern die eigentliche Brücke zwischen beiden Motoren: Je länger die Verträge laufen, desto größer ist er."
+            },
+            {
+              "type": "table",
+              "title": "Welcher Motor das Ergebnis trägt",
+              "headers": [
+                "Sparte",
+                "Gewinnquelle"
+              ],
+              "rows": [
+                [
+                  "SHUK",
+                  "Die Versicherungstechnik dominiert, da Prämien und echte Schäden meist kurzfristig anfallen. Die Kapitalanlage ist bei diesen kurzen Laufzeiten ein nützlicher Puffer, aber nicht der primäre Gewinntreiber."
+                ],
+                [
+                  "KV",
+                  "Ein Hybridmodell, bei dem beide Motoren ineinandergreifen müssen: Der Versicherer muss laufende Krankheitskosten strikt managen und gleichzeitig die massiven Sparanteile der Kunden – die Alterungsrückstellungen – am Kapitalmarkt profitabel verzinsen."
+                ],
+                [
+                  "LV",
+                  "Das Geschäftsmodell setzt fast vollständig auf die Kapitalanlage. Der Gewinn entsteht über Jahrzehnte hinweg primär aus der Zinsmarge zwischen erwirtschafteter Rendite und den Garantien an den Kunden."
+                ]
+              ],
+              "sortable": false
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Die Asset-Allokation der Lebensversicherer",
+              "content": "Wie der Float angelegt wird, zeigt die Aufteilung der Kapitalanlagen der Lebensversicherer für 2025.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 67</span></span> Das Sektortraining nennt dafür Bandbreiten, keine punktgenauen Anteile."
+            },
+            {
+              "type": "table",
+              "title": "Kapitalanlagen der Lebensversicherer 2025",
+              "headers": [
+                "Anlageklasse",
+                "Anteil"
+              ],
+              "rows": [
+                [
+                  "Festverzinsliche Anlagen",
+                  "rund 75 %"
+                ],
+                [
+                  "Beteiligungen",
+                  "10 bis 15 %"
+                ],
+                [
+                  "Aktien",
+                  "je etwa 5 %"
+                ],
+                [
+                  "Immobilien",
+                  "je etwa 5 %"
+                ],
+                [
+                  "Liquidität und Sonstiges",
+                  "kleiner Rest"
+                ]
+              ],
+              "sortable": false
+            },
+            {
+              "type": "paragraph",
+              "title": "Warum die Reihenfolge der Motoren nicht beliebig ist",
+              "content": "Die Formulierung des Sektortrainings ist präzise: Die Versicherungstechnik <strong>beschafft</strong> das Kapital, das Investment <strong>generiert</strong> die Rendite. Daraus folgt eine Rangfolge in der Steuerung. Ein Haus, das die Versicherungstechnik verliert, kann das über die Kapitalanlage nur begrenzt ausgleichen – es finanziert dann fremdes Kapital, statt es kostenlos zu erhalten. Umgekehrt genügt in langlaufenden Sparten eine ausgeglichene Technik nicht, weil der Gewinn ohnehin aus der Zinsmarge kommt."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Was das für die Bewertung eines Hauses bedeutet",
+              "content": "Wer ein Versicherungsunternehmen beurteilt, muss beide Motoren getrennt lesen. In SHUK ist die Combined Ratio die zentrale Referenz, weil das Ergebnis dort im Underwriting entsteht und die Kapitalanlage nur puffert. In der Lebensversicherung entscheidet der Abstand zwischen erwirtschafteter Rendite und garantiertem Kundenzins, weshalb dort das Zinsniveau und die Struktur der Altbestände wichtiger sind als die operative Kostenquote. In der Krankenversicherung müssen beide Größen gleichzeitig stimmen: das Risikoergebnis aus dem Leistungsmanagement und das Zinsergebnis auf die Alterungsrückstellungen."
+            }
+          ]
+        },
+        {
+          "id": "guv",
+          "title": "Die GuV eines Versicherers",
+          "icon": "file-text",
+          "subtitle": "Von den Bruttobeiträgen über Schadenverlauf und Kosten zum Jahresüberschuss",
+          "kurzgesagt": [
+            "Die Versicherungs-GuV zeigt in neun Zeilen, wie Beiträge Risiken finanzieren und über Schadenverlauf, Kosten und Kapitalerträge zum Ergebnis werden.",
+            "Drei Zwischensummen strukturieren die Rechnung: die verdienten Nettobeiträge (NWP), das versicherungstechnische Ergebnis und der Jahresüberschuss.",
+            "Die Combined Ratio wird auf die verdienten Nettobeiträge gerechnet – als Summe aus Schadenaufwand und Kosten geteilt durch NWP."
+          ],
+          "lernziele": [
+            "die Zeilen der Versicherungs-GuV in der richtigen Reihenfolge nennen",
+            "den Unterschied zwischen Bruttobeitragseinnahmen und verdienten Nettobeiträgen erklären",
+            "das versicherungstechnische Ergebnis von Jahresüberschuss und Kapitalanlageergebnis abgrenzen"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Neun Zeilen, drei Zwischensummen",
+              "content": "Die Gewinn- und Verlustrechnung eines Erstversicherers folgt einer eigenen Logik, die sich von der eines Industrieunternehmens unterscheidet: Sie zeigt, wie Beiträge Risiken finanzieren und über Schadenverlauf, Kosten und Kapitalerträge zum Ergebnis werden.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 68</span></span> Wer die drei Zwischensummen kennt, kann jede Versicherungs-GuV lesen."
+            },
+            {
+              "type": "stufenTabelle",
+              "title": "Gewinn- und Verlustrechnung eines Erstversicherers",
+              "untertitel": "Die Formeln in der rechten Spalte zeigen, aus welchen Treibern die jeweilige Zeile entsteht.",
+              "kopf": [
+                "GuV-Zeile",
+                "Bedeutung"
+              ],
+              "zeilen": [
+                {
+                  "zeichen": "+",
+                  "art": "posten",
+                  "text": "Bruttobeitragseinnahmen (GWP)",
+                  "bedeutung": "Der gesamte Umsatz des Versicherers.",
+                  "formel": "Durchschnittsbeitrag × Anzahl Verträge"
+                },
+                {
+                  "zeichen": "-",
+                  "art": "posten",
+                  "text": "Rückversicherungsabgaben",
+                  "bedeutung": "Die Prämie, die der Versicherer an Rückversicherer zahlt, um extreme Risiken abzusichern.",
+                  "formel": "GWP × Rückversicherungsquote"
+                },
+                {
+                  "zeichen": "=",
+                  "art": "zwischensumme",
+                  "text": "Verdiente Nettobeiträge (NWP)",
+                  "bedeutung": "Der echte Umsatz nach Abzug der Rückversicherung für das laufende Jahr."
+                },
+                {
+                  "zeichen": "-",
+                  "art": "posten",
+                  "text": "Schaden- oder Leistungsaufwendungen",
+                  "bedeutung": "Ausbezahlte Schäden, Renten und Erstattungen plus Zuführungen zu Rückstellungen. Die von Rückversicherern erhaltenen Schadenzahlungen sind hier gegenzurechnen.",
+                  "formel": "Anzahl Schäden × Durchschnittsschaden (SHUK)"
+                },
+                {
+                  "zeichen": "-",
+                  "art": "posten",
+                  "text": "Abschluss- und Verwaltungskosten",
+                  "bedeutung": "Gehälter, IT und Miete sowie Provisionen an Makler und Vertreter.",
+                  "formel": "Abschlusskosten = GWP × Durchschnittsprovisionssatz; Verwaltungskosten = fixe Kosten + variable Kosten je Vertrag"
+                },
+                {
+                  "zeichen": "=",
+                  "art": "zwischensumme",
+                  "text": "Versicherungstechnisches Ergebnis",
+                  "bedeutung": "Zeigt, ob das operative Versicherungsgeschäft profitabel ist. In SHUK wird zusätzlich die Combined Ratio als Referenz genommen.",
+                  "formel": "(Schadenaufwand + Kosten) / NWP"
+                },
+                {
+                  "zeichen": "+",
+                  "art": "posten",
+                  "text": "Kapitalanlageergebnis",
+                  "bedeutung": "Zinsen, Dividenden und realisierte Gewinne aus Kapitalanlagen.",
+                  "formel": "durchschnittliches Anlagevolumen × Rendite"
+                },
+                {
+                  "zeichen": "-",
+                  "art": "posten",
+                  "text": "Sonstiges und Steuern",
+                  "bedeutung": "Nicht-technische Aufwendungen und Ertragssteuern.",
+                  "formel": "Steuern = steuerpflichtiges Ergebnis × Steuersatz"
+                },
+                {
+                  "zeichen": "=",
+                  "art": "endsumme",
+                  "text": "Jahresüberschuss (Net Income)",
+                  "bedeutung": "Der finale Gewinn, der ins Eigenkapital geht oder ausgeschüttet wird."
+                }
+              ],
+              "fussnote": "GWP steht für Gross Written Premium, NWP für Net Written Premium. Das Sektortraining spricht in SHUK von Schadenaufwendungen und in KV und LV von Leistungsaufwendungen. Quelle: Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 68."
+            },
+            {
+              "type": "paragraph",
+              "title": "Stufe 1: von brutto zu netto",
+              "content": "Am Anfang stehen die <strong>Bruttobeitragseinnahmen</strong> (GWP) – der gesamte Umsatz, rechnerisch Durchschnittsbeitrag mal Anzahl der Verträge. Davon geht ab, was der Versicherer selbst für Deckung zahlt: die <strong>Rückversicherungsabgaben</strong>, also die Prämie an den Rückversicherer für die Absicherung extremer Risiken. Übrig bleiben die <strong>verdienten Nettobeiträge</strong> (NWP), der echte Umsatz des laufenden Jahres. Diese Zeile ist die Bezugsgröße für die wichtigsten Quoten – wer Schadenquote oder Combined Ratio versehentlich auf GWP rechnet, erhält systematisch zu gute Werte."
+            },
+            {
+              "type": "paragraph",
+              "title": "Stufe 2: die zwei großen Aufwandsblöcke",
+              "content": "Vom Nettoumsatz gehen zwei Blöcke ab. Die <strong>Schaden- oder Leistungsaufwendungen</strong> umfassen nicht nur ausbezahlte Schäden, Renten und Erstattungen, sondern auch die Zuführungen zu den Rückstellungen – ein Schaden belastet also das Jahr, in dem er entsteht, nicht erst das Jahr der Zahlung. Der zweite Block sind die <strong>Abschluss- und Verwaltungskosten</strong>: Gehälter, IT, Miete und die Provisionen an Makler und Vertreter. Die Abschlusskosten skalieren mit dem Neugeschäft, die Verwaltungskosten bestehen aus einem fixen Teil und einem variablen Teil je Vertrag."
+            },
+            {
+              "type": "paragraph",
+              "title": "Stufe 3: das versicherungstechnische Ergebnis",
+              "content": "Nach diesen beiden Blöcken steht das <strong>versicherungstechnische Ergebnis</strong>. Es zeigt, ob das operative Versicherungsgeschäft profitabel ist – ganz ohne Kapitalmarkt. In der Schaden- und Unfallversicherung wird daneben die Combined Ratio als Referenz genommen: Schadenaufwand plus Kosten geteilt durch die verdienten Nettobeiträge. Diese Zeile ist die Nahtstelle zwischen Geschäftsmodell und Steuerung, weil hier sichtbar wird, ob die kalkulierte Gewinnmarge aus der Prämienberechnung tatsächlich verdient wurde."
+            },
+            {
+              "type": "paragraph",
+              "title": "Stufe 4: vom Kapitalanlageergebnis zum Jahresüberschuss",
+              "content": "Zum technischen Ergebnis kommt das <strong>Kapitalanlageergebnis</strong> aus Zinsen, Dividenden und realisierten Gewinnen – rechnerisch das durchschnittliche Anlagevolumen mal Rendite. Danach folgen <strong>Sonstiges und Steuern</strong>, also nicht-technische Aufwendungen und Ertragssteuern. Was übrig bleibt, ist der <strong>Jahresüberschuss</strong> (Net Income): der finale Gewinn, der ins Eigenkapital geht oder ausgeschüttet wird. Er ist zugleich der Zähler des Return on Equity."
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Die Treiber hinter jeder Zeile",
+              "content": "Das Sektortraining hinterlegt die GuV-Zeilen mit Rechengrößen. Das ist nützlich, weil sich damit jede Zeile in Treiber zerlegen lässt:<ul><li><code>GWP = Durchschnittsbeitrag × Anzahl Verträge</code></li><li><code>Rückversicherungsabgaben = GWP × Rückversicherungsquote</code></li><li><code>Schadenaufwand (SHUK) = Anzahl Schäden × Durchschnittsschaden</code></li><li><code>Abschlusskosten = GWP × Durchschnittsprovisionssatz</code></li><li><code>Verwaltungskosten = fixe Kosten + variable Kosten je Vertrag</code></li><li><code>Kapitalanlageergebnis = durchschnittliches Anlagevolumen × Rendite</code></li><li><code>Steuern = steuerpflichtiges Ergebnis × Steuersatz</code></li></ul>"
+            },
+            {
+              "type": "paragraph",
+              "content": "Damit lässt sich jede Ergebnisveränderung auf Menge, Preis oder Quote zurückführen – die Grundlage jeder Werttreiberanalyse im Versicherungsgeschäft."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Drei Fallstricke beim Lesen einer Versicherungs-GuV",
+              "content": "Erstens die <strong>Bezugsgröße</strong>: Die Combined Ratio wird auf die verdienten Nettobeiträge bezogen, nicht auf die Bruttobeitragseinnahmen. Zweitens die <strong>Rückversicherungsseite</strong>: Die Abgaben mindern den Umsatz, aber die erhaltenen Schadenzahlungen der Rückversicherer mindern auch den Aufwand – wer nur die Abgaben sieht, hält die Rückversicherung für teurer, als sie ist. Drittens die <strong>Rückstellungen</strong>: Weil Zuführungen zu den Rückstellungen Teil des Schadenaufwands sind, kann ein Jahr mit wenigen Zahlungen trotzdem einen hohen Schadenaufwand ausweisen. Gerade in der Lebensversicherung und in der Krankenversicherung bestimmen diese Zuführungen – Deckungsrückstellungen, Zinszusatzreserve, Alterungsrückstellungen – die größte Aufwandsposition."
+            }
+          ]
+        },
+        {
+          "id": "kennzahlen",
+          "title": "Zentrale Kennzahlen",
+          "icon": "percent",
+          "subtitle": "Combined Ratio, Schaden- und Kostenquote, Return on Equity und Solvency II",
+          "kurzgesagt": [
+            "Das KPI-Cockpit des Vorstands hat zwei Hälften: die operative Steuerung, die je nach Sparte variiert, und die Ertragskraft mit Regulierung, die spartenübergreifend über den Unternehmenswert entscheidet.",
+            "Eine Combined Ratio von 97 % bedeutet, dass jeder verdiente Euro Prämie 3 Cent Gewinn in der Technik erzeugt; unter 100 % steht ein versicherungstechnischer Gewinn, über 100 % ein Verlust.",
+            "Ein Return on Equity unter den Eigenkapitalkosten von meist etwa 8 % vernichtet Unternehmenswert; die Solvency-II-Quote muss für alle Sparten über 100 % liegen."
+          ],
+          "lernziele": [
+            "Combined Ratio, Schadenquote und Kostenquote aus ihren Formeln herleiten und interpretieren",
+            "den Return on Equity gegen die Eigenkapitalkosten einordnen",
+            "die Solvency-II-Quote als Maß der Krisenfestigkeit erklären und ihre Spartenunterschiede benennen"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Das KPI-Cockpit des Vorstands",
+              "content": "Die Kennzahlen der Versicherungswirtschaft lassen sich in zwei Gruppen ordnen: Die <strong>operative Steuerung</strong> variiert je nach Sparte und dreht sich in SHUK um die Combined Ratio und ihre beiden Bestandteile; <strong>Ertragskraft und Regulierung</strong> entscheiden über Return on Equity und Solvency-II-Quote spartenübergreifend über den Unternehmenswert.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 69</span></span>"
+            },
+            {
+              "type": "table",
+              "title": "Die fünf zentralen Kennzahlen",
+              "headers": [
+                "Kennzahl",
+                "Formel",
+                "Was sie zeigt"
+              ],
+              "rows": [
+                [
+                  "Combined Ratio",
+                  "(Schadenaufwand + Kostenaufwand) / verdiente Prämien",
+                  "Indikator der Profitabilität des Versicherungsgeschäfts"
+                ],
+                [
+                  "Schadenquote",
+                  "Schadenaufwand / verdiente Prämien",
+                  "Indikator für die Qualität der Risikoauswahl und des Pricings"
+                ],
+                [
+                  "Kostenquote",
+                  "(Abschlusskosten + Verwaltungskosten) / verdiente Prämien",
+                  "Indikator für die operative Effizienz und die Vertriebsstärke"
+                ],
+                [
+                  "Return on Equity",
+                  "Nettoergebnis / Eigenkapital",
+                  "Ertragskraft, gemessen an der Rendite auf das eingesetzte Eigenkapital"
+                ],
+                [
+                  "Solvency-II-Quote",
+                  "Eigenmittel / Solvenzkapitalanforderung (SCR)",
+                  "Krisenfestigkeit und finanzielle Überlebensfähigkeit im extremen Schockszenario"
+                ]
+              ],
+              "sortable": true
+            },
+            {
+              "type": "paragraph",
+              "title": "Die Combined Ratio und ihre Benchmarks",
+              "content": "Die Combined Ratio ist die zentrale operative Kennzahl der Schaden- und Unfallversicherung. Eine <strong>CR von 97 %</strong> bedeutet, dass jeder verdiente Euro Prämie 3 Cent Gewinn in der Technik erzeugt. Die Benchmarks sind entsprechend einfach:<ul><li><strong>CR unter 100 %:</strong> versicherungstechnischer Gewinn</li><li><strong>CR gleich 100 %:</strong> Das Kerngeschäft trägt sich selbst, macht aber keinen Gewinn.</li><li><strong>CR über 100 %:</strong> versicherungstechnischer Verlust</li></ul>"
+            },
+            {
+              "type": "paragraph",
+              "content": "Was als guter Wert gilt, variiert von Produkt zu Produkt; die Kfz-Versicherung zeigt tendenziell die schwächsten Combined Ratios. Die Werte für den deutschen Markt und die einzelnen Sparten stehen im Kapitel Der Markt im Überblick."
+            },
+            {
+              "type": "combinedRatioCalc",
+              "title": "Combined Ratio Rechner"
+            },
+            {
+              "type": "paragraph",
+              "title": "Schadenquote und Kostenquote als die beiden Treiber",
+              "content": "Die Combined Ratio ist eine Summe – und deshalb nur so aussagekräftig wie ihre beiden Bestandteile. Die <strong>Schadenquote</strong> setzt den Schadenaufwand in Verhältnis zu den verdienten Prämien und ist damit ein Indikator für die Qualität der Risikoauswahl und des Pricings: Sie steigt, wenn falsch selektiert oder zu günstig kalkuliert wurde. Die <strong>Kostenquote</strong> setzt Abschluss- und Verwaltungskosten in Verhältnis zu den verdienten Prämien und zeigt die operative Effizienz und die Vertriebsstärke. Zwei Häuser mit derselben Combined Ratio können damit völlig unterschiedliche Probleme haben."
+            },
+            {
+              "type": "paragraph",
+              "title": "Return on Equity: die Messlatte sind die Eigenkapitalkosten",
+              "content": "Der Return on Equity setzt das Nettoergebnis in Verhältnis zum Eigenkapital. Entscheidend ist nicht der absolute Wert, sondern der Vergleich mit den Eigenkapitalkosten: Werte unter den Eigenkapitalkosten von meist etwa 8 % vernichten Unternehmenswert. Die Erwartungen unterscheiden sich je Sparte – in SHUK 8 bis 15 % wegen des höheren Risikos und der höheren Margenerwartung, in LV 5 bis 10 % stark abhängig vom Kapitalmarkt und oft gedrückt durch teure Alt-Garantien, in KV ebenfalls 5 bis 10 % als stabiles, aber stark reguliertes Geschäftsmodell."
+            },
+            {
+              "type": "paragraph",
+              "title": "Solvency-II-Quote: Krisenfestigkeit im 200-Jahres-Szenario",
+              "content": "Die Solvency-II-Quote teilt die Eigenmittel durch die Solvenzkapitalanforderung (SCR). Sie ist der Indikator für die absolute Krisenfestigkeit und die finanzielle Überlebensfähigkeit des Versicherers bei extremen Schockszenarien – gerechnet wird gegen eine Krise, wie sie statistisch alle 200 Jahre auftritt. Die 100-Prozent-Pflichtgrenze gilt für alle Sparten; was darüber als gut gilt, hängt vom Risikoprofil ab."
+            }
+          ],
+          "level2": [
+            {
+              "type": "table",
+              "title": "Benchmarks je Sparte",
+              "headers": [
+                "Kennzahl",
+                "SHUK",
+                "KV",
+                "LV"
+              ],
+              "rows": [
+                [
+                  "Return on Equity",
+                  "8 bis 15 %",
+                  "5 bis 10 %",
+                  "5 bis 10 %"
+                ],
+                [
+                  "Solvency-II-Quote („gut“)",
+                  "über 180 %",
+                  "über 250 %",
+                  "über 200 % inklusive Übergangsmaßnahmen"
+                ],
+                [
+                  "Was die Quote treibt",
+                  "wenig Zinsrisiko, dafür Katastrophenrisiken wie Flut, Stürme und Hagel",
+                  "langfristige Biometrie-Risiken wie Überalterung und medizinische Inflation, gedämpft durch das gesetzliche Recht auf Beitragsanpassungen",
+                  "jahrzehntelange Zinsgarantien, deshalb dominieren massive Kapitalmarktrisiken"
+                ]
+              ],
+              "sortable": false
+            },
+            {
+              "type": "paragraph",
+              "title": "Warum die Solvenzquote je Sparte anders zu lesen ist",
+              "content": "Die Quote misst nicht Profitabilität, sondern Widerstandsfähigkeit gegen das jeweils dominierende Risiko. In SHUK ist sie meist sehr robust gegenüber reinen Kapitalmarktschwankungen, weil das Risikoprofil von Naturkatastrophen und nicht von Zinsen bestimmt wird. In der Lebensversicherung dagegen ist sie stark abhängig von Zinsschwankungen und von regulatorischen Übergangsmaßnahmen – dieselbe Quote bedeutet dort also etwas anderes. In der Krankenversicherung bleibt sie meist auf einem sehr stabilen Niveau, weil Beitragsanpassungen gesetzlich möglich sind."
+            },
+            {
+              "type": "paragraph",
+              "title": "Storno als Steuerungsgröße neben den fünf Kennzahlen",
+              "content": "Die Stornoquote gehört nicht zu den fünf Kennzahlen des KPI-Cockpits, taucht im Sektortraining aber an drei weiteren Stellen als Steuerungsgröße auf:<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 59, 64 und 70</span></span> Das Produktcontrolling steuert die Profitabilität über das Monitoring von Schadenquoten, Storno, Abschlusskosten und Combined Ratio; Kundenservice und Retention arbeiten mit Storno- und Churn-Prävention als eigenem Wertbeitrag; und in der Lebensversicherung zählt die Stornogefahr – Kunden kündigen frühzeitig – neben dem Zinsänderungsrisiko zu den beiden zentralen Risiken. Storno wirkt damit auf beide Seiten der Combined Ratio: über verlorene Beiträge und über nicht amortisierte Abschlusskosten."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Was beim Vergleich von Kennzahlen schiefgeht",
+              "content": "Drei Vorbehalte gehören zu jedem Kennzahlenvergleich. Erstens ist die Definition von „gut“ produktabhängig: In der Kfz-Versicherung sind Combined Ratios strukturell schwächer als in Haftpflicht oder Unfall. Zweitens ist die Solvency-II-Quote in der Lebensversicherung ohne Angabe der Übergangsmaßnahmen nicht vergleichbar, weil ein erheblicher Teil der Quote aus regulatorischen Hilfen stammen kann. Drittens gilt die 100-Prozent-Pflichtgrenze zwar für alle Sparten, doch spiegelt die Quote in SHUK und KV das operative Risiko direkter wider, während sie in LV eher die Zinssituation abbildet. Die regulatorischen Grundlagen dazu stehen im Kapitel Regulatorik."
+            }
+          ]
+        },
+        {
+          "id": "segmentunterschiede",
+          "title": "Unterschiede der Segmente",
+          "icon": "layers",
+          "subtitle": "Umsatzcharakter, Aufwandspositionen, Gewinnquellen und Hebel je Sparte",
+          "kurzgesagt": [
+            "Jede Sparte erfordert ein eigenes Steuerungsmodell – von der operativen Combined-Ratio-Optimierung in SHUK bis zum jahrzehntelangen Zins- und Demografiemanagement in LV und KV.",
+            "Der Umsatzcharakter unterscheidet sich fundamental: In SHUK sind es fast 100 % Risikoprämie, in der KV ein Mix aus Risikoprämie und Sparanteil, in der LV ein dominanter Sparanteil plus kleiner Risikoanteil.",
+            "Entsprechend liegen die Hebel auseinander: Pricing-Optimierung und Prozessexzellenz in SHUK, Health Management und Dunkelverarbeitung in der KV, Run-off und der Wechsel zu Capital-Light-Produkten in der LV."
+          ],
+          "lernziele": [
+            "den Umsatzcharakter der drei Segmente unterscheiden",
+            "je Segment die größte Aufwandsposition und die primäre Gewinnquelle nennen",
+            "die spartentypischen Risiken und Hebel zuordnen"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Ein Steuerungsmodell passt nicht für alle",
+              "content": "Das Sektortraining formuliert es als „One size fits none“: Jede Sparte erfordert ein völlig eigenes Steuerungsmodell – von der operativen Combined-Ratio-Optimierung in SHUK bis zum jahrzehntelangen Zins- und Demografiemanagement in LV und KV.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 70</span></span> Die Unterschiede beginnen nicht bei den Produkten, sondern beim Charakter des Umsatzes."
+            },
+            {
+              "type": "comparisonTable",
+              "title": "Kernunterschiede zwischen den Segmenten",
+              "columns": [
+                "Blickwinkel",
+                "SHUK",
+                "KV",
+                "LV"
+              ],
+              "rows": [
+                [
+                  "Umsatz-Charakter",
+                  "Fast 100 % Risikoprämie. Der Kunde zahlt für die reine Übernahme eines Risikos, etwa eines Autounfalls, für meist 12 Monate; ein- bis fünfjährige Verträge sind Branchenstandard.",
+                  "Mix aus Risikoprämie für die aktuellen Arztkosten und Sparanteil für die Alterungsrückstellung.",
+                  "Dominanter Sparanteil zum Vermögensaufbau plus ein kleiner Risikoanteil, etwa der Todesfallschutz."
+                ],
+                [
+                  "Größte Aufwandspositionen",
+                  "Schäden wie Reparaturen und Schmerzensgeld; relativ hohe Abschluss- und Verwaltungskosten durch Provisionen.",
+                  "Leistungen für Arzt- und Krankenhauskosten; massive Zuführungen zu den Alterungsrückstellungen, also den Sparguthaben der Kunden.",
+                  "Leistungen durch Auszahlung von Renten oder Ablaufleistungen; gigantische Zuführungen zu Deckungsrückstellungen und Zinszusatzreserven (ZZR)."
+                ],
+                [
+                  "Primäre Gewinnquellen",
+                  "Das versicherungstechnische Ergebnis: Gewinn entsteht, wenn die Prämien über Schäden plus Kosten liegen. Das Anlageergebnis ist nur ein Bonus.",
+                  "Ein Hybrid-Ergebnis: Gewinn entsteht aus dem Risikoergebnis, wenn die Kunden gesünder sind als kalkuliert, und aus dem Zinsergebnis, wenn die Kapitalanlage mehr abwirft als der Rechnungszins.",
+                  "Der echte Gewinn ist der Zins-Spread zwischen erwirtschafteter Rendite und garantiertem Kundenzins."
+                ],
+                [
+                  "Volatilität und Hebel",
+                  "Risiko: Naturkatastrophen (NatCat) und Claims Inflation, weil Ersatzteile teurer werden. Hebel: Pricing-Optimierung und Prozessexzellenz über Dunkelverarbeitung.",
+                  "Risiko: medizinische Inflation durch neue, teure Therapien und politische Regulierungen bei Beitragsanpassungen. Hebel: Health Management, also Kunden gesund halten, und Dunkelverarbeitung.",
+                  "Risiko: Kapitalmarktschwankungen (Zinsänderungsrisiko) und Stornogefahr, wenn Kunden frühzeitig kündigen. Hebel: Run-off durch Verkauf teurer Altbestände und der Wechsel zu Capital-Light-Produkten, also fondsgebunden ohne Garantien."
+                ]
+              ]
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Warum der Umsatzcharakter alles Weitere bestimmt",
+              "content": "Die erste Zeile der Vergleichstabelle erklärt die übrigen drei. Wo der Beitrag fast vollständig Risikoprämie ist, endet die Verantwortung des Versicherers mit dem Vertragsjahr – die Steuerung dreht sich um Schadenfrequenz, Durchschnittsschaden und Kosten. Wo der Beitrag überwiegend Sparanteil ist, übernimmt der Versicherer eine Verpflichtung über Jahrzehnte, und die größte Aufwandsposition ist nicht der Schaden, sondern die Zuführung zur Rückstellung. Genau deshalb ist in der Lebensversicherung der Zins-Spread die Gewinnquelle und nicht die Combined Ratio."
+            },
+            {
+              "type": "paragraph",
+              "title": "Die drei Hebel im Vergleich",
+              "content": "Die Hebel folgen der jeweiligen Gewinnquelle. In SHUK setzen Pricing-Optimierung und Prozessexzellenz direkt an den beiden Bestandteilen der Combined Ratio an. In der Krankenversicherung wirkt Health Management auf das Risikoergebnis, während Dunkelverarbeitung die Kostenseite entlastet. In der Lebensversicherung greifen beide Hebel an der Bilanz an: Der Run-off gibt teure Altbestände samt ihren Garantien ab, der Wechsel zu Capital-Light-Produkten vermeidet neue Garantien von Anfang an. Was Run-off im deutschen Markt praktisch bedeutet, steht im Kapitel Zukunftsthemen."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Die Risiken sind nicht austauschbar",
+              "content": "Wer Risiken zwischen den Sparten vergleicht, vergleicht verschiedene Zeithorizonte. NatCat und Claims Inflation treffen SHUK innerhalb eines Geschäftsjahres und sind über Rückversicherung und Prämienanpassung steuerbar. Medizinische Inflation und politische Eingriffe bei Beitragsanpassungen wirken in der Krankenversicherung über Jahre und sind nur begrenzt steuerbar, weil der Gesetzgeber mitentscheidet. Zinsänderungsrisiko und Storno treffen die Lebensversicherung über Jahrzehnte und sind bereits durch Verträge aus der Vergangenheit festgelegt. Dieselbe Maßnahme hat deshalb je Sparte eine völlig andere Wirkungsdauer."
+            }
+          ]
+        },
+        {
+          "id": "rueckversicherer-modell",
+          "title": "Modell des Rückversicherers",
+          "icon": "globe",
+          "subtitle": "Kapitalallokation statt Massengeschäft: andere GuV, andere Benchmarks",
+          "kurzgesagt": [
+            "Ein Erstversicherer steuert auf Stabilität und Effizienz im Massengeschäft mit vielen kleinen Schäden und hohen IT- und Vertriebskosten, ein Rückversicherer auf Kapitalallokation und den Umgang mit Volatilität.",
+            "Die Kostenquote eines Rückversicherers liegt bei rund 5 % gegenüber 25 bis 30 % beim Erstversicherer; im Gegenzug darf die Schadenquote höher und volatiler sein.",
+            "Das Combined-Ratio-Ziel bleibt unter 100 %, über den Zyklus unter 95 %; Investoren akzeptieren in einem Katastrophenjahr 105 %, solange ruhige Jahre bei 90 % liegen."
+          ],
+          "lernziele": [
+            "die GuV-Unterschiede zwischen Erst- und Rückversicherer benennen",
+            "die Benchmarks für Kostenquote, Schadenquote, Combined Ratio und Return on Equity des Rückversicherers zuordnen",
+            "proportionale und nicht-proportionale Verträge nach ihrer Wirkung auf die Schadenlast unterscheiden"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Ein anderes Geschäft mit denselben Begriffen",
+              "content": "Erst- und Rückversicherer benutzen dieselben Kennzahlen, aber sie steuern verschiedene Geschäfte. Ein Erstversicherer steuert auf Stabilität und Effizienz im Massengeschäft – viele kleine Schäden, hohe IT- und Vertriebskosten –, während ein Rückversicherer auf Kapitalallokation und den Umgang mit Volatilität ausgerichtet ist: wenige, aber gigantische Schäden bei minimalen Verwaltungskosten.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 71</span></span>"
+            },
+            {
+              "type": "paragraph",
+              "title": "Was in der GuV anders aussieht",
+              "content": "<ul><li><strong>Kaum Vertriebs- und Verwaltungskosten:</strong> keine teure Werbung im Endkundengeschäft, keine Maklerpools, keine Filialen</li><li><strong>Keine Schadenregulierung</strong> und damit keine operativen Schadenbearbeitungskosten, die beim Erstversicherer hoch sind</li><li><strong>Extreme Volatilität</strong> im Schadenaufwand</li><li><strong>Die Rückversicherungsprämien</strong> bilden den Bruttobeitrag (GWP) des Rückversicherers</li><li><strong>Das Kapitalergebnis</strong> spielt eine wesentlich größere Rolle</li><li><strong>Retro-Abgaben als weiterer Kostenblock:</strong> Der Rückversicherer kauft selbst wieder Rückversicherung ein – die Retrozession</li></ul>"
+            },
+            {
+              "type": "table",
+              "title": "Kennzahlen des Rückversicherers",
+              "headers": [
+                "Kennzahl",
+                "Besonderheit",
+                "Benchmark"
+              ],
+              "rows": [
+                [
+                  "Kostenquote (Verwaltung)",
+                  "Viel niedriger: Ein Rückversicherer braucht nur ein paar hundert hochbezahlte Underwriter und Aktuare, um Milliardenumsätze zu machen. Es gibt keine Millionen von Einzelpolicen, die IT-seitig verwaltet werden müssen.",
+                  "rund 5 % (Erstversicherer: 25 bis 30 %)"
+                ],
+                [
+                  "Schadenquote (Loss Ratio)",
+                  "Höher und viel volatiler. Weil die reinen Verwaltungskosten so niedrig sind, darf die Schadenquote höher sein und trotzdem eine profitable Combined Ratio ergeben.",
+                  "SHUK 70 bis 75 %, LV etwa 40 bis 50 % (GDV-Daten)"
+                ],
+                [
+                  "Combined Ratio",
+                  "Das Ziel bleibt unter 100 %. Investoren akzeptieren aber, dass sie in einem Katastrophenjahr auf 105 % springt, solange sie in ruhigen Jahren bei 90 % liegt – Zyklussteuerung.",
+                  "Ziel über den Zyklus: unter 95 %"
+                ],
+                [
+                  "Return on Equity",
+                  "Höher als beim Erstversicherer. Wer Großrisiken im Geschäftskundensegment zeichnet, braucht extrem viel Risikokapital; Investoren verlangen für diese Volatilität eine höhere Risikoprämie.",
+                  "Ziel: 12 bis 15 % und mehr"
+                ],
+                [
+                  "Großschadenquote",
+                  "Rückversicherer arbeiten mit einem Großschadenbudget: Die Munich Re rechnete für 2024 pauschal mit 3 bis 4 Mrd. € für Naturkatastrophen.",
+                  "üblich: 15 bis 25 %"
+                ]
+              ],
+              "sortable": true
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Proportional oder nicht-proportional: zwei Wirkungslogiken",
+              "content": "Die Vertragsform entscheidet darüber, wie die Schadenlast beim Rückversicherer ankommt. <strong>Proportionale Verträge</strong> erzeugen Kommissionen an den Erstversicherer; im Gegenzug übernimmt der Rückversicherer einen festen Prozentsatz von Prämien und Schäden – er sitzt also anteilig im gleichen Boot. Bei <strong>nicht-proportionalen Verträgen</strong> erhält der Rückversicherer eine feste Prämie und trägt nur den Schadenanteil über der Priorität. Diese Form macht extrem volatile Schadenlasten möglich: Unterhalb der Priorität passiert nichts, oberhalb kann die Last sehr groß werden. Die Vertragsformen im Einzelnen stehen im Kapitel Marktteilnehmer."
+            },
+            {
+              "type": "paragraph",
+              "title": "Retrozession als eigener Kostenblock",
+              "content": "Ein Rückversicherer ist selbst Kunde: Über die Retrozession gibt er Teile seines Portfolios an andere Rückversicherer ab. In seiner GuV ist das ein eigener Kostenblock, der dieselbe Rolle spielt wie die Rückversicherungsabgaben beim Erstversicherer – er mindert den Nettoumsatz und dämpft im Gegenzug die Schadenspitzen. Damit setzt sich die Risikokette aus dem Kapitel Grundlagen um eine Stufe fort."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Zyklussteuerung statt Jahresoptimierung",
+              "content": "Die wichtigste Eigenheit dieses Geschäftsmodells ist der Zeithorizont der Steuerung. Weil wenige, aber gigantische Schäden das Ergebnis eines einzelnen Jahres dominieren, wird nicht das Geschäftsjahr, sondern der Zyklus optimiert: Ziel ist eine Combined Ratio unter 95 % über den Zyklus, und Investoren akzeptieren einen Sprung auf 105 % in einem Katastrophenjahr, solange ruhige Jahre bei 90 % liegen. Dazu passt das Großschadenbudget als Planungsinstrument – für 2024 rechnete die Munich Re pauschal mit 3 bis 4 Mrd. € für Naturkatastrophen. Wer die Ergebnisse eines Rückversicherers nach einem einzelnen Jahr beurteilt, beurteilt deshalb das Wetter, nicht das Geschäftsmodell."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "erweiterungen": [
+    {
+      "kapitelId": "grundlagen",
+      "hinweis": "Kapitelhülle und die Lerneinheit `definition` (Folien 4 bis 5 und 51) legt Agent 11 an; hier stehen nur die Lerneinheiten zu den Folien 52 bis 56. Sollte Agent 11 die Hülle anders benennen, gilt die Kennung `grundlagen` der ZIELSTRUKTUR.",
+      "neueEinheiten": [
+        {
+          "id": "risikotransfer",
+          "title": "Risikotransfer und Pooling",
+          "icon": "shield",
+          "subtitle": "Zwei Brillen auf denselben Vertrag: die des Kunden und die des Versicherers",
+          "position": "nach:definition",
+          "kurzgesagt": [
+            "Menschen und Unternehmen sind in der Regel risikoavers: Ein großer finanzieller Verlust wie ein abgebranntes Haus schmerzt ökonomisch überproportional stärker als der kleine, planbare Mittelverlust der Prämie.",
+            "Der Versicherungsnehmer tauscht eine hochgradig ungewisse Volatilität in seiner eigenen Bilanz gegen feste, planbare Kosten ein; das Risiko wandert vertraglich auf die Bilanz des Versicherers.",
+            "Der Versicherer bündelt die Risiken vieler Tausender Kunden, sodass die Summe der kleinen Prämien die wenigen tatsächlichen Großschäden trägt (Diversifikationseffekt)."
+          ],
+          "lernziele": [
+            "die Risikoübertragung aus der Kunden- und aus der Versicherersicht erklären",
+            "den Diversifikationseffekt eines Risikokollektivs begründen",
+            "benennen, unter welcher Voraussetzung Pooling funktioniert und wann es an seine Grenzen stößt"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Die Kunden-Brille: Volatilität gegen feste Kosten",
+              "content": "Der Ausgangspunkt jeder Versicherung ist die Risikoaversion. Menschen und Unternehmen bewerten einen großen, ungewissen Verlust – etwa ein abgebranntes Haus – ökonomisch überproportional stärker als einen kleinen, planbaren Mittelverlust, nämlich die Prämie.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 52</span></span> Wer eine Versicherung kauft, kauft deshalb nicht in erster Linie eine Auszahlung, sondern <strong>Planbarkeit</strong>: Er tauscht eine hochgradig ungewisse Volatilität in seiner eigenen Bilanz gegen feste Kosten ein. Das Risiko wird vertraglich auf den Versicherer übertragen, also auf dessen Bilanz ausgelagert."
+            },
+            {
+              "type": "paragraph",
+              "title": "Die Versicherer-Brille: Pooling und Diversifikation",
+              "content": "Auf der anderen Seite des Vertrags entsteht kein Verlustgeschäft, sondern ein Portfolio. Der Versicherer bündelt – „poolt“ – die übernommenen Risiken vieler Tausender Kunden. Da im Idealfall nicht alle Häuser gleichzeitig brennen, reicht die Summe der kleinen Prämien aller Kunden aus, um die wenigen tatsächlichen Großschäden zu bezahlen. Diesen Ausgleich im Kollektiv nennt man <strong>Diversifikationseffekt</strong>; er ist der eigentliche Produktionsvorgang eines Versicherers."
+            },
+            {
+              "type": "callout",
+              "variant": "warning",
+              "content": "<strong>Voraussetzung:</strong> Die Risiken im Pool müssen unabhängig voneinander sein, wie etwa einzelne Autounfälle. Sind sie hochgradig korreliert – zum Beispiel bei einer Pandemie, die alle betrifft –, gerät das Pooling-Prinzip an seine Grenzen, weil zu viele Schäden gleichzeitig eintreten. Für genau diesen Fall gibt es die Rückversicherung."
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Warum Unabhängigkeit die entscheidende Bedingung ist",
+              "content": "Der Ausgleich im Kollektiv trägt nur so weit, wie die Einzelrisiken voneinander unabhängig sind. Je stärker die Risiken eines Pools von einem gemeinsamen Auslöser abhängen, desto weniger gleichen sich gute und schlechte Verläufe im selben Jahr aus – und desto größer wird der Teil des Risikos, den der Versicherer nicht mehr aus laufenden Prämien, sondern nur noch aus Eigenkapital oder über Rückversicherung tragen kann. Die Lerneinheit Die Risikokette in diesem Kapitel zeigt, wohin solche Kumulrisiken weitergegeben werden."
+            },
+            {
+              "type": "paragraph",
+              "title": "Risikoausgleich im Kollektiv und in der Zeit",
+              "content": "Die Definition der Versicherung nennt zwei Ausgleichsrichtungen: den Ausgleich <strong>im Kollektiv</strong> – viele Verträge in derselben Periode – und den Ausgleich <strong>in der Zeit</strong> – gute und schlechte Jahre desselben Bestands. Beide zusammen machen einen im Einzelnen ungewissen Geldbedarf insgesamt schätzbar. Der Ausgleich in der Zeit ist der Grund, warum Versicherer Rückstellungen bilden und warum die Kapitalanlage für langfristige Sparten zur zweiten Ertragsquelle wird."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Was das für die Beratungsarbeit heißt",
+              "content": "Die beiden Brillen erklären, warum Diskussionen über Prämienhöhe und Produktdesign fast immer Diskussionen über das Kollektiv sind: Jede Maßnahme, die gute Risiken aus dem Pool treibt oder schlechte hineinholt, verändert den Diversifikationseffekt und damit die Kalkulationsgrundlage.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 52 und 55</span></span> Wer ein Produkt neu zuschneidet, verschiebt deshalb nicht nur die Prämie, sondern auch die Zusammensetzung des Pools – in der Fachsprache die Portfolioqualität."
+            }
+          ]
+        },
+        {
+          "id": "grosse-zahlen",
+          "title": "Gesetz der großen Zahlen",
+          "icon": "activity",
+          "subtitle": "Warum ein großes Kollektiv die Schwankung senkt und Eigenkapital spart",
+          "position": "nach:risikotransfer",
+          "kurzgesagt": [
+            "Mit wachsender Kollektivgröße sinkt die relative Schwankungsbreite der Schäden: Der laufende Mittelwert nähert sich dem Erwartungswert an.",
+            "Für den Versicherer heißt das, dass sich der tatsächliche Schadenaufwand dem vorab berechneten erwarteten Schadenaufwand annähert und Risiken überhaupt erst berechenbar und bepreisbar werden.",
+            "Weil die Volatilität sinkt, muss der Versicherer weniger teures Sicherheitskapital als Puffer vorhalten – das Gesetz der großen Zahlen ist damit unmittelbar eine Kapitalkostenfrage."
+          ],
+          "lernziele": [
+            "das Gesetz der großen Zahlen am Verhältnis von laufendem Mittelwert und Erwartungswert erklären",
+            "die wirtschaftliche Bedeutung der sinkenden Volatilität für den Kapitalbedarf herleiten",
+            "begründen, warum das Gesetz der großen Zahlen nie perfekt greift"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Vom laufenden Mittelwert zum Erwartungswert",
+              "content": "Trägt man den durchschnittlichen Schaden je Vertrag gegen die Anzahl der Beobachtungen auf, entsteht die charakteristische Kurve des Gesetzes der großen Zahlen: Bei wenigen Verträgen schlägt der laufende Mittelwert weit nach oben und unten aus, mit wachsender Zahl der Beobachtungen legt er sich immer enger um den Erwartungswert.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 53</span></span> Die Aussage ist ausdrücklich <strong>relativ</strong>: Die absolute Schadenlast eines großen Bestands ist größer, die Schwankung je Vertrag aber kleiner."
+            },
+            {
+              "type": "simulationGrosseZahlen",
+              "title": "Risikoausgleich im Kollektiv",
+              "untertitel": "Stelle Kollektivgröße, Schadenwahrscheinlichkeit und Schadenhöhe ein und beobachte, wie die relative Schwankung mit der Zahl der Verträge sinkt.",
+              "vorgabe": {
+                "kollektiv": 1000,
+                "wahrscheinlichkeit": 1,
+                "schadenhoehe": 100000
+              },
+              "erklaerung": [
+                "Die Vorgabe entspricht dem Rechenbeispiel des Sektortrainings: 1 % Schadenwahrscheinlichkeit für einen Hausbrand mit 100.000 € Schadenhöhe ergibt einen Erwartungswert von 1.000 € je Vertrag.",
+                "Der Erwartungswert je Vertrag bleibt konstant, wenn du das Kollektiv vergrößerst – er ist das Produkt aus Eintrittswahrscheinlichkeit und erwarteter Schadenhöhe.",
+                "Was sinkt, ist die relative Streuung des tatsächlichen Schadenaufwands um diesen Erwartungswert. Genau diese Streuung muss der Versicherer mit Eigenkapital abdecken.",
+                "Je kleiner die relative Streuung, desto kleiner der nötige Sicherheitszuschlag und desto weniger teures Risikokapital ist gebunden. Auch bei sehr großen Kollektiven bleibt eine Restvolatilität: Das Gesetz der großen Zahlen greift nie perfekt."
+              ],
+              "fussnote": "Kurve und Aussage nach Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 53, das Rechenbeispiel nach Folie 54."
+            },
+            {
+              "type": "paragraph",
+              "title": "Wirtschaftliche Bedeutung für den Versicherer",
+              "content": "Durch die hohe Anzahl an Verträgen nähert sich der tatsächliche Schadenaufwand dem vorab berechneten erwarteten Schadenaufwand an. Die Ungewissheit sinkt für den Versicherer drastisch. Daraus folgen zwei Dinge: Er muss <strong>weniger teures Sicherheitskapital</strong> als Puffer vorhalten, und er kann Risiken überhaupt erst berechnen und bepreisen. Ohne ein hinreichend großes Kollektiv gibt es keine kalkulierbare Prämie, sondern nur eine Wette."
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Warum das Gesetz nie perfekt greift",
+              "content": "Auch bei sehr großen Risikokollektiven bleibt eine Restschwankung. Genau sie wird in der Prämienkalkulation als Risikoaufschlag bepreist: Besteht das Risiko, dass die tatsächlichen Schäden die kalkulierte Reinprämie übersteigen, muss der Versicherer regulatorisches und ökonomisches Eigenkapital als Puffer vorhalten. Zwei Grenzen sind besonders relevant: korrelierte Risiken, bei denen ein einziges Ereignis viele Verträge gleichzeitig trifft, und kleine Spezialbestände, in denen es kein großes Kollektiv gibt."
+            }
+          ]
+        },
+        {
+          "id": "praemie",
+          "title": "Prämienberechnung",
+          "icon": "calculator",
+          "subtitle": "Bottom-up von der Reinprämie über Risiko- und Kostenzuschlag zum Bruttobeitrag",
+          "position": "nach:grosse-zahlen",
+          "kurzgesagt": [
+            "Die Versicherungsprämie wird strikt bottom-up kalkuliert: Auf die Reinprämie kommen Risikoaufschlag, Kostenzuschlag und Gewinnmarge.",
+            "Die Reinprämie ist der mathematische Erwartungswert des Schadens – 1 % Wahrscheinlichkeit für einen 100.000 € teuren Hausbrand ergibt 1.000 € Reinprämie.",
+            "Der Risikoaufschlag bepreist die verbleibende Volatilität und entspricht ökonomisch den Kapitalkosten; in stark umkämpften Segmenten wie Kfz liegt die Gewinnmarge oft bei 0 % oder ist leicht negativ."
+          ],
+          "lernziele": [
+            "die vier Bestandteile des Bruttobeitrags in der richtigen Reihenfolge nennen",
+            "eine Reinprämie aus Eintrittswahrscheinlichkeit und Schadenhöhe berechnen",
+            "erklären, warum die Prämie höher sein muss als der erwartete Schaden"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Warum die Prämie höher ist als der erwartete Schaden",
+              "content": "Die Versicherungsprämie wird strikt bottom-up kalkuliert und bepreist neben dem reinen mathematischen Erwartungswert des Schadens vor allem die operativen Kosten sowie die Kapitalkosten für die verbleibende Volatilität.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 54</span></span> Wer nur den Erwartungswert verlangte, hätte im Mittel gerade die Schäden gedeckt – aber niemanden bezahlt, der die Verträge verwaltet, und kein Kapital für die Jahre vorgehalten, in denen mehr passiert als erwartet."
+            },
+            {
+              "type": "formelAufbau",
+              "title": "Aufbau des Bruttobeitrags",
+              "untertitel": "Von unten nach oben gerechnet: jede Stufe beantwortet eine eigene Frage.",
+              "glieder": [
+                {
+                  "zeichen": "+",
+                  "name": "Reinprämie",
+                  "text": "Der mathematische Erwartungswert des Schadens: Eintrittswahrscheinlichkeit × erwartete Schadenhöhe.",
+                  "beispiel": "1 % Wahrscheinlichkeit für einen Hausbrand über 100.000 € ergibt 1.000 € Reinprämie."
+                },
+                {
+                  "zeichen": "+",
+                  "name": "Risikoaufschlag, auch Sicherheitszuschlag",
+                  "text": "Bepreist die verbleibende Volatilität im Portfolio, denn auch bei sehr großen Risikokollektiven greift das Gesetz der großen Zahlen nie perfekt. Übersteigen die tatsächlichen Schäden die kalkulierte Reinprämie, muss der Versicherer regulatorisches und ökonomisches Eigenkapital als Puffer vorhalten, um eine Insolvenz auszuschließen. Ökonomisch entspricht der Risikoaufschlag den Kapitalkosten, die die Anteilseigner für die Bereitstellung und Bindung dieses Risikokapitals fordern."
+                },
+                {
+                  "zeichen": "+",
+                  "name": "Kostenzuschlag",
+                  "text": "Deckt den gesamten administrativen und vertrieblichen Aufwand des Versicherers ab, der für die Vertrags- und Schadenabwicklung anfällt."
+                },
+                {
+                  "zeichen": "+",
+                  "name": "Gewinnmarge",
+                  "text": "Repräsentiert den kalkulatorischen, rein versicherungstechnischen Zielgewinn (Underwriting Profit), der nach Abzug aller erwarteten Schäden, Risikopuffer und Kosten verbleiben soll, um eine angemessene Rendite auf das eingesetzte Eigenkapital zu erwirtschaften. In stark umkämpften Segmenten wie Kfz liegt sie oft bei 0 % oder ist sogar leicht negativ."
+                }
+              ],
+              "ergebnis": {
+                "name": "Bruttobeitrag",
+                "text": "Der Bruttobeitrag ist die Summe aller vier Stufen und damit der Preis, den der Kunde zahlt."
+              },
+              "fussnote": "Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 54. Die Folie fasst Kostenzuschlag, Risikoaufschlag und Reinprämie als „Nettobeitrag“ zusammen; der Bruttobeitrag ist der Nettobeitrag plus Gewinnmarge. Die Größen der Folie sind nicht maßstabsgetreu."
+            },
+            {
+              "type": "paragraph",
+              "title": "Die Rechnung am Beispiel",
+              "content": "Das Beispiel des Sektortrainings macht die unterste Stufe greifbar: Bei einer Eintrittswahrscheinlichkeit von 1 % und einer erwarteten Schadenhöhe von 100.000 € beträgt die Reinprämie 1.000 €. Was der Kunde am Ende zahlt, liegt darüber – um den Risikoaufschlag für die Restvolatilität, den Kostenzuschlag für Verwaltung und Vertrieb und die kalkulierte Gewinnmarge."
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Der Risikoaufschlag ist eine Kapitalkostenposition",
+              "content": "Der Risikoaufschlag wird oft als „Sicherheitspuffer“ missverstanden. Ökonomisch ist er der Preis des Eigenkapitals: Weil die tatsächlichen Schäden die kalkulierte Reinprämie übersteigen können, muss der Versicherer regulatorisches und ökonomisches Eigenkapital vorhalten, um eine Insolvenz auszuschließen. Dieses Kapital stellen die Anteilseigner bereit und verlangen dafür eine Rendite. Der Risikoaufschlag entspricht damit den Kapitalkosten (Cost of Capital) des gezeichneten Geschäfts – und sinkt, wenn das Kollektiv größer und damit die Restvolatilität kleiner wird."
+            },
+            {
+              "type": "paragraph",
+              "title": "Die Gewinnmarge im Wettbewerb",
+              "content": "Die Gewinnmarge ist die einzige Stufe, die der Markt unmittelbar wegverhandeln kann. In stark umkämpften Segmenten wie der Kfz-Versicherung liegt sie oft bei 0 % oder ist sogar leicht negativ – der Versicherer nimmt also bewusst hin, dass das Geschäft rechnerisch keinen versicherungstechnischen Gewinn trägt. Umgekehrt heißt eine Combined Ratio unter 100 %, dass die kalkulierte Marge im Ergebnis auch tatsächlich verdient wurde."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Fallstricke in der Kalkulationsdiskussion",
+              "content": "Drei Verwechslungen kosten in Projekten regelmäßig Zeit. Erstens: Reinprämie und Nettobeitrag sind nicht dasselbe – die Reinprämie ist der reine Erwartungswert, der Nettobeitrag nach der Darstellung des Sektortrainings die Summe aus Reinprämie, Risikoaufschlag und Kostenzuschlag. Zweitens: Der Risikoaufschlag ist keine Gewinnposition, sondern eine Kapitalkostenposition. Drittens: Eine niedrigere Prämie bei gleichem Risiko bedeutet nicht automatisch mehr Wettbewerbsfähigkeit, sondern zuerst eine geringere Marge auf dasselbe gebundene Kapital."
+            }
+          ]
+        },
+        {
+          "id": "marktineffizienzen",
+          "title": "Marktineffizienzen",
+          "icon": "scale",
+          "subtitle": "Adverse Selektion vor und Moral Hazard nach dem Vertragsabschluss",
+          "position": "nach:praemie",
+          "kurzgesagt": [
+            "Strukturelle Informationsasymmetrien bedrohen das Risikokollektiv von zwei Seiten: durch Gegenauslese vor dem Vertragsabschluss (Adverse Selektion) und durch Verhaltensänderungen danach (Moral Hazard).",
+            "Bei der Adverse Selektion sammeln sich überproportional viele schlechte Risiken im Pool, die Prämie steigt, gute Risiken kündigen – eine existenzbedrohende Abwärtsspirale (Death Spiral).",
+            "Die Gegenmittel sind unterschiedlich: Gesundheitsprüfungen, Vorvertragsfragen und Risikoausschlüsse im Underwriting gegen Adverse Selektion, Selbstbeteiligungen und Bonus-Malus-Systeme gegen Moral Hazard."
+          ],
+          "lernziele": [
+            "Adverse Selektion und Moral Hazard nach dem Zeitpunkt ihres Auftretens unterscheiden",
+            "die Abwärtsspirale der Adverse Selektion in ihren Schritten beschreiben",
+            "den passenden Lösungsansatz der Versicherer je Marktineffizienz zuordnen"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Zwei Probleme, ein Ursprung: die Informationsasymmetrie",
+              "content": "Versicherer und Kunde wissen nicht dasselbe. Der Kunde kennt sein Risiko und sein Verhalten besser als der Versicherer – und genau daraus entstehen zwei strukturelle Marktineffizienzen, die das Risikokollektiv bedrohen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 55</span></span> Sie unterscheiden sich durch den Zeitpunkt: <strong>Adverse Selektion</strong> wirkt vor dem Vertragsabschluss über die Auswahl der Versicherten, <strong>Moral Hazard</strong> danach über ihr Verhalten. Das Sektortraining fasst beide unter dem Principal-Agent-Dilemma des Versicherungsmarktes zusammen."
+            },
+            {
+              "type": "comparisonTable",
+              "title": "Adverse Selektion und Moral Hazard im Vergleich",
+              "columns": [
+                "Blickwinkel",
+                "Adverse Selektion (vor Abschluss)",
+                "Moral Hazard (nach Abschluss)"
+              ],
+              "rows": [
+                [
+                  "Problem",
+                  "Personen mit einem hohen Risiko, etwa chronisch Kranke, haben eine wesentlich höhere Zahlungsbereitschaft für eine Versicherung als gesunde Menschen.",
+                  "Menschen ändern ihr Verhalten, sobald sie versichert sind. Wer weiß, dass sein Fahrrad gegen Diebstahl voll zum Neupreis versichert ist, nutzt eventuell ein billigeres Schloss oder verhält sich leichtsinniger."
+                ],
+                [
+                  "Folge und Gefahr",
+                  "Im Pool sammeln sich überproportional viele schlechte Risiken. Die Schäden steigen, der Versicherer muss die Prämien für alle anheben. Daraufhin kündigen die guten Risiken, denen es nun zu teuer ist – das treibt die Prämie weiter nach oben (Death Spiral).",
+                  "Die bloße Existenz der Versicherung erhöht künstlich die Eintrittswahrscheinlichkeit oder die Höhe des Schadens."
+                ],
+                [
+                  "Lösungsversuch der Versicherer",
+                  "Der Versicherer gleicht die Informationsasymmetrie durch Gesundheitsprüfungen, Vorvertragsfragen und Risikoausschlüsse im Underwriting aus.",
+                  "Der Kunde muss Risikopartner bleiben. Das geschieht durch Selbstbeteiligungen, bei denen der Kunde die ersten Euro selbst zahlt, oder durch Bonus-Malus-Systeme wie Schadenfreiheitsrabatte."
+                ]
+              ]
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Die Abwärtsspirale in vier Schritten",
+              "content": "Die Adverse Selektion ist gefährlich, weil sie sich selbst verstärkt. Der Ablauf ist immer derselbe:<ul><li>Hohe Risiken haben eine höhere Zahlungsbereitschaft und schließen deshalb überproportional häufig ab.</li><li>Der Schadenaufwand des Kollektivs steigt über den kalkulierten Erwartungswert.</li><li>Der Versicherer hebt die Prämien für alle an.</li><li>Die guten Risiken kündigen, weil ihnen die Deckung nun zu teuer ist – womit der Kollektivmix noch schlechter wird und die Spirale von vorn beginnt.</li></ul>"
+            },
+            {
+              "type": "paragraph",
+              "content": "Am Ende steht eine existenzbedrohende Abwärtsspirale, die das Sektortraining Death Spiral nennt."
+            },
+            {
+              "type": "paragraph",
+              "title": "Warum Selbstbeteiligung mehr ist als ein Rabattmechanismus",
+              "content": "Gegen Moral Hazard hilft keine Prüfung vor Abschluss, denn das Problem entsteht erst danach. Die Antwort besteht darin, den Kunden im Risiko zu halten: Selbstbeteiligungen lassen ihn die ersten Euro jedes Schadens selbst tragen, Bonus-Malus-Systeme wie Schadenfreiheitsrabatte machen die eigene Schadenhistorie im Preis sichtbar. Beide Instrumente verändern das Verhalten, nicht die Risikoauswahl – deshalb sind sie kein Ersatz für das Underwriting, sondern seine Ergänzung."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Wo die Instrumente an Grenzen stoßen",
+              "content": "Die Gegenmittel greifen nur so weit, wie das Aufsichts- und Vertragsrecht sie zulässt. Risikoprüfung, Vorvertragsfragen und Risikoausschlüsse sind in der Krankenversicherung das zentrale Instrument – das Sektortraining nennt medizinisches Underwriting deshalb für dieses Segment essenziell –, während sie in anderen Sparten kaum eine Rolle spielen. Wer über Produktdesign diskutiert, entscheidet damit immer zugleich über die Frage, wie stark der Kunde Risikopartner bleiben soll."
+            }
+          ]
+        },
+        {
+          "id": "risikokette",
+          "title": "Die Risikokette",
+          "icon": "network",
+          "subtitle": "Wer die Extremrisiken trägt, wenn das Pooling an seine Grenzen stößt",
+          "position": "nach:marktineffizienzen",
+          "kurzgesagt": [
+            "Das Risiko wandert in einer Kette weiter: Der Versicherungsnehmer gibt es gegen eine Prämie an den Erstversicherer, dieser Teile davon an den Rückversicherer, der sie über Retrozession noch einmal streuen kann.",
+            "Sprengen Kumulrisiken – viele Schäden aus einem einzigen Ereignis wie einem Erdbeben oder einer Flut – den Erwartungswert, stößt das Pooling an seine Grenzen.",
+            "Rückversicherer agieren auf globaler Ebene und diversifizieren auf einem Level, das Erstversicherer nicht erreichen können: Ein erdbebenfreies Jahr in Japan gleicht die Sturmflut in Europa aus."
+          ],
+          "lernziele": [
+            "die Stufen der Risikokette in der richtigen Reihenfolge nennen",
+            "erklären, gegen wen der Versicherungsnehmer bei einem Großschaden Ansprüche hat",
+            "die Funktion des Rückversicherers als globaler Schockabsorber begründen"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Risiko nach unten, Zahlung nach oben",
+              "content": "Versicherung endet nicht beim Erstversicherer. Erstversicherer reichen systemsprengende Kumulrisiken an globale Rückversicherer weiter, die durch weltweite Diversifikation als Schockabsorber fungieren.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 56</span></span> In jeder Stufe der Kette laufen zwei Ströme in entgegengesetzte Richtungen: Risikoabdeckung gegen Prämie nach unten und Schadenzahlung bei Risikoeintritt nach oben. Für den Kunden bleibt das unsichtbar – und rechtlich auch unerheblich."
+            },
+            {
+              "type": "risikokette",
+              "title": "Die Risikokette: wer die Extremrisiken trägt",
+              "untertitel": "Nach unten wandern Risiko und Prämie, nach oben fließen die Schadenzahlungen.",
+              "stufen": [
+                {
+                  "titel": "Versicherungsnehmer",
+                  "text": "Gibt sein individuelles Risiko ab und zahlt eine Prämie an den Versicherer. Bei einem Großschaden hat er ausschließlich Anspruch gegenüber seinem Erstversicherer.",
+                  "traegt": "Nach der Übertragung nichts mehr: Er tauscht Volatilität gegen die feste Prämie.",
+                  "beispiel": "Ein Hauseigentümer versichert sein Gebäude und zahlt dafür einen festen Jahresbeitrag."
+                },
+                {
+                  "titel": "Erstversicherer",
+                  "text": "Bündelt die Endkundenrisiken. Um seine eigene Bilanz bei Extremereignissen zu schützen, kauft er selbst eine Versicherung ein und reicht Teile seines Risikos und der Prämien weiter.",
+                  "traegt": "Das gepoolte Massengeschäft und den Teil der Großschäden, den er selbst behält.",
+                  "beispiel": "Ein Orkan zerstört 10.000 versicherte Dächer gleichzeitig."
+                },
+                {
+                  "titel": "Rückversicherer",
+                  "text": "Agiert auf globaler Ebene und diversifiziert durch die weltweite Streuung sein Risiko nochmals auf einem Level, das Erstversicherer nicht erreichen können. Damit sichert er die Stabilität des gesamten Systems.",
+                  "traegt": "Kumul- und Extremrisiken, die den Erwartungswert eines einzelnen Erstversicherers sprengen.",
+                  "beispiel": "Ein erdbebenfreies Jahr in Japan gleicht die Sturmflut in Europa aus."
+                },
+                {
+                  "titel": "Retrozession",
+                  "text": "Auch der Rückversicherer kauft selbst wieder Rückversicherung ein. Diese Retro-Abgaben sind für ihn ein eigener Kostenblock und verteilen die Spitzen seines Portfolios noch einmal weiter.",
+                  "traegt": "Die Spitzen des Rückversicherungsportfolios.",
+                  "beispiel": "Der Rückversicherer gibt Teile seines Naturkatastrophenrisikos an andere Rückversicherer ab."
+                }
+              ],
+              "fussnote": "Die Stufen 1 bis 3 nach Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 56, die Retrozession nach Folie 71."
+            },
+            {
+              "type": "paragraph",
+              "title": "Kumulrisiken sprengen den Erwartungswert",
+              "content": "Der Punkt, an dem das Pooling nicht mehr trägt, hat einen Namen: <strong>Kumulrisiko</strong>. Gemeint sind viele Schäden aus einem einzigen Ereignis, etwa einem Erdbeben oder einer Flut. Weil alle betroffenen Verträge gleichzeitig fällig werden, gleichen sich gute und schlechte Verläufe nicht mehr aus, und der tatsächliche Schadenaufwand überschreitet den Erwartungswert deutlich. Rückversicherer übernehmen genau diese Extremrisiken und fungieren durch weltweite Diversifikation als globale Schockabsorber."
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Was der Kunde davon merkt: nichts",
+              "content": "Die Weitergabe des Risikos ändert die Anspruchslage des Kunden nicht. Bei einem Großschaden hat der Versicherungsnehmer ausschließlich Anspruch gegenüber seinem Erstversicherer – die Rückversicherung ist ein Vertrag zwischen Versicherern und für den Kunden nicht einredefähig. Wirtschaftlich merkt er sie dennoch: Ohne Rückversicherung könnten Erstversicherer viele Deckungen in exponierten Regionen gar nicht anbieten oder müssten sie erheblich teurer kalkulieren."
+            },
+            {
+              "type": "paragraph",
+              "title": "Wer die Kette betreibt",
+              "content": "Deutschland ist Heimat von zwei der größten Rückversicherer der Welt; wer sie sind, wie groß sie sind und welche Vertragsformen sie nutzen, steht im Kapitel Marktteilnehmer. Wie sich das Geschäftsmodell eines Rückversicherers von dem eines Erstversicherers unterscheidet – bei Kostenquote, Schadenquote und Combined Ratio –, steht im Kapitel Geschäftsmodell und Kennzahlen."
+            }
+          ]
+        }
+      ],
+      "neueBloecke": [],
+      "ersetzteBloecke": [],
+      "neueQuizfragen": [
+        {
+          "question": "Was tauscht der Versicherungsnehmer beim Risikotransfer ein?",
+          "options": [
+            "Sein Eigenkapital gegen eine Bilanzgarantie des Versicherers und dessen Rückversicherer",
+            "Eine feste Prämie gegen eine garantierte Kapitalmarktrendite",
+            "Eine hochgradig ungewisse Volatilität gegen feste, planbare Kosten"
+          ],
+          "correct": 2,
+          "explanation": "Der Versicherungsnehmer tauscht die ungewisse Volatilität in seiner eigenen Bilanz gegen feste, planbare Kosten; das Risiko wird vertraglich auf den Versicherer übertragen.",
+          "einheitId": "risikotransfer"
+        },
+        {
+          "question": "Welche Voraussetzung muss erfüllt sein, damit Pooling funktioniert?",
+          "options": [
+            "Die Risiken im Pool müssen unabhängig voneinander sein",
+            "Die Risiken im Pool müssen möglichst stark miteinander korreliert sein",
+            "Alle Kunden im Pool müssen denselben Beitrag zahlen",
+            "Der Pool darf höchstens ein Jahr bestehen"
+          ],
+          "correct": 0,
+          "explanation": "Nur unabhängige Risiken wie einzelne Autounfälle gleichen sich im Kollektiv aus. Bei hochgradig korrelierten Risiken wie einer Pandemie stößt das Pooling-Prinzip an seine Grenzen.",
+          "einheitId": "risikotransfer"
+        },
+        {
+          "question": "Was sinkt laut dem Gesetz der großen Zahlen, wenn das Kollektiv wächst?",
+          "options": [
+            "Der Erwartungswert des Schadens je Vertrag",
+            "Die Eintrittswahrscheinlichkeit je Vertrag",
+            "Die relative Schwankungsbreite der Schäden"
+          ],
+          "correct": 2,
+          "explanation": "Mit wachsender Kollektivgröße nähert sich der laufende Mittelwert dem Erwartungswert an: Die relative Schwankung sinkt, der Erwartungswert je Vertrag bleibt unverändert.",
+          "einheitId": "grosse-zahlen"
+        },
+        {
+          "question": "Welche wirtschaftliche Folge hat ein größeres Risikokollektiv für den Versicherer?",
+          "options": [
+            "Er muss weniger teures Sicherheitskapital als Puffer vorhalten",
+            "Er kann den Kostenzuschlag aus der Prämie streichen",
+            "Er kann den Risikoaufschlag vollständig durch das Kapitalanlageergebnis ersetzen"
+          ],
+          "correct": 0,
+          "explanation": "Weil die Volatilität sinkt, braucht der Versicherer weniger Sicherheitskapital als Puffer – und kann Risiken überhaupt erst berechnen und bepreisen.",
+          "einheitId": "grosse-zahlen"
+        },
+        {
+          "question": "Wie hoch ist die Reinprämie bei 1 % Schadenwahrscheinlichkeit und 100.000 € erwarteter Schadenhöhe?",
+          "options": [
+            "100 €",
+            "1.000 €",
+            "10.000 €",
+            "100.000 €"
+          ],
+          "correct": 1,
+          "explanation": "Die Reinprämie ist der Erwartungswert des Schadens, also Eintrittswahrscheinlichkeit mal erwartete Schadenhöhe: 1 % von 100.000 € ergibt 1.000 €.",
+          "einheitId": "praemie"
+        },
+        {
+          "question": "Was bepreist der Risikoaufschlag, der auch Sicherheitszuschlag genannt wird?",
+          "options": [
+            "Die Provision des Vermittlers und die Kosten der Vertragsverwaltung zusammen",
+            "Die verbleibende Volatilität im Portfolio und damit die Kapitalkosten",
+            "Die erwarteten Schäden des kommenden Geschäftsjahres"
+          ],
+          "correct": 1,
+          "explanation": "Weil das Gesetz der großen Zahlen nie perfekt greift, muss Eigenkapital als Puffer vorgehalten werden. Der Risikoaufschlag entspricht ökonomisch den Kapitalkosten dieses Risikokapitals.",
+          "einheitId": "praemie"
+        },
+        {
+          "question": "In welcher Reihenfolge wird die Prämie von unten nach oben aufgebaut?",
+          "options": [
+            "Reinprämie, Risikoaufschlag, Kostenzuschlag, Gewinnmarge",
+            "Kostenzuschlag, Reinprämie, Gewinnmarge, Risikoaufschlag",
+            "Gewinnmarge, Kostenzuschlag, Risikoaufschlag, Reinprämie"
+          ],
+          "correct": 0,
+          "explanation": "Die Prämie wird strikt bottom-up kalkuliert: auf die Reinprämie kommen Risikoaufschlag, Kostenzuschlag und zuletzt die Gewinnmarge; die Summe ist der Bruttobeitrag.",
+          "einheitId": "praemie"
+        },
+        {
+          "question": "Welches Problem entsteht bereits vor dem Vertragsabschluss?",
+          "options": [
+            "Das Kumulrisiko eines Naturkatastrophenereignisses",
+            "Die Retrozession des Rückversicherers",
+            "Adverse Selektion, also die Gegenauslese der Risiken",
+            "Moral Hazard, also die Verhaltensänderung des Versicherten"
+          ],
+          "correct": 2,
+          "explanation": "Adverse Selektion wirkt vor Abschluss über die Auswahl der Versicherten, Moral Hazard danach über das Verhalten der Versicherten.",
+          "einheitId": "marktineffizienzen"
+        },
+        {
+          "question": "Mit welchen Mitteln begrenzen Versicherer den Moral Hazard?",
+          "options": [
+            "Selbstbeteiligungen und Bonus-Malus-Systeme",
+            "Gesundheitsprüfungen, Vorvertragsfragen und Risikoausschlüsse",
+            "Rückversicherung und Retrozession"
+          ],
+          "correct": 0,
+          "explanation": "Gegen Moral Hazard hilft nur, den Kunden im Risiko zu halten: Selbstbeteiligungen und Bonus-Malus-Systeme wie Schadenfreiheitsrabatte. Gesundheitsprüfungen wirken gegen Adverse Selektion.",
+          "einheitId": "marktineffizienzen"
+        },
+        {
+          "question": "Gegen wen hat der Versicherungsnehmer bei einem Großschaden Anspruch?",
+          "options": [
+            "Gegen den Rückversicherer, der das Kumulrisiko tatsächlich trägt",
+            "Ausschließlich gegen seinen Erstversicherer",
+            "Gegen Erst- und Rückversicherer gemeinsam"
+          ],
+          "correct": 1,
+          "explanation": "Die Rückversicherung ist ein Vertrag zwischen Versicherern. Der Kunde hat ausschließlich Anspruch gegenüber seinem Erstversicherer.",
+          "einheitId": "risikokette"
+        }
+      ]
+    },
+    {
+      "kapitelId": "07-wertschoepfungskette",
+      "neueEinheiten": [
+        {
+          "id": "aktuariat-underwriting",
+          "title": "Aktuariat & Underwriting",
+          "icon": "shield-check",
+          "subtitle": "Risiken bepreisen, treffsicher auswählen und über Rückversicherung absichern",
+          "position": "nach:produktentwicklung",
+          "kurzgesagt": [
+            "Aktuariat, Underwriting und Rückversicherung sichern die Profitabilität, indem sie Risiken präzise bepreisen, treffsicher auswählen und klug absichern.",
+            "Das Aktuariat liefert Pricing, Risikomodelle, versicherungsmathematische Rückstellungen, Szenarioanalysen, Best-Estimate-Berechnungen und Solvency-II-Modelle.",
+            "Das Underwriting bewertet einzelne Risiken und entscheidet über Annahme, Ablehnung oder Konditionierung; die Rückversicherung gibt Spitzenrisiken ab und erweitert so die Zeichnungskapazität."
+          ],
+          "lernziele": [
+            "Aktuariat, Underwriting und Rückversicherung nach Aufgabe und Wertbeitrag unterscheiden",
+            "die wichtigsten Schnittstellen dieser Funktionen im Haus benennen",
+            "erklären, warum das Pricing je Sparte auf anderen Modellen beruht"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Drei Funktionen, ein Ziel",
+              "content": "Aktuariat, Underwriting und Rückversicherung sichern die Profitabilität, indem sie Risiken präzise bepreisen, treffsicher auswählen und klug absichern.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 60</span></span> Die drei Funktionen arbeiten in derselben Logik, aber auf verschiedenen Ebenen: Das Aktuariat rechnet am Kollektiv, das Underwriting entscheidet am einzelnen Risiko, die Rückversicherung schützt die Bilanz des ganzen Hauses."
+            },
+            {
+              "type": "paragraph",
+              "title": "Aktuariat",
+              "content": "Das Aktuariat ist die rechnende Instanz des Versicherers. Zu seinen Aufgaben gehören:<ul><li><strong>Pricing, Risikomodelle</strong> und versicherungsmathematische Rückstellungen</li><li><strong>Szenarioanalysen</strong>, Best-Estimate-Berechnungen und Solvency-II-Modelle</li></ul>"
+            },
+            {
+              "type": "paragraph",
+              "content": "Der Wertbeitrag liegt in der Sicherstellung nachhaltiger Profitabilität und in der Vermeidung von Untertarifierung oder Überdeckung – zu niedrige Preise kosten Ergebnis, zu hohe kosten Wettbewerbsfähigkeit."
+            },
+            {
+              "type": "paragraph",
+              "title": "Underwriting (Risikoprüfung)",
+              "content": "Das Underwriting entscheidet, welche Risiken ins Portfolio kommen und zu welchen Bedingungen:<ul><li><strong>Individuelle Risikobewertung</strong> einzelner Kunden oder Risiken</li><li><strong>Annahme, Ablehnung, Konditionierung</strong> des Antrags</li></ul>"
+            },
+            {
+              "type": "paragraph",
+              "content": "Sein Wertbeitrag ist die Steuerung der Risikostruktur des Portfolios und die Vermeidung von Anti-Selektion – also genau die Antwort auf das Problem der Adverse Selektion aus dem Kapitel Grundlagen."
+            },
+            {
+              "type": "paragraph",
+              "title": "Rückversicherung",
+              "content": "Die Rückversicherung ist aus Sicht des Erstversicherers ein Einkauf, nicht ein Verkauf:<ul><li><strong>Abgabe von Spitzenrisiken</strong> an Rückversicherer</li><li><strong>Schutz vor Volatilität</strong> und Großschäden</li></ul>"
+            },
+            {
+              "type": "paragraph",
+              "content": "Ihr Wertbeitrag ist die Stabilisierung der Kapitalbasis und die Ermöglichung größerer Zeichnungskapazitäten: Wer Spitzen abgibt, darf mehr zeichnen."
+            }
+          ],
+          "level2": [
+            {
+              "type": "table",
+              "title": "Schnittstellen im Haus",
+              "headers": [
+                "Gegenüber",
+                "Was ausgetauscht wird"
+              ],
+              "rows": [
+                [
+                  "Produktentwicklung",
+                  "Input zu Risikoannahmen, Pricingparametern und Produktprofitabilität"
+                ],
+                [
+                  "Vertrieb",
+                  "klare Risikoregeln, Pricinglogik und Zielsegmentdefinitionen für marktfähige Angebote"
+                ],
+                [
+                  "Schadenmanagement",
+                  "reale Schadenverläufe und Loss-Ratio-Feedback zur Verbesserung von Pricing und Annahmerichtlinien"
+                ],
+                [
+                  "Risk und Compliance",
+                  "regulatorische Konformität von Modellen, Richtlinien und Limits"
+                ],
+                [
+                  "Finance und Controlling",
+                  "Koordination von Reserven, Kapitaleinsatz und Rückversicherungsbedarf"
+                ]
+              ],
+              "sortable": false
+            },
+            {
+              "type": "table",
+              "title": "Was sich je Sparte unterscheidet",
+              "headers": [
+                "Sparte",
+                "Besonderheit in dieser Funktion"
+              ],
+              "rows": [
+                [
+                  "SHUK",
+                  "Pricing oft stärker datengetrieben mit Frequenz- und Severity-Modellen; objektspezifische Risikoprüfung; Rückversicherung zur Volatilitätsabsicherung zentral"
+                ],
+                [
+                  "KV",
+                  "medizinisches Underwriting essenziell; medizinische Risikomodelle zu Morbidität und Leistungswahrscheinlichkeiten; Rückversicherung weniger ausgeprägt"
+                ],
+                [
+                  "LV",
+                  "biometrische Modelle zu Langlebigkeit, Sterblichkeit und Storno; Rückversicherung zentral"
+                ]
+              ],
+              "sortable": false
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Der Regelkreis, auf den es in Projekten ankommt",
+              "content": "Die drei Funktionen bilden einen Regelkreis, der nur so gut ist wie seine Rückmeldungen. Das Schadenmanagement liefert reale Schadenverläufe und Loss-Ratio-Feedback, das Aktuariat übersetzt es in Pricing und Annahmerichtlinien, das Underwriting wendet es am nächsten Antrag an. Bricht eine dieser Verbindungen – etwa weil Schadendaten nicht in der Pricing-Strecke ankommen –, zeigt sich das erst mit Verzögerung in der Schadenquote. Zugleich wacht Risk und Compliance über die regulatorische Konformität von Modellen, Richtlinien und Limits, sodass jede Modelländerung auch eine Validierungsfrage ist."
+            }
+          ]
+        },
+        {
+          "id": "bestandsfuehrung",
+          "title": "Policierung & Bestand",
+          "icon": "file-text",
+          "subtitle": "Verträge anlegen, ändern, beenden und den Zahlungsverkehr sichern",
+          "position": "nach:aktuariat-underwriting",
+          "kurzgesagt": [
+            "Policierung und Bestandsführung verwalten Verträge und Beiträge: Anträge werden angelegt, Änderungen verarbeitet, der Zahlungsverkehr sichergestellt und Bestandsdaten sauber gepflegt.",
+            "Der größte Wertbeitrag sind Effizienz und Skaleneffekte: niedrige Prozesskosten durch Dunkelverarbeitung und Standardisierung.",
+            "Verlässliche Bestandsdaten sind zugleich die Grundlage für Controlling, Pricing und Service – Datenqualität ist hier keine IT-Frage, sondern eine Steuerungsfrage."
+          ],
+          "lernziele": [
+            "die Kernaufgaben von Policierung und Bestandsführung nennen",
+            "die vier Wertbeiträge dieser Funktion unterscheiden",
+            "die Schnittstellen zu IT, Kundenservice, Finance und Vertrieb benennen"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Das Rückgrat des laufenden Geschäfts",
+              "content": "Bei Policierung und Bestandsführung geht es um die Verwaltung von Verträgen und Beiträgen: Anträge werden angelegt, Änderungen verarbeitet, der Zahlungsverkehr sichergestellt und Bestandsdaten sauber gepflegt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 62</span></span> Diese Funktion ist der Teil der Wertschöpfungskette, den der Kunde nur bemerkt, wenn etwas schiefgeht – und der über die Prozesskosten eines Versicherers mitentscheidet."
+            },
+            {
+              "type": "paragraph",
+              "title": "Was in der Bestandsführung passiert",
+              "content": "<ul><li><strong>Rechtssichere Anlage, Änderung und Beendigung</strong> von Verträgen inklusive der Beitrags- und Stammdatenprozesse</li><li><strong>Verarbeitung von Anträgen, Nachträgen, Dynamiken und Indexierungen</strong> – also Anpassungen bei Beiträgen, Deckungssummen, Wertanpassungen und Tarifen, möglichst automatisiert</li><li><strong>Sicherstellung von Datenqualität</strong>, Konsistenz und Nachvollziehbarkeit in den Kernsystemen</li><li><strong>Steuerung des Zahlungsverkehrs</strong> über Inkasso, Mahnwesen, Raten und Rückstände samt Schnittstellen zu Finance</li></ul>"
+            },
+            {
+              "type": "table",
+              "title": "Wertbeitrag der Funktion",
+              "headers": [
+                "Hebel",
+                "Was er bringt"
+              ],
+              "rows": [
+                [
+                  "Effizienz und Skaleneffekte",
+                  "niedrige Prozesskosten durch Dunkelverarbeitung und Standardisierung"
+                ],
+                [
+                  "Ertragsstabilität",
+                  "sicherer Zahlungsverkehr über Inkasso und Mahnwesen und geringe Fehlerquoten"
+                ],
+                [
+                  "Datenqualität und Steuerungsfähigkeit",
+                  "verlässliche Bestandsdaten als Basis für Controlling, Pricing und Service"
+                ],
+                [
+                  "Kundenerlebnis",
+                  "friktionsarme Vertragsänderungen, Indexierungen und Lebenszyklus-Events erhöhen die Zufriedenheit"
+                ]
+              ],
+              "sortable": false
+            }
+          ],
+          "level2": [
+            {
+              "type": "table",
+              "title": "Schnittstellen im Haus",
+              "headers": [
+                "Gegenüber",
+                "Was ausgetauscht wird"
+              ],
+              "rows": [
+                [
+                  "IT",
+                  "Policy-Admin, Automatisierung und Datenkonsistenz für effiziente Ende-zu-Ende-Prozesse"
+                ],
+                [
+                  "Kundenservice",
+                  "Vertragsinformationen und Änderungen für eine schnelle, fehlerarme Bearbeitung"
+                ],
+                [
+                  "Finance und Inkasso",
+                  "Zahlungsverkehr mit Inkasso, Mahnwesen und Rückständen sowie die Abstimmung"
+                ],
+                [
+                  "Vertrieb",
+                  "Nachträge, Vertragsänderungen und Statusinformationen für die Kundenkommunikation"
+                ]
+              ],
+              "sortable": false
+            },
+            {
+              "type": "table",
+              "title": "Was sich je Sparte unterscheidet",
+              "headers": [
+                "Sparte",
+                "Besonderheit in dieser Funktion"
+              ],
+              "rows": [
+                [
+                  "SHUK",
+                  "viele und häufige Vertragsänderungen, etwa in Kfz; hohe Automatisierung möglich"
+                ],
+                [
+                  "KV",
+                  "komplexe Leistungs- und Beitragsanpassungen, starke Regulatorik"
+                ],
+                [
+                  "LV",
+                  "langfristige Verträge mit komplexen Berechnungen zu Garantien, Überschüssen und Renten"
+                ]
+              ],
+              "sortable": false
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Warum die Bestandsführung ein Kostenthema ist",
+              "content": "Die Bestandsführung entscheidet über den Anteil der Vorgänge, die ohne Sachbearbeitung durchlaufen. Das Sektortraining nennt die Dunkelverarbeitung ausdrücklich das Kernziel der IT: Ende-zu-Ende-Automatisierung von Antrag, Nachtrag und Leistung beziehungsweise Schaden. Jeder Vorgang, der dort hängen bleibt, erscheint später in den Verwaltungskosten der Gewinn- und Verlustrechnung und damit in der Kostenquote. Welche Systeme dahinterstehen und wie hoch die Dunkelverarbeitungsquoten in Deutschland tatsächlich sind, steht in den Lerneinheiten Wertschöpfung & Kennzahlen sowie IT & Digitalisierung dieses Kapitels."
+            }
+          ]
+        }
+      ],
+      "neueBloecke": [
+        {
+          "einheitId": "ueberblick",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "infoKachelGrid",
+            "title": "Die vier Supportfunktionen",
+            "items": [
+              {
+                "icon": "cpu",
+                "title": "IT und Digitalisierung",
+                "description": "Kernsysteme und Integrationslandschaft, Dunkelverarbeitung als Kernziel, Daten- und Analytics-Plattform, Omnikanal und Cybersecurity."
+              },
+              {
+                "icon": "shield-check",
+                "title": "Compliance und Risiko",
+                "description": "Regulatorische Konformität, Risikomanagement-Framework mit ORSA und Limits, Produkt- und Vertriebs-Compliance, Auslagerungsrisiken."
+              },
+              {
+                "icon": "users",
+                "title": "HR, Learning und Culture",
+                "description": "Talente in Schlüsselrollen, Upskilling und Reskilling, Performance- und Vergütungsmodelle, Kulturarbeit und Change Management."
+              },
+              {
+                "icon": "banknote",
+                "title": "Finance, Controlling und Kapitalanlage",
+                "description": "Rechnungswesen und Reporting, Kosten- und Ergebnissteuerung, Kapitalmanagement, Kapitalanlage und Pricing-Unterstützung."
+              }
+            ]
+          }
+        },
+        {
+          "einheitId": "ueberblick",
+          "tiefe": 1,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Vertrieb und Marketing als Glied der Kette",
+            "content": "In der Wertschöpfungskette steht Vertrieb und Marketing zwischen Underwriting und Bestandsführung: Die Funktion erzeugt Wachstum, indem sie zielgerichtet Nachfrage schafft, Beratung ermöglicht und Abschlüsse über alle Vertriebswege realisiert – von Direkt- und Maklerkanälen über Partner bis zu Embedded-Kanälen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 61</span></span> Ihr Wertbeitrag reicht von Wachstum und Skalierung über die Steuerung von Akquisitionskosten und Deckungsbeiträgen bis zur Portfolioqualität: Zielgerichtete Segmentierung lenkt die Zeichnung und verbessert damit die Risikomischung. Die Kanäle selbst, ihre Marktanteile und ihre Vergütung sind Gegenstand der Kapitel Vertriebswege und Vergütung und Provision; hier genügt der Platz in der Kette."
+          }
+        },
+        {
+          "einheitId": "ueberblick",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Compliance, Risiko und HR im Detail",
+            "content": "Zwei der vier Supportbänder haben in diesem Kapitel keine eigene Lerneinheit, gehören aber zum Bild.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 65</span></span> <strong>Compliance und Risiko</strong> stellt die regulatorische Konformität sicher – genannt werden Solvency II, IDD und IVV, DSGVO, MaGo sowie BAIT und VAIT –, betreibt das Risikomanagement-Framework mit ORSA, Limits, Risikoappetit, Modellvalidierung und internem Kontrollsystem, verantwortet die Produkt- und Vertriebs-Compliance mit Zielmarktdefinition, Eignungsprüfung und Vergütungskonformität und überwacht Auslagerungs- und Third-Party-Risiken samt Informationssicherheit. <strong>HR, Learning und Culture</strong> gewinnt und bindet Talente in den Schlüsselrollen Aktuariat, Underwriting, Data, IT und Schaden, treibt Upskilling und Reskilling in Datenkompetenz, agilem Arbeiten, Regulatorik und Produktwissen, gestaltet Performance- und Vergütungsmodelle inklusive vertriebsnaher Anreizsysteme und verankert Kundenfokus, agiles Mindset und Compliance in der Kultur. Die regulatorischen Anforderungen selbst stehen im Kapitel Regulatorik."
+          }
+        },
+        {
+          "einheitId": "produktentwicklung",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Wertbeitrag der Produktentwicklung",
+            "content": "In der Produktentwicklung werden Kundenbedürfnisse, Risiko- und Marktanforderungen in wirtschaftlich tragfähige, klar steuerbare Produkte übersetzt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 59</span></span> Der Wertbeitrag der Funktion lässt sich in vier Punkten fassen:<ul><li><strong>Marktfit und Wettbewerbsfähigkeit</strong> der Produkte sicherstellen</li><li><strong>Neue Kundensegmente und Wachstumsfelder</strong> erschließen</li><li><strong>Nachhaltige Profitabilität</strong> durch strukturierte Produktkalkulation absichern</li><li><strong>Komplexität reduzieren</strong> durch klare Produktarchitekturen und ein gemanagtes Portfolio</li></ul>"
+          }
+        },
+        {
+          "einheitId": "produktentwicklung",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "content": "Dazu kommt die laufende Optimierung bestehender Produkte über Performance- und Preis-Updates. Das Produktcontrolling steuert die Profitabilität über das Monitoring von Schadenquoten, Storno, Abschlusskosten und Combined Ratio."
+          }
+        },
+        {
+          "einheitId": "produktentwicklung",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "table",
+            "title": "Schnittstellen der Produktentwicklung",
+            "headers": [
+              "Gegenüber",
+              "Was ausgetauscht wird"
+            ],
+            "rows": [
+              [
+                "Aktuariat",
+                "Pricing, Risikomodelle und Kapitalanforderungen"
+              ],
+              [
+                "Underwriting",
+                "Übersetzung der Produktlogik in Annahmerichtlinien"
+              ],
+              [
+                "Vertrieb",
+                "Produktstory, Nutzenargumentation und Marktfeedback"
+              ],
+              [
+                "IT",
+                "Tarifierung, Produktkonfiguration, Angebotsstrecken und Bestandsführung"
+              ],
+              [
+                "Schaden",
+                "Erkenntnisse aus Schadenverläufen für Produktanpassungen"
+              ]
+            ],
+            "sortable": false
+          }
+        },
+        {
+          "einheitId": "produktentwicklung",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "table",
+            "title": "Produktentwicklung je Sparte",
+            "headers": [
+              "Sparte",
+              "Besonderheit"
+            ],
+            "rows": [
+              [
+                "SHUK",
+                "hohe Innovationsgeschwindigkeit bei Cyber, Telematik und Parametrik; schnelle Produktzyklen; stärkere Datenorientierung im Pricing"
+              ],
+              [
+                "KV",
+                "medizinische Entwicklungen, GKV-Interaktionen und Leistungsdefinitionen; die Tarifwelt ist hoch reguliert"
+              ],
+              [
+                "LV",
+                "starke Abhängigkeit von Kapitalanlage und Zinsumfeld, komplexe Garantien, intensive regulatorische Anforderungen nach Solvency II und VAG"
+              ]
+            ],
+            "sortable": false
+          }
+        },
+        {
+          "einheitId": "schadenmgmt",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Vertrag und Schaden als Ergebnishebel",
+            "content": "Vertrag und Schaden prüfen und regulieren Leistungs- und Schadenfälle, indem sie Ansprüche aufnehmen, bewerten, entscheiden und Leistungen effizient auszahlen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 63</span></span> Vier Wertbeiträge macht das Sektortraining sichtbar:<ul><li><strong>Ergebniswirkung direkt:</strong> Senkung der Schaden- und Leistungsquote, konsequente Betrugsvermeidung, aktives Regressmanagement</li><li><strong>Kundenzufriedenheit und Vertrauen:</strong> schnelle, faire Regulierung und transparente Kommunikation</li><li><strong>Kapitalentlastung:</strong> wirksame Großschaden- und Katastrophensteuerung inklusive Ausnutzung der Rückversicherung</li><li><strong>Lernschleifen:</strong> kontinuierliche Rückmeldungen an Pricing, Underwriting und Produkt verbessern die Profitabilität</li></ul>"
+          }
+        },
+        {
+          "einheitId": "schadenmgmt",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "content": "Zum Aufgabenzuschnitt gehören neben der Ende-zu-Ende-Bearbeitung auch die Prävention, etwa durch Telematik, die Betrugsprävention über Regeln und Analytik, das Regressmanagement sowie die aktive Steuerung externer Dienstleister wie Werkstätten, Gutachter, Ärzte und Handwerker."
+          }
+        },
+        {
+          "einheitId": "schadenmgmt",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "table",
+            "title": "Schnittstellen im Schaden",
+            "headers": [
+              "Gegenüber",
+              "Was ausgetauscht wird"
+            ],
+            "rows": [
+              [
+                "Aktuariat und Underwriting",
+                "Schadenfeedback zur Optimierung von Pricing und Annahmeregeln"
+              ],
+              [
+                "Rückversicherung",
+                "Abwicklung von Großschäden, Rückversicherungsleistungen (Recovery) und Quotenrückversicherung"
+              ],
+              [
+                "IT",
+                "Schadenstrecken, Automationsregeln und Betrugsanalytik über Regeln und Modelle"
+              ]
+            ],
+            "sortable": false
+          }
+        },
+        {
+          "einheitId": "schadenmgmt",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "table",
+            "title": "Schadenbearbeitung je Sparte",
+            "headers": [
+              "Sparte",
+              "Besonderheit"
+            ],
+            "rows": [
+              [
+                "SHUK",
+                "hohe Schadenfrequenz; Automatisierung und Dienstleistersteuerung sind entscheidend"
+              ],
+              [
+                "KV",
+                "Leistungsabrechnung, medizinische Prüfung und Hochkostenfall-Management"
+              ],
+              [
+                "LV",
+                "wenige, aber große Leistungsfälle wie Todesfall, Berufsunfähigkeit und Rentenzahlungen"
+              ]
+            ],
+            "sortable": false
+          }
+        },
+        {
+          "einheitId": "kundenservice",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Kundenservice und Retention als Wertbeitrag",
+            "content": "Kundenservice und Retention sichern langfristigen Wert, indem sie Kundenanliegen lösungsorientiert bearbeiten und aktiv zur Kundenbindung beitragen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 64</span></span> Das Sektortraining ordnet der Funktion vier Wertbeiträge zu:<ul><li><strong>Persistenz und Customer Lifetime Value:</strong> Reduktion von Storno und Churn, Steigerung von Cross- und Upsell, Tarifwechsellösungen</li><li><strong>Serviceeffizienz:</strong> hohe First-Contact-Resolution, hohe Self-Service-Quoten und kurze Bearbeitungszeiten</li><li><strong>Personalisierung:</strong> Next Best Action erhöht Relevanz, Zufriedenheit und Wertbeitrag pro Kontakt</li><li><strong>Reputationsschutz:</strong> professionelles Beschwerde- und Qualitätsmanagement stärkt Marke und Weiterempfehlung</li></ul>"
+          }
+        },
+        {
+          "einheitId": "kundenservice",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "content": "Zur proaktiven Bestandsarbeit gehören Storno- und Churn-Prävention, Tarifwechselberatung und Next Best Action – der Service ist damit nicht nur Reaktion, sondern ein eigener Vertriebskanal in den Bestand."
+          }
+        },
+        {
+          "einheitId": "kundenservice",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "table",
+            "title": "Schnittstellen im Kundenservice",
+            "headers": [
+              "Gegenüber",
+              "Was ausgetauscht wird"
+            ],
+            "rows": [
+              [
+                "Bestandsführung",
+                "Vertrags- und Zahlungsdaten für schnelle Klärung und Self-Service"
+              ],
+              [
+                "Schaden",
+                "Status- und Entscheidungsinformationen für die Kundenkommunikation"
+              ],
+              [
+                "Vertrieb und CRM",
+                "Next Best Action, Cross- und Upsell sowie Churn-Prävention"
+              ],
+              [
+                "Analytics und BI",
+                "NPS und CSAT, Kontaktgründe und Trigger für Qualitäts- und Prozessverbesserung"
+              ]
+            ],
+            "sortable": false
+          }
+        },
+        {
+          "einheitId": "kundenservice",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "table",
+            "title": "Service je Sparte",
+            "headers": [
+              "Sparte",
+              "Besonderheit"
+            ],
+            "rows": [
+              [
+                "SHUK",
+                "hohe Kontaktvolumina; schnelle Problemlösung ist entscheidend"
+              ],
+              [
+                "KV",
+                "viele Leistungsanfragen und hoher Beratungsbedarf im Gesundheitskontext"
+              ],
+              [
+                "LV",
+                "Stornoprävention und langfristige Betreuung sind geschäftskritisch"
+              ]
+            ],
+            "sortable": false
+          }
+        },
+        {
+          "einheitId": "kapitalanlage",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "Finance, Controlling und Kapitalanlage als Supportband",
+            "content": "In der Wertschöpfungskette ist die Kapitalanlage Teil des Supportbands Finance, Controlling und Kapitalanlage.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 65</span></span> Dazu gehören:<ul><li><strong>Rechnungswesen und Reporting</strong> nach HGB und IFRS sowie für Solvency II, Plan und Forecast, dazu die Kosten- und Ergebnissteuerung</li><li><strong>Asset-Liability-Management und Kapitalmanagement:</strong> Solvenz, Eigenmittel, Dividenden- und Rückversicherungsstrategie</li><li><strong>Kapitalanlage und Investments:</strong> Strategic Asset Allocation, Mandatssteuerung, ESG und Liquidität</li><li><strong>Pricing- und Produktunterstützung:</strong> Abschluss- und Verwaltungskosten, Kapitalkosten und Profitabilitätsziele</li></ul>"
+          }
+        },
+        {
+          "einheitId": "kapitalanlage",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "content": "Der letzte Punkt schließt den Kreis zur Prämienkalkulation: Die Kapitalkosten, die im Risikoaufschlag der Prämie stecken, kommen aus dieser Funktion."
+          }
+        },
+        {
+          "einheitId": "it-digitalisierung",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "title": "IT und Digitalisierung als Supportband",
+            "content": "Das Sektortraining beschreibt den Aufgabenkanon der IT als eigenes Supportband der Wertschöpfungskette.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 65</span></span> Genannt werden:<ul><li><strong>Betrieb der Kernsysteme</strong> für Police und Admin, Bestand, Schaden und Provision sowie die Integrationslandschaft mit APIs und Enterprise Service Bus</li><li><strong>Dunkelverarbeitung als Kernziel:</strong> Ende-zu-Ende-Automatisierung von Antrag, Nachtrag und Leistung beziehungsweise Schaden</li><li><strong>Data- und Analytics-Plattform:</strong> Single Source of Truth, Pricing- und Betrugsmodelle, Echtzeit-Entscheidungen für die Next Best Action</li><li><strong>Omnikanal-Journeys und Self-Service</strong> über Portal und App, Identity und Access, Dokumente und Signatur</li><li><strong>Cloud, DevOps, Cybersecurity</strong>, Master Data Management sowie Qualitäts- und Release-Management</li></ul>"
+          }
+        },
+        {
+          "einheitId": "it-digitalisierung",
+          "tiefe": 2,
+          "position": "ende",
+          "block": {
+            "type": "paragraph",
+            "content": "Diese Liste ist die Funktionsseite; die Zahlen zum deutschen Markt – Dunkelverarbeitungsquoten, Systemanbieter, Portalnutzung – stehen in dieser Lerneinheit und in der Lerneinheit Wertschöpfung & Kennzahlen."
+          }
+        }
+      ],
+      "ersetzteBloecke": [
+        {
+          "einheitId": "ueberblick",
+          "tiefe": 1,
+          "index": 6,
+          "grund": "Der bisherige valueChain-Block mit sieben frei gewählten Schritten wird durch den prozessKette-Block der Folie 58 ersetzt: sechs Kernfunktionen und vier Supportbänder, exakt in der Taxonomie des Sektortrainings. Die Inhalte der alten Schrittbeschreibungen stecken in den aufgaben-Listen und in den Deep Dives der Lerneinheiten.",
+          "block": {
+            "type": "prozessKette",
+            "title": "Die Wertschöpfungskette eines Versicherers",
+            "untertitel": "Sechs Kernfunktionen wandeln Risiko in Wert; vier Supportbänder tragen die ganze Kette.",
+            "kern": [
+              {
+                "id": "produktentwicklung",
+                "titel": "Produktentwicklung und -pflege",
+                "text": "Übersetzt Kundenbedürfnisse, Risiko- und Marktanforderungen in wirtschaftlich tragfähige, klar steuerbare Produkte.",
+                "aufgaben": [
+                  "Analyse von Kundenbedürfnissen, Wettbewerbern und Regulierung",
+                  "Übersetzung in wirtschaftlich tragfähige, kundenrelevante Versicherungsprodukte",
+                  "Entwicklung der Produkttarife, neuer Bedingungen und Leistungen",
+                  "Neben der fachlichen Definition auch die technische Konfiguration",
+                  "Produktcontrolling: Steuerung der Profitabilität durch Monitoring"
+                ],
+                "kennzahlen": [
+                  {
+                    "label": "Combined Ratio",
+                    "wert": "Profitabilität des Versicherungsgeschäfts"
+                  },
+                  {
+                    "label": "Schadenquote",
+                    "wert": "Qualität von Risikoauswahl und Pricing"
+                  },
+                  {
+                    "label": "Stornoquote",
+                    "wert": "Akzeptanz des Produkts im Bestand"
+                  },
+                  {
+                    "label": "Abschlusskosten",
+                    "wert": "Vertriebsaufwand des Produkts"
+                  }
+                ]
+              },
+              {
+                "id": "aktuariat-underwriting",
+                "titel": "Aktuariat, Underwriting, Rückversicherung",
+                "text": "Sichert die Profitabilität, indem Risiken präzise bepreist, treffsicher ausgewählt und klug abgesichert werden.",
+                "aufgaben": [
+                  "Aktuariat: Pricing, Risikomodelle und versicherungsmathematische Rückstellungen",
+                  "Aktuariat: Szenarioanalysen, Best-Estimate-Berechnungen, Solvency-II-Modelle",
+                  "Underwriting: individuelle Risikobewertung einzelner Kunden oder Risiken",
+                  "Underwriting: Annahme, Ablehnung, Konditionierung",
+                  "Rückversicherung: Abgabe von Spitzenrisiken, Schutz vor Volatilität und Großschäden"
+                ],
+                "kennzahlen": [
+                  {
+                    "label": "Loss Ratio",
+                    "wert": "Rückmeldung aus dem Schaden an Pricing und Annahmeregeln"
+                  },
+                  {
+                    "label": "Zeichnungskapazität",
+                    "wert": "wird durch Rückversicherung erweitert"
+                  }
+                ]
+              },
+              {
+                "id": "vertrieb",
+                "titel": "Vertrieb und Marketing",
+                "text": "Erzeugt Wachstum, indem zielgerichtet Nachfrage geschaffen, Beratung ermöglicht und über alle Vertriebswege abgeschlossen wird.",
+                "aufgaben": [
+                  "Identifikation, Ansprache und Konversion von Zielsegmenten über die Vertriebswege",
+                  "Orchestrierung von Preis, Angebot, Story und Beratung entlang der Sales-Journey",
+                  "Steuerung und Enablement der Absatzkanäle über Incentives, Provision, Schulungen und Kampagnen",
+                  "Qualifizierung und Übergabe von Leads inklusive Nurturing und Angebotsnachverfolgung",
+                  "Datengestützte Optimierung von Funnel, Akquisitionskosten und Abschlussquoten"
+                ],
+                "kennzahlen": [
+                  {
+                    "label": "Abschlussquote",
+                    "wert": "Konversion im Funnel"
+                  },
+                  {
+                    "label": "CAC",
+                    "wert": "Kundenakquisitionskosten je Kanal"
+                  },
+                  {
+                    "label": "Kanalproduktivität",
+                    "wert": "Neugeschäft je Absatzkanal"
+                  }
+                ]
+              },
+              {
+                "id": "bestandsfuehrung",
+                "titel": "Policierung und Bestandsführung",
+                "text": "Verwaltet Verträge und Beiträge: Anträge anlegen, Änderungen verarbeiten, Zahlungsverkehr sicherstellen, Bestandsdaten pflegen.",
+                "aufgaben": [
+                  "Rechtssichere Anlage, Änderung und Beendigung von Verträgen",
+                  "Automatisierte Verarbeitung von Anträgen, Nachträgen, Dynamiken und Indexierungen",
+                  "Sicherstellung von Datenqualität, Konsistenz und Nachvollziehbarkeit in den Kernsystemen",
+                  "Steuerung des Zahlungsverkehrs über Inkasso, Mahnwesen, Raten und Rückstände"
+                ],
+                "kennzahlen": [
+                  {
+                    "label": "Dunkelverarbeitungsquote",
+                    "wert": "Kernziel der Automatisierung"
+                  },
+                  {
+                    "label": "Fehlerquote",
+                    "wert": "Qualität im Zahlungsverkehr"
+                  }
+                ]
+              },
+              {
+                "id": "vertrag-schaden",
+                "titel": "Vertrag und Schaden",
+                "text": "Prüft und reguliert Leistungs- und Schadenfälle: Ansprüche aufnehmen, bewerten, entscheiden und Leistungen effizient auszahlen.",
+                "aufgaben": [
+                  "End-to-End-Bearbeitung von Leistungs- und Schadenfällen von der Prävention bis zur Auszahlung",
+                  "Betrugsprävention und -detektion sowie Regressmanagement",
+                  "Aktive Steuerung externer Dienstleister wie Werkstätten, Gutachter, Ärzte und Handwerker",
+                  "Großschaden- und Katastrophenmanagement inklusive Rückversicherungsabwicklung"
+                ],
+                "kennzahlen": [
+                  {
+                    "label": "Schaden- oder Leistungsquote",
+                    "wert": "unmittelbare Ergebniswirkung"
+                  }
+                ]
+              },
+              {
+                "id": "kundenservice",
+                "titel": "Kundenservice und Retention",
+                "text": "Sichert langfristigen Wert, indem Kundenanliegen lösungsorientiert bearbeitet werden und die Bindung aktiv gepflegt wird.",
+                "aufgaben": [
+                  "Multikanal-Betreuung über Telefon, Chat, Portal und E-Mail",
+                  "Proaktive Bestandsarbeit: Storno- und Churn-Prävention, Tarifwechselberatung, Next Best Action",
+                  "Transparente Kommunikation zum Schaden- und Leistungsstatus, Self-Service-Enablement",
+                  "Nutzung von Kunden- und Nutzungsdaten zur Personalisierung",
+                  "Qualitäts- und SLA-Steuerung"
+                ],
+                "kennzahlen": [
+                  {
+                    "label": "First-Contact-Resolution",
+                    "wert": "Serviceeffizienz"
+                  },
+                  {
+                    "label": "Self-Service-Quote",
+                    "wert": "Anteil ohne Sachbearbeitung"
+                  },
+                  {
+                    "label": "NPS und CSAT",
+                    "wert": "Zufriedenheit, gemessen über Analytics und BI"
+                  },
+                  {
+                    "label": "Stornoquote",
+                    "wert": "Churn-Prävention als Werttreiber"
+                  }
+                ]
+              }
+            ],
+            "support": [
+              {
+                "titel": "IT und Digitalisierung",
+                "text": "Betreibt die Kernsysteme für Police, Bestand, Schaden und Provision samt Integrationslandschaft, treibt die Dunkelverarbeitung als Kernziel, stellt die Daten- und Analytics-Plattform bereit und verantwortet Omnikanal-Journeys, Cloud, DevOps und Cybersecurity."
+              },
+              {
+                "titel": "Compliance und Risiko",
+                "text": "Sichert die regulatorische Konformität etwa nach Solvency II, IDD, DSGVO, MaGo und VAIT, betreibt das Risikomanagement-Framework mit ORSA, Limits, Risikoappetit und Modellvalidierung und überwacht Produkt-, Vertriebs- und Auslagerungsrisiken."
+              },
+              {
+                "titel": "HR, Learning und Culture",
+                "text": "Gewinnt und bindet Talente in den Schlüsselrollen Aktuariat, Underwriting, Data, IT und Schaden, treibt Upskilling und Reskilling, gestaltet Performance- und Vergütungsmodelle samt vertriebsnaher Anreizsysteme und verankert Kundenfokus und Compliance in der Kultur."
+              },
+              {
+                "titel": "Finance, Controlling und Kapitalanlage",
+                "text": "Verantwortet Rechnungswesen und Reporting nach HGB, IFRS und Solvency II, steuert Kosten und Ergebnis, betreibt Asset-Liability-Management und Kapitalmanagement, führt die Kapitalanlage samt Strategic Asset Allocation und unterstützt Pricing und Produkt mit Kosten- und Kapitalkostensätzen."
+              }
+            ],
+            "fussnote": "Aufbau der Kette nach Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 58; die Aufgaben, Kennzahlen und Supporttexte nach den Deep Dives der Folien 59 bis 65."
+          }
+        }
+      ],
+      "entfernteBloecke": [
+        {
+          "einheitId": "ueberblick",
+          "tiefe": 1,
+          "index": 7,
+          "typ": "combinedRatioCalc",
+          "grund": "Der Rechner wird in die neue Lerneinheit `geschaeftsmodell`/`kennzahlen` verschoben, wo die Formel, die Benchmarks und die Bestandteile der Combined Ratio erklärt werden. Der Block ist datenlos, ein Umhängen kostet nichts; bleibt er hier stehen, gibt es ihn zweimal (daten-pruefung.mjs meldet byteidentische Blöcke nur außerhalb von combinedRatioCalc/provisionCalc, der Doppelbefund bliebe also unentdeckt)."
+        }
+      ],
+      "neueQuizfragen": [
+        {
+          "question": "Wie viele Kernfunktionen zeigt die Wertschöpfungskette eines Versicherers?",
+          "options": [
+            "Vier Kernfunktionen",
+            "Sechs Kernfunktionen",
+            "Sieben Kernfunktionen"
+          ],
+          "correct": 1,
+          "explanation": "Sechs Kernfunktionen: Produktentwicklung und -pflege, Aktuariat mit Underwriting und Rückversicherung, Vertrieb und Marketing, Policierung und Bestandsführung, Vertrag und Schaden sowie Kundenservice und Retention.",
+          "einheitId": "ueberblick"
+        },
+        {
+          "question": "Welche der folgenden Funktionen ist eine Supportfunktion, keine Kernfunktion?",
+          "options": [
+            "Policierung und Bestandsführung",
+            "Vertrag und Schaden",
+            "Compliance und Risiko",
+            "Vertrieb und Marketing"
+          ],
+          "correct": 2,
+          "explanation": "Die vier Supportbänder sind IT und Digitalisierung, Compliance und Risiko, HR sowie Finance und Kapitalanlage. Sie tragen die gesamte Kette, gehören aber nicht zu den sechs Kernfunktionen.",
+          "einheitId": "ueberblick"
+        },
+        {
+          "question": "Welche Aufgabe gehört zum Aktuariat und nicht zum Underwriting?",
+          "options": [
+            "Die individuelle Risikobewertung einzelner Kunden",
+            "Szenarioanalysen und Best-Estimate-Berechnungen",
+            "Die Entscheidung über Annahme oder Ablehnung eines Antrags",
+            "Die Konditionierung eines Antrags mit Zuschlägen"
+          ],
+          "correct": 1,
+          "explanation": "Das Aktuariat rechnet am Kollektiv: Pricing, Risikomodelle, versicherungsmathematische Rückstellungen, Szenarioanalysen und Solvency-II-Modelle. Das Underwriting entscheidet am einzelnen Risiko.",
+          "einheitId": "aktuariat-underwriting"
+        },
+        {
+          "question": "Welcher Wertbeitrag steht in der Policierung und Bestandsführung im Vordergrund?",
+          "options": [
+            "Wachstum durch neue Kundensegmente und eine schnellere Time-to-Market bei Produkten",
+            "Niedrige Prozesskosten durch Dunkelverarbeitung und Standardisierung",
+            "Risikoselektion über Annahmerichtlinien und Zeichnungslimits"
+          ],
+          "correct": 1,
+          "explanation": "Effizienz und Skaleneffekte sind der erste Wertbeitrag dieser Funktion: niedrige Prozesskosten durch Dunkelverarbeitung und Standardisierung, dazu Ertragsstabilität, Datenqualität und Kundenerlebnis.",
+          "einheitId": "bestandsfuehrung"
+        }
+      ]
+    },
+    {
+      "kapitelId": "geschaeftsmodell",
+      "hinweis": "Das Kapitel selbst steht unter `neueKapitel`; die Quizfragen stehen dort in `quiz` und sind hier nur zur Kontrolle gespiegelt.",
+      "neueEinheiten": [],
+      "neueBloecke": [],
+      "ersetzteBloecke": [],
+      "neueQuizfragen": [
+        {
+          "question": "Aus welchen zwei Bestandteilen setzt sich der Operating Profit eines Erstversicherers zusammen?",
+          "options": [
+            "Bruttobeitragseinnahmen und Rückversicherungsabgaben des laufenden Jahres",
+            "Schadenquote und Kostenquote",
+            "Versicherungstechnisches Ergebnis und Kapitalanlageergebnis"
+          ],
+          "correct": 2,
+          "explanation": "Der Operating Profit ist die Summe aus versicherungstechnischem Ergebnis und Kapitalanlageergebnis. Die Versicherungstechnik beschafft das Kapital, das Investment erzeugt die Rendite.",
+          "einheitId": "ertragsquellen"
+        },
+        {
+          "question": "Was bezeichnet der Begriff Float?",
+          "options": [
+            "Die Differenz zwischen garantiertem und erwirtschaftetem Zins über die Vertragslaufzeit",
+            "Das Geld zwischen Prämieneinnahme und Schadenzahlung, das der Versicherer anlegt",
+            "Den Anteil fondsgebundener Produkte am Neugeschäft"
+          ],
+          "correct": 1,
+          "explanation": "Zwischen Prämieneinnahme und Schadenzahlung vergehen Tage bis Jahrzehnte. Dieses Geld heißt Float und wird am Kapitalmarkt angelegt.",
+          "einheitId": "ertragsquellen"
+        },
+        {
+          "question": "In welchem Segment ist die Kapitalanlage der primäre Gewinntreiber?",
+          "options": [
+            "SHUK",
+            "Krankenversicherung",
+            "Lebensversicherung"
+          ],
+          "correct": 2,
+          "explanation": "Die Lebensversicherung setzt fast vollständig auf die Kapitalanlage: Der Gewinn entsteht primär aus der Zinsmarge zwischen erwirtschafteter Rendite und den Garantien an die Kunden.",
+          "einheitId": "ertragsquellen"
+        },
+        {
+          "question": "Wie kommt man von den Bruttobeitragseinnahmen zu den verdienten Nettobeiträgen?",
+          "options": [
+            "Durch Abzug der Rückversicherungsabgaben",
+            "Durch Abzug der Abschluss- und Verwaltungskosten",
+            "Durch Abzug der Schadenaufwendungen",
+            "Durch Addition des Kapitalanlageergebnisses"
+          ],
+          "correct": 0,
+          "explanation": "GWP minus Rückversicherungsabgaben ergibt die verdienten Nettobeiträge (NWP) – den echten Umsatz nach Abzug der Rückversicherung für das laufende Jahr.",
+          "einheitId": "guv"
+        },
+        {
+          "question": "Auf welche Bezugsgröße wird die Combined Ratio in der Versicherungs-GuV gerechnet?",
+          "options": [
+            "Auf die gebuchten Bruttobeitragseinnahmen (GWP)",
+            "Auf die verdienten Nettobeiträge (NWP)",
+            "Auf das bilanzielle Eigenkapital"
+          ],
+          "correct": 1,
+          "explanation": "Die Combined Ratio ist Schadenaufwand plus Kosten geteilt durch NWP. Wer sie auf GWP rechnet, erhält systematisch zu gute Werte.",
+          "einheitId": "guv"
+        },
+        {
+          "question": "Welche GuV-Position steht unmittelbar vor dem Jahresüberschuss?",
+          "options": [
+            "Das Kapitalanlageergebnis",
+            "Das versicherungstechnische Ergebnis",
+            "Sonstiges und Steuern"
+          ],
+          "correct": 2,
+          "explanation": "Nach dem versicherungstechnischen Ergebnis kommt das Kapitalanlageergebnis hinzu, danach gehen Sonstiges und Steuern ab – erst dann steht der Jahresüberschuss.",
+          "einheitId": "guv"
+        },
+        {
+          "question": "Was zählt in der Versicherungs-GuV zu den Schaden- oder Leistungsaufwendungen?",
+          "options": [
+            "Nur die tatsächlich ausbezahlten Schäden, Renten und Erstattungen",
+            "Ausbezahlte Leistungen plus Zuführungen zu den Rückstellungen",
+            "Ausbezahlte Leistungen plus Provisionen an Makler und Vertreter"
+          ],
+          "correct": 1,
+          "explanation": "Zu den Schaden- oder Leistungsaufwendungen gehören auch die Zuführungen zu den Rückstellungen. Deshalb kann ein Jahr mit wenigen Zahlungen trotzdem einen hohen Schadenaufwand ausweisen.",
+          "einheitId": "guv"
+        },
+        {
+          "question": "Was bedeutet eine Combined Ratio von 97 %?",
+          "options": [
+            "Der Versicherer erzeugt 3 Cent Gewinn je verdientem Euro Prämie",
+            "Der Versicherer macht je verdientem Euro Prämie 3 Cent Verlust in der Versicherungstechnik",
+            "Das Kerngeschäft trägt sich gerade selbst"
+          ],
+          "correct": 0,
+          "explanation": "Eine CR von 97 % heißt, dass jeder verdiente Euro Prämie 3 Cent Gewinn in der Technik erzeugt. Erst bei 100 % trägt sich das Kerngeschäft nur noch selbst.",
+          "einheitId": "kennzahlen"
+        },
+        {
+          "question": "Welche Formel beschreibt die Kostenquote?",
+          "options": [
+            "Schadenaufwand geteilt durch die verdienten Prämien des laufenden Jahres",
+            "Nettoergebnis geteilt durch das bilanzielle Eigenkapital",
+            "Eigenmittel geteilt durch die Solvenzkapitalanforderung",
+            "Abschlusskosten plus Verwaltungskosten geteilt durch verdiente Prämien"
+          ],
+          "correct": 3,
+          "explanation": "Die Kostenquote ist der Indikator für operative Effizienz und Vertriebsstärke. Schadenaufwand durch verdiente Prämien ist die Schadenquote, die Summe beider ist die Combined Ratio.",
+          "einheitId": "kennzahlen"
+        },
+        {
+          "question": "Ab welchem Return on Equity schafft ein Versicherer Unternehmenswert?",
+          "options": [
+            "Oberhalb der gesetzlichen Mindestsolvenzquote von 100 %",
+            "Oberhalb der Eigenkapitalkosten von meist etwa 8 %",
+            "Ab einem Wert von mindestens 20 %"
+          ],
+          "correct": 1,
+          "explanation": "Werte unter den Eigenkapitalkosten von meist etwa 8 % vernichten Unternehmenswert. In SHUK werden 8 bis 15 % erwartet, in LV und KV jeweils 5 bis 10 %.",
+          "einheitId": "kennzahlen"
+        },
+        {
+          "question": "Was zeigt die Solvency-II-Quote an?",
+          "options": [
+            "Die Profitabilität des Versicherungsgeschäfts im laufenden Geschäftsjahr",
+            "Die Krisenfestigkeit im Schockszenario einer 200-Jahres-Krise",
+            "Die Rendite der Kapitalanlage nach Abschreibungen"
+          ],
+          "correct": 1,
+          "explanation": "Die Quote teilt die Eigenmittel durch die Solvenzkapitalanforderung (SCR) und misst die finanzielle Überlebensfähigkeit bei extremen Schocks. Die 100-Prozent-Grenze gilt für alle Sparten.",
+          "einheitId": "kennzahlen"
+        },
+        {
+          "question": "Welche Sparte hat einen Umsatz von fast 100 % Risikoprämie?",
+          "options": [
+            "SHUK",
+            "Krankenversicherung",
+            "Lebensversicherung"
+          ],
+          "correct": 0,
+          "explanation": "In SHUK zahlt der Kunde für die reine Übernahme eines Risikos, meist für zwölf Monate. In der KV kommt ein Sparanteil für die Alterungsrückstellung hinzu, in der LV dominiert er.",
+          "einheitId": "segmentunterschiede"
+        },
+        {
+          "question": "Welche Hebel nennt das Sektortraining für die Lebensversicherung?",
+          "options": [
+            "Health Management und eine strikte Leistungssteuerung",
+            "Run-off und der Wechsel zu Capital-Light-Produkten",
+            "Pricing-Optimierung und Prozessexzellenz durch Dunkelverarbeitung"
+          ],
+          "correct": 1,
+          "explanation": "In der LV greifen die Hebel an der Bilanz an: Run-off durch Verkauf teurer Altbestände und der Wechsel zu fondsgebundenen Produkten ohne Garantien.",
+          "einheitId": "segmentunterschiede"
+        },
+        {
+          "question": "Welche größte Aufwandsposition ist typisch für die Krankenversicherung?",
+          "options": [
+            "Zuführungen zu den Deckungsrückstellungen und Zinszusatzreserven",
+            "Zuführungen zu den Alterungsrückstellungen",
+            "Provisionen an Makler und Vertreter"
+          ],
+          "correct": 1,
+          "explanation": "Neben den Leistungen für Arzt- und Krankenhauskosten stehen in der KV massive Zuführungen zu den Alterungsrückstellungen, also den Sparguthaben der Kunden.",
+          "einheitId": "segmentunterschiede"
+        },
+        {
+          "question": "Wie hoch ist die Kostenquote eines Rückversicherers in der Verwaltung etwa?",
+          "options": [
+            "rund 5 %",
+            "rund 15 %",
+            "25 bis 30 %"
+          ],
+          "correct": 0,
+          "explanation": "Ein Rückversicherer braucht nur ein paar hundert hochbezahlte Underwriter und Aktuare und verwaltet keine Millionen Einzelpolicen. Beim Erstversicherer liegt die Quote bei 25 bis 30 %.",
+          "einheitId": "rueckversicherer-modell"
+        },
+        {
+          "question": "Was bedeutet Retrozession?",
+          "options": [
+            "Der Rückversicherer kauft selbst wieder Rückversicherung ein",
+            "Der Erstversicherer gibt Spitzenrisiken gegen eine Prämie an den Rückversicherer ab",
+            "Der Kunde beteiligt sich über einen Selbstbehalt am Schaden"
+          ],
+          "correct": 0,
+          "explanation": "Retrozession ist die Rückversicherung des Rückversicherers. Die Retro-Abgaben sind für ihn ein eigener Kostenblock.",
+          "einheitId": "rueckversicherer-modell"
+        },
+        {
+          "question": "Warum darf die Schadenquote eines Rückversicherers höher sein als die eines Erstversicherers?",
+          "options": [
+            "Weil Rückversicherer keine Combined Ratio unter 100 % anstreben müssen",
+            "Weil seine Verwaltungskosten mit rund 5 % sehr niedrig sind",
+            "Weil er seine Schäden vollständig über die Retrozession weitergibt"
+          ],
+          "correct": 1,
+          "explanation": "Weil die reinen Verwaltungskosten so niedrig sind, darf die Schadenquote höher ausfallen und trotzdem eine profitable Combined Ratio ergeben. Das Ziel bleibt unter 100 %, über den Zyklus unter 95 %.",
+          "einheitId": "rueckversicherer-modell"
+        }
+      ]
+    }
+  ],
+  "glossar": [
+    {
+      "term": "Adverse Selektion",
+      "definition": "Gegenauslese vor Vertragsabschluss: Hohe Risiken haben eine höhere Zahlungsbereitschaft, sammeln sich im Pool und treiben die Prämie für alle nach oben.",
+      "tags": [
+        "Markt",
+        "Finanzen"
+      ],
+      "slug": "adverse-selektion"
+    },
+    {
+      "term": "Bestandsführung",
+      "definition": "Verwaltung laufender Verträge und Beiträge: Nachträge, Dynamiken, Indexierungen, Datenqualität in den Kernsystemen und der Zahlungsverkehr.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "bestandsfuehrung"
+    },
+    {
+      "term": "Bonus-Malus-System",
+      "definition": "Beitragssystem, das die eigene Schadenhistorie im Preis sichtbar macht, etwa als Schadenfreiheitsrabatt. Gegenmittel gegen Moral Hazard.",
+      "tags": [
+        "Produkte",
+        "Vertrieb"
+      ],
+      "slug": "bonus-malus-system"
+    },
+    {
+      "term": "Bruttobeitrag",
+      "definition": "Der Preis, den der Kunde zahlt: Reinprämie plus Risikoaufschlag plus Kostenzuschlag plus Gewinnmarge.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "bruttobeitrag"
+    },
+    {
+      "term": "Capital Light",
+      "definition": "Produktstrategie der Lebensversicherer mit fondsgebundenen Tarifen ohne Garantien, um neue Kapitalbindung und Zinsrisiken zu vermeiden.",
+      "tags": [
+        "Produkte",
+        "Zukunft"
+      ],
+      "slug": "capital-light"
+    },
+    {
+      "term": "Claims Inflation",
+      "definition": "Anstieg der Schadenhöhe bei gleichem Schadenereignis, etwa durch teurere Ersatzteile und Handwerkerleistungen. Zentrales Risiko in SHUK.",
+      "tags": [
+        "Finanzen",
+        "Markt"
+      ],
+      "slug": "claims-inflation"
+    },
+    {
+      "term": "Death Spiral",
+      "definition": "Abwärtsspirale der Adverse Selektion: steigende Schäden, steigende Prämien, Kündigung der guten Risiken, erneut steigende Prämien.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "death-spiral"
+    },
+    {
+      "term": "Diversifikationseffekt",
+      "definition": "Ausgleich im Kollektiv: Weil nicht alle Schäden gleichzeitig eintreten, reicht die Summe der kleinen Prämien für die wenigen Großschäden.",
+      "tags": [
+        "Finanzen",
+        "Markt"
+      ],
+      "slug": "diversifikationseffekt"
+    },
+    {
+      "term": "Float",
+      "definition": "Das Geld zwischen Prämieneinnahme und Schadenzahlung, das der Versicherer am Kapitalmarkt anlegt. Je länger die Verträge, desto größer.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "float"
+    },
+    {
+      "term": "Gesetz der großen Zahlen",
+      "definition": "Mit wachsender Kollektivgröße nähert sich der tatsächliche Schadenaufwand dem erwarteten an; die relative Schwankung und der Kapitalbedarf sinken.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "gesetz-der-grossen-zahlen"
+    },
+    {
+      "term": "Großschadenbudget",
+      "definition": "Pauschal geplanter Betrag für Naturkatastrophen im Jahresbudget eines Rückversicherers. Die Munich Re rechnete für 2024 mit 3 bis 4 Mrd. €.",
+      "tags": [
+        "Finanzen",
+        "Markt"
+      ],
+      "slug": "grossschadenbudget"
+    },
+    {
+      "term": "GWP (Gross Written Premium)",
+      "definition": "Bruttobeitragseinnahmen und damit der gesamte Umsatz eines Versicherers: Durchschnittsbeitrag mal Anzahl der Verträge.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "gwp-gross-written-premium"
+    },
+    {
+      "term": "Kapitalanlageergebnis",
+      "definition": "Investment Income abzüglich Zinsaufwendungen und Abschreibungen. Zweite Ertragsquelle neben dem versicherungstechnischen Ergebnis.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "kapitalanlageergebnis"
+    },
+    {
+      "term": "Kostenquote",
+      "definition": "Abschluss- und Verwaltungskosten geteilt durch die verdienten Prämien. Indikator für operative Effizienz und Vertriebsstärke.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "kostenquote"
+    },
+    {
+      "term": "Kumulrisiko",
+      "definition": "Viele Schäden aus einem einzigen Ereignis wie Erdbeben oder Flut. Sprengt den Erwartungswert und wird an Rückversicherer weitergegeben.",
+      "tags": [
+        "Markt",
+        "Finanzen"
+      ],
+      "slug": "kumulrisiko"
+    },
+    {
+      "term": "Moral Hazard",
+      "definition": "Verhaltensänderung nach Vertragsabschluss: Die Existenz der Versicherung erhöht Eintrittswahrscheinlichkeit oder Höhe des Schadens.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "moral-hazard"
+    },
+    {
+      "term": "NWP (Net Written Premium)",
+      "definition": "Verdiente Nettobeiträge, also die Bruttobeitragseinnahmen nach Abzug der Rückversicherungsabgaben. Bezugsgröße der Combined Ratio.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "nwp-net-written-premium"
+    },
+    {
+      "term": "Policierung",
+      "definition": "Rechtssichere Anlage eines angenommenen Antrags als Vertrag im Bestandssystem, inklusive Versicherungsschein und Beitragsprozessen.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "policierung"
+    },
+    {
+      "term": "Pooling",
+      "definition": "Bündelung der übernommenen Risiken vieler Tausender Kunden zu einem Kollektiv. Setzt voneinander unabhängige Einzelrisiken voraus.",
+      "tags": [
+        "Markt",
+        "Finanzen"
+      ],
+      "slug": "pooling"
+    },
+    {
+      "term": "Priorität (Rückversicherung)",
+      "definition": "Schwelle in nicht-proportionalen Rückversicherungsverträgen: Erst über ihr trägt der Rückversicherer den Schadenanteil.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "prioritaet-rueckversicherung"
+    },
+    {
+      "term": "Reinprämie",
+      "definition": "Mathematischer Erwartungswert des Schadens: Eintrittswahrscheinlichkeit mal erwartete Schadenhöhe. Untere Stufe der Prämienkalkulation.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "reinpraemie"
+    },
+    {
+      "term": "Return on Equity (RoE)",
+      "definition": "Nettoergebnis geteilt durch Eigenkapital. Werte unter den Eigenkapitalkosten von meist etwa 8 % vernichten Unternehmenswert.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "return-on-equity-roe"
+    },
+    {
+      "term": "Risikoaufschlag",
+      "definition": "Prämienbestandteil für die verbleibende Volatilität des Portfolios; ökonomisch die Kapitalkosten des vorzuhaltenden Risikokapitals.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "risikoaufschlag"
+    },
+    {
+      "term": "Schadenquote",
+      "definition": "Schadenaufwand geteilt durch die verdienten Prämien. Indikator für die Qualität der Risikoauswahl und des Pricings.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "schadenquote"
+    },
+    {
+      "term": "Sicherheitszuschlag",
+      "definition": "Anderer Name für den Risikoaufschlag in der Prämienkalkulation: Preis der Restvolatilität, die das Gesetz der großen Zahlen nicht wegnimmt.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "sicherheitszuschlag"
+    },
+    {
+      "term": "Solvency-II-Quote",
+      "definition": "Eigenmittel geteilt durch die Solvenzkapitalanforderung (SCR). Maß der Krisenfestigkeit; mindestens 100 % sind für alle Sparten Pflicht.",
+      "tags": [
+        "Regulatorik",
+        "Finanzen"
+      ],
+      "slug": "solvency-ii-quote"
+    },
+    {
+      "term": "Versicherungstechnisches Ergebnis",
+      "definition": "Verdiente Nettobeiträge minus Schaden- oder Leistungsaufwendungen minus Abschluss- und Verwaltungskosten. Zeigt die operative Profitabilität.",
+      "tags": [
+        "Finanzen"
+      ],
+      "slug": "versicherungstechnisches-ergebnis"
+    },
+    {
+      "term": "Zins-Spread",
+      "definition": "Abstand zwischen erwirtschafteter Kapitalanlagerendite und garantiertem Kundenzins. Eigentliche Gewinnquelle der Lebensversicherung.",
+      "tags": [
+        "Finanzen",
+        "Produkte"
+      ],
+      "slug": "zins-spread"
+    }
+  ],
+  "offeneFragen": [
+    "Glossar-Kollisionen mit den Schwesterlieferungen: „Dunkelverarbeitung“ (teil1 und teil2), „Retrozession“ (teil1) und „Risikoausgleich im Kollektiv und in der Zeit“ (teil1) sind hier bewusst NICHT enthalten, weil term und slug je Glossar eindeutig sein müssen. Deren Fassungen sind gleichwertig oder ausführlicher. Sollte eine der Schwesterlieferungen sie fallen lassen, fehlen die drei Begriffe – dann sind sie aus dem Bericht dieses Agenten (Abschnitt 8) nachzutragen.",
+    "Folie 54 fasst Kostenzuschlag, Risikoaufschlag und Reinprämie als „Nettobeitrag“ zusammen. Der bestehende Glossareintrag „Nettobeitrag“ (glossary, slug nettobeitrag) definiert ihn dagegen als „der für die Risikodeckung benötigte Beitragsteil ohne Kosten- und Gewinnzuschläge“ – also ohne Kostenzuschlag. Beides ist fachlich vertretbar, aber widersprüchlich. Vorschlag: Glossareintrag um den Hinweis ergänzen, dass das Sektortraining den Kostenzuschlag einschließt; im Text der Lerneinheit `praemie` ist die Deck-Lesart als solche gekennzeichnet.",
+    "Die ZIELSTRUKTUR nennt für den risikokette-Block fünf Stufen (Endkunde, Erstversicherer, Rückversicherer, Retrozession, Kapitalmarkt/Staat). Folie 56 zeigt nur drei Stufen; die Retrozession steht auf Folie 71. Eine Stufe „Kapitalmarkt/Staat“ hat im Deck keine Grundlage (Cat Bonds und ILS stehen in den bestehenden Daten unter 02-marktteilnehmer/rueckversicherer, nicht im Deck) und wurde deshalb weggelassen.",
+    "Die Aufgabenbeschreibung nennt für die Kennzahlen-Einheit auch „Storno“ und „Neugeschäftsmarge“. Folie 69 führt nur Combined Ratio, Schadenquote, Kostenquote, Return on Equity und Solvency-II-Quote. „Neugeschäftsmarge“ kommt im gesamten Deck nicht vor und wurde nicht erfunden; Storno ist als Steuerungsgröße aus den Folien 59, 64 und 70 in level2 aufgenommen und dort ausdrücklich von Folie 69 abgegrenzt.",
+    "Die Asset-Allokation der Lebensversicherer (Folie 67) steht als Tabelle mit den Bandbreiten des Decks („rund 75 %“, „10 bis 15 %“, „je etwa 5 %“, „kleiner Rest“). Ein chartDonut wäre möglich, bräuchte aber Mittelwerte (12,5 % Beteiligungen, 2,5 % Rest), die das Deck nicht nennt. Entscheidung liegt beim Einarbeitungs-Agenten; die Tabelle ist die quellentreue Variante.",
+    "Die Vorgabewerte des simulationGrosseZahlen-Blocks sind an den bereits gebauten Renderer angepasst (src/components/content/SimulationGrosseZahlen.jsx): `wahrscheinlichkeit` in Prozent (1 = 1 %), `schadenhoehe` in Euro (100000), `kollektiv` als Anzahl Verträge (1000). Die Rechenzeichen im formelAufbau sind reine Operatoren („+“), weil der Renderer sie zwischen die Glieder setzt und über ZEICHEN_WORT vorlesen lässt; die Bedeutung steckt in `name`.",
+    "Zwei kleine Schema-Ergänzungen gegenüber der ZIELSTRUKTUR: `prozessKette` und `simulationGrosseZahlen` haben hier ein optionales Feld `fussnote` (wie archetypenKarte, stufenTabelle, formelAufbau und risikokette), damit jede Grafik ihre Folienquelle trägt. Der Renderer darf das Feld ignorieren; dann fehlt nur die Quellenzeile unter der Grafik.",
+    "Der ersetzte valueChain-Block in 07-wertschoepfungskette/ueberblick enthält Detailangaben, die auf den Folien 58 bis 65 nicht vorkommen (POG-Prozess, Zielmarktdefinition, FNOL, §§ 124 bis 135 VAG). Wenn diese Angaben erhalten bleiben sollen, gehören sie in die level2-Absätze der jeweiligen Lerneinheiten, nicht in den prozessKette-Block.",
+    "daten-pruefung.mjs kennt die sieben neuen Blocktypen noch nicht; `pruefeBlock` fällt für sie in den default-Zweig und meldet „Blocktyp unbekannt“. Die Prüfung muss um prozessKette, stufenTabelle, formelAufbau, simulationGrosseZahlen und risikokette erweitert werden, bevor diese Daten eingespielt werden.",
+    "Die Reihenfolge der Lerneinheiten in 07-wertschoepfungskette folgt nach dem Einbau nicht der Kette: `ueberblick` mit dem prozessKette-Block steht hinter `produktentwicklung`. Empfehlung: `ueberblick` an die erste Position des Kapitels stellen, danach produktentwicklung, aktuariat-underwriting, bestandsfuehrung, schadenmgmt, kundenservice, kapitalanlage, it-digitalisierung."
+  ],
+  "grafikbedarf": [
+    {
+      "typ": "prozessKette",
+      "wo": "07-wertschoepfungskette/ueberblick level1[6] (ersetzt valueChain)",
+      "hinweis": "Sechs Kernfunktionen waagerecht, vier Supportbänder darunter; Klick öffnet aufgaben und kennzahlen. Feld `projektfelder` wird nicht geliefert, weil das Deck dazu auf den Folien 58 bis 65 keine Angaben macht."
+    },
+    {
+      "typ": "simulationGrosseZahlen",
+      "wo": "grundlagen/grosse-zahlen level1[1]",
+      "hinweis": "Regler für Kollektivgröße, Schadenwahrscheinlichkeit (Anteil) und Schadenhöhe; zeigt Erwartungswert, Streuung und die nötige Sicherheitszuschlag-Spanne."
+    },
+    {
+      "typ": "formelAufbau",
+      "wo": "grundlagen/praemie level1[1]",
+      "hinweis": "Vier Glieder von unten nach oben plus Ergebnis; die Fußnote nennt die Nettobeitrag-Klammer der Folie."
+    },
+    {
+      "typ": "risikokette",
+      "wo": "grundlagen/risikokette level1[1]",
+      "hinweis": "Vier Stufen mit Pfeilen in beide Richtungen: Risiko und Prämie nach unten, Schadenzahlung nach oben."
+    },
+    {
+      "typ": "stufenTabelle",
+      "wo": "geschaeftsmodell/guv level1[1]",
+      "hinweis": "Neun Zeilen mit Zeichen, Bedeutung und Formel; drei Zeilen sind Zwischen- beziehungsweise Endsummen (art)."
+    }
+  ]
+}

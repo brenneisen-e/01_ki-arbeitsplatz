@@ -1,0 +1,122 @@
+[
+ {
+  "de": "Kurzfristiger Ausfall (bis zu einem Arbeitstag): Es ist keine Aktivität erforderlich. Der Roboter arbeitet die aufgelaufenen Vorgänge nach Wiederaufnahme des Betriebs in der Reihenfolge des Eingangsdatums nach.",
+  "art": "text"
+ },
+ {
+  "de": "Längerer Ausfall (mehr als ein Arbeitstag) oder Ausfall im Umfeld der 72-Stunden-Frist: Der Betriebsinformationsempfänger informiert die Sachbearbeitung. Die Vorgänge werden manuell nach dem bisherigen Verfahren vorgeprüft. Priorisiert werden Vorgänge, bei denen der abgebende Bestandsinhaber der AO zugeordnet ist, da hier die 72-Stunden-Frist läuft. Manuell bearbeitete Vorgänge werden im Postkorb als bearbeitet gekennzeichnet, damit der Roboter sie nach Wiederanlauf nicht erneut aufgreift.",
+  "art": "text"
+ },
+ {
+  "de": "Reporting",
+  "art": "text"
+ },
+ {
+  "de": "Allgemeines zum Reporting",
+  "art": "text"
+ },
+ {
+  "de": "Standardmäßig können folgende Reports in Excel erstellt werden",
+  "art": "text"
+ },
+ {
+  "de": "Nach jedem Lauf (MQ-Report)",
+  "art": "text"
+ },
+ {
+  "de": "Täglich (Daily Report)",
+  "art": "text"
+ },
+ {
+  "de": "Wöchentlich (Weekly-Report)",
+  "art": "text"
+ },
+ {
+  "de": "Monatlich (Monthly-Report)",
+  "art": "text"
+ },
+ {
+  "de": "Quartärlich (Quaterly-Report)",
+  "art": "text"
+ },
+ {
+  "de": "Auf Anforderung (OnDemand-Report)",
+  "art": "text"
+ },
+ {
+  "de": "Welche Reports generiert werden, wird spätestens nach dem Go-Live festgelegt und kann jederzeit nachträglich gerändert werden",
+  "art": "text"
+ },
+ {
+  "de": "Das Reporting ist noch nicht abschließend geklärt und wird derzeit nicht priorisiert.",
+  "art": "text"
+ },
+ {
+  "de": "Vorgesehen ist zunächst der Standardreport von Robotics. Welche Reports darüber hinaus erzeugt werden, wird nach dem Go-Live gemeinsam mit dem Robotics-Betrieb festgelegt.",
+  "art": "text"
+ },
+ {
+  "de": "Die Standardreports sind inhaltlich gruppiert (die Gruppe basiert auf den Status-Haken in Blue-Prism) und bündeln verschiedene Stati",
+  "art": "text"
+ },
+ {
+  "de": "Beschreibung",
+  "art": "text"
+ },
+ {
+  "de": "Status (wird während der Roboterverarbeitung gesetzt)",
+  "art": "text"
+ },
+ {
+  "de": "Verarbeitet",
+  "art": "text"
+ },
+ {
+  "de": "Erfolgreich abgeschlossener Durchlauf ohne Exception",
+  "art": "text"
+ },
+ {
+  "de": "Completed",
+  "art": "text"
+ },
+ {
+  "de": "Business Exceptiones",
+  "art": "text"
+ },
+ {
+  "de": "Nicht erfolgreicher Abschluß/Abbruch mit Tag Business Exception",
+  "art": "text"
+ },
+ {
+  "de": "Referred",
+  "art": "text"
+ },
+ {
+  "de": "Bearbeitung des Ordnungsbegriffes im Load2Queue abgelehnt",
+  "art": "text"
+ },
+ {
+  "de": "Rejected",
+  "art": "text"
+ },
+ {
+  "de": "System Exceptions",
+  "art": "text"
+ },
+ {
+  "de": "Nicht erfolgreicher Abschluss/Abbruch wegen technischer Probleme und Weiterleitung",
+  "art": "text"
+ },
+ {
+  "de": "Exception",
+  "art": "text"
+ },
+ {
+  "de": "offen",
+  "art": "text"
+ },
+ {
+  "de": "Ordnungsbegriffe wurden im Load2Queue eingelesen, jedoch noch nicht bearbeitet",
+  "art": "text"
+ }
+]

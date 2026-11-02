@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* === MODUS-FARBEN (Braunschweiger Sparkasse) === */
+  --mode-primary: #b3131b;
+  --mode-primary-light: #d9232c;
+  --mode-gradient: linear-gradient(135deg, #7a0d12 0%, #b3131b 45%, #d9232c 100%);
+  --mode-pastel: #fef2f2;
+  --mode-row-hover: #fff5f5;
+
+  /* === NEUTRALE FARBEN === */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-table-stripe: #f8fafc;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+
+  /* === SEMANTISCHE FARBEN === */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  /* === KARTEN === */
+  --card-radius: 12px;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --card-shadow-hover: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.06);
+}
+
+@layer base {
+  html {
+    font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-width: 1100px;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  table { border-collapse: collapse; }
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+@layer utilities {
+  .font-mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .animate-fade-in { animation: fadeIn 0.25s ease-out both; }
+  .animate-fade-in-up { animation: fadeInUp 0.35s ease-out both; }
+  .animate-scale-in { animation: scaleIn 0.22s ease-out both; }
+  .animate-slide-in-right { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-spin-slow { animation: spin 1.1s linear infinite; }
+  .animate-pulse-soft { animation: pulseSoft 1.8s ease-in-out infinite; }
+}
+
+.card-base {
+  background: var(--bg-card);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--card-shadow);
+  contain: layout style;
+}
+
+/* Dropdown-Menues im Header, analog zum ControlHub. */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 50;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+  padding: 6px;
+  overflow-y: auto;
+  color: var(--text-primary);
+  animation: fadeInUp 0.16s ease-out both;
+}
+
+.dropdown-title {
+  padding: 8px 10px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-tertiary);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: left;
+  transition: background 0.12s ease;
+  cursor: pointer;
+}
+.dropdown-item:hover { background: #f1f5f9; }
+.dropdown-item.active { background: var(--mode-pastel); font-weight: 600; }
+
+.dropdown-divider {
+  height: 1px;
+  margin: 6px 8px;
+  background: var(--border-light);
+}

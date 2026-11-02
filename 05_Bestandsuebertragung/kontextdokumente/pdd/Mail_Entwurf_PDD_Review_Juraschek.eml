@@ -1,0 +1,37 @@
+From: Eike Brenneisen <ebrenneisen@deloitte.de>
+To: Tanja Juraschek <Tanja.Juraschek@ergo.de>
+Subject: =?utf-8?q?B=C3=9C-Pr=C3=BCf-Bot_Makler_=E2=80=93_erste_PDD-Fassung_?=
+ =?utf-8?q?Gesundheit_und_Komposit/Leben=2C_Bitte_um_Review_der_Nomenklatur?=
+Date: Wed, 26 Aug 2026 09:00:00 +0200
+X-Unsent: 1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Hallo Tanja,
+
+wir haben die PDD für den Prüf-Bot der Makler-Bestandsübertragung nun initial erstellt – je eine
+Fassung für Gesundheit/KV und für Komposit/Leben. Beide Dokumente hängen an.
+
+Zum Stand: Es ist bewusst eine erste Fassung. Die Screenshots fehlen noch, und es ist gut möglich,
+dass einzelne Prozessschritte noch ergänzt oder feiner ausdifferenziert werden.
+
+Bevor wir weiter in die Tiefe gehen, möchten wir dich bitten, einmal grundsätzlich darüberzuschauen –
+weniger auf den fachlichen Inhalt, mehr auf Form und Nomenklatur:
+
+- Datenfelder: Schreibweise und Darstellung der Felder aus dem Datenpool
+- Variablen: Initialisierung, Benennung und spätere Verwendung
+- Prüflogik: WENN / DANN / SONST / Ende WENN, Vergleichsoperatoren, Schleifen
+- Business Exceptions: Merken der Gründe während der Prüfung, Setzen des BE-Flags und
+  Aussteuerung am Ende des Durchlaufs
+- Nutzung der Formatvorlagen des Templates (System, fachlicher Kontext, WENN DANN,
+  Business Exception)
+
+Falls wir an einer Stelle strukturell falsch abgebogen sind, gib uns dazu bitte einen Hinweis –
+oder wir gehen es in einem kurzen Termin gemeinsam durch, je nachdem was für dich einfacher ist.
+
+Sofern es grundsätzlich in die richtige Richtung geht, würden wir die PDD für Gesundheit als nächstes
+vollständig finalisieren: mit Screenshots, finaler Prozesslogik und den noch offenen Punkten.
+
+Beste Grüße
+Eike Brenneisen

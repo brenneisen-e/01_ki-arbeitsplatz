@@ -1,0 +1,754 @@
+{
+  "teil": "teil4",
+  "folien": "72-89",
+  "neueKapitel": [
+    {
+      "id": "beratungspraxis",
+      "title": "Beratungspraxis: Projekte verorten",
+      "subtitle": "Vier Kategorien, fünf Projekte, sieben Themenfelder",
+      "icon": "briefcase",
+      "heroStat": {
+        "value": 4,
+        "unit": "",
+        "label": "Kategorien ordnen ein Versicherungsprojekt ein"
+      },
+      "quickStats": [
+        {
+          "value": 17,
+          "unit": "",
+          "label": "Optionen in den vier Kategorien"
+        },
+        {
+          "value": 5,
+          "unit": "",
+          "label": "Projektbeispiele aus dem Sektor"
+        },
+        {
+          "value": 70,
+          "unit": "%",
+          "label": "Anteil reiner Strategiearbeit an den Projekten"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Entlang wie vieler Kategorien ordnet der morphologische Kasten ein Versicherungsprojekt ein?",
+          "options": [
+            "Vier Kategorien",
+            "Drei Kategorien",
+            "Sechs Kategorien"
+          ],
+          "correct": 0,
+          "explanation": "Es sind vier: Unternehmensbereich, Produktbereich, Kundensegment und Vertriebskanal.",
+          "einheitId": "verortung"
+        },
+        {
+          "question": "Welche Option gehört im morphologischen Kasten NICHT zum Vertriebskanal?",
+          "options": [
+            "Assekuradeur",
+            "Embedded",
+            "Bank",
+            "Rück"
+          ],
+          "correct": 3,
+          "explanation": "Rück steht für die Rückversicherung und ist eine Option des Unternehmensbereichs. Die Kanäle sind AO, Makler, Bank, Assekuradeur, Direkt und Embedded.",
+          "einheitId": "verortung"
+        },
+        {
+          "question": "Was steht in der Kategorie Produktbereich zur Wahl?",
+          "options": [
+            "Leben, Kranken, Komposit und Rück",
+            "produktspezifisch oder produktübergreifend",
+            "Industrie, Schifffahrt, Gewerbe und Privat"
+          ],
+          "correct": 1,
+          "explanation": "Der Produktbereich kennt nur diese zwei Optionen: Arbeitet ein Projekt an einem Produkt oder über das Portfolio hinweg?",
+          "einheitId": "verortung"
+        },
+        {
+          "question": "Wie ist das Beispielprojekt des Trainings im morphologischen Kasten verortet?",
+          "options": [
+            "LV · produktspezifisch · Gewerbe · Bank",
+            "KV · produktspezifisch · Industrie · AO",
+            "SHUK · produktübergreifend · Privat · Makler",
+            "Konzern · produktübergreifend · Privat · Direkt"
+          ],
+          "correct": 2,
+          "explanation": "Markiert sind SHUK (mit SHU und K), produktübergreifend, Privat und Makler: eine Wachstumsstrategie für das SHUK-Privatkundengeschäft über Makler.",
+          "einheitId": "verortung"
+        },
+        {
+          "question": "Wofür steht das Kürzel SHUK?",
+          "options": [
+            "Sach, Haftpflicht, Unfall und Kfz",
+            "Schaden, Haftung, Unternehmen und Kranken",
+            "Sach, Haftpflicht, Unfall und Kranken"
+          ],
+          "correct": 0,
+          "explanation": "SHUK steht für Schaden, Haftpflicht, Unfall und Kfz und heißt im Markt auch Komposit. Im Kasten ist SHUK noch einmal in SHU und K geteilt.",
+          "einheitId": "verortung"
+        },
+        {
+          "question": "Was war das Ergebnis des Projektes zum Aufbau einer New-Business-Einheit?",
+          "options": [
+            "die Ausgliederung des Direktvertriebs in eine eigene Gesellschaft",
+            "ein Vorstandsbeschluss für eine zentrale New-Business-Einheit",
+            "der Verkauf der digitalen Geschäftsmodelle an einen Partner"
+          ],
+          "correct": 1,
+          "explanation": "Der Vorstand beschloss die zentrale Einheit; dazu kamen ein validiertes Zielbild, ein abgestimmtes Betriebsmodell und eine budgetierte Transformations-Roadmap.",
+          "einheitId": "projektbeispiele"
+        },
+        {
+          "question": "In welchem System wurde das einheitliche Provisionsmodell nach der Fusion umgesetzt?",
+          "options": [
+            "in SAP FS-CD",
+            "in einer neu entwickelten Eigenlösung",
+            "in SAP FS-ICM"
+          ],
+          "correct": 2,
+          "explanation": "Umgesetzt wurde in SAP FS-ICM, überwiegend im SAP-Standard und mit Wiederverwendung bestehender Berechnungslogik.",
+          "einheitId": "projektbeispiele"
+        },
+        {
+          "question": "Wie schnell ging das neue Provisionsmodell nach der Fusion in Betrieb?",
+          "options": [
+            "nach rund neun Monaten, mit dreimonatiger Hypercare-Phase",
+            "nach rund vier Monaten, ohne Hypercare-Phase",
+            "nach rund zwei Jahren, mit sechsmonatiger Hypercare-Phase"
+          ],
+          "correct": 0,
+          "explanation": "Der Go-live gelang termingerecht nach rund neun Monaten; die dreimonatige Hypercare-Phase sicherte den Produktionsstart ab.",
+          "einheitId": "projektbeispiele"
+        },
+        {
+          "question": "Welche Produktform entstand im Projekt zur Mikromobilität?",
+          "options": [
+            "ein Einheitstarif für alle Fahrzeugarten und Laufzeiten",
+            "eine Erweiterung der bestehenden Kfz-Police um Zusatzbausteine",
+            "ein Bausteinsystem aus dem ermittelten Kundenbedarf"
+          ],
+          "correct": 2,
+          "explanation": "Konzipiert wurde ein Bausteinsystem, das auf dem in Design-Thinking-Workshops und Marktumfragen ermittelten Kundenbedarf aufsetzt.",
+          "einheitId": "projektbeispiele"
+        },
+        {
+          "question": "Wie teilt sich das Projektportfolio im Sektor laut Training auf?",
+          "options": [
+            "70 % Strategie und 30 % Transformation",
+            "50 % Strategie und 50 % Transformation",
+            "30 % Strategie und 70 % Transformation"
+          ],
+          "correct": 0,
+          "explanation": "Auf reine Strategiearbeit entfallen 70 %, auf Transformation einschließlich Post-Merger-Integration 30 %.",
+          "einheitId": "projektbeispiele"
+        },
+        {
+          "question": "Welche vier Trendtreiber nennt das Training für den Versicherungssektor?",
+          "options": [
+            "zins-, schaden-, kosten- und kapitalanlagegetrieben",
+            "kunden-, partner-, regulations- und technologiegetrieben",
+            "demografie-, klimarisiko-, steuer- und gesetzgebungsgetrieben"
+          ],
+          "correct": 1,
+          "explanation": "Kunden, Partner, Regulierung und Technologie treiben die Trends, die Prozesse und Marktverständnis der Versicherer herausfordern.",
+          "einheitId": "themenfelder"
+        },
+        {
+          "question": "Warum lohnt sich die Verortung eines Projektes überhaupt?",
+          "options": [
+            "weil die Aufsicht eine Einordnung in die vier Kategorien verlangt",
+            "weil dieselbe Kombination selten zweimal vorkommt, Erfahrung sich aber übertragen lässt",
+            "weil jede Kombination aus Bereich, Produkt, Segment und Kanal ein eigenes Geschäft ergibt"
+          ],
+          "correct": 1,
+          "explanation": "Die Diversität der Themen ist groß, übertragbare vertriebliche, fachliche und prozessuale Erfahrung ist aber vorhanden. Die Verortung zeigt, welche davon passt.",
+          "einheitId": "themenfelder"
+        }
+      ],
+      "subChapters": [
+        {
+          "id": "verortung",
+          "title": "Projekte verorten",
+          "icon": "layout",
+          "subtitle": "Vier Kategorien, entlang derer sich fast jedes Versicherungsprojekt einordnen lässt",
+          "kurzgesagt": [
+            "Ein Versicherungsprojekt lässt sich in der Regel entlang von vier Kategorien einordnen: Unternehmensbereich, Produktbereich, Kundensegment und Vertriebskanal.",
+            "Die vier Kategorien bieten zusammen 17 Optionen, von Konzern, SHUK, KV, LV und Rück über produktspezifisch oder produktübergreifend bis zu den sechs Kanälen AO, Makler, Bank, Assekuradeur, Direkt und Embedded.",
+            "Die Verortung lohnt sich, weil dieselbe Kombination aus Bereich, Produkt, Segment und Kanal selten zweimal vorkommt, übertragbare fachliche und vertriebliche Erfahrung aber sehr wohl vorhanden ist."
+          ],
+          "lernziele": [
+            "die vier Kategorien des morphologischen Kastens benennen und ein Projekt darin einordnen",
+            "die Optionen je Kategorie unterscheiden, etwa SHUK von KV, LV und Rück",
+            "an einem Beispielprojekt ablesen, welche Kombination aus Bereich, Produkt, Segment und Kanal es beschreibt"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Warum eine Verortung hilft",
+              "content": "Die Versicherungswirtschaft bietet ein breites Spektrum strategischer Fragestellungen und Projektkontexte. Versicherer stehen <strong>kunden-, partner-, regulations- und technologiegetriebenen Trends</strong> gegenüber, die ihre Prozesse und ihr eigenes Marktverständnis herausfordern und stetige Veränderung bedingen. Durch die Menge der Versicherer und die Breite der Produktportfolios und Vertriebskanäle entsteht eine <strong>große Diversität in Themen und Projekten</strong>: dieselbe Kombination aus den verschiedenen Aspekten kommt selten zweimal vor, während vertriebliche, fachliche und prozessuale Erfahrung sich gut übertragen lässt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 3, 72</span></span> Genau dafür ist die Verortung gedacht. Sie beantwortet vier Fragen und macht damit sichtbar, worüber ein Projekt eigentlich spricht."
+            },
+            {
+              "type": "paragraph",
+              "title": "Die vier Kategorien",
+              "content": "Der <strong>morphologische Kasten</strong> ordnet ein Projekt entlang von vier Kategorien ein. Der <strong>Unternehmensbereich</strong> sagt, wer im Haus betroffen ist: der Konzern, die Kompositsparte SHUK mit ihren Teilen SHU und K, die Krankenversicherung (KV), die Lebensversicherung (LV) oder die Rückversicherung (Rück). Der <strong>Produktbereich</strong> unterscheidet produktspezifische Arbeit von produktübergreifender. Das <strong>Kundensegment</strong> trennt Industrie und Schifffahrt, Gewerbe und Privat. Der <strong>Vertriebskanal</strong> nennt sechs Wege: AO, Makler, Bank, Assekuradeur, Direkt und Embedded.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 75</span></span> Erst die Kombination beschreibt das Projekt: ein produktübergreifendes SHUK-Thema im Privatkundengeschäft über Makler ist eine andere Aufgabe als ein produktspezifisches LV-Thema über den Bankkanal."
+            },
+            {
+              "type": "morphologischerKasten",
+              "title": "Morphologischer Kasten: ein Projekt in vier Kategorien einordnen",
+              "untertitel": "Wähle je Kategorie eine Option oder öffne eines der sechs gespeicherten Beispiele. Mehrfachauswahl ist möglich, etwa SHU und K zusammen als SHUK.",
+              "dimensionen": [
+                {
+                  "id": "unternehmensbereich",
+                  "titel": "Unternehmensbereich",
+                  "optionen": [
+                    {
+                      "id": "konzern",
+                      "label": "Konzern"
+                    },
+                    {
+                      "id": "shu",
+                      "label": "SHU",
+                      "gruppe": "SHUK"
+                    },
+                    {
+                      "id": "k",
+                      "label": "K",
+                      "gruppe": "SHUK"
+                    },
+                    {
+                      "id": "kv",
+                      "label": "KV"
+                    },
+                    {
+                      "id": "lv",
+                      "label": "LV"
+                    },
+                    {
+                      "id": "rueck",
+                      "label": "Rück"
+                    }
+                  ]
+                },
+                {
+                  "id": "produktbereich",
+                  "titel": "Produktbereich",
+                  "optionen": [
+                    {
+                      "id": "produktspezifisch",
+                      "label": "Produktspezifisch"
+                    },
+                    {
+                      "id": "produktuebergreifend",
+                      "label": "Produktübergreifend"
+                    }
+                  ]
+                },
+                {
+                  "id": "kundensegment",
+                  "titel": "Kundensegment",
+                  "optionen": [
+                    {
+                      "id": "industrie-schifffahrt",
+                      "label": "Industrie/Schifffahrt"
+                    },
+                    {
+                      "id": "gewerbe",
+                      "label": "Gewerbe"
+                    },
+                    {
+                      "id": "privat",
+                      "label": "Privat"
+                    }
+                  ]
+                },
+                {
+                  "id": "vertriebskanal",
+                  "titel": "Vertriebskanal",
+                  "optionen": [
+                    {
+                      "id": "ao",
+                      "label": "AO"
+                    },
+                    {
+                      "id": "makler",
+                      "label": "Makler"
+                    },
+                    {
+                      "id": "bank",
+                      "label": "Bank"
+                    },
+                    {
+                      "id": "assekuradeur",
+                      "label": "Assekuradeur"
+                    },
+                    {
+                      "id": "direkt",
+                      "label": "Direkt"
+                    },
+                    {
+                      "id": "embedded",
+                      "label": "Embedded"
+                    }
+                  ]
+                }
+              ],
+              "beispiele": [
+                {
+                  "id": "wachstum-shuk-privat-makler",
+                  "titel": "Wachstumsstrategie SHUK-Privatkundengeschäft über Makler",
+                  "text": "Das im Training selbst markierte Beispiel. Es betrifft die Kompositsparte (SHUK, also SHU und K zusammen), arbeitet produktübergreifend, richtet sich an Privatkunden und setzt auf den Maklerkanal. Einen Projektverlauf oder ein Ergebnis nennt die Folie zu diesem Beispiel nicht.",
+                  "auswahl": {
+                    "unternehmensbereich": [
+                      "shu",
+                      "k"
+                    ],
+                    "produktbereich": "produktuebergreifend",
+                    "kundensegment": "privat",
+                    "vertriebskanal": "makler"
+                  }
+                },
+                {
+                  "id": "vertriebsstrategie-embedded-bancassurance",
+                  "titel": "Vertriebsstrategie für Embedded Insurance und Bancassurance",
+                  "text": "Bank und Embedded nennt die Projektfolie ausdrücklich als die beiden Kanäle des Zielbildes. Konzern, produktübergreifend und Privat sind aus der Beschreibung gelesen: Das Projekt arbeitet am Geschäftsmodell insgesamt, priorisiert mehrere Produktinitiativen und richtet sich über Partner an Endkunden.",
+                  "auswahl": {
+                    "unternehmensbereich": "konzern",
+                    "produktbereich": "produktuebergreifend",
+                    "kundensegment": "privat",
+                    "vertriebskanal": [
+                      "bank",
+                      "embedded"
+                    ]
+                  },
+                  "ergebnis": {
+                    "titel": "Vertriebsstrategie für Embedded Insurance und Bancassurance",
+                    "punkte": [
+                      "Ausgangslage: hohe Abhängigkeit vom Bancassurance-Geschäft als zentralem Vertriebs- und Ertragskanal, regulatorische Veränderungen mit potenziell erheblichen Auswirkungen auf das Umsatzmodell, begrenzte Diversifikation und zunehmender Wettbewerbsdruck durch digitale Angebote.",
+                      "Vorgehen: strategisches Zielbild mit Vision, Mission und Wachstumsambitionen, Priorisierung attraktiver Marktsegmente, Partnerökosysteme und Produktinitiativen, kanal- und produktspezifische Umsatz- und Wachstumsziele, Go-to-Market- und Betriebsmodell-Ansatz.",
+                      "Ergebnis: abgestimmte Vertriebsstrategie zur Absicherung regulatorisch bedingter Risiken im Kerngeschäft, priorisierte Embedded-Insurance-Wachstumsfelder mit konkreten Markt- und Partneroptionen und ein umsetzbarer Markteintritts- und Skalierungsansatz."
+                    ]
+                  }
+                },
+                {
+                  "id": "new-business-einheit",
+                  "titel": "Aufbau einer New-Business-Einheit für digitale Geschäftsmodelle",
+                  "text": "Direkt, Makler und Embedded stehen auf der Folie als die Kanäle, die stärker verzahnt werden sollen. Der Konzernbezug steht ebenfalls dort (Integration in den Konzern, zentrale Managementeinheit, Governance); produktübergreifend folgt aus dem Betriebsmodell über Produkte, Kanäle, IT, Organisation und Prozesse, das Privatkundensegment ist gelesen.",
+                  "auswahl": {
+                    "unternehmensbereich": "konzern",
+                    "produktbereich": "produktuebergreifend",
+                    "kundensegment": "privat",
+                    "vertriebskanal": [
+                      "makler",
+                      "direkt",
+                      "embedded"
+                    ]
+                  },
+                  "ergebnis": {
+                    "titel": "Aufbau einer New-Business-Einheit für digitale Geschäftsmodelle",
+                    "punkte": [
+                      "Ausgangslage: ein öffentlicher Versicherer mit wachsender strategischer Relevanz digitaler und hybrider Geschäftsmodelle, historisch fragmentiert, mit hoher Autonomie, aber begrenzter Integration in den Konzern und ohne übergreifende Steuerung.",
+                      "Vorgehen: Vision für New Business mit Geschäfts- und Betriebsmodell und Governance-Design, zentrale Managementeinheit, Betriebsmodell über Produkte, Kanäle, IT, Organisation und Prozesse, Markteinführungskonzept, Definition der Werttreiber, zweijährige Transformations-Roadmap.",
+                      "Ergebnis: Vorstandsbeschluss für eine zentrale New-Business-Einheit, validiertes Zielbild mit abgestimmten Ambitionsniveaus, ganzheitliches Betriebsmodell einschließlich Technologie, Organisation, Personalstruktur und Kostenbasis sowie eine freigegebene, budgetierte Roadmap."
+                    ]
+                  }
+                },
+                {
+                  "id": "wachstumsstrategie-bancassurance",
+                  "titel": "Wachstumsstrategie im Bancassurance-Markt",
+                  "text": "Der Bankkanal ist der Gegenstand des Projektes und steht so auf der Folie. Konzern und produktübergreifend sind gelesen: Es geht um ein Wachstumsziel für das Unternehmen und um Partnerschaften, nicht um ein einzelnes Produkt. Das Privatkundensegment ergibt sich aus den Partner- und Endkundenanforderungen, die die Folie nennt.",
+                  "auswahl": {
+                    "unternehmensbereich": "konzern",
+                    "produktbereich": "produktuebergreifend",
+                    "kundensegment": "privat",
+                    "vertriebskanal": "bank"
+                  },
+                  "ergebnis": {
+                    "titel": "Wachstumsstrategie im Bancassurance-Markt",
+                    "punkte": [
+                      "Ausgangslage: ein großes deutsches Bancassurance-Unternehmen hatte ein sehr ehrgeiziges Wachstumsziel für den deutschen Bancassurance-Markt gesetzt und suchte eine Strategie samt der dafür relevanten Erfolgsfaktoren.",
+                      "Vorgehen: Analyse der Marktlandschaft nach potenziellen Partnern und deren Verfügbarkeit, Priorisierung der Partner-Zielgruppen nach strategischem Fit und Volumenpotenzial, Quantifizierung des verfügbaren Marktvolumens, Experteninterviews zu Erfolgsfaktoren, Definition der organisatorischen und technologischen Anforderungen.",
+                      "Ergebnis: ein klarer Weg zum Wachstumsziel und ein umfassendes Spektrum relevanter Erfolgsfaktoren für die Gewinnung und Bindung von Partnern."
+                    ]
+                  }
+                },
+                {
+                  "id": "produktkonzept-mikromobilitaet",
+                  "titel": "Entwicklung Produktkonzept im Bereich Mikromobilität",
+                  "text": "Produktspezifisch steht auf der Folie (eine neue Produktgruppe). SHU ist gelesen: Die Folie nennt Fahrrad- und E-Bike-Versicherung, also Sach- und Unfallrisiken; bei E-Scootern käme die Kfz-Seite hinzu. Privat und Embedded folgen aus dem Kundenbedarf und daraus, dass das Produkt Bestandteil eines Mobilitätsökosystems werden sollte.",
+                  "auswahl": {
+                    "unternehmensbereich": "shu",
+                    "produktbereich": "produktspezifisch",
+                    "kundensegment": "privat",
+                    "vertriebskanal": "embedded"
+                  },
+                  "ergebnis": {
+                    "titel": "Entwicklung Produktkonzept im Bereich Mikromobilität",
+                    "punkte": [
+                      "Ausgangslage: die zunehmende Relevanz von Mikromobilität mit Fahrrad, E-Bike und E-Scooter öffnet dem Versicherungsmarkt neue Möglichkeiten; der Kunde wollte größter Anbieter von Mobilitäts-Services werden, der Markt war neu, sehr dynamisch und bot wenig Erfahrungswerte.",
+                      "Vorgehen: Analysephase zu Kundenbedürfnissen, Markt und Wettbewerb im Umfeld der Fahrrad- und E-Bike-Versicherung mit Business Case und Empfehlung zum Produktpotenzial, danach Konzeptionsphase mit Produktkonzeption als Bestandteil eines möglichen Ökosystems, Umsetzungs-Roadmap und Vorbereitung der Implementierung.",
+                      "Ergebnis: Analyse eines für den Kunden neuen Marktes samt Potenzial und Umsetzungsempfehlung sowie neue Versicherungsprodukte als Bausteinsystem auf Grundlage des in Design-Thinking-Workshops und Marktumfragen ermittelten Kundenbedarfs."
+                    ]
+                  }
+                },
+                {
+                  "id": "provisionsmodell-fusion",
+                  "titel": "Einführung eines Provisionsmodells",
+                  "text": "Konzern und produktübergreifend stehen auf der Folie: zwei fusionierte Häuser, zwei Systemlandschaften, separate Produktportfolios ohne Cross-Selling. Ein Kundensegment nennt die Folie nicht, deshalb bleibt die Kategorie leer; Vergütungsprojekte schneiden quer durch alle Segmente. Als Kanäle sind AO und Makler gelesen, weil es um die Gleichbehandlung der Vermittler geht.",
+                  "auswahl": {
+                    "unternehmensbereich": "konzern",
+                    "produktbereich": "produktuebergreifend",
+                    "kundensegment": [],
+                    "vertriebskanal": [
+                      "ao",
+                      "makler"
+                    ]
+                  },
+                  "ergebnis": {
+                    "titel": "Einführung eines Provisionsmodells in SAP FS-ICM",
+                    "punkte": [
+                      "Ausgangslage: nach der Fusion zwei grundlegend unterschiedliche Provisionsmodelle und zwei getrennte Systemlandschaften mit separaten Produktportfolios, also kein Cross-Selling; gebraucht wurde eine Übergangslösung mit Gleichbehandlung der Vermittler und einheitlichem Produktangebot, bei einem Go-live in rund neun Monaten.",
+                      "Vorgehen: strukturiertes Team mit klaren Strängen für Stammdaten, Provisionsfall, Provisionsberechnung und Abrechnung, Vorstudie zur Bewertung der Bestandsmodelle und zur Auswahl des Übergangsmodells, technische Weiche zur Trennung der Provisionsmodelle, Umsetzung überwiegend im SAP-Standard mit Wiederverwendung bestehender Berechnungslogik.",
+                      "Ergebnis: harmonisierter Vertriebsprozess mit konsistenter Vermittlerbehandlung, Anbindung und Erweiterung beider Umgebungen, sodass Produkte beider Einheiten vermittelbar wurden, und ein termingerechtes Go-live nach rund neun Monaten mit dreimonatiger Hypercare-Phase."
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "variant": "info",
+              "content": "Der Kasten wertet nicht, er beschreibt. Markiert ist im Training nur das erste Beispiel; die Einordnung der fünf Projektbeispiele folgt der Beschreibung auf den Projektfolien, und jedes Beispiel nennt im Text, welche Kategorie dort ausdrücklich steht und welche gelesen ist.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 76, 79–83</span></span>"
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Was die vier Kategorien unterscheiden",
+              "content": "Jede Kategorie beantwortet eine andere Frage, und jede Antwort ändert die Arbeit: Der Unternehmensbereich bestimmt, wer im Haus mitreden muss und welche Kennzahlen gelten; der Produktbereich entscheidet, ob eine Sparte tief oder das Portfolio breit betrachtet wird; das Kundensegment legt fest, für wen gerechnet wird; der Vertriebskanal bestimmt, über welchen Weg das Angebot den Kunden erreicht und wer dafür vergütet wird."
+            },
+            {
+              "type": "table",
+              "title": "Die vier Kategorien und ihre Optionen",
+              "sortable": false,
+              "headers": [
+                "Kategorie",
+                "Optionen",
+                "Frage, die sie beantwortet"
+              ],
+              "rows": [
+                [
+                  "Unternehmensbereich",
+                  "Konzern · SHUK (SHU, K) · KV · LV · Rück",
+                  "Wer im Haus verantwortet das Thema?"
+                ],
+                [
+                  "Produktbereich",
+                  "produktspezifisch · produktübergreifend",
+                  "Geht es um ein Produkt oder um das Portfolio?"
+                ],
+                [
+                  "Kundensegment",
+                  "Industrie/Schifffahrt · Gewerbe · Privat",
+                  "Für welche Kunden wird gearbeitet?"
+                ],
+                [
+                  "Vertriebskanal",
+                  "AO · Makler · Bank · Assekuradeur · Direkt · Embedded",
+                  "Über welchen Weg erreicht das Angebot den Kunden?"
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "title": "Die Kürzel im Kasten",
+              "content": "<strong>SHUK</strong> steht für Schaden, Haftpflicht, Unfall und Kfz und heißt im Markt auch Komposit; im Kasten ist SHUK noch einmal geteilt, in SHU für Sach, Haftpflicht und Unfall und in K für Kfz.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 67, 75</span></span> <strong>KV</strong> ist die Krankenversicherung, <strong>LV</strong> die Lebensversicherung, <strong>Rück</strong> die Rückversicherung. Auf der Kanalseite meint <strong>AO</strong> die Ausschließlichkeitsorganisation, <strong>Assekuradeur</strong> einen Dienstleister, der im Auftrag von Versicherern zeichnet, und <strong>Embedded</strong> den Verkauf im Kaufprozess eines anderen Produktes. Der Konzern erscheint als eigene Option, weil viele Fragen erst oberhalb der Sparten entschieden werden."
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Die Verortung als Landkarte durch dieses Wissenswerk",
+              "content": "Die vier Kategorien sind zugleich vier Türen in die übrigen Kapitel. Der Unternehmensbereich führt zu den Kapiteln „Marktteilnehmer“ und „Produktlandschaft“, weil dort Erst- und Rückversicherer, Sparten und Produkte beschrieben sind. Das Kundensegment führt zum Kapitel „Kundengruppen“, der Vertriebskanal zu „Vertriebswege“ und, sobald es um die Vergütung des Kanals geht, zu „Vergütung und Provision“. Wer ein Projekt verortet hat, weiß damit auch, welche Kapitel zuerst zu lesen sind."
+            },
+            {
+              "type": "paragraph",
+              "title": "Grenzen des Kastens",
+              "content": "Der Kasten beschreibt den Zuschnitt, nicht die Aufgabe. Zwei Projekte mit identischer Verortung können ein Zielbild, eine Produktkonzeption oder eine Systemumstellung sein, und manche Projekte lassen eine Kategorie offen: Das Provisionsmodell aus den Beispielen hat kein Kundensegment, weil es quer durch alle Segmente wirkt. Die Verortung ersetzt also keine Auftragsklärung, sie ordnet sie ein."
+            }
+          ]
+        },
+        {
+          "id": "projektbeispiele",
+          "title": "Projektbeispiele",
+          "icon": "file-text",
+          "subtitle": "Fünf Strategieprojekte aus dem Sektor: Ausgangslage, Vorgehen und Ergebnis",
+          "kurzgesagt": [
+            "Fünf anonymisierte Projektbeispiele zeigen, woran Strategiearbeit im Versicherungssektor konkret arbeitet: Vertriebsstrategie, New Business, Wachstum, Produktkonzept und Provisionsmodell.",
+            "Vier davon sind reine Strategiearbeit, das fünfte ist eine Transformation nach einer Fusion; im Projektportfolio stehen 70 % reine Strategiearbeit gegen 30 % Transformation einschließlich Post-Merger-Integration.",
+            "Alle fünf Beschreibungen sind gleich aufgebaut: Hintergrund und Herausforderung, Projektumfang und Vorgehen, Ergebnis und Wirkung."
+          ],
+          "lernziele": [
+            "die fünf Projekttypen unterscheiden und je Projekt Ausgangslage, Vorgehen und Ergebnis wiedergeben",
+            "ein Projekt danach einordnen, ob es reine Strategiearbeit oder Transformation ist"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Fünf Projekte, ein Aufbau",
+              "content": "Die Beispiele stammen aus der Strategiearbeit im Versicherungssektor; die Kunden sind im Training als vertraulich gekennzeichnet und bleiben deshalb auch hier ungenannt. Vier der fünf Projekte sind reine Strategiearbeit, das fünfte ist eine Transformation einschließlich Post-Merger-Integration; im Portfolio stehen diese beiden Arten im Verhältnis 70 % zu 30 %.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 78</span></span> Jede Projektbeschreibung folgt demselben Dreischritt: <strong>Hintergrund und Herausforderung</strong>, <strong>Projektumfang und Vorgehen</strong>, <strong>Ergebnis und Wirkung</strong>. Dieser Dreischritt ist auch die nützlichste Leseart: Er trennt, was vorlag, von dem, was getan wurde, und von dem, was am Ende stand."
+            },
+            {
+              "type": "infoKachelGrid",
+              "title": "Die fünf Projekttypen",
+              "items": [
+                {
+                  "icon": "network",
+                  "title": "Multi-Marken-Vertriebsstrategie",
+                  "description": "Integrierte Vertriebsstrategie für Bancassurance und Embedded Insurance: Zielbild, priorisierte Wachstumsfelder, Go-to-Market."
+                },
+                {
+                  "icon": "rocket",
+                  "title": "New Business Strategy",
+                  "description": "Zielbild und zentrale Einheit für digitale Geschäftsmodelle, vom Betriebsmodell bis zur zweijährigen Transformations-Roadmap."
+                },
+                {
+                  "icon": "trending-up",
+                  "title": "Wachstumsstrategie",
+                  "description": "Weg zu einem ehrgeizigen Wachstumsziel im Bancassurance-Markt über Partnerprüfung, Marktvolumen und Erfolgsfaktoren."
+                },
+                {
+                  "icon": "package",
+                  "title": "Produktdesign",
+                  "description": "Markt- und Wettbewerbsanalyse und Konzeption einer neuen Produktgruppe für Mikromobilität als Bausteinsystem."
+                },
+                {
+                  "icon": "banknote",
+                  "title": "Einführung eines Provisionsmodells",
+                  "description": "Einheitliches Provisionsmodell in SAP FS-ICM nach einer Fusion, mit Systemintegration, Tests und Hypercare-Phase."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "title": "Vertriebsstrategie für Embedded Insurance und Bancassurance",
+              "content": "<strong>Ausgangslage.</strong> Ein Versicherer war stark vom Bancassurance-Geschäft als zentralem Vertriebs- und Ertragskanal abhängig. Regulatorische Veränderungen drohten das bestehende Umsatzmodell erheblich zu treffen, die Diversifikation über alternative Kanäle und Wachstumsplattformen war begrenzt, und der Wettbewerbsdruck durch digitale Versicherungsangebote und Ökosystem-Modelle nahm zu. <strong>Vorgehen.</strong> Das Projekt definierte ein strategisches Zielbild mit Vision, Mission und Wachstumsambitionen für Bancassurance und Embedded Insurance, priorisierte attraktive Marktsegmente, Partnerökosysteme und Produktinitiativen, leitete kanal- und produktspezifische Umsatz- und Wachstumsziele ab und entwarf einen Go-to-Market- und Betriebsmodell-Ansatz samt organisatorischer Anpassungen und Erfolgsfaktoren. <strong>Ergebnis.</strong> Am Ende stand eine abgestimmte Vertriebsstrategie, die regulatorisch bedingte Risiken im Kerngeschäft absichert, dazu priorisierte Embedded-Insurance-Wachstumsfelder mit konkreten Markt- und Partneroptionen und ein umsetzbarer Markteintritts- und Skalierungsansatz für das Embedded-Geschäft.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 79</span></span>"
+            },
+            {
+              "type": "paragraph",
+              "title": "Aufbau einer New-Business-Einheit für digitale Geschäftsmodelle",
+              "content": "<strong>Ausgangslage.</strong> Bei einem öffentlichen Versicherer gewannen digitale und hybride Geschäftsmodelle strategisch an Gewicht, waren aber historisch fragmentiert: hohe Autonomie, begrenzte Integration in den Konzern, keine übergreifende Steuerung und keine Synchronisation mit den Traditionsvertrieben und den zentralen Funktionen. Verteiltes Wissen, verteilte Systeme und verteilte Vertriebsansätze sollten harmonisiert und Synergien gehoben werden. <strong>Vorgehen.</strong> Entwickelt wurden eine Vision für „New Business“ samt Geschäfts- und Betriebsmodell und Governance-Design, eine zentrale Managementeinheit zur Bündelung und Steuerung der digitalen Geschäftsmodelle, ein umfassendes Betriebsmodell über Produkte, Kanäle, IT, Organisation und Prozesse, ein Markteinführungskonzept mit Blick auf die Abhängigkeiten von den traditionellen Kanälen, eine Definition der wichtigsten Werttreiber und eine zweijährige Transformations-Roadmap. <strong>Ergebnis.</strong> Der Vorstand beschloss die Etablierung einer zentralen New-Business-Einheit. Dazu kamen ein validiertes Zielbild mit abgestimmten Ambitionsniveaus (Volumen-, Stückzahlen- und Ergebnisziele), ein ganzheitlich abgestimmtes Betriebsmodell einschließlich Technologie, Organisation, Personalstruktur und Kostenbasis, gehobene Synergien durch die stärkere Verzahnung von Direktvertrieb, Maklergeschäft und Embedded Insurance sowie eine freigegebene, budgetierte Roadmap.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 80</span></span>"
+            },
+            {
+              "type": "paragraph",
+              "title": "Wachstumsstrategie im Bancassurance-Markt",
+              "content": "<strong>Ausgangslage.</strong> Ein großes deutsches Bancassurance-Unternehmen hatte sich ein sehr ehrgeiziges Wachstumsziel für den deutschen Bancassurance-Markt gesetzt und suchte Unterstützung bei der Strategie, die dieses Ziel erreichbar macht, samt der dafür relevanten Erfolgsfaktoren. <strong>Vorgehen.</strong> Analysiert wurde die Bancassurance-Marktlandschaft mit Blick auf potenzielle Partner und deren Verfügbarkeit; die wichtigsten Partner-Zielgruppen wurden nach strategischem Fit und Volumenpotenzial priorisiert, das im angestrebten Zeitrahmen verfügbare Marktvolumen quantifiziert, Erfolgsfaktoren von Partnerschaften in Experteninterviews erhoben und eine detaillierte Markteinschätzung auf Grundlage von Branchentrends und Partner- und Endkundenanforderungen erstellt. Zum Schluss wurden die organisatorischen, technologischen und allgemeinen Anforderungen zur Umsetzung definiert. <strong>Ergebnis.</strong> Das Projekt lieferte einen klaren Weg zum Wachstumsziel und zeigte ein umfassendes Spektrum relevanter Erfolgsfaktoren für die Gewinnung und Bindung von Partnern, um den Marktanteil nachhaltig auszubauen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 81</span></span>"
+            },
+            {
+              "type": "paragraph",
+              "title": "Entwicklung Produktkonzept im Bereich Mikromobilität",
+              "content": "<strong>Ausgangslage.</strong> Mikromobilität mit Fahrrad, E-Bike und E-Scooter gewinnt an Relevanz und öffnet dem Versicherungsmarkt neue Möglichkeiten. Der Kunde wollte größter Anbieter von Mobilitäts-Services werden und dazu auch Versicherungsprodukte für Mikromobilität anbieten. Der Markt war neu, sehr dynamisch und bot wenig Erfahrungswerte. <strong>Vorgehen.</strong> In der Analysephase wurden Kundenbedürfnisse, Markt und Wettbewerb im Umfeld der Fahrrad- und E-Bike-Versicherung untersucht, ein Business Case gerechnet und daraus eine Empfehlung zum Potenzial eines solchen Produktes abgeleitet. In der Konzeptionsphase entstanden die neuen Versicherungsprodukte als Bestandteil eines möglichen Ökosystems, dazu eine Umsetzungs-Roadmap und die Vorbereitung der Implementierung. <strong>Ergebnis.</strong> Der Kunde erhielt die Analyse eines für ihn neuen Marktes mit Potenzialabschätzung und Umsetzungsempfehlung sowie neue Versicherungsprodukte in Form eines Bausteinsystems, das auf dem in Design-Thinking-Workshops und Marktumfragen ermittelten Kundenbedarf aufsetzt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 82</span></span>"
+            },
+            {
+              "type": "paragraph",
+              "title": "Einführung eines Provisionsmodells nach einer Fusion",
+              "content": "<strong>Ausgangslage.</strong> Nach der Fusion bestanden zwei grundlegend unterschiedliche Provisionsmodelle und zwei getrennte Systemlandschaften mit separaten Produktportfolios, also kein Cross-Selling. Für einen einheitlichen Vertrieb brauchte der Kunde eine Übergangslösung, die die Gleichbehandlung der Vermittler und ein einheitliches Produktangebot sicherstellt, und das unter hohem Zeitdruck: Go-live in rund neun Monaten, einschließlich Modellkonzeption und Umsetzung in SAP FS-ICM, Systemanbindung, Verhandlungen und Tests. <strong>Vorgehen.</strong> Aufgebaut wurde ein strukturiertes Team mit klaren Strängen für Stammdaten, Provisionsfall, Provisionsberechnung und Abrechnung. Eine Vorstudie bewertete die Bestandsmodelle und Portfolios und wählte ein tragfähiges Übergangsmodell aus. Technisch trennte eine Weiche die beiden Provisionsmodelle; umgesetzt wurde überwiegend im SAP-Standard mit Wiederverwendung bestehender Berechnungslogik, parallel dazu die Integration einschließlich einer neuen Provisionsschnittstelle für die neuen Produkte. Verhandelt wurde mit dem Betriebsrat und den Interessenvertretungen. <strong>Ergebnis.</strong> Der Vertriebsprozess war harmonisiert, die Vermittlerbehandlung in der fusionierten Organisation konsistent. Beide Umgebungen wurden angebunden und erweitert, sodass Produkte beider Einheiten vermittelbar wurden. Das Go-live gelang termingerecht nach rund neun Monaten, der Produktionsstart blieb stabil, abgesichert durch Tests und eine dreimonatige Hypercare-Phase.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 83</span></span>"
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Was in allen fünf Projekten wiederkehrt",
+              "content": "So verschieden die Aufgaben sind, einige Bausteine kehren wieder. Am Anfang steht meist ein <strong>Zielbild</strong> mit einem messbaren Ambitionsniveau, in zwei Projekten ausdrücklich mit Volumen-, Stückzahlen- und Ergebniszielen oder mit einem Marktanteilsziel. Dann folgt eine <strong>Priorisierung</strong>: Marktsegmente, Partner, Produktinitiativen oder Übergangsmodelle werden nach Fit und Potenzial sortiert, statt alles gleichzeitig anzufassen. Wo es an die Umsetzung geht, wird das <strong>Betriebsmodell</strong> beschrieben, also Produkte, Kanäle, IT, Organisation und Prozesse, in zwei Projekten ergänzt um organisatorische und technologische Anforderungen. Am Ende steht ein <strong>Umsetzungspfad</strong>: eine Roadmap mit Budget und Zeitachse, ein Markteintritts- und Skalierungsansatz oder, im Transformationsprojekt, ein Go-live mit Tests und Hypercare.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 79–83</span></span>"
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Strategie und Transformation im Projektportfolio",
+              "content": "Das Projektportfolio teilt sich in <strong>70 % reine Strategiearbeit</strong> und <strong>30 % Transformation einschließlich Post-Merger-Integration</strong>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 78</span></span> Der Unterschied ist an den Beispielen gut zu sehen: Die vier Strategieprojekte enden mit einer Entscheidung, einem priorisierten Feld oder einem Konzept; das Transformationsprojekt endet mit einem laufenden System, einem Termin und einer Betriebsphase. Für die Arbeit heißt das unterschiedliche Erfolgsmaße: dort Tragfähigkeit der Entscheidung, hier Termintreue und Stabilität im Produktionsstart."
+            },
+            {
+              "type": "paragraph",
+              "title": "Warum die Kunden ungenannt bleiben",
+              "content": "Das Training zeigt zu jedem Beispiel den Kundennamen, kennzeichnet ihn aber als vertraulich. In diesem Wissenswerk stehen deshalb nur die Merkmale, die zum Verständnis des Projektes nötig sind, etwa „ein öffentlicher Versicherer“ oder „ein großes deutsches Bancassurance-Unternehmen“ – beides Formulierungen der Folien selbst. Fachlich geht dabei nichts verloren: Der Zuschnitt eines Projektes ergibt sich aus Bereich, Produkt, Segment und Kanal, nicht aus dem Namen des Hauses."
+            }
+          ]
+        },
+        {
+          "id": "themenfelder",
+          "title": "Typische Themenfelder",
+          "icon": "layers",
+          "subtitle": "Welche Fragestellungen im Sektor typisch sind und wo sie in diesem Wissenswerk stehen",
+          "kurzgesagt": [
+            "Die strategischen Fragestellungen des Sektors lassen sich in sieben Felder bündeln: Wachstum, Vertrieb, Produkt, Provisionierung, Betriebsmodell, Digitalisierung und Regulierung.",
+            "Sie entstehen aus kunden-, partner-, regulations- und technologiegetriebenen Trends, die die Prozesse und das Marktverständnis der Versicherer herausfordern.",
+            "Jedes Feld hat in diesem Wissenswerk ein Zuhause, von der Produktlandschaft über die Vertriebswege bis zur Regulatorik."
+          ],
+          "lernziele": [
+            "die sieben typischen Themenfelder des Sektors benennen und Projektbeispielen zuordnen",
+            "zu einer Fragestellung das passende Kapitel dieses Wissenswerks finden"
+          ],
+          "level1": [
+            {
+              "type": "paragraph",
+              "title": "Woher die Fragestellungen kommen",
+              "content": "Die Versicherungsindustrie ist in Bewegung wie wenige andere etablierte Märkte. Sie muss auf der Produktseite die Innovationen anderer Industrien und makroökonomische wie gesellschaftliche Verschiebungen mitdenken und zeitnah mit passenden Angeboten beantworten. Dazu stehen Versicherer kunden-, partner-, regulations- und technologiegetriebenen Trends gegenüber: im vergangenen Jahrzehnt etwa der Etablierung des Direktvertriebs, der höheren Markttransparenz und Wettbewerbsintensität durch Vergleicher und der zunehmenden Relevanz ergänzender Serviceleistungen, die über das Versicherungsprodukt hinausgehen. Aus all diesen Themen ergeben sich die zentralen strategischen Fragestellungen des Sektors.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 3</span></span>"
+            },
+            {
+              "type": "table",
+              "title": "Sieben Themenfelder und wo sie in diesem Wissenswerk stehen",
+              "sortable": true,
+              "headers": [
+                "Themenfeld",
+                "Typische Fragestellung",
+                "Kapitel dieses Wissenswerks"
+              ],
+              "rows": [
+                [
+                  "Wachstum",
+                  "Wo wächst der Markt, welche Partner und Segmente tragen ein ehrgeiziges Ziel?",
+                  "Der Markt im Überblick · Marktteilnehmer"
+                ],
+                [
+                  "Vertrieb",
+                  "Welche Kanäle tragen das Geschäft, wie werden Bank, Makler, Direkt und Embedded verzahnt?",
+                  "Vertriebswege"
+                ],
+                [
+                  "Produkt",
+                  "Welche Produktgruppe passt zu einem neuen Bedarf wie Mikromobilität?",
+                  "Produktlandschaft · Kundengruppen"
+                ],
+                [
+                  "Provisionierung",
+                  "Wie werden Vermittler gleich behandelt und zwei Provisionsmodelle zusammengeführt?",
+                  "Vergütung und Provision"
+                ],
+                [
+                  "Betriebsmodell",
+                  "Wie sind Produkte, Kanäle, IT, Organisation und Prozesse aufgestellt?",
+                  "Wertschöpfungskette · Geschäftsmodell und Kennzahlen"
+                ],
+                [
+                  "Digitalisierung",
+                  "Wie werden digitale Geschäftsmodelle gebündelt, gesteuert und skaliert?",
+                  "Zukunftsthemen"
+                ],
+                [
+                  "Regulierung",
+                  "Welche regulatorischen Veränderungen treffen das Umsatzmodell, und wie sichert man das Kerngeschäft ab?",
+                  "Regulatorik"
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "variant": "info",
+              "content": "Die Zuordnung ist eine Leseempfehlung, keine Grenze: Fast jedes Projekt berührt mehrere Felder. Die Vertriebsstrategie aus den Beispielen ist gleichzeitig Wachstum, Vertrieb und Regulierung, das Provisionsmodell gleichzeitig Provisionierung, Betriebsmodell und Vertrieb."
+            }
+          ],
+          "level2": [
+            {
+              "type": "paragraph",
+              "title": "Warum die Kombination zählt",
+              "content": "Die Menge der Versicherer und die Breite der Produktportfolios und Vertriebskanäle erzeugen eine große Diversität in Themen und Projekten. Dieselbe Kombination aus den verschiedenen Aspekten kommt selten zweimal vor – es gibt aber viel übertragbare vertriebliche, fachliche und prozessuale Erfahrung, und genau daraus entsteht der Mehrwert in einem neuen Projekt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folie 3</span></span> Praktisch heißt das: Die Verortung sagt, welche Erfahrung passt. Ein Wachstumsthema im Bankkanal lässt sich aus einem anderen Bankkanal-Projekt speisen, selbst wenn Sparte und Segment abweichen; eine Produktkonzeption im Privatkundengeschäft profitiert von Vorarbeiten zu Kundenbedarf und Bausteinlogik, unabhängig von der Sparte."
+            },
+            {
+              "type": "paragraph",
+              "title": "Die sieben Felder in den Beispielen",
+              "content": "<ul><li><strong>Wachstum</strong> – Wachstumsziel im Bancassurance-Markt, priorisierte Wachstumsfelder für Embedded Insurance.</li><li><strong>Vertrieb</strong> – Zielbild für zwei Kanäle, Verzahnung von Direktvertrieb, Maklergeschäft und Embedded Insurance.</li><li><strong>Produkt</strong> – neue Produktgruppe für Mikromobilität als Bausteinsystem.</li><li><strong>Provisionierung</strong> – einheitliches Provisionsmodell mit Gleichbehandlung der Vermittler.</li><li><strong>Betriebsmodell</strong> – zentrale Managementeinheit, Governance, Organisation, Personalstruktur und Kostenbasis.</li><li><strong>Digitalisierung</strong> – Bündelung und Skalierung digitaler und hybrider Geschäftsmodelle.</li><li><strong>Regulierung</strong> – Absicherung regulatorisch bedingter Risiken im Kerngeschäft.</li></ul><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 79–83</span></span>"
+            }
+          ],
+          "level3": [
+            {
+              "type": "paragraph",
+              "title": "Orientierung ist der Zweck",
+              "content": "Das Grundlagentraining, aus dem dieses Kapitel stammt, ist ausdrücklich für Neueinsteiger in die Industrie gedacht: Es soll ein besseres Verständnis und eine bessere Orientierung schaffen, in welchem Bereich man sich bewegt und wie dieser Bereich mit anderen zusammenhängt, und das Innenleben von Versicherern und die daraus folgenden strategischen Probleme transparenter machen. Es schafft damit den Kontext für typische Strategiefragen und Projektfelder im Sektor.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Monitor Deloitte, Insurance Strategy Grundlagentraining 2026, Folien 2–3</span></span> Genau diese Reihenfolge trägt auch dieses Kapitel: erst verorten, dann die Beispiele lesen, dann das Themenfeld ins passende Kapitel weiterverfolgen."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "erweiterungen": [],
+  "glossar": [
+    {
+      "term": "Morphologischer Kasten",
+      "definition": "Raster, das ein Projekt entlang mehrerer Kategorien einordnet: je Kategorie wird eine Option gewählt. Im Versicherungssektor sind es vier Kategorien.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "morphologischer-kasten"
+    },
+    {
+      "term": "New Business (Versicherungs-)",
+      "definition": "Bündelung digitaler und hybrider Geschäftsmodelle eines Versicherers in einer eigenen Einheit, um sie zentral zu steuern und zu skalieren.",
+      "tags": [
+        "Zukunft",
+        "Markt"
+      ],
+      "slug": "new-business-versicherungs"
+    },
+    {
+      "term": "Mikromobilität",
+      "definition": "Kleine, meist elektrische Fahrzeuge wie Fahrrad, E-Bike und E-Scooter. Als Versicherungsfeld ein junger, dynamischer Markt mit wenig Erfahrungswerten.",
+      "tags": [
+        "Produkte",
+        "Zukunft"
+      ],
+      "slug": "mikromobilitaet"
+    },
+    {
+      "term": "Provisionsmodell",
+      "definition": "Regelwerk eines Versicherers dafür, welche Vergütung ein Vermittler für welches Geschäft erhält. Nach Fusionen werden zwei Modelle zu einem zusammengeführt.",
+      "tags": [
+        "Vertrieb",
+        "Finanzen"
+      ],
+      "slug": "provisionsmodell"
+    },
+    {
+      "term": "Post-Merger-Integration (PMI)",
+      "definition": "Zusammenführung zweier Unternehmen nach einer Fusion, von Produktportfolios und Systemlandschaften bis zu Vertrieb und Vergütung.",
+      "tags": [
+        "Markt",
+        "Finanzen"
+      ],
+      "slug": "post-merger-integration-pmi"
+    },
+    {
+      "term": "Betriebsmodell (Operating Model)",
+      "definition": "Beschreibung, wie ein Geschäft betrieben wird: Produkte, Kanäle, IT, Organisation und Prozesse. In Strategieprojekten die Brücke zwischen Zielbild und Umsetzung.",
+      "tags": [
+        "Markt"
+      ],
+      "slug": "betriebsmodell-operating-model"
+    },
+    {
+      "term": "Hypercare",
+      "definition": "Betreuungsphase direkt nach dem Produktionsstart eines Systems, in der Fehler eng begleitet und schnell behoben werden; im Projektbeispiel drei Monate.",
+      "tags": [
+        "Vertrieb"
+      ],
+      "slug": "hypercare"
+    },
+    {
+      "term": "SHUK",
+      "definition": "Sammelbegriff für Schaden, Haftpflicht, Unfall und Kfz, im Markt auch Komposit genannt. In der Projektverortung wird SHUK noch einmal in SHU und K geteilt.",
+      "tags": [
+        "Produkte",
+        "Markt"
+      ],
+      "slug": "shuk"
+    }
+  ],
+  "offeneFragen": [
+    "Kapiteltitel: ZIELSTRUKTUR.md gibt „Beratungspraxis: Projekte verorten“ vor (34 Zeichen). Bestehende Kapiteltitel sind 11–26 Zeichen lang und erscheinen in Navigation, Breadcrumb und Quiz-Abzeichen. Falls die Navigation kappt, sollte der Titel auf „Beratungspraxis“ gekürzt und der Rest in den Untertitel wandern; der Orchestrator entscheidet.",
+    "Der Blocktyp morphologischerKasten fehlt noch im Prüfskript scripts/daten-pruefung.mjs (switch in pruefeBlock) und im Renderer; ohne Ergänzung meldet die Prüfung „Blocktyp unbekannt“.",
+    "Im Beispiel „Einführung eines Provisionsmodells“ ist kundensegment ein leeres Array, weil die Folie kein Segment nennt. Der Renderer muss eine Kategorie ohne Auswahl darstellen können (Vorschlag: Spalte ohne Markierung, Hinweis „keine Angabe“).",
+    "Glossar „SHUK“ kann auch aus Teil 2/3 kommen (Folie 67 definiert das Kürzel). Beim Zusammenführen entfernen, falls doppelt; gleiches gilt für „Betriebsmodell (Operating Model)“, falls Teil 3 aus den Folien 57–65 einen gleichlautenden Eintrag liefert.",
+    "Folie 79 nennt die „Strategic Choice Cascade“ als Raster der Priorisierung, erklärt sie aber nicht. Ein Glossareintrag würde Wissen ergänzen, das nicht im Deck steht, deshalb bewusst weggelassen.",
+    "Folie 86 („Hilfreiche Ressourcen“) enthält ausschließlich interne Quellen (Teams-Chat, zwei SharePoint-Sammlungen). Es gibt dort keine öffentlich zugängliche Quelle, die sich in 09-verbaende-institutionen übernehmen ließe; der Auftragspunkt bleibt damit ohne Lieferung.",
+    "Die Beitragszahl 70/30 (Folie 78) beschreibt das Projektportfolio einer Beratungspraxis, nicht den Markt. Sie steht als quickStat im Kapitel; falls das Kapitel markenneutral bleiben soll, ersetzt man sie durch die Anzahl der Themenfelder (7)."
+  ]
+}

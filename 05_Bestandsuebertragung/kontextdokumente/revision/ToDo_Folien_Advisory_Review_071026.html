@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>To-do Folien Advisory Review</title>
+<style>
+  @page { size: A4; margin: 14mm 13mm 16mm 13mm; }
+  :root { --rot: #BF1528; --teal: #0B6F7D; --sw: #1A1A1A; --grau: #6B6B6B; --hell: #F3F4F6; --linie: #D0D5DA; --gelb: #FBEFC7; --gelbd: #8A5A00; }
+  * { box-sizing: border-box; }
+  body { font-family: "Liberation Sans", Arial, sans-serif; color: var(--sw); font-size: 9.2pt; line-height: 1.38; margin: 0; }
+  h1 { font-size: 17pt; margin: 0 0 2px; }
+  h1 span { color: var(--rot); }
+  .sub { color: var(--grau); font-size: 9pt; margin-bottom: 10px; }
+  h2 { font-size: 11.5pt; color: var(--teal); margin: 16px 0 6px; padding-bottom: 3px; border-bottom: 1.5px solid var(--teal); break-after: avoid; }
+  h3 { font-size: 10pt; margin: 12px 0 4px; break-after: avoid; }
+  p { margin: 4px 0; }
+  .kasten { background: var(--hell); border-radius: 6px; padding: 8px 11px; margin: 6px 0 10px; }
+  .kasten ul { margin: 3px 0 0 16px; padding: 0; }
+  .kasten li { margin: 2px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; }
+  th { text-align: left; font-size: 8pt; color: var(--grau); font-weight: bold; border-bottom: 1px solid var(--linie); padding: 3px 5px; }
+  td { vertical-align: top; border-bottom: 1px solid var(--linie); padding: 5px 5px; }
+  tr { break-inside: avoid; }
+  td.box { width: 16px; padding-top: 6px; }
+  td.box div { width: 10px; height: 10px; border: 1.2px solid var(--sw); border-radius: 2px; }
+  td.folie { width: 54px; font-weight: bold; white-space: nowrap; }
+  td.quelle { width: 74px; color: var(--grau); font-size: 7.8pt; white-space: nowrap; }
+  td.prio { width: 46px; }
+  .p { display: inline-block; font-size: 7.4pt; font-weight: bold; border-radius: 3px; padding: 1px 5px; }
+  .hoch { background: #FBE9EB; color: var(--rot); }
+  .mittel { background: var(--gelb); color: var(--gelbd); }
+  .klein { background: #E6F2F3; color: var(--teal); }
+  .neu { color: var(--grau); font-size: 8pt; }
+  ul.inner { margin: 3px 0 0 14px; padding: 0; }
+  ul.inner li { margin: 1px 0; }
+  b.t { color: var(--teal); }
+  .fuss { color: var(--grau); font-size: 7.6pt; margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<h1><span>To-do</span> Folien „Revisionsanforderungen Makler BÜ meets KI“</h1>
+<div class="sub">Grundlage: Abstimmungstermin Fachkonzept am 07.10.2026 (Transkript, 1:45 h) · Foliensatz Deep Dive, Stand 06.10.2026 (59 Seiten) ·
+Foliennummern wie auf der Folie gedruckt (ab PDF-Seite 45 weicht die Zählung ab: Seite 45 = Folie 49) · Zeitangaben = Stelle im Transkript</div>
+
+<div class="kasten">
+<b>Vorgehen in dieser Liste:</b> (1) Was im Termin entschieden wurde, (2) Änderungen je Folie in Kapitelreihenfolge, (3) Fragen an die Revision
+(Herr Merkel, Termin 08.10.2026), (4) Zuarbeiten, die wir für die Folien brauchen, (5) Redaktionelles aus der Durchsicht.
+Priorität: <span class="p hoch">hoch</span> inhaltliche Änderung aus dem Termin · <span class="p mittel">mittel</span> Ergänzung/Präzisierung ·
+<span class="p klein">klein</span> Status oder Korrektur.
+</div>
+
+<h2>1. Entscheidungen aus dem Termin</h2>
+<div class="kasten"><ul>
+  <li><b>Routing Komposit/Leben:</b> AO-Bestand geht an <b>HSB4 K KO</b> (KO 23724), nicht an HSB4K MV – MV gilt nur für KV (Lorusso, 17:00). Makler-Themenpostkorb heißt nicht mehr ODPB, sondern <b>ODPP1 D</b> (laut PDD v12: AA 23949) – auf allen Folien (Garcia-Fernandez, 1:29:45).</li>
+  <li><b>Governance-Folie (System- und Prozessverantwortlichkeiten)</b> ohne Einwände bestätigt → grün (10:29).</li>
+  <li><b>Prüfkatalog vom 26.05.2026</b> ist abgenommen, keine erneute Bestätigung nötig – nur Referenz (10:53, 11:21).</li>
+  <li><b>Risikobezug</b> des Prüf-Bots ohne Gegenrede bestätigt: einziges wesentliches Risiko ist eine BÜ, die nicht hätte erfolgen dürfen (15:33).</li>
+  <li><b>Stichprobe einheitlich für HS und Makler:</b> gleiche Logik, gleiche Dokumentation, keine Parallelprozesse; HS prüft HS-, Makler prüft Makler-Vorgänge. Das bewährte Stichprobenverfahren wird fortgeführt und um Deckblatt- und Prüf-Bot-Prüfung erweitert. Stichprobe bestmöglich als VNR-Liste aus Celonis (bei HS etabliert) (29:45, 36:28, 37:01, 46:19).</li>
+  <li><b>Quoten prozentual statt absolut</b> und <b>degressiv</b> (Richarz 37:20, 38:08): Prüf-Bot-Go-Live 2 Wochen 100 % QS (Amend 43:35), danach ca. 2 Monate 1 %, Zielbild 0,5 % (ca. 20 Vorgänge/Woche HS und Makler zusammen) (44:32, 53:31). Feinjustierung (1 % oder 2 %) bleibt offen (58:02).</li>
+  <li><b>Kriterium für die nächste Stufe:</b> 100 % korrekte Dunkelverarbeitung; falsch gesetzte BE sind weniger kritisch, führen aber zu einem Change Request (48:57, 1:08:28).</li>
+  <li><b>Fehler in der Dunkelverarbeitung:</b> jeder Fall wird einzeln analysiert; je nach Schwere bis zum kurzfristigen Stopp des Bots; in der degressiven Phase wird die Quote dann nicht weiter gesenkt (52:52, 1:03:24, 1:05:49).</li>
+  <li><b>Change-Freigabe</b> (Vier-Augen-Prinzip HS und Makler) gilt auch für den Prüf-Bot/PDD, nicht nur für Celonis (1:21:45).</li>
+  <li><b>SLA für den Prüf-Bot</b> derzeit nicht seriös bezifferbar → transparent so benennen; Festlegung, sobald im Laufe der Umsetzung bzw. spätestens nach Go-Live erste Quoten vorliegen (1:25:10).</li>
+  <li><b>Offene Auslegungsfragen</b> klären Martin Richarz, Christoph Reber-Lucht und Eike/Marco mit Herrn Merkel (Revision) am 08.10.2026, 16:00 Uhr; Kiya Staudt soll einbezogen werden (1:39–1:43). Danach neuer Stand an den Verteiler.</li>
+</ul></div>
+
+<h2>2. Änderungen je Folie</h2>
+
+<h3>Kapitel 2 · End-to-End-Prozess &amp; Architektur</h3>
+<table>
+<tr><th></th><th>Folie</th><th>Änderung</th><th>Prio</th><th>Quelle</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">8</td><td>Box „Nachbearbeitung bei BE / Fehler“: <b>K/L: AO → HSB4K KO</b> (statt HSB4K MV); <b>K/L: Makler → ODPP1 D</b> (statt ODPB). Status danach grün.</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">17:00, 1:29:45</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">9</td><td>Ergebnisbox unten: „K/L: abgebender Makler → <b>ODPP1 D</b>, AO → <b>HSB4K KO</b>“. Fallback bei Celonis-Ausfall und HITL-Testkomponenten bleiben (im Termin als neu vorgestellt, kein Einwand).</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">8:51, 17:00</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">10</td><td>Status „Inhaltlich zu diskutieren“ → <b>„Fachlich bestätigt“</b> (grün). Ggf. Hinweis, dass die Makler-Seite durch Pierre Boulanger zuletzt per Mail bestätigt wurde.</td><td class="prio"><span class="p klein">klein</span></td><td class="quelle">9:18, 10:29</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">11</td><td>Status „Fachlich zu bestätigen“ ersetzen durch <b>„abgenommen am 26.05.2026 (Referenz)“</b>; kurzer Satz: Ausgangsbasis der Prüflogik im PDD, Abnahme per Mail dokumentiert.</td><td class="prio"><span class="p klein">klein</span></td><td class="quelle">10:53, 11:21</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">7, 49</td><td>Referenzen ergänzen/präzisieren: ADONIS-Prozessmodell aus Phase 1 <b>für Phase 2 anpassen</b>; Celonis-Action-Flow inkl. Prompts und Darstellung der Multi-Agenten-Architektur (Ausbaustufe 2) <b>bei Celonis anfordern</b>. Kapitelübersicht 49: „System- und Prozessverantwortlichkeiten“ auf „Vorhanden“.</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">5:30–7:00</td></tr>
+</table>
+
+<h3>Kapitel 3 · Kontrollkonzept und Human-in-the-Loop</h3>
+<table>
+<tr><th></th><th>Folie</th><th>Änderung</th><th>Prio</th><th>Quelle</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">14</td><td>Wie Folie 9: Ergebnisbox auf <b>ODPP1 D</b> und <b>HSB4K KO</b> korrigieren (gleiche Grafik).</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">17:00, 1:29:45</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">15</td><td>Risikobezug schärfen (bestätigt): <b>wesentliches Risiko = BÜ, die nicht hätte erfolgen dürfen</b>, z. B. fehlende Unterschrift auf der Maklervollmacht von Celonis falsch interpretiert. Mitigation: ausführliche fachliche Tests (Celonis und Prüf-Bot inkl. aller BE) und Stichprobe im Betrieb. Testfallzahl an den finalen Stand anpassen (steht hier „24“, siehe Folien 39–42). Status danach grün.</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">15:33–17:05</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">16</td><td>Klarstellung ergänzen: <b>BOT-Notiz nur bei Dunkelverarbeitung</b>; bei harter oder weicher BE nur Bearbeitungshinweis am Vorgang (keine Übergabe an den 72-Stunden-BOT). Harte BE = sofortiger Abbruch, weiche BE = weiterprüfen, Fehler sammeln, am Ende aussteuern. Hinweis: zum Go-Live wird viel ausgesteuert; die Aussteuerungsgründe werden ausgewertet (z. B. „30 % wegen Grund X“).</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">19:10–20:18</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">17</td><td><b>Neu aufbauen als degressives, einheitliches Stichprobenkonzept</b> (statt „jede 10. / jede 100. Mail“):
+  <ul class="inner">
+    <li>Struktur: Spalten <b>Strukturierung (Celonis/Deckblatt)</b> · <b>Prüf-Bot</b> · <b>Gesamtprozess</b>; Zeilen <b>Aufbau/Test</b> und <b>Go-Live/Betrieb</b>.</li>
+    <li>Deckblatt-Start (für alle Vorgänge aus maklerauftraege@ / bestandsuebertragungen@, in 1–2 Wochen): im fachlichen Test etwa jede 10. Mail bzw. 10–20 Vorgänge je Tag und Tester; bei produktiver Nutzung des Deckblatts 2–5 %.</li>
+    <li>Prüf-Bot: <b>2 Wochen 100 % QS ab Go-Live</b>, dann <b>ca. 2 Monate 1 %</b>, Zielbild <b>0,5 %</b> (ca. 20 Vorgänge/Woche HS und Makler zusammen); Quoten prozentual.</li>
+    <li>Stufenwechsel nur bei <b>100 % korrekter Dunkelverarbeitung</b>; Fehler → Stufe halten (nicht weiter senken), Einzelanalyse.</li>
+    <li>Stichprobenziehung: VNR-Liste aus Celonis (bei HS etabliert: Excel mit VNR je Monat); enthält dunkel verarbeitete <b>und</b> ausgesteuerte Vorgänge (auch BE prüfen: war die BE richtig?).</li>
+    <li>Prüfschritte je Vorgang: automatischer Vorgang ja/nein → wenn ja: Deckblatt korrekt? Prüf-Bot fachlich korrekt? Hätte die BÜ so erfolgen dürfen (ggf. Zielagentur am Folgetag)? Bei Nein: Fehlerstelle (Celonis oder Bot-Logik). Nicht automatisierte Vorgänge wie heute.</li>
+    <li>Kritische vs. unkritische Abweichungen definieren (z. B. Makleradresse weniger kritisch; Kundenname, Unterschrift kritisch).</li>
+    <li>Hinweis: 100 % QS ist kein Mehraufwand gegenüber heute – diese Vorgänge würden ohne Bot ohnehin manuell geprüft.</li>
+    <li>Wer prüft: HS beim Deckblatt alle Mitarbeitenden; beim Prüf-Bot zuerst die PDD-Beteiligten, dann schrittweise alle. Makler: Kapazität und Prüfer noch zu benennen.</li>
+    <li>Ist-Stand dokumentieren: Makler 3 % (Maklervertrieb Personenversicherung 15/Woche, KBI 5/Woche; Excel je Einheit), HS 50 Vorgänge/Monat K/L aus Celonis-Liste.</li>
+  </ul></td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">20:44–1:02:06</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">18</td><td><b>Eskalationslogik ersetzen</b> („ab 20 % Fehlerquote“ entfällt): falsch dunkel verarbeitete BÜ → Einzelanalyse der Ursache → je nach Schwere Fehler im Betrieb beheben oder Bot kurzfristig stoppen; nach langer fehlerfreier Zeit Stopp nur bei systemischem Fehler; in der degressiven Phase Quote halten bzw. erhöhen. Ergänzen: häufigste BE-Gründe auswerten und in den Prozess übernehmen, um die Dunkelquote zu erhöhen; falsch gesetzte BE → Change Request.<br>
+  <b>Meeting-Cadence:</b> Hypercare mit <b>täglichem Termin</b> (ca. 14 Tage, mit RCC; HS und Makler gemeinsam: Auffälligkeiten, BE-Quoten, Nachjustierung), danach wöchentlich HS/Makler (Quoten, BE, Stichprobe, BÜ-Reporting), Celonis mindestens quartalsweise. Titel nicht nur „Celonis-Extraktion“ – gilt auch für den Prüf-Bot.</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">1:02:08–1:11:09</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">19</td><td>Keine inhaltliche Änderung (aus PDD bekannt und abgenommen). Prüfen: Box „Weiterleitung an Themenpostkörbe (tbd)“ jetzt mit den PDD-Postkörben füllen (KV: HSB4K MV, K/L: ODPP1 D / HSB4K KO).</td><td class="prio"><span class="p klein">klein</span></td><td class="quelle">1:11:10</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">20</td><td>PDD-Screenshots und Link einfügen, sobald die PDDs final sind. Punkt „Routing: BE nach HSB4K MV“ um K/L ergänzen (ODPP1 D / HSB4K KO).</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">1:11:20</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">13, 50</td><td>IKS-Rolle klären und ergänzen: Wer modelliert das IKS-Konzept in ORCS/ADONIS, gibt es Standardvorgaben? (im Termin offen geblieben → an die Revision, siehe Abschnitt 3). Statusübersicht 50 nach Überarbeitung aktualisieren.</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">12:25</td></tr>
+</table>
+
+<h3>Kapitel 4 · Prüfkatalog und Data Governance</h3>
+<table>
+<tr><th></th><th>Folie</th><th>Änderung</th><th>Prio</th><th>Quelle</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">23–25</td><td>Keine Änderung (im Termin ohne Rückfragen durchgegangen) → Status grün.</td><td class="prio"><span class="p klein">klein</span></td><td class="quelle">1:13:00</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">26</td><td>Zu ca. 95 % fertig; nach der finalen Celonis-Dokumentation der Ausbaustufe 2 mit Celonis gegenprüfen. <b>Folgefolie ergänzen</b>: Interpretations- und Extraktionslogik je Datenfeld inkl. Prompts (Inhalt von Celonis, wir übernehmen den Connect).</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">1:13:00–1:14:16</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">27</td><td><b>Rollen- und Governance-Modell füllen</b> für Celonis <b>und</b> Prüf-Bot: Linienverantwortung über die Ebenen (Prozessowner), kleine RACI-Matrix mit operativen Rollen und Entscheidungsrollen: Stichprobe operativ durchführen → Reporting an die Abteilungsleitung → Bewertung, ob ein Finding zu Konsequenzen führt oder die nächste Reduktionsstufe erlaubt. Vorher Auslegung mit Herrn Merkel klären.</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">1:14:37–1:17:35</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">28</td><td>Auf <b>Prüf-Bot/PDD erweitern</b>: PDD wird gesamthaft abgenommen, Changes am Bot gemeinsam von HS und Makler entschieden (Vier-Augen). Titel „Celonis Weiterentwicklung ab Go-Live“ verallgemeinern. Gesamtabnahme Celonis als <b>ein formales Abnahmedokument</b> von HS und Makler (statt Nachweis über viele einzelne Mails).</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">1:19:48, 1:21:45</td></tr>
+</table>
+
+<h3>Kapitel 5 · Business Exception Steuerung</h3>
+<table>
+<tr><th></th><th>Folie</th><th>Änderung</th><th>Prio</th><th>Quelle</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">31</td><td>K/L ergänzen (Freigabe der K/L-PDD liegt vor): Routing und Prozessende für Komposit/Leben (ODPP1 D bzw. HSB4K KO); Hinweis „Aktueller Stand KV“ entfernen.</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">1:22:12–1:23:47</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">32, 33</td><td>Routing-Spalte K/L gegen PDD v12 prüfen: dort nur „HSB4K KO“ – laut PDD Makler-/Koop-Bestand nach ODPP1 D (AA 23949), AO nach HSB4K KO. Zeile „Zentrales BE-Handling … an HSB4K MV weiterleiten“ um K/L ergänzen. Spalte „Reporting“ an das Bot-Reporting (Robotics) anbinden.</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">1:23:49, 1:29:45</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">34</td><td><b>Owner, SLA und Eskalation füllen</b>: Abstimmung in dieser Runde (nicht nur „Absprache mit Martin“; bei AO und Makler muss die Makler-Seite beteiligt sein). SLA: aktuell keine Einschätzung möglich (Postkorb nicht auswertbar) → Festlegung, sobald erste Quoten vorliegen, spätestens nach Go-Live; gemeint ist der Anteil BE-frei/dunkel verarbeiteter Vorgänge, <b>nicht</b> das Rückstands-SLA. Eskalation aus Folie 17/18 übernehmen. Auslegung mit Herrn Merkel klären.</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">1:24:53–1:27:49</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">35</td><td>Wie Folie 9: Makler-Themenpostkorb <b>ODPP1 D</b> statt ODPB, AO <b>HSB4K KO</b> („auf allen Folien korrigieren“).</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">1:29:45</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">36, 37</td><td>36: bilaterale Celonis-Tests mit QS-Matrix laufen ab Freitag (10.10.) mit Bezug auf das KI-Deckblatt weiter – ggf. ergänzen. 37: bei Celonis eigene Testverfahren und Best Practices aus früheren Projekten anfragen.</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">1:29:29, 1:30:04</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">38–42</td><td><b>Testfallzahlen vereinheitlichen</b>, sobald das Testkonzept abgenommen ist (im Termin „Stand jetzt 21“). Derzeit widersprüchlich: 39 „25 Testfälle“ vs. „24 gesamt | 21 Muss“; 40 „16 + 6 + 3 = 25“ vs. „24 Fälle“; 41 „25“ vs. „24“ und „22 Muss“; 42 „25 / 22 Muss“ vs. Tabelle 21/2/1 = 24; dazu Folie 15. Testfall-Excel (VNR, Agenturkonstellationen) als Referenz nennen.</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">1:28:00, 1:31:25</td></tr>
+</table>
+
+<h3>Kapitel 6 · KPI Reporting</h3>
+<table>
+<tr><th></th><th>Folie</th><th>Änderung</th><th>Prio</th><th>Quelle</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">44, 53</td><td><b>Scope und Soll-KPI-Set</b> für Celonis und Prüf-Bot (nicht das Rückstands- und Eingangsreporting): Anzahl prozessierter Vorgänge, BE-Quote, Fehlerquote aus der Stichprobe, Störfälle/Ausfalltage des Bots, Durchlaufzeiten im Zeitverlauf. Abgrenzung: nicht enthalten sind Widerrufe, Koop-BÜ und Vorgänge aus anderen Eingangskanälen.</td><td class="prio"><span class="p hoch">hoch</span></td><td class="quelle">1:33:06–1:36:45</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">44</td><td><b>Einbindung in Governance-/Steuerungskreise:</b> Vorschlag regelmäßiger Linien-Austausch (z. B. monatlich mit Klemens Steiner und Pierre Boulanger) zu Celonis-Reporting und Bot-KPIs; Bot-Ausfälle erklären Rückstandsentwicklung. Auslegung mit Herrn Merkel klären.</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">1:34:35</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">neu</td><td><b>Reporting Prüf-Bot:</b> Standard-Reporting von Robotics (aus dem PDD abgeleitet); bereits angelegte Folien mit Tanjas Praxisbeispielen validieren.</td><td class="prio"><span class="p mittel">mittel</span></td><td class="quelle">1:24:00, 1:35:18</td></tr>
+</table>
+
+<h3>Übergreifend</h3>
+<table>
+<tr><th></th><th>Folie</th><th>Änderung</th><th>Prio</th><th>Quelle</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">alle</td><td>Statusmarker nach dem Termin nachziehen (Slide Tracking): bestätigte Folien grün, Folien 17/18/27/34/44 bleiben bis zur Überarbeitung gelb/rot; Kapitelübersichten 49–53 entsprechend.</td><td class="prio"><span class="p klein">klein</span></td><td class="quelle">1:36:59</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">1</td><td>Beim Versand an die Revision deutlicher „Work in Progress“-Hinweis (Vorabstand nach dem Gespräch mit Herrn Merkel).</td><td class="prio"><span class="p klein">klein</span></td><td class="quelle">1:37:40</td></tr>
+</table>
+
+<h2>3. Fragen an die Revision (Herr Merkel, 08.10.2026, 16:00 Uhr)</h2>
+<table>
+<tr><th></th><th>Thema</th><th>Frage</th><th>Folie</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">Rollen</td><td>Was ist mit „Rollen- und Governance-Modell für Prüf-Tool/KI-Regeln“ gemeint – über die Verantwortlichkeitsmatrix (Folie 10) hinaus eine Linien-/RACI-Sicht mit Stichprobe, Reporting und Entscheidungen?</td><td class="quelle">27</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">SLA</td><td>Welche SLAs sind im BE-Steuerungsmodell gemeint (Quote dunkel verarbeiteter Vorgänge, Bearbeitungszeit BE)? Ist eine Festlegung nach Vorliegen erster Quoten akzeptabel?</td><td class="quelle">34</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">Stichprobe</td><td>Was unterscheidet die Anforderung „HS-/MSU-Stichprobenlogik: technische Flags und Zielanteile“ von der bereits aufgenommenen Stichprobenanforderung?</td><td class="quelle">17, 30</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">KPI</td><td>Was heißt „Einbindung in HS-/MSU-Governance- und Steuerungskreise“ konkret – welche Gremien, welche Flughöhe der KPIs?</td><td class="quelle">44</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">IKS</td><td>Wer modelliert das IKS-Konzept in ORCS/ADONIS, gibt es Standardvorgaben?</td><td class="quelle">13</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">Vorgehen</td><td>Vorabstand jetzt teilen oder erst das vollständige Werk (Risiko weiterer Anforderungen vs. frühes Feedback)?</td><td class="quelle">–</td></tr>
+</table>
+
+<h2>4. Zuarbeiten für die Folien</h2>
+<table>
+<tr><th></th><th>Von</th><th>Was</th><th>Für Folie</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">Nuria</td><td>Stichprobenlisten Makler (KBI und ODPP1 D, gleiches Laufwerk) an Eike – ab 08.10. im Urlaub, daher vorher; Zahl Komposit/KBI bestätigen.</td><td class="quelle">17</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">Dirk</td><td>HS-Stichprobenliste aus Celonis (laut Dirk bereits geschickt – Eingang prüfen).</td><td class="quelle">17</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">Christoph, Marcus, Nuria</td><td>Kapazität und Prüfer für Stichprobe und 100-%-QS auf der Makler-Seite.</td><td class="quelle">17</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">Martin</td><td>Termin mit Herrn Merkel aufsetzen (Christoph, Eike, Marco; Kiya Staudt einladen); in anderen Bereichen mit Dunkelverarbeitung nach Prüfquoten fragen (z. B. Leistungsauszahlung).</td><td class="quelle">17, 27, 34, 44</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">Celonis</td><td>Action Flow mit Prompts, Multi-Agenten-Architektur Ausbaustufe 2, Rollen-/Governance-Modell, eigene Testverfahren.</td><td class="quelle">7, 26, 27, 37</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">Tanja</td><td>Praxisbeispiele für das Bot-Reporting.</td><td class="quelle">44</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">Eike, Marco</td><td>Folien überarbeiten; Vorschlag für die gemeinsame Stichproben-Dokumentation (Excel mit zusätzlichen Prüfspalten für Deckblatt und Prüf-Bot) in der kommenden Woche; neuen Stand nach dem Merkel-Termin an den Verteiler.</td><td class="quelle">alle</td></tr>
+</table>
+
+<h2>5. Redaktionelles aus der Durchsicht <span class="neu">(nicht Thema im Termin)</span></h2>
+<table>
+<tr><th></th><th>Folie</th><th>Korrektur</th></tr>
+<tr><td class="box"><div></div></td><td class="folie">4</td><td>„Zusammenfassung der wichtigsten Ergebnissen“ → „Ergebnisse“; Datum „XX August 2026“ füllen; „Um Durchführung …“ → „Um die Durchführung …“.</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">9, 14, 35</td><td>Mailadresse vereinheitlichen: „buestrukturierung@ergo.de (tbd)“ vs. Folie 8 „bustrukturierung@ergo.de“.</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">8</td><td>„Bündelt alle Angaben … und generiert“ – Satz unvollständig (KI-Deckblatt ergänzen).</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">18</td><td>„Febr.“ → „Feb.“ (wie übrige Monatskürzel).</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">59, 60, 63</td><td>Arbeitsnotizen und Platzhalter erledigen bzw. entfernen: „Fertige Version mit Seitenzahlen und Verzeichnis“, „Kapitelübersicht zum Fachkonzept“, „Bemängelungen in Kapitelübersicht umbennen“, „Vollständiges Inhaltsverzeichnis …“ (59), „Alle notwendige Referenzen tbd“ (60), „Einfügen aktuelles Zeitplans“ (63).</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">51, 52, 57, 59</td><td>Tippfehler: „Prüf-Toll“ (51), „einhitlich“ (52), „Herausforderungem“ (57), „Gesamtsichtzusammengeführt“, „verbinfliches“, „risikiorientierte“, „detailiertes“ (59).</td></tr>
+<tr><td class="box"><div></div></td><td class="folie">61, 62</td><td>Organigramm (Stand 04.05.2026) und nächste Schritte auf aktuellen Stand bringen (z. B. ODPB3 D → ODPP1 D, Deloitte-Offboarding).</td></tr>
+</table>
+
+<div class="fuss">Erstellt aus dem Besprechungstranskript vom 07.10.2026 und dem Foliensatz „Revisionsanforderungen – Deep Dive“ (Draft, Stand 06.10.2026).
+Postkorb-Bezeichnungen laut PDD v12: KV HSB4K MV · K/L Makler/Koop ODPP1 D (AA 23949) · K/L AO HSB4 K KO (KO 23724).</div>
+</body>
+</html>

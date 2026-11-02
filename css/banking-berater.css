@@ -1,0 +1,398 @@
+/* css/banking-berater.css - Banking Berater B-02/B-10 Styles
+   Provides banking-specific color overrides for A-02/A-10 classes */
+
+/* ========================================
+   BANKING COLOR VARIABLES
+   ======================================== */
+:root {
+    --bank-vr-blue: #003399;
+    --bank-vr-blue-dark: #002266;
+    --bank-vr-orange: #FF6600;
+    --bank-retail-color: #2563eb;
+    --bank-firma-color: #16a34a;
+    --bank-pb-color: #d97706;
+}
+
+/* ========================================
+   B-02 PAGE WRAPPER
+   ======================================== */
+.berater-page-new {
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+/* ========================================
+   B-02 HEADER (mirrors .agentur-header-new, banking blue)
+   ======================================== */
+.berater-header-new {
+    background: linear-gradient(135deg, var(--bank-vr-blue) 0%, var(--bank-vr-blue-dark) 100%);
+    color: white;
+    padding: var(--spacing-md, 16px) var(--spacing-xl, 32px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: var(--card-gap, 16px);
+}
+.berater-header-new .berater-header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--card-gap, 16px);
+}
+.berater-header-new .back-button {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: var(--spacing-sm, 8px);
+    padding: var(--spacing-sm, 8px) 14px;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+.berater-header-new .back-button:hover {
+    background: rgba(255,255,255,0.25);
+}
+.berater-header-new .agentur-photo-small {
+    background: linear-gradient(135deg, #4a90d9, #003399);
+}
+.berater-header-new .agentur-header-text h1 {
+    color: white;
+    font-size: 20px;
+}
+.berater-header-new .agentur-subtitle {
+    color: rgba(255,255,255,0.75);
+}
+
+/* Tab navigation in banking header */
+.berater-header-new .agentur-header-tabs {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+.berater-header-new .agentur-tab {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+.berater-header-new .agentur-tab:hover {
+    background: rgba(255,255,255,0.2);
+}
+.berater-header-new .agentur-tab.active {
+    background: var(--bank-vr-orange);
+    border-color: var(--bank-vr-orange);
+    color: white;
+}
+.berater-header-new .agentur-tab-divider {
+    border-left-color: rgba(255,255,255,0.3);
+}
+
+/* View mode selector in banking header */
+.berater-header-new .view-mode-selector {
+    position: relative;
+    right: auto;
+}
+.berater-header-new .view-mode-selector .view-mode-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8);
+}
+.berater-header-new .view-mode-selector .view-mode-btn.active {
+    background: var(--bank-vr-orange);
+    border-color: var(--bank-vr-orange);
+    color: white;
+}
+.berater-header-new .view-mode-selector .view-mode-btn:hover:not(.active) {
+    background: rgba(255,255,255,0.2);
+}
+
+/* Demo reset button */
+.berater-header-new .demo-reset-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+}
+.berater-header-new .demo-reset-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ========================================
+   B-02 KPI OVERRIDES (banking colors)
+   ======================================== */
+.berater-page-new .cockpit-kpi-card:nth-child(1) { border-top-color: var(--bank-vr-blue); }
+.berater-page-new .cockpit-kpi-card:nth-child(2) { border-top-color: #16a34a; }
+.berater-page-new .cockpit-kpi-card:nth-child(3) { border-top-color: var(--bank-vr-orange); }
+.berater-page-new .cockpit-kpi-card:nth-child(4) { border-top-color: #9333ea; }
+.berater-page-new .cockpit-kpi-card:nth-child(5) { border-top-color: #0891b2; }
+
+.berater-page-new .cockpit-kpi-icon.bestand { background: #dbeafe; color: var(--bank-vr-blue); }
+.berater-page-new .cockpit-kpi-icon.neugeschaeft { background: #dcfce7; color: #16a34a; }
+.berater-page-new .cockpit-kpi-icon.storno { background: #fff7ed; color: var(--bank-vr-orange); }
+.berater-page-new .cockpit-kpi-icon.ziel { background: #f3e8ff; color: #9333ea; }
+
+.berater-page-new .cockpit-kpi-gauge .gauge-fill {
+    background: linear-gradient(90deg, var(--bank-vr-blue), var(--bank-vr-orange));
+}
+
+/* ========================================
+   B-02 SPARTEN BADGES (banking product types)
+   ======================================== */
+.berater-page-new .sparten-badge.kredit { background: #dbeafe; color: #2563eb; }
+.berater-page-new .sparten-badge.wertpapier { background: #dcfce7; color: #16a34a; }
+.berater-page-new .sparten-badge.vorsorge { background: #f3e8ff; color: #9333ea; }
+.berater-page-new .sparten-badge.einlage { background: #fef3c7; color: #d97706; }
+.berater-page-new .sparten-badge.versicherung { background: #fce7f3; color: #ec4899; }
+.berater-page-new .sparten-badge.bausparen { background: #e0f2fe; color: #0891b2; }
+.berater-page-new .sparten-badge.beratung { background: #f1f5f9; color: #64748b; }
+
+/* ========================================
+   B-10 SHARED HEADER (banking blue variant)
+   ======================================== */
+.berater-shared-header {
+    background: linear-gradient(135deg, var(--bank-vr-blue) 0%, var(--bank-vr-blue-dark) 100%);
+}
+.berater-shared-header .back-button {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+}
+.berater-shared-header .back-button:hover {
+    background: rgba(255,255,255,0.25);
+}
+.berater-shared-header .agentur-page-title,
+.berater-shared-header h1 {
+    color: white !important;
+}
+.berater-shared-header .agentur-subtitle {
+    color: rgba(255,255,255,0.75) !important;
+}
+.berater-shared-header .agentur-photo-small {
+    background: linear-gradient(135deg, #4a90d9, var(--bank-vr-blue));
+}
+.berater-shared-header .agentur-tab.active {
+    background: var(--bank-vr-orange);
+    border-color: var(--bank-vr-orange);
+    color: white;
+}
+.berater-shared-header .agentur-tab {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.85);
+}
+.berater-shared-header .agentur-tab:hover {
+    background: rgba(255,255,255,0.2);
+}
+.berater-shared-header .kunden-switch-dropdown {
+    color: white;
+}
+.berater-shared-header .kunden-switch-dropdown label {
+    color: rgba(255,255,255,0.7);
+}
+.berater-shared-header .kunden-switch-dropdown select {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.25);
+}
+
+/* ========================================
+   B-02/B-10 CHAT WIDGET
+   ======================================== */
+.berater-chat-toggle {
+    position: fixed;
+    bottom: var(--spacing-lg, 24px);
+    right: var(--spacing-lg, 24px);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bank-vr-orange), #cc5200);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(255,102,0,0.4);
+    z-index: 1000;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.berater-chat-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 24px rgba(255,102,0,0.5);
+}
+.berater-chat-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #dc2626;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.berater-chat-widget {
+    position: fixed;
+    bottom: 92px;
+    right: var(--spacing-lg, 24px);
+    width: 420px;
+    max-height: 540px;
+    background: white;
+    border-radius: var(--card-radius, 12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: beraterChatSlideUp 0.3s ease;
+}
+@keyframes beraterChatSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.berater-chat-header {
+    background: linear-gradient(135deg, var(--bank-vr-blue), var(--bank-vr-blue-dark));
+    color: white;
+    padding: 14px var(--spacing-md, 16px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.berater-chat-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.berater-chat-close:hover { background: rgba(255,255,255,0.25); }
+
+.berater-chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-md, 16px);
+    max-height: 380px;
+}
+.berater-chat-welcome {
+    text-align: center;
+    padding: var(--spacing-md, 16px);
+}
+.berater-chat-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm, 8px);
+    justify-content: center;
+    margin-top: var(--spacing-md, 16px);
+}
+.berater-example-btn {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #1e293b;
+}
+.berater-example-btn:hover { background: #e2e8f0; }
+
+.berater-chat-input-area {
+    display: flex;
+    gap: var(--spacing-sm, 8px);
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    border-top: 1px solid #e2e8f0;
+}
+.berater-chat-input {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--spacing-sm, 8px);
+    padding: var(--spacing-sm, 8px) 12px;
+    font-size: 15px;
+    outline: none;
+}
+.berater-chat-input:focus { border-color: var(--bank-vr-blue); }
+.berater-chat-send {
+    background: var(--bank-vr-orange);
+    border: none;
+    border-radius: var(--spacing-sm, 8px);
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.berater-chat-send:hover { background: #cc5200; }
+
+/* Chat messages */
+.berater-chat-widget .chat-message { margin-bottom: var(--card-gap, 16px); animation: beraterMsgFade 0.3s ease; }
+@keyframes beraterMsgFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.berater-chat-widget .chat-message .message-content { padding: 10px 14px; border-radius: var(--card-radius, 12px); font-size: 15px; line-height: 1.5; }
+.berater-chat-widget .user-message { text-align: right; }
+.berater-chat-widget .user-message .message-content { background: var(--bank-vr-blue); color: white; display: inline-block; border-bottom-right-radius: 4px; }
+.berater-chat-widget .ai-message .message-content { background: #f1f5f9; color: #1e293b; border-bottom-left-radius: 4px; }
+.berater-chat-widget .chat-customer-item { padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
+.berater-chat-widget .chat-customer-btn {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--bank-vr-blue);
+}
+.berater-chat-widget .chat-customer-btn:hover { background: #f1f5f9; }
+.berater-chat-widget .chat-recommendation { font-size: 13px; color: #16a34a; display: block; margin-top: 2px; }
+.berater-chat-widget .chat-followup-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.berater-chat-widget .chat-followup-suggestions button {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: var(--bank-vr-blue);
+    padding: 4px 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 13px;
+}
+.berater-chat-widget .chat-followup-suggestions button:hover { background: #dbeafe; }
+.typing-dots { display: flex; gap: 4px; padding: 4px 0; }
+.typing-dots span {
+    width: 8px; height: 8px; border-radius: 50%; background: #94a3b8;
+    animation: typingBounce 1.4s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce { 0%,80%,100% { transform: scale(0.6); } 40% { transform: scale(1); } }
+
+/* ========================================
+   B-10 IMPULS PRIORITIES
+   ======================================== */
+.impuls-priority.high { background: #fef2f2; color: #dc2626; }
+.impuls-priority.medium { background: #fef3c7; color: #d97706; }
+.impuls-priority.low { background: #f1f5f9; color: #64748b; }
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 1200px) {
+    .berater-header-new { flex-wrap: wrap; padding: var(--spacing-sm, 8px) var(--spacing-md, 16px); }
+    .berater-header-new .agentur-header-tabs { order: 3; flex-basis: 100%; justify-content: flex-start; overflow-x: auto; }
+}
+@media (max-width: 768px) {
+    .berater-chat-widget { width: calc(100vw - var(--spacing-xl, 32px)); right: var(--spacing-md, 16px); }
+    .berater-header-new .view-mode-selector { flex-basis: 100%; justify-content: center; }
+}

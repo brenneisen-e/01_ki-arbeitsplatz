@@ -1,0 +1,207 @@
+[
+ {
+  "de": "Hinweis: Vorgänge ohne Befund werden dunkel verarbeitet und laufen nicht in diesen Postkorb.",
+  "en": "Note: Cases without findings are processed straight-through (dark processing) and do not go into this mailbox.",
+  "art": "text"
+ },
+ {
+  "de": "Mögliche Werte von <BE-Klassifikation>:",
+  "en": "Possible values of <BE-Klassifikation>:",
+  "art": "text"
+ },
+ {
+  "de": "BÜ-Wunsch nicht vorhanden",
+  "en": "BÜ-Wunsch nicht vorhanden (no transfer request present)",
+  "art": "wert"
+ },
+ {
+  "de": "Betreuungswunsch nicht auf MFA ausgestellt",
+  "en": "Betreuungswunsch nicht auf MFA ausgestellt (support request not made out to an MFA)",
+  "art": "wert"
+ },
+ {
+  "de": "Unterschrift VN fehlt",
+  "en": "Unterschrift VN fehlt (policyholder signature missing)",
+  "art": "wert"
+ },
+ {
+  "de": "Kunde in IS011 nicht gefunden",
+  "en": "Kunde in IS011 nicht gefunden (customer not found in IS011)",
+  "art": "wert"
+ },
+ {
+  "de": "Kunde ist nicht Versicherungsnehmer",
+  "en": "Kunde ist nicht Versicherungsnehmer (customer is not the policyholder)",
+  "art": "wert"
+ },
+ {
+  "de": "Vertrag gehört nicht zum Kunden",
+  "en": "Vertrag gehört nicht zum Kunden (contract does not belong to the customer)",
+  "art": "wert"
+ },
+ {
+  "de": "Agenturnummer nicht vorhanden",
+  "en": "Agenturnummer nicht vorhanden (agency number not present)",
+  "art": "wert"
+ },
+ {
+  "de": "Keine Zusammenarbeit",
+  "en": "Keine Zusammenarbeit (no cooperation)",
+  "art": "wert"
+ },
+ {
+  "de": "<Klassifikation für nicht aktuelle Verträge – durch Fachbereich festzulegen>",
+  "en": "<Klassifikation für nicht aktuelle Verträge – durch Fachbereich festzulegen> (classification for non-current contracts – to be defined by the business department)",
+  "art": "wert"
+ },
+ {
+  "de": "Nachprüfung erforderlich",
+  "en": "Nachprüfung erforderlich (re-check required)",
+  "art": "wert"
+ },
+ {
+  "de": "Mögliche Prüfnotizen in <Fehlerliste>:",
+  "en": "Possible check notes in <Fehlerliste>:",
+  "art": "text"
+ },
+ {
+  "de": "Vermittlertyp nicht angegeben",
+  "en": "Vermittlertyp nicht angegeben (intermediary type not specified)",
+  "art": "wert"
+ },
+ {
+  "de": "Unterlagen nicht vollständig",
+  "en": "Unterlagen nicht vollständig (documents not complete)",
+  "art": "wert"
+ },
+ {
+  "de": "Geburtsdatum abweichend",
+  "en": "Geburtsdatum abweichend (date of birth differs)",
+  "art": "wert"
+ },
+ {
+  "de": "Anbindung Bestandsinhaber nicht aktiv",
+  "en": "Anbindung Bestandsinhaber nicht aktiv (affiliation of the portfolio holder not active)",
+  "art": "wert"
+ },
+ {
+  "de": "Vermittlertyp abweichend",
+  "en": "Vermittlertyp abweichend (intermediary type differs)",
+  "art": "wert"
+ },
+ {
+  "de": "E-Mail-Adresse des Vermittlers fehlt",
+  "en": "E-Mail-Adresse des Vermittlers fehlt (e-mail address of the intermediary missing)",
+  "art": "wert"
+ },
+ {
+  "de": "Absender ist eine interne ERGO-Adresse",
+  "en": "Absender ist eine interne ERGO-Adresse (sender is an internal ERGO address)",
+  "art": "wert"
+ },
+ {
+  "de": "Ein Postkorbeingang.",
+  "en": "One incoming mailbox item.",
+  "art": "text"
+ },
+ {
+  "de": "Genauer: ein Bestandsübertragungs-Vorgang im Themenpostkorb des Prüf-Bots mit den zugehörigen Vorgangsdaten im Datenpool.",
+  "en": "More precisely: a portfolio transfer case in the topic mailbox of the Prüf-Bot with the associated case data in the data pool.",
+  "art": "text"
+ },
+ {
+  "de": "Vorgang-Lfd-Nr des Postkorbvorgangs.",
+  "en": "Vorgang-Lfd-Nr of the mailbox case.",
+  "art": "text"
+ },
+ {
+  "de": "Ergänzender Ordnungsbegriff für das Reporting: die geprüfte Versicherungsscheinnummer.",
+  "en": "Supplementary order key for reporting: the checked policy number.",
+  "art": "text"
+ },
+ {
+  "de": "Nein.",
+  "en": "No.",
+  "art": "text"
+ },
+ {
+  "de": "Nach erfolgreicher Verarbeitung ist der Vorgang mit bestückter Notiz an den 72-Stunden-BOT übergeben.",
+  "en": "After successful processing, the case has been handed over to the 72-Stunden-BOT with the populated note.",
+  "art": "text"
+ },
+ {
+  "de": "Ein bereits bearbeiteter Postkorbvorgang (gleiche <Vorgang-Lfd-Nr>) wird nicht erneut verarbeitet.",
+  "en": "A mailbox case that has already been processed (same <Vorgang-Lfd-Nr>) is not processed again.",
+  "art": "text"
+ },
+ {
+  "de": "Ja, jedoch nur vollständig von vorne.",
+  "en": "Yes, but only completely from the beginning.",
+  "art": "text"
+ },
+ {
+  "de": "Der Prüf-Bot speichert keine Zwischenstände. Ein abgebrochener Vorgang wird beim Wiederanlauf komplett neu durchlaufen.",
+  "en": "The Prüf-Bot does not save any intermediate states. An aborted case is run through completely anew on restart.",
+  "art": "text"
+ },
+ {
+  "de": "Die Prüfschritte in IS011 einschließlich Scout-Service, VA230, OB726 und GH040 sind lesend. Schreibende Schritte sind die Erstellung der Telefonnotiz sowie die Weiterleitung am Prozessende; ein Wiederanlauf ist zulässig, solange diese noch nicht erfolgt sind.",
+  "en": "The check steps in IS011 including Scout-Service, VA230, OB726 and GH040 are read-only. Writing steps are the creation of the telephone note and the forwarding at the end of the process; a restart is permitted as long as these have not yet taken place.",
+  "art": "text"
+ },
+ {
+  "de": "Celonis eröffnet den Postkorbvorgang je Versicherungsnummer über die EMWS-Schnittstelle und befüllt den Datenpool; die E-Mail mit allen Anhängen und dem KI-Deckblatt hängt am Vorgang.",
+  "en": "Celonis opens the mailbox case per policy number via the EMWS interface and populates the data pool; the e-mail with all attachments and the AI cover sheet is attached to the case.",
+  "art": "text"
+ },
+ {
+  "de": "Arbeitstäglich, laufend. Die Taktung ist noch in Klärung und wird mit dem Robotics-Betrieb abgestimmt.",
+  "en": "Every working day, continuously. The scheduling interval is still being clarified and will be agreed with Robotics operations.",
+  "art": "text"
+ },
+ {
+  "de": "Ja. Peaks entstehen zu Monatsbeginn sowie bei der Übertragung ganzer Bestände (Maklerwechsel, Poolwechsel), bei denen mehrere hundert Einzelvorgänge an einem Tag eingehen können.",
+  "en": "Yes. Peaks occur at the beginning of the month and when entire portfolios are transferred (change of broker, change of pool), where several hundred individual cases can be received on a single day.",
+  "art": "text"
+ },
+ {
+  "de": "Ja. Bleibt die Lieferung an einem Arbeitstag vollständig aus, versendet der Roboter eine Information an den Betriebsinformationsempfänger (Gruppenpostfach), damit die vorgelagerte Befüllung des Datenpools geprüft werden kann.",
+  "en": "Yes. If no delivery at all arrives on a working day, the robot sends a notification to the operations information recipient (group mailbox) so that the upstream population of the data pool can be checked.",
+  "art": "text"
+ },
+ {
+  "de": "Nein. Innerhalb des Prüf-Bots gibt es keine Wartezustände und keine Wiedervorlage. Die Weiterverarbeitung erfolgt asynchron durch den 72-Stunden-BOT und den nachgelagerten BÜ-BOT.",
+  "en": "No. Within the Prüf-Bot there are no waiting states and no resubmission. Further processing takes place asynchronously through the 72-Stunden-BOT and the downstream BÜ-BOT.",
+  "art": "text"
+ },
+ {
+  "de": "Ja. Die Vorgangsdokumente unterliegen dem Löschkonzept des Postkorbs; der Prüf-Bot legt keine eigenen Dateien ab. Vom Roboter empfangene und versendete Mails werden nach 6 Monaten gelöscht.",
+  "en": "Yes. The case documents are subject to the deletion concept of the mailbox; the Prüf-Bot does not store any files of its own. E-mails received and sent by the robot are deleted after 6 months.",
+  "art": "text"
+ },
+ {
+  "de": "Nein. Es wird ausschließlich lesend auf Hostanwendungen und den Datenpool zugegriffen. Gemeinsam genutzte Dateien werden nicht verwendet.",
+  "en": "No. Access to host applications and the data pool is exclusively read-only. Shared files are not used.",
+  "art": "text"
+ },
+ {
+  "de": "6 Monate",
+  "en": "6 months",
+  "art": "text"
+ },
+ {
+  "de": "<Themenpostkorb gezielt benennen – durch Fachbereich zu liefern>",
+  "en": "<Name the specific topic mailbox – to be provided by the business department>",
+  "art": "text"
+ },
+ {
+  "de": "Mails, die nicht dem definierten Eingangskanal entsprechen, werden unverändert an den unter Zeile 2 genannten Verteiler weitergeleitet und anschließend aus dem Bot-Postfach gelöscht. Der Bot beantwortet sie nicht.",
+  "en": "E-mails that do not correspond to the defined inbound channel are forwarded unchanged to the distribution list named in line 2 and then deleted from the bot mailbox. The bot does not reply to them.",
+  "art": "text"
+ },
+ {
+  "de": "Ich bin ein Roboter. Diese Mail wird ungelesen gelöscht.",
+  "en": "Ich bin ein Roboter. Diese Mail wird ungelesen gelöscht. (I am a robot. This e-mail will be deleted unread.)",
+  "art": "text"
+ }
+]

@@ -1,0 +1,1881 @@
+/* Ein Tag in Banking Operations 2030 — heller, ruhiger Auftritt in Aptos.
+   Bewusst der Gegenentwurf zum dunklen Holodeck: viel Weiß, feine Linien,
+   Deloitte-Grün als einziger Akzent. */
+.root {
+  --accent: #046a38;
+  --accent-bright: #86bc25;
+  --accent-tint: rgba(4, 106, 56, 0.08);
+  --ink: #101211;
+  --ink-2: #4a4f4b;
+  --ink-3: #8a908b;
+  --line: rgba(16, 18, 17, 0.12);
+  --line-soft: rgba(16, 18, 17, 0.07);
+
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: var(--ink);
+  font-family: Aptos, 'Aptos Display', 'Segoe UI Variable', 'Segoe UI', system-ui,
+    -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  overflow: hidden;
+}
+
+/* ── Kopfzeile ── */
+.topbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px clamp(18px, 3vw, 40px);
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.backBtn:hover {
+  border-color: var(--accent);
+  transform: translateX(-2px);
+}
+
+.wordmark {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink-2);
+}
+
+.wordmark span {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.topRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+}
+
+/* Ladeanzeige beim Betreten: wie viel der Übergänge schon im Speicher liegt. */
+.laden {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.ladenBalken {
+  display: block;
+  width: clamp(70px, 8vw, 130px);
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: rgba(16, 18, 17, 0.12);
+}
+
+.ladenBalken i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform 0.25s linear;
+}
+
+.persona {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+}
+
+/* ── Analoge Uhr ── */
+.uhrBox {
+  /* Liegt als Overlay oben rechts auf der Szene. */
+  position: absolute;
+  top: clamp(14px, 1.8vw, 22px);
+  right: clamp(14px, 1.8vw, 22px);
+  /* Liegt auch waehrend eines Videouebergangs oben — die Zeit laeuft ja weiter. */
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 16px 9px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 2px 14px rgba(16, 18, 17, 0.16);
+  backdrop-filter: blur(8px);
+  /* Der Massstab wird waehrend eines Weges hochgefahren (siehe unten). Die
+     Ecke oben rechts bleibt dabei stehen, damit die Uhr nicht wandert. */
+  transform-origin: 100% 0;
+  transition: box-shadow 0.3s ease, transform 0.85s cubic-bezier(0.22, 0.7, 0.25, 1);
+}
+
+/* Waehrend des Schnelldurchlaufs dezent hervorheben. */
+.uhrBox[data-vorlauf] {
+  box-shadow: 0 2px 18px rgba(4, 106, 56, 0.34);
+}
+
+.uhr {
+  width: clamp(44px, 3.6vw, 58px);
+  height: clamp(44px, 3.6vw, 58px);
+  flex: none;
+}
+
+.uhrBlatt {
+  fill: #fff;
+  stroke: rgba(16, 18, 17, 0.16);
+  stroke-width: 1;
+}
+
+/* Feine Minuterie, vier betonte Viertelstunden. */
+.uhrStrich {
+  stroke: rgba(16, 18, 17, 0.32);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.uhrStrichLang {
+  stroke: var(--ink);
+  stroke-width: 2.8;
+  stroke-linecap: round;
+}
+
+.zeigerStunde {
+  stroke: var(--ink);
+  stroke-width: 4.4;
+  stroke-linecap: round;
+}
+
+.zeigerMinute {
+  stroke: var(--ink);
+  stroke-width: 2.8;
+  stroke-linecap: round;
+}
+
+/* Sekundenzeiger haarfein im Akzent — der einzige Farbakzent der Uhr. */
+.zeigerSekunde {
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  transition: opacity 0.2s ease;
+}
+
+/* Im Schnelldurchlauf verschwindet er: bei diesem Tempo wäre er nur ein
+   flirrender Strich und würde die beiden anderen Zeiger unlesbar machen. */
+.uhrBox[data-vorlauf] .zeigerSekunde {
+  opacity: 0;
+}
+
+.uhrMitte {
+  fill: var(--ink);
+}
+
+.uhrZeit {
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(21px, 1.8vw, 27px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.uhrDoppelpunkt {
+  margin: 0 0.02em;
+  color: var(--ink-3);
+}
+
+/* ── Bühne: Szene links, Hypothese rechts ── */
+.layout {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  /* Feste Haelften: die Bildspalte darf nicht durch den Textinhalt
+     zusammengedrueckt werden. */
+  grid-template-columns: 50% 50%;
+}
+
+/* Nur Text wechselt mit einer Blende — die Bildbuehne bleibt ruhig stehen,
+   damit der Videouebergang nicht von einer Layout-Animation ueberlagert wird. */
+@keyframes opsFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.szene {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f6f7f6;
+  border-right: 1px solid var(--line);
+}
+
+.szeneBildBox {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+  background: #f6f7f6;
+}
+
+.szeneBild {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Der Rahmen, in dem Szenenbild und UI-Overlay gemeinsam fahren. In v01/v02
+   ist er nur ein durchgereichter Fuellrahmen; erst die Buehne macht ihn zur
+   16:9-Leinwand mit Kamerafahrt — EIN transform, dadurch bleibt das Overlay
+   in jeder Zoomstufe deckungsgleich auf dem Schirm. */
+.leinwand {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* Die Box ist Container: die Leinwand nimmt die groesste 16:9-Flaeche, die
+   in BEIDE Richtungen passt. Nur die Breite zu begrenzen hat im Weg-Modus
+   (volle Buehnenbreite, breiter als 16:9) die Leinwand ueber die Box hinaus
+   wachsen lassen — overflow: hidden schnitt das Video oben und unten ab.
+   Kein will-change: die Ebene soll nur waehrend der Fahrt promoted sein,
+   nicht dauerhaft Speicher halten. */
+.root[data-buehne] .leinwand {
+  flex: none;
+  aspect-ratio: 16 / 9;
+  margin: auto;
+  transition: transform 1.35s cubic-bezier(0.24, 0.8, 0.25, 1);
+}
+
+.root[data-buehne] .leinwand .szeneBild {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Das scharfe Original der Oberflaeche, exakt ueber der Stanzflaeche. Traegt
+   dieselbe Grundfarbe wie die Seite, damit die contain-Raender nicht auffallen. */
+.schirmOverlay {
+  position: absolute;
+  object-fit: contain;
+  background: #101317;
+}
+
+/* Maske ueber der Bank-Bildmarke (logoMaske.ts): liegt in der Leinwand ueber
+   Standbild und Bildschirm-Overlay und faehrt mit dem Zoom. */
+.logoMaske {
+  position: absolute;
+  z-index: 3;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Platzhalter: nur sichtbar, solange das Szenenbild fehlt. */
+.szenePlatzhalter {
+  display: none;
+}
+
+.szeneBildBox[data-leer] .szenePlatzhalter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #f2f4f2,
+    #f2f4f2 14px,
+    #eceeec 14px,
+    #eceeec 28px
+  );
+  color: var(--ink-3);
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.szeneText {
+  flex: none;
+  /* Der große Text darf das Bild nicht erdrücken: die Unterschrift bekommt
+     höchstens ein Drittel der Bühne, sehr lange Beschreibungen scrollen. */
+  max-height: 34%;
+  overflow-y: auto;
+  padding: clamp(18px, 2.2vw, 28px) clamp(18px, 2.4vw, 32px);
+  font-size: clamp(28px, 2.2vw, 38px);
+  line-height: 1.35;
+  color: var(--ink-2);
+  background: #fff;
+  border-top: 1px solid var(--line-soft);
+  animation: opsFade 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.szeneZeit {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 1.06em;
+  margin-right: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+/* ── Hypothesen-Panel ── */
+.panel {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(22px, 3vw, 46px) clamp(20px, 3vw, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.6vw, 22px);
+  animation: opsFade 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.dimension {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hypothese {
+  margin: 0;
+  font-size: clamp(30px, 2.9vw, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* Steckbrief der Auftaktszene */
+.steckbrief {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: 0;
+  padding-top: clamp(6px, 1vw, 12px);
+  border-top: 1px solid var(--line);
+}
+
+.steckbrief dt {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.steckbrief dd {
+  margin: 4px 0 0;
+  font-size: clamp(18px, 1.35vw, 22px);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.personaText {
+  margin: 0;
+  font-size: clamp(19px, 1.5vw, 24px);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.vergleich {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(14px, 1.6vw, 24px);
+  padding-top: clamp(4px, 0.8vw, 10px);
+  border-top: 1px solid var(--line);
+}
+
+.block {
+  min-width: 0;
+}
+
+.blockLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+  font-size: clamp(19px, 1.45vw, 23px);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-2);
+}
+
+.blockLabel svg {
+  flex: none;
+}
+
+.block[data-future] .blockLabel {
+  color: var(--accent);
+}
+
+.blockText {
+  margin: 0;
+  font-size: clamp(19px, 1.45vw, 23px);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.block[data-future] .blockText {
+  color: var(--ink);
+}
+
+/* Kernaussagen (**fett** in den Inhalten) treten dunkler hervor, ohne den
+   Fließtext zu zerreißen. */
+.blockText strong,
+.impactText strong,
+.personaText strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.block[data-future] .blockText strong {
+  color: var(--accent);
+}
+
+/* ── Knappe Fassung (v02) ──
+   Der Kunde will auf der Folie nur noch die 2030-Aussage sehen; Heute, Wirkung
+   und Leitfrage gehen auf die Tonspur. Weil dann fast das ganze Panel frei ist,
+   wird der verbleibende Satz deutlich groesser gesetzt — er ist die Aussage,
+   nicht mehr eine Spalte von vieren. */
+.nur2030 {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.2vw, 18px);
+  padding-top: clamp(8px, 1.2vw, 16px);
+  border-top: 1px solid var(--line);
+}
+
+.nur2030Label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(20px, 1.6vw, 26px);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.nur2030Label svg {
+  flex: none;
+}
+
+/* Die Schriftgroesse setzt die Komponente: sie waehlt die groesste Groesse,
+   bei der der Satz noch vollstaendig ins Panel passt (siehe `einpassen`). Der
+   Wert hier ist nur der Startwert, bis das Einpassen gelaufen ist. */
+.nur2030Text {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  font-size: clamp(26px, 2.2vw, 40px);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.nur2030Text strong {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Die Ueberschrift der Station steht ueber einem viel groesseren Fliesstext —
+   damit sie nicht mit ihm konkurriert, faellt sie eine Spur kleiner aus. */
+.root[data-variante='v02'] .hypothese {
+  font-size: clamp(26px, 2.2vw, 36px);
+}
+
+/* Ohne Bildunterschrift bekommt die Szene die volle Hoehe. Damit das
+   3:2-Bild dabei nicht links und rechts beschnitten wird — es fuellt seinen
+   Rahmen —, waechst die Bildspalte entsprechend mit. */
+.root[data-variante='v02'] .layout {
+  grid-template-columns: 60% 40%;
+}
+
+.root[data-variante='v02'] .szene {
+  justify-content: center;
+}
+
+.root[data-variante='v02'] .personaText {
+  font-size: clamp(24px, 1.9vw, 32px);
+  line-height: 1.5;
+}
+
+.impact {
+  padding-top: clamp(10px, 1.2vw, 16px);
+  border-top: 1px solid var(--line-soft);
+}
+
+.impactLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+  font-size: clamp(19px, 1.45vw, 23px);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--accent);
+}
+
+.impactLabel svg {
+  flex: none;
+}
+
+.impactText {
+  margin: 0;
+  font-size: clamp(19px, 1.45vw, 23px);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.leitfrage {
+  margin-top: auto;
+  display: flex;
+  gap: 12px;
+  padding: clamp(14px, 1.6vw, 20px);
+  border-left: 3px solid var(--accent-bright);
+  background: var(--accent-tint);
+  border-radius: 0 6px 6px 0;
+}
+
+.leitfrage svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+.leitfrage p {
+  margin: 0;
+  font-size: clamp(19px, 1.5vw, 24px);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* ── Fußzeile: Stationsleiste ── */
+.pager {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 26px);
+  padding: 12px clamp(18px, 3vw, 40px);
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
+
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.navBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.navBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.navBtnPrimary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.navBtnPrimary:hover:not(:disabled) {
+  background: #035a2f;
+}
+
+.dots {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3px, 0.6vw, 10px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+}
+
+.dot {
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-3);
+  font: inherit;
+  font-size: clamp(15px, 1.15vw, 18px);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.dot:hover {
+  background: rgba(16, 18, 17, 0.05);
+  color: var(--ink);
+}
+
+.dot[data-done] {
+  color: var(--accent);
+}
+
+.dot[data-active] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.dotZeit {
+  pointer-events: none;
+}
+
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1.2fr);
+  }
+  .szene {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .dots {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .szeneText {
+    animation: none;
+  }
+}
+
+/* ── Szenenübergang: Veo-Clip über der Bühne ──
+   Kein schwarzer Grund: solange ein Clip puffert, bleibt das Szenenbild
+   darunter stehen; erst wenn das Video wirklich Bilder liefert, blendet es
+   darüber auf. Weil das erste Videobild exakt das Szenenbild ist (und das
+   letzte exakt das der Zielszene), sieht man von beiden Blenden nichts. */
+.uebergang {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: transparent;
+  pointer-events: none;
+}
+
+.uebergangVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+
+.uebergangVideo[data-sichtbar] {
+  opacity: 1;
+}
+
+/* Am Ende wieder heraus in das schon gewechselte Szenenbild. */
+.uebergang[data-phase='raus'] .uebergangVideo[data-sichtbar] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Ladebalken mit echtem Fortschritt, solange der Clip noch geholt wird. */
+.ladeBalken {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  overflow: hidden;
+  background: rgba(16, 18, 17, 0.12);
+}
+
+.ladeBalken i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform 0.16s linear;
+}
+
+/* Beim Streamen ist die Restdauer unbekannt — dann läuft ein Balken durch. */
+.ladeBalken[data-unbestimmt] i {
+  width: 30%;
+  transition: none;
+  animation: opsLade 1.2s ease-in-out infinite;
+}
+
+@keyframes opsLade {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(440%);
+  }
+}
+
+.uebergangSkip {
+  position: absolute;
+  pointer-events: auto;
+  right: clamp(12px, 1.6vw, 20px);
+  bottom: clamp(12px, 1.6vw, 20px);
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(16, 18, 17, 0.55);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.uebergangSkip:hover {
+  background: rgba(16, 18, 17, 0.75);
+}
+
+/* ── Bühne (v03) ──
+   Die Szene füllt das ganze Bild, darüber steht allein die Hypothese. Kein
+   Textpanel: was zu sagen ist, sagt der Moderator. Damit das 16:9-Material
+   ungeschnitten steht, bekommt die Bühne dasselbe Seitenverhältnis. */
+/* Die Hypothese ist in der Buehne der einzige Text der Seite — sie darf so
+   gross stehen, wie sie in zwei Zeilen passt. Die Groesse setzt `einpassen`
+   zur Laufzeit; hier steht nur der Rahmen, in den sie passen muss. */
+.aussage {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0 clamp(12px, 1.6vw, 28px);
+  font-family: 'Uniform', 'Uniform Light', 'Helvetica Neue', 'Segoe UI', var(--font-heading);
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 1.12;
+  max-height: 2.24em;
+  overflow: hidden;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* Der noch nicht getippte Rest steht unsichtbar im Fluss: dadurch bleibt der
+   Zeilenumbruch waehrend des Schreibens stehen, und `einpassen` misst den
+   ganzen Satz statt des halben. */
+.aussageRest {
+  visibility: hidden;
+}
+
+.kursor {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.86em;
+  margin: 0 0.02em -0.08em;
+  background: var(--accent, #0a7d4b);
+  animation: opsKursor 0.9s steps(1) infinite;
+}
+
+@keyframes opsKursor {
+  50% {
+    opacity: 0;
+  }
+}
+
+.root[data-buehne] .topbar {
+  padding-top: clamp(10px, 1.2vw, 18px);
+  padding-bottom: clamp(10px, 1.2vw, 18px);
+  align-items: center;
+}
+
+/* Die Szene braucht keinen Rahmen mehr — sie IST die Seite. */
+.root[data-buehne] .szene {
+  border-right: none;
+  background: #0b0d10;
+}
+
+/* Ruhezustand: links der Bildschirm gross, rechts die Aussage. Waehrend eines
+   Wegs faellt das Panel weg und die Szene nimmt die ganze Breite — der Weg ist
+   der Film, die Station ist die Analyse. */
+.root[data-buehne]:not([data-vollbild]) .layout {
+  grid-template-columns: minmax(0, 62%) minmax(0, 38%);
+}
+
+.root[data-buehne]:not([data-vollbild])[data-weg] .layout {
+  grid-template-columns: 100%;
+}
+
+/* Der Bildschirm ist kein Foto: er darf den Platz ausnutzen und braucht einen
+   ruhigen Grund, damit die dunkle Oberflaeche nicht im Nichts schwebt. */
+.root[data-buehne]:not([data-vollbild]) .szeneBild[data-schirm] {
+  object-fit: contain;
+  padding: clamp(10px, 1.4vw, 26px);
+}
+
+.aussagePanel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.6vh, 26px);
+  padding: clamp(20px, 2.4vw, 44px) clamp(18px, 2.2vw, 40px);
+  background: #fff;
+  border-left: 1px solid var(--line);
+  overflow-y: auto;
+  animation: opsFade 0.4s ease both;
+}
+
+.panelKopf {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: clamp(15px, 1.15vw, 20px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Action Title: der Satz, der die Station traegt. Gesetzt in Uniform Light —
+   dem Schriftbild grosser Beratungs-Titelseiten. Die TTF liegt nicht im Repo
+   (kommerzielle Lizenz); der Stack greift, wo sie installiert ist, und faellt
+   sonst auf eine helle, neutrale Grotesk in Gewicht 300 zurueck. */
+.panelTitel {
+  margin: 0;
+  font-family: 'Uniform', 'Uniform Light', 'Helvetica Neue', 'Segoe UI', var(--font-heading);
+  font-size: clamp(24px, 2.1vw, 40px);
+  font-weight: 300;
+  line-height: 1.18;
+  letter-spacing: -0.008em;
+  color: var(--ink);
+  max-height: 5.2em;
+  overflow: hidden;
+  text-wrap: balance;
+}
+
+.panelPunkte {
+  margin: 0;
+  padding: clamp(18px, 2.2vh, 32px) 0 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.4vh, 30px);
+  border-top: 1px solid var(--line);
+}
+
+/* Jeder Punkt ist eine kleine Beweiszeile: Symbol, Marke, Satz. Die Marke
+   traegt die Beweisfuehrung sichtbar — was sich geaendert hat, woran man es
+   misst, was folgt. */
+.panelPunkte li {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 18px;
+  row-gap: 5px;
+  align-items: start;
+}
+
+.punktSymbol {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #f6f8f6;
+  color: var(--accent, #0a7d4b);
+}
+
+.punktMarke {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: 2px;
+}
+
+.punktText {
+  font-size: clamp(19px, 1.65vw, 28px);
+  line-height: 1.42;
+  color: var(--ink-2);
+}
+
+/* ── v05: Sprechblasen auf dem Bild ──
+   Dunkles Glas (Blur + duenner heller Rand), damit es auf jeder Szene lesbar
+   ist; eine feine Linie zeigt auf die Stelle, zu der der Beleg gehoert. */
+.zeiger {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.keil {
+  fill: rgba(13, 16, 20, 0.58);
+  stroke: rgba(255, 255, 255, 0.32);
+  stroke-width: 1.4;
+  opacity: 0;
+  animation: opsBlase 0.5s ease forwards;
+}
+
+@keyframes opsBlase {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.blase {
+  position: absolute;
+  width: 31%;
+  max-width: 470px;
+  padding: clamp(12px, 1.3vw, 22px) clamp(14px, 1.5vw, 26px);
+  border-radius: 18px;
+  background: rgba(13, 16, 20, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #f2f5f7;
+  font-size: clamp(13px, 1.05vw, 19px);
+  line-height: 1.42;
+  opacity: 0;
+  animation: opsBlase 0.55s ease forwards;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+}
+
+.blaseMarke {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: clamp(11px, 0.85vw, 14px);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 6px;
+}
+
+/* Auftakt: rechts die Vorstellung — wer ist Mara. */
+.personaGlas {
+  position: absolute;
+  right: 2.6%;
+  top: 6%;
+  bottom: 6%;
+  width: 34%;
+  max-width: 560px;
+  padding: clamp(18px, 1.8vw, 34px);
+  border-radius: 22px;
+  background: rgba(13, 16, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #f2f5f7;
+  overflow: auto;
+  opacity: 0;
+  animation: opsBlase 0.55s ease 0.35s forwards;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+}
+
+.personaGlas h2 {
+  margin: 4px 0 10px;
+  font-family: 'Uniform', 'Uniform Light', 'Helvetica Neue', 'Segoe UI', var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(26px, 2.2vw, 42px);
+}
+
+.personaGlas p {
+  margin: 0 0 14px;
+  font-size: clamp(15px, 1.2vw, 21px);
+  line-height: 1.5;
+  color: rgba(242, 245, 247, 0.92);
+}
+
+.personaGlas ul {
+  margin: 0;
+  padding: 12px 0 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: clamp(14px, 1.1vw, 20px);
+  line-height: 1.45;
+}
+
+/* Vollbild-Fassung: eine Spalte, immer. */
+.root[data-vollbild] .layout {
+  grid-template-columns: 100%;
+}
+
+.root[data-vollbild] .szene {
+  border-right: none;
+  background: #0b0d10;
+}
+
+/* Nichts beschneiden. Das Material ist durchgaengig 16:9; ist die Buehne
+   breiter als 16:9, schnitte `cover` oben und unten weg — genau die
+   Briefing-Karten, auf die es ankommt. Standbild UND Clip bekommen deshalb
+   dieselbe Einpassung: unterschiedliche Werte wuerden die Uebergabe
+   Bild -> Video springen lassen. */
+.root[data-buehne] .szeneBildBox {
+  background: #0b0d10;
+}
+
+.root[data-buehne] .szeneBild,
+.root[data-buehne] .uebergangVideo {
+  object-fit: contain;
+}
+
+/* ── Vollbild-Fassungen (v05 aufwaerts): das Bild IST die Seite ──
+   Kopfzeile und Zeitleiste nehmen keine Hoehe mehr weg, sondern liegen als
+   Glasleisten ueber der Szene. Auf einem 16:9-Schirm fuellt die Leinwand
+   damit exakt das Fenster — ohne `cover`, also ohne dass oben und unten
+   etwas weggeschnitten wird (das war der Fehler der ersten Buehne). */
+.root[data-vollbild] .layout {
+  position: absolute;
+  inset: 0;
+}
+
+.root[data-vollbild] .topbar,
+.root[data-vollbild] .pager {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 7;
+  border: none;
+  background: none;
+  pointer-events: none;
+}
+
+.root[data-vollbild] .topbar {
+  top: 0;
+  /* Traegt bis zu zwei Zeilen Hypothese: der Verlauf muss auch die zweite
+     noch dunkel unterlegen, sonst steht weisse Schrift auf hellem Fenster. */
+  padding-bottom: clamp(58px, 8vw, 132px);
+  align-items: flex-start;
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 10, 12, 0.8) 0%,
+    rgba(8, 10, 12, 0.66) 42%,
+    rgba(8, 10, 12, 0.3) 74%,
+    rgba(8, 10, 12, 0) 100%
+  );
+}
+
+.root[data-vollbild] .pager {
+  bottom: 0;
+  padding-top: clamp(28px, 4vw, 56px);
+  background: linear-gradient(
+    to top,
+    rgba(8, 10, 12, 0.72) 0%,
+    rgba(8, 10, 12, 0.42) 55%,
+    rgba(8, 10, 12, 0) 100%
+  );
+}
+
+/* Bedienelemente bleiben klickbar, die Leiste selbst laesst Klicks durch. */
+.root[data-vollbild] .topbar > *,
+.root[data-vollbild] .pager > * {
+  pointer-events: auto;
+}
+
+.root[data-vollbild] .aussage,
+.root[data-vollbild] .persona,
+.root[data-vollbild] .laden {
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+
+.root[data-vollbild] .backBtn,
+.root[data-vollbild] .navBtn {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.34);
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+
+.root[data-vollbild] .navBtnPrimary {
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.root[data-vollbild] .backBtn:hover,
+.root[data-vollbild] .navBtn:hover:not(:disabled) {
+  border-color: #fff;
+}
+
+.root[data-vollbild] .dotZeit {
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+.root[data-vollbild] .dot[data-active] .dotZeit {
+  color: #fff;
+}
+
+/* Die Aussage bleibt eine Zeile links oben — kein Block quer ueber die Szene. */
+.root[data-vollbild] .aussage {
+  max-width: 64%;
+  text-align: left;
+  line-height: 1.16;
+  /* Zwei Zeilen brauchen bei dieser Zeilenhoehe 2,5em plus Unterlaengen —
+     die Basisregel (2,24em) schnitt die zweite Zeile mittig durch. Die
+     Leiste ist ein Overlay, sie darf ueber ihre Hoehe hinaus zeichnen. */
+  max-height: 3.55em;
+  overflow: visible;
+}
+
+/* Hypothese und Belege wegblenden: die Szene allein zeigen. */
+.theseBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.theseBtn:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.aussage[data-aus] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Ohne Aussage braucht der obere Verlauf nur noch die Bedienelemente zu
+   tragen — er wird schmal und leicht, damit das Bild frei steht. */
+.root[data-ohne-these] .topbar {
+  padding-bottom: clamp(10px, 1.4vw, 18px);
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 10, 12, 0.55) 0%,
+    rgba(8, 10, 12, 0) 100%
+  );
+}
+
+/* Waehrend ein Uebergang laeuft, liegt die Weichzeichnung der Bedienelemente
+   ueber BEWEGTEN Bildern — der Compositor muesste sie fuer jedes Videobild neu
+   rechnen. Im Ruhezustand (Standbild) kostet sie einmalig nichts. */
+.root[data-weg] .backBtn,
+.root[data-weg] .navBtn,
+.root[data-weg] .theseBtn,
+.root[data-weg] .uhrBox {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.root[data-vollbild][data-weg] .backBtn,
+.root[data-vollbild][data-weg] .navBtn,
+.root[data-vollbild][data-weg] .theseBtn {
+  background: rgba(12, 15, 18, 0.62);
+}
+
+/* Ladeanzeige im Vollbild: heller Grund reicht nicht, sie liegt auf dem Bild. */
+.root[data-vollbild] .ladenBalken {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.root[data-vollbild] .ladenBalken i {
+  background: var(--accent-bright);
+}
+
+/* Waehrend der Wiedergabe ruht das Nachladen — das sagt die Anzeige auch,
+   sonst wirkt der stehende Balken wie ein Fehler. */
+.laden[data-pause] .ladenBalken i {
+  opacity: 0.55;
+}
+
+/* ── Review: Kommentare des Teams je Station ── */
+.theseBtn[data-an] {
+  background: var(--accent);
+  border-color: transparent;
+  color: #fff;
+}
+
+.reviewZahl {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.review {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: min(420px, 38vw);
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-left: 1px solid var(--line);
+  box-shadow: -18px 0 46px rgba(10, 14, 20, 0.22);
+  color: var(--ink);
+}
+
+.reviewKopf {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.reviewKopf strong { font-size: 15px; }
+
+.reviewStand {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.reviewStand[data-geteilt] { color: var(--accent); }
+
+.reviewX {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.reviewX:hover { border-color: var(--accent); }
+
+.reviewKoerper {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 16px 20px;
+}
+
+.reviewBlock { padding: 16px 0; border-bottom: 1px solid var(--line-soft); }
+
+.reviewBlock h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.reviewBlock h3 span:not(:empty) {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.reviewHinweis { margin: 3px 0 10px; font-size: 12px; color: var(--ink-3); }
+
+.reviewListe { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 8px; }
+
+.reviewListe li {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fbfcfb;
+}
+
+.reviewListe li[data-bestaetigt] {
+  border-color: rgba(4, 106, 56, 0.4);
+  background: var(--accent-tint);
+}
+
+.reviewListe p { margin: 0; font-size: 13.5px; line-height: 1.45; white-space: pre-wrap; }
+
+.reviewMeta {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.reviewMeta > span { margin-right: auto; }
+
+.reviewMeta button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reviewMeta button:hover { border-color: var(--accent); color: var(--accent); }
+.reviewMeta button[data-an] { background: var(--accent); border-color: transparent; color: #fff; }
+
+.reviewNeu { display: grid; gap: 6px; }
+
+.review textarea,
+.review input {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px;
+  resize: vertical;
+}
+
+.review textarea:focus,
+.review input:focus { outline: 2px solid var(--accent-tint); border-color: var(--accent); }
+
+.reviewPrimaer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.reviewZeile { display: flex; gap: 8px; margin-top: 6px; }
+
+.reviewZeile button:not(.reviewPrimaer) {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.reviewName { padding: 18px 16px; display: grid; gap: 10px; }
+.reviewName label { font-size: 13px; font-weight: 600; }
+
+/* Bearbeitbare Texte im Review, mit Verlauf. */
+.reviewFeld { margin-bottom: 14px; display: grid; gap: 5px; }
+
+.reviewFeld label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.reviewPrimaer:disabled {
+  background: var(--line);
+  color: var(--ink-3);
+  cursor: default;
+}
+
+.reviewZeile button:not(.reviewPrimaer) {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-2);
+}
+
+.reviewVerlauf {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0 0 0 12px;
+  border-left: 2px solid var(--line);
+  display: grid;
+  gap: 8px;
+}
+
+.reviewVerlauf li > span {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+.reviewVerlauf li > p {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* ── v08: Hero-Box oben, Szene rechts, Marken links ──────────────────────────
+   Das Review hat drei Dinge beanstandet, die alle dasselbe Layoutproblem
+   hatten: die Aussage lief bei langen Hypothesen in drei Zeilen ueber die
+   Oberkante des Monitors, die Belegkaesten lagen auf den Kennzahlen, und mit
+   der vierten Marke war kein Platz mehr frei, der nicht Inhalt war.
+
+   Loesung: die Aussage bekommt ein eigenes Band ueber dem Bild statt darauf,
+   die Szene rueckt nach rechts, und die Marken stehen in der Spalte, die
+   dadurch links frei wird. Kein Kasten liegt mehr auf der Szene.
+   ------------------------------------------------------------------------ */
+
+/* In der Vollbild-Fassung liegen Kopf- und Fussleiste als Verlauf UEBER der
+   Szene. In v08 sind sie eigene Zeilen: die Hero-Box soll ueber dem Bild
+   stehen, nicht darauf — und die Marken-Spalte braucht eine Buehne, die
+   wirklich zwischen den beiden Leisten beginnt und endet. */
+/* v08: die Szene nimmt ALLES bis auf die Uhrzeitleiste — volle Breite, volle
+   Hoehe. Kopfzeile und Markenband liegen als Overlay darauf statt als Baender
+   darueber. Das hat zwei Gruende: die Szene bekommt die ganze Flaeche, und die
+   Buehnenhoehe aendert sich nicht mehr, wenn das Markenband zum Weg
+   verschwindet — vorher sprang das Bild in dem Moment, in dem ein Video
+   anfing. */
+.root[data-hero] .layout {
+  position: relative;
+  inset: auto;
+  display: block;
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+.root[data-hero] .szene {
+  position: absolute;
+  inset: 0;
+  flex: none;
+  min-height: 0;
+}
+
+/* Die Uhrzeitleiste ist eingeklappt, solange die Maus nicht in ihrer Naehe
+   ist — dann gehoert der Bildschirm ganz der Szene. Ein schmaler Streifen
+   bleibt als Griff stehen, damit man sie ueberhaupt findet; das ::before
+   zieht die Empfangsflaeche noch ein Stueck ins Bild hinein, sonst muesste
+   man den Streifen auf den Pixel genau treffen. */
+.root[data-hero] .pager {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8;
+  flex: none;
+  pointer-events: auto;
+  transform: translateY(calc(100% - 9px));
+  transition: transform 0.32s cubic-bezier(0.22, 0.7, 0.25, 1);
+}
+
+.root[data-hero] .pager::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -46px;
+  height: 46px;
+}
+
+.root[data-hero] .pager:hover,
+.root[data-hero] .pager:focus-within {
+  transform: translateY(0);
+}
+
+.root[data-hero] .pager {
+  background: #14342a;
+  padding-top: clamp(9px, 0.9vw, 16px);
+  padding-bottom: clamp(9px, 0.9vw, 16px);
+  gap: clamp(6px, 0.7vw, 14px);
+}
+
+/* Die Werkzeuge sitzen in v08 unten in der Uhrzeitleiste. Sie schieben sich
+   nicht zwischen die Uhrzeiten, sondern haengen rechts an. */
+.root[data-hero] .pager .topRight {
+  margin-left: 0;
+}
+
+.root[data-hero] .pager .backBtn,
+.root[data-hero] .pager .theseBtn {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.root[data-hero] .pager .backBtn:hover,
+.root[data-hero] .pager .theseBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.root[data-hero] .pager .persona {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Dreizehn Uhrzeiten, zwei Knoepfe links, drei rechts: in der Vollbildleiste
+   wird es eng. Ohne kleinere Marken scrollt die Liste, und dann stehen die
+   erste und die letzte Uhrzeit halb unter den Knoepfen. */
+.root[data-hero] .pager .dots {
+  overflow-x: visible;
+  gap: clamp(1px, 0.25vw, 6px);
+}
+
+.root[data-hero] .pager .dot {
+  padding: 6px clamp(5px, 0.42vw, 9px);
+  font-size: clamp(11px, 0.8vw, 15px);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.root[data-hero] .pager .dot:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.root[data-hero] .pager .dot[data-done] {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.root[data-hero] .pager .dot[data-active] {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+
+
+/* Die Kopfzeile liegt oben auf der Szene: dunkelgruen und nach unten
+   auslaufend, damit die Schrift auf jedem Bild steht und das Bild trotzdem
+   nicht abgeschnitten wirkt. */
+.root[data-hero] .topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  pointer-events: none;
+  border-bottom: none;
+  padding: clamp(12px, 1.2vw, 22px) clamp(18px, 2.4vw, 40px);
+  gap: clamp(14px, 1.8vw, 32px);
+  align-items: center;
+  background: linear-gradient(to bottom,
+    rgba(11, 27, 22, 0.92) 0%,
+    rgba(11, 27, 22, 0.86) 62%,
+    rgba(11, 27, 22, 0) 100%);
+}
+
+/* Ohne Hypothese faellt das Band ganz weg — und die Glastafel rueckt nach
+   oben, weil nichts mehr ueber ihr liegt. */
+.root[data-ohne-kopf] .topbar {
+  display: none;
+}
+
+/* Ohne Kopfzeile beginnt die Glastafel unter der Uhr — sie sitzt in
+   derselben Ecke. */
+.root[data-ohne-kopf][data-hero] .personaGlas {
+  top: clamp(86px, 8.4vh, 118px);
+}
+
+/* Die Kopfzeile hat eine FESTE Hoehe. Waere sie vom Satz abhaengig, spraenge
+   der Text bei jedem Stationswechsel um ein paar Pixel — und `einpassen`
+   misst gegen genau diese Hoehe. */
+.root[data-hero] .topbar {
+  height: clamp(78px, 10.5vh, 150px);
+}
+
+.root[data-hero] .topbar .aussage {
+  color: #ffffff;
+  font-weight: 400;
+  line-height: 1.14;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  /* EINE Zeile, so gross wie sie ins Band passt — `einpassen` sucht die
+     groesste Schrift, die weder seitlich noch nach unten anstoesst. Deshalb
+     hier KEINE font-size: die setzt das Skript. */
+  white-space: nowrap;
+  /* Die Vollbild-Regel deckelt die Aussage auf 64 % und 3,55em — dort war sie
+     ein Overlay neben den Knoepfen. Im Band hat sie beides nicht mehr noetig
+     und braucht die ganze Breite, sonst misst sich die Schriftgroesse an
+     einem Drittel zu wenig Platz. */
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+  padding-left: 0;
+  padding-right: 0;
+  margin-right: clamp(18px, 2.4vw, 40px);
+  /* Ohne feste Breite schrumpft die Zeile auf ihren Text — dann ist
+     scrollWidth immer gleich clientWidth, die Breitenpruefung greift nie,
+     und nur die Bandhoehe begrenzt die Schrift. */
+  flex: 1 1 100%;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Die Bedienelemente stehen jetzt auf dunklem Grund. */
+.root[data-hero] .backBtn,
+.root[data-hero] .theseBtn {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.root[data-hero] .backBtn:hover,
+.root[data-hero] .theseBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Waehrend eines Weges traegt die Uhr die Szene: die Hypothese ist weg, das
+   Bild laeuft, und die einzige Anzeige ist die Zeit, die auf die naechste
+   Station vorlaeuft. Sie faehrt deshalb weich auf das Doppelte hoch und am
+   Ende des Weges genauso weich zurueck — beides ueber dieselbe Transition,
+   es braucht keine Animation und keinen zweiten Zustand. */
+.root[data-hero][data-weg] .uhrBox {
+  transform: scale(2.05);
+}
+
+/* Waehrend eines Weges laeuft nur das Zifferblatt: die Zeiger drehen sichtbar
+   vor, und genau das ist die Aussage — es vergeht Zeit. Die Ziffern daneben
+   wuerden dabei durchrattern und die Bewegung erschlagen. Im Standbild
+   stehen sie wieder da, denn dort ist die Uhrzeit eine Angabe, keine
+   Bewegung. */
+.root[data-weg] .uhrZeit {
+  display: none;
+}
+
+.root[data-weg] .uhrBox {
+  padding-right: 10px;
+}
+
+.root[data-hero] .kursor {
+  background: #ffffff;
+}
+
+/* Der Grund unter der Szene traegt dieselbe dunkle Farbe wie die Hero-Box,
+   damit die Raender der Leinwand nicht als Fehler gelesen werden. */
+.root[data-hero] .szene,
+.root[data-hero] .szeneBildBox {
+  background: #0c1a16;
+}
+
+/* Die Szene haelt sich LINKS, die Marken stehen rechts daneben.
+   Volle Breite mit Overlay war der Wunsch, geht aber nicht auf: der Monitor
+   sitzt bei 0,303 bis 0,859 der Bildbreite, und die Spalte braucht rund ein
+   Viertel — sie laege damit zwangslaeufig auf der rechten Haelfte des
+   Dashboards. Solange die Bildschirme dort keinen freien Rand haben, bleibt
+   es beim Nebeneinander: so ist Mara zu sehen, der Monitor vollstaendig, und
+   nichts wird verdeckt. */
+.root[data-hero] .leinwand {
+  margin: 0;
+  max-width: none;
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: auto;
+  /* Die Nahfahrt an den Bildschirm: deutlich langsamer als in v04, es ist
+     eine Kamerabewegung, kein Umschalten. Sie beginnt erst im Standbild. */
+  transition: transform 2.6s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.root[data-hero] .leinwand .szeneBild,
+.root[data-hero] .leinwand .uebergangVideo {
+  width: 100%;
+  height: 100%;
+}
+
+/* Das Marken-Band: eine Zeile unter der Hero-Box, vier gleich breite Karten.
+   Waehrend eines Weges wird es gar nicht erst gerendert — dann faellt die
+   Zeile weg und die Szene bekommt die Hoehe. */
+.spalte {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  pointer-events: none;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: clamp(8px, 0.8vw, 16px);
+  padding: clamp(26px, 3vw, 54px) clamp(18px, 2.4vw, 40px) clamp(58px, 5.2vh, 84px);
+  background: linear-gradient(to top,
+    rgba(11, 27, 22, 0.92) 0%,
+    rgba(11, 27, 22, 0.78) 55%,
+    rgba(11, 27, 22, 0) 100%);
+}
+
+.spaltePunkt {
+  padding: clamp(9px, 0.85vw, 16px) clamp(11px, 1.05vw, 20px);
+  border-radius: 12px;
+  background: rgba(14, 34, 28, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #f2f5f7;
+  opacity: 0;
+  animation: opsBlase 0.45s ease forwards;
+}
+
+.spaltePunkt p {
+  margin: 0;
+  font-size: clamp(12px, 1.02vw, 20px);
+  line-height: 1.36;
+}
+
+.spaltePunkt strong {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.root[data-hero] .blaseMarke {
+  font-size: clamp(10px, 0.92vw, 17px);
+  color: rgba(255, 255, 255, 0.66);
+  margin-bottom: clamp(4px, 0.4vw, 8px);
+}
+
+/* Ohne Aussage soll auch die Spalte weichen — dann steht die Szene allein. */
+.root[data-ohne-these] .spalte {
+  display: none;
+}
+
+/* Stationen, deren Inhalt bis an den rechten Rand reicht (08:10, die
+   Kundenkacheln), bekommen die Szene schmaler — dort steht die Spalte neben
+   dem Bild statt darauf. */
+/* Der Auftakt folgt derselben Ordnung wie jede andere Station: Szene ueber
+   die volle Breite, der Text als Tafel darauf. Eine Sonderbehandlung fuer
+   `data-persona` gibt es nicht mehr — sie machte die Szene dort schmaler als
+   ueberall sonst. */
+.root[data-hero] .personaGlas {
+  right: clamp(14px, 1.4vw, 28px);
+  top: calc(clamp(78px, 10.5vh, 150px) + clamp(8px, 0.8vw, 16px));
+  /* Die Tafel ist so hoch wie ihr Text — seit Profil, Umfang und „This
+     morning" weg sind, stand darunter sonst ein Drittel leere Flaeche. */
+  bottom: auto;
+  max-height: calc(100% - clamp(78px, 10.5vh, 150px) - clamp(28px, 3vw, 54px));
+  width: 30%;
+  max-width: none;
+  padding: clamp(14px, 1.4vw, 26px);
+  background: rgba(10, 22, 18, 0.72);
+  border-color: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.root[data-hero] .personaGlas h2 {
+  font-size: clamp(19px, 1.75vw, 33px);
+  margin: 2px 0 8px;
+}
+
+.root[data-hero] .personaGlas p {
+  font-size: clamp(12px, 1.06vw, 21px);
+  line-height: 1.38;
+  margin-bottom: clamp(8px, 0.8vw, 14px);
+}
+
+.root[data-hero] .personaGlas ul {
+  font-size: clamp(12px, 1.02vw, 20px);
+  line-height: 1.36;
+  gap: clamp(7px, 0.7vw, 13px);
+  padding-top: clamp(8px, 0.8vw, 14px);
+}
+
+@media (max-width: 900px) {
+  .root[data-hero] .leinwand { max-width: none; }
+  .spalte { display: none; }
+}
+
+/* Unsichtbarer Zwilling: misst die Textbreite der Hypothesen bei 100 px,
+   damit alle Stationen dieselbe Schriftgroesse bekommen. */
+.messZwilling {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: 'Uniform', 'Uniform Light', 'Helvetica Neue', 'Segoe UI', var(--font-heading);
+  font-weight: 400;
+  font-size: 100px;
+  letter-spacing: -0.02em;
+}

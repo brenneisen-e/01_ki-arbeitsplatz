@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Banking Operations 2030 — Telefon</title>
+<style>
+  :root {
+    --grund: #101317; --karte: #171c22; --rand: #232a32; --schrift: #e9edf1;
+    --leise: #8a95a1; --gruen: #34a06a; --bernstein: #d29a3c;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 900px; height: 1950px; overflow: hidden; }
+  body {
+    background: var(--grund); color: var(--schrift);
+    font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif;
+    font-size: 34px; padding: 70px 52px 60px;
+    display: flex; flex-direction: column; gap: 34px;
+  }
+  .leiste { display: flex; justify-content: space-between; align-items: center;
+    font-size: 30px; color: var(--leise); }
+  .leiste b { color: var(--schrift); font-weight: 600; }
+  header h1 { font-size: 62px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; }
+  header p { margin-top: 14px; font-size: 32px; color: var(--leise); }
+  .karten { display: flex; flex-direction: column; gap: 26px; flex: 1; min-height: 0; }
+  .karte { background: var(--karte); border: 1px solid var(--rand); border-radius: 26px;
+    padding: 30px 32px; opacity: 0; transform: translateY(14px);
+    flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .karte .marke { font-size: 24px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--leise); }
+  .karte .satz { margin-top: 12px; font-size: 40px; font-weight: 600; line-height: 1.2; }
+  .karte .satz em { font-style: normal; color: var(--gruen); }
+  .karte .satz b { color: var(--bernstein); font-weight: 600; }
+  .fuss { display: flex; align-items: center; gap: 18px; color: var(--leise); font-size: 28px; }
+  .balken { flex: 1; height: 8px; border-radius: 99px; background: var(--rand); overflow: hidden; }
+  .balken i { display: block; height: 100%; width: 0; background: var(--gruen); }
+</style>
+<div class="leiste"><b>07:00</b><span>Operations · overnight</span></div>
+<header><h1>Good morning, Mara.</h1><p>Your fleets worked while you slept.</p></header>
+<div class="karten">
+  <div class="karte" data-ein="0.05"><div class="marke">Overnight</div><div class="satz">Everything ran <em>to plan</em></div></div>
+  <div class="karte" data-ein="0.22"><div class="marke">Agent health</div><div class="satz">All fleets <em>nominal</em></div></div>
+  <div class="karte" data-ein="0.40"><div class="marke">Emerging risk</div><div class="satz">One pattern building in <b>card disputes</b></div></div>
+  <div class="karte" data-ein="0.58"><div class="marke">For your judgement</div><div class="satz">Three cases waiting</div></div>
+</div>
+<div class="fuss"><span>Preparing</span><span class="balken"><i></i></span></div>
+<script>
+  const karten = [...document.querySelectorAll('[data-ein]')]
+  const balken = document.querySelector('.balken i')
+  const DAUER = 8
+  window.setT = (sek) => {
+    const t = Math.max(0, Math.min(1, sek / DAUER))
+    for (const k of karten) {
+      const ab = parseFloat(k.dataset.ein)
+      const f = Math.max(0, Math.min(1, (t - ab) / 0.14))
+      k.style.opacity = f
+      k.style.transform = `translateY(${(1 - f) * 14}px)`
+    }
+    balken.style.width = `${Math.min(1, t / 0.9) * 100}%`
+  }
+  window.setT(DAUER)
+</script>

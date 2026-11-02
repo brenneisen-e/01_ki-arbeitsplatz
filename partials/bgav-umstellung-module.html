@@ -1,0 +1,481 @@
+  <div id="bgavUmstellungPage" class="bgav-container" style="display: none;">
+
+    <!-- BGAV Header -->
+    <div class="bgav-header">
+        <div class="bgav-header-content">
+            <div class="bgav-header-left">
+                <div class="bgav-logo-badge">BG</div>
+                <div>
+                    <h1>Vertragsumstellung BGAV</h1>
+                    <div class="subtitle">Simulationsergebnisse &mdash; Provisionsmodell ICM2026</div>
+                </div>
+            </div>
+            <div class="bgav-header-right">
+                <div class="bgav-header-badge">Arbeitsstand &ndash; initiale Einschätzung</div>
+                <div class="bgav-header-badge">Februar 2026</div>
+                <button class="bgav-back-btn" onclick="closeBgavTool()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Zurück
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vermittler Bar with Photo -->
+    <div class="bgav-vermittler-bar">
+        <div class="bgav-vermittler-info">
+            <div class="bgav-vermittler-avatar" id="bgavVermittlerAvatarContainer">
+                <svg id="bgavVermittlerPhotoPlaceholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <img id="bgavVermittlerPhoto" style="display:none; width:42px; height:42px; border-radius:50%; object-fit:cover;" alt="Vermittler Foto">
+            </div>
+            <div class="bgav-vermittler-details">
+                <h3>Maria Musterfrau</h3>
+                <span>BD-VM 0055/0310 &bull; VPT9957912 &bull; Bezirksdirektor &bull; VD Wuppertal</span>
+            </div>
+        </div>
+        <select class="bgav-vermittler-select" onchange="/* Vermittler wechseln */">
+            <option selected>Maria Musterfrau (0055/0310)</option>
+            <option>Anna Schmidt (0042/0210)</option>
+            <option>Thomas Weber (0078/0415)</option>
+            <option>Julia Braun (0091/0520)</option>
+            <option>Stefan Klein (0063/0330)</option>
+        </select>
+    </div>
+
+    <!-- BGAV Tabs -->
+    <div class="bgav-tabs">
+        <div class="bgav-tab active" data-tab="uebersicht">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></span>
+            Übersicht
+        </div>
+        <div class="bgav-tab" data-tab="simulation">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>
+            Provisionssimulation
+        </div>
+    </div>
+
+    <!-- ================================
+         TAB 1: ÜBERSICHT
+         ================================ -->
+    <div id="bgavContent_uebersicht" class="bgav-tab-content active">
+        <div class="bgav-ub-grid">
+            <!-- LEFT: Dark VZ Sidebar -->
+            <div class="bgav-ub-sidebar">
+                <select class="bgav-ub-vz-select">
+                    <option>Vertriebszentrum K&ouml;ln</option>
+                    <option>Vertriebszentrum D&uuml;sseldorf</option>
+                    <option>Vertriebszentrum M&uuml;nchen</option>
+                    <option>Vertriebszentrum Hamburg</option>
+                </select>
+
+                <div class="bgav-ub-vz-name">Vertriebszentrum K&ouml;ln</div>
+
+                <div class="bgav-ub-vz-fields">
+                    <div class="bgav-ub-vz-row"><span class="vz-label">VZ-Leiter:</span> <span class="vz-value">Marc Hintze</span></div>
+                    <div class="bgav-ub-vz-row"><span class="vz-label">Bezirksleiter:</span> <span class="vz-value">-</span></div>
+                </div>
+
+                <div class="bgav-ub-vz-note">
+                    <strong>Keine Berücksichtigung in der Simulation:</strong>
+                    <ul><li>Angestellte Vermittler</li></ul>
+                </div>
+
+                <div class="bgav-ub-vz-divider"></div>
+
+                <div class="bgav-ub-vz-chart-title">Vergleich Ergebnisse Alt vs. Neu je AGT</div>
+                <div class="bgav-ub-vz-chart">
+                    <canvas id="bgavUbVzChart" width="220" height="160"></canvas>
+                </div>
+                <div class="bgav-ub-vz-legend">
+                    <span class="vz-legend-item"><span class="vz-dot null"></span> (Null)</span>
+                    <span class="vz-legend-item"><span class="vz-dot neg"></span> &lt; 0%</span>
+                    <span class="vz-legend-item"><span class="vz-dot low"></span> 0-5%</span>
+                    <span class="vz-legend-item"><span class="vz-dot mid"></span> 5-10%</span>
+                    <span class="vz-legend-item"><span class="vz-dot high"></span> &gt; 10%</span>
+                </div>
+            </div>
+
+            <!-- RIGHT: Main content with orange border -->
+            <div class="bgav-ub-main">
+                <div class="bgav-ub-main-header">
+                    <h3>Vergleich Umstellung</h3>
+                    <p>Rechnerische Simulationsergebnisse</p>
+                </div>
+
+                <!-- Simulationsergebnisse Table -->
+                <div class="bgav-ub-table-section">
+                    <div class="bgav-ub-table-title">Simulationsergebnisse</div>
+                    <div class="bgav-table-wrapper">
+                        <table class="bgav-table bgav-ub-table">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" style="min-width:60px;"></th>
+                                    <th rowspan="2">Vermittler</th>
+                                    <th rowspan="2">Status</th>
+                                    <th colspan="2" class="th-group">Vergütung AP</th>
+                                    <th colspan="2" class="th-group">Vergütung FP</th>
+                                    <th rowspan="2">Sonst. Erfolgsabh. Vergütung</th>
+                                    <th rowspan="2">Zuschüsse</th>
+                                    <th rowspan="2">Zusatzverg.</th>
+                                    <th rowspan="2">Vergütung Alt</th>
+                                    <th rowspan="2">Simulierte Vergütung</th>
+                                    <th rowspan="2">Gesamtdifferenz</th>
+                                </tr>
+                                <tr>
+                                    <th>Alt</th>
+                                    <th>Neu</th>
+                                    <th>Alt</th>
+                                    <th>Neu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bgavUbTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="bgav-ub-charts-row">
+                    <div class="bgav-ub-chart-box">
+                        <div class="bgav-ub-chart-title">Anzahl Vermittler mit jeweiliger Provisionseinstufung (AP)</div>
+                        <div class="bgav-ub-charts-inner">
+                            <div class="bgav-ub-chart-item">
+                                <div class="bgav-ub-chart-label">S/U ohne KFZ</div>
+                                <canvas id="bgavUbChartSU" height="140"></canvas>
+                            </div>
+                            <div class="bgav-ub-chart-item">
+                                <div class="bgav-ub-chart-label">KV</div>
+                                <canvas id="bgavUbChartKV" height="140"></canvas>
+                            </div>
+                            <div class="bgav-ub-chart-item">
+                                <div class="bgav-ub-chart-label">LV</div>
+                                <canvas id="bgavUbChartLV" height="140"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bgav-ub-chart-box">
+                        <div class="bgav-ub-chart-title">Übersicht Agenturfunktionen</div>
+                        <div class="bgav-ub-chart-fixed" style="height:160px; position:relative;">
+                            <canvas id="bgavUbChartAgentur" height="160"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: Productivity table + Zuschüsse chart + Disclaimer -->
+                <div class="bgav-ub-bottom-row">
+                    <div class="bgav-ub-chart-box">
+                        <div class="bgav-ub-chart-title">Anzahl Vermittler mit erreichtem Produktionsstandard</div>
+                        <table class="bgav-table bgav-ub-small-table">
+                            <thead>
+                                <tr><th></th><th>&lt; MPL</th><th>MPL</th><th>1. LS</th><th>2. LS</th><th>3. LS</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>S/U inkl. Tier</td><td>29</td><td>10</td><td>10</td><td>7</td><td>8</td></tr>
+                                <tr><td>Kfz</td><td>57</td><td>2</td><td>4</td><td></td><td>1</td></tr>
+                                <tr><td>LV</td><td>44</td><td>6</td><td>8</td><td>4</td><td>1</td></tr>
+                                <tr><td>KV</td><td>17</td><td>4</td><td>13</td><td>6</td><td>24</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bgav-ub-chart-box">
+                        <div class="bgav-ub-chart-title">Vergleich &ndash; allgemeine Zuschüsse</div>
+                        <div class="bgav-ub-chart-fixed" style="height:180px; position:relative;">
+                            <canvas id="bgavUbChartZuschuesse" height="180"></canvas>
+                        </div>
+                    </div>
+                    <div class="bgav-ub-chart-box bgav-ub-disclaimer">
+                        <div class="bgav-ub-chart-title">Disclaimer</div>
+                        <div class="bgav-ub-disclaimer-text">
+                            <p><strong>Hinweis:</strong> Diese Darstellung dient der Veranschaulichung eines Vergleichs zwischen der bisherigen Vergütung (gemäß Ist-Daten der Referenzzeiträume <strong>01.07.2023&ndash;30.06.2024</strong> und <strong>01.07.2024&ndash;30.06.2025</strong>) und einer simulierten Anwendung des neuen Provisionsmodells.</p>
+                            <p>Die Agentur- und Provisions-Einstufung in der Simulation erfolgt auf Basis des <strong>Durchschnitts der beiden Referenzzeiträume</strong>.</p>
+                            <p>Für die Bestandsprovisionen aus Altverträgen gilt ein <strong>Bestandsschutz</strong>. Das bedeutet, dass die neuen Provisionsarten ausschließlich für Neugeschäft ab dem Umstellungszeitpunkt <strong>01.01.2026</strong> gelten.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Link -->
+                <div class="bgav-ub-info-link">
+                    Infomaterial BGAV: <a href="https://www.barmenia24.de/deu/b24_ein_exklusivvertrieb_1/uebersicht.xhtml" target="_blank">https://www.barmenia24.de/deu/b24_ein_exklusivvertrieb_1/uebersicht.xhtml</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================
+         TAB 2: PROVISIONSSIMULATION
+         ================================ -->
+    <div id="bgavContent_simulation" class="bgav-tab-content">
+        <div class="bgav-sim-grid">
+            <!-- LEFT: Dark Stammdaten Sidebar (like PDF) -->
+            <div class="bgav-sim-stammdaten">
+                <div class="bgav-sim-stamm-photo" id="bgavSimPhotoContainer">
+                    <svg id="bgavSimPhotoPlaceholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <img id="bgavSimPhoto" style="display:none; width:60px; height:60px; border-radius:50%; object-fit:cover; border: 2px solid #00A3E0;" alt="">
+                </div>
+                <select class="bgav-sim-stamm-select" onchange="/* Vermittler wechseln */">
+                    <option>Maria Musterfrau</option>
+                </select>
+                <div class="bgav-sim-stamm-role" id="bgavSimRole">Leiter des Service-Centers</div>
+
+                <div class="bgav-sim-stamm-fields">
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">Status:</span>
+                        <span class="stamm-value" id="bgavSimStatus">Offen</span>
+                    </div>
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">Gesamtstand:</span>
+                        <span class="stamm-value" id="bgavSimStand">04.12.2025</span>
+                    </div>
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">BD-Nummer:</span>
+                        <span class="stamm-value" id="bgavSimBDNr">0000001</span>
+                    </div>
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">Eintrittsdatum:</span>
+                        <span class="stamm-value" id="bgavSimEintritt">01.01.2090</span>
+                    </div>
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">Agenturstatus:</span>
+                        <span class="stamm-value" id="bgavSimAgentur">Ab 01.01.2026</span>
+                    </div>
+                </div>
+
+                <div class="bgav-sim-stamm-divider"></div>
+
+                <div class="bgav-sim-stamm-section-title">
+                    Veränderung Vergütung ggü.<br>Durchschnitt WJ 23/24 und 24/25<br><span style="font-size:13px; opacity:0.7;">(simuliert)</span>
+                </div>
+
+                <!-- Comparison chart (Canvas) -->
+                <div class="bgav-sim-stamm-chart-wrap">
+                    <canvas id="bgavStammCompareChart" height="180"></canvas>
+                </div>
+                <div class="bgav-sim-stamm-compare-vals">
+                    <div class="stamm-compare-item">
+                        <span class="stamm-compare-dot alt"></span>
+                        <span class="stamm-compare-label">Alt</span>
+                        <span class="stamm-compare-val" id="bgavStammValAlt">42.800 &euro;</span>
+                    </div>
+                    <div class="stamm-compare-item">
+                        <span class="stamm-compare-dot neu"></span>
+                        <span class="stamm-compare-label">Neu</span>
+                        <span class="stamm-compare-val highlight" id="bgavStammValNeu">44.520 &euro;</span>
+                    </div>
+                </div>
+                <div class="bgav-sim-stamm-delta" id="bgavStammDelta">
+                    <span class="stamm-delta-arrow">&#9650;</span>
+                    <span class="stamm-delta-val" id="bgavStammDeltaVal">+1.720 &euro;</span>
+                    <span class="stamm-delta-pct" id="bgavStammDeltaPct">(+4,0%)</span>
+                </div>
+
+                <div class="bgav-sim-stamm-footnote">
+                    Vergleich Durchschnitt Wertungsjahre 23/24 und 24/25 mit simulierter Neuregelung
+                </div>
+            </div>
+
+            <!-- RIGHT: Main simulation content -->
+            <div class="bgav-sim-main">
+                <!-- KPI Row -->
+                <div class="bgav-kpi-row">
+                    <div class="bgav-kpi-card status-info">
+                        <div class="kpi-label">Alt-Modell Gesamt</div>
+                        <div class="kpi-value" id="bgavKpi_altGesamt2">-</div>
+                    </div>
+                    <div class="bgav-kpi-card status-success">
+                        <div class="kpi-label">BGAV Gesamt</div>
+                        <div class="kpi-value" id="bgavKpi_bgavGesamt2">-</div>
+                    </div>
+                    <div class="bgav-kpi-card status-success" id="bgavKpiDeltaCard2">
+                        <div class="kpi-label">Delta</div>
+                        <div class="kpi-value" id="bgavKpi_delta2">-</div>
+                    </div>
+                    <div class="bgav-kpi-card status-warning">
+                        <div class="kpi-label">Karrierestufe</div>
+                        <div class="kpi-value" id="bgavKpi_karriere2">Premium</div>
+                    </div>
+                </div>
+
+                <!-- Sliders row -->
+                <div class="bgav-sim-sliders-info">
+                    Voreinstellung gem&auml;&szlig; Produktion im Referenzzeitraum 01.01.2025 &ndash; 31.12.2025
+                </div>
+                <div class="bgav-sim-sliders-row">
+                    <div class="bgav-sim-slider-block">
+                        <h4>Neugeschäft (Produktion)</h4>
+                        <div class="bgav-slider-group">
+                            <label>Leben <span id="bgavSliderVal_produktionLeben">150.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="produktionLeben" data-default="150000" min="0" max="500000" step="10000" value="150000">
+                        </div>
+                        <div class="bgav-slider-group">
+                            <label>Kranken <span id="bgavSliderVal_produktionKranken">80.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="produktionKranken" data-default="80000" min="0" max="300000" step="5000" value="80000">
+                        </div>
+                        <div class="bgav-slider-group">
+                            <label>Schaden <span id="bgavSliderVal_produktionSchaden">120.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="produktionSchaden" data-default="120000" min="0" max="500000" step="10000" value="120000">
+                        </div>
+                    </div>
+                    <div class="bgav-sim-slider-block">
+                        <h4>Bestandsprovisionen</h4>
+                        <div class="bgav-slider-group">
+                            <label>Leben <span id="bgavSliderVal_bestandLeben">450.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="bestandLeben" data-default="450000" min="0" max="2000000" step="50000" value="450000">
+                        </div>
+                        <div class="bgav-slider-group">
+                            <label>Kranken <span id="bgavSliderVal_bestandKranken">220.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="bestandKranken" data-default="220000" min="0" max="1000000" step="10000" value="220000">
+                        </div>
+                        <div class="bgav-slider-group">
+                            <label>Schaden <span id="bgavSliderVal_bestandSchaden">380.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="bestandSchaden" data-default="380000" min="0" max="1500000" step="10000" value="380000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts per Sparte -->
+                <div class="bgav-charts-grid">
+                    <div class="bgav-section bgav-sparte-chart-box" style="margin-bottom: 0;">
+                        <div class="bgav-section-header" style="margin-bottom: 12px; padding-bottom: 10px;">
+                            <div class="bgav-section-title" style="font-size: 14px;">Leben</div>
+                            <span class="bgav-sparte-badge" id="bgavSparteBadgeLeben"></span>
+                        </div>
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="bgavSimChartLeben"></canvas>
+                        </div>
+                    </div>
+                    <div class="bgav-section bgav-sparte-chart-box" style="margin-bottom: 0;">
+                        <div class="bgav-section-header" style="margin-bottom: 12px; padding-bottom: 10px;">
+                            <div class="bgav-section-title" style="font-size: 14px;">Kranken</div>
+                            <span class="bgav-sparte-badge" id="bgavSparteBadgeKranken"></span>
+                        </div>
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="bgavSimChartKranken"></canvas>
+                        </div>
+                    </div>
+                    <div class="bgav-section bgav-sparte-chart-box" style="margin-bottom: 0;">
+                        <div class="bgav-section-header" style="margin-bottom: 12px; padding-bottom: 10px;">
+                            <div class="bgav-section-title" style="font-size: 14px;">Schaden/Unfall</div>
+                            <span class="bgav-sparte-badge" id="bgavSparteBadgeSchaden"></span>
+                        </div>
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="bgavSimChartSchaden"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Provisionssätze -->
+                <div class="bgav-section">
+                    <div class="bgav-section-header">
+                        <div class="bgav-section-title">Provisionss&auml;tze im Vergleich</div>
+                    </div>
+                    <div class="bgav-table-wrapper">
+                        <table class="bgav-table bgav-rates-table" id="bgavRatesTable">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Sparte</th>
+                                    <th colspan="2" class="th-group-alt">Alt-Modell</th>
+                                    <th colspan="2" class="th-group-bgav">BGAV</th>
+                                    <th colspan="2" class="th-group-delta">Ver&auml;nderung</th>
+                                </tr>
+                                <tr>
+                                    <th class="th-group-alt">AP</th>
+                                    <th class="th-group-alt">BP</th>
+                                    <th class="th-group-bgav">AP</th>
+                                    <th class="th-group-bgav">BP</th>
+                                    <th class="th-group-delta">AP</th>
+                                    <th class="th-group-delta">BP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bgavRatesTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="bgav-rates-note" id="bgavRatesNote"></div>
+                </div>
+
+                <!-- Detail Table -->
+                <div class="bgav-section">
+                    <div class="bgav-section-header">
+                        <div class="bgav-section-title">Detailansicht nach Sparten</div>
+                    </div>
+                    <div class="bgav-table-wrapper">
+                        <table class="bgav-table">
+                            <thead>
+                                <tr>
+                                    <th>Sparte</th>
+                                    <th>Alt AP</th>
+                                    <th>Alt BP</th>
+                                    <th>Alt Gesamt</th>
+                                    <th>BGAV AP</th>
+                                    <th>BGAV BP</th>
+                                    <th>BGAV Gesamt</th>
+                                    <th>Delta</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bgavSimTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Leistungsstufen -->
+                <div class="bgav-section bgav-ls-section">
+                    <div class="bgav-section-header">
+                        <div class="bgav-section-title">Leistungsstufen &ndash; Provisionseinstufung</div>
+                    </div>
+                    <div class="bgav-ls-grid" id="bgavLeistungsstufenGrid">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- 5-Jahres Perspektive -->
+                <div class="bgav-section">
+                    <div class="bgav-section-header">
+                        <div class="bgav-section-title">Provisionseinnahmen &ndash; 5-Jahres-Perspektive</div>
+                    </div>
+                    <div style="height: 280px; position: relative;">
+                        <canvas id="bgavSim5YearChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHAT TOGGLE BUTTON -->
+    <button class="bgav-chat-toggle" id="bgavChatToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="26" height="26">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path>
+        </svg>
+        <span class="chat-badge-indicator">KI</span>
+    </button>
+
+    <!-- CHAT WIDGET -->
+    <div class="bgav-chat-widget hidden" id="bgavChatWidget">
+        <div class="bgav-chat-header">
+            <div class="bgav-chat-header-left">
+                <div class="bgav-chat-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4"></path>
+                    </svg>
+                </div>
+                <div class="bgav-chat-header-info">
+                    <h4>BGAV-Assistent</h4>
+                    <span>Fragen zur Vertragsumstellung</span>
+                </div>
+            </div>
+            <button class="bgav-chat-close" id="bgavChatClose">&times;</button>
+        </div>
+        <div class="bgav-chat-body" id="bgavChatBody"></div>
+        <div class="bgav-chat-footer">
+            <input type="text" class="bgav-chat-input" id="bgavChatInput" placeholder="Frage zur BGAV-Umstellung..." autocomplete="off">
+            <button class="bgav-chat-send" id="bgavChatSend">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+
+  </div><!-- Ende BGAV Vertragsumstellung -->

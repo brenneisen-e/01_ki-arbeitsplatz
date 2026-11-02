@@ -1,0 +1,185 @@
+/* EinstiegsBuehne — Vollflächiges Landing-Overlay eines Raum-Kapitels.
+   Raum-Detailbild groß, dunkler Verlaufs-Scrim, Content-Panel unten. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  align-items: flex-end;
+  /* Sanfter, längerer Crossfade — überblendet weich vom Kamera-Zoom ins
+     Raumbild, statt hart aufzupoppen. */
+  animation: ebIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes ebIn {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Das Raumbild deckt die Flaeche. Frueher lag es bei 0.55 Deckkraft, weil die
+   Gesichter in dieser Zoomstufe nur wenige Pixel gross waren und bei voller
+   Deckkraft kuenstlich wirkten. Der Preis war eine Doppelbelichtung: durch das
+   halbdurchsichtige Raumbild schien der Kamera-Zoom des Strukturbilds hindurch,
+   und weil beide verschiedene Raeume zeigen, lagen zwei Moeblierungen und zwei
+   Gruppen Menschen uebereinander. Seit die Gesichter einzeln nachgezogen sind,
+   braucht es den Schleier nicht mehr; ein Rest Transparenz haelt die Verbindung
+   zum Zoom, ohne dass sich die Szenen gegenseitig stoeren. */
+.bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.94;
+  filter: blur(0.6px) saturate(0.96);
+  animation: ebZoom 8s ease-out both;
+}
+
+@keyframes ebZoom {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 12, 14, 0.5) 0%,
+    rgba(11, 12, 14, 0.62) 40%,
+    rgba(11, 12, 14, 0.95) 100%
+  );
+}
+
+/* Bedienelemente oben rechts: Screenshot und Überspringen in einer Reihe. */
+.topRight {
+  position: absolute;
+  top: clamp(16px, 2.4vh, 28px);
+  right: clamp(16px, 2vw, 28px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zurueck {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(0, 0, 0, 0.35);
+  color: #f4f1ea;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  transition: background 0.18s ease;
+}
+
+.zurueck:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes ebSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 56px) clamp(20px, 4vw, 56px) clamp(28px, 5vh, 60px);
+  color: #f4f1ea;
+  animation: ebUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes ebUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.kicker {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #86bc25;
+}
+
+.title {
+  margin: 8px 0 12px;
+  font-size: clamp(36px, 5vw, 68px);
+  font-weight: 800;
+  line-height: 1.05;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+}
+
+.rolle {
+  max-width: 1120px;
+  font-size: clamp(19px, 1.45vw, 26px);
+  line-height: 1.5;
+  color: rgba(244, 241, 234, 0.94);
+}
+
+/* Denkanstoß — hebt die Zukunftsfrage hervor, ohne die Hypothesen zu verraten. */
+.frage {
+  max-width: 1080px;
+  margin: clamp(20px, 3vh, 30px) 0 clamp(24px, 3.5vh, 34px);
+  padding-left: 20px;
+  border-left: 3px solid #86bc25;
+  font-size: clamp(23px, 2.2vw, 34px);
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 15px 28px;
+  border-radius: 12px;
+  background: #046a38;
+  border: 1px solid #046a38;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.cta:hover {
+  background: #05532d;
+  transform: translateX(2px);
+}
+
+@media (max-width: 720px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .panel,
+  .bg {
+    animation: none;
+  }
+}

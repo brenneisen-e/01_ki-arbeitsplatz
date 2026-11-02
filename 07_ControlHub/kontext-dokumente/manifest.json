@@ -1,0 +1,334 @@
+{
+  "schema_version": "controlhub/kontext-korpus@1",
+  "generiert_am": "2026-06-30",
+  "beschreibung": "Maschinenlesbarer Index des ControlHub-Kontext-Korpus: realistische, vollständig synthetische Eingangsdokumente (Banken/Versicherung) mit extrahierter Prozess-, Risiko- und Kontrollstruktur für den Tool-Umbau.",
+  "hinweis": "Alle Inhalte sind frei erfunden (synthetische Demo-Daten). Keine realen Personen, Beträge oder Sachverhalte.",
+  "institut_fiktion": {
+    "typ": "Fiktiver deutscher Universalbank- und Versicherungskonzern",
+    "standorte": ["DE", "AT", "LU"],
+    "governance": "Three-Lines-of-Defense",
+    "methodische_aufsicht": "Operational Risk & Compliance (2nd Line of Defense)"
+  },
+  "taxonomie": {
+    "referenz_dokument": "methodik/risiko-und-kontroll-taxonomie.md",
+    "risiko_kategorien": [
+      { "id": "operationelles-risiko", "name": "Operationelles Risiko", "unterarten": [
+        { "id": "prozess", "name": "Prozessrisiken" },
+        { "id": "human", "name": "Personalrisiken" },
+        { "id": "system", "name": "IT- & Systemrisiken" },
+        { "id": "extern", "name": "Externe Ereignisse" }
+      ]},
+      { "id": "compliance-risiko", "name": "Compliance- & Rechtsrisiko", "unterarten": [
+        { "id": "regulatorik", "name": "Regulatorische Verstöße" },
+        { "id": "gwg", "name": "Geldwäsche & Sanktionen" },
+        { "id": "dsgvo", "name": "Datenschutz" },
+        { "id": "vertrag", "name": "Vertragsrechtliche Risiken" }
+      ]},
+      { "id": "reputations-risiko", "name": "Reputationsrisiko", "unterarten": [
+        { "id": "kunde", "name": "Kundenwahrnehmung" },
+        { "id": "medien", "name": "Medien & Öffentlichkeit" },
+        { "id": "esg", "name": "ESG-Reputationsrisiken" }
+      ]},
+      { "id": "finanzkriminalitaet", "name": "Finanzkriminalität & Betrug", "unterarten": [
+        { "id": "intern", "name": "Interner Betrug" },
+        { "id": "extern", "name": "Externer Betrug" },
+        { "id": "cyber", "name": "Cyber-Fraud" }
+      ]},
+      { "id": "modell-risiko", "name": "Modell- & Daten-Risiko", "unterarten": [
+        { "id": "modell", "name": "Modellrisiken" },
+        { "id": "daten", "name": "Datenqualität" },
+        { "id": "ki", "name": "KI-/Algorithmus-Risiko" }
+      ]},
+      { "id": "auslagerungs-risiko", "name": "Auslagerungs- & Drittparteienrisiko", "unterarten": [
+        { "id": "dienstleister", "name": "Dienstleistersteuerung" },
+        { "id": "konzentration", "name": "Konzentrationsrisiko" },
+        { "id": "exit", "name": "Exit-Risiko" }
+      ]}
+    ],
+    "kontroll_arten": ["präventiv", "detektiv"],
+    "kontroll_typen": ["manuell", "automatisch", "hybrid"],
+    "kontroll_frequenzen": [
+      { "id": "jede-transaktion", "name": "Je Transaktion" },
+      { "id": "taeglich", "name": "Täglich" },
+      { "id": "woechentlich", "name": "Wöchentlich" },
+      { "id": "monatlich", "name": "Monatlich" },
+      { "id": "quartalsweise", "name": "Quartalsweise" },
+      { "id": "halbjaehrlich", "name": "Halbjährlich" },
+      { "id": "jaehrlich", "name": "Jährlich" },
+      { "id": "anlassbezogen", "name": "Anlassbezogen" }
+    ],
+    "bewertung": {
+      "eintrittswahrscheinlichkeit": [
+        { "stufe": "Gering", "bandbreite": "< 5 %" },
+        { "stufe": "Mittel", "bandbreite": "5–20 %" },
+        { "stufe": "Hoch", "bandbreite": "> 20 %" }
+      ],
+      "schadenhoehe": [
+        { "stufe": "Gering", "bandbreite": "< 50 TEUR" },
+        { "stufe": "Mittel", "bandbreite": "50–250 TEUR" },
+        { "stufe": "Hoch", "bandbreite": "> 250 TEUR" }
+      ],
+      "tiers": ["low", "mid", "high"]
+    }
+  },
+  "methodik_dokument": {
+    "id": "risiko-und-kontroll-taxonomie",
+    "dokumentId": "MH-IKS-2026-001",
+    "titel": "Methodenhandbuch Risiko- und Kontroll-Taxonomie (NFR / IKS)",
+    "typ": "Methodenhandbuch",
+    "version": "1.0",
+    "pfad": "methodik/risiko-und-kontroll-taxonomie.md",
+    "eigentuemer": "Operational Risk & Compliance (2nd Line of Defense)"
+  },
+  "dokumente": [
+    {
+      "id": "01-kreditvergabe-firmenkunden",
+      "dokumentId": "PL-FK-2026-014",
+      "titel": "Prozessleitfaden Kreditvergabe an Firmenkunden",
+      "typ": "Prozessleitfaden",
+      "version": "4.2",
+      "pfad": "prozesse/01-kreditvergabe-firmenkunden.md",
+      "eigentuemer": "Bereichsleitung Marktfolge Aktiv",
+      "prozess": { "id": "kreditvergabe", "name": "Kreditvergabe an Firmenkunden", "kategorie": "Kreditgeschäft", "beschreibung": "End-to-End-Prozess zur Bewilligung gewerblicher Kredite ab 250 TEUR" },
+      "regulatorik": ["KWG § 13/§ 18/§ 25a", "MaRisk BTO 1.2", "CRR (VO 575/2013)", "EBA/GL/2020/06", "GwG", "DORA", "EU AI Act", "DSGVO"],
+      "aktivitaeten": [
+        { "id": "a1", "name": "Antragserfassung", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Unvollständige oder fehlerhafte Erfassung der Kundenstammdaten und Antragsangaben.", "kontrollen": [ { "name": "Vier-Augen-Prinzip", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" }, { "name": "Automatisierte Plausibilisierung", "art": "detektiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "dsgvo", "beschreibung": "Unzureichende Art.-13-DSGVO-Information des Antragstellers.", "kontrollen": [ { "name": "Standardisierte Datenschutz-Erstinformation", "art": "präventiv", "typ": "hybrid", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "modell-risiko", "unterart": "daten", "beschreibung": "Falsche Klassifizierung des Kreditzwecks.", "kontrollen": [ { "name": "Stammdaten-Qualitätsmanagement", "art": "detektiv", "typ": "hybrid", "frequenz": "monatlich" } ] }
+        ]},
+        { "id": "a2", "name": "KYC- & Sanktionsprüfung", "risiken": [
+          { "kategorie": "finanzkriminalitaet", "unterart": "extern", "beschreibung": "Kreditbetrug durch gefälschte Identitäten bei unzureichender KYC-Prüfung.", "kontrollen": [ { "name": "PEP-/Sanktionsscreening Echtzeit", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "gwg", "beschreibung": "Verstoß gegen § 10 GwG durch unvollständige UBO-Erfassung.", "kontrollen": [ { "name": "KYC-Refresh mit UBO-Hard-Stop", "art": "präventiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Unterlassene FIU-Meldung gemäß § 43 GwG.", "kontrollen": [ { "name": "GwG-Officer-Review", "art": "detektiv", "typ": "manuell", "frequenz": "monatlich" } ] }
+        ]},
+        { "id": "a3", "name": "§18 KWG Bonitätsanalyse", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verstoß gegen § 18 KWG durch unzureichende Offenlegung.", "kontrollen": [ { "name": "Offenlegungs-Checkliste mit Hard-Stop", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "modell-risiko", "unterart": "modell", "beschreibung": "Fehlerhafte KDF-Berechnung durch falsche Cashflow-Annahmen.", "kontrollen": [ { "name": "Modellvalidierung und Vier-Augen-Plausibilisierung", "art": "detektiv", "typ": "manuell", "frequenz": "jaehrlich" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "human", "beschreibung": "Manuelle Übertragungsfehler bei Bilanzpositionen.", "kontrollen": [ { "name": "Automatischer Import mit Abstimmkontrolle", "art": "detektiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] }
+        ]},
+        { "id": "a4", "name": "Sicherheitenbewertung", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Überbewertung von Sicherheiten durch veraltete Gutachten.", "kontrollen": [ { "name": "Markt-Trigger und Revaluierungslauf (RA-SI-04)", "art": "detektiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "vertrag", "beschreibung": "Unwirksame Sicherheitenverträge durch formale Mängel.", "kontrollen": [ { "name": "Vertragsmuster-Freigabe Rechtsabteilung", "art": "präventiv", "typ": "manuell", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "modell-risiko", "unterart": "modell", "beschreibung": "Falsche Haircut-Ansätze gemäß CRR Art. 207 ff.", "kontrollen": [ { "name": "Haircut-Matrix-Versionierung mit Freigabe", "art": "präventiv", "typ": "hybrid", "frequenz": "quartalsweise" } ] }
+        ]},
+        { "id": "a5", "name": "Rating-Ermittlung", "risiken": [
+          { "kategorie": "modell-risiko", "unterart": "modell", "beschreibung": "Rating-Modell unzureichend validiert / Backtesting nicht dokumentiert.", "kontrollen": [ { "name": "Jährliche Modellvalidierung", "art": "detektiv", "typ": "manuell", "frequenz": "jaehrlich" } ] },
+          { "kategorie": "modell-risiko", "unterart": "ki", "beschreibung": "KI-gestütztes Rating verletzt EU-AI-Act-Anforderungen (Hochrisiko-KI).", "kontrollen": [ { "name": "EU-AI-Act-Konformitätscheck", "art": "präventiv", "typ": "manuell", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Ausfall des Rating-Systems verhindert rechtzeitige Einstufung.", "kontrollen": [ { "name": "Hochverfügbarkeits-Cluster mit Failover", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] }
+        ]},
+        { "id": "a6", "name": "Kreditentscheidung & Votum", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verstoß gegen MaRisk BTO 1.2 (fehlendes MF-Votum / Kompetenzüberschreitung).", "kontrollen": [ { "name": "Vier-Augen-Genehmigung Großkredite", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "human", "beschreibung": "Nicht offengelegte Interessenkonflikte bei Entscheidern.", "kontrollen": [ { "name": "Funktionstrennung und Interessenkonflikt-Erklärung", "art": "präventiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "reputations-risiko", "unterart": "kunde", "beschreibung": "Ablehnung ohne nachvollziehbare Begründung.", "kontrollen": [ { "name": "Beschwerdemanagement mit Quartalsreport", "art": "detektiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] }
+        ]},
+        { "id": "a7", "name": "Auszahlung & Buchung", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Auszahlung trotz unvollständiger Sicherheitenbestellung/Auflagen.", "kontrollen": [ { "name": "Conditions-Precedent-Checkliste mit Hard-Stop", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "finanzkriminalitaet", "unterart": "intern", "beschreibung": "Auszahlung auf eigenes/fremdes Konto (Veruntreuung).", "kontrollen": [ { "name": "6-Augen-Prinzip für sensible Auszahlungen", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Doppelauszahlung durch Systemfehler.", "kontrollen": [ { "name": "Tagesabschluss-Abstimmung und Duplikatserkennung", "art": "detektiv", "typ": "automatisch", "frequenz": "taeglich" } ] }
+        ]},
+        { "id": "a8", "name": "Laufende Überwachung", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verstoß gegen MaRisk BTO 1.2.2 (unzureichende laufende Überwachung).", "kontrollen": [ { "name": "MaRisk-Konformitäts-Review", "art": "detektiv", "typ": "manuell", "frequenz": "jaehrlich" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Frühwarnindikatoren werden zu spät eskaliert.", "kontrollen": [ { "name": "Automatisierte FWI-Auswertung mit Eskalation", "art": "detektiv", "typ": "automatisch", "frequenz": "taeglich" } ] },
+          { "kategorie": "modell-risiko", "unterart": "daten", "beschreibung": "Unvollständige/veraltete Daten in der Überwachungsplattform.", "kontrollen": [ { "name": "Stammdaten-QM und CDE-Inventar", "art": "detektiv", "typ": "hybrid", "frequenz": "monatlich" } ] }
+        ]}
+      ]
+    },
+    {
+      "id": "02-zahlungsverkehr-sepa-swift",
+      "dokumentId": "OH-ZV-2026-007",
+      "titel": "Operations-Handbuch SEPA- und SWIFT-Zahlungsverkehr",
+      "typ": "Operations-Handbuch",
+      "version": "6.0",
+      "pfad": "prozesse/02-zahlungsverkehr-sepa-swift.md",
+      "eigentuemer": "Bereichsleitung Payment Operations",
+      "prozess": { "id": "zahlungsverkehr", "name": "Zahlungsverkehr (SEPA/SWIFT)", "kategorie": "Operations", "beschreibung": "Bearbeitung eingehender und ausgehender Zahlungen über SEPA und SWIFT" },
+      "regulatorik": ["PSD2/ZAG", "VO (EU) 2024/886 (Instant Payments)", "VO (EU) 2015/847 (Travel Rule)", "EU-Sanktionsverordnungen", "GwG / § 25h KWG", "MaRisk AT 7.2/7.3/9", "DORA", "SWIFT CSCF v2026"],
+      "aktivitaeten": [
+        { "id": "c1", "name": "Auftragsannahme", "risiken": [
+          { "kategorie": "finanzkriminalitaet", "unterart": "extern", "beschreibung": "CEO-Fraud / Social Engineering durch manipulierte Zahlungsaufträge.", "kontrollen": [ { "name": "Telefon-Rückruf bei Großbeträgen ab 250 TEUR", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" }, { "name": "Verhaltensanalytik / Anti-Fraud-Scoring", "art": "detektiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "human", "beschreibung": "Falsche Auftragsannahme durch unzureichende Identifikation.", "kontrollen": [ { "name": "SCA-Authentifizierung und Identifikation (§ 13 GwG)", "art": "präventiv", "typ": "hybrid", "frequenz": "jede-transaktion" } ] }
+        ]},
+        { "id": "c2", "name": "Plausibilitätsprüfung", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Fehlerhafte IBAN/Beträge passieren ohne Plausibilitätsprüfung.", "kontrollen": [ { "name": "Automatisierte Plausibilisierung mit Hard-Stop", "art": "detektiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "finanzkriminalitaet", "unterart": "extern", "beschreibung": "Fake-Receiver-IBAN wird nicht erkannt.", "kontrollen": [ { "name": "Confirmation of Payee / Name-Matching", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] }
+        ]},
+        { "id": "c3", "name": "Embargo-/Sanktionsfilter", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "gwg", "beschreibung": "Verstoß gegen EU-Sanktionsverordnungen (Trefferunterdrückung / False Negative).", "kontrollen": [ { "name": "Empfänger-Sanktionscheck Echtzeit mit Hard-Stop", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" }, { "name": "GwG-Officer-Review der Treffer-Disposition", "art": "detektiv", "typ": "manuell", "frequenz": "monatlich" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Unvollständige Konfiguration der Sanktionslisten im Filter.", "kontrollen": [ { "name": "Listen-Update-Protokoll und Konfigurations-Review", "art": "detektiv", "typ": "hybrid", "frequenz": "taeglich" } ] }
+        ]},
+        { "id": "c4", "name": "Limitprüfung", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Limitsystem prüft nicht in Echtzeit, Überziehung möglich.", "kontrollen": [ { "name": "Echtzeit-Limitprüfung mit Hard-Stop", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "modell-risiko", "unterart": "daten", "beschreibung": "Veraltete Limit-Stammdaten in Konzernlimiten.", "kontrollen": [ { "name": "Stammdaten-QM der Limitparameter", "art": "detektiv", "typ": "hybrid", "frequenz": "monatlich" } ] }
+        ]},
+        { "id": "c5", "name": "Freigabe & Routing", "risiken": [
+          { "kategorie": "finanzkriminalitaet", "unterart": "intern", "beschreibung": "Umgehung des Vier-Augen-Prinzips durch Sammelbuchung/Stellvertretung.", "kontrollen": [ { "name": "Funktionstrennung (BMS) und 6-Augen für sensible Transaktionen", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Routing-Fehler führt zu doppeltem Versand.", "kontrollen": [ { "name": "Duplikatserkennung und Tagesabschluss-Abstimmung", "art": "detektiv", "typ": "automatisch", "frequenz": "taeglich" } ] }
+        ]},
+        { "id": "c6", "name": "Buchung & Reporting", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verspätete/unvollständige Meldungen an die Bundesbank (AWV/AnaCredit).", "kontrollen": [ { "name": "Reporting an BaFin/Bundesbank mit Vier-Augen-Freigabe", "art": "detektiv", "typ": "hybrid", "frequenz": "monatlich" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Hauptbuch und Subledger weichen voneinander ab.", "kontrollen": [ { "name": "Tägliche Nostro-/Subledger-Reconciliation", "art": "detektiv", "typ": "automatisch", "frequenz": "taeglich" } ] }
+        ]}
+      ]
+    },
+    {
+      "id": "03-wertpapierabwicklung-settlement",
+      "dokumentId": "PH-WP-2026-009",
+      "titel": "Prozesshandbuch Wertpapierabwicklung (Settlement)",
+      "typ": "Prozesshandbuch",
+      "version": "3.1",
+      "pfad": "prozesse/03-wertpapierabwicklung-settlement.md",
+      "eigentuemer": "Bereichsleitung Securities Operations",
+      "prozess": { "id": "wertpapierabwicklung", "name": "Wertpapierabwicklung (Settlement)", "kategorie": "Kapitalmarkt", "beschreibung": "Settlement-Prozess für Kunden- und Eigenhandelsgeschäfte im Wertpapiergeschäft" },
+      "regulatorik": ["CSDR (VO 909/2014) Art. 6/7", "RTS (EU) 2018/1229", "EMIR (VO 648/2012)", "MiFIR/MiFID II", "MaRisk BTO 2", "DORA"],
+      "aktivitaeten": [
+        { "id": "b1", "name": "Trade-Erfassung", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "human", "beschreibung": "Fat-Finger-Risiko bei Stückzahl, Kurs oder WKN/ISIN.", "kontrollen": [ { "name": "Eingabe-Plausibilisierung gegen Stammdaten", "art": "detektiv", "typ": "automatisch", "frequenz": "jede-transaktion" }, { "name": "Vier-Augen bei manuellen Trades über Schwelle", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verstoß gegen MiFID-II-Aufzeichnungs-/Zeitstempelpflichten.", "kontrollen": [ { "name": "Zeitstempel-Synchronisation und MiFIR-Feld-Check", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Front-Office-System fällt in aktiver Handelsphase aus.", "kontrollen": [ { "name": "Hochverfügbarkeits-Cluster mit Failover", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] }
+        ]},
+        { "id": "b2", "name": "Trade-Matching", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Unmatched Trades führen zu Settlement Fails (CSDR-Penalty).", "kontrollen": [ { "name": "Pre-Matching am Handelstag mit Ausnahme-Queue", "art": "präventiv", "typ": "hybrid", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Schnittstellenausfall Front-Office zu Matching.", "kontrollen": [ { "name": "Schnittstellen-Monitoring mit Alerting", "art": "detektiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "modell-risiko", "unterart": "daten", "beschreibung": "Inkonsistente Stammdaten (SSI) führen zu Fehlmatches.", "kontrollen": [ { "name": "SSI-Stammdaten-QM und CDE-Inventar", "art": "detektiv", "typ": "hybrid", "frequenz": "monatlich" } ] }
+        ]},
+        { "id": "b3", "name": "Confirmation & Affirmation", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "EMIR/MiFIR-Reporting nicht innerhalb T+1.", "kontrollen": [ { "name": "Reporting-Überwachung mit Vier-Augen-Freigabe", "art": "detektiv", "typ": "hybrid", "frequenz": "taeglich" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Fehlerhafte XML-Generierung beim Confirmation-Versand.", "kontrollen": [ { "name": "Schema-Validierung vor Versand", "art": "detektiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] }
+        ]},
+        { "id": "b4", "name": "Settlement-Instruktion", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Falsche/verspätete Settlement-Instruktion führt zu Fail.", "kontrollen": [ { "name": "SSI-Konsistenz-/Deckungsprüfung mit Vier-Augen", "art": "präventiv", "typ": "hybrid", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "auslagerungs-risiko", "unterart": "dienstleister", "beschreibung": "Custodian verarbeitet Instruktionen verspätet/fehlerhaft.", "kontrollen": [ { "name": "Custodian-SLA-Monitoring mit Eskalation", "art": "detektiv", "typ": "automatisch", "frequenz": "monatlich" } ] }
+        ]},
+        { "id": "b5", "name": "Cash- und Stückeabwicklung", "risiken": [
+          { "kategorie": "finanzkriminalitaet", "unterart": "cyber", "beschreibung": "Manipulation der Settlement-Instruktion durch Phishing/Account Takeover.", "kontrollen": [ { "name": "Multifaktor-Authentifizierung und Freigabe-Härtung", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Verstoß gegen CSDR Settlement-Discipline-Regime.", "kontrollen": [ { "name": "Fails-/Penalty-Monitoring und Buy-in-Trigger", "art": "detektiv", "typ": "hybrid", "frequenz": "taeglich" } ] }
+        ]},
+        { "id": "b6", "name": "Reconciliation", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Nicht abgestimmte Positionen verzerren GuV/Bilanz.", "kontrollen": [ { "name": "Tägliche Nostro-/Depot-Reconciliation", "art": "detektiv", "typ": "automatisch", "frequenz": "taeglich" } ] },
+          { "kategorie": "modell-risiko", "unterart": "daten", "beschreibung": "Inkonsistenzen Nostro vs. Custodian bleiben unentdeckt.", "kontrollen": [ { "name": "Abweichungs-Reporting mit Schwellenwert-Eskalation", "art": "detektiv", "typ": "hybrid", "frequenz": "taeglich" } ] }
+        ]}
+      ]
+    },
+    {
+      "id": "04-schadenmanagement-komposit",
+      "dokumentId": "FH-SCH-2026-021",
+      "titel": "Fachhandbuch Schadenmanagement Komposit (Sach-/Haftpflicht)",
+      "typ": "Fachhandbuch",
+      "version": "5.0",
+      "pfad": "prozesse/04-schadenmanagement-komposit.md",
+      "eigentuemer": "Bereichsleitung Schaden/Leistung Komposit",
+      "prozess": { "id": "antragsmanagement", "name": "Schadenmanagement (Versicherung)", "kategorie": "Versicherung", "beschreibung": "Bearbeitung von Schadenfällen in der Sach-/Haftpflichtversicherung" },
+      "regulatorik": ["VVG", "VAG", "IDD / DVO (EU) 2017/2358", "Solvency II", "HGB § 341e ff.", "DSGVO", "GwG"],
+      "aktivitaeten": [
+        { "id": "d1", "name": "Schadenmeldung", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Schadenmeldung wird nicht korrekt angelegt oder geht verloren.", "kontrollen": [ { "name": "Zentrale Schadenanlage mit Pflichtfeldern", "art": "präventiv", "typ": "hybrid", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verstoß gegen IDD-Vorgaben zur Erstinformation.", "kontrollen": [ { "name": "Standardisierte Erstinformation mit Fristen-Monitoring", "art": "detektiv", "typ": "hybrid", "frequenz": "jede-transaktion" } ] }
+        ]},
+        { "id": "d2", "name": "Deckungsprüfung", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "human", "beschreibung": "Falsche Deckungsprüfung führt zu unberechtigten Regulierungen/Ablehnungen.", "kontrollen": [ { "name": "Deckungs-Checkliste und Vier-Augen ab Schwelle", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "reputations-risiko", "unterart": "kunde", "beschreibung": "Unklare Ablehnungskommunikation erhöht Beschwerden.", "kontrollen": [ { "name": "Beschwerdemanagement mit Quartalsreport", "art": "detektiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] }
+        ]},
+        { "id": "d3", "name": "Schadenermittlung", "risiken": [
+          { "kategorie": "finanzkriminalitaet", "unterart": "extern", "beschreibung": "Versicherungsbetrug durch gefälschte Belege oder kollusive Gutachter.", "kontrollen": [ { "name": "Betrugs-Screening (regelbasiert + ML) mit SIU-Übergabe", "art": "detektiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "auslagerungs-risiko", "unterart": "dienstleister", "beschreibung": "Gutachter erfüllt SLA bei Bearbeitungszeit nicht.", "kontrollen": [ { "name": "SLA-Monitoring der Schadensteuerung", "art": "detektiv", "typ": "automatisch", "frequenz": "monatlich" } ] }
+        ]},
+        { "id": "d4", "name": "Reservebildung", "risiken": [
+          { "kategorie": "modell-risiko", "unterart": "modell", "beschreibung": "Unter-/Überdotierung der Reserven verstößt gegen Solvency II.", "kontrollen": [ { "name": "Reservierungsmethodik mit aktuarieller Plausibilisierung", "art": "detektiv", "typ": "hybrid", "frequenz": "monatlich" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verstoß gegen Rückstellungspflichten nach HGB § 341e.", "kontrollen": [ { "name": "Modellvalidierung der Reservierungsmodelle", "art": "detektiv", "typ": "manuell", "frequenz": "jaehrlich" } ] }
+        ]},
+        { "id": "d5", "name": "Regulierungsentscheidung", "risiken": [
+          { "kategorie": "finanzkriminalitaet", "unterart": "intern", "beschreibung": "Manipulation der Regulierung zugunsten verbundener Personen.", "kontrollen": [ { "name": "Funktionstrennung und 6-Augen für sensible Fälle", "art": "präventiv", "typ": "manuell", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "reputations-risiko", "unterart": "kunde", "beschreibung": "Inkonsistente Regulierungspraxis führt zu öffentlicher Kritik.", "kontrollen": [ { "name": "Stichprobenprüfung der Regulierungsqualität", "art": "detektiv", "typ": "manuell", "frequenz": "quartalsweise" } ] }
+        ]},
+        { "id": "d6", "name": "Auszahlung", "risiken": [
+          { "kategorie": "finanzkriminalitaet", "unterart": "intern", "beschreibung": "Auszahlung auf falsches Konto durch Manipulation/Identitätsdiebstahl.", "kontrollen": [ { "name": "Rückverifikation geänderter Bankverbindungen + Sperrlogik", "art": "präventiv", "typ": "hybrid", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Doppelauszahlung durch Systemfehler.", "kontrollen": [ { "name": "Duplikatserkennung und Tagesabschluss-Abstimmung", "art": "detektiv", "typ": "automatisch", "frequenz": "taeglich" } ] }
+        ]},
+        { "id": "d7", "name": "Regress & Subrogation", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "vertrag", "beschreibung": "Verjährung der Regressansprüche durch verspätete Geltendmachung.", "kontrollen": [ { "name": "Fristen-/Wiedervorlage-Management mit Eskalation", "art": "präventiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Regressquote unterhalb Benchmark, Erlöslücke unerklärt.", "kontrollen": [ { "name": "Regress-Monitoring und Ursachenanalyse", "art": "detektiv", "typ": "manuell", "frequenz": "quartalsweise" } ] }
+        ]}
+      ]
+    },
+    {
+      "id": "05-transaktionsmonitoring-aml",
+      "dokumentId": "RL-AML-2026-003",
+      "titel": "Richtlinie Geldwäscheprävention und Transaktionsmonitoring",
+      "typ": "Richtlinie",
+      "version": "7.0",
+      "pfad": "prozesse/05-transaktionsmonitoring-aml.md",
+      "eigentuemer": "Geldwäschebeauftragter (MLRO)",
+      "prozess": { "id": "transaktionsmonitoring", "name": "Geldwäsche-Transaktionsmonitoring", "kategorie": "Compliance / Financial Crime", "beschreibung": "Szenariobasiertes Transaktionsmonitoring, Verdachtsfallbearbeitung und Sanktions-Screening" },
+      "regulatorik": ["GwG §§ 4–15/§ 43/§ 47", "KWG § 25h", "EU-Sanktionsverordnungen", "VO (EU) 2015/847", "BaFin-AuA", "MaRisk AT 4.3", "DSGVO"],
+      "aktivitaeten": [
+        { "id": "e1", "name": "Alert-Generierung", "risiken": [
+          { "kategorie": "modell-risiko", "unterart": "modell", "beschreibung": "Lückenhafte/veraltete Szenarien erzeugen False Negatives.", "kontrollen": [ { "name": "Szenario-Governance mit Backtesting und Above/Below-the-Line", "art": "detektiv", "typ": "hybrid", "frequenz": "quartalsweise" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Ausfall/verspäteter Datenfeed des Monitoring-Systems.", "kontrollen": [ { "name": "Feed-/Job-Monitoring mit Vollständigkeitskontrolle", "art": "detektiv", "typ": "automatisch", "frequenz": "taeglich" } ] },
+          { "kategorie": "modell-risiko", "unterart": "daten", "beschreibung": "Unvollständige Transaktions-/Stammdaten führen zu falschen Alerts.", "kontrollen": [ { "name": "Datenqualitäts-QM auf Critical Data Elements", "art": "detektiv", "typ": "hybrid", "frequenz": "monatlich" } ] }
+        ]},
+        { "id": "e2", "name": "Alert-Triage (1st Level)", "risiken": [
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Fehlerhafte Vorqualifizierung schließt echte Verdachtsfälle vorschnell.", "kontrollen": [ { "name": "Vier-Augen-Stichprobe geschlossener Alerts", "art": "detektiv", "typ": "manuell", "frequenz": "monatlich" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "human", "beschreibung": "Alert-Backlog durch Unterkapazität verzögert Bearbeitung über Fristen.", "kontrollen": [ { "name": "Backlog-/SLA-Monitoring mit Eskalation", "art": "detektiv", "typ": "automatisch", "frequenz": "taeglich" } ] }
+        ]},
+        { "id": "e3", "name": "Fallbearbeitung / Investigation", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "gwg", "beschreibung": "Unzureichende EDD bei erhöhtem Risiko (§ 15 GwG).", "kontrollen": [ { "name": "EDD-Checkliste und MLRO-Review", "art": "präventiv", "typ": "manuell", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "dsgvo", "beschreibung": "Unzulässige Verarbeitung personenbezogener Daten in der Investigation.", "kontrollen": [ { "name": "Verarbeitungsverzeichnis und Zugriffsbeschränkung", "art": "präventiv", "typ": "hybrid", "frequenz": "jaehrlich" } ] }
+        ]},
+        { "id": "e4", "name": "Verdachtsmeldung (FIU/goAML)", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Unterlassene/verspätete Verdachtsmeldung gemäß § 43 GwG.", "kontrollen": [ { "name": "Melde-Workflow mit Fristenüberwachung und MLRO-Freigabe", "art": "präventiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verstoß gegen das Tipping-off-Verbot (§ 47 GwG).", "kontrollen": [ { "name": "Zugriffs-/Vertraulichkeitskontrollen und Schulung", "art": "präventiv", "typ": "hybrid", "frequenz": "jaehrlich" } ] }
+        ]},
+        { "id": "e5", "name": "Sanktions- & Embargo-Screening", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "gwg", "beschreibung": "Echter Sanktionstreffer wird nicht erkannt/unterdrückt (False Negative).", "kontrollen": [ { "name": "Echtzeit-Screening mit Hard-Stop und unabhängiger Disposition", "art": "präventiv", "typ": "automatisch", "frequenz": "jede-transaktion" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Massenhaft False Positives binden Kapazität.", "kontrollen": [ { "name": "Match-Schwellen-Tuning mit Qualitätsmonitoring", "art": "detektiv", "typ": "hybrid", "frequenz": "quartalsweise" } ] }
+        ]},
+        { "id": "e6", "name": "Qualitätssicherung & Modellgüte", "risiken": [
+          { "kategorie": "modell-risiko", "unterart": "modell", "beschreibung": "Schwellenwerte nicht validiert; Modell-Drift bleibt unentdeckt.", "kontrollen": [ { "name": "Modellvalidierung und Out-of-Time-Tests (unabhängig)", "art": "detektiv", "typ": "hybrid", "frequenz": "jaehrlich" } ] },
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Unzureichende Dokumentation der Wirksamkeit (§ 25h KWG / MaRisk).", "kontrollen": [ { "name": "QS-Reporting an MLRO und Operational Risk Committee", "art": "detektiv", "typ": "manuell", "frequenz": "quartalsweise" } ] }
+        ]}
+      ]
+    },
+    {
+      "id": "06-auslagerungsmanagement-dora",
+      "dokumentId": "RL-AUS-2026-005",
+      "titel": "Auslagerungs- und IKT-Drittparteienrichtlinie (DORA)",
+      "typ": "Richtlinie",
+      "version": "2.0",
+      "pfad": "prozesse/06-auslagerungsmanagement-dora.md",
+      "eigentuemer": "Zentraler Auslagerungsbeauftragter",
+      "prozess": { "id": "auslagerungsmanagement", "name": "Auslagerungs- und IKT-Drittparteienmanagement", "kategorie": "Auslagerung / DORA", "beschreibung": "Steuerung von Auslagerungen und IKT-Drittdienstleistungen über den gesamten Lebenszyklus" },
+      "regulatorik": ["DORA (VO 2022/2554) Art. 19/28/29/30", "MaRisk AT 9", "EBA/GL/2019/02", "KWG § 25b"],
+      "aktivitaeten": [
+        { "id": "f1", "name": "Identifikation & Wesentlichkeitsbewertung", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Fehlklassifizierung umgeht DORA-/MaRisk-Pflichten.", "kontrollen": [ { "name": "Standardisiertes Klassifizierungs-Assessment mit Plausibilisierung", "art": "präventiv", "typ": "manuell", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "auslagerungs-risiko", "unterart": "dienstleister", "beschreibung": "Kritikalität zu niedrig eingestuft, Steuerungstiefe unzureichend.", "kontrollen": [ { "name": "Jährliches Re-Assessment der Wesentlichkeit", "art": "detektiv", "typ": "manuell", "frequenz": "jaehrlich" } ] }
+        ]},
+        { "id": "f2", "name": "Due Diligence & Risikoanalyse", "risiken": [
+          { "kategorie": "auslagerungs-risiko", "unterart": "dienstleister", "beschreibung": "Mangelnde Eignung/Informationssicherheit des Anbieters bleibt unentdeckt.", "kontrollen": [ { "name": "Dienstleister-Risiko-Assessment inkl. Vor-Ort-Audit", "art": "präventiv", "typ": "manuell", "frequenz": "jaehrlich" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "system", "beschreibung": "Unzureichende Resilienz/Recovery-Fähigkeit des Anbieters.", "kontrollen": [ { "name": "Nachweis BCM-/DR-Tests und Resilienz-Kennzahlen", "art": "detektiv", "typ": "hybrid", "frequenz": "jaehrlich" } ] }
+        ]},
+        { "id": "f3", "name": "Vertragsgestaltung (DORA-Pflichtklauseln)", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "vertrag", "beschreibung": "Vertrag enthält nicht alle DORA-Pflichtinhalte (Art. 30).", "kontrollen": [ { "name": "Vertragsmuster-Freigabe mit DORA-Klausel-Checkliste", "art": "präventiv", "typ": "manuell", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "auslagerungs-risiko", "unterart": "exit", "beschreibung": "Fehlende Exit-/Datenrückgaberegelungen erschweren die Rückführung.", "kontrollen": [ { "name": "Pflicht-Exit-Klausel und Abweichungs-Check vor Abschluss", "art": "detektiv", "typ": "manuell", "frequenz": "anlassbezogen" } ] }
+        ]},
+        { "id": "f4", "name": "Onboarding & Informationsregister", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Unvollständiges/veraltetes Informationsregister (DORA Art. 28).", "kontrollen": [ { "name": "Register-Pflichtfelder mit periodischem Vollständigkeits-Review", "art": "detektiv", "typ": "hybrid", "frequenz": "quartalsweise" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Fehlerhaftes Berechtigungs-/Schnittstellen-Setup beim Onboarding.", "kontrollen": [ { "name": "Onboarding-Checkliste mit Vier-Augen-Abnahme", "art": "präventiv", "typ": "manuell", "frequenz": "anlassbezogen" } ] }
+        ]},
+        { "id": "f5", "name": "Laufende Überwachung & SLA-Monitoring", "risiken": [
+          { "kategorie": "auslagerungs-risiko", "unterart": "dienstleister", "beschreibung": "Schlechte SLA-Erfüllung wird nicht erkannt/eskaliert.", "kontrollen": [ { "name": "Automatisiertes SLA-/KPI-Monitoring mit Eskalation", "art": "detektiv", "typ": "automatisch", "frequenz": "monatlich" } ] },
+          { "kategorie": "auslagerungs-risiko", "unterart": "konzentration", "beschreibung": "Klumpenrisiko durch wenige/schwer ersetzbare Anbieter.", "kontrollen": [ { "name": "Konzentrationsanalyse mit Heatmap und Diversifikationsplan", "art": "detektiv", "typ": "manuell", "frequenz": "halbjaehrlich" } ] }
+        ]},
+        { "id": "f6", "name": "IKT-Vorfallsmanagement & Meldewesen", "risiken": [
+          { "kategorie": "compliance-risiko", "unterart": "regulatorik", "beschreibung": "Verspätete/unterlassene Meldung schwerwiegender IKT-Vorfälle (DORA Art. 19).", "kontrollen": [ { "name": "Vorfalls-Workflow mit Fristen-Trigger und Behörden-Meldung", "art": "präventiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] },
+          { "kategorie": "auslagerungs-risiko", "unterart": "dienstleister", "beschreibung": "Dienstleister informiert nicht rechtzeitig über eigene Vorfälle.", "kontrollen": [ { "name": "Vertragliche Informationspflicht mit Monitoring", "art": "detektiv", "typ": "hybrid", "frequenz": "anlassbezogen" } ] }
+        ]},
+        { "id": "f7", "name": "Exit-Management", "risiken": [
+          { "kategorie": "auslagerungs-risiko", "unterart": "exit", "beschreibung": "Fehlende/ungetestete Exit-Strategie verhindert geordnete Rückführung.", "kontrollen": [ { "name": "Dokumentierte und jährlich getestete Exit-Strategie mit Testat", "art": "präventiv", "typ": "manuell", "frequenz": "jaehrlich" } ] },
+          { "kategorie": "operationelles-risiko", "unterart": "prozess", "beschreibung": "Datenrückgabe/-löschung beim Exit unvollständig.", "kontrollen": [ { "name": "Exit-Checkliste mit Nachweis Datenrückgabe/-löschung", "art": "detektiv", "typ": "manuell", "frequenz": "anlassbezogen" } ] }
+        ]}
+      ]
+    }
+  ]
+}

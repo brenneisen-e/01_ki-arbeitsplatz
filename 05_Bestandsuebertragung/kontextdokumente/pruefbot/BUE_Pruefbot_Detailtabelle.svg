@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1344" height="812" font-family="Arial, sans-serif">
+<rect width="100%" height="100%" fill="white"/>
+<text x="40" y="40" font-size="20" font-weight="bold" fill="#046A38">Prüfschritte 6–16 — Detailbeschreibung (Blue-Prism-System-Prüfung; Schritt 9 VVR manuell)</text>
+<text x="40" y="60" font-size="13" fill="#53565A">Prüfschritte 1–5 (BÜ-Wunsch · MV formal &amp; inhaltlich · Pool/Untervollmacht · Unterschriften) liegen bereits im KI-Deckblatt vor. Schritt 9 (VVR) erfolgt am Ende als manuelle</text>
+<text x="40" y="77" font-size="13" fill="#53565A">Bestätigung (HITL), da Robots im Vermittlerregister nicht zulässig sind.</text>
+<rect x="40" y="108" width="1264" height="34" fill="#046A38"/>
+<text x="48" y="123" font-size="12.0" font-weight="bold" fill="white">Schritt</text>
+<text x="220" y="123" font-size="12.0" font-weight="bold" fill="white">Was wird geprüft?</text>
+<text x="532" y="123" font-size="12.0" font-weight="bold" fill="white">Quellsystem</text>
+<text x="728" y="123" font-size="12.0" font-weight="bold" fill="white">Ergebnis „Ja&quot; (Merkmal erfüllt)</text>
+<text x="1020" y="123" font-size="12.0" font-weight="bold" fill="white">Ergebnis „Nein&quot; (Merkmal nicht erfüllt)</text>
+<text x="48" y="161" font-size="12.0" font-weight="bold" fill="#046A38">6 · Vertrag aktiv?</text>
+<text x="220" y="161" font-size="11.0" font-weight="normal" fill="#1A1A1A">Ist der betroffene Vertrag noch in Bestand (nicht</text>
+<text x="220" y="175" font-size="11.0" font-weight="normal" fill="#1A1A1A">beendet / historisch)?</text>
+<text x="532" y="161" font-size="11.0" font-weight="normal" fill="#1A1A1A">Scout (Vertragsstatus /</text>
+<text x="532" y="175" font-size="11.0" font-weight="normal" fill="#1A1A1A">Beendigungsdatum) · SV001</text>
+<text x="532" y="189" font-size="11.0" font-weight="normal" fill="#1A1A1A">(KOM·LEB)</text>
+<text x="728" y="161" font-size="11.0" font-weight="normal" fill="#1d6b2f">Status „aktiv&quot; und kein Beendigungsdatum: BÜ</text>
+<text x="728" y="175" font-size="11.0" font-weight="normal" fill="#1d6b2f">ist möglich, der Vorgang läuft weiter.</text>
+<text x="1020" y="161" font-size="11.0" font-weight="normal" fill="#8a2b1f">Vertrag beendet oder historisch: Aussteuerung,</text>
+<text x="1020" y="175" font-size="11.0" font-weight="normal" fill="#8a2b1f">keine BÜ.</text>
+<line x1="40" y1="198" x2="1304" y2="198" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="40" y="198" width="1264" height="56" fill="#F4F7F4"/>
+<text x="48" y="217" font-size="12.0" font-weight="bold" fill="#046A38">7 · Vertrags-Identität</text>
+<text x="220" y="217" font-size="11.0" font-weight="normal" fill="#1A1A1A">Ist der Unterzeichner der MV der</text>
+<text x="220" y="231" font-size="11.0" font-weight="normal" fill="#1A1A1A">Versicherungsnehmer des Vertrags? (Abgleich</text>
+<text x="220" y="245" font-size="11.0" font-weight="normal" fill="#1A1A1A">Deckblatt-Name und System-VN)</text>
+<text x="532" y="217" font-size="11.0" font-weight="normal" fill="#1A1A1A">IS100 · Scout</text>
+<text x="728" y="217" font-size="11.0" font-weight="normal" fill="#1d6b2f">VN aus der MV stimmt mit dem System-VN</text>
+<text x="728" y="231" font-size="11.0" font-weight="normal" fill="#1d6b2f">überein, der Vorgang läuft weiter.</text>
+<text x="1020" y="217" font-size="11.0" font-weight="normal" fill="#8a2b1f">VN und Unterzeichner weichen ab: Klärung,</text>
+<text x="1020" y="231" font-size="11.0" font-weight="normal" fill="#8a2b1f">gegebenenfalls Aussteuerung.</text>
+<line x1="40" y1="254" x2="1304" y2="254" stroke="#C9CDD1" stroke-width="1"/>
+<text x="48" y="273" font-size="12.0" font-weight="bold" fill="#046A38">8 · Vermittler-Status &amp;</text>
+<text x="48" y="287" font-size="12.0" font-weight="bold" fill="#046A38">Bestandstyp</text>
+<text x="220" y="273" font-size="11.0" font-weight="normal" fill="#1A1A1A">Ist der Vermittler systemseitig Makler / Koop /</text>
+<text x="220" y="287" font-size="11.0" font-weight="normal" fill="#1A1A1A">MFA / AO – oder Sonderbestand (Mitarbeiter / Eigen</text>
+<text x="220" y="301" font-size="11.0" font-weight="normal" fill="#1A1A1A">/ Gruppe KV180 / bKV)?</text>
+<text x="532" y="273" font-size="11.0" font-weight="normal" fill="#1A1A1A">OB726 · OB510 · KV050 (KV) /</text>
+<text x="532" y="287" font-size="11.0" font-weight="normal" fill="#1A1A1A">VA210 (KOM·LEB)</text>
+<text x="728" y="273" font-size="11.0" font-weight="normal" fill="#1d6b2f">Makler bzw. MFA und kein Sonderbestand, der</text>
+<text x="728" y="287" font-size="11.0" font-weight="normal" fill="#1d6b2f">Vorgang läuft weiter.</text>
+<text x="1020" y="273" font-size="11.0" font-weight="normal" fill="#8a2b1f">Sonderbestand: fallspezifische, manuelle</text>
+<text x="1020" y="287" font-size="11.0" font-weight="normal" fill="#8a2b1f">Bearbeitung.</text>
+<line x1="40" y1="310" x2="1304" y2="310" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="40" y="310" width="1264" height="56" fill="#F4F7F4"/>
+<text x="48" y="329" font-size="12.0" font-weight="bold" fill="#046A38">9 · Untermakler im VVR</text>
+<text x="48" y="343" font-size="12.0" font-weight="bold" fill="#046A38">(manuell · HITL · v.a.</text>
+<text x="48" y="357" font-size="12.0" font-weight="bold" fill="#046A38">KV-Fall)</text>
+<text x="220" y="329" font-size="11.0" font-weight="normal" fill="#1A1A1A">Ist der Untermakler im Vermittlerregister als</text>
+<text x="220" y="343" font-size="11.0" font-weight="normal" fill="#1A1A1A">Makler eingetragen? (Robots laut VVR-AGB nicht</text>
+<text x="220" y="357" font-size="11.0" font-weight="normal" fill="#1A1A1A">erlaubt, daher manuell am Ende)</text>
+<text x="532" y="329" font-size="11.0" font-weight="normal" fill="#1A1A1A">VVR (extern, keine API):</text>
+<text x="532" y="343" font-size="11.0" font-weight="normal" fill="#1A1A1A">manuelle Prüfung durch SB;</text>
+<text x="532" y="357" font-size="11.0" font-weight="normal" fill="#1A1A1A">ggf. Großmakler-Whitelist</text>
+<text x="728" y="329" font-size="11.0" font-weight="normal" fill="#1d6b2f">Im VVR als Makler geführt oder auf der</text>
+<text x="728" y="343" font-size="11.0" font-weight="normal" fill="#1d6b2f">Whitelist: der Sachbearbeiter bestätigt</text>
+<text x="728" y="357" font-size="11.0" font-weight="normal" fill="#1d6b2f">(klickt OK).</text>
+<text x="1020" y="329" font-size="11.0" font-weight="normal" fill="#8a2b1f">Nicht als Makler eingetragen: Klärung oder</text>
+<text x="1020" y="343" font-size="11.0" font-weight="normal" fill="#8a2b1f">Ablehnung.</text>
+<line x1="40" y1="366" x2="1304" y2="366" stroke="#C9CDD1" stroke-width="1"/>
+<text x="48" y="385" font-size="12.0" font-weight="bold" fill="#046A38">10 · Hinterlegte MV /</text>
+<text x="48" y="399" font-size="12.0" font-weight="bold" fill="#046A38">VA250</text>
+<text x="48" y="413" font-size="12.0" font-weight="bold" fill="#046A38">(situativ)</text>
+<text x="220" y="385" font-size="11.0" font-weight="normal" fill="#1A1A1A">Ist bereits eine andere / ältere MV hinterlegt</text>
+<text x="220" y="399" font-size="11.0" font-weight="normal" fill="#1A1A1A">oder ein Vermittler zu bereinigen?</text>
+<text x="532" y="385" font-size="11.0" font-weight="normal" fill="#1A1A1A">VA250 (LEB) · PDB (KV)</text>
+<text x="728" y="385" font-size="11.0" font-weight="normal" fill="#1d6b2f">Keine konkurrierende MV und saubere</text>
+<text x="728" y="399" font-size="11.0" font-weight="normal" fill="#1d6b2f">Hinterlegung, der Vorgang läuft weiter.</text>
+<text x="1020" y="385" font-size="11.0" font-weight="normal" fill="#8a2b1f">Ältere oder andere MV bzw. zu löschender</text>
+<text x="1020" y="399" font-size="11.0" font-weight="normal" fill="#8a2b1f">Eintrag: manuelle VA250-Bereinigung.</text>
+<line x1="40" y1="422" x2="1304" y2="422" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="40" y="422" width="1264" height="42" fill="#F4F7F4"/>
+<text x="48" y="441" font-size="12.0" font-weight="bold" fill="#046A38">11 · Widerruf-Check</text>
+<text x="48" y="455" font-size="12.0" font-weight="bold" fill="#046A38">(situativ)</text>
+<text x="220" y="441" font-size="11.0" font-weight="normal" fill="#1A1A1A">Liegt ein Kunden- / Makler-Widerruf zur VNR oder</text>
+<text x="220" y="455" font-size="11.0" font-weight="normal" fill="#1A1A1A">ein widersprüchlicher Verbund vor?</text>
+<text x="532" y="441" font-size="11.0" font-weight="normal" fill="#1A1A1A">Scout · Image/Jadice</text>
+<text x="728" y="441" font-size="11.0" font-weight="normal" fill="#1d6b2f">Kein Widerruf und kein Widerspruch, der</text>
+<text x="728" y="455" font-size="11.0" font-weight="normal" fill="#1d6b2f">Vorgang läuft weiter.</text>
+<text x="1020" y="441" font-size="11.0" font-weight="normal" fill="#8a2b1f">Widerruf oder Widerspruch vorhanden: BÜ</text>
+<text x="1020" y="455" font-size="11.0" font-weight="normal" fill="#8a2b1f">abbrechen, Aussteuerung.</text>
+<line x1="40" y1="464" x2="1304" y2="464" stroke="#C9CDD1" stroke-width="1"/>
+<text x="48" y="483" font-size="12.0" font-weight="bold" fill="#046A38">12 · Umfang &amp; weitere</text>
+<text x="48" y="497" font-size="12.0" font-weight="bold" fill="#046A38">Verträge / VNRs</text>
+<text x="220" y="483" font-size="11.0" font-weight="normal" fill="#1A1A1A">Umfang des BÜ-Wunschs: einzelne VNR oder gesamte</text>
+<text x="220" y="497" font-size="11.0" font-weight="normal" fill="#1A1A1A">Kundenverbindung? Weitere VNRs / Verbünde des</text>
+<text x="220" y="511" font-size="11.0" font-weight="normal" fill="#1A1A1A">Kunden (Mehrfach-Verbund)? Alle auf dieselbe</text>
+<text x="220" y="525" font-size="11.0" font-weight="normal" fill="#1A1A1A">Agenturnummer?</text>
+<text x="532" y="483" font-size="11.0" font-weight="normal" fill="#1A1A1A">Scout (Außendienstübersicht)</text>
+<text x="728" y="483" font-size="11.0" font-weight="normal" fill="#1d6b2f">Gesamte Kundenverbindung gewünscht oder</text>
+<text x="728" y="497" font-size="11.0" font-weight="normal" fill="#1d6b2f">weitere VNRs vorhanden: der Bot ermittelt alle</text>
+<text x="728" y="511" font-size="11.0" font-weight="normal" fill="#1d6b2f">Verträge / VNRs / Verbünde des Kunden und</text>
+<text x="728" y="525" font-size="11.0" font-weight="normal" fill="#1d6b2f">durchläuft die Prüfung 6–16 je Vertrag</text>
+<text x="728" y="539" font-size="11.0" font-weight="normal" fill="#1d6b2f">(gleiche AGT).</text>
+<text x="1020" y="483" font-size="11.0" font-weight="normal" fill="#8a2b1f">Nur die genannte VNR gewünscht und keine</text>
+<text x="1020" y="497" font-size="11.0" font-weight="normal" fill="#8a2b1f">weiteren Verbünde: nur dieser Vorgang.</text>
+<line x1="40" y1="548" x2="1304" y2="548" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="40" y="548" width="1264" height="56" fill="#F4F7F4"/>
+<text x="48" y="567" font-size="12.0" font-weight="bold" fill="#046A38">13 · Agenturnummer</text>
+<text x="48" y="581" font-size="12.0" font-weight="bold" fill="#046A38">aktiv?</text>
+<text x="220" y="567" font-size="11.0" font-weight="normal" fill="#1A1A1A">Ist die genannte AGT aktiv (inkl. „alte&quot; AgNr vor</text>
+<text x="220" y="581" font-size="11.0" font-weight="normal" fill="#1A1A1A">ZAV), Stammdaten korrekt, als Makler / MfA</text>
+<text x="220" y="595" font-size="11.0" font-weight="normal" fill="#1A1A1A">angebunden?</text>
+<text x="532" y="567" font-size="11.0" font-weight="normal" fill="#1A1A1A">OB726 · OB510 · OB735</text>
+<text x="532" y="581" font-size="11.0" font-weight="normal" fill="#1A1A1A">(Bot-Sicht)</text>
+<text x="728" y="567" font-size="11.0" font-weight="normal" fill="#1d6b2f">AGT aktiv und angebunden: Übertrag auf diese</text>
+<text x="728" y="581" font-size="11.0" font-weight="normal" fill="#1d6b2f">AGT.</text>
+<text x="1020" y="567" font-size="11.0" font-weight="normal" fill="#8a2b1f">AGT inaktiv oder Zahlendreher: Übertrag auf</text>
+<text x="1020" y="581" font-size="11.0" font-weight="normal" fill="#8a2b1f">unbesetzte AGT bzw. Klärung.</text>
+<line x1="40" y1="604" x2="1304" y2="604" stroke="#C9CDD1" stroke-width="1"/>
+<text x="48" y="623" font-size="12.0" font-weight="bold" fill="#046A38">14 · Rahmenvertrag /</text>
+<text x="48" y="637" font-size="12.0" font-weight="bold" fill="#046A38">BÜ-Sperre</text>
+<text x="48" y="651" font-size="12.0" font-weight="bold" fill="#046A38">(situativ · KOM·LEB)</text>
+<text x="220" y="623" font-size="11.0" font-weight="normal" fill="#1A1A1A">Liegt eine BÜ-Sperre via Rahmenvertrag /</text>
+<text x="220" y="637" font-size="11.0" font-weight="normal" fill="#1A1A1A">Sonderkondition (z. B. Rechtsschutz) vor?</text>
+<text x="532" y="623" font-size="11.0" font-weight="normal" fill="#1A1A1A">Scout (Versicherungsart) ·</text>
+<text x="532" y="637" font-size="11.0" font-weight="normal" fill="#1A1A1A">SV001 (Feld „BÜ möglich&quot;)</text>
+<text x="728" y="623" font-size="11.0" font-weight="normal" fill="#1d6b2f">Keine Sperre und „BÜ möglich&quot; ist gesetzt, der</text>
+<text x="728" y="637" font-size="11.0" font-weight="normal" fill="#1d6b2f">Vorgang läuft weiter.</text>
+<text x="1020" y="623" font-size="11.0" font-weight="normal" fill="#8a2b1f">Sperre vorhanden oder unklar: Rücksprache mit</text>
+<text x="1020" y="637" font-size="11.0" font-weight="normal" fill="#8a2b1f">der Sparte, gegebenenfalls Ablehnung.</text>
+<line x1="40" y1="660" x2="1304" y2="660" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="40" y="660" width="1264" height="42" fill="#F4F7F4"/>
+<text x="48" y="679" font-size="12.0" font-weight="bold" fill="#046A38">15 · Provisionshaftung</text>
+<text x="220" y="679" font-size="11.0" font-weight="normal" fill="#1A1A1A">Liegt eine offene Provisionshaftung</text>
+<text x="220" y="693" font-size="11.0" font-weight="normal" fill="#1A1A1A">(Vorvermittler) vor, die der BÜ entgegensteht?</text>
+<text x="532" y="679" font-size="11.0" font-weight="normal" fill="#1A1A1A">KV050 (KV · manuell SB) ·</text>
+<text x="532" y="693" font-size="11.0" font-weight="normal" fill="#1A1A1A">BÜ-Bot (LEB)</text>
+<text x="728" y="679" font-size="11.0" font-weight="normal" fill="#1d6b2f">Keine offene Haftung, der Vorgang läuft</text>
+<text x="728" y="693" font-size="11.0" font-weight="normal" fill="#1d6b2f">weiter.</text>
+<text x="1020" y="679" font-size="11.0" font-weight="normal" fill="#8a2b1f">Offene Haftung: Übertragung nicht möglich,</text>
+<text x="1020" y="693" font-size="11.0" font-weight="normal" fill="#8a2b1f">Routing gemäß Richtlinie.</text>
+<line x1="40" y1="702" x2="1304" y2="702" stroke="#C9CDD1" stroke-width="1"/>
+<text x="48" y="721" font-size="12.0" font-weight="bold" fill="#046A38">16 ·</text>
+<text x="48" y="735" font-size="12.0" font-weight="bold" fill="#046A38">Korrespondenzadresse</text>
+<text x="48" y="749" font-size="12.0" font-weight="bold" fill="#046A38">Makler</text>
+<text x="48" y="763" font-size="12.0" font-weight="bold" fill="#046A38">(KOM·LEB)</text>
+<text x="220" y="721" font-size="11.0" font-weight="normal" fill="#1A1A1A">Korrespondenz- / Mailadresse des Maklers für das</text>
+<text x="220" y="735" font-size="11.0" font-weight="normal" fill="#1A1A1A">Bot-Ausgangsschreiben ermitteln</text>
+<text x="532" y="721" font-size="11.0" font-weight="normal" fill="#1A1A1A">OB729 (via OB510 / PF20) ·</text>
+<text x="532" y="735" font-size="11.0" font-weight="normal" fill="#1A1A1A">DiOrg/SAP (Backup)</text>
+<text x="728" y="721" font-size="11.0" font-weight="normal" fill="#1d6b2f">Adresse ermittelt, sie wird für die</text>
+<text x="728" y="735" font-size="11.0" font-weight="normal" fill="#1d6b2f">Maklerinformation verwendet.</text>
+<text x="1020" y="721" font-size="11.0" font-weight="normal" fill="#8a2b1f">Keine Adresse in OB729: Backup über DiOrg/SAP</text>
+<text x="1020" y="735" font-size="11.0" font-weight="normal" fill="#8a2b1f">(KV: Mail über Kontext).</text>
+<line x1="40" y1="772" x2="1304" y2="772" stroke="#C9CDD1" stroke-width="1"/>
+<line x1="40" y1="108" x2="40" y2="772" stroke="#C9CDD1" stroke-width="1"/>
+<line x1="212" y1="108" x2="212" y2="772" stroke="#C9CDD1" stroke-width="1"/>
+<line x1="524" y1="108" x2="524" y2="772" stroke="#C9CDD1" stroke-width="1"/>
+<line x1="720" y1="108" x2="720" y2="772" stroke="#C9CDD1" stroke-width="1"/>
+<line x1="1012" y1="108" x2="1012" y2="772" stroke="#C9CDD1" stroke-width="1"/>
+<line x1="1304" y1="108" x2="1304" y2="772" stroke="#C9CDD1" stroke-width="1"/>
+<rect x="40" y="108" width="1264" height="664" fill="none" stroke="#53565A" stroke-width="1.2"/>
+</svg>

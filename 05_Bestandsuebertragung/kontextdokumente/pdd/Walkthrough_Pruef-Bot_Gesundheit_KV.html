@@ -1,0 +1,466 @@
+<title>Prüf-Bot Walkthrough</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #FAF8F6; --panel: #FFFFFF; --panel-2: #F2EDEB; --line: #E3DBD8; --line-strong: #CFC3BF;
+    --ink: #1F1B1D; --ink-2: #5E5559; --ink-3: #8C8286;
+    --accent: #8B1A2B; --accent-ink: #FFFFFF; --accent-soft: #F6E4E7;
+    --hart: #B3261E; --hart-soft: #FBE7E5; --weich: #A56300; --weich-soft: #FFF1D6;
+    --ok: #2A7A4B; --ok-soft: #E1F3E7; --info: #3B5F8A; --info-soft: #E4EDF7;
+    --mono-bg: #F3EFED; --shadow: 0 1px 2px rgba(31,27,29,.06), 0 8px 24px -12px rgba(31,27,29,.18);
+    --focus: #8B1A2B;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1A1618; --panel: #221D1F; --panel-2: #2B2528; --line: #3A3235; --line-strong: #4C4246;
+      --ink: #EFE8EA; --ink-2: #B9AEB2; --ink-3: #8E8388;
+      --accent: #E0566B; --accent-ink: #1A1618; --accent-soft: #3A2228;
+      --hart: #F28B82; --hart-soft: #3D2321; --weich: #F0B429; --weich-soft: #3B3020;
+      --ok: #6CCB8A; --ok-soft: #1F3527; --info: #8FB4E3; --info-soft: #1F2C3C;
+      --mono-bg: #2B2528; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+      --focus: #E0566B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1A1618; --panel: #221D1F; --panel-2: #2B2528; --line: #3A3235; --line-strong: #4C4246;
+    --ink: #EFE8EA; --ink-2: #B9AEB2; --ink-3: #8E8388;
+    --accent: #E0566B; --accent-ink: #1A1618; --accent-soft: #3A2228;
+    --hart: #F28B82; --hart-soft: #3D2321; --weich: #F0B429; --weich-soft: #3B3020;
+    --ok: #6CCB8A; --ok-soft: #1F3527; --info: #8FB4E3; --info-soft: #1F2C3C;
+    --mono-bg: #2B2528; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    --focus: #E0566B;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 "IBM Plex Sans", "Segoe UI", Arial, sans-serif; }
+  code, .mono { font-family: "IBM Plex Mono", Consolas, monospace; font-size: .92em; }
+  code { background: var(--mono-bg); padding: .05em .35em; border-radius: 4px; color: var(--ink); white-space: nowrap; }
+  h1, h2, h3 { font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", Arial, sans-serif; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+  a { color: var(--accent); }
+  button { font: inherit; color: inherit; }
+  button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .top { border-bottom: 1px solid var(--line); background: var(--panel); }
+  .top-inner { max-width: 1280px; margin: 0 auto; padding: 18px 28px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: baseline; gap: 12px; }
+  .brand h1 { font-size: 22px; font-weight: 600; }
+  .brand .sub { color: var(--ink-2); font-size: 13px; }
+  .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  .scen { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .scen .eyebrow { margin-right: 4px; }
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px; background: var(--panel-2); }
+  .seg button { border: 0; background: transparent; border-radius: 999px; padding: 6px 14px; cursor: pointer; color: var(--ink-2); font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
+  .seg button .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .seg button[aria-pressed="true"] { background: var(--panel); color: var(--ink); box-shadow: var(--shadow); }
+  .seg button[data-s="A"] .dot { color: var(--ok); } .seg button[data-s="B"] .dot { color: var(--weich); } .seg button[data-s="C"] .dot { color: var(--hart); } .seg button[data-s="D"] .dot { color: var(--hart); }
+
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 24px 28px 48px; display: grid; grid-template-columns: 250px minmax(0,1fr) 300px; gap: 24px; align-items: start; }
+
+  /* Stepper */
+  .rail { position: sticky; top: 16px; }
+  .rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .rail li button { width: 100%; text-align: left; border: 0; background: transparent; padding: 8px 10px 8px 8px; border-radius: 8px; display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: center; cursor: pointer; color: var(--ink-2); }
+  .rail li button:hover { background: var(--panel-2); }
+  .rail li button[aria-current="step"] { background: var(--accent-soft); color: var(--ink); }
+  .rail .num { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-2); background: var(--panel); }
+  .rail li button[aria-current="step"] .num { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+  .rail .lbl { font-size: 13.5px; line-height: 1.3; font-weight: 500; }
+  .rail .lbl small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11.5px; margin-top: 1px; }
+  .rail li.skipped button { opacity: .45; }
+  .rail li.skipped .num { border-style: dashed; }
+  .rail li.reached-be .num { border-color: var(--hart); color: var(--hart); }
+  .rail li.reached-note .num { border-color: var(--weich); color: var(--weich); }
+  .rail li.reached-ok .num { border-color: var(--ok); color: var(--ok); }
+  .rail .phase { margin: 14px 0 6px 8px; }
+  .rail .phase:first-child { margin-top: 0; }
+  .legend { margin-top: 22px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); font-size: 12.5px; color: var(--ink-2); display: grid; gap: 8px; }
+  .legend .row { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+
+  /* Main */
+  .main { min-width: 0; }
+  .step-head { display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .step-head h2 { font-size: 30px; font-weight: 600; line-height: 1.1; }
+  .step-head .src { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid var(--line-strong); background: var(--panel); color: var(--ink-2); white-space: nowrap; }
+  .chip.sys { font-family: "IBM Plex Mono", monospace; font-weight: 500; }
+  .lead { font-size: 16.5px; max-width: 68ch; color: var(--ink); margin: 0 0 18px; }
+  .lead b { font-weight: 600; }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  .card + .card { margin-top: 16px; }
+  .card-h { padding: 12px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+  .card-h h3 { font-size: 15px; font-weight: 600; letter-spacing: 0; font-family: "IBM Plex Sans", sans-serif; }
+  .card-h .count { margin-left: auto; color: var(--ink-3); font-size: 12.5px; }
+  .card-b { padding: 6px 18px 14px; }
+
+  table.checks { width: 100%; border-collapse: collapse; }
+  table.checks th { text-align: left; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; padding: 10px 8px 6px 0; border-bottom: 1px solid var(--line); }
+  table.checks td { padding: 10px 8px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.checks tr:last-child td { border-bottom: 0; }
+  table.checks td.res { white-space: nowrap; width: 1%; padding-right: 0; }
+  table.checks td.what { width: 42%; }
+  table.checks .cond { color: var(--ink-2); font-size: 13.5px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px 3px 7px; border-radius: 6px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+  .pill::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: currentColor; }
+  .pill.hart { color: var(--hart); background: var(--hart-soft); }
+  .pill.weich { color: var(--weich); background: var(--weich-soft); }
+  .pill.ok { color: var(--ok); background: var(--ok-soft); }
+  .pill.info { color: var(--info); background: var(--info-soft); }
+  .pill.info::before { border-radius: 50%; }
+  tr.fired td { background: color-mix(in srgb, var(--panel-2) 60%, transparent); }
+  tr.fired td.what::before { content: "▸ "; color: var(--accent); }
+  .fired-note { font-size: 12.5px; color: var(--ink-2); margin-top: 4px; }
+  .fired-note b { color: var(--ink); font-weight: 600; }
+
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; padding: 14px 18px; }
+  .flow .node { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--panel-2); font-size: 13px; position: relative; }
+  .flow .node .eyebrow { margin-bottom: 4px; }
+  .flow .node.on { border-color: var(--accent); background: var(--accent-soft); }
+  .flow .node .v { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; word-break: break-word; }
+
+  .outcome { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px 18px; }
+  .outcome > div { border-radius: 10px; padding: 12px 14px; border: 1px solid var(--line); background: var(--panel-2); font-size: 13.5px; }
+  .outcome h4 { margin: 0 0 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .outcome .hart h4 { color: var(--hart); } .outcome .weich h4 { color: var(--weich); }
+
+  .nav { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+  .nav .prog { flex: 1; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .nav .prog i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .25s ease; }
+  .btn { border: 1px solid var(--line-strong); background: var(--panel); border-radius: 8px; padding: 9px 16px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn:disabled { opacity: .4; cursor: default; }
+  .kbd { color: var(--ink-3); font-size: 12px; }
+
+  /* Vorgangsakte */
+  .akte { position: sticky; top: 16px; }
+  .akte .card-b { padding: 10px 16px 14px; }
+  .akte dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .akte dt { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-bottom: 2px; }
+  .akte dd { margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 12.5px; line-height: 1.45; word-break: break-word; }
+  .akte dd.empty { color: var(--ink-3); font-style: italic; font-family: "IBM Plex Sans", sans-serif; }
+  .akte dd ul { margin: 0; padding-left: 16px; }
+  .akte .fld { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 12.5px; }
+  .akte .fld .k { color: var(--ink-3); font-family: "IBM Plex Mono", monospace; }
+  .akte .fld .v { font-family: "IBM Plex Mono", monospace; }
+  .ziel { padding: 12px 16px; border-top: 1px solid var(--line); font-size: 13.5px; }
+  .ziel .pill { margin-top: 4px; }
+  .ziel .muted { color: var(--ink-3); }
+  .beispiel { font-size: 11.5px; color: var(--ink-3); padding: 0 16px 12px; }
+
+  @media (max-width: 1080px) {
+    .wrap { grid-template-columns: 220px minmax(0,1fr); }
+    .akte { grid-column: 1 / -1; position: static; }
+  }
+  @media (max-width: 760px) {
+    .wrap { grid-template-columns: 1fr; padding: 16px; }
+    .rail { position: static; }
+    .rail ol { flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 6px; }
+    .rail li { flex: 0 0 auto; }
+    .rail li button { grid-template-columns: 22px 1fr; padding: 6px 10px; border: 1px solid var(--line); }
+    .rail .lbl small { display: none; }
+    .rail .phase { display: none; }
+    .legend { display: none; }
+    .step-head h2 { font-size: 24px; }
+    .outcome { grid-template-columns: 1fr; }
+    .top-inner { padding: 14px 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .nav .prog i { transition: none; } }
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <h1>Prüf-Bot Walkthrough</h1>
+      <span class="sub">Bestandsübertragung Gesundheit/KV · Ausbaustufe 1 · Stand PDD 16.09.2026 (Weiterleitung an den 72-Stunden-BOT nur bei Umfang „Einzel“, Umfang „Gesamt“ wird nach vollständiger Prüfung ausgesteuert)</span>
+    </div>
+    <div class="scen" role="group" aria-label="Beispielvorgang wählen">
+      <span class="eyebrow">Beispielvorgang</span>
+      <div class="seg" id="seg">
+        <button type="button" data-s="A" aria-pressed="true"><span class="dot"></span>Läuft sauber durch</button>
+        <button type="button" data-s="B" aria-pressed="false"><span class="dot"></span>Mit Prüfnotizen</button>
+        <button type="button" data-s="C" aria-pressed="false"><span class="dot"></span>Harte BE</button>
+        <button type="button" data-s="D" aria-pressed="false"><span class="dot"></span>Gesamte Kundenverbindung</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="rail">
+    <ol id="rail"></ol>
+    <div class="legend">
+      <div class="row"><span class="pill hart">BE hart</span><span>Sofortiger Abbruch. Der Bot setzt <code>&lt;BE-Klassifikation&gt;</code> und springt direkt ins BE-Handling.</span></div>
+      <div class="row"><span class="pill weich">BE weich</span><span>Prüfnotiz in <code>&lt;Fehlerliste&gt;</code>, der Bot prüft weiter. Am Ende entscheidet der Test auf die Fehlerliste.</span></div>
+      <div class="row"><span class="pill ok">OK</span><span>Prüfung bestanden, keine Auswirkung.</span></div>
+      <div class="row"><span class="pill info">Info</span><span>Wird nur gelesen oder für das Reporting mitgeführt.</span></div>
+    </div>
+  </aside>
+
+  <main class="main" id="main" aria-live="polite"></main>
+
+  <aside class="akte">
+    <div class="card">
+      <div class="card-h"><h3>Vorgangsakte</h3><span class="count" id="akte-step"></span></div>
+      <div class="card-b" id="akte"></div>
+      <div class="ziel" id="ziel"></div>
+      <div class="beispiel">Beispieldaten, frei erfunden. Sie zeigen nur, wie der Bot die Variablen füllt.</div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function () {
+  // ---------------------------------------------------------------- Beispielvorgänge
+  const SCEN = {
+    A: { name: 'Läuft sauber durch', vnr: 'KV012345678', lfd: '4711', kunde: 'Anna Müller', gebdat: '14.03.1978', strasse: 'Lindenweg 12', plz: '40477',
+         makler: 'Finanzkontor Schmidt GmbH', agt: 'A123456789', pnr: '6045123', umfang: 'Einzel', bueVnr: 'KV012345678', bueVnr2: '',
+         uv: 'nein', pool: '', anf: 'nein', typ: 'Makler', hart: null, notes: {} },
+    B: { name: 'Mit Prüfnotizen', vnr: 'KV023456789', lfd: '4712', kunde: 'Anna-Lena Müller', gebdat: '14.03.1978', strasse: 'Lindenweg 12a', plz: '40477',
+         makler: 'Finanzkontor Schmidt GmbH', agt: 'A123456789', pnr: '6045123', umfang: 'Einzel', bueVnr: 'KV023456789', bueVnr2: '',
+         uv: 'ja', pool: 'VEMA', anf: 'ja', typ: 'Makler', hart: null,
+         notes: { 4: ['Vorname abweichend'], 6: ['Straße abweichend'] },
+         detail: { 4: 'Datenpool „Anna-Lena“, IS100 „Anna“', 6: 'Datenpool „Lindenweg 12a“, IS100 „Lindenweg 12“' } },
+    C: { name: 'Harte BE', vnr: 'KV034567890', lfd: '4713', kunde: 'Peter Krause', gebdat: '02.11.1965', strasse: 'Am Markt 3', plz: '50667',
+         makler: 'Assekuranz Weber e.K.', agt: 'A987654321', pnr: '6011987', umfang: 'Einzel', bueVnr: 'KV034567890; KV045678901', bueVnr2: 'KV056789012',
+         uv: 'N/A', pool: '', anf: 'nein', typ: 'MFA',
+         hart: { step: 2, klass: 'Betreuungswunsch nicht auf MFA ausgestellt', check: 'mfa-bw' }, notes: {},
+         detail: { 2: 'Der Betreuungswunsch nennt die Agentur, nicht den MFA' } },
+    D: { name: 'Gesamte Kundenverbindung', vnr: 'KV067890123', lfd: '4714', kunde: 'Sabine Vogt', gebdat: '21.07.1982', strasse: 'Rheinallee 8', plz: '55116',
+         makler: 'Finanzkontor Schmidt GmbH', agt: 'A123456789', pnr: '6045123', umfang: 'Gesamt', bueVnr: 'KV067890123; KV078901234', bueVnr2: '',
+         uv: 'nein', pool: '', anf: 'nein', typ: 'Makler', hart: null, notes: {},
+         detail: { 9: 'Alle Prüfungen sind positiv, der Auftrag nennt aber die gesamte Kundenverbindung' } },
+  };
+
+  // ---------------------------------------------------------------- Schritte
+  // check: { id, what, cond, res: 'hart'|'weich'|'ok'|'info', klass?: BE-Klassifikation, note?: Prüfnotiz }
+  const STEPS = [
+    { phase: 'Eingang', title: 'Neuer Vorgang im Themenpostkorb', short: 'Eingang', sys: ['Celonis', 'EWMS', 'Datenpool'],
+      lead: 'Bevor der Prüf-Bot startet, hat Celonis die Makler-Mail bereits gelesen. Das KI-Deckblatt liefert die strukturierten Felder, Celonis schreibt sie in den <b>Datenpool</b> und eröffnet über EWMS einen <b>Postkorbvorgang im Themenpostkorb des Prüf-Bots Gesundheit</b>. Die Versicherungsnummer, mit der der Vorgang eröffnet wird, ist bereits normiert.',
+      flow: [['Makler-Mail', 'Eingang über maklerauftraege@ergo.de'], ['Celonis', 'KI-Deckblatt, Klassifikation, Felder BUE_…'], ['Datenpool', '35 Felder je Vorgang, Schlüssel Lfd-Nr'], ['Themenpostkorb', 'Prüf-Bot Gesundheit, VNR normiert']],
+      checks: [
+        { what: 'Versicherungsnummer normiert', cond: 'Zwei Buchstaben Spartenkürzel und neun Ziffern, z. B. KV012345678. Mehrere Nummern semikolongetrennt in BUE_VNR, Überlauf in BUE_VNR_2.', res: 'info' },
+        { what: 'Ein Vorgang je genannter VNR', cond: 'Nennt die Mail mehrere Versicherungsnummern, eröffnet Celonis <b>je Nummer einen eigenen Postkorbvorgang</b> mit derselben Mail und einer eigenen führenden VNR. Jeder davon läuft eigenständig durch den Prüf-Bot, damit z. B. ein Widerruf zu nur einem Vertrag nicht die übrigen blockiert.', res: 'info' },
+        { what: 'Umfang der Übertragung', cond: '<code>&lt;BUE_UMFANG&gt;</code> hat zwei Ausprägungen: „Einzel“ für die genannte Nummer, „Gesamt“, wenn zusätzlich die gesamte Kundenverbindung gewünscht ist. Beide durchlaufen alle Prüfungen; nur „Einzel“ geht am Ende an den 72-Stunden-BOT, „Gesamt“ wird als BE ausgesteuert.', res: 'info' },
+        { what: 'Vorgänge ohne ermittelbare VNR', cond: 'Bleiben beim Eingangsmanagement und erreichen den Bot nicht. Datenpool trägt „Manuelle Prüfung VNR/Sparte“.', res: 'info' },
+      ] },
+    { phase: 'Start', title: 'Vorgang öffnen und Daten laden', short: 'Start', sys: ['EWMS', 'Datenpool'],
+      lead: 'Der Bot nimmt den nächsten Vorgang aus dem Themenpostkorb, liest die <b>laufende Nummer</b> und die <b>Versicherungsnummer des Vorgangs</b> und holt sich alle Felder aus dem Datenpool. Die BE-Variablen werden geleert.',
+      checks: [
+        { what: 'Lese <code>&lt;Vorgang-Lfd-Nr&gt;</code>', cond: 'Ordnungsbegriff des Bots, später in der Notiz und im Reporting.', res: 'info' },
+        { what: 'Lese <code>&lt;Vorgang-VNR&gt;</code>', cond: 'Die Nummer, mit der Celonis den Vorgang eröffnet hat. Einstieg für VA230 und IS100 und für den ganzen Vorgang die führende Nummer. Eine Normierung und ein Abgleich gegen <code>&lt;BUE_VNR&gt;</code> im Bot entfallen.', res: 'info' },
+        { what: 'Lese alle <code>&lt;BUE_…&gt;</code>-Felder', cond: 'Kunde, Makler, Klassifikation, Maklervollmacht, Unterlagen, Umfang.', res: 'info' },
+        { what: 'Initialisiere <code>&lt;BE&gt;</code>, <code>&lt;BE-Klassifikation&gt;</code>, <code>&lt;Fehlerliste&gt;</code>', cond: 'Alle drei leer. Sie füllen sich in den folgenden Schritten.', res: 'info' },
+      ] },
+    { phase: 'Vorprüfung', title: 'Ausschlusskriterien aus dem Datenpool', short: 'Vorprüfung', sys: ['Datenpool'],
+      lead: 'Noch ohne Hostsystem prüft der Bot, ob überhaupt ein prüfbarer BÜ-Vorgang vorliegt. <b>Jedes Kriterium ist eine harte BE</b>: Trifft es zu, ist die Prüfung sofort beendet. Für <b>Mehrfachagenten (MFA)</b> gelten statt der Unterlagenprüfung zwei eigene Kriterien, weil sie keine Maklervollmacht brauchen.',
+      checks: [
+        { what: 'Kein BÜ-Vorgang', cond: '<code>&lt;BUE_KLASSIFIKATION&gt;</code> ≠ „BÜ-Vorgang“, z. B. Adressänderung mit Maklervollmacht.', res: 'hart', klass: 'Kein BÜ-Vorgang' },
+        { what: 'BÜ-Wunsch fehlt', cond: '<code>&lt;BUE_WUNSCH_VORHANDEN&gt;</code> = „nein“.', res: 'hart', klass: 'BÜ-Wunsch nicht vorhanden' },
+        { what: 'Erinnerung / Reminder', cond: '<code>&lt;BUE_REMINDER&gt;</code> = „ja“. Bei einer Erinnerung wird nichts neu eingereicht.', res: 'hart', klass: 'Erinnerung / Reminder' },
+        { what: 'VNR nicht ermittelbar', cond: '<code>&lt;BUE_VNR&gt;</code> = „Manuelle Prüfung VNR/Sparte“. Absicherung, falls ein solcher Vorgang doch im Postkorb landet.', res: 'hart', klass: 'VNR nicht ermittelbar' },
+        { what: 'Makler: Unterlagen unvollständig ohne Anforderung', cond: '<code>&lt;BUE_VERMITTLER_TYP&gt;</code> = „Makler“, <code>&lt;BUE_PRUEFUNG_UNTERLAGEN&gt;</code> ≠ „Vollständig“ und <code>&lt;BUE_ANF_UNTERLAGEN&gt;</code> = „nein“. Werden Unterlagen angefordert, entsteht keine BE.', res: 'hart', klass: 'Unterlagen nicht vollständig' },
+        { id: 'mfa-bw', what: 'MFA: Betreuungswunsch nicht auf den MFA ausgestellt', cond: '<code>&lt;BUE_VERMITTLER_TYP&gt;</code> = „MFA“ und <code>&lt;BUE_MV_AUF_MAKLER&gt;</code> ≠ „ja“. Die Vollmachtsfelder stehen bei MFA auf N/A und werden nicht geprüft.', res: 'hart', klass: 'Betreuungswunsch nicht auf MFA ausgestellt' },
+        { id: 'mfa-us', what: 'MFA: Unterschrift des Versicherungsnehmers fehlt', cond: '<code>&lt;BUE_VERMITTLER_TYP&gt;</code> = „MFA“ und <code>&lt;BUE_MV_UNTERSCHRIFT_KUNDE&gt;</code> ≠ „ja“.', res: 'hart', klass: 'Unterschrift VN fehlt' },
+      ] },
+    { phase: 'I. Versicherungsnehmer', title: 'Vertrag in VA230 prüfen', short: 'VNR-Prüfung', sys: ['VA230'],
+      lead: 'Mit <code>&lt;Vorgang-VNR&gt;</code> öffnet der Bot den Vertrag in VA230. Ein gefülltes Feld <b>Vertragsbeginn</b> weist nach, dass der Vertrag existiert. Sparte und Status werden nur mitgeführt, die Notizvorlage ist durch den Postkorb Gesundheit festgelegt.',
+      checks: [
+        { what: 'Vertrag existiert', cond: '<code>&lt;VA230-Vertragsbeginn&gt;</code> = leer bedeutet: kein Vertrag zu dieser Nummer.', res: 'hart', klass: 'VNR nicht korrekt / nicht vorhanden' },
+        { what: 'Sparte und Status lesen', cond: '<code>&lt;VA230-Sparte&gt;</code>, <code>&lt;VA230-Status&gt;</code> nachrichtlich.', res: 'info' },
+      ] },
+    { phase: 'I. Versicherungsnehmer', title: 'Name in IS100 abgleichen', short: 'Name', sys: ['IS100'],
+      lead: 'IS100 liefert die Stammdaten des Versicherungsnehmers. Nach- und Vorname werden gegen die Werte aus der Makler-Mail verglichen. <b>Abweichungen sind weiche BE</b>: Sie landen als Prüfnotiz in der Fehlerliste, der Bot prüft weiter.',
+      checks: [
+        { what: 'Nachname', cond: '<code>&lt;IS100-Nachname&gt;</code> leer oder ≠ <code>&lt;BUE_KUNDE_NACHNAME&gt;</code>.', res: 'weich', note: 'Nachname abweichend' },
+        { what: 'Vorname', cond: '<code>&lt;IS100-Vorname&gt;</code> leer oder ≠ <code>&lt;BUE_KUNDE_VORNAME&gt;</code>. Bei juristischen Personen ist das Datenpool-Feld leer, die Prüfung wird übersprungen.', res: 'weich', note: 'Vorname abweichend' },
+      ] },
+    { phase: 'I. Versicherungsnehmer', title: 'Geburtsdatum abgleichen', short: 'Geburtsdatum', sys: ['IS100'],
+      lead: 'Das Geburtsdatum aus IS100 wird mit dem Datum aus der Makler-Mail verglichen. Format tt.mm.jjjj.',
+      checks: [
+        { what: 'Geburtsdatum', cond: '<code>&lt;IS100-Gebdat&gt;</code> leer oder ≠ <code>&lt;BUE_KUNDE_GEBDAT&gt;</code>. Juristische Person: übersprungen.', res: 'weich', note: 'Geb.-Datum abweichend' },
+      ] },
+    { phase: 'I. Versicherungsnehmer', title: 'Adresse abgleichen', short: 'Adresse', sys: ['IS100'],
+      lead: 'Straße und Postleitzahl werden einzeln verglichen. Beide Abweichungen sind weich.',
+      checks: [
+        { what: 'Straße', cond: '<code>&lt;IS100-Strasse&gt;</code> ≠ <code>&lt;BUE_KUNDE_STRASSE&gt;</code>. Schreibweisen wie „Str.“ und „Straße“ gelten als gleich.', res: 'weich', note: 'Straße abweichend' },
+        { what: 'PLZ', cond: '<code>&lt;IS100-PLZ&gt;</code> ≠ <code>&lt;BUE_KUNDE_PLZ&gt;</code>, fünf Ziffern.', res: 'weich', note: 'PLZ abweichend' },
+      ] },
+    { phase: 'II. Übernehmender Makler', title: 'Makler in OB726 und GH040 prüfen', short: 'Makler', sys: ['OB726', 'GH040', 'EOS'],
+      lead: 'Liegt eine <b>Agenturnummer</b> vor, steigt der Bot damit in OB726 ein (Variante A). Fehlt sie, nutzt er die <b>Vermittlernummer (PNR)</b> und ermittelt die Stammagentur über EOS (Variante B). In beiden Varianten gilt: Existiert der Makler nicht oder ist die Zusammenarbeit beendet, ist das eine harte BE.',
+      checks: [
+        { what: 'Agentur existiert (Variante A)', cond: 'Agentur zu <code>&lt;BUE_AGENTUR_NR&gt;</code> in OB726 nicht vorhanden.', res: 'hart', klass: 'Agenturnummer nicht vorhanden' },
+        { what: 'Vermittler existiert (Variante B)', cond: 'Vermittler zu <code>&lt;BUE_VERMITTLER_NR&gt;</code> in OB726 nicht vorhanden, oder PNR in Variante A leer.', res: 'hart', klass: 'Vermittlernummer / PNR nicht vorhanden' },
+        { what: 'Name des Maklers', cond: '<code>&lt;OB726-Name&gt;</code> ≠ <code>&lt;BUE_VERMITTLER_NAME&gt;</code>.', res: 'weich', note: 'Name übernehmender Makler abweichend' },
+        { what: 'Keine Zusammenarbeit', cond: '<code>&lt;OB726-Name&gt;</code> enthält „INAKTIV“ oder <code>&lt;GH040-Anbindung-Makler&gt;</code> ≠ „aktiv“.', res: 'hart', klass: 'Keine Zusammenarbeit' },
+        { what: 'Absender ist ERGO-intern', cond: '<code>&lt;Makler-Email&gt;</code> = <code>&lt;BUE_MAKLER_EMAIL&gt;</code> setzen; endet die Adresse auf „@ergo.de“, ist der Absender ERGO-intern.', res: 'weich', note: 'Absender ist eine interne ERGO-Adresse' },
+        { what: 'TOP-Makler', cond: 'Für definierte TOP-Makler wird die E-Mail-Adresse anhand der PNR aus einer fest hinterlegten Liste übernommen. Danach weiter mit „Agentur-Nr. des Bestandsinhabers ermitteln“.', res: 'info' },
+        { what: 'Stammagentur (Variante B)', cond: 'EOS liefert zur PNR keine Stammagentur, <code>&lt;AGT-Uebernehmer&gt;</code> bleibt leer.', res: 'weich', note: 'Stammagentur nicht ermittelbar' },
+        { what: 'Vermittlertyp passt zur Klassifizierung', cond: '<code>&lt;OB726-Klassifizierung&gt;</code> (Makler, Mehrfachagent, Courtagefortzahler) gegen <code>&lt;BUE_VERMITTLER_TYP&gt;</code>: MFA ohne „Mehrfachagent“ oder Makler mit „Mehrfachagent“.', res: 'weich', note: 'Vermittlertyp abweichend' },
+      ] },
+    { phase: 'II. Übernehmender Makler', title: 'Bisherigen Bestandsinhaber ermitteln', short: 'Bestandsinhaber', sys: ['VA230', 'GH040'],
+      lead: 'Aus VA230 liest der Bot die Agenturnummer des bisherigen Bestandsinhabers und prüft dessen Anbindung in GH040. Ob der Bestandsinhaber zur Ausschließlichkeitsorganisation gehört, prüft der Bot nicht; das übernimmt der nachgelagerte 72-Stunden-BOT.',
+      checks: [
+        { what: 'Agentur-Nr. des Bestandsinhabers', cond: '<code>&lt;VA230-AGT-Inhaber&gt;</code> lesen.', res: 'info' },
+        { what: 'Anbindung des Bestandsinhabers', cond: '<code>&lt;GH040-Anbindung-Inhaber&gt;</code> ≠ „aktiv“.', res: 'weich', note: 'Anbindung Bestandsinhaber nicht aktiv' },
+      ] },
+    { phase: 'III. Abschluss', title: 'Test auf Fehlerliste', short: 'Fehlerliste', sys: [],
+      lead: 'Alle Einzelprüfungen sind durchlaufen. Jetzt entscheiden der Umfang der Übertragung und die gesammelten Prüfnotizen, ob der Vorgang in die manuelle Bearbeitung geht. <b>Umfang „Gesamt“ wird immer ausgesteuert</b>: Der BÜ-Bot würde bei mehreren Vorgängen derselben Kundenverbindung die Ablöse mehrfach verbuchen. Die Sachbearbeitung setzt auf dem Prüfergebnis auf.',
+      checks: [
+        { id: 'ges', what: 'Umfang „Gesamt“', cond: '<code>&lt;BUE_UMFANG&gt;</code> = „Gesamt“. Die Prüfnotizen der Fehlerliste wandern mit in den Bearbeitungshinweis.', res: 'hart', klass: 'Gesamte Kundenverbindung' },
+        { id: 'fl', what: 'Fehlerliste ist gefüllt', cond: '<code>&lt;Fehlerliste&gt;</code> ≠ leer.', res: 'hart', klass: 'Nachprüfung erforderlich' },
+        { id: 'flok', what: 'Umfang „Einzel“ und Fehlerliste leer', cond: 'Weiter zur Weiterleitung an den 72-Stunden-BOT.', res: 'ok' },
+      ] },
+    { phase: 'III. Abschluss', title: 'Notiz bestücken und an den 72-Stunden-BOT', short: '72-Stunden-BOT', sys: ['EWMS'],
+      lead: 'Es gab keine BE und der Umfang ist „Einzel“. Der Bot legt die Notiz <b>„BÜ auf Makler Robotics“ (BOT2011)</b> an, füllt sie aus den gelesenen Werten und übergibt den Vorgang <b>immer</b> an den 72-Stunden-BOT. Der prüft selbst, ob der abgebende Bestandsinhaber der AO zugeordnet ist.',
+      checks: [
+        { what: 'Notizfelder', cond: 'Maklername/MFA-Name = <code>&lt;OB726-Name&gt;</code>, Agenturnummer = <code>&lt;AGT-Uebernehmer&gt;</code>, KNR Makler, Laufende Nr. = <code>&lt;Vorgang-Lfd-Nr&gt;</code>.', res: 'info' },
+        { what: 'Betroffene VNR', cond: '„angegebene VNR beachten“ mit <code>&lt;Vorgang-VNR&gt;</code>. Weitere Nummern desselben Auftrags laufen als eigene Vorgänge; Umfang „Gesamt“ kommt hier nicht an.', res: 'info' },
+        { what: 'Bearbeitung nach', cond: '<code>&lt;BUE_VERMITTLER_TYP&gt;</code> = „MFA“ → „mit BÜ“ (Untervollmacht entfällt, <code>&lt;BUE_UV_ERTEILT&gt;</code> = N/A). Sonst: <code>&lt;BUE_POOL&gt;</code> ≠ leer und <code>&lt;BUE_UV_ERTEILT&gt;</code> = „nein“ → „UV fehlt“; <code>&lt;BUE_UV_ERTEILT&gt;</code> = „ja“ → „BÜ mit UV“; sonst „mit BÜ“.', res: 'info' },
+        { what: 'Anforderung von Unterlagen', cond: '<code>&lt;BUE_ANF_UNTERLAGEN&gt;</code> = „ja“: Kennzeichen „Anforderung von Unterlagen“ setzen, <code>&lt;BUE_ART_UNTERLAGEN&gt;</code> am Semikolon zerlegen und jede Unterlagenart einzeln im Notiztext aufführen. Danach Notiz speichern.', res: 'info' },
+        { what: 'Prozessende', cond: 'Notiz speichern, Vorgang an den 72-Stunden-BOT weiterleiten, im Postkorb als vollständig bearbeitet ablegen.', res: 'ok' },
+      ] },
+    { phase: 'III. Abschluss', title: 'BE-Handling: Weiterleitung an HSB4K MV', short: 'BE-Handling', sys: ['EWMS'],
+      lead: 'Jede Business Exception landet hier, egal aus welchem Schritt. Der Bot schreibt einen <b>Bearbeitungshinweis</b> an den Vorgang, damit die Sachbearbeitung nicht bei null anfängt, und leitet ihn an den Themenpostkorb <b>HSB4K MV</b> weiter. Vorgänge ohne BE laufen dunkel und kommen hier nie an.',
+      checks: [
+        { what: 'BE kennzeichnen', cond: '<code>&lt;BE&gt;</code> = „ja“ als erster Schritt, damit Reporting und Postkorb den Vorgang als Business Exception führen.', res: 'info' },
+        { what: 'Bearbeitungshinweis', cond: 'Erste Zeile = <code>&lt;BE-Klassifikation&gt;</code>. Danach jede Prüfnotiz aus <code>&lt;Fehlerliste&gt;</code> in einer eigenen Zeile.', res: 'info' },
+        { what: 'Weitere Versicherungsnummern', cond: 'Nennt der Auftrag mehrere Nummern, werden <code>&lt;BUE_VNR&gt;</code> und <code>&lt;BUE_VNR_2&gt;</code> angehängt. Sie werden als eigene Vorgänge geprüft; die Liste zeigt der Sachbearbeitung den Zusammenhang.', res: 'info' },
+        { what: 'Reporting', cond: '<code>&lt;BE&gt;</code>, <code>&lt;BE-Klassifikation&gt;</code> und <code>&lt;Fehlerliste&gt;</code> werden ins Reporting übernommen.', res: 'info' },
+        { what: 'Weiterleitung', cond: 'Vorgang an den Themenpostkorb „HSB4K MV“, Verarbeitung beenden, nächster Vorgang aus der Queue.', res: 'ok' },
+      ] },
+  ];
+  const IDX_TEST = 9, IDX_POS = 10, IDX_BE = 11;
+
+  // ---------------------------------------------------------------- Zustand je Szenario und Schritt
+  function simulate(s) {
+    const st = STEPS.map(() => ({ status: 'ok', fired: [], klass: null, notes: [] }));
+    let fl = []; let hart = null;
+    for (let i = 0; i < STEPS.length; i++) {
+      const r = st[i];
+      if (hart !== null && i !== IDX_BE) { r.status = 'skipped'; continue; }
+      if (i === IDX_BE) { r.status = hart !== null ? 'be' : 'skipped'; continue; }
+      if (i === IDX_POS) { r.status = 'ok'; continue; }
+      if (i === IDX_TEST) {
+        if (s.umfang === 'Gesamt') { hart = 'Gesamte Kundenverbindung'; r.status = 'be'; r.klass = hart; r.fired = ['ges']; }
+        else if (fl.length) { hart = 'Nachprüfung erforderlich'; r.status = 'be'; r.klass = hart; r.fired = ['fl']; }
+        else { r.status = 'ok'; r.fired = ['flok']; }
+        continue;
+      }
+      if (s.notes[i]) { r.status = 'note'; r.notes = s.notes[i]; fl = fl.concat(s.notes[i]); r.fired = s.notes[i].map(n => 'note:' + n); }
+      if (s.hart && s.hart.step === i) { hart = s.hart.klass; r.status = 'be'; r.klass = hart; r.fired = r.fired.concat([s.hart.check]); continue; }
+      if (i <= 1) r.status = 'info';
+    }
+    // Zustand nach jedem Schritt (kumuliert)
+    let acc = []; let k = null; const after = [];
+    for (let i = 0; i < STEPS.length; i++) {
+      if (st[i].status !== 'skipped') { acc = acc.concat(st[i].notes); if (st[i].klass) k = st[i].klass; }
+      after.push({ fl: acc.slice(), klass: k, status: st[i].status });
+    }
+    const ziel = hart !== null ? 'HSB4K MV' : '72-Stunden-BOT';
+    return { st, after, ziel, hart };
+  }
+
+  // ---------------------------------------------------------------- Rendering
+  let scen = 'A', cur = 0;
+  const railEl = document.getElementById('rail'), mainEl = document.getElementById('main'),
+        akteEl = document.getElementById('akte'), zielEl = document.getElementById('ziel'), akteStep = document.getElementById('akte-step');
+
+  function esc(t) { return t.replace(/&(?!lt;|gt;|amp;)/g, '&amp;'); }
+
+  function renderRail(sim) {
+    let html = ''; let lastPhase = null;
+    STEPS.forEach((s, i) => {
+      if (s.phase !== lastPhase) { html += `<li class="phase eyebrow" aria-hidden="true">${s.phase}</li>`; lastPhase = s.phase; }
+      const r = sim.st[i]; const cls = r.status === 'skipped' ? 'skipped' : r.status === 'be' ? 'reached-be' : r.status === 'note' ? 'reached-note' : (i > 1 ? 'reached-ok' : '');
+      html += `<li class="${cls}"><button type="button" data-i="${i}" ${i === cur ? 'aria-current="step"' : ''}><span class="num">${i}</span><span class="lbl">${s.short}<small>${r.status === 'skipped' ? 'nicht erreicht' : r.status === 'be' ? 'BE ausgelöst' : r.status === 'note' ? r.notes.length + (r.notes.length === 1 ? ' Prüfnotiz' : ' Prüfnotizen') : s.title}</small></span></button></li>`;
+    });
+    railEl.innerHTML = html;
+  }
+
+  function pill(res) {
+    return { hart: '<span class="pill hart">BE hart</span>', weich: '<span class="pill weich">BE weich</span>', ok: '<span class="pill ok">OK</span>', info: '<span class="pill info">Info</span>' }[res];
+  }
+
+  function renderMain(sim, s) {
+    const step = STEPS[cur]; const r = sim.st[cur];
+    const chips = step.sys.map(x => `<span class="chip sys">${x}</span>`).join('');
+    let html = `<div class="step-head"><div><div class="eyebrow">Schritt ${cur} · ${step.phase}</div><h2>${step.title}</h2></div><div class="src">${chips}</div></div>`;
+    html += `<p class="lead">${step.lead}</p>`;
+
+    if (step.flow) {
+      html += `<div class="card"><div class="card-h"><h3>So kommt der Vorgang zum Bot</h3></div><div class="flow">` +
+        step.flow.map((n, i) => `<div class="node ${i === 3 ? 'on' : ''}"><div class="eyebrow">${n[0]}</div><div>${n[1]}</div></div>`).join('') + `</div></div>`;
+    }
+
+    // Status dieses Schritts im gewählten Beispiel
+    let banner = '';
+    if (r.status === 'skipped') banner = `<div class="card"><div class="card-b" style="padding:14px 18px"><span class="pill hart">Nicht erreicht</span> <span style="color:var(--ink-2)">Im Beispiel „${s.name}“ hat der Bot den Vorgang bereits in Schritt ${sim.st.findIndex(x => x.status === 'be')} beendet.</span></div></div>`;
+    else if (r.status === 'be') banner = `<div class="card"><div class="card-b" style="padding:14px 18px"><span class="pill hart">BE ausgelöst</span> <span style="color:var(--ink-2)">Im Beispiel „${s.name}“ setzt der Bot hier <code>&lt;BE-Klassifikation&gt;</code> = „${r.klass}“ und springt ins BE-Handling.${r.notes.length ? ' Vorher merkt er noch: ' + r.notes.map(n => '„' + n + '“').join(', ') + '.' : ''} ${s.detail && s.detail[cur] ? s.detail[cur] + '.' : ''}</span></div></div>`;
+    else if (r.status === 'note') banner = `<div class="card"><div class="card-b" style="padding:14px 18px"><span class="pill weich">${r.notes.length === 1 ? 'Prüfnotiz' : 'Prüfnotizen'}</span> <span style="color:var(--ink-2)">Im Beispiel „${s.name}“ merkt sich der Bot: ${r.notes.map(n => '„' + n + '“').join(', ')}. ${s.detail && s.detail[cur] ? s.detail[cur] + '.' : ''} Die Prüfung läuft weiter.</span></div></div>`;
+    else if (cur > 1 && cur !== IDX_BE && cur !== IDX_POS && cur !== IDX_TEST) banner = `<div class="card"><div class="card-b" style="padding:14px 18px"><span class="pill ok">Bestanden</span> <span style="color:var(--ink-2)">Im Beispiel „${s.name}“ greift hier keine Prüfung.</span></div></div>`;
+    else if (cur === IDX_POS && r.status === 'ok') banner = `<div class="card"><div class="card-b" style="padding:14px 18px"><span class="pill ok">Dunkelverarbeitung</span> <span style="color:var(--ink-2)">Im Beispiel „${s.name}“ geht der Vorgang mit bestückter Notiz an den 72-Stunden-BOT. Kein Mensch fasst ihn an.</span></div></div>`;
+    html += banner;
+
+    // Prüfungen
+    const n = step.checks.length;
+    html += `<div class="card"><div class="card-h"><h3>${cur <= 1 ? 'Was der Bot tut' : 'Was der Bot prüft'}</h3><span class="count">${n} ${n === 1 ? 'Punkt' : 'Punkte'}</span></div><div class="card-b"><table class="checks"><thead><tr><th>Prüfung</th><th>Bedingung und Quelle</th><th>Ergebnis</th></tr></thead><tbody>`;
+    step.checks.forEach(c => {
+      const fired = r.fired.includes(c.id) || (c.note && r.fired.includes('note:' + c.note));
+      let effect = '';
+      if (c.klass) effect = `<div class="fired-note"><code>&lt;BE-Klassifikation&gt;</code> = „${c.klass}“ → BE-Handling</div>`;
+      if (c.note) effect = `<div class="fired-note">Prüfnotiz „${c.note}“ → <code>&lt;Fehlerliste&gt;</code>, weiter</div>`;
+      html += `<tr class="${fired ? 'fired' : ''}"><td class="what"><b>${c.what}</b>${fired ? '<div class="fired-note"><b>Trifft im Beispiel zu.</b></div>' : ''}</td><td class="cond">${c.cond}${effect}</td><td class="res">${pill(c.res)}</td></tr>`;
+    });
+    html += `</tbody></table></div></div>`;
+
+    if (cur === IDX_BE) {
+      const a = sim.after[cur];
+      const lines = [a.klass || '–'].concat(a.fl);
+      if (s.bueVnr2 || s.bueVnr.includes(';')) lines.push('Weitere VNR im Auftrag: ' + [s.bueVnr, s.bueVnr2].filter(Boolean).join('; '));
+      html += `<div class="card"><div class="card-h"><h3>So sieht der Bearbeitungshinweis im Beispiel aus</h3></div><div class="card-b"><pre class="mono" style="margin:8px 0 4px;white-space:pre-wrap;background:var(--mono-bg);padding:12px 14px;border-radius:8px;font-size:13px">${sim.hart ? lines.join('\n') : 'Kein Bearbeitungshinweis: Im Beispiel „' + s.name + '“ gab es keine BE.'}</pre></div></div>`;
+    }
+
+    html += `<div class="nav"><button type="button" class="btn" id="prev" ${cur === 0 ? 'disabled' : ''}>← Zurück</button><div class="prog"><i style="width:${(cur / (STEPS.length - 1)) * 100}%"></i></div><span class="kbd">${cur + 1} / ${STEPS.length} · Pfeiltasten</span><button type="button" class="btn primary" id="next" ${cur === STEPS.length - 1 ? 'disabled' : ''}>Weiter →</button></div>`;
+    mainEl.innerHTML = html;
+    document.getElementById('prev').onclick = () => go(cur - 1);
+    document.getElementById('next').onclick = () => go(cur + 1);
+  }
+
+  function renderAkte(sim, s) {
+    const a = sim.after[cur];
+    akteStep.textContent = `nach Schritt ${cur}`;
+    const known = cur >= 1;
+    akteEl.innerHTML = `<dl>
+      <div><dt>Postkorbvorgang</dt><dd class="fld"><span class="k">Lfd-Nr</span><span class="v">${s.lfd}</span><span class="k">Vorgang-VNR</span><span class="v">${s.vnr}</span><span class="k">Umfang</span><span class="v">${s.umfang}</span><span class="k">Typ</span><span class="v">${s.typ}</span></dd></div>
+      <div><dt>Aus dem Datenpool</dt><dd class="fld"><span class="k">BUE_VNR</span><span class="v">${s.bueVnr}</span><span class="k">BUE_VNR_2</span><span class="v">${s.bueVnr2 || '–'}</span><span class="k">Kunde</span><span class="v">${s.kunde}</span><span class="k">Makler</span><span class="v">${s.makler}</span><span class="k">${s.agt ? 'Agentur' : 'PNR'}</span><span class="v">${s.agt || s.pnr}</span></dd></div>
+      <div><dt>&lt;BE-Klassifikation&gt;</dt>${known && a.klass ? `<dd style="color:var(--hart)">„${a.klass}“</dd>` : `<dd class="empty">${known ? 'leer' : 'noch nicht initialisiert'}</dd>`}</div>
+      <div><dt>&lt;Fehlerliste&gt;</dt>${known && a.fl.length ? `<dd style="color:var(--weich)"><ul>${a.fl.map(x => '<li>' + x + '</li>').join('')}</ul></dd>` : `<dd class="empty">${known ? 'leer' : 'noch nicht initialisiert'}</dd>`}</div>
+    </dl>`;
+    const decided = a.klass !== null || cur >= IDX_POS;
+    zielEl.innerHTML = `<div class="eyebrow">Ziel des Vorgangs</div>` + (decided
+      ? (sim.hart ? `<span class="pill hart">Themenpostkorb HSB4K MV</span><div class="muted" style="margin-top:6px">Manuelle Bearbeitung mit Bearbeitungshinweis</div>`
+                  : `<span class="pill ok">72-Stunden-BOT</span><div class="muted" style="margin-top:6px">Dunkelverarbeitung, Notiz BOT2011</div>`)
+      : `<span class="muted">Noch offen, die Prüfung läuft.</span>`);
+  }
+
+  function render() {
+    const s = SCEN[scen]; const sim = simulate(s);
+    renderRail(sim); renderMain(sim, s); renderAkte(sim, s);
+    try { localStorage.setItem('pruefbot-walkthrough', JSON.stringify({ scen, cur })); } catch (e) {}
+  }
+  function go(i) { if (i < 0 || i >= STEPS.length) return; cur = i; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+  railEl.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b) go(+b.dataset.i); });
+  document.getElementById('seg').addEventListener('click', e => {
+    const b = e.target.closest('button[data-s]'); if (!b) return;
+    scen = b.dataset.s;
+    document.querySelectorAll('#seg button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    render();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight') go(cur + 1); else if (e.key === 'ArrowLeft') go(cur - 1);
+  });
+  try { const saved = JSON.parse(localStorage.getItem('pruefbot-walkthrough') || 'null'); if (saved && SCEN[saved.scen]) { scen = saved.scen; cur = Math.min(saved.cur | 0, STEPS.length - 1); document.querySelectorAll('#seg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.s === scen ? 'true' : 'false')); } } catch (e) {}
+  render();
+})();
+</script>

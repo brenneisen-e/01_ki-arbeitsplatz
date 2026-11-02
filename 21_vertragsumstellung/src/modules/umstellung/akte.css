@@ -1,0 +1,249 @@
+/* ===========================================================================
+   INSTITUTSAKTE — Modulklassen
+
+   Nur, was die Akte allein braucht: die zweigeteilte Reiterleiste, das
+   Höhenbudget des Akten-Steuerblocks (Wurzelklasse .vg-akte), das
+   Vier-Spalten-Raster der Übersicht mit seinen Umbrüchen, die Partner-
+   verteilung im Kartenkopf, der Kopierknopf, der erst bei Hover erscheint,
+   und die Einwände als Definitionsliste. Tokens und Grundklassen kommen
+   aus index.css, die Tafelsprache aus ui/tafel.css, der Block aus
+   ui/steuerblock.css — dessen Klassen werden hier nur enger gestellt,
+   nie umgebaut.
+   =========================================================================== */
+
+/* -- Reiterleiste: drei Hauptreiter links, zwei Nebenreiter rechts ------- */
+
+.vg-reiter > button.vg-akte-reiter-neben {
+  font-size: var(--vg-fs-sm);
+  color: var(--vg-text-4);
+}
+.vg-reiter > button.vg-akte-reiter-neben-erster {
+  margin-left: auto;
+}
+.vg-reiter > button.vg-akte-reiter-neben[aria-selected="true"] {
+  color: var(--vg-text);
+}
+
+/* -- Steuerblock der Akte: Höhenbudget bei 1000 px Bildhöhe --------------- */
+/* Der Akten-Block ist der vollste der Anwendung: neun Stammdaten, Summe,
+   zwei Plaketten, der Stapelbalken (144 px samt Legende) und zwei Signale.
+   Bei 1000 px Höhe hat die Mitte 644 px (1600) bzw. 656 px (1280); mit den
+   Grundwerten aus steuerblock.css braucht sie rund 690 px, und der Balken
+   endete genau an der Grundlinie — Säulenbeschriftung, Legende und Signale
+   lagen hinter der Scrollkante. Hier werden nur Abstände enger, keine
+   Schrift kleiner und kein Bauteil anders: rund 60 px, so dass alles ohne
+   Scrollen steht. Erst ab 1025 px — im Band (≤ 1024) gelten die eigenen
+   Regeln aus steuerblock.css, denen diese sonst über die Spezifität
+   dazwischenkämen. */
+/* Gruppenabstand 12 statt 16 px (fünf Fugen, 20 px) — der Token ist dafür
+   vorgesehen: „wird bei knapper Höhe enger“. Nur über 800 px Höhe: darunter
+   setzt steuerblock.css selbst 8 px, und die Regel hier darf das nicht
+   über die Spezifität wieder anheben. */
+@media (min-width: 1025px) and (min-height: 801px) {
+  .vg-akte .vg-steuerblock { --sb-luft: var(--vg-a5); }
+}
+@media (min-width: 1025px) {
+  /* Stammdaten: 18 px je Zeile (Schrift 13 px, Zeilenhöhe 17) und keine
+     Fuge zwischen den Zeilen — neun Zeilen kosten so 36 px weniger. */
+  .vg-akte .vg-sb-stammdaten { gap: 0; padding-top: var(--vg-a4); }
+  .vg-akte .vg-sb-stammdatum { min-height: 18px; }
+  /* Summe, Stapel, Signale: 8 px Luft unter jeder Haarlinie statt 12 */
+  .vg-akte .vg-sb-summe { padding-top: var(--vg-a4); }
+  .vg-akte .vg-sb-delta { margin-top: 0; }
+  .vg-akte .vg-sb-stapel { margin-top: 0; }
+  .vg-akte .vg-sb-signale { padding-top: var(--vg-a4); gap: var(--vg-a2); }
+}
+/* ≤ 1280 stehen „Handout“ und „Verhandlungsmodus“ (fs-md, 12 px Polster)
+   mit rund 280 px nicht in die 268 px des Blocks und brachen auf zwei
+   Zeilen um — 38 px, die der Mitte fehlten. Eine Stufe kleiner und mit
+   8 px Polster brauchen beide rund 250 px und bleiben eine Zeile; das
+   Band (≤ 1024) verkleinert die Knöpfe ohnehin auf dieses Maß. */
+@media (max-width: 1280px) and (min-width: 1025px) {
+  .vg-akte .vg-sb-fuss .vg-btn { padding: 0 var(--vg-a4); font-size: var(--vg-fs-sm); }
+}
+
+/* -- Übersicht: vier Rasterspalten, Tafeln über zwei Spalten ------------- */
+/* .vg-tafeln (tafel.css) bringt drei Spalten mit; die Akte braucht vier,
+   damit Reihe 1 (vier Sparten) und Reihe 3 (vier Tafeln) je eine Zeile
+   füllen und Reihe 2 und 4 in zwei Hälften zerfallen. */
+
+.vg-tafeln.vg-akte-tafeln {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.vg-tafeln.vg-akte-tafeln > [data-breit="2"] { grid-column: span 2; }
+.vg-tafeln.vg-akte-tafeln > .vg-akte-reihe-voll { grid-column: 1 / -1; }
+
+/* Provisionssätze: Komponente mit Bemessungsgrundlage als zweiter Zeile,
+   darunter die Faktoren des Hauses als Fußtext in der bündigen Tafel. */
+.vg-akte-satz-name { display: flex; flex-direction: column; gap: 1px; }
+.vg-akte-satz-faktoren { margin: 0; padding: var(--vg-a3) var(--vg-a5) var(--vg-a3); line-height: 1.45; }
+/* Werkzeugzeile über den Sparten-Tafeln: Erklärung links, Knopf rechts */
+.vg-akte-werkzeuge {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vg-a4);
+  min-width: 0;
+  margin-bottom: calc(-1 * var(--vg-a3));
+}
+.vg-akte-werkzeuge > span { min-width: 0; }
+/* Szenarioanalyse: Hinweis mit fester Zeilenzahl — Werte in Tabellenziffern,
+   damit weder Höhe noch Breite mit den Reglern wandern */
+.vg-sz-hinweis { display: grid; gap: var(--vg-a2); min-width: 0; }
+.vg-sz-zeilen {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 2px var(--vg-a4);
+  margin: 0;
+}
+.vg-sz-zeilen dt { color: var(--vg-text-3); white-space: nowrap; }
+.vg-sz-zeilen dd {
+  margin: 0;
+  min-width: 0;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Zuschüsse: vier Tabellenspalten (Posten · Alt · Neu · Differenz) in EINER
+   Rasterspalte, die bei 1600 px 287 px breit ist. Rechnung in Uniform Tab
+   (fs-sm): Alt und Neu „296 Tsd.“ je rund 50 px, Differenz „−296 Tsd.“
+   rund 58 px, dazu 6 px Polster je Seite (außen 8 px) — die drei
+   Zahlenspalten brauchen zusammen etwa 196 px, dem Posten bleiben über
+   90 px; „Kleinteilig“ braucht 79. Mit den 8/12 px der Grundregel und der
+   Posten-Mindestbreite von 96 px kämen 292 px zusammen, und die Tafel
+   scrollte waagerecht. Die Polster gelten auf allen Breiten gleich. */
+.vg-akte-eng .vg-vergleich th,
+.vg-akte-eng .vg-vergleich td { padding: 0 var(--vg-a3); }
+.vg-akte-eng .vg-vergleich th:first-child,
+.vg-akte-eng .vg-vergleich td:first-child { padding-left: var(--vg-a4); }
+.vg-akte-eng .vg-vergleich th:last-child,
+.vg-akte-eng .vg-vergleich td:last-child { padding-right: var(--vg-a4); }
+.vg-akte-eng .vg-vergleich td[data-spalte="produkt"] { min-width: 72px; }
+/* tafel.css nimmt die Alt-Spalte unter 300 px Tafelbreite — das träfe
+   ausgerechnet die Referenzbreite (287 px), in der alle Nachbartafeln Alt
+   und Neu führen. Mit den engen Polstern tragen die vier Spalten bis
+   hinunter zu 280 px; darunter greift die Regel aus tafel.css weiter, damit
+   bei Zwischenbreiten (etwa 1366 px, Tafel um 230 px) nichts scrollt. */
+@container (min-width: 280px) {
+  .vg-akte-eng .vg-vergleich-rahmen[data-weichend~="alt"] [data-spalte="alt"] { display: table-cell; }
+}
+
+/* Bestand: die Beträge stehen kompakt ohne Einheit (die Unterzeile trägt
+   „EUR“), darum darf der Wert schmaler sein als die 84 px der Grundregel.
+   Die Labelbreite kommt aus tafel.css (max-content, nie gekappt). */
+.vg-akte-tafeln .vg-bestand-wert { min-width: 0; }
+
+/* Qualitätsprofil: vier Messlatten untereinander, Label 150 px, Wert
+   72 px, die Latte nimmt den Rest — zwei Spalten kappten die Labels
+   („Beitragsdura…“) und ließen den Latten nur 96 px. */
+.vg-akte-qualitaet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--vg-a1) 0;
+}
+.vg-akte-messlatte {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a4);
+  min-height: 30px;
+  min-width: 0;
+}
+.vg-akte-messlatte-label {
+  flex: 0 0 150px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vg-akte-messlatte-wert { width: 72px; flex: none; text-align: right; }
+.vg-akte-messlatte-latte { flex: 1 1 auto; min-width: 96px; }
+
+/* -- Vertriebspartner: Verteilung als eigene Zeile über der Tabelle ------ */
+
+.vg-akte-partnerverteilung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vg-a2);
+  min-width: 0;
+  padding: var(--vg-a2) var(--vg-a3) var(--vg-a4);
+}
+.vg-akte-partnerverteilung-legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vg-a2) var(--vg-a5);
+  font-size: var(--vg-fs-sm);
+  color: var(--vg-text-3);
+  font-variant-numeric: tabular-nums;
+}
+.vg-akte-partnerverteilung-eintrag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* Die Summenzeile muss über der klebenden ersten Spalte liegen (dort
+   z-index 1), sonst schieben sich die Namen beim Scrollen über die Summe. */
+.vg-akte-partner tfoot td {
+  z-index: calc(var(--vg-z-sticky) + 1);
+}
+
+/* -- Argumente: Kopierknopf nur bei Hover oder Fokus ---------------------- */
+
+.vg-akte-kopieren {
+  opacity: 0;
+  transition: opacity var(--vg-schnell) var(--vg-kurve-weich);
+}
+.vg-karte:hover .vg-akte-kopieren,
+.vg-karte:focus-within .vg-akte-kopieren,
+.vg-akte-kopieren[data-kopiert="true"] {
+  opacity: 1;
+}
+
+/* -- Einwände als Definitionsliste --------------------------------------- */
+
+.vg-einwand {
+  margin: 0;
+  padding: 0;
+}
+.vg-einwand > div {
+  padding: var(--vg-a4) 0;
+  border-top: 1px solid var(--vg-rand);
+}
+.vg-einwand > div:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.vg-einwand dt {
+  margin: 0 0 var(--vg-a2);
+  font-size: var(--vg-fs-md);
+}
+.vg-einwand dd {
+  margin: 0;
+}
+
+/* -- Responsivität ------------------------------------------------------ */
+/* ≤ 1280: das Vier-Spalten-Raster bleibt; die Tabellen sind schon in
+   tafel.css eine Stufe kleiner. Die vier Tafeln der dritten Reihe (Bestand,
+   Bonifikation, Garantien, Zuschüsse) spannen je zwei Spalten und stehen
+   zu zweit je Zeile: in 220 px waren vier Tabellenspalten und die Label/
+   Wert-Listen nicht lesbar. Unter 1024 px hat das Raster ohnehin zwei
+   Spalten; dort stehen sie wieder einspaltig zu zweit je Zeile. */
+@media (max-width: 1280px) and (min-width: 1025px) {
+  .vg-tafeln.vg-akte-tafeln > .vg-akte-reihe-3 { grid-column: span 2; }
+}
+@media (max-width: 1280px) {
+  .vg-akte-tafeln .vg-bestand-zeile { gap: var(--vg-a3); }
+}
+
+/* ≤ 1024: zwei Spalten (Teiler von vier); breite Tafeln spannen beide,
+   die Sparten stehen zu zweit je Zeile, der Steuerblock ist ein Band. */
+@media (max-width: 1024px) {
+  .vg-tafeln.vg-akte-tafeln { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vg-tafeln.vg-akte-tafeln > [data-breit="2"] { grid-column: 1 / -1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vg-akte-kopieren { transition: none; }
+}

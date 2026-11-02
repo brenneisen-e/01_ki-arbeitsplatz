@@ -1,0 +1,208 @@
+/* ==========================================================================
+   Regler — Ergänzungen zu Abschnitt 12 in index.css
+   Kerben-Label „heute …“ und Zieh-Fahne bleiben innerhalb der Bahn, auch
+   wenn Kerbe oder Knopf am Bahnrand stehen (heute = min oder max). Die
+   Grundregeln (.vg-regler, -bahn, -basis, -knopf) bleiben in index.css.
+   ========================================================================== */
+
+/* Die Bahn wird Container: 1cqw ist dann ein Prozent ihrer Breite, und ein
+   Label kann seine eigene Verschiebung gegen die Bahnkanten begrenzen. */
+.vg-regler-bahn { container-type: inline-size; }
+
+/* Verschiebung eines Labels, das an --vg-pos (Prozent der Bahn, ohne Einheit)
+   verankert ist: mittig (−50 %), aber nie links vor die Bahn (−Ankerabstand)
+   und nie rechts über sie hinaus (Restbreite minus eigene Breite). */
+.vg-regler-bahn .vg-regler-basis[data-label]::after,
+.vg-regler-bahn .vg-regler-knopf::after {
+  --vg-label-x: clamp(
+    calc(var(--vg-pos, 50) * -1cqw),
+    -50%,
+    calc(100cqw - var(--vg-pos, 50) * 1cqw - 100%)
+  );
+  translate: var(--vg-label-x) 0;
+}
+
+/* Die Fahne blendet über eine eigene Keyframe ein, weil vg-tip-ein die
+   Verschiebung fest auf −50 % setzt und die Begrenzung überschreiben würde. */
+.vg-regler-bahn .vg-regler-knopf::after { animation-name: vg-regler-fahne-ein; }
+@keyframes vg-regler-fahne-ein {
+  from { opacity: 0; translate: var(--vg-label-x) 3px; }
+  to   { opacity: 1; translate: var(--vg-label-x) 0; }
+}
+
+/* Name ohne Kurzinfo (Schublade: der Hinweis steht bei Fokus unter der Bahn):
+   keine Hilfe-Unterstreichung, kein Fragezeichen-Zeiger. */
+.vg-regler-name[data-ohne-tip] { cursor: default; }
+.vg-regler:hover .vg-regler-name[data-ohne-tip] { border-bottom-color: transparent; }
+
+/* Hinweis in der Schublade: Kerbenlabel und Hinweis erscheinen immer gemeinsam
+   (beide bei Fokus). Das Label ragt rund 10 px unter die Bahn (Kerbe endet
+   5 px darüber, Label 2 px darunter, eine Zeile 2xs); der Hinweis rückt so
+   weit nach unten, dass 6 px Luft bleiben. */
+/* Blockselektor: index.css steht im Bündel später und würde die Regel
+   sonst mit gleicher Spezifität überschreiben. */
+.vg-regler > .vg-regler-hinweis { padding-top: calc(var(--vg-a2) + 12px); }
+
+/* ==========================================================================
+   Dichte Reglerzeile — [data-dicht]
+   44 px hoch, alles in EINER Zeile: Name links · Bahn in der Mitte (18 px,
+   Knopf 12 px) · Wert rechts (58 px, rechtsbündig) · Abzeichen als Chip
+   hinter dem Wert · Waage und Zurück nur bei Hand oder Fokus.
+   Kerbe „heute“ und Abweichungsstück bleiben erhalten.
+
+   Die Namensspalte ist fit-content(150px): ein kurzer Name („AP Leben“)
+   gibt der Bahn seinen Platz, ein langer bekommt bis zu 150 px — und die
+   Bahn behält immer mindestens 120 px Weg (104 px bei 1280). Reicht die
+   Spalte für einen langen Namen nicht, bricht er auf zwei Zeilen um (mit
+   Trennung), statt zu kappen: „Zuschlag Biometrie“ bleibt lesbar, auch in
+   einer Drittel-Tafel. Erst die dritte Zeile entfällt.
+
+   Die Symbolknöpfe stehen nicht in der Zeile, sondern erscheinen bei Hand
+   oder Fokus ÜBER dem rechten Ende des Namens (Regler.jsx setzt sie in der
+   dichten Zeile in den Kopf, absolut an dessen rechter Kante) — so ist die
+   Bahn bei jeder Breite gleich lang, nichts springt, und die Knöpfe liegen
+   nie über dem Knopf der Bahn. Die Zeile trägt keinen eigenen Rand; den
+   gibt die Liste oder der Tafelkörper.
+   ========================================================================== */
+.vg-regler[data-dicht] {
+  position: relative;
+  grid-template-columns: fit-content(150px) minmax(120px, 1fr) auto;
+  grid-template-rows: 44px;
+  align-items: center;
+  gap: 0 var(--vg-a4);
+  padding: 0;
+}
+.vg-regler[data-dicht] .vg-regler-kopf {
+  grid-column: 1;
+  grid-row: 1;
+  /* kein Bezug für die Knöpfe: die liegen am rechten Zeilenende über dem
+     Chip, nicht über dem Namen (der Name bleibt beim Ziehen lesbar) */
+  position: static;
+  height: auto;
+  min-width: 0;
+}
+/* Der Name füllt seine Spalte; der Tip-Anker (inline-flex) darf nicht auf
+   Inhaltsbreite wachsen, sonst läuft der Name unter die Bahn. */
+.vg-regler[data-dicht] .vg-regler-kopf > .vg-tip { min-width: 0; max-width: 100%; }
+.vg-regler[data-dicht] .vg-regler-name {
+  font-size: var(--vg-fs-sm);
+  line-height: 1.2;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  /* zwei Zeilen statt Ellipse; lange Wörter trennen sich (lang="de") */
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  /* nur an Wortgrenzen brechen: Chromium hat kein deutsches Trennwörterbuch,
+     „anywhere“ zerlegte „Standortzuschuss“ mitten im Wort */
+  hyphens: manual;
+  overflow-wrap: normal;
+}
+.vg-regler[data-dicht] .vg-regler-bahn {
+  grid-column: 2;
+  /* Knopfradius: am linken Anschlag berührt der Knopf sonst den Namen */
+  margin-left: 6px;
+  grid-row: 1;
+  height: 18px;
+}
+.vg-regler[data-dicht] .vg-regler-bahn input[type="range"] { height: 18px; }
+.vg-regler[data-dicht] .vg-regler-bahn input[type="range"]::-webkit-slider-runnable-track { height: 18px; }
+.vg-regler[data-dicht] .vg-regler-bahn input[type="range"]::-webkit-slider-thumb { width: 12px; height: 12px; margin-top: 3px; }
+.vg-regler[data-dicht] .vg-regler-bahn input[type="range"]::-moz-range-track { height: 18px; }
+.vg-regler[data-dicht] .vg-regler-bahn input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; }
+.vg-regler[data-dicht] .vg-regler-knopf { width: 12px; height: 12px; }
+.vg-regler[data-dicht] .vg-regler-basis { height: 10px; }
+/* Kerbenlabel und Fahne rücken näher an die flachere Bahn, damit beide in
+   der 44-px-Zeile bleiben */
+.vg-regler[data-dicht] .vg-regler-basis[data-label]::after { top: 100%; }
+.vg-regler[data-dicht] .vg-regler-knopf::after { bottom: calc(100% + 7px); }
+
+.vg-regler[data-dicht] .vg-regler-werkzeuge {
+  grid-column: 3;
+  grid-row: 1;
+  height: auto;
+  gap: var(--vg-a2);
+}
+.vg-regler[data-dicht] .vg-regler-wert {
+  min-width: 58px;
+  font-size: var(--vg-fs-sm);
+}
+.vg-regler[data-dicht] .vg-regler-eingabe { width: 58px; }
+/* Chip hinter dem Wert: der Platz bleibt reserviert, damit nichts springt */
+.vg-regler-chip {
+  display: none;
+  min-width: 40px;
+  justify-content: flex-start;
+}
+.vg-regler[data-dicht] .vg-regler-chip { display: inline-flex; }
+.vg-regler-chip .vg-badge { height: 18px; font-size: var(--vg-fs-2xs); padding: 0 5px; }
+
+/* Waage und Zurück: im Kopf, absolut an dessen rechter Kante, versteckt bis
+   Hand oder Fokus. Jeder Knopf steckt in einem Tip (basis.jsx). */
+.vg-regler-knoepfe { display: none; }
+.vg-regler[data-dicht] .vg-regler-knoepfe {
+  display: flex;
+  align-items: center;
+  gap: var(--vg-a1);
+  position: absolute;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  visibility: hidden;
+  z-index: 3;
+}
+.vg-regler[data-dicht] .vg-regler-knoepfe .vg-btn {
+  background: var(--vg-flaeche);
+  border-color: var(--vg-rand);
+  /* weicher Übergang vom Namen zum Knopf, damit kein Buchstabe hart abbricht */
+  box-shadow: -6px 0 6px -2px var(--vg-flaeche);
+}
+/* Beim Zeigen weicht der Chip den Knöpfen — sein Platz ist ohnehin reserviert */
+.vg-regler[data-dicht]:hover .vg-regler-chip,
+.vg-regler[data-dicht]:focus-within .vg-regler-chip { visibility: hidden; }
+.vg-regler[data-dicht]:hover .vg-regler-knoepfe,
+.vg-regler[data-dicht]:focus-within .vg-regler-knoepfe { visibility: visible; }
+/* Der Hinweis der Schublade hat in der dichten Zeile keinen Platz */
+.vg-regler[data-dicht] > .vg-regler-hinweis { display: none; }
+
+/* Schalter: 0/1-Bahn mit zwei Rasten an den Enden */
+.vg-regler-raste {
+  position: absolute;
+  top: 50%;
+  translate: -50% -50%;
+  width: 2px;
+  height: 8px;
+  border-radius: 1px;
+  background: var(--vg-rand-hart);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ≤ 1280: drei Tafelspalten von rund 300 px. Name bis 128 px, Bahn
+   mindestens 104 px, der Chip weicht — der Wert trägt bei Abweichung
+   ohnehin Tiefgrün und die Kerbe zeigt heute. */
+@media (max-width: 1280px) {
+  .vg-regler[data-dicht] { grid-template-columns: fit-content(128px) minmax(96px, 1fr) auto; }
+  .vg-regler[data-dicht] .vg-regler-chip { display: none; }
+  .vg-regler[data-dicht] .vg-regler-wert { min-width: 50px; }
+}
+/* Nur 1025–1280 px: ohne Chip gibt es rechts keinen Platz — die Knöpfe
+   legen sich hier über das Namensende statt über den Wert */
+@media (max-width: 1280px) and (min-width: 1025px) {
+  .vg-regler[data-dicht] .vg-regler-kopf { position: relative; }
+}
+/* ≤ 1024: zwei Tafelspalten, die Tafeln sind wieder breiter — die Maße von
+   1600 gelten erneut */
+@media (max-width: 1024px) {
+  .vg-regler[data-dicht] { grid-template-columns: fit-content(150px) minmax(120px, 1fr) auto; }
+  .vg-regler[data-dicht] .vg-regler-chip { display: inline-flex; }
+}
+/* Zeigegeräte ohne Hover (Touch): die Knöpfe bleiben sichtbar */
+@media (hover: none) {
+  .vg-regler[data-dicht] .vg-regler-knoepfe { visibility: visible; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vg-regler-knopf, .vg-regler-abweichung { transition-duration: 1ms; }
+}

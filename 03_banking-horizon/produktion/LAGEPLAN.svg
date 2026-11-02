@@ -1,0 +1,214 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 1060" font-family="'DM Sans','Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="pf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#86BC25"/>
+    </marker>
+    <marker id="pfDunkel" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5F8FB4"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1680" height="1060" fill="#0B1626"/>
+
+  <!-- Kopf -->
+  <text x="60" y="66" font-size="30" font-weight="700" fill="#F2F7FC">Lageplan — Ein Tag in Banking Operations 2030</text>
+  <text x="60" y="98" font-size="16" fill="#9FB2C8">Maras Weg durch das Haus, 07:00–17:00 · Stationen und Uhrzeiten wie in der App (/v04, /v05)</text>
+
+  <!-- ================= Legende (oben links) ================= -->
+  <g>
+    <rect x="60" y="140" width="360" height="580" rx="14" fill="#0F1E33" stroke="#2A4361" stroke-width="2"/>
+    <text x="84" y="176" font-size="17" font-weight="700" fill="#F2F7FC">Stationen des Tages</text>
+    <g font-size="13" fill="#C4D6E9">
+      <g><circle cx="98" cy="212" r="11" fill="#86BC25"/><text x="98" y="217" font-size="12" font-weight="700" fill="#0B1626" text-anchor="middle">1</text>
+        <text x="120" y="208" font-weight="700" fill="#F2F7FC">07:00 · Wohnung</text>
+        <text x="120" y="226">Overnight-Briefing auf dem Handy,</text>
+        <text x="120" y="243">dann mit dem Rad zur Bank</text></g>
+      <g><circle cx="98" cy="278" r="11" fill="#86BC25"/><text x="98" y="283" font-size="12" font-weight="700" fill="#0B1626" text-anchor="middle">2</text>
+        <text x="120" y="274" font-weight="700" fill="#F2F7FC">07:45 · Eingangshalle <tspan fill="#8AA4C0" font-weight="400">(s0)</tspan></text>
+        <text x="120" y="292">Check-in an der Schranke,</text>
+        <text x="120" y="309">die ihre Smartwatch kennt</text></g>
+      <g><circle cx="98" cy="344" r="11" fill="#86BC25"/><text x="98" y="349" font-size="12" font-weight="700" fill="#0B1626" text-anchor="middle">3</text>
+        <text x="120" y="340" font-weight="700" fill="#F2F7FC">08:00–08:15 · Arbeitsplatz <tspan fill="#8AA4C0" font-weight="400">(s1–s3)</tspan></text>
+        <text x="120" y="358">Präventions-Feed, Kundenmoment,</text>
+        <text x="120" y="375">Kundenkacheln, Behördenanfrage</text></g>
+      <g><circle cx="98" cy="410" r="11" fill="#86BC25"/><text x="98" y="415" font-size="12" font-weight="700" fill="#0B1626" text-anchor="middle">4</text>
+        <text x="120" y="406" font-weight="700" fill="#F2F7FC">09:00 · Besprechungsraum <tspan fill="#8AA4C0" font-weight="400">(s4)</tspan></text>
+        <text x="120" y="424">Agent-Team-Review</text>
+        <text x="120" y="441">am Breitdisplay über den Köpfen</text></g>
+      <g><circle cx="98" cy="476" r="11" fill="#86BC25"/><text x="98" y="481" font-size="12" font-weight="700" fill="#0B1626" text-anchor="middle">5</text>
+        <text x="120" y="472" font-weight="700" fill="#F2F7FC">10:30 / 11:15 · Fokus-Kabine <tspan fill="#8AA4C0" font-weight="400">(s5–s6)</tspan></text>
+        <text x="120" y="490">Decision Trace statt Prozesskarte,</text>
+        <text x="120" y="507">Zertifizierung der Entscheidungslogik</text></g>
+      <g><circle cx="98" cy="542" r="11" fill="#86BC25"/><text x="98" y="547" font-size="12" font-weight="700" fill="#0B1626" text-anchor="middle">6</text>
+        <text x="120" y="538" font-weight="700" fill="#F2F7FC">14:00 · Werkraum <tspan fill="#8AA4C0" font-weight="400">(s7)</tspan></text>
+        <text x="120" y="556">Kontrolle wandert in die Entscheidung</text>
+        <text x="120" y="573">(Collection Recovery Workout)</text></g>
+      <g><circle cx="98" cy="608" r="11" fill="#86BC25"/><text x="98" y="613" font-size="12" font-weight="700" fill="#0B1626" text-anchor="middle">7</text>
+        <text x="120" y="604" font-weight="700" fill="#F2F7FC">15:30 / 16:00 · Arbeitsplatz <tspan fill="#8AA4C0" font-weight="400">(s8–s9)</tspan></text>
+        <text x="120" y="622">Agent als Interface,</text>
+        <text x="120" y="639">Workforce-Portfolio-Review</text></g>
+      <g><circle cx="98" cy="674" r="11" fill="#86BC25"/><text x="98" y="679" font-size="12" font-weight="700" fill="#0B1626" text-anchor="middle">8</text>
+        <text x="120" y="670" font-weight="700" fill="#F2F7FC">17:00 · Dachgarten <tspan fill="#8AA4C0" font-weight="400">(s10)</tspan></text>
+        <text x="120" y="688">Tagesrückblick — kein einziger Fall von Hand</text></g>
+    </g>
+  </g>
+
+  <!-- ================= Gebäude ================= -->
+  <rect x="460" y="160" width="920" height="800" rx="18" fill="#0F1E33" stroke="#2A4361" stroke-width="2.5"/>
+  <text x="470" y="150" font-size="14" font-weight="600" fill="#7E97B5">OPERATIONS-ZENTRALE FRANKFURT · ERDGESCHOSS (SCHEMATISCH)</text>
+
+  <!-- Besprechungsraum -->
+  <g>
+    <rect x="482" y="182" width="288" height="228" rx="10" fill="#142842" stroke="#33517A" stroke-width="1.8"/>
+    <rect x="512" y="196" width="228" height="13" rx="4" fill="#86BC25" opacity="0.75"/>
+    <text x="626" y="230" font-size="16" font-weight="700" fill="#D5E6F6" text-anchor="middle">Besprechungsraum</text>
+    <text x="626" y="249" font-size="11" fill="#8AA4C0" text-anchor="middle">Agent Workforce Control Room · Breitdisplay</text>
+    <ellipse cx="616" cy="330" rx="80" ry="32" fill="none" stroke="#3D5C84" stroke-width="1.8"/>
+    <g fill="#3D5C84">
+      <circle cx="536" cy="312" r="6"/><circle cx="556" cy="358" r="6"/><circle cx="616" cy="372" r="6"/>
+      <circle cx="676" cy="358" r="6"/><circle cx="696" cy="312" r="6"/><circle cx="616" cy="288" r="6"/>
+    </g>
+  </g>
+
+  <!-- Fokus-Kabine -->
+  <g>
+    <rect x="800" y="182" width="182" height="158" rx="10" fill="#142842" stroke="#33517A" stroke-width="1.8"/>
+    <text x="891" y="212" font-size="16" font-weight="700" fill="#D5E6F6" text-anchor="middle">Fokus-Kabine</text>
+    <text x="891" y="230" font-size="11" fill="#8AA4C0" text-anchor="middle">Process Intelligence · Governance</text>
+    <g stroke="#3D5C84" stroke-width="2" fill="none">
+      <rect x="856" y="252" width="70" height="40" rx="4"/>
+      <path d="M 891 292 L 891 304 M 874 304 L 908 304"/>
+    </g>
+  </g>
+
+  <!-- Werkraum -->
+  <g>
+    <rect x="1012" y="182" width="278" height="228" rx="10" fill="#142842" stroke="#33517A" stroke-width="1.8"/>
+    <text x="1151" y="215" font-size="16" font-weight="700" fill="#D5E6F6" text-anchor="middle">Werkraum</text>
+    <text x="1151" y="234" font-size="11" fill="#8AA4C0" text-anchor="middle">Risk Assurance Hub</text>
+    <g stroke="#3D5C84" stroke-width="2" fill="none">
+      <path d="M 1151 336 c -22 0 -34 -14 -34 -30 v -22 l 34 -14 l 34 14 v 22 c 0 16 -12 30 -34 30 z"/>
+      <path d="M 1138 306 l 9 9 l 17 -18"/>
+    </g>
+  </g>
+
+  <!-- Offene Fläche + Arbeitsplatz -->
+  <text x="920" y="500" font-size="13" letter-spacing="3" fill="#41608A" text-anchor="middle">OFFENE OPERATIONS-FLÄCHE</text>
+  <g>
+    <rect x="832" y="572" width="188" height="76" rx="8" fill="#142842" stroke="#33517A" stroke-width="1.8"/>
+    <g stroke="#3D5C84" stroke-width="2" fill="none">
+      <rect x="852" y="586" width="40" height="26" rx="3"/>
+      <rect x="906" y="586" width="40" height="26" rx="3"/>
+      <rect x="960" y="586" width="40" height="26" rx="3"/>
+      <path d="M 872 612 v 8 M 926 612 v 8 M 980 612 v 8"/>
+    </g>
+    <text x="926" y="676" font-size="15" font-weight="700" fill="#D5E6F6" text-anchor="middle">Maras Arbeitsplatz</text>
+    <text x="926" y="694" font-size="11" fill="#8AA4C0" text-anchor="middle">Prevention · Customer Trust · Evidence</text>
+  </g>
+
+  <!-- Aufzug -->
+  <g>
+    <rect x="1318" y="556" width="60" height="122" rx="8" fill="#142842" stroke="#33517A" stroke-width="1.8"/>
+    <g stroke="#3D5C84" stroke-width="2" fill="none">
+      <path d="M 1340 600 l 8 -12 l 8 12 M 1348 588 v 24"/>
+      <path d="M 1340 636 l 8 12 l 8 -12 M 1348 648 v -24"/>
+    </g>
+    <text x="1348" y="700" font-size="12" font-weight="600" fill="#8AA4C0" text-anchor="middle">Aufzug</text>
+  </g>
+
+  <!-- Eingangshalle mit Schranke -->
+  <g>
+    <rect x="462" y="792" width="916" height="166" rx="10" fill="#122540" stroke="#33517A" stroke-width="1.6"/>
+    <text x="560" y="826" font-size="16" font-weight="700" fill="#D5E6F6">Eingangshalle</text>
+    <text x="560" y="845" font-size="11" fill="#8AA4C0">Arrival &amp; Operations Entry Zone</text>
+    <!-- Sperrlinie Wand zu Wand, eine Gasse -->
+    <path d="M 462 792 H 688" stroke="#86BC25" stroke-width="5"/>
+    <path d="M 758 792 H 1378" stroke="#86BC25" stroke-width="5"/>
+    <rect x="682" y="776" width="14" height="32" rx="3" fill="#86BC25"/>
+    <rect x="750" y="776" width="14" height="32" rx="3" fill="#86BC25"/>
+    <text x="1030" y="772" font-size="12" font-weight="600" fill="#86BC25" text-anchor="middle">Check-in-Schranke — Sperrlinie Wand zu Wand, einzige Gasse</text>
+  </g>
+
+  <!-- Haupteingang in der linken Wand -->
+  <rect x="450" y="852" width="16" height="52" fill="#0B1626"/>
+  <path d="M 464 852 A 52 52 0 0 1 516 904" stroke="#3D5C84" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+  <text x="472" y="928" font-size="11" font-weight="600" fill="#61789A">Haupteingang</text>
+
+  <!-- ================= Dachebene ================= -->
+  <g>
+    <rect x="1428" y="170" width="212" height="240" rx="14" fill="#0F1E33" stroke="#2A4361" stroke-width="2" stroke-dasharray="7 5"/>
+    <text x="1534" y="204" font-size="16" font-weight="700" fill="#D5E6F6" text-anchor="middle">Dachgarten</text>
+    <text x="1534" y="223" font-size="11" fill="#8AA4C0" text-anchor="middle">Dachebene · Reflection &amp; Learning</text>
+    <g stroke="#3D5C84" stroke-width="2" fill="none">
+      <path d="M 1500 300 q 0 -26 22 -30 q -2 26 -22 30 z"/>
+      <path d="M 1522 302 q 2 -30 28 -34 q -4 30 -28 34 z"/>
+      <path d="M 1560 302 q -2 -24 -22 -28"/>
+      <path d="M 1490 310 h 84"/>
+    </g>
+  </g>
+
+  <!-- ================= Wohnung (unten links) ================= -->
+  <g>
+    <rect x="80" y="780" width="260" height="170" rx="14" fill="#0F1E33" stroke="#2A4361" stroke-width="2"/>
+    <text x="210" y="816" font-size="16" font-weight="700" fill="#D5E6F6" text-anchor="middle">Wohnung</text>
+    <text x="210" y="835" font-size="11" fill="#8AA4C0" text-anchor="middle">Küchentisch, Kaffee, Overnight-Briefing</text>
+    <g stroke="#3D5C84" stroke-width="2" fill="none">
+      <path d="M 182 892 l 28 -24 l 28 24 v 26 h -56 z"/>
+      <path d="M 202 918 v -16 h 16 v 16"/>
+    </g>
+  </g>
+
+  <!-- Fahrrad unter dem Arbeitsweg -->
+  <g stroke="#5F8FB4" stroke-width="2" fill="none">
+    <circle cx="380" cy="928" r="12"/>
+    <circle cx="424" cy="928" r="12"/>
+    <path d="M 380 928 l 10 -21 h 15 l 15 21 M 386 907 h -9 M 398 928 h 20 l -7 -18"/>
+  </g>
+  <text x="402" y="966" font-size="12" font-weight="600" fill="#5F8FB4" text-anchor="middle">mit dem Rad</text>
+
+  <!-- ================= Route ================= -->
+  <!-- 1 -> Haupteingang: Arbeitsweg (gestrichelt) -->
+  <path d="M 360 878 C 392 878, 418 878, 446 878" fill="none" stroke="#5F8FB4" stroke-width="3.5" stroke-dasharray="9 8" marker-end="url(#pfDunkel)"/>
+  <!-- Haupteingang -> 2 -->
+  <path d="M 470 878 C 560 882, 630 882, 698 880" fill="none" stroke="#86BC25" stroke-width="3.5" marker-end="url(#pf)"/>
+  <!-- 2 -> 3: durch die Gasse zum Platz -->
+  <path d="M 720 858 C 722 800, 740 700, 806 632" fill="none" stroke="#86BC25" stroke-width="3.5" marker-end="url(#pf)"/>
+  <!-- 3 -> 4: Platz -> Besprechung -->
+  <path d="M 820 594 C 782 520, 762 480, 742 436" fill="none" stroke="#86BC25" stroke-width="3.5" marker-end="url(#pf)"/>
+  <!-- 4 -> 5: Besprechung -> Kabine -->
+  <path d="M 754 402 C 788 376, 800 368, 815 352" fill="none" stroke="#86BC25" stroke-width="3.5" marker-end="url(#pf)"/>
+  <!-- 5 -> 6: Kabine -> Werkraum -->
+  <path d="M 854 348 C 940 402, 1040 428, 1128 416" fill="none" stroke="#86BC25" stroke-width="3.5" marker-end="url(#pf)"/>
+  <!-- 6 -> 7: Werkraum -> zurück an den Platz -->
+  <path d="M 1146 430 C 1130 500, 1090 560, 1049 596" fill="none" stroke="#86BC25" stroke-width="3.5" marker-end="url(#pf)"/>
+  <!-- 7 -> Aufzug -->
+  <path d="M 1050 626 C 1140 652, 1220 640, 1306 622" fill="none" stroke="#86BC25" stroke-width="3.5" marker-end="url(#pf)"/>
+  <!-- Aufzug -> 8: Dachebene (gestrichelt) -->
+  <path d="M 1380 592 C 1470 566, 1524 500, 1532 424" fill="none" stroke="#86BC25" stroke-width="3.5" stroke-dasharray="9 8" marker-end="url(#pf)"/>
+  <text x="1396" y="500" font-size="12" font-weight="600" fill="#86BC25">Aufzug zur</text>
+  <text x="1396" y="516" font-size="12" font-weight="600" fill="#86BC25">Dachebene</text>
+
+  <!-- ================= Stationsmarken ================= -->
+  <g font-size="16" font-weight="700" text-anchor="middle">
+    <g><circle cx="340" cy="878" r="17" fill="#86BC25"/><text x="340" y="884" fill="#0B1626">1</text>
+       <text x="368" y="858" font-size="14" fill="#F2F7FC" text-anchor="start" style="paint-order:stroke" stroke="#0B1626" stroke-width="4">07:00</text></g>
+    <g><circle cx="720" cy="880" r="17" fill="#86BC25"/><text x="720" y="886" fill="#0B1626">2</text>
+       <text x="748" y="886" font-size="14" fill="#F2F7FC" text-anchor="start" style="paint-order:stroke" stroke="#0B1626" stroke-width="4">07:45 Check-in</text></g>
+    <g><circle cx="822" cy="614" r="17" fill="#86BC25"/><text x="822" y="620" fill="#0B1626">3</text>
+       <text x="796" y="560" font-size="14" fill="#F2F7FC" text-anchor="end" style="paint-order:stroke" stroke="#0B1626" stroke-width="4">08:00–08:15</text></g>
+    <g><circle cx="734" cy="410" r="17" fill="#86BC25"/><text x="734" y="416" fill="#0B1626">4</text>
+       <text x="714" y="450" font-size="14" fill="#F2F7FC" text-anchor="end" style="paint-order:stroke" stroke="#0B1626" stroke-width="4">09:00</text></g>
+    <g><circle cx="836" cy="340" r="17" fill="#86BC25"/><text x="836" y="346" fill="#0B1626">5</text>
+       <text x="860" y="330" font-size="14" fill="#F2F7FC" text-anchor="start" style="paint-order:stroke" stroke="#0B1626" stroke-width="4">10:30 / 11:15</text></g>
+    <g><circle cx="1150" cy="410" r="17" fill="#86BC25"/><text x="1150" y="416" fill="#0B1626">6</text>
+       <text x="1176" y="444" font-size="14" fill="#F2F7FC" text-anchor="start" style="paint-order:stroke" stroke="#0B1626" stroke-width="4">14:00</text></g>
+    <g><circle cx="1032" cy="614" r="17" fill="#86BC25"/><text x="1032" y="620" fill="#0B1626">7</text>
+       <text x="1058" y="600" font-size="14" fill="#F2F7FC" text-anchor="start" style="paint-order:stroke" stroke="#0B1626" stroke-width="4">15:30 / 16:00</text></g>
+    <g><circle cx="1478" cy="364" r="17" fill="#86BC25"/><text x="1478" y="370" fill="#0B1626">8</text>
+       <text x="1478" y="396" font-size="14" fill="#F2F7FC" style="paint-order:stroke" stroke="#0B1626" stroke-width="4">17:00</text></g>
+  </g>
+
+  <!-- Fußnote -->
+  <text x="460" y="1010" font-size="12" fill="#61789A">Grundriss schematisch. Durchgezogene Pfeile: Weg im Erdgeschoss · gestrichelt: Arbeitsweg bzw. Aufzug zur Dachebene.</text>
+  <text x="460" y="1030" font-size="12" fill="#61789A">An Station 3 und 7 sitzt Mara am selben Platz — die Inhalte wechseln auf den Bildschirmen, nicht im Raum.</text>
+</svg>

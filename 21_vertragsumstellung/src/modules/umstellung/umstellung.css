@@ -1,0 +1,162 @@
+/* ==========================================================================
+   UMSTELLUNGSTOOL — Modulklassen des Lagebilds und des Vergleichs
+   --------------------------------------------------------------------------
+   Nur, was ausschließlich hier vorkommt. Wegbalken, Kachel, Kachelraster,
+   Legendenchip und Lagebild-Tabelle sind Gestaltungssystem (index.css);
+   der Steuerblock bringt sein CSS selbst mit (ui/steuerblock.css).
+   ========================================================================== */
+
+/* ---- Werkzeugzeile rechts: Ansichts-Segment links, Suche rechts --------- */
+.vg-lage-werkzeuge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vg-a4);
+  min-height: 40px;
+  min-width: 0;
+}
+
+/* ---- Einstellungen im Steuerblock ---------------------------------------
+   Das Kanal-Segment füllt die Blockbreite; die Bahn des Segments ist im
+   Gestaltungssystem hell (--vg-tief), was der Block nicht umbelegt — hier
+   wird sie zur Glasfläche wie die Knöpfe des Blocks. */
+.vg-lage-kanal .vg-segment {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%;
+  background: rgb(255 255 255 / 0.06);
+  border-color: var(--vg-rand-stark);
+}
+.vg-lage-kanal .vg-segment > button {
+  padding: 0 var(--vg-a2);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--vg-fs-xs);   /* vier Wörter in 300 px Blockbreite */
+}
+.vg-lage-kanal .vg-segment > button[aria-pressed="true"] {
+  background: rgb(255 255 255 / 0.14);
+  box-shadow: none;
+}
+
+/* Vier Ampel-Chips mit Zähler — Legende und Hervorhebung in einem */
+.vg-lage-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vg-a2);
+}
+
+/* ---- Kachel als Schaltfläche --------------------------------------------
+   .vg-kachel ist als Karte gedacht; auf einem <button> bringt der Browser
+   eigene Schrift, Farbe und Ausrichtung mit. */
+button.vg-kachel {
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+/* ---- Tabelle: Einheit mit Unterzeile, gedimmte Zellen ------------------- */
+.vg-lage-einheit {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  max-width: 300px;
+}
+.vg-lage-einheit-unter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vg-a2);
+  font-size: var(--vg-fs-xs);
+  font-weight: 400;
+  color: var(--vg-text-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vg-lage-einheit-unter .vg-punkt { width: 6px; height: 6px; background: var(--vg-neutral-flaeche); }
+.vg-lage-einheit-unter[data-ton="positiv"] .vg-punkt { background: var(--vg-positiv); }
+.vg-lage-einheit-unter[data-ton="warnung"] .vg-punkt { background: var(--vg-warnung); }
+.vg-lage-einheit-unter[data-ton="negativ"] .vg-punkt { background: var(--vg-negativ); }
+.vg-lage-einheit-unter[data-ton="info"] .vg-punkt    { background: var(--vg-info); }
+
+/* Die Tabelle kennt keine Zeilenattribute; gedimmt wird je Zelle, damit
+   die Ampel-Chips auch hier die anderen Stufen zurücktreten lassen. */
+.vg-lage-zelle {
+  display: block;
+  min-width: 0;
+  transition: opacity var(--vg-normal) var(--vg-kurve-weich);
+}
+.vg-lage-zelle[data-gedimmt="true"] { opacity: 0.4; }
+.vg-lage-weg {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vg-a4);
+}
+
+/* ---- Ränder des Portfolios: fünf Rückgänge links, fünf Zuwächse rechts -- */
+.vg-raender-spalten {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--vg-a7);
+}
+.vg-raender-spalten > ul { list-style: none; margin: 0; padding: 0; min-width: 0; }
+.vg-raender-titel {
+  padding: var(--vg-a2) var(--vg-a3) var(--vg-a3);
+  font-size: var(--vg-fs-xs);
+  color: var(--vg-text-4);
+}
+.vg-raender-zeile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px 64px;
+  align-items: center;
+  gap: var(--vg-a4);
+  width: 100%;
+  height: 34px;
+  padding: 0 var(--vg-a3);
+  border: 0;
+  border-radius: var(--vg-r-sm);
+  background: transparent;
+  color: var(--vg-text);
+  font: inherit;
+  font-size: var(--vg-fs-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--vg-sofort) linear;
+}
+.vg-raender-zeile:hover, .vg-raender-zeile:focus-visible { background: var(--vg-hover); }
+.vg-raender-zeile:focus-visible { outline: 2px solid var(--vg-fokus); outline-offset: -2px; }
+.vg-raender-zeile .vg-delta { justify-self: end; font-size: var(--vg-fs-sm); }
+
+/* ---- Vergleich: Paarvergleich-Karten nebeneinander -----------------------
+   Umbruch nur auf Teiler der Kartenzahl (§ 8): drei Karten bleiben bis 1280 px
+   dreispaltig (Karte ≈ 400 px) und werden ab 1024 px einspaltig — bei ≈ 316 px
+   Kartenbreite überdrucken sich sonst die fünf Kategorienamen des Paarvergleichs;
+   vier Karten gehen 4 → 2 → 1. */
+.vg-vergleich-raster {
+  display: grid;
+  gap: var(--vg-d-raster-luft);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.vg-vergleich-raster[data-spalten="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vg-vergleich-raster[data-spalten="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1280px) {
+  .vg-vergleich-raster[data-spalten="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1024px) {
+  .vg-vergleich-raster,
+  .vg-vergleich-raster[data-spalten="2"],
+  .vg-vergleich-raster[data-spalten="4"] { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Vergleich: Umschalter über der Kennzahltabelle, beste Quote --------- */
+.vg-vergleich-umschalter {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--vg-a4);
+}
+/* Der beste Quotenwert bekommt eine 2-px-Marke am Zellenrand — keine Farbe
+   im Wert, und nie bei Absolutbeträgen (Größe ist kein Verdienst). */
+.vg-tabelle td.vg-vergleich-bester { box-shadow: inset 2px 0 0 var(--vg-positiv); }

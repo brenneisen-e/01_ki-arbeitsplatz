@@ -1,0 +1,972 @@
+<!-- HR Pipeline Module: KI-gestütztes Recruiting & Bewerbermanagement -->
+<div class="hp-scanner-page">
+    <!-- Toast Container -->
+    <div id="hpToastContainer" class="hp-toast-container"></div>
+
+    <!-- Module Header -->
+    <div class="hp-scanner-header">
+        <div class="hp-scanner-header-left">
+            <button class="back-button" onclick="closeHRPipeline()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Zurück
+            </button>
+            <div class="hp-scanner-header-info">
+                <div class="hp-scanner-logo-small">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                    </svg>
+                </div>
+                <div class="hp-scanner-header-text">
+                    <h1 class="hp-scanner-page-title">HR Pipeline</h1>
+                    <div class="hp-scanner-subtitle">KI-gestütztes Recruiting & Bewerbermanagement</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compliance Badge -->
+        <div class="hp-compliance-badges">
+            <span class="hp-compliance-badge" title="EU AI Act konform - Hochrisiko-KI nach Anhang III, Nr. 4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                EU AI Act
+            </span>
+            <span class="hp-compliance-badge" title="DSGVO-konform mit Human-in-the-Loop">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                DSGVO
+            </span>
+        </div>
+
+        <!-- Mode Toggle -->
+        <div class="hp-mode-toggle">
+            <button class="hp-mode-btn active" data-mode="bewerber" onclick="switchHPMode('bewerber')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                Bewerber-Portal
+            </button>
+            <button class="hp-mode-btn" data-mode="arbeitgeber" onclick="switchHPMode('arbeitgeber')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
+                Recruiting Dashboard
+            </button>
+            <button class="hp-mode-btn" data-mode="cockpit" onclick="switchHPMode('cockpit')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                HR-Cockpit
+            </button>
+        </div>
+    </div>
+
+    <!-- ===========================
+         BEWERBER MODE
+         =========================== -->
+    <div id="hpBewerberMode" class="hp-bewerber-section">
+        <!-- Upload Section / Landing Page -->
+        <div id="hpUploadSection" class="hp-upload-section">
+            <!-- Hero Section -->
+            <div class="hp-landing-hero">
+                <div class="hp-landing-hero-content">
+                    <div class="hp-landing-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        KI-gestützte Stellensuche
+                    </div>
+                    <h2 class="hp-landing-title">Willkommen im ERGO Karriereportal</h2>
+                    <p class="hp-landing-subtitle">Finden Sie Ihre ideale Vertriebsposition bei einem der führenden Versicherungsunternehmen Deutschlands. Unsere KI analysiert Ihren Lebenslauf und findet die besten Stellen für Sie — in Sekunden.</p>
+                    <div class="hp-landing-cta">
+                        <button class="hp-landing-upload-btn" onclick="document.getElementById('hpFileInput').click()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Lebenslauf hochladen
+                        </button>
+                        <span class="hp-landing-formats">PDF oder DOCX</span>
+                        <input type="file" id="hpFileInput" accept=".pdf,.docx" onchange="handleHPUpload(event)" style="display:none">
+                    </div>
+                    <label class="hp-linkedin-toggle" for="hpLinkedinToggle">
+                        <input type="checkbox" id="hpLinkedinToggle" checked>
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="color:#0A66C2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        <span>LinkedIn &amp; Social-Media-Profile automatisch analysieren</span>
+                    </label>
+                </div>
+                <div class="hp-landing-hero-visual">
+                    <div class="hp-landing-stats">
+                        <div class="hp-landing-stat">
+                            <div class="hp-landing-stat-value">8</div>
+                            <div class="hp-landing-stat-label">Offene Stellen</div>
+                        </div>
+                        <div class="hp-landing-stat">
+                            <div class="hp-landing-stat-value">NRW</div>
+                            <div class="hp-landing-stat-label">Schwerpunkt Region</div>
+                        </div>
+                        <div class="hp-landing-stat">
+                            <div class="hp-landing-stat-value">&lt;30s</div>
+                            <div class="hp-landing-stat-label">KI-Analyse</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benefits / How it works -->
+            <div class="hp-landing-features">
+                <div class="hp-landing-feature">
+                    <div class="hp-landing-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h4>1. Lebenslauf hochladen</h4>
+                    <p>Laden Sie Ihren Lebenslauf als PDF oder DOCX hoch — sicher und DSGVO-konform.</p>
+                </div>
+                <div class="hp-landing-feature">
+                    <div class="hp-landing-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                            <circle cx="12" cy="5" r="2"></circle>
+                            <path d="M12 7v4"></path>
+                        </svg>
+                    </div>
+                    <h4>2. KI analysiert Ihr Profil</h4>
+                    <p>Unsere KI erkennt Qualifikationen, Erfahrung und Branchenkenntnisse automatisch.</p>
+                </div>
+                <div class="hp-landing-feature">
+                    <div class="hp-landing-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                    <h4>3. Passende Stellen finden</h4>
+                    <p>Erhalten Sie personalisierte Stellenvorschläge mit Match-Score und Entfernungsberechnung.</p>
+                </div>
+            </div>
+
+            <!-- Open Positions Preview -->
+            <div class="hp-landing-positions">
+                <h3>Aktuelle Vertriebspositionen</h3>
+                <div class="hp-landing-positions-grid">
+                    <div class="hp-landing-position-card" onclick="openHPJobDetail(1)">
+                        <div class="hp-landing-pos-title">Agenturleiter</div>
+                        <div class="hp-landing-pos-meta">Düsseldorf &middot; Führung</div>
+                    </div>
+                    <div class="hp-landing-position-card" onclick="openHPJobDetail(2)">
+                        <div class="hp-landing-pos-title">Vertriebsspezialist Leben</div>
+                        <div class="hp-landing-pos-meta">Köln &middot; Spezialist</div>
+                    </div>
+                    <div class="hp-landing-position-card" onclick="openHPJobDetail(5)">
+                        <div class="hp-landing-pos-title">Trainee Vertrieb</div>
+                        <div class="hp-landing-pos-meta">Köln &middot; Einstieg</div>
+                    </div>
+                    <div class="hp-landing-position-card" onclick="openHPJobDetail(7)">
+                        <div class="hp-landing-pos-title">Bezirksdirektor</div>
+                        <div class="hp-landing-pos-meta">Münster &middot; Führung</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Profiles (collapsible) -->
+            <div class="hp-demo-profiles collapsed">
+                <div class="hp-demo-divider hp-demo-toggle" onclick="this.parentElement.classList.toggle('collapsed')">
+                    <span>Demo-Modus</span>
+                    <svg class="hp-demo-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="hp-demo-content">
+                    <p class="hp-demo-hint">Testen Sie die KI-Analyse mit einem vorgefertigten Profil:</p>
+                    <div class="hp-demo-grid">
+                        <button class="hp-demo-btn score-high" onclick="loadHPDemoProfile('max')">
+                            <div class="hp-demo-avatar">MB</div>
+                            <span class="name">Max Berger</span>
+                            <span class="role">Top-Kandidat</span>
+                        </button>
+                        <button class="hp-demo-btn score-mid" onclick="loadHPDemoProfile('sarah')">
+                            <div class="hp-demo-avatar">SK</div>
+                            <span class="name">Sarah Klein</span>
+                            <span class="role">Quereinsteigerin</span>
+                        </button>
+                        <button class="hp-demo-btn score-low" onclick="loadHPDemoProfile('thomas')">
+                            <div class="hp-demo-avatar">TW</div>
+                            <span class="name">Thomas Wendt</span>
+                            <span class="role">Ablehnung</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Animation -->
+        <div id="hpLoadingSection" class="hp-loading-section">
+            <div class="hp-loading-spinner"></div>
+            <h3>KI analysiert Ihren Lebenslauf...</h3>
+            <div class="hp-loading-bar">
+                <div class="hp-loading-bar-fill" id="hpLoadingBar"></div>
+            </div>
+            <div class="hp-loading-status" id="hpLoadingStatus">Dokument wird verarbeitet...</div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="hpResultsSection" class="hp-results-section">
+            <!-- Back Navigation -->
+            <button class="hp-back-to-landing" onclick="resetHPBewerber()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                Zurück zur Startseite
+            </button>
+            <!-- DSGVO Banner -->
+            <div class="hp-dsgvo-banner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                KI-gestützte Vorauswahl — Die finale Bewertung und Entscheidung wird stets durch qualifiziertes Personal getroffen.
+            </div>
+
+            <!-- Profile Card -->
+            <div class="hp-profile-card" id="hpProfileCard">
+                <!-- Filled dynamically -->
+            </div>
+
+            <!-- Rejection Notice -->
+            <div class="hp-rejection-notice" id="hpRejectionNotice">
+                <div class="hp-rejection-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h4>Derzeit keine passende Position verfügbar</h4>
+                    <p id="hpRejectionText"></p>
+                    <span class="hp-alt-suggestion" onclick="hpChatAction('quereinsteiger')">Informieren Sie sich über unser Quereinsteiger-Programm</span>
+                </div>
+            </div>
+
+            <!-- Job Matches -->
+            <div class="hp-matches-header">
+                <h3>Stellenvorschläge</h3>
+                <div style="display:flex;align-items:center;gap:var(--space-3);">
+                    <button class="hp-action-btn" onclick="resetHPBewerber()" style="font-size:var(--font-sm)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        Neuen Lebenslauf hochladen
+                    </button>
+                    <div class="hp-matches-sort">
+                        <label>Sortieren:</label>
+                        <select id="hpSortSelect" onchange="sortHPMatches(this.value)">
+                            <option value="score">Match-Score</option>
+                            <option value="distance">Entfernung</option>
+                            <option value="region">Region</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="hpMatchesList">
+                <!-- Job match cards filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         ARBEITGEBER MODE
+         =========================== -->
+    <div id="hpArbeitgeberMode" class="hp-employer-section">
+        <!-- Toolbar -->
+        <div class="hp-employer-toolbar">
+            <div class="hp-employer-toolbar-left">
+                <h3 class="hp-employer-section-title">Recruiting Dashboard</h3>
+            </div>
+            <div class="hp-employer-toolbar-right">
+                <label class="hp-blind-toggle" title="Anonymisierte Ansicht (AGG-konform)">
+                    <input type="checkbox" id="hpBlindToggle" onchange="toggleHPBlindScreening()">
+                    <span class="hp-blind-toggle-slider"></span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    Blind Screening
+                </label>
+            </div>
+        </div>
+
+        <!-- KPI Bar -->
+        <div class="hp-kpi-section">
+            <div class="hp-kpi-group-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+                Bewerbungseingang
+            </div>
+            <div class="hp-kpi-bar" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Bewerbungen</div>
+                    <div class="hp-kpi-value" id="hpKpiBewerbungen" data-target="47">0</div>
+                    <div class="hp-kpi-desc">Eingegangene Bewerbungen der letzten 30 Tage</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +12% vs. Vormonat
+                    </div>
+                    <canvas class="hp-sparkline" id="hpSparkline1" width="120" height="32"></canvas>
+                </div>
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Durchschnittlicher Score</div>
+                    <div class="hp-kpi-value blue" id="hpKpiScore" data-target="68" data-suffix="/100">0/100</div>
+                    <div class="hp-kpi-desc">Mittlerer KI-Score aller Bewerbungen (max. 100)</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +3 Punkte
+                    </div>
+                    <canvas class="hp-sparkline" id="hpSparkline2" width="120" height="32"></canvas>
+                </div>
+                <div class="hp-kpi-card clickable" onclick="filterHPByRecommended()" style="cursor:pointer" title="Klicken zum Filtern">
+                    <div class="hp-kpi-label">Empfohlene Kandidaten</div>
+                    <div class="hp-kpi-value green" id="hpKpiEmpfohlen" data-target="12">0</div>
+                    <div class="hp-kpi-desc">Kandidaten mit KI-Empfehlung &bdquo;Einladen&ldquo;</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +4 diese Woche
+                    </div>
+                    <canvas class="hp-sparkline" id="hpSparkline3" width="120" height="32"></canvas>
+                </div>
+            </div>
+
+            <div class="hp-kpi-group-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Recruiting-Pipeline
+            </div>
+            <div class="hp-kpi-bar" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Eingeladen</div>
+                    <div class="hp-kpi-value blue" id="hpKpiEingeladen" data-target="58" data-suffix="%">0%</div>
+                    <div class="hp-kpi-desc">Anteil Bewerber mit Einladung zum Gespräch</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +6% vs. Vormonat
+                    </div>
+                </div>
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Angebot unterbreitet</div>
+                    <div class="hp-kpi-value" id="hpKpiAngebot" data-target="23" data-suffix="%">0%</div>
+                    <div class="hp-kpi-desc">Anteil Bewerber, die ein Vertragsangebot erhalten</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +2% vs. Vormonat
+                    </div>
+                </div>
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Eingestellt</div>
+                    <div class="hp-kpi-value green" id="hpKpiEingestellt" data-target="15" data-suffix="%">0%</div>
+                    <div class="hp-kpi-desc">Anteil Bewerber mit unterschriebenem Vertrag</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +3% vs. Vormonat
+                    </div>
+                </div>
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">KI-Genauigkeit</div>
+                    <div class="hp-kpi-value green" id="hpKpiGenauigkeit" data-target="94" data-suffix=",7%">0%</div>
+                    <div class="hp-kpi-desc">Recruiter-Übernahme der KI-Empfehlung (12 Monate)</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +1,2% vs. Vorjahr
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="hp-filters">
+            <select class="hp-filter-select" id="hpFilterRegion" onchange="filterHPApplicants()">
+                <option value="">Alle Regionen</option>
+                <option value="nrw">Nordrhein-Westfalen</option>
+                <option value="nord">Norddeutschland</option>
+                <option value="sued">Süddeutschland</option>
+            </select>
+            <select class="hp-filter-select" id="hpFilterScore" onchange="filterHPApplicants()">
+                <option value="">Alle Scores</option>
+                <option value="high">Score > 80</option>
+                <option value="mid">Score 60-80</option>
+                <option value="low">Score &lt; 60</option>
+            </select>
+            <select class="hp-filter-select" id="hpFilterStatus" onchange="filterHPApplicants()">
+                <option value="">Alle Status</option>
+                <option value="recommended">Empfohlen</option>
+                <option value="review">Prüfen</option>
+                <option value="rejected">Ablehnung empfohlen</option>
+            </select>
+        </div>
+
+        <!-- Applicant Grid -->
+        <div class="hp-applicant-grid" id="hpApplicantGrid">
+            <!-- Filled dynamically -->
+        </div>
+    </div>
+
+    <!-- ===========================
+         DETAIL OVERLAY (Arbeitgeber)
+         =========================== -->
+    <div class="hp-detail-overlay" id="hpDetailOverlay" onclick="if(event.target===this)closeHPDetail()">
+        <div class="hp-detail-panel" id="hpDetailPanel">
+            <div class="hp-detail-header">
+                <h3 id="hpDetailName">Bewerber-Detail</h3>
+                <div style="display:flex;align-items:center;gap:var(--space-3)">
+                    <button class="hp-action-btn" onclick="toggleHPSideBySide()" id="hpPdfBtn" style="display:none" title="Original-CV ein-/ausblenden">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <span id="hpPdfBtnText">Original-CV</span>
+                    </button>
+                    <button class="hp-detail-close" onclick="closeHPDetail()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="hp-detail-split">
+                <div class="hp-detail-analysis">
+                    <div class="hp-detail-body" id="hpDetailBody">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+                <div class="hp-detail-cv" id="hpDetailCV">
+                    <div class="hp-cv-sidebar-header">
+                        <span>Original-Bewerbung</span>
+                    </div>
+                    <iframe id="hpPdfFrame" style="width:100%;height:100%;border:none;"></iframe>
+                </div>
+            </div>
+            <div class="hp-detail-actions">
+                <button class="hp-action-btn primary" onclick="hpDetailAction('einladen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Einladen
+                </button>
+                <button class="hp-action-btn danger" onclick="hpDetailAction('ablehnen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    Ablehnen
+                </button>
+                <button class="hp-action-btn" onclick="hpDetailAction('merken')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"></path>
+                    </svg>
+                    Merken
+                </button>
+                <button class="hp-action-btn" onclick="generateHPInterviewQuestions()" title="KI-generierte Interviewfragen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    Interviewfragen
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===========================
+         INTERVIEW QUESTIONS OVERLAY
+         =========================== -->
+    <div class="hp-detail-overlay" id="hpInterviewOverlay" onclick="if(event.target===this)closeHPInterviewQuestions()">
+        <div class="hp-detail-panel">
+            <div class="hp-detail-header">
+                <h3>KI-generierte Interviewfragen</h3>
+                <button class="hp-detail-close" onclick="closeHPInterviewQuestions()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="hp-detail-body" id="hpInterviewBody">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Preview Overlay removed - CV now shown side-by-side in detail panel -->
+
+    <!-- ===========================
+         JOB DETAIL OVERLAY (Bewerber)
+         =========================== -->
+    <div class="hp-detail-overlay" id="hpJobDetailOverlay" onclick="if(event.target===this)closeHPJobDetail()">
+        <div class="hp-detail-panel">
+            <div class="hp-detail-header">
+                <h3 id="hpJobDetailTitle">Stellendetails</h3>
+                <button class="hp-detail-close" onclick="closeHPJobDetail()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="hp-detail-body" id="hpJobDetailBody">
+                <!-- Filled dynamically -->
+            </div>
+            <div class="hp-detail-actions">
+                <button class="hp-action-btn hp-apply-btn" onclick="closeHPJobDetail(); showHPToast('Bewerbung wurde erfolgreich eingereicht!', 'success')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Jetzt bewerben
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         HR-COCKPIT MODE (H-03)
+         =========================== -->
+    <div id="hpCockpitMode" class="hp-cockpit-section">
+        <!-- Cockpit Sub-Navigation -->
+        <div class="hc-subnav">
+            <button class="hc-subnav-btn active" data-view="overview" onclick="switchHCView('overview')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                Gesamtübersicht
+            </button>
+            <button class="hc-subnav-btn" data-view="regions" onclick="switchHCView('regions')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Regionen-Vergleich
+            </button>
+            <button class="hc-subnav-btn" data-view="unit" onclick="switchHCView('unit')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
+                Einheiten-Detail
+            </button>
+            <button class="hc-subnav-btn" data-view="earlywarning" onclick="switchHCView('earlywarning')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                Frühwarnsystem
+            </button>
+        </div>
+
+        <!-- DSGVO Compliance Banner -->
+        <div class="hc-compliance-banner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>HR-Cockpit — Frühwarnsystem für Vertriebsorganisationen. Alle Daten pseudonymisiert gemäß DSGVO Art. 25. Mindestgruppengröße: 10 Personen. Human-in-the-Loop gem. Art. 22 DSGVO.</span>
+        </div>
+
+        <!-- ===== SUB-VIEW 1: Gesamtübersicht ===== -->
+        <div id="hcOverview" class="hc-view active">
+            <!-- KPI Section (grouped like H-02) -->
+            <div class="hc-kpi-section" id="hcKpiSection">
+                <!-- Filled dynamically -->
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="hc-overview-grid">
+                <!-- Germany Map -->
+                <div class="hc-panel hc-map-panel">
+                    <div class="hc-panel-header">
+                        <h3>Regionaldirektionen — Gesundheitsscore</h3>
+                        <span class="hc-panel-badge">Klicken für Details</span>
+                    </div>
+                    <div class="hc-germany-map" id="hcGermanyMap">
+                        <!-- SVG Map filled dynamically -->
+                    </div>
+                </div>
+
+                <!-- Abgangsrisiko-Verteilung + Warnmeldungen -->
+                <div class="hc-panel-stack">
+                    <!-- Abgangsrisiko-Donut -->
+                    <div class="hc-panel">
+                        <div class="hc-panel-header">
+                            <h3>Abgangsrisiko-Verteilung</h3>
+                        </div>
+                        <div class="hc-donut-container" id="hcFlightRiskDonut">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Alerts Panel -->
+                    <div class="hc-panel">
+                        <div class="hc-panel-header">
+                            <h3>Aktuelle Warnungen</h3>
+                            <span class="hc-alert-count" id="hcAlertCount">0</span>
+                        </div>
+                        <div class="hc-alerts-list" id="hcAlertsList">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Movers Table -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Risk Movers — Größte Score-Veränderungen</h3>
+                    <div class="hc-table-controls">
+                        <select id="hcMoversFilter" onchange="renderHCRiskMovers()">
+                            <option value="all">Alle Änderungen</option>
+                            <option value="up">Nur Verschlechterungen ↑</option>
+                            <option value="down">Nur Verbesserungen ↓</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hc-table-wrapper">
+                    <table class="hc-table" id="hcRiskMoversTable">
+                        <thead>
+                            <tr>
+                                <th>Kennung</th>
+                                <th>Regionaldirektion</th>
+                                <th>Aktueller Score</th>
+                                <th>Vorheriger Score</th>
+                                <th>Veränderung</th>
+                                <th>Top-Risikofaktor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hcRiskMoversBody">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUB-VIEW 2: Regionen-Vergleich ===== -->
+        <div id="hcRegions" class="hc-view">
+            <!-- Heat Map Matrix -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Organisations-Gesundheit — Heat Map</h3>
+                    <span class="hc-panel-subtitle">Regionaldirektionen × Gesundheitsdimensionen</span>
+                </div>
+                <div class="hc-heatmap-wrapper">
+                    <table class="hc-heatmap" id="hcHeatmapTable">
+                        <thead>
+                            <tr>
+                                <th>Regionaldirektion</th>
+                                <th>Gesamt</th>
+                                <th>Fluktuation</th>
+                                <th>Vakanzen</th>
+                                <th>Engagement</th>
+                                <th>Nachwuchs</th>
+                                <th>Produktion</th>
+                                <th>Stornoquote</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hcHeatmapBody">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- League Table with Sparklines -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Rangliste — 12-Monats-Trends</h3>
+                </div>
+                <div class="hc-table-wrapper">
+                    <table class="hc-table" id="hcLeagueTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Regionaldirektion</th>
+                                <th>Health Score</th>
+                                <th>Trend (12M)</th>
+                                <th>Vermittler</th>
+                                <th>Fluktuation</th>
+                                <th>Vakanzen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hcLeagueBody">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Radar Chart for selected RD -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Regionaldirektion-Profil vs. Benchmark</h3>
+                    <select id="hcRadarSelect" onchange="renderHCRadarChart()">
+                        <!-- Options filled dynamically -->
+                    </select>
+                </div>
+                <div class="hc-radar-container">
+                    <canvas id="hcRadarChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUB-VIEW 3: Einheiten-Detail ===== -->
+        <div id="hcUnit" class="hc-view">
+            <!-- Unit Selector -->
+            <div class="hc-unit-selector">
+                <label>Regionaldirektion:</label>
+                <select id="hcUnitRDSelect" onchange="renderHCUnitDetail()">
+                    <!-- Options filled dynamically -->
+                </select>
+            </div>
+
+            <!-- Unit Scorecard -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3 id="hcUnitTitle">Einheiten-Scorecard</h3>
+                </div>
+                <div class="hc-unit-scorecard" id="hcUnitScorecard">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- Team Composition + Risk Distribution -->
+            <div class="hc-unit-grid">
+                <div class="hc-panel">
+                    <div class="hc-panel-header">
+                        <h3>Altersverteilung</h3>
+                    </div>
+                    <div class="hc-chart-container" id="hcAgeDistribution">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+                <div class="hc-panel">
+                    <div class="hc-panel-header">
+                        <h3>Zugehörigkeitsverteilung</h3>
+                    </div>
+                    <div class="hc-chart-container" id="hcTenureDistribution">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+                <div class="hc-panel">
+                    <div class="hc-panel-header">
+                        <h3>Abgangsrisiko in Einheit</h3>
+                    </div>
+                    <div class="hc-chart-container" id="hcUnitRiskDist">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verbleibende vs. Ausgeschiedene -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Verbleibende vs. Ausgeschiedene — Engagement-Vergleich</h3>
+                </div>
+                <div class="hc-stayers-leavers" id="hcStayersLeavers">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- Unit Early Warnings -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Frühwarnungen in dieser Einheit
+                    </h3>
+                </div>
+                <div class="hc-ew-grid" id="hcUnitEWGrid">
+                    <!-- Filled dynamically -->
+                </div>
+                <div class="hc-shap-container" id="hcUnitShapContainer" style="margin-top: var(--space-4);">
+                    <!-- Filled when agent is clicked -->
+                </div>
+            </div>
+
+            <!-- Contagion Watch -->
+            <div class="hc-panel hc-full-width hc-contagion-panel" id="hcContagionPanel">
+                <div class="hc-panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Ansteckungseffekt — 135-Tage-Beobachtungsfenster
+                    </h3>
+                </div>
+                <div class="hc-contagion-content" id="hcContagionContent">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUB-VIEW 4: Frühwarnsystem ===== -->
+        <div id="hcEarlyWarning" class="hc-view">
+            <!-- Active Alerts -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Aktive Frühwarnungen</h3>
+                    <div class="hc-ew-filters">
+                        <select id="hcEWFilterTier" onchange="renderHCEarlyWarnings()">
+                            <option value="all">Alle Stufen</option>
+                            <option value="red">Rot (Hoch)</option>
+                            <option value="amber">Gelb (Mittel)</option>
+                        </select>
+                        <select id="hcEWFilterRD" onchange="renderHCEarlyWarnings()">
+                            <option value="all">Alle Regionen</option>
+                            <!-- Options filled dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div class="hc-ew-grid" id="hcEWGrid">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- KI-Maßnahmenempfehlung -->
+            <div class="hc-panel hc-full-width hc-ki-recommendation-panel" id="hcKIRecommendationPanel" style="display:none;">
+                <div class="hc-panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        KI-Maßnahmenempfehlung
+                    </h3>
+                    <button class="hc-btn-close" onclick="document.getElementById('hcKIRecommendationPanel').style.display='none'">&times;</button>
+                </div>
+                <div id="hcKIRecommendationContent">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- SHAP Explanation -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Score-Erklärung (SHAP-Analyse)</h3>
+                    <select id="hcShapSelect" onchange="renderHCShapExplanation()">
+                        <!-- Options filled dynamically -->
+                    </select>
+                </div>
+                <div class="hc-shap-container" id="hcShapContainer">
+                    <div class="hc-shap-placeholder">Wählen Sie einen Vermittler aus der Liste oben, um die Score-Erklärung anzuzeigen.</div>
+                </div>
+            </div>
+
+            <!-- Retention Action Tracker (Kanban) -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Retention-Maßnahmen Tracker</h3>
+                </div>
+                <div class="hc-kanban" id="hcKanban">
+                    <div class="hc-kanban-col" data-status="identified">
+                        <div class="hc-kanban-col-header">
+                            <span class="hc-kanban-dot red"></span>
+                            Identifiziert
+                            <span class="hc-kanban-count" id="hcKanbanCount1">0</span>
+                        </div>
+                        <div class="hc-kanban-cards" id="hcKanbanCol1">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                    <div class="hc-kanban-col" data-status="scheduled">
+                        <div class="hc-kanban-col-header">
+                            <span class="hc-kanban-dot amber"></span>
+                            Bleibegespräch geplant
+                            <span class="hc-kanban-count" id="hcKanbanCount2">0</span>
+                        </div>
+                        <div class="hc-kanban-cards" id="hcKanbanCol2">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                    <div class="hc-kanban-col" data-status="action">
+                        <div class="hc-kanban-col-header">
+                            <span class="hc-kanban-dot blue"></span>
+                            Maßnahme eingeleitet
+                            <span class="hc-kanban-count" id="hcKanbanCount3">0</span>
+                        </div>
+                        <div class="hc-kanban-cards" id="hcKanbanCol3">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                    <div class="hc-kanban-col" data-status="resolved">
+                        <div class="hc-kanban-col-header">
+                            <span class="hc-kanban-dot green"></span>
+                            Ergebnis dokumentiert
+                            <span class="hc-kanban-count" id="hcKanbanCount4">0</span>
+                        </div>
+                        <div class="hc-kanban-cards" id="hcKanbanCol4">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Performance -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Modell-Performance</h3>
+                </div>
+                <div class="hc-model-perf" id="hcModelPerf">
+                    <div class="hc-perf-metric">
+                        <div class="hc-perf-label">AUC-ROC</div>
+                        <div class="hc-perf-value green">0.87</div>
+                        <div class="hc-perf-desc">Trennschärfe des Vorhersagemodells</div>
+                    </div>
+                    <div class="hc-perf-metric">
+                        <div class="hc-perf-label">Precision (Rot)</div>
+                        <div class="hc-perf-value">78%</div>
+                        <div class="hc-perf-desc">Anteil korrekter Rot-Einstufungen</div>
+                    </div>
+                    <div class="hc-perf-metric">
+                        <div class="hc-perf-label">Recall (Rot)</div>
+                        <div class="hc-perf-value">82%</div>
+                        <div class="hc-perf-desc">Anteil erkannter Abgänge</div>
+                    </div>
+                    <div class="hc-perf-metric">
+                        <div class="hc-perf-label">Vorhersagezeitraum</div>
+                        <div class="hc-perf-value blue">Ø 4.2 Monate</div>
+                        <div class="hc-perf-desc">Durchschnittliche Vorwarnzeit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         CHATBOT
+         =========================== -->
+    <button class="hp-chat-toggle" id="hpChatToggle" onclick="toggleHPChat()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path>
+        </svg>
+    </button>
+
+    <div class="hp-chat-window" id="hpChatWindow">
+        <div class="hp-chat-header">
+            <div class="hp-chat-bot-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                    <circle cx="12" cy="5" r="2"></circle>
+                    <path d="M12 7v4"></path>
+                    <line x1="8" y1="16" x2="8" y2="16"></line>
+                    <line x1="16" y1="16" x2="16" y2="16"></line>
+                </svg>
+            </div>
+            <div class="hp-chat-header-text">
+                <h4>ERGO KI-Assistent</h4>
+                <span>Recruiting-Unterstützung</span>
+            </div>
+            <button class="hp-chat-close" onclick="toggleHPChat()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="hp-chat-messages" id="hpChatMessages">
+            <!-- Messages filled dynamically -->
+        </div>
+        <div class="hp-chat-buttons" id="hpChatButtons">
+            <!-- Buttons filled dynamically -->
+        </div>
+        <div class="hp-chat-input-area">
+            <div class="hp-chat-input-wrapper">
+                <input type="text" placeholder="Demo-Modus -- bitte Buttons nutzen" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color: var(--text-muted)">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>

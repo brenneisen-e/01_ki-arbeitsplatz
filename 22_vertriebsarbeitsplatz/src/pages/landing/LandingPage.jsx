@@ -298,18 +298,30 @@ export default function LandingPage() {
   const [claudeReply, setClaudeReply] = useState(null); // { prompt, text, error } | null
   const [claudeLoading, setClaudeLoading] = useState(false);
 
+  // Ohne Plattform-Server (Download-Fassung, SharePoint, lokaler Server)
+  // fehlt /api/claude: dann eine freundliche Meldung statt HTML-Fehlerseite.
+  const OHNE_SERVER = 'Der freie KI-Chat braucht den Server der Plattform und ist in dieser Fassung nicht verfügbar. Die vorgeschlagenen Fragen und das Cockpit funktionieren weiter.';
+
   async function askClaude(prompt) {
     setClaudeLoading(true);
     setClaudeReply({ prompt, text: '', error: null });
     try {
-      const res = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ prompt }),
-      });
+      let res;
+      try {
+        res = await fetch('/api/claude', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ prompt }),
+        });
+      } catch {
+        throw new Error(OHNE_SERVER);
+      }
       const raw = await res.text();
       let data = null;
       try { data = raw ? JSON.parse(raw) : null; } catch { /* leave as text */ }
+      if ([404, 405, 501, 503].includes(res.status) || (!data && /^\s*</.test(raw))) {
+        throw new Error(OHNE_SERVER);
+      }
       if (!res.ok) {
         const msg = data?.error
           || (raw && raw.slice(0, 200))
@@ -444,7 +456,7 @@ export default function LandingPage() {
       style={{
         // Panorama als Vollbild-Hintergrund. Der Scrim hellt nach unten in den
         // Seitenhintergrund auf, damit die Seite in das Cockpit übergeht.
-        backgroundImage: `linear-gradient(180deg, rgba(250,249,247,0.06) 0%, rgba(250,249,247,0.16) 40%, rgba(250,249,247,0.72) 82%, var(--bg-primary) 100%), url('/images/zukunftsbank-header.jpeg')`,
+        backgroundImage: `linear-gradient(180deg, rgba(250,249,247,0.06) 0%, rgba(250,249,247,0.16) 40%, rgba(250,249,247,0.72) 82%, var(--bg-primary) 100%), url('images/zukunftsbank-header.jpeg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

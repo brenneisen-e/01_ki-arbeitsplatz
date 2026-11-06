@@ -1,3 +1,4 @@
+import DELOITTE_LOGO_LOKAL from '../assets/deloitte-logo.png'
 // Festes Wasserzeichen als Lasche mittig an der Oberkante, wie im
 // Vertriebsarbeitsplatz: „Deloitte. Demo“ und darunter „Synthetische Daten“.
 // Es bleibt beim Scrollen stehen, nimmt keine Zeigerereignisse an und liegt
@@ -6,7 +7,6 @@
 // Dieselbe Logo-Quelle wie Landing Page und Vertriebsarbeitsplatz; fällt auf
 // das lokale Logo der Plattform zurück.
 const DELOITTE_LOGO = 'https://img.logo.dev/deloitte.com?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=128&format=png'
-const DELOITTE_LOGO_LOKAL = '/assets/images/6364529b74a1f1454594542e_Monitor Deloitte Logo.png'
 
 export default function DemoWasserzeichen() {
   return (

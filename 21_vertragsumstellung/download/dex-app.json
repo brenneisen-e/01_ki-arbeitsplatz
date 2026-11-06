@@ -1,0 +1,16 @@
+{
+  "format": "dex-app/1",
+  "id": "21_vertragsumstellung",
+  "titel": "Vergütungswerk",
+  "beschreibung": "Vergütungsmodell simulieren und umstellen: Simulationskasten für das Gesamtmodell und Umstellungstool je Institut mit Verhandlungsmodus.",
+  "version": "1.0.0",
+  "gebaut": "2026-11-06T15:41:01Z",
+  "quelle": {
+    "repo": "brenneisen-e/kiarbeitsplatz",
+    "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+  },
+  "start": "index.html#/start",
+  "single": true,
+  "benoetigtInternet": false,
+  "api": []
+}

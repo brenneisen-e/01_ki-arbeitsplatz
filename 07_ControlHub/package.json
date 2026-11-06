@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pack": "node ../tools/dex/pack.mjs 07_ControlHub"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",

@@ -12,7 +12,8 @@
     "importpruefung": "node scripts/importpruefung.mjs",
     "pruefen": "npm run importpruefung && npm run build && npm run rauchtest",
     "pitchpfad": "node scripts/pitchpfad.mjs",
-    "bilderbogen": "node scripts/bilderbogen.mjs"
+    "bilderbogen": "node scripts/bilderbogen.mjs",
+    "pack": "node ../tools/dex/pack.mjs 21_vertragsumstellung"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",

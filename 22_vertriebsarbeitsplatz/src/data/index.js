@@ -720,9 +720,9 @@ export const TERMINE_BY_MODE = {
   get versicherung() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Amira König', betreff: tx('Kfz-Angebot besprechen', 'Discuss motor insurance quote'), kundeId: 'KD00002', foto: fotoFor('KD00002', '/images/AdobeStock_252262042.jpeg') },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Amira König', betreff: tx('Kfz-Angebot besprechen', 'Discuss motor insurance quote'), kundeId: 'KD00002', foto: fotoFor('KD00002', 'images/AdobeStock_252262042.jpeg') },
       { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Anna Hoffmann', betreff: tx('Altersvorsorge-Beratung', 'Retirement planning consultation'), kundeId: 'KD00004', foto: fotoFor('KD00004') },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Thomas Weber', betreff: tx('Hausbesuch Bindungsgespräch', 'Home visit retention meeting'), kundeId: 'KD00003', foto: fotoFor('KD00003', '/images/AdobeStock_361342769.jpeg') },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Thomas Weber', betreff: tx('Hausbesuch Bindungsgespräch', 'Home visit retention meeting'), kundeId: 'KD00003', foto: fotoFor('KD00003', 'images/AdobeStock_361342769.jpeg') },
       { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sandra Yilmaz', betreff: tx('Jahresgespräch', 'Annual review'), kundeId: 'KD00008', foto: fotoFor('KD00008') },
     ];
   },
@@ -734,19 +734,19 @@ export const TERMINE_BY_MODE = {
       // der Übersicht auftauchen – sonst wäre die Sidebar nur eine Kopie
       // dieser Kacheln. Die hier genutzten Kunden sind reine Termin-Stubs
       // (KDB00X), die auch in den Aufgaben vorkommen oder neu sind.
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Julia Becker', betreff: tx('Altersvorsorge Beratung', 'Retirement planning consultation'), kundeId: 'KDB004', foto: fotoFor('KDB004', '/images/AdobeStock_612940075.jpeg') },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Thomas Krüger', betreff: tx('Baufinanzierung Erstgespräch', 'Construction loan initial meeting'), kundeId: 'KDB007', foto: fotoFor('KDB007', '/images/AdobeStock_329502726.jpeg') },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Christian Binder', betreff: tx('VR-FinanzPlan Beratung', 'VR Financial Plan consultation'), kundeId: 'KDB010', foto: fotoFor('KDB010', '/images/AdobeStock_1091012713.jpeg') },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sabine Lorenz', betreff: tx('Wertpapier-Review', 'Securities review'), kundeId: 'KDB011', foto: fotoFor('KDB011', '/images/maria-musterfrau.png') },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Julia Becker', betreff: tx('Altersvorsorge Beratung', 'Retirement planning consultation'), kundeId: 'KDB004', foto: fotoFor('KDB004', 'images/AdobeStock_612940075.jpeg') },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Thomas Krüger', betreff: tx('Baufinanzierung Erstgespräch', 'Construction loan initial meeting'), kundeId: 'KDB007', foto: fotoFor('KDB007', 'images/AdobeStock_329502726.jpeg') },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Christian Binder', betreff: tx('VR-FinanzPlan Beratung', 'VR Financial Plan consultation'), kundeId: 'KDB010', foto: fotoFor('KDB010', 'images/AdobeStock_1091012713.jpeg') },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sabine Lorenz', betreff: tx('Wertpapier-Review', 'Securities review'), kundeId: 'KDB011', foto: fotoFor('KDB011', 'images/maria-musterfrau.png') },
     ];
   },
   get vermoegensverwaltung() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: tx('Onboarding-Gespräch (3,5M€)', 'Onboarding meeting (3.5M€)'), kundeId: 'VV-NEW', foto: fotoFor('VV-NEW', '/images/AdobeStock_910604663.jpeg') },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: translateName('Familie Schneider'), betreff: tx('WpHG-Fragebogen', 'MiFID Questionnaire'), kundeId: 'VV-PIPE', foto: fotoFor('VV-PIPE', '/images/AdobeStock_965208311.jpeg') },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: tx('Investmentvorschlag (5M€)', 'Investment proposal (5M€)'), kundeId: 'VV-PIPE2', foto: fotoFor('VV-PIPE2', '/images/AdobeStock_1387839378.jpeg') },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: translateName('Fam. Hohenlohe'), betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3', foto: fotoFor('VV-PIPE3', '/images/AdobeStock_1367815601.jpeg') },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: tx('Onboarding-Gespräch (3,5M€)', 'Onboarding meeting (3.5M€)'), kundeId: 'VV-NEW', foto: fotoFor('VV-NEW', 'images/AdobeStock_910604663.jpeg') },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: translateName('Familie Schneider'), betreff: tx('WpHG-Fragebogen', 'MiFID Questionnaire'), kundeId: 'VV-PIPE', foto: fotoFor('VV-PIPE', 'images/AdobeStock_965208311.jpeg') },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: tx('Investmentvorschlag (5M€)', 'Investment proposal (5M€)'), kundeId: 'VV-PIPE2', foto: fotoFor('VV-PIPE2', 'images/AdobeStock_1387839378.jpeg') },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: translateName('Fam. Hohenlohe'), betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3', foto: fotoFor('VV-PIPE3', 'images/AdobeStock_1367815601.jpeg') },
     ];
   },
 };

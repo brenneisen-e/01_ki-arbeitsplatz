@@ -1,0 +1,14 @@
+{
+  "name": "dex-pakete",
+  "version": "1.0.0",
+  "description": "DEX-Pakete (ZIP) aller Apps bauen und prüfen",
+  "scripts": {
+    "pack": "node pack.mjs",
+    "pruefen": "node pruefen.mjs"
+  },
+  "dependencies": {
+    "vite-plugin-singlefile": "^2.3.4"
+  },
+  "private": true,
+  "type": "module"
+}

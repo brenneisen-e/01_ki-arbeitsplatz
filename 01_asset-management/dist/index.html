@@ -5,12 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%232d5016'/%3E%3Cstop offset='100%25' stop-color='%2386BC25'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='700' font-size='14' fill='white'%3EAM%3C/text%3E%3C/svg%3E" />
     <title>Active Equities — Asset Management</title>
-    <script type="module" crossorigin src="./assets/index-CcFEIVFM.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/vendor-lucide-CDyPoQ_k.js">
-    <link rel="modulepreload" crossorigin href="./assets/vendor-recharts-Cw3HF9ak.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-DKPvcE8n.css">
+    <script type="module" crossorigin src="./assets/index-B4qm4nSV.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/vendor-lucide-Bua0hvgv.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-recharts-DU7PW7vm.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-CJaKzrzK.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>window.__DEX_KNOPF={"ordner":"01_asset-management","id":"01_asset-management","rel":"../","oben":0,"rechts":16};
+/*
+ * Download-Knopf für DEX — eine gemeinsame Komponente für alle Apps.
+ *
+ * Hängt oben rechts eine kleine Lasche „Download“ an die Oberkante (wie das
+ * Demo-Wasserzeichen in der Mitte). Sie lädt das DEX-Paket der App aus
+ * <app>/download/<app-id>.zip und zeigt Version und Stand im Tooltip.
+ *
+ * Konfiguration: window.__DEX_KNOPF = { ordner, id, rel } (Vite-Plugin) oder die
+ * Attribute data-dex-ordner / data-dex-rel am <script>-Tag (reine HTML-Apps).
+ * `ordner` ist der App-Ordner (Webadresse), die DEX-id sein Name in Kleinbuchstaben.
+ * `oben` (px, Attribut data-dex-oben) setzt die Lasche unter eine Kopfleiste, deren rechte
+ * Seite schon belegt ist; `rechts` (px, Standard 16) rückt sie von einem Knopf darunter weg.
+ * `rel` ist der Weg von der Seite zum App-Ordner („../“ für dist/index.html).
+ *
+ * Ausgeblendet, wenn
+ *   - window.__DEX_EINGEBETTET gesetzt ist (single.html und app/ im ZIP),
+ *   - die Adresse ?dex=1 trägt (auch im Hash),
+ *   - die Seite als Datei (file://) oder in einem Rahmen (iframe) läuft,
+ *   - kein veröffentlichtes Paket gefunden wird (download/dex-app.json fehlt).
+ *
+ * Kein Framework, kein Build: das Plugin bettet die Datei als Inline-Skript ein.
+ */
+(function () {
+  'use strict';
+  var skript = document.currentScript;
+  try {
+    if (window.__DEX_EINGEBETTET) return;
+    if (/[?&]dex=1(?:&|$)/.test(location.search) || /[?&]dex=1(?:&|$)/.test(location.hash)) {
+      window.__DEX_EINGEBETTET = true;
+      return;
+    }
+    if (location.protocol === 'file:') return;
+    if (window.top !== window.self) return;
+  } catch (e) {
+    return; // fremder Rahmen: Zugriff auf window.top verboten → eingebettet
+  }
+
+  var cfg = window.__DEX_KNOPF || {};
+  var ordnerName = cfg.ordner || (skript && skript.getAttribute('data-dex-ordner'));
+  var rel = cfg.rel || (skript && skript.getAttribute('data-dex-rel')) || '../';
+  if (!ordnerName) return;
+  var id = cfg.id || ordnerName.toLowerCase();
+  var oben = parseInt(cfg.oben || (skript && skript.getAttribute('data-dex-oben')) || 0, 10) || 0;
+  var rechts = parseInt(cfg.rechts || (skript && skript.getAttribute('data-dex-rechts')) || 16, 10) || 16;
+
+  // App-Ordner aus der Adresse (…/<id>/…); sonst relativ zur Seite.
+  function appOrdner() {
+    var p = location.pathname;
+    var marke = '/' + ordnerName + '/';
+    var i = p.indexOf(marke);
+    if (i !== -1) return p.slice(0, i + marke.length);
+    return new URL(rel, location.href).pathname;
+  }
+
+  var ordner = appOrdner() + 'download/';
+  var zipUrl = ordner + encodeURIComponent(id) + '.zip';
+
+  function stand(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+      ', ' + d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+  }
+
+  function zeige(info) {
+    var host = document.createElement('div');
+    host.setAttribute('data-dex-download', '');
+    host.style.cssText = 'position:fixed;top:' + oben + 'px;right:' + rechts + 'px;z-index:2147483000;';
+    var wurzel = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
+    var tip = 'Version ' + info.version + (info.gebaut ? ' · Stand ' + stand(info.gebaut) : '');
+    wurzel.innerHTML =
+      '<style>' +
+      ':host{all:initial}' +
+      'a{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 11px 1px;box-sizing:border-box;' +
+      'font:500 12px/1 "Uniform","DM Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;letter-spacing:.01em;' +
+      'color:#334155;text-decoration:none;background:color-mix(in oklab,#ffffff 86%,transparent);' +
+      'border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px;' +
+      'backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);' +
+      'box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.08);cursor:pointer;' +
+      'transition:background-color .15s,color .15s,height .15s}' +
+      'a:hover{background:#ffffff;color:#0f172a;height:26px}' +
+      'a:focus-visible{outline:2px solid #0f172a;outline-offset:2px}' +
+      'svg{width:14px;height:14px;flex:none}' +
+      '.tip{position:absolute;top:calc(100% + 6px);right:0;white-space:nowrap;padding:6px 9px;border-radius:6px;' +
+      'background:#0f172a;color:#fff;font:400 11px/1.2 "Uniform","DM Sans",system-ui,sans-serif;' +
+      'opacity:0;transform:translateY(-2px);transition:opacity .12s,transform .12s;pointer-events:none}' +
+      'a:hover+.tip,a:focus-visible+.tip{opacity:1;transform:none}' +
+      '@media print{a,.tip{display:none}}' +
+      '</style>' +
+      '<a part="knopf" href="' + zipUrl + '" download="' + id + '_' + info.version + '.zip" aria-label="Download, ' + tip + '">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M12 4v12"/><path d="m6 10 6 6 6-6"/><path d="M5 20h14"/></svg>' +
+      '<span>Download</span></a>' +
+      '<span class="tip" role="tooltip">' + tip + '</span>';
+    (document.body || document.documentElement).appendChild(host);
+  }
+
+  function los() {
+    fetch(ordner + 'dex-app.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (info) {
+        if (info && info.format === 'dex-app/1' && info.version) zeige(info);
+      })
+      .catch(function () { /* kein Paket veröffentlicht: kein Knopf */ });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', los);
+  else los();
+})();
+</script>
   </body>
 </html>

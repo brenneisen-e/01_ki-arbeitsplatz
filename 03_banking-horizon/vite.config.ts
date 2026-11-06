@@ -1,9 +1,10 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import dex from '../tools/dex/vite-plugin-dex.mjs'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), dex({ ordner: '03_banking-horizon' })],
   base: './',
   build: {
     outDir: 'dist',

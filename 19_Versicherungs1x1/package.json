@@ -18,7 +18,8 @@
     "rauchtest": "node scripts/rauchtest.mjs",
     "browserpruefung": "node scripts/mit-vorschau.mjs node scripts/rauchtest.mjs :: node scripts/umfang-pruefung.mjs",
     "bilderbogen": "node scripts/bilderbogen.mjs",
-    "pruefen": "npm run importpruefung && npm run daten-pruefung && npm run build && npm run browserpruefung"
+    "pruefen": "npm run importpruefung && npm run daten-pruefung && npm run build && npm run browserpruefung",
+    "pack": "node ../tools/dex/pack.mjs 19_Versicherungs1x1"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

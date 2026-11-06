@@ -27,6 +27,15 @@ Die App- und Inhaltsordner sind alphabetisch nummeriert (`NN_name`, z. B. `22_ve
 
 Alle Projekte nutzen: **Vite + React 19 + Tailwind CSS v4**
 
+## DEX-Pakete (Download-Knopf, SharePoint)
+
+Jede App der Plattform-Startseite trägt oben rechts die Lasche „Download“ (`tools/dex/download-knopf.js`, eine gemeinsame Komponente: Vite-Apps bekommen sie über `tools/dex/vite-plugin-dex.mjs` in `vite.config`, `dex({ ordner: '<Ordner>' })`; die reinen HTML-Apps 16 und 18 per `<script src="../tools/dex/download-knopf.js" data-dex-ordner=…>`). Sie lädt `<Ordner>/download/<id>.zip`, zeigt Version und Stand im Tooltip und blendet sich aus bei `window.__DEX_EINGEBETTET`, `?dex=1`, `file://`, im iframe und wenn `download/dex-app.json` fehlt. Die `id` ist der Ordnername in Kleinbuchstaben (das Format erlaubt nur `a-z 0-9 _ -`), Ordner und Adressen bleiben.
+
+- **Paketformat** `dex-app/1`: ZIP mit `dex-app.json` (Steckbrief), `single.html` (ganze App in einer Datei, läuft per Doppelklick) und `app/` (Build für einen lokalen Server). Steckbriefe (Titel, Beschreibung, Start, APIs, Internet) in `tools/dex/apps.mjs`.
+- **Bauen**: nach einer Änderung an einer App `node tools/dex/pack.mjs <Ordner>` (ohne Angabe alle; einmalig `cd tools/dex && npm install` für `vite-plugin-singlefile`). Das Skript baut `dist/` neu, erzeugt `single.html` (zweiter Vite-Build mit `DEX_SINGLE=1`; Dateien aus `public/` liegen als Tabelle darin, `tools/dex/single-shim.js` lenkt `fetch`, `src`, `href` und `url(...)` darauf um), zählt die Version an der dritten Stelle hoch, wenn sich der Inhalt geändert hat (`tools/dex/stand.json`), und legt `<Ordner>/download/<id>.zip`, `<Ordner>/download/dex-app.json` und die Übersicht `downloads/index.json` ab — alles einchecken. ZIPs über 25 MiB (Grenze von Cloudflare Pages, derzeit Banking Horizon mit seinen Videos) werden nicht veröffentlicht, sie liegen nur unter `tools/dex/.ausgabe/`.
+- **Prüfen**: `node tools/dex/pruefen.mjs [Ordner…]` entpackt jedes ZIP, prüft `dex-app.json` gegen das Format und das Paket auf Verbotenes (`.env`, Schlüssel, `node_modules`, Quellcode), öffnet `single.html` per `file://` und `app/` über `npx serve`, dann die Web-Fassung mit Knopf und mit `?dex=1`, und gibt die Liste App, Version, ZIP-Größe, single, fehlende APIs aus.
+- **Regeln für Apps**: Pfade auf eigene Dateien relativ (`images/x.jpeg`, nicht `/images/x.jpeg`; Vite `base: './'`), Hash-Router, kein Service Worker, Server-Funktionen (`/api/…`) dürfen fehlen und brauchen bei 404/503 oder Netzfehler eine freundliche Meldung.
+
 ### vertragsumstellung: nach jeder Änderung prüfen
 
 Ein fehlender Import bricht in JSX erst zur Laufzeit — Rollup prüft keine

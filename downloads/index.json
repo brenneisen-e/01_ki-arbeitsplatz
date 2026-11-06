@@ -1,0 +1,317 @@
+{
+  "format": "dex-index/1",
+  "erzeugt": "2026-11-06T15:41:34Z",
+  "apps": [
+    {
+      "format": "dex-app/1",
+      "id": "01_asset-management",
+      "titel": "Active Equities",
+      "beschreibung": "Portfolio-Management-Dashboard für einen Aktienfonds: Positionen, Performance, Risiko und Markt im Überblick.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:38:48Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/01_asset-management/download/01_asset-management.zip",
+      "zipName": "01_asset-management_1.0.0.zip",
+      "groesse": 443424
+    },
+    {
+      "format": "dex-app/1",
+      "id": "02_bankenkpi",
+      "titel": "Banken-KPI",
+      "beschreibung": "Monatlicher KPI-Bericht einer Bank mit KI-Kommentar zu Ertrag, Risiko und Vertrieb.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:38:59Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/02_BankenKPI/download/02_bankenkpi.zip",
+      "zipName": "02_bankenkpi_1.0.0.zip",
+      "groesse": 688940
+    },
+    {
+      "format": "dex-app/1",
+      "id": "03_banking-horizon",
+      "titel": "Banking Horizon 2030",
+      "beschreibung": "Begehbares Strukturbild der Bank 2030 mit acht Dimensionen, Hypothesen, Videos und eingebetteten Demos für Workshops.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:39:13Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": false,
+      "benoetigtInternet": true,
+      "api": [
+        "/api/content",
+        "/api/review",
+        "/api/upload"
+      ],
+      "zip": null,
+      "zipName": "03_banking-horizon_1.0.0.zip",
+      "groesse": 265517114,
+      "hinweis": "ZIP größer als 25 MiB (Grenze von Cloudflare Pages): nicht veröffentlicht, lokal mit node tools/dex/pack.mjs bauen."
+    },
+    {
+      "format": "dex-app/1",
+      "id": "05_bestandsuebertragung",
+      "titel": "Bestandsübertragung",
+      "beschreibung": "Portfolio Transfer Management: Vertragsübertragungen zwischen Vermittlern steuern, Dokumente per KI prüfen und Vorlagen erzeugen.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:39:32Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/05_Bestandsuebertragung/download/05_bestandsuebertragung.zip",
+      "zipName": "05_bestandsuebertragung_1.0.0.zip",
+      "groesse": 612034
+    },
+    {
+      "format": "dex-app/1",
+      "id": "06_collections",
+      "titel": "Collections Management",
+      "beschreibung": "AI Collections & Recovery: Cockpit mit Next-Best-Action-Queue, Agenten-Freigaben, Portfolio-Segmentierung und Risiko-Monitoring.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:39:42Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/06_Collections/download/06_collections.zip",
+      "zipName": "06_collections_1.0.0.zip",
+      "groesse": 498434
+    },
+    {
+      "format": "dex-app/1",
+      "id": "07_controlhub",
+      "titel": "ControlHub",
+      "beschreibung": "KI-gestützte Analyse und Optimierung des internen Kontrollsystems (IKS).",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:39:54Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/07_ControlHub/download/07_controlhub.zip",
+      "zipName": "07_controlhub_1.0.0.zip",
+      "groesse": 1227832
+    },
+    {
+      "format": "dex-app/1",
+      "id": "13_hrpipeline",
+      "titel": "HR Pipeline",
+      "beschreibung": "Recruiting und Bewerbermanagement: Pipeline, Kandidatenprofile und Auswertungen.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:40:02Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/13_HRPipeline/download/13_hrpipeline.zip",
+      "zipName": "13_hrpipeline_1.0.0.zip",
+      "groesse": 2004827
+    },
+    {
+      "format": "dex-app/1",
+      "id": "14_kreditanalyse",
+      "titel": "KI-Kreditanalyse",
+      "beschreibung": "KI-gestützte Kreditbewertung für Firmenkunden: Antrag, Bilanzanalyse, Rating, Sicherheiten und Kreditrahmen.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:40:22Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/14_kreditanalyse/download/14_kreditanalyse.zip",
+      "zipName": "14_kreditanalyse_1.0.0.zip",
+      "groesse": 4393742
+    },
+    {
+      "format": "dex-app/1",
+      "id": "15_pdfeditor",
+      "titel": "PDF-Editor",
+      "beschreibung": "Text in bestehenden PDFs ändern, verschieben, löschen und ergänzen, die Originalschrift bleibt erhalten; mit Stapelmodus.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:40:34Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/15_pdfeditor/download/15_pdfeditor.zip",
+      "zipName": "15_pdfeditor_1.0.0.zip",
+      "groesse": 3020963
+    },
+    {
+      "format": "dex-app/1",
+      "id": "16_pmotoolbox",
+      "titel": "PMO Toolbox",
+      "beschreibung": "Steuerung eines Transformationsprogramms: Dashboard, KPI-Karten, Value Map, Frühwarnungen und Statusbericht als PowerPoint.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:40:34Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": false,
+      "api": [],
+      "zip": "/16_PMOToolbox/download/16_pmotoolbox.zip",
+      "zipName": "16_pmotoolbox_1.0.0.zip",
+      "groesse": 539328
+    },
+    {
+      "format": "dex-app/1",
+      "id": "17_provisionsreklamation",
+      "titel": "Provisionsreklamation",
+      "beschreibung": "KI-gestützte Prüfung von Provisionsreklamationen der Vermittler mit Analyse, Bewertung und Antwortentwurf.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:40:40Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/17_provisionsreklamation/download/17_provisionsreklamation.zip",
+      "zipName": "17_provisionsreklamation_1.0.0.zip",
+      "groesse": 671230
+    },
+    {
+      "format": "dex-app/1",
+      "id": "18_risikoscoring",
+      "titel": "Vermittler-Scoring",
+      "beschreibung": "Risikobewertung von Vermittlern mit Scoring, Frühindikatoren und Analyse.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:40:40Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": false,
+      "api": [],
+      "zip": "/18_Risikoscoring/download/18_risikoscoring.zip",
+      "zipName": "18_risikoscoring_1.0.0.zip",
+      "groesse": 467170
+    },
+    {
+      "format": "dex-app/1",
+      "id": "19_versicherungs1x1",
+      "titel": "Versicherungs-1×1",
+      "beschreibung": "Wissensprodukt für neue Berater: 13 Kapitel zum deutschen Versicherungsmarkt in drei Tiefen, mit Wissenscheck und Glossar.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:40:50Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": false,
+      "api": [],
+      "zip": "/19_Versicherungs1x1/download/19_versicherungs1x1.zip",
+      "zipName": "19_versicherungs1x1_1.0.0.zip",
+      "groesse": 1683829
+    },
+    {
+      "format": "dex-app/1",
+      "id": "21_vertragsumstellung",
+      "titel": "Vergütungswerk",
+      "beschreibung": "Vergütungsmodell simulieren und umstellen: Simulationskasten für das Gesamtmodell und Umstellungstool je Institut mit Verhandlungsmodus.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:41:01Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html#/start",
+      "single": true,
+      "benoetigtInternet": false,
+      "api": [],
+      "zip": "/21_vertragsumstellung/download/21_vertragsumstellung.zip",
+      "zipName": "21_vertragsumstellung_1.0.0.zip",
+      "groesse": 1321579
+    },
+    {
+      "format": "dex-app/1",
+      "id": "22_vertriebsarbeitsplatz",
+      "titel": "KI-Vertriebsarbeitsplatz",
+      "beschreibung": "Cockpit für Berater in Versicherung, Banking und Vermögensverwaltung: Kundenakte, KI-Leads, Termine und Vertriebsassistent.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:41:22Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html#/versicherung/landing",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [
+        "/api/claude"
+      ],
+      "zip": "/22_vertriebsarbeitsplatz/download/22_vertriebsarbeitsplatz.zip",
+      "zipName": "22_vertriebsarbeitsplatz_1.0.0.zip",
+      "groesse": 5088569
+    },
+    {
+      "format": "dex-app/1",
+      "id": "23_vstcockpit",
+      "titel": "VST-Cockpit",
+      "beschreibung": "Vertriebssteuerung mit Live-Strom der Abschlüsse, Kennzahlen zu Bestand und Neugeschäft und einem KI-Assistenten, der Dashboards baut.",
+      "version": "1.0.0",
+      "gebaut": "2026-11-06T15:41:34Z",
+      "quelle": {
+        "repo": "brenneisen-e/kiarbeitsplatz",
+        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+      },
+      "start": "index.html",
+      "single": true,
+      "benoetigtInternet": true,
+      "api": [],
+      "zip": "/23_VSTCockpit/download/23_vstcockpit.zip",
+      "zipName": "23_vstcockpit_1.0.0.zip",
+      "groesse": 829614
+    }
+  ]
+}

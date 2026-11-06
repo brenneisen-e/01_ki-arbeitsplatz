@@ -30,6 +30,9 @@
     }
     window.safeLocalGet = function(k, f) { try { var v = localStorage.getItem(k); return v !== null ? v : f; } catch(e) { return f; } };
     window.safeLocalSet = function(k, v) { try { localStorage.setItem(k, v); } catch(e) {} };
+    // Die Skripte melden sich beim Lade-Manifest der Plattform (js/load-order.js) an,
+    // das diese Seite nicht lädt: ohne Rückfall bricht ihre letzte Zeile mit einem Fehler ab.
+    window.__registerModule = window.__registerModule || function() {};
     </script>
 
     <script>
@@ -48,5 +51,7 @@
             loadNext(0);
         });
     </script>
+    <!-- Download-Knopf (DEX-Paket), gemeinsame Komponente aus tools/dex -->
+    <script src="../tools/dex/download-knopf.js" data-dex-ordner="18_Risikoscoring" data-dex-rel="./"></script>
 </body>
 </html>

@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pack": "node ../tools/dex/pack.mjs 05_Bestandsuebertragung"
   },
   "keywords": [],
   "author": "",

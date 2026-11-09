@@ -2,10 +2,12 @@
  * Laufzeit-Hilfe für single.html (DEX-Einzeldatei).
  *
  * Vite bettet nur importierte Dateien ein. Dateien aus public/ (Fotos, JSON,
- * Vorlagen), die die App per Pfad anspricht ('images/x.jpeg', '/images/x.jpeg',
- * fetch('data/chapters.json')), fehlen in der Einzeldatei, und unter file://
+ * Vorlagen), die die App per Pfad anspricht (relativ, mit ./ oder /,
+ * auch per fetch), fehlen in der Einzeldatei. pack.mjs ersetzt feste Verweise
+ * schon beim Packen durch data:-URIs; dieses Skript ist der Rückfall für Pfade,
+ * die erst zur Laufzeit entstehen. Unter file:// bzw. blob:
  * darf der Browser sie ohnehin nicht nachladen. pack.mjs legt sie deshalb als
- * Tabelle in window.__DEX_DATEIEN ab ({ 'images/x.jpeg': ['image/jpeg', '<base64>'] }),
+ * Tabelle in window.__DEX_DATEIEN ab ({ '<pfad>': ['<mime>', '<base64>'] }),
  * und dieses Skript lenkt jeden Zugriff darauf um:
  *   fetch, XMLHttpRequest, src/href/poster von Bild, Quelle, Video, Audio,
  *   Link und Anker (Eigenschaft und setAttribute), url(...) in Inline-Styles,
@@ -16,9 +18,6 @@
   'use strict';
   var D = window.__DEX_DATEIEN || {};
   var ID = window.__DEX_ID || '';
-  var leer = true;
-  for (var k in D) { leer = false; break; }
-  if (leer) return;
 
   var dataUrls = {};
   var basisPfad;
@@ -32,13 +31,23 @@
       else u = String(u);
     }
     if (!u || /^(data|blob|javascript|mailto|tel|about):/i.test(u)) return null;
-    var a;
-    try { a = new URL(u, document.baseURI); } catch (e) { return null; }
-    if (a.protocol !== 'file:' && a.origin !== location.origin) return null;
     var p;
-    try { p = decodeURIComponent(a.pathname); } catch (e) { p = a.pathname; }
     var kandidaten = [];
-    if (p.indexOf(basisPfad) === 0) kandidaten.push(p.slice(basisPfad.length));
+    var a = null;
+    // Unter blob:/about: (DEX lädt single.html als blob-URL) hat die Seite keine
+    // auflösbare Basis: dann den Pfad als Text nehmen.
+    if (!/^(blob|about|data):/i.test(location.href)) {
+      try { a = new URL(u, document.baseURI); } catch (e) { a = null; }
+    }
+    if (a) {
+      if (a.protocol !== 'file:' && a.origin !== location.origin) return null;
+      try { p = decodeURIComponent(a.pathname); } catch (e) { p = a.pathname; }
+      if (p.indexOf(basisPfad) === 0) kandidaten.push(p.slice(basisPfad.length));
+    } else {
+      if (/^[a-z][a-z0-9+.-]*:/i.test(u)) return null;
+      try { p = decodeURIComponent(u.split(/[?#]/)[0]); } catch (e) { p = u.split(/[?#]/)[0]; }
+      p = p.replace(/^\.\//, '');
+    }
     var ohne = p.replace(/^\/+/, '');
     kandidaten.push(ohne);
     if (ID) {
@@ -59,6 +68,8 @@
     return dataUrls[k];
   }
   function umlenken(u) {
+    // Code, der eine Basis vor einen (jetzt eingebetteten) Pfad setzt: './' + 'data:…'
+    if (typeof u === 'string' && /^(?:\.{0,2}\/)+(data|blob):/i.test(u)) return u.replace(/^(?:\.{0,2}\/)+/, '');
     var k = schluessel(u);
     return k ? dataUrl(k) : u;
   }
@@ -81,6 +92,10 @@
   if (window.fetch) {
     var origFetch = window.fetch;
     window.fetch = function (eingabe, init) {
+      if (typeof eingabe === 'string' && /^(?:\.{0,2}\/)+(data|blob):/i.test(eingabe)) {
+        arguments[0] = eingabe.replace(/^(?:\.{0,2}\/)+/, '');
+        return origFetch.apply(this, arguments);
+      }
       var k = schluessel(eingabe);
       if (k) {
         return Promise.resolve(new Response(bytes(k), {

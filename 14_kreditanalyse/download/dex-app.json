@@ -3,11 +3,11 @@
   "id": "14_kreditanalyse",
   "titel": "KI-Kreditanalyse",
   "beschreibung": "KI-gestützte Kreditbewertung für Firmenkunden: Antrag, Bilanzanalyse, Rating, Sicherheiten und Kreditrahmen.",
-  "version": "1.0.0",
-  "gebaut": "2026-11-06T15:40:22Z",
+  "version": "1.0.1",
+  "gebaut": "2026-11-09T14:21:45Z",
   "quelle": {
     "repo": "brenneisen-e/kiarbeitsplatz",
-    "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+    "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
   },
   "start": "index.html",
   "single": true,

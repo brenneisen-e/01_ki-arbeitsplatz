@@ -132,6 +132,8 @@ const DOMAIN_MAP = {
 export function getLogoUrl(name, size = 32) {
   // Check custom local logos first
   if (CUSTOM_LOGOS[name]) {
+    // Fertige Adressen (in der DEX-Einzeldatei eine data:-URI) nicht mit der Basis verketten
+    if (/^[a-z][a-z0-9+.-]*:/i.test(CUSTOM_LOGOS[name])) return CUSTOM_LOGOS[name];
     const base = import.meta.env.BASE_URL || '/';
     return `${base}${CUSTOM_LOGOS[name]}`;
   }

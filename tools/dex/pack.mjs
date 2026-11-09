@@ -114,46 +114,88 @@ function entferneVerbotenes(ordner) {
 }
 
 // Tabelle der öffentlichen Dateien für single.html (alles außer HTML und den
-// gebündelten assets/, die Vite ohnehin einbettet).
-function dateiTabelle(appOrdner, { ohneAssets }) {
+// gebündelten assets/, die Vite ohnehin einbettet). Große Fotos werden für die
+// Einzeldatei verkleinert (höchstens 1600 px breit, JPEG-Qualität 80); app/
+// behält die Originale.
+const MAX_BREITE = 1600
+async function verkleinere(rel, puffer) {
+  const ext = path.extname(rel).toLowerCase()
+  if (!['.jpg', '.jpeg', '.png', '.webp'].includes(ext)) return puffer
+  let sharp
+  try { sharp = (await import('sharp')).default } catch { return puffer }
+  try {
+    const bild = sharp(puffer, { failOn: 'none' })
+    const { width } = await bild.metadata()
+    let pipe = width > MAX_BREITE ? bild.resize({ width: MAX_BREITE }) : bild
+    if (ext === '.png') pipe = pipe.png({ compressionLevel: 9, palette: false })
+    else if (ext === '.webp') pipe = pipe.webp({ quality: 80 })
+    else pipe = pipe.jpeg({ quality: 80, mozjpeg: true })
+    const neu = await pipe.toBuffer()
+    return neu.length < puffer.length ? neu : puffer
+  } catch {
+    return puffer
+  }
+}
+
+async function dateiTabelle(appOrdner, { ohneAssets }) {
   const tabelle = {}
   for (const rel of alleDateien(appOrdner)) {
     if (/\.html?$/i.test(rel)) continue
     if (ohneAssets && rel.startsWith('assets/')) continue
-    tabelle[rel] = [mime(rel), fs.readFileSync(path.join(appOrdner, rel)).toString('base64')]
+    const puffer = await verkleinere(rel, fs.readFileSync(path.join(appOrdner, rel)))
+    tabelle[rel] = [mime(rel), puffer.toString('base64')]
   }
   return tabelle
 }
 
 const sicherImSkript = (text) => text.replace(/<\/(script)/gi, '<\\/$1').replace(/<!--/g, '<\\!--')
+const reEsc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-// Fügt der Einzeldatei die Dateitabelle und den Shim hinzu und lenkt url(...)
-// in <style>-Blöcken direkt auf data:-URLs um.
-function ergaenzeEinzeldatei(html, id, tabelle) {
-  const anzahl = Object.keys(tabelle).length
-  if (anzahl) {
-    html = html.replace(/<style([^>]*)>([\s\S]*?)<\/style>/gi, (ganz, attrs, css) =>
-      `<style${attrs}>${css.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g, (u, q, ziel) => {
-        const k = ziel.replace(/^\.?\//, '').replace(/^\/+/, '').split(/[?#]/)[0]
-        return tabelle[k] ? `url("data:${tabelle[k][0]};base64,${tabelle[k][1]}")` : u
-      })}</style>`)
+// Verweise auf lokale Dateien, die nach dem Ersetzen nicht übrig sein dürfen:
+// in Anführungszeichen, Backticks oder url( beginnend mit (./|/)<Ordner>/ bzw. (./|/)<Datei>.
+function uebrigeVerweise(html, tabelle) {
+  const ordner = [...new Set(Object.keys(tabelle).filter((k) => k.includes('/')).map((k) => k.split('/')[0]))]
+  const dateien = Object.keys(tabelle).filter((k) => !k.includes('/'))
+  const teile = [...ordner.map((o) => `${reEsc(o)}/[^"'\`)\\s]*`), ...dateien.map(reEsc)]
+  if (!teile.length) return []
+  const re = new RegExp(`(?:["'\`]|url\\(\\s*)(?:\\./|/)?(?:${teile.join('|')})`, 'g')
+  return [...html.matchAll(re)].map((m) => m[0].replace(/^(?:["'\`]|url\(\s*)/, ''))
+}
+
+// Ersetzt jeden Verweis auf eine Datei der Tabelle (in HTML, CSS und JS,
+// Schreibweisen x, ./x, /x, <ordner>/dist/x, auch URL-kodiert) fest durch ihre
+// data:-URI. So braucht single.html keine Adresse mehr, auch nicht als blob:-URL.
+function ersetzeVerweise(html, id, tabelle) {
+  let ersetzt = 0
+  const genutzt = new Set()
+  const schluessel = Object.keys(tabelle).sort((a, b) => b.length - a.length)
+  for (const k of schluessel) {
+    const varianten = [...new Set([k, encodeURI(k), k.split('/').map(encodeURIComponent).join('/')])]
+    const praefix = `(?:\\./|/|/?${reEsc(id)}/(?:dist/)?)?`
+    const re = new RegExp(`((?:["'\`]|url\\(\\s*))${praefix}(?:${varianten.map(reEsc).join('|')})(?=["'\`)?#\\s])`, 'g')
+    const daten = `data:${tabelle[k][0]};base64,${tabelle[k][1]}`
+    html = html.replace(re, (ganz, vor) => { ersetzt++; genutzt.add(k); return vor + daten })
   }
-  // Statische Verweise im Markup direkt umlenken: der Parser lädt sie, bevor der
-  // Shim eingreifen kann. Vorab-Ladehinweise auf eingebettete Dateien entfallen.
-  const schl = (ziel) => ziel.replace(/^\.?\//, '').replace(/^\/+/, '').split(/[?#]/)[0]
-  html = html.replace(/<link\b[^>]*rel=["'](?:preload|prefetch)["'][^>]*>\s*/gi, (tag) => {
-    const m = tag.match(/href=["']([^"']+)["']/i)
-    return m && tabelle[schl(m[1])] ? '' : tag
-  })
-  html = html.replace(/(\s(?:src|href|poster)=)(["'])([^"']+)\2/gi, (ganz, attr, q, ziel) => {
-    const k = schl(ziel)
-    return tabelle[k] ? `${attr}${q}data:${tabelle[k][0]};base64,${tabelle[k][1]}${q}` : ganz
-  })
+  // Vorab-Ladehinweise auf eingebettete Dateien sind jetzt sinnlos
+  html = html.replace(/<link\b[^>]*rel=["'](?:preload|prefetch)["'][^>]*href=["']data:[^>]*>\s*/gi, '')
+  return { html, ersetzt, genutzt }
+}
+
+// Fügt der Einzeldatei die festen data:-URIs hinzu und für Pfade, die erst zur
+// Laufzeit entstehen, Dateitabelle und Shim (nur Dateien ohne festen Verweis).
+function ergaenzeEinzeldatei(html, id, tabelle) {
+  const r = ersetzeVerweise(html, id, tabelle)
+  html = r.html
+  // Rückfall-Tabelle für den Shim: nur Dateien ohne festen Verweis, deren Name
+  // im Code vorkommt (Pfad wird zur Laufzeit zusammengesetzt); ungenutzte entfallen.
+  const rest = Object.fromEntries(Object.entries(tabelle).filter(([k]) =>
+    !r.genutzt.has(k) && html.includes(k.split('/').pop())))
+  const uebrig = uebrigeVerweise(html.replace(/<script data-dex-shim>[\s\S]*?<\/script>/g, ''), tabelle)
   const shim = lies(path.join(HIER, 'single-shim.js'))
-  const kopf = `${FLAG}\n<script>window.__DEX_ID=${JSON.stringify(id)};window.__DEX_DATEIEN=${sicherImSkript(JSON.stringify(tabelle))};</script>\n<script>${sicherImSkript(shim)}</script>\n`
+  const kopf = `${FLAG}\n<script data-dex-shim>window.__DEX_ID=${JSON.stringify(id)};window.__DEX_DATEIEN=${sicherImSkript(JSON.stringify(rest))};</script>\n<script data-dex-shim>${sicherImSkript(shim)}</script>\n`
   // ganz an den Anfang von <head>, vor jedes App-Skript
-  if (/<head[^>]*>/i.test(html)) return html.replace(/<head([^>]*)>/i, (m) => `${m}\n${kopf}`)
-  return kopf + html
+  html = /<head[^>]*>/i.test(html) ? html.replace(/<head([^>]*)>/i, (m) => `${m}\n${kopf}`) : kopf + html
+  return { html, ersetzt: r.ersetzt, dateien: r.genutzt.size, uebrig }
 }
 
 function setzeFlag(html) {
@@ -168,7 +210,7 @@ function npm(cwd, args, env = {}) {
 }
 
 // ── Vite-Apps ────────────────────────────────────────────────────────────────
-function packeVite(app, ziel) {
+async function packeVite(app, ziel) {
   const appDir = path.join(WURZEL, app.ordner)
   if (!fs.existsSync(path.join(appDir, 'node_modules'))) npm(appDir, ['install', '--no-audit', '--no-fund'])
   if (!ohneBuild) {
@@ -198,20 +240,23 @@ function packeVite(app, ziel) {
   if (r.status !== 0) fehler(`${app.id}: Einzeldatei-Build fehlgeschlagen`)
   const reste = alleDateien(tmp).filter((r) => r !== 'index.html')
   if (reste.length) log(`    Hinweis: nicht eingebettet: ${reste.join(', ')}`)
-  let html = lies(path.join(tmp, 'index.html'))
-  html = ergaenzeEinzeldatei(html, app.ordner, dateiTabelle(appZiel, { ohneAssets: true }))
+  const html = lies(path.join(tmp, 'index.html'))
+  const erg = ergaenzeEinzeldatei(html, app.ordner, await dateiTabelle(appZiel, { ohneAssets: true }))
   fs.rmSync(tmp, { recursive: true, force: true })
-  return schreibeEinzeldatei(ziel, html)
+  return schreibeEinzeldatei(ziel, erg)
 }
 
-function schreibeEinzeldatei(ziel, html) {
+function schreibeEinzeldatei(ziel, { html, ersetzt, dateien, uebrig }) {
   const groesse = Buffer.byteLength(html)
+  log(`    ${ersetzt} Verweise auf ${dateien} lokale Dateien durch data:-URIs ersetzt, ${(groesse / 1048576).toFixed(2)} MB`)
+  if (uebrig.length) log(`    ACHTUNG: ${uebrig.length} Verweise auf lokale Dateien übrig: ${[...new Set(uebrig)].slice(0, 5).join(', ')}`)
+  const einzeln = { ersetzt, uebrig: uebrig.length, singleGroesse: groesse }
   if (groesse > MAX_SINGLE) {
     log(`    single.html wäre ${(groesse / 1048576).toFixed(1)} MB groß → "single": false`)
-    return { single: false }
+    return { single: false, ...einzeln }
   }
   fs.writeFileSync(path.join(ziel, 'single.html'), html)
-  return { single: true }
+  return { single: true, ...einzeln }
 }
 
 // ── Reine HTML-Apps ──────────────────────────────────────────────────────────
@@ -282,7 +327,7 @@ async function packeHtml(app, ziel) {
   entferneVerbotenes(appZiel)
   if (app.single === false) return { single: false }
   log('  · Einzeldatei (single.html)')
-  return schreibeEinzeldatei(ziel, ergaenzeEinzeldatei(html, app.ordner, dateiTabelle(appZiel, { ohneAssets: false })))
+  return schreibeEinzeldatei(ziel, ergaenzeEinzeldatei(html, app.ordner, await dateiTabelle(appZiel, { ohneAssets: false })))
 }
 
 // ── Ablauf ───────────────────────────────────────────────────────────────────
@@ -298,7 +343,8 @@ for (const app of auswahl) {
   fs.rmSync(ziel, { recursive: true, force: true })
   fs.mkdirSync(ziel, { recursive: true })
 
-  const { single } = app.art === 'html' ? await packeHtml(app, ziel) : packeVite(app, ziel)
+  const einzel = app.art === 'html' ? await packeHtml(app, ziel) : await packeVite(app, ziel)
+  const { single } = einzel
 
   const summe = pruefsumme(path.join(ziel, 'app'), [path.join(ziel, 'single.html')])
   const alt = stand[app.id]
@@ -345,7 +391,7 @@ for (const app of auswahl) {
   }
 
   stand[app.id] = { ordner: app.ordner, pruefsumme: summe, groesse, veroeffentlicht, steckbrief }
-  ergebnisse.push({ app: app.id, version, groesse, single, api: app.api, veroeffentlicht, unveraendert: !!unveraendert })
+  ergebnisse.push({ app: app.id, version, groesse, single, api: app.api, veroeffentlicht, unveraendert: !!unveraendert, ersetzt: einzel.ersetzt, uebrig: einzel.uebrig, singleGroesse: einzel.singleGroesse })
   log(`  ✓ ${zipName} (${(groesse / 1048576).toFixed(2)} MB)${unveraendert ? ' — unverändert' : ''}`)
 }
 
@@ -364,7 +410,8 @@ schreibeJson(INDEX_DATEI, {
   })),
 })
 
-log('\nApp                          Version   ZIP        single  veröffentlicht  fehlende APIs')
+const mb = (b) => (b == null ? '–' : (b / 1048576).toFixed(2) + ' MB')
+log('\nApp                          Version   ZIP        single.html  ersetzt  übrig  im Web  fehlende APIs')
 for (const e of ergebnisse) {
-  log(`${e.app.padEnd(29)}${e.version.padEnd(10)}${((e.groesse / 1048576).toFixed(2) + ' MB').padEnd(11)}${(e.single ? 'ja' : 'nein').padEnd(8)}${(e.veroeffentlicht ? 'ja' : 'nein').padEnd(16)}${e.api.join(', ') || '–'}`)
+  log(`${e.app.padEnd(29)}${e.version.padEnd(10)}${mb(e.groesse).padEnd(11)}${(e.single ? mb(e.singleGroesse) : 'nein').padEnd(13)}${String(e.ersetzt ?? '–').padEnd(9)}${String(e.uebrig ?? '–').padEnd(7)}${(e.veroeffentlicht ? 'ja' : 'nein').padEnd(8)}${e.api.join(', ') || '–'}`)
 }

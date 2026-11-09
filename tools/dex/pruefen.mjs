@@ -95,8 +95,79 @@ function ladePlaywright() {
 const istExtern = (url, basis) => !url.startsWith(basis) && !url.startsWith('data:') && !url.startsWith('blob:')
 const istApi = (url) => /\/api\//.test(url)
 
+// Alle <img> geladen, kein Hintergrundbild auf eine lokale Datei (file:, relativ)
+async function bildPruefung(frame) {
+  return frame.evaluate(() => {
+    const kaputt = []
+    let bilder = 0
+    for (const i of document.images) {
+      if (!i.currentSrc && !i.getAttribute('src')) continue
+      bilder++
+      if (i.complete && i.naturalWidth === 0) kaputt.push((i.getAttribute('src') || '').slice(0, 80))
+    }
+    let hintergruende = 0
+    for (const el of document.querySelectorAll('*')) {
+      const bg = getComputedStyle(el).backgroundImage
+      if (!bg || bg === 'none') continue
+      for (const m of bg.matchAll(/url\("?([^")]+)"?\)/g)) {
+        hintergruende++
+        if (!/^(data|https?|blob):/.test(m[1])) kaputt.push('Hintergrund ' + m[1].slice(0, 80))
+      }
+    }
+    return { bilder, hintergruende, kaputt }
+  }).catch((e) => ({ bilder: 0, hintergruende: 0, kaputt: [`Prüfung: ${e.message}`] }))
+}
+
+// single.html so öffnen, wie DEX es tut: als blob:-URL im iframe, ohne Ordner daneben
+async function besucheAlsBlob(browser, html, hash, traeger) {
+  const seite = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+  const fehler = []
+  seite.on('pageerror', (e) => fehler.push(`Skriptfehler: ${String(e.message || e).slice(0, 200)}`))
+  seite.on('requestfailed', (r) => {
+    const u = r.url()
+    if (/^https?:/.test(u)) return
+    fehler.push(`nicht geladen: ${u.slice(0, 120)} (${r.failure()?.errorText})`)
+  })
+  // Wie in DEX: die Trägerseite liegt auf http(s), die blob-URL erbt ihren Ursprung
+  await seite.goto(traeger)
+  await seite.evaluate(() => { document.documentElement.innerHTML = '<body></body>' })
+  await seite.evaluate(({ html, hash }) => {
+    const url = URL.createObjectURL(new Blob([html], { type: 'text/html' })) + (hash || '')
+    const f = document.createElement('iframe')
+    f.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:0'
+    f.src = url
+    document.body.appendChild(f)
+  }, { html, hash })
+  await seite.waitForTimeout(5000)
+  const frame = seite.frames().find((f) => f.url().startsWith('blob:'))
+  let textLaenge = 0
+  let bp = { bilder: 0, hintergruende: 0, kaputt: [] }
+  if (!frame) fehler.push('iframe mit blob:-URL nicht gefunden')
+  else {
+    bp = await bildPruefung(frame)
+    fehler.push(...bp.kaputt.map((u) => `Bild fehlt: ${u}`))
+    textLaenge = (await frame.evaluate(() => (document.body?.innerText || '').trim()).catch(() => '')).length
+    if (textLaenge < 40) fehler.push(`Seite leer (Text ${textLaenge} Zeichen)`)
+  }
+  await seite.close()
+  return { fehler, textLaenge, bilder: bp.bilder, hintergruende: bp.hintergruende }
+}
+
+// Verweise auf Dateien von app/ (ohne gebündelte assets/ der Vite-Apps), die in
+// single.html als Pfad stehen geblieben sind
+function uebrigeVerweise(html, liste, art) {
+  const dateien = liste.filter((e) => e.startsWith('app/') && !e.endsWith('/') && !/\.html?$/.test(e))
+    .map((e) => e.slice(4)).filter((e) => art === 'html' || !e.startsWith('assets/'))
+  const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const ordner = [...new Set(dateien.filter((k) => k.includes('/')).map((k) => k.split('/')[0]))]
+  const teile = [...ordner.map((o) => `${esc(o)}/[^"'\`)\\s]*`), ...dateien.filter((k) => !k.includes('/')).map(esc)]
+  if (!teile.length) return []
+  const re = new RegExp(`(?:["'\`]|url\\(\\s*)(?:\\./|/)?(?:${teile.join('|')})`, 'g')
+  return [...html.matchAll(re)].map((m) => m[0])
+}
+
 // Öffnet eine Seite und sammelt Fehler; liefert {fehler[], hinweise[], text}
-async function besuche(browser, url, { basis, erwarteKnopf = null }) {
+async function besuche(browser, url, { basis, erwarteKnopf = null, bilder = false }) {
   const seite = await browser.newPage({ viewport: { width: 1440, height: 900 } })
   const fehler = []
   const hinweise = []
@@ -130,6 +201,10 @@ async function besuche(browser, url, { basis, erwarteKnopf = null }) {
     fehler.push(`Laden: ${e.message.split('\n')[0]}`)
   }
   await seite.waitForTimeout(3500)
+  if (bilder) {
+    const bp = await bildPruefung(seite.mainFrame())
+    fehler.push(...bp.kaputt.map((u) => `Bild fehlt: ${u}`))
+  }
   const text = await seite.evaluate(() => (document.body?.innerText || '').trim()).catch(() => '')
   const elemente = await seite.evaluate(() => document.body?.querySelectorAll('*').length || 0).catch(() => 0)
   if (text.length < 40 || elemente < 15) fehler.push(`Seite leer (Text ${text.length} Zeichen, ${elemente} Elemente)`)
@@ -169,6 +244,10 @@ try {
     if (!fs.existsSync(zip)) { fehler.push(`ZIP fehlt: ${path.relative(WURZEL, zip)}`) }
     const ziel = path.join(tmpWurzel, app.id)
     let s = null
+    let singleHtml = ''
+    let singleGroesse = null
+    let uebrig = []
+    let dataUris = 0
     if (fs.existsSync(zip)) {
       fs.mkdirSync(ziel, { recursive: true })
       execFileSync('unzip', ['-q', zip, '-d', ziel])
@@ -178,6 +257,13 @@ try {
         if (VERBOTEN.some((re) => re.test(e))) fehler.push(`verboten im ZIP: ${e}`)
       }
       if (!liste.includes('dex-app.json')) fehler.push('dex-app.json fehlt im Wurzelverzeichnis')
+      if (liste.includes('single.html')) {
+        singleHtml = fs.readFileSync(path.join(ziel, 'single.html'), 'utf8')
+        singleGroesse = Buffer.byteLength(singleHtml)
+        uebrig = uebrigeVerweise(singleHtml.replace(/<script data-dex-shim>[\s\S]*?<\/script>/g, ''), liste, app.art)
+        if (uebrig.length) fehler.push(`single.html: ${uebrig.length} Verweise auf lokale Dateien übrig, z. B. ${[...new Set(uebrig)].slice(0, 4).join(', ')}`)
+        dataUris = (singleHtml.match(/data:[a-z]+\/[a-z0-9.+-]+;base64,/g) || []).length
+      }
       if (!liste.includes('app/index.html')) fehler.push('app/index.html fehlt')
       try { s = JSON.parse(fs.readFileSync(path.join(ziel, 'dex-app.json'), 'utf8')) } catch { s = null }
       fehler.push(...pruefeSteckbrief(s, app.id).map((t) => `dex-app.json: ${t}`))
@@ -202,10 +288,14 @@ try {
     if (browser && s) {
       if (s.single) {
         const url = pathToFileURL(path.join(ziel, 'single.html')).href + (s.start.includes('#') ? s.start.slice(s.start.indexOf('#')) : '')
-        const r = await besuche(browser, url, { basis: pathToFileURL(ziel).href, erwarteKnopf: false })
+        const r = await besuche(browser, url, { basis: pathToFileURL(ziel).href, erwarteKnopf: false, bilder: true })
         fehler.push(...r.fehler.map((t) => `single.html: ${t}`))
         hinweise.push(...r.hinweise.map((t) => `single.html: ${t}`))
         console.log(`  single.html (file://): ${r.fehler.length ? '✗' : '✓'} ${r.textLaenge} Zeichen Text`)
+        const hash = s.start.includes('#') ? s.start.slice(s.start.indexOf('#')) : ''
+        const rb = await besucheAlsBlob(browser, singleHtml, hash, `http://localhost:${repoServer.port}/downloads/index.json`)
+        fehler.push(...rb.fehler.map((t) => `single.html als blob: ${t}`))
+        console.log(`  single.html (blob:, wie DEX): ${rb.fehler.length ? '✗' : '✓'} ${rb.textLaenge} Zeichen Text, ${rb.bilder} Bilder, ${rb.hintergruende} Hintergründe`)
       }
       const srv = await starteServe(path.join(ziel, 'app'))
       try {
@@ -242,7 +332,7 @@ try {
     for (const t of fehler) console.log(`  ✗ ${t}`)
     for (const t of [...new Set(hinweise)].slice(0, 8)) console.log(`  · ${t}`)
     gesamtFehler += fehler.length
-    zeilen.push({ app: app.id, version: s?.version ?? '–', groesse: st.groesse, single: s?.single, api: s?.api ?? [], veroeffentlicht: st.veroeffentlicht, ok: fehler.length === 0 })
+    zeilen.push({ app: app.id, version: s?.version ?? '–', groesse: st.groesse, single: s?.single, singleGroesse, dataUris, uebrig: uebrig.length, api: s?.api ?? [], veroeffentlicht: st.veroeffentlicht, ok: fehler.length === 0 })
   }
 } finally {
   repoServer?.stopp()
@@ -250,8 +340,9 @@ try {
   fs.rmSync(tmpWurzel, { recursive: true, force: true })
 }
 
-console.log('\nApp                          Version   ZIP        single  im Web  Prüfung  fehlende APIs')
+const mb = (b) => (b ? (b / 1048576).toFixed(2) + ' MB' : '–')
+console.log('\nApp                          Version   ZIP        single.html  data-URIs  übrig  im Web  Prüfung  fehlende APIs')
 for (const z of zeilen) {
-  console.log(`${z.app.padEnd(29)}${String(z.version).padEnd(10)}${(z.groesse ? (z.groesse / 1048576).toFixed(2) + ' MB' : '–').padEnd(11)}${(z.single ? 'ja' : 'nein').padEnd(8)}${(z.veroeffentlicht ? 'ja' : 'nein').padEnd(8)}${(z.ok ? 'ok' : 'FEHLER').padEnd(9)}${(z.api || []).join(', ') || '–'}`)
+  console.log(`${z.app.padEnd(29)}${String(z.version).padEnd(10)}${mb(z.groesse).padEnd(11)}${(z.single ? mb(z.singleGroesse) : 'nein').padEnd(13)}${String(z.single ? z.dataUris : '–').padEnd(11)}${String(z.single ? z.uebrig : '–').padEnd(7)}${(z.veroeffentlicht ? 'ja' : 'nein').padEnd(8)}${(z.ok ? 'ok' : 'FEHLER').padEnd(9)}${(z.api || []).join(', ') || '–'}`)
 }
 process.exit(gesamtFehler ? 1 : 0)

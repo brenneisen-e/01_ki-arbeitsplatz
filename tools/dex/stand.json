@@ -1,19 +1,19 @@
 {
   "01_asset-management": {
     "ordner": "01_asset-management",
-    "pruefsumme": "9b88fe73ea182b84cd519bb16a547f430b71ddfaf32d91bd3eeda560f18cb08f",
-    "groesse": 443424,
+    "pruefsumme": "a26e51965f2c603cf39d42fa654853d17bb7ae48c08932391adddda883982ae5",
+    "groesse": 442829,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "01_asset-management",
       "titel": "Active Equities",
       "beschreibung": "Portfolio-Management-Dashboard für einen Aktienfonds: Positionen, Performance, Risiko und Markt im Überblick.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:38:48Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:20:39Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -23,19 +23,19 @@
   },
   "02_bankenkpi": {
     "ordner": "02_BankenKPI",
-    "pruefsumme": "683edbc52127fa3388cd89cef794de95c63a48f9438f1afad70fc25022f27c51",
-    "groesse": 688940,
+    "pruefsumme": "84efa8a48cdf316e5d10162d60f3076fbdb88c05eca316b57d0603b9f73341a4",
+    "groesse": 689282,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "02_bankenkpi",
       "titel": "Banken-KPI",
       "beschreibung": "Monatlicher KPI-Bericht einer Bank mit KI-Kommentar zu Ertrag, Risiko und Vertrieb.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:38:59Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:20:48Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -71,19 +71,19 @@
   },
   "05_bestandsuebertragung": {
     "ordner": "05_Bestandsuebertragung",
-    "pruefsumme": "ac3f26b59fbcadc0cc13243aad77cf94a4435e05cf699ccd8ac6af39b9042f0a",
-    "groesse": 612034,
+    "pruefsumme": "a204da7c90516c0dbfa7f44ee22535b712417db274e73b6d8a88523ccb5024d3",
+    "groesse": 612619,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "05_bestandsuebertragung",
       "titel": "Bestandsübertragung",
       "beschreibung": "Portfolio Transfer Management: Vertragsübertragungen zwischen Vermittlern steuern, Dokumente per KI prüfen und Vorlagen erzeugen.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:39:32Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:21:08Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -93,19 +93,19 @@
   },
   "06_collections": {
     "ordner": "06_Collections",
-    "pruefsumme": "7e42603fe4db075a580f21e2ff9132564565d370c19ae3df65135cd537c6a439",
-    "groesse": 498434,
+    "pruefsumme": "a11b1d1fc5bf1868317a2dc31d8a233d336c1102d6b242fbfca005b86c22b990",
+    "groesse": 498775,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "06_collections",
       "titel": "Collections Management",
       "beschreibung": "AI Collections & Recovery: Cockpit mit Next-Best-Action-Queue, Agenten-Freigaben, Portfolio-Segmentierung und Risiko-Monitoring.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:39:42Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:21:15Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -115,19 +115,19 @@
   },
   "07_controlhub": {
     "ordner": "07_ControlHub",
-    "pruefsumme": "411ef38fe9903e64babc94d8786ec1eeb04961f75ba09d3dee85cf7deb928c47",
-    "groesse": 1227832,
+    "pruefsumme": "50715a4d52dbbceb9663d0120c08667d3edb30ea25eb8f6b0393a6f001a7635d",
+    "groesse": 1202236,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "07_controlhub",
       "titel": "ControlHub",
       "beschreibung": "KI-gestützte Analyse und Optimierung des internen Kontrollsystems (IKS).",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:39:54Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:21:25Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -137,19 +137,19 @@
   },
   "13_hrpipeline": {
     "ordner": "13_HRPipeline",
-    "pruefsumme": "d365e615c66b36cd209f3f1f08ce9e4a726a4e94a942b0707d1ecd834ba4b6c4",
-    "groesse": 2004827,
+    "pruefsumme": "fcefeb322443df2c9a0058357e4e0d1651eb84b5ed97bcb8af11503bdcae0a4d",
+    "groesse": 2514461,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "13_hrpipeline",
       "titel": "HR Pipeline",
       "beschreibung": "Recruiting und Bewerbermanagement: Pipeline, Kandidatenprofile und Auswertungen.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:40:02Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:21:31Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -159,19 +159,19 @@
   },
   "14_kreditanalyse": {
     "ordner": "14_kreditanalyse",
-    "pruefsumme": "dea404b48657b52c17f47fb0737de5d208444bdc1ea999847e32a70419e21d6d",
-    "groesse": 4393742,
+    "pruefsumme": "ee06a83a078436a132755077360435b621c88d26d05441de630bd8ab5414e8d1",
+    "groesse": 4393841,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "14_kreditanalyse",
       "titel": "KI-Kreditanalyse",
       "beschreibung": "KI-gestützte Kreditbewertung für Firmenkunden: Antrag, Bilanzanalyse, Rating, Sicherheiten und Kreditrahmen.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:40:22Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:21:45Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -181,19 +181,19 @@
   },
   "15_pdfeditor": {
     "ordner": "15_pdfeditor",
-    "pruefsumme": "bef7a044d241a80fe1a4bc0e4e344bde2767265080d473937d2590596d25837e",
-    "groesse": 3020963,
+    "pruefsumme": "b2dbc70b9497223bf90012d9183d0c93fca5996b1b2c2eafada9da90e3fd59c5",
+    "groesse": 3023285,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "15_pdfeditor",
       "titel": "PDF-Editor",
       "beschreibung": "Text in bestehenden PDFs ändern, verschieben, löschen und ergänzen, die Originalschrift bleibt erhalten; mit Stapelmodus.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:40:34Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:21:54Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -203,19 +203,19 @@
   },
   "16_pmotoolbox": {
     "ordner": "16_PMOToolbox",
-    "pruefsumme": "479a2504bb63798904fcab643532cf5e2fe27303b76de32ec6e6d2865090689c",
-    "groesse": 539328,
+    "pruefsumme": "844ec62c03aeb0fefa034cf3bc7bd86c1c906b17e347e26c26a36ef2c650a0c2",
+    "groesse": 540847,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "16_pmotoolbox",
       "titel": "PMO Toolbox",
       "beschreibung": "Steuerung eines Transformationsprogramms: Dashboard, KPI-Karten, Value Map, Frühwarnungen und Statusbericht als PowerPoint.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:40:34Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:21:55Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -225,19 +225,19 @@
   },
   "17_provisionsreklamation": {
     "ordner": "17_provisionsreklamation",
-    "pruefsumme": "e1212e79647575c93ed3ee81c81568709aac30cecb87dcc08aa95e2c89bbe06a",
-    "groesse": 671230,
+    "pruefsumme": "027345811a8c6e1c0733bad46b32263246da2df631f2b8eec1f5c043e93e650e",
+    "groesse": 571183,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "17_provisionsreklamation",
       "titel": "Provisionsreklamation",
       "beschreibung": "KI-gestützte Prüfung von Provisionsreklamationen der Vermittler mit Analyse, Bewertung und Antwortentwurf.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:40:40Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:21:59Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -247,19 +247,19 @@
   },
   "18_risikoscoring": {
     "ordner": "18_Risikoscoring",
-    "pruefsumme": "7f649c0c2e8f42d4dc2288c960d444f05fd1c50a74af7d75a7a7224002be76a8",
-    "groesse": 467170,
+    "pruefsumme": "f057c3218c94d86c0d591911433fec1b8144f730bf6d51a6804240103dce69ff",
+    "groesse": 328954,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "18_risikoscoring",
       "titel": "Vermittler-Scoring",
       "beschreibung": "Risikobewertung von Vermittlern mit Scoring, Frühindikatoren und Analyse.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:40:40Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:22:00Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -269,19 +269,19 @@
   },
   "19_versicherungs1x1": {
     "ordner": "19_Versicherungs1x1",
-    "pruefsumme": "40d4446c64c3bd07ff278af3aa8593446b8bb1ca8cbc7fe47ff90b1364b18614",
-    "groesse": 1683829,
+    "pruefsumme": "6735d103217fd70d08595282dcea2cf8ec91f41766d0dd3770e56790c9cd03ac",
+    "groesse": 1619927,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "19_versicherungs1x1",
       "titel": "Versicherungs-1×1",
       "beschreibung": "Wissensprodukt für neue Berater: 13 Kapitel zum deutschen Versicherungsmarkt in drei Tiefen, mit Wissenscheck und Glossar.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:40:50Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:22:08Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,
@@ -291,19 +291,19 @@
   },
   "21_vertragsumstellung": {
     "ordner": "21_vertragsumstellung",
-    "pruefsumme": "19cb76daede5322f4d9b1fc29b2a802c2c88a02122fe08857a827381677c5591",
-    "groesse": 1321579,
+    "pruefsumme": "afdf1d5b93a9637da7f4ef947cfd2c07fc485ce843dfc6669638451bfd359c2f",
+    "groesse": 1154692,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "21_vertragsumstellung",
       "titel": "Vergütungswerk",
       "beschreibung": "Vergütungsmodell simulieren und umstellen: Simulationskasten für das Gesamtmodell und Umstellungstool je Institut mit Verhandlungsmodus.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:41:01Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:22:16Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html#/start",
       "single": true,
@@ -313,19 +313,19 @@
   },
   "22_vertriebsarbeitsplatz": {
     "ordner": "22_vertriebsarbeitsplatz",
-    "pruefsumme": "394f39717efa5ce0db51aec41f4fb6079f12b1a578180e3fc2a9b1608223ee37",
-    "groesse": 5088569,
+    "pruefsumme": "fd6e717a976e896a5cccbf2c9c33aee3d2ad94818d22c8f21140943635a694e2",
+    "groesse": 5179006,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "22_vertriebsarbeitsplatz",
       "titel": "KI-Vertriebsarbeitsplatz",
       "beschreibung": "Cockpit für Berater in Versicherung, Banking und Vermögensverwaltung: Kundenakte, KI-Leads, Termine und Vertriebsassistent.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:41:22Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:22:36Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html#/versicherung/landing",
       "single": true,
@@ -337,19 +337,19 @@
   },
   "23_vstcockpit": {
     "ordner": "23_VSTCockpit",
-    "pruefsumme": "30e7649d0fcb0141d71a5104f4bc8e2656f9c5ac30cd51a5bbb86c60ef8ea11a",
-    "groesse": 829614,
+    "pruefsumme": "f7762551b210163b3ec218140d4b77294c12aadc30dcb578e342c4d7c907ef59",
+    "groesse": 830013,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "23_vstcockpit",
       "titel": "VST-Cockpit",
       "beschreibung": "Vertriebssteuerung mit Live-Strom der Abschlüsse, Kennzahlen zu Bestand und Neugeschäft und einem KI-Assistenten, der Dashboards baut.",
-      "version": "1.0.0",
-      "gebaut": "2026-11-06T15:41:34Z",
+      "version": "1.0.1",
+      "gebaut": "2026-11-09T14:22:44Z",
       "quelle": {
         "repo": "brenneisen-e/kiarbeitsplatz",
-        "commit": "28e8782d21531e16affeef8d8041561b2972cd28"
+        "commit": "4dd0b6f483accb671684164fc9beaf830a3b3f3f"
       },
       "start": "index.html",
       "single": true,

@@ -2,6 +2,25 @@ import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 import { itemsToRuns, runsToBlocks } from './textBlocks.js';
 
+// Standardschriften von pdf.js (für PDFs, die Helvetica, Times … nicht einbetten)
+// als Vite-Assets: im Build eigene Dateien, in der DEX-Einzeldatei data:-URIs.
+// So braucht der Editor keine Basisadresse, die es unter file:// oder einer
+// blob:-URL (DEX) nicht gibt.
+const STANDARD_SCHRIFTEN = Object.fromEntries(
+  Object.entries(import.meta.glob('./standard_fonts/*', { query: '?url', import: 'default', eager: true }))
+    .map(([pfad, url]) => [pfad.split('/').pop(), url]),
+);
+
+class EingebetteteSchriften {
+  async fetch({ kind, filename }) {
+    const url = kind === 'standardFontDataUrl' ? STANDARD_SCHRIFTEN[filename] : null;
+    if (!url) throw new Error(`Schriftdaten nicht verfügbar: ${kind} ${filename}`);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Schriftdaten ${filename}: HTTP ${res.status}`);
+    return new Uint8Array(await res.arrayBuffer());
+  }
+}
+
 let configured = false;
 export function configurePdfjs() {
   if (configured) return;
@@ -15,7 +34,9 @@ export async function loadPdfjsDocument(bytes) {
   const task = pdfjsLib.getDocument({
     data: bytes.slice(),
     isEvalSupported: false,
-    standardFontDataUrl: new URL('standard_fonts/', window.location.href).href,
+    standardFontDataUrl: 'eingebettet/',
+    BinaryDataFactory: EingebetteteSchriften,
+    useWorkerFetch: false,
   });
   return task.promise;
 }

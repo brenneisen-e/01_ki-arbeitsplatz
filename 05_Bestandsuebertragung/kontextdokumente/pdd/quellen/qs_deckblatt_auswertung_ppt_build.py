@@ -96,7 +96,22 @@ for r in FERTIG:
     if not d: continue
     kw = d.isocalendar()[1]; kw = 42 if kw == 41 else kw
     wochen[kw][0] += r in OK; wochen[kw][1] += 1
-KWNAME = {38: 'KW 38\n(14.09.)', 42: 'KW 41/42\n(09.–14.10.)', 43: 'KW 43\n(21.–23.10.)', 44: 'KW 44\n(26.–28.10.)', 45: 'KW 45\n(02.–06.11.)'}
+def kw_von(r):
+    d = datum(r[42])
+    if not d: return None
+    k = d.isocalendar()[1]
+    return 42 if k == 41 else k
+
+KLASSEN = ['ohne Abweichung', '1–2 Felder', '3–5 Felder', '6 und mehr']
+schwere = collections.defaultdict(lambda: [0, 0, 0, 0]); summe_kw = collections.Counter(); feld_kw = collections.defaultdict(collections.Counter)
+for r in FERTIG:
+    k = kw_von(r)
+    if k is None: continue
+    n = 0 if r in OK else max(len(felder(r)), 1)
+    schwere[k][0 if n == 0 else 1 if n <= 2 else 2 if n <= 5 else 3] += 1; summe_kw[k] += n
+    if r in AB:
+        for c in felder(r): feld_kw[c][k] += 1
+KWNAME = {38: 'KW 38\n14.09.', 42: 'KW 41/42\n09.–14.10.', 43: 'KW 43\n21.–23.10.', 44: 'KW 44\n26.–28.10.', 45: 'KW 45\n02.–06.11.'}
 OHNE_DATUM = sum(1 for r in FERTIG if not datum(r[42]))
 
 MUSTER = {
@@ -118,7 +133,7 @@ for zi, r in enumerate(ZEILEN):
         GEDECKT |= {(zi, c) for c in MUSTER[k](r)}
 MZ = {k: (sum(1 for r in ZEILEN if f(r)), sum(len(f(r)) for r in ZEILEN)) for k, f in MUSTER.items()}
 
-STUFEN = [('Agentur- und\nVermittlernummer', {20, 21}), ('übrige Maklerdaten\n(Pool, Vermittler,\nE-Mail, Anschrift)', {18, 19, 22, 23, 24, 25}),
+STUFEN = [('Agentur- und\nVermittlernummer', {20, 21}), ('übrige\nMaklerdaten', {18, 19, 22, 23, 24, 25}),
           ('Maklervollmacht\nund Unterschriften', {7, 29, 31, 32, 33, 34, 35, 36, 37, 38}), ('Kunde und\nVertrag', set(range(8, 18)))]
 treppe = [('Heute', len(OK))]; behoben = set()
 for name, spalten in STUFEN:
@@ -298,57 +313,74 @@ text(s, 0.56, 3.7, 4.3, 2.2, [
     f'Die Quoten rechnen auf den {NF} abgeschlossenen Prüfungen.',
     'Die Wochen folgen dem Prüfdatum. Wann ein Deckblatt erzeugt wurde und mit welchem Stand der Regeln, steht nicht in der Matrix.',
 ], size=9.5, bullets=True, space_after=5, color=GRAUD)
-abschnitt(s, 5.4, 1.5, 7.37, 'Anteil Deckblätter ohne Abweichung je Prüfwoche')
-cx0, cy0, ch = 5.7, 5.05, 2.75; kws = sorted(wochen); cw = 6.9 / len(kws); maxq = 0.5
-for g in (0, 0.25, 0.5):
-    y = cy0 - ch * g / maxq
-    line(s, cx0, y, cx0 + 6.9, y, GRAUL if g else GRAUM, 0.75)
-    text(s, cx0 - 0.5, y - 0.1, 0.42, 0.2, f'{int(g * 100)} %', size=8, color=GRAU, align=PP_ALIGN.RIGHT)
+abschnitt(s, 5.4, 1.5, 7.37, 'Deckblätter je Prüfwoche nach Zahl der abweichenden Felder (Anteil in %)')
+SFARBE = [TEALD, RGBColor(0xF3, 0xC5, 0xCA), RGBColor(0xDD, 0x6B, 0x78), ROT]; STEXT = [WEISS, SW, WEISS, WEISS]
+lx = 5.4
+for k, name in enumerate(KLASSEN):
+    rect(s, lx, 1.93, 0.14, 0.14, SFARBE[k]); text(s, lx + 0.2, 1.88, 1.6, 0.24, name, size=8.5, color=GRAUD); lx += 1.7
+kws = sorted(wochen); cx0, ctop, cbot = 6.75, 2.3, 4.7; ch = cbot - ctop; cw = 6.0 / len(kws); bw_ = cw * 0.62
+vorher = None
 for i, k in enumerate(kws):
-    a, b = wochen[k]; q = a / b; h = max(ch * q / maxq, 0.02)
-    x = cx0 + i * cw + cw * 0.22
-    rect(s, x, cy0 - h, cw * 0.56, h, TEALD if k != kws[-1] else ROT)
-    text(s, x - 0.3, cy0 - h - 0.3, cw * 0.56 + 0.6, 0.26, pz(a, b), size=12, bold=True, align=PP_ALIGN.CENTER)
-    text(s, x - 0.3, cy0 + 0.06, cw * 0.56 + 0.6, 0.4, KWNAME.get(k, f'KW {k}'), size=8.5, color=GRAUD, align=PP_ALIGN.CENTER, space_after=0)
-    text(s, x - 0.3, cy0 + 0.46, cw * 0.56 + 0.6, 0.2, f'{a} von {b}', size=8, color=GRAU, align=PP_ALIGN.CENTER)
-fazit(s, f'Die Richtung stimmt, das Niveau nicht: Auch in der jüngsten Prüfwoche tragen {pz(w1[1] - w1[0], w1[1])} der Deckblätter mindestens eine Abweichung.')
+    v = schwere[k]; n = sum(v); x = cx0 + i * cw + (cw - bw_) / 2; y = cbot
+    for j in range(4):
+        h = ch * v[j] / n
+        if h <= 0: continue
+        y -= h
+        rect(s, x, y, bw_, max(h - 0.02, 0.01), SFARBE[j])
+        if h >= 0.2: text(s, x, y, bw_, h - 0.02, f'{round(100 * v[j] / n)}', size=11 if j == 0 else 9, bold=j == 0, color=STEXT[j], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        if j == 0:
+            if vorher: line(s, vorher[0], vorher[1], x, y, TEALD, 1)
+            vorher = (x + bw_, y)
+    if schwere[k][0] == 0: vorher = (x + bw_, cbot)
+    text(s, x - 0.3, cbot + 0.06, bw_ + 0.6, 0.36, KWNAME.get(k, f'KW {k}'), size=8.5, color=GRAUD, align=PP_ALIGN.CENTER, space_after=0)
+line(s, cx0, cbot, cx0 + 6.0, cbot, GRAUM, 0.75)
+for z, (name, wert) in enumerate([('Geprüfte Deckblätter', lambda k: str(sum(schwere[k]))), ('Ø abweichende Felder', lambda k: dez(summe_kw[k] / sum(schwere[k])))]):
+    y = cbot + 0.52 + z * 0.27
+    line(s, 5.4, y, 12.77, y, RGBColor(0xC8, 0xC8, 0xC8), 0.5)
+    text(s, 5.4, y + 0.03, 1.4, 0.22, name, size=8, color=GRAUD, anchor=MSO_ANCHOR.MIDDLE)
+    for i, k in enumerate(kws):
+        text(s, cx0 + i * cw, y + 0.03, cw, 0.22, wert(k), size=9, bold=z == 1, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+k0, k1 = kws[0], kws[-1]
+fazit(s, f'Die Richtung stimmt, das Niveau nicht: Je Deckblatt sind es noch {dez(summe_kw[k1] / sum(schwere[k1]))} statt {dez(summe_kw[k0] / sum(schwere[k0]))} abweichende Felder, aber {pz(w1[1] - w1[0], w1[1])} tragen weiter mindestens eine Abweichung.')
 quelle(s, QUELLE + f' {OHNE_DATUM} abgeschlossene Prüfungen ohne Prüfdatum fehlen im Verlauf.')
 
 # ------------------------------------------------------------------ 4 Abweichungen je Feld
 s = neue_folie(f'{KOPF[f1]} und {KOPF[f2]} führen – {pz(je_gruppe["Makler"], ABW)} aller Abweichungen liegen im Block Makler', KICKER)
-abschnitt(s, 0.56, 1.5, 7.6, f'Abweichungen je Feld – die 15 häufigsten von {ABW} (fett: Block Makler)')
+NTOP = 14
+abschnitt(s, 0.56, 1.5, 6.0, f'Abweichungen je Feld nach Art – die {NTOP} häufigsten von {ABW}')
 FARBE = {'nicht ausgelesen': TEALD, 'falscher Wert': ROT, 'ausgewichen': GRAUM, 'Rückfrage': RGBColor(0xD0, 0xD0, 0xD0)}
 lx = 0.56
 for a in ARTEN:
-    rect(s, lx, 1.91, 0.14, 0.14, FARBE[a]); text(s, lx + 0.2, 1.88, 1.6, 0.24, a, size=8.5, color=GRAUD); lx += 1.75
-bx0, by0, rh = 2.75, 2.22, 0.248; mx = sum(je_feld[top[0]].values()); bmax = 4.9
-for i, c in enumerate(top[:15]):
+    rect(s, lx, 1.93, 0.14, 0.14, FARBE[a]); text(s, lx + 0.2, 1.88, 1.5, 0.24, [[(a + ' ', False), (pz(je_art[a], ABW), True)]], size=8.5, color=GRAUD); lx += 1.52
+bx0, by0, rh = 2.7, 2.52, 0.245; mx = sum(je_feld[top[0]].values()); bmax = 3.3
+hx0, hw = 7.1, 1.134; kws = sorted(wochen); nkw = {k: sum(schwere[k]) for k in kws}
+abschnitt(s, 6.9, 1.5, 5.87, 'Anteil der Deckblätter mit Abweichung im Feld je Prüfwoche (in %)')
+def waerme(q):
+    t = min(q / 0.45, 1.0)
+    return RGBColor(*[round(a + (b - a) * t) for a, b in zip((0xF7, 0xF2, 0xF2), (0xBF, 0x15, 0x28))])
+text(s, 6.9, 1.88, 0.9, 0.24, 'Skala', size=8.5, color=GRAUD)
+for j, q in enumerate((0, 0.1, 0.2, 0.3, 0.45)):
+    rect(s, 7.4 + j * 0.62, 1.93, 0.14, 0.14, waerme(q)); text(s, 7.6 + j * 0.62, 1.88, 0.45, 0.24, ('≥ ' if j == 4 else '') + f'{round(q * 100)}', size=8.5, color=GRAUD)
+for i, k in enumerate(kws):
+    text(s, hx0 + i * hw, by0 - 0.36, hw - 0.03, 0.34, KWNAME.get(k, f'KW {k}').split('\n')[0] + f'\nn = {nkw[k]}', size=7.5, color=GRAUD, align=PP_ALIGN.CENTER, space_after=0)
+for i, c in enumerate(top[:NTOP]):
     y = by0 + i * rh; tot = sum(je_feld[c].values())
-    text(s, 0.56, y, 2.1, rh - 0.05, KOPF[c], size=9, align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, bold=GRUPPE[c] == 'Makler')
+    text(s, 0.56, y, 2.05, rh - 0.03, KOPF[c], size=9, align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, bold=GRUPPE[c] == 'Makler')
     x = bx0
     for a in ARTEN:
         n = je_feld[c][a]
         if not n: continue
         w = bmax * n / mx
-        rect(s, x, y + 0.03, max(w - 0.02, 0.02), rh - 0.11, FARBE[a]); x += w
-    text(s, x + 0.06, y, 0.5, rh - 0.05, str(tot), size=9, bold=True, anchor=MSO_ANCHOR.MIDDLE)
-line(s, bx0, by0 - 0.02, bx0, by0 + 15 * rh, GRAUM, 0.75)
-abschnitt(s, 8.6, 1.5, 4.17, 'Nach Block des Deckblatts')
-rows = [['Block', ('Abw.', {'align': PP_ALIGN.RIGHT}), ('Anteil', {'align': PP_ALIGN.RIGHT})]]
-for g, n in je_gruppe.most_common():
-    rows.append([(g, {'bold': g == 'Makler'}), (str(n), {'align': PP_ALIGN.RIGHT, 'bold': g == 'Makler'}), (pz(n, ABW), {'align': PP_ALIGN.RIGHT, 'bold': g == 'Makler'})])
-table(s, 8.6, 1.88, [2.67, 0.7, 0.8], rows, rowh=0.27, size=9)
-abschnitt(s, 8.6, 3.95, 4.17, 'Nach Art der Abweichung')
-BESCHR = {'nicht ausgelesen': 'Feld leer, „N/A“ oder „nicht ermittelbar“, Angabe steht in den Unterlagen',
-          'falscher Wert': 'Feld gefüllt, aber mit falschem Inhalt',
-          'ausgewichen': '„nicht prüfbar“, „manuelle Prüfung“ oder Reminder-Vermerk statt Ergebnis',
-          'Rückfrage': 'Rückfrage oder Hinweis der Prüfer ohne Falsch/Richtig'}
-for i, a in enumerate(ARTEN):
-    y = 4.36 + i * 0.41
-    text(s, 8.6, y, 0.75, 0.3, pz(je_art[a], ABW), size=14, bold=True, color=FARBE[a] if a != 'Rückfrage' else GRAU)
-    text(s, 9.4, y - 0.02, 3.37, 0.46, [[(f'{a} ({je_art[a]}): ', True), (BESCHR[a], False)]], size=8.5, color=GRAUD)
+        rect(s, x, y + 0.03, max(w - 0.02, 0.02), rh - 0.09, FARBE[a]); x += w
+    text(s, x + 0.06, y, 0.5, rh - 0.03, str(tot), size=9, bold=True, anchor=MSO_ANCHOR.MIDDLE)
+    for j, k in enumerate(kws):
+        q = feld_kw[c][k] / nkw[k]
+        z = rect(s, hx0 + j * hw, y + 0.01, hw - 0.03, rh - 0.03, waerme(q))
+        text(s, hx0 + j * hw, y + 0.01, hw - 0.03, rh - 0.03, f'{round(q * 100)}' if feld_kw[c][k] else '–', size=8.5, bold=q >= 0.3, color=WEISS if q >= 0.24 else (SW if feld_kw[c][k] else GRAUM), align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+line(s, bx0, by0, bx0, by0 + NTOP * rh, GRAUM, 0.75)
+text(s, 0.56, by0 - 0.3, 2.05, 0.22, 'fett: Block Makler', size=7.5, color=GRAU, italic=True, align=PP_ALIGN.RIGHT)
 fazit(s, f'Der Block Makler ist der größte Hebel: Dort liegt fast jede zweite Abweichung, und in {pz(sum(je_feld[c]["nicht ausgelesen"] for c in range(18, 26)), je_gruppe["Makler"])} der Fälle fehlt die Angabe ganz.')
-quelle(s, QUELLE + ' Gezählt ist jede ausgefüllte Prüfzelle; die Spalten „entfällt“ bleiben außen vor.')
+quelle(s, QUELLE + ' Gezählt ist jede ausgefüllte Prüfzelle; die Spalten „entfällt“ bleiben außen vor. Rechts: abgeschlossene Prüfungen mit Prüfdatum.')
 
 # ------------------------------------------------------------------ 5 Fehlermuster
 s = neue_folie(f'Sieben wiederkehrende Muster erklären {pz(len(GEDECKT), ABW)} der Abweichungen', KICKER)
@@ -368,21 +400,22 @@ quelle(s, QUELLE + f' Muster überschneiden sich (DEMA zählt auch bei Pool und 
 
 # ------------------------------------------------------------------ 6 Wirkung
 s = neue_folie(f'Stimmen die Maklerdaten, wären rechnerisch {pz(treppe[2][1], NF)} der Deckblätter fehlerfrei statt {pz(len(OK), NF)}', KICKER)
-abschnitt(s, 0.56, 1.5, 8.0, 'Anteil fehlerfreier Deckblätter, wenn die Abweichungen eines Blocks nacheinander behoben wären')
-cx0, cy0, ch = 1.1, 4.95, 2.8; cw = 7.4 / len(treppe)
-for g in (0, 0.25, 0.5, 0.75, 1.0):
-    y = cy0 - ch * g
-    line(s, cx0, y, cx0 + 7.4, y, GRAUL if g else GRAUM, 0.75)
-    text(s, cx0 - 0.55, y - 0.1, 0.47, 0.2, f'{int(g * 100)} %', size=8, color=GRAU, align=PP_ALIGN.RIGHT)
-vor = 0
-for i, (name, n) in enumerate(treppe):
-    q = n / NF; x = cx0 + i * cw + cw * 0.2; bw_ = cw * 0.6
-    if i: rect(s, x, cy0 - ch * vor, bw_, ch * vor, TEALL)
-    rect(s, x, cy0 - ch * q, bw_, ch * (q - vor) if i else ch * q, TEALD if i else ROT)
-    text(s, x - 0.3, cy0 - ch * q - 0.3, bw_ + 0.6, 0.26, pz(n, NF), size=13, bold=True, align=PP_ALIGN.CENTER)
-    text(s, x - 0.35, cy0 + 0.06, bw_ + 0.7, 0.62, ('+ ' if i else '') + name, size=8.5, color=GRAUD, align=PP_ALIGN.CENTER, space_after=0)
-    text(s, x - 0.3, cy0 + 0.72, bw_ + 0.6, 0.2, f'{n} von {NF}', size=8, color=GRAU, align=PP_ALIGN.CENTER)
-    vor = q
+abschnitt(s, 0.56, 1.5, 8.0, 'Anteil fehlerfreier Deckblätter, wenn die Abweichungen eines Blocks nacheinander behoben wären (in %)')
+saeulen = [('Heute', 0, treppe[0][1], 'summe')]
+for (name, n), (_, v) in zip(treppe[1:], treppe[:-1]): saeulen.append((name, v, n, 'stufe'))
+saeulen.append(('Rechnerisch\nerreichbar', 0, treppe[-1][1], 'summe')); saeulen.append(('Typ, Klassifikation,\nVorgang, Sonstiges', treppe[-1][1], NF, 'rest'))
+cx0, cy0, ch = 0.75, 4.9, 2.7; cw = 7.8 / len(saeulen); bw_ = cw * 0.62
+line(s, cx0, cy0, cx0 + 7.8, cy0, GRAUM, 0.75)
+for i, (name, von, bis, typ) in enumerate(saeulen):
+    x = cx0 + i * cw + (cw - bw_) / 2; y1, y0 = cy0 - ch * bis / NF, cy0 - ch * von / NF
+    rect(s, x, y1, bw_, y0 - y1, {'summe': SW, 'stufe': TEALD, 'rest': RGBColor(0xD0, 0xD0, 0xD0)}[typ])
+    if i < len(saeulen) - 1: line(s, x + bw_, y1, x + cw, y1, GRAUM, 0.75)
+    if typ == 'summe':
+        text(s, x - 0.3, y1 - 0.34, bw_ + 0.6, 0.3, pz(bis, NF), size=15, bold=True, align=PP_ALIGN.CENTER)
+    else:
+        text(s, x - 0.3, y1 - 0.3, bw_ + 0.6, 0.26, ('+' if typ == 'stufe' else '') + f'{round(100 * bis / NF) - round(100 * von / NF)} Pp.', size=11, bold=True, color=TEALD if typ == 'stufe' else GRAU, align=PP_ALIGN.CENTER)
+    text(s, x - 0.4, cy0 + 0.07, bw_ + 0.8, 0.6, name, size=8.5, color=SW if typ == 'summe' else GRAUD, bold=typ == 'summe', align=PP_ALIGN.CENTER, space_after=0)
+    text(s, x - 0.4, cy0 + 0.68, bw_ + 0.8, 0.2, f'{bis} von {NF}' if typ == 'summe' else f'{"+" if typ == "stufe" else ""}{bis - von} Deckblätter', size=8, color=GRAU, align=PP_ALIGN.CENTER)
 abschnitt(s, 9.0, 1.5, 3.77, 'Lesehilfe')
 text(s, 9.0, 1.95, 3.77, 4.5, [
     [(f'{NUR_MAKLERNR} Deckblätter ', True), ('scheitern heute allein an Agentur- oder Vermittlernummer.', False)],
@@ -409,14 +442,33 @@ for zi, r in enumerate(ZEILEN):
 print('N/A', na_zellen, len(na_zeilen), na_sonder, 'leer', leer_zellen, 'Sonderfall', sonder_zeilen, sonder_zellen)
 
 s = neue_folie(f'„N/A“ ist in zwei Presets gewollt – das erklärt höchstens {pz(sonder_zellen, ABW)} der Abweichungen', KICKER)
-abschnitt(s, 0.56, 1.5, 7.3, 'Celonis fragt je Klassifikation nicht alle Felder ab')
-table(s, 0.56, 1.92, [0.9, 3.0, 3.4], [
-    ['Preset', 'Klassifikation', 'Felder mit „N/A“ (keine Abfrage)'],
-    [('1', {'bold': True}), 'BÜ-Makler, BÜ-leer, BÜ-Fremdversicherer; Sonderthemen mit BÜ-Wunsch (VN-Wechsel, Weg-Wechsel, Kündigung Vertrag, Verkürzung Kündigungsfrist, Sonstige Fachthemen, Nicht Standard)', 'keine – alle Felder werden abgefragt'],
-    [('2', {'bold': True}), 'BÜ-MFA, BÜ-Courtagefortzahler, BÜ-Kontaktgeber', 'MV-Status, MV enthalten, MV vollumfänglich, Untervollmacht'],
-    [('3', {'bold': True}), 'Kündigung Maklervollmacht; dieselben Sonderthemen ohne BÜ-Wunsch; Kein Makler-Vorgang', 'Pool, Vermittler, Agentur- und Vermittlernummer, Makleranschrift, Name laut MV, BÜ-Wunsch, Prüfung Unterlagen, Reminder, alle MV-Felder, Unterschrifts- und Eingangsdatum'],
-], rowh=0.78, size=8.5)
-text(s, 0.56, 5.2, 7.3, 0.6, 'In Preset 3 bleiben nur Kunde, Vertrag, Absenderadresse, Zusammenfassung und Hinweis. Die Prüfmatrix führt weder Klassifikation noch Preset je Deckblatt; die Zuordnung rechts stützt sich deshalb auf die Anmerkungen der Prüfer.', size=8.5, color=GRAUD)
+abschnitt(s, 0.56, 1.5, 7.3, 'Welche Blöcke des Deckblatts Celonis je Preset abfragt')
+BLOECKE = ['Kopfzeile', 'Kunde &\nVertrag', 'Makler', 'Klassifikation\n& Vorgang', 'MV & Unter-\nschriften', 'Ergebnis']
+V, T, K = 'voll', 'teil', 'kein'
+PRESETS = [
+    ('1', 'BÜ-Makler, BÜ-leer, BÜ-Fremdversicherer; Sonderthemen mit BÜ-Wunsch (VN- und Weg-Wechsel, Kündigung Vertrag, Kündigungsfrist, Sonstige Fachthemen, Nicht Standard)', [(V, ''), (V, ''), (V, ''), (V, ''), (V, ''), (V, '')]),
+    ('2', 'BÜ-MFA, BÜ-Courtagefortzahler, BÜ-Kontaktgeber', [(T, 'ohne MV-Status'), (V, ''), (V, ''), (V, ''), (T, 'ohne drei MV-Felder'), (V, '')]),
+    ('3', 'Kündigung Maklervollmacht; dieselben Sonderthemen ohne BÜ-Wunsch; Kein Makler-Vorgang', [(T, 'ohne MV-Status'), (T, 'ohne Name laut MV'), (T, 'nur Absender-adresse'), (T, 'nur Vorgangstyp'), (K, 'kein Feld'), (V, '')]),
+]
+mx0, kw_ = 3.75, 0.685; my0, mh = 2.45, 0.9
+text(s, 0.56, 1.95, 0.6, 0.4, 'Preset', size=8.5, bold=True, anchor=MSO_ANCHOR.BOTTOM)
+text(s, 1.2, 1.95, 2.4, 0.4, 'Klassifikation', size=8.5, bold=True, anchor=MSO_ANCHOR.BOTTOM)
+for j, b in enumerate(BLOECKE):
+    text(s, mx0 + j * kw_, 1.95, kw_, 0.4, b, size=7.5, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM, space_after=0)
+line(s, 0.56, my0 - 0.05, 7.86, my0 - 0.05, SW, 1.25)
+for i, (nr, klass, zellen) in enumerate(PRESETS):
+    y = my0 + i * mh
+    text(s, 0.56, y, 0.6, mh - 0.1, nr, size=20, bold=True, color=TEALD, anchor=MSO_ANCHOR.MIDDLE)
+    text(s, 1.2, y, 2.4, mh - 0.1, klass, size=8, color=GRAUD, anchor=MSO_ANCHOR.MIDDLE)
+    for j, (zustand, notiz) in enumerate(zellen):
+        cx = mx0 + j * kw_ + kw_ / 2
+        rect(s, cx - 0.13, y + 0.1, 0.26, 0.26, {V: TEALD, T: TEALL, K: WEISS}[zustand], TEALD, MSO_SHAPE.OVAL, lw=1.25)
+        if notiz: text(s, cx - kw_ / 2 + 0.02, y + 0.4, kw_ - 0.04, 0.45, notiz, size=6.5, color=GRAUD, align=PP_ALIGN.CENTER, space_after=0)
+    line(s, 0.56, y + mh - 0.05, 7.86, y + mh - 0.05, RGBColor(0xC8, 0xC8, 0xC8), 0.5)
+lx = 0.56
+for zustand, name in ((V, 'alle Felder abgefragt'), (T, 'teilweise „N/A“'), (K, 'durchgehend „N/A“ (keine Abfrage)')):
+    rect(s, lx, 5.2, 0.16, 0.16, {V: TEALD, T: TEALL, K: WEISS}[zustand], TEALD, MSO_SHAPE.OVAL, lw=1); text(s, lx + 0.24, 5.16, 2.3, 0.24, name, size=8.5, color=GRAUD); lx += 2.0
+text(s, 0.56, 5.5, 7.3, 0.5, 'Die Prüfmatrix führt weder Klassifikation noch Preset je Deckblatt; die Zuordnung rechts stützt sich deshalb auf die Anmerkungen der Prüfer.', size=8.5, color=GRAUD)
 abschnitt(s, 8.3, 1.5, 4.47, 'Was das für die Auswertung heißt')
 for i, (zahl, farbe, t) in enumerate([
     (pz(na_zellen, ABW), TEALD, [[(f'{na_zellen} Abweichungen auf {len(na_zeilen)} Deckblättern ', True), (f'bemängeln ausdrücklich „N/A“ oder „nicht ermittelbar“. {na_sonder} davon stehen auf Deckblättern mit Hinweis auf MFA oder einen Sonderfall.', False)]]),

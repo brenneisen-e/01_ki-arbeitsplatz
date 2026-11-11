@@ -187,22 +187,33 @@ def line(slide, x1, y1, x2, y2, color=GRAUM, width=0.75):
     return c
 
 
-def table(slide, x, y, colw, rows, rowh=0.3, size=9, header_fill=ROT):
+def rand(c, pt, farbe):
+    """Nur eine Linie unter der Zelle; die Linien stehen im Schema vor der Fuellung."""
+    tcPr = c._tc.get_or_add_tcPr()
+    neu = []
+    for tag in ('a:lnL', 'a:lnR', 'a:lnT'):
+        ln = tcPr.makeelement(qn(tag), {'w': '0'}); ln.append(ln.makeelement(qn('a:noFill'), {})); neu.append(ln)
+    ln = tcPr.makeelement(qn('a:lnB'), {'w': str(int(pt * 12700)), 'cap': 'flat', 'cmpd': 'sng', 'algn': 'ctr'})
+    sf = ln.makeelement(qn('a:solidFill'), {}); sf.append(sf.makeelement(qn('a:srgbClr'), {'val': farbe})); ln.append(sf); neu.append(ln)
+    for k, el in enumerate(neu): tcPr.insert(k, el)
+
+
+def table(slide, x, y, colw, rows, rowh=0.3, size=9):
     shp = slide.shapes.add_table(len(rows), len(colw), Inches(x), Inches(y), Inches(sum(colw)), Inches(rowh * len(rows)))
     tbl = shp.table; tbl.first_row = False; tbl.horz_banding = False
     for j, w in enumerate(colw): tbl.columns[j].width = Inches(w)
     for i, row in enumerate(rows):
-        tbl.rows[i].height = Inches(rowh)
+        tbl.rows[i].height = Inches(min(rowh, 0.36) if i == 0 else rowh)
         for j, cell in enumerate(row):
             t, o = (cell if isinstance(cell, tuple) else (cell, {}))
             c = tbl.cell(i, j); c.margin_left = c.margin_right = Inches(0.07); c.margin_top = c.margin_bottom = Inches(0.04)
             c.vertical_anchor = MSO_ANCHOR.MIDDLE
-            c.fill.solid(); c.fill.fore_color.rgb = o.get('fill', header_fill if i == 0 else (WEISS if i % 2 else GRAUL))
+            c.fill.solid(); c.fill.fore_color.rgb = WEISS; rand(c, 1.25 if i == 0 else 0.5, '1A1A1A' if i == 0 else 'C8C8C8')
             for k, teil in enumerate((t or ' ').split('\n')):
                 p = c.text_frame.paragraphs[0] if k == 0 else c.text_frame.add_paragraph()
                 p.alignment = o.get('align', PP_ALIGN.LEFT)
                 r = p.add_run(); r.text = teil; r.font.size = Pt(size); r.font.name = F
-                r.font.bold = o.get('bold', i == 0); r.font.color.rgb = o.get('color', WEISS if i == 0 else SW)
+                r.font.bold = o.get('bold', i == 0); r.font.color.rgb = o.get('color', SW)
             c.text_frame.word_wrap = True
     return shp
 
@@ -220,8 +231,8 @@ def neue_folie(titel, kicker, tsize=20):
 
 
 def abschnitt(slide, x, y, w, t):
-    text(slide, x, y, w, 0.26, t, size=11, bold=True, color=TEALD)
-    line(slide, x, y + 0.28, x + w, y + 0.28, TEAL, 1)
+    text(slide, x, y, w, 0.26, t, size=11, bold=True, color=SW)
+    line(slide, x, y + 0.28, x + w, y + 0.28, SW, 0.75)
 
 
 def quelle(slide, t):
@@ -229,11 +240,15 @@ def quelle(slide, t):
 
 
 def kachel(slide, x, y, w, h, zahl, label, sub, farbe=TEALD):
-    rect(slide, x, y, w, h, GRAUL)
-    rect(slide, x, y, 0.06, h, farbe)
-    text(slide, x + 0.22, y + 0.14, w - 0.3, 0.6, zahl, size=30, bold=True, color=farbe)
-    text(slide, x + 0.22, y + 0.82, w - 0.3, 0.26, label, size=10.5, bold=True)
-    text(slide, x + 0.22, y + 1.1, w - 0.3, 0.5, sub, size=8.5, color=GRAUD)
+    line(slide, x, y, x + w, y, SW, 0.75)
+    text(slide, x, y + 0.12, w, 0.7, zahl, size=40, bold=True, color=farbe)
+    text(slide, x, y + 0.9, w, 0.26, label, size=11, bold=True)
+    text(slide, x, y + 1.18, w - 0.1, 0.5, sub, size=9, color=GRAUD)
+
+
+def fazit(slide, t):
+    rect(slide, 0.56, 6.04, 12.21, 0.5, GRAUL); rect(slide, 0.56, 6.04, 0.06, 0.5, ROT)
+    text(slide, 0.8, 6.04, 11.8, 0.5, t, size=10.5, bold=True, anchor=MSO_ANCHOR.MIDDLE)
 
 
 KICKER = 'QS KI-Deckblatt | Auswertung der Prüfmatrix des Fachbereichs'
@@ -250,12 +265,17 @@ kachel(s, kx[2], 1.55, kw, 1.7, str(ABW), 'Feldabweichungen', f'im Schnitt {dez(
 kachel(s, kx[3], 1.55, kw, 1.7, pz(je_gruppe['Makler'], ABW), 'davon im Block Makler', f'{je_gruppe["Makler"]} Abweichungen in Pool, Vermittler, Nummern, E-Mail und Anschrift')
 abschnitt(s, 0.56, 3.55, 12.2, 'Kernaussagen')
 w0, w1 = wochen[min(wochen)], wochen[max(wochen)]
-text(s, 0.56, 3.95, 12.2, 2.6, [
+kern = [
     [('Die Qualität steigt, reicht aber noch nicht. ', True), (f'Der Anteil fehlerfreier Deckblätter ist von {pz(w0[0], w0[1])} (Prüfung Mitte September) auf {pz(w1[0], w1[1])} (erste Novemberwoche) gewachsen. Für den Einsatz in der Prüfung ist das zu wenig.', False)],
     [('Zwei Felder tragen ein Fünftel aller Abweichungen. ', True), (f'{KOPF[f1]} ({sum(je_feld[f1].values())}) und {KOPF[f2]} ({sum(je_feld[f2].values())}) führen mit Abstand; {MZ["agentur_leer"][0]}-mal wurde die Agentur-Nr. gar nicht ausgelesen.', False)],
     [('Das Deckblatt liest eher nichts als Falsches. ', True), (f'{pz(je_art["nicht ausgelesen"], ABW)} der Abweichungen sind leere Felder, {pz(je_art["falscher Wert"], ABW)} falsche Werte, {pz(je_art["ausgewichen"], ABW)} ein Ausweichen auf „nicht prüfbar“ oder „manuelle Prüfung“, obwohl die Angabe in den Unterlagen steht.', False)],
     [('Die Fehler folgen Mustern, nicht dem Zufall. ', True), (f'Allein die Regeln rund um DEMA erklären {MZ["dema"][1]} Abweichungen auf {MZ["dema"][0]} Deckblättern. Stimmten Agentur- und Vermittlernummer und die übrigen Maklerdaten, wären rechnerisch {pz(treppe[2][1], NF)} der Deckblätter fehlerfrei.', False)],
-], size=11, bullets=True, space_after=9)
+]
+for i, k in enumerate(kern):
+    y = 3.98 + i * 0.66
+    o = rect(s, 0.56, y + 0.02, 0.36, 0.36, SW, None, MSO_SHAPE.OVAL)
+    text(s, 0.56, y + 0.02, 0.36, 0.36, str(i + 1), size=11, bold=True, color=WEISS, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    text(s, 1.12, y, 11.6, 0.56, [k], size=11, anchor=MSO_ANCHOR.TOP)
 quelle(s, QUELLE)
 
 # ------------------------------------------------------------------ 3 Prüfstand und Verlauf
@@ -272,14 +292,14 @@ for n, farbe, _ in seg:
 for i, (n, farbe, name) in enumerate(seg):
     rect(s, bx, by + 0.7 + i * 0.3, 0.14, 0.14, farbe)
     text(s, bx + 0.22, by + 0.66 + i * 0.3, 4.0, 0.26, f'{name}: {n} ({pz(n, N)})', size=9.5, color=GRAUD)
-text(s, 0.56, 3.75, 4.3, 2.7, [
+text(s, 0.56, 3.7, 4.3, 2.2, [
     f'{N} Deckblätter in der Matrix, geprüft von {PRUEFER} Personen aus dem Fachbereich.',
     f'{len(OFFEN)} Prüfungen sind offen, {MFA_OFFEN} davon, weil MFA erst in einer späteren Ausbaustufe betrachtet wird. Insgesamt betreffen {MFA_ALLE} Deckblätter MFA.',
     f'Die Quoten rechnen auf den {NF} abgeschlossenen Prüfungen.',
     'Die Wochen folgen dem Prüfdatum. Wann ein Deckblatt erzeugt wurde und mit welchem Stand der Regeln, steht nicht in der Matrix.',
-], size=9.5, bullets=True, space_after=6, color=GRAUD)
+], size=9.5, bullets=True, space_after=5, color=GRAUD)
 abschnitt(s, 5.4, 1.5, 7.37, 'Anteil Deckblätter ohne Abweichung je Prüfwoche')
-cx0, cy0, ch = 5.7, 5.75, 3.2; kws = sorted(wochen); cw = 6.9 / len(kws); maxq = 0.5
+cx0, cy0, ch = 5.7, 5.05, 2.75; kws = sorted(wochen); cw = 6.9 / len(kws); maxq = 0.5
 for g in (0, 0.25, 0.5):
     y = cy0 - ch * g / maxq
     line(s, cx0, y, cx0 + 6.9, y, GRAUL if g else GRAUM, 0.75)
@@ -291,16 +311,17 @@ for i, k in enumerate(kws):
     text(s, x - 0.3, cy0 - h - 0.3, cw * 0.56 + 0.6, 0.26, pz(a, b), size=12, bold=True, align=PP_ALIGN.CENTER)
     text(s, x - 0.3, cy0 + 0.06, cw * 0.56 + 0.6, 0.4, KWNAME.get(k, f'KW {k}'), size=8.5, color=GRAUD, align=PP_ALIGN.CENTER, space_after=0)
     text(s, x - 0.3, cy0 + 0.46, cw * 0.56 + 0.6, 0.2, f'{a} von {b}', size=8, color=GRAU, align=PP_ALIGN.CENTER)
+fazit(s, f'Die Richtung stimmt, das Niveau nicht: Auch in der jüngsten Prüfwoche tragen {pz(w1[1] - w1[0], w1[1])} der Deckblätter mindestens eine Abweichung.')
 quelle(s, QUELLE + f' {OHNE_DATUM} abgeschlossene Prüfungen ohne Prüfdatum fehlen im Verlauf.')
 
 # ------------------------------------------------------------------ 4 Abweichungen je Feld
 s = neue_folie(f'{KOPF[f1]} und {KOPF[f2]} führen – {pz(je_gruppe["Makler"], ABW)} aller Abweichungen liegen im Block Makler', KICKER)
-abschnitt(s, 0.56, 1.5, 7.6, f'Abweichungen je Feld (die 15 häufigsten von {ABW})')
+abschnitt(s, 0.56, 1.5, 7.6, f'Abweichungen je Feld – die 15 häufigsten von {ABW} (fett: Block Makler)')
 FARBE = {'nicht ausgelesen': TEALD, 'falscher Wert': ROT, 'ausgewichen': GRAUM, 'Rückfrage': RGBColor(0xD0, 0xD0, 0xD0)}
 lx = 0.56
 for a in ARTEN:
     rect(s, lx, 1.91, 0.14, 0.14, FARBE[a]); text(s, lx + 0.2, 1.88, 1.6, 0.24, a, size=8.5, color=GRAUD); lx += 1.75
-bx0, by0, rh = 2.75, 2.25, 0.285; mx = sum(je_feld[top[0]].values()); bmax = 4.9
+bx0, by0, rh = 2.75, 2.22, 0.248; mx = sum(je_feld[top[0]].values()); bmax = 4.9
 for i, c in enumerate(top[:15]):
     y = by0 + i * rh; tot = sum(je_feld[c].values())
     text(s, 0.56, y, 2.1, rh - 0.05, KOPF[c], size=9, align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, bold=GRUPPE[c] == 'Makler')
@@ -312,21 +333,21 @@ for i, c in enumerate(top[:15]):
         rect(s, x, y + 0.03, max(w - 0.02, 0.02), rh - 0.11, FARBE[a]); x += w
     text(s, x + 0.06, y, 0.5, rh - 0.05, str(tot), size=9, bold=True, anchor=MSO_ANCHOR.MIDDLE)
 line(s, bx0, by0 - 0.02, bx0, by0 + 15 * rh, GRAUM, 0.75)
-text(s, 0.56, by0 + 15 * rh + 0.02, 7.6, 0.2, 'Fett: Felder des Blocks Makler.', size=7.5, color=GRAU, italic=True)
 abschnitt(s, 8.6, 1.5, 4.17, 'Nach Block des Deckblatts')
 rows = [['Block', ('Abw.', {'align': PP_ALIGN.RIGHT}), ('Anteil', {'align': PP_ALIGN.RIGHT})]]
 for g, n in je_gruppe.most_common():
     rows.append([(g, {'bold': g == 'Makler'}), (str(n), {'align': PP_ALIGN.RIGHT, 'bold': g == 'Makler'}), (pz(n, ABW), {'align': PP_ALIGN.RIGHT, 'bold': g == 'Makler'})])
-table(s, 8.6, 1.92, [2.67, 0.7, 0.8], rows, rowh=0.29, size=9)
-abschnitt(s, 8.6, 4.2, 4.17, 'Nach Art der Abweichung')
+table(s, 8.6, 1.88, [2.67, 0.7, 0.8], rows, rowh=0.27, size=9)
+abschnitt(s, 8.6, 3.95, 4.17, 'Nach Art der Abweichung')
 BESCHR = {'nicht ausgelesen': 'Feld leer, „N/A“ oder „nicht ermittelbar“, Angabe steht in den Unterlagen',
           'falscher Wert': 'Feld gefüllt, aber mit falschem Inhalt',
           'ausgewichen': '„nicht prüfbar“, „manuelle Prüfung“ oder Reminder-Vermerk statt Ergebnis',
           'Rückfrage': 'Rückfrage oder Hinweis der Prüfer ohne Falsch/Richtig'}
 for i, a in enumerate(ARTEN):
-    y = 4.62 + i * 0.5
+    y = 4.36 + i * 0.41
     text(s, 8.6, y, 0.75, 0.3, pz(je_art[a], ABW), size=14, bold=True, color=FARBE[a] if a != 'Rückfrage' else GRAU)
     text(s, 9.4, y - 0.02, 3.37, 0.46, [[(f'{a} ({je_art[a]}): ', True), (BESCHR[a], False)]], size=8.5, color=GRAUD)
+fazit(s, f'Der Block Makler ist der größte Hebel: Dort liegt fast jede zweite Abweichung, und in {pz(sum(je_feld[c]["nicht ausgelesen"] for c in range(18, 26)), je_gruppe["Makler"])} der Fälle fehlt die Angabe ganz.')
 quelle(s, QUELLE + ' Gezählt ist jede ausgefüllte Prüfzelle; die Spalten „entfällt“ bleiben außen vor.')
 
 # ------------------------------------------------------------------ 5 Fehlermuster
@@ -341,13 +362,14 @@ rows = [['Muster', 'Was die Prüfer festgestellt haben', ('Deckblätter', {'alig
     ['Versicherungsnummer', '„Manuelle Prüfung“ oder leer, obwohl die Nummer in den Unterlagen steht; Präfix und Sparte falsch abgeleitet (WG oder RS statt SV).', (f'{MZ["vnr_manuell"][0]} manuell\n{MZ["vnr_praefix"][0]} Präfix', {'align': PP_ALIGN.RIGHT}), 'Nummern ohne Präfix, 13-stellige Direktnummern und mehrere Nummern je Vorgang abdecken.'],
     ['Kundenanschrift fehlt', 'Straße, PLZ und Ort des Kunden bleiben leer, obwohl sie in der Vollmacht stehen.', (f'{MZ["kundenadresse"][0]}\n({MZ["kundenadresse"][1]} Felder)', {'align': PP_ALIGN.RIGHT}), 'Anschrift aus der Vollmacht lesen, wenn das Anschreiben keine nennt.'],
 ]
-table(s, 0.56, 1.5, [1.75, 5.25, 1.15, 4.05], rows, rowh=0.62, size=8.5)
+table(s, 0.56, 1.45, [1.75, 5.25, 1.15, 4.05], rows, rowh=0.55, size=8.5)
+fazit(s, 'Die Muster sind regelhaft und damit gezielt behebbar; vier der sieben betreffen die Maklerdaten.')
 quelle(s, QUELLE + f' Muster überschneiden sich (DEMA zählt auch bei Pool und E-Mail). Weitere: Reminder ohne Vollständigkeitsprüfung auf {MZ["reminder"][0]} Deckblättern.')
 
 # ------------------------------------------------------------------ 6 Wirkung
 s = neue_folie(f'Stimmen die Maklerdaten, wären rechnerisch {pz(treppe[2][1], NF)} der Deckblätter fehlerfrei statt {pz(len(OK), NF)}', KICKER)
 abschnitt(s, 0.56, 1.5, 8.0, 'Anteil fehlerfreier Deckblätter, wenn die Abweichungen eines Blocks nacheinander behoben wären')
-cx0, cy0, ch = 1.1, 5.55, 3.2; cw = 7.4 / len(treppe)
+cx0, cy0, ch = 1.1, 4.95, 2.8; cw = 7.4 / len(treppe)
 for g in (0, 0.25, 0.5, 0.75, 1.0):
     y = cy0 - ch * g
     line(s, cx0, y, cx0 + 7.4, y, GRAUL if g else GRAUM, 0.75)
@@ -368,10 +390,46 @@ text(s, 9.0, 1.95, 3.77, 4.5, [
     [('Maklervollmacht sowie Kunde und Vertrag ', True), (f'heben die Quote danach auf {pz(treppe[4][1], NF)}.', False)],
     [('Der Rest ', True), (f'({NF - treppe[4][1]} Deckblätter) hängt an Typ, Klassifikation und Vorgangssteuerung oder an Anmerkungen ohne Feldbezug.', False)],
     [('Rechnerische Sicht: ', True), ('Sie setzt voraus, dass die Prüfer alle Abweichungen eines Deckblatts eingetragen haben, und sagt nichts über den Aufwand der Behebung.', False)],
-], size=9.5, bullets=True, space_after=7, color=GRAUD)
+], size=9.5, bullets=True, space_after=6, color=GRAUD)
+fazit(s, 'Die Rechnung spricht für die Reihenfolge: zuerst Agentur- und Vermittlernummer, dann die übrigen Maklerdaten, danach die Maklervollmacht.')
 quelle(s, QUELLE + f' Basis: {NF} abgeschlossene Prüfungen.')
 
-# ------------------------------------------------------------------ 7 Einordnung
+# ------------------------------------------------------------------ 7 N/A und Presets
+# Presets laut „BÜ Klassifikation“ (Celonis, Mail S. Schwarz vom 11.11.2026): N/A = Feld wird nicht abgefragt.
+SONDER = re.compile(r'MFA|K[üu]ndigung|Widerruf|Stornohaftung|Outbound|ERGO-M|@ergo|Reminder|Erinnerung|Mahnung|St[öo]rung|kein Postkorb', re.I)
+na_zellen = na_sonder = leer_zellen = sonder_zeilen = sonder_zellen = 0; na_zeilen = set()
+for zi, r in enumerate(ZEILEN):
+    hinweis = bool(SONDER.search(' '.join(str(r[k] or '') for k in (39, 40, 41))) or hat(r, 5, 'MFA'))
+    fs = felder(r)
+    if hinweis and fs: sonder_zeilen += 1; sonder_zellen += len(fs)
+    for c in fs:
+        t = zelle(r, c).lower()
+        if re.search(r'falsch:\s*"?(n/a|nicht ermittelbar)', t): na_zellen += 1; na_sonder += hinweis; na_zeilen.add(zi)
+        elif re.search(r'falsch:\s*"?le+r', t) or t == 'leer': leer_zellen += 1
+print('N/A', na_zellen, len(na_zeilen), na_sonder, 'leer', leer_zellen, 'Sonderfall', sonder_zeilen, sonder_zellen)
+
+s = neue_folie(f'„N/A“ ist in zwei Presets gewollt – das erklärt höchstens {pz(sonder_zellen, ABW)} der Abweichungen', KICKER)
+abschnitt(s, 0.56, 1.5, 7.3, 'Celonis fragt je Klassifikation nicht alle Felder ab')
+table(s, 0.56, 1.92, [0.9, 3.0, 3.4], [
+    ['Preset', 'Klassifikation', 'Felder mit „N/A“ (keine Abfrage)'],
+    [('1', {'bold': True}), 'BÜ-Makler, BÜ-leer, BÜ-Fremdversicherer; Sonderthemen mit BÜ-Wunsch (VN-Wechsel, Weg-Wechsel, Kündigung Vertrag, Verkürzung Kündigungsfrist, Sonstige Fachthemen, Nicht Standard)', 'keine – alle Felder werden abgefragt'],
+    [('2', {'bold': True}), 'BÜ-MFA, BÜ-Courtagefortzahler, BÜ-Kontaktgeber', 'MV-Status, MV enthalten, MV vollumfänglich, Untervollmacht'],
+    [('3', {'bold': True}), 'Kündigung Maklervollmacht; dieselben Sonderthemen ohne BÜ-Wunsch; Kein Makler-Vorgang', 'Pool, Vermittler, Agentur- und Vermittlernummer, Makleranschrift, Name laut MV, BÜ-Wunsch, Prüfung Unterlagen, Reminder, alle MV-Felder, Unterschrifts- und Eingangsdatum'],
+], rowh=0.78, size=8.5)
+text(s, 0.56, 5.2, 7.3, 0.6, 'In Preset 3 bleiben nur Kunde, Vertrag, Absenderadresse, Zusammenfassung und Hinweis. Die Prüfmatrix führt weder Klassifikation noch Preset je Deckblatt; die Zuordnung rechts stützt sich deshalb auf die Anmerkungen der Prüfer.', size=8.5, color=GRAUD)
+abschnitt(s, 8.3, 1.5, 4.47, 'Was das für die Auswertung heißt')
+for i, (zahl, farbe, t) in enumerate([
+    (pz(na_zellen, ABW), TEALD, [[(f'{na_zellen} Abweichungen auf {len(na_zeilen)} Deckblättern ', True), (f'bemängeln ausdrücklich „N/A“ oder „nicht ermittelbar“. {na_sonder} davon stehen auf Deckblättern mit Hinweis auf MFA oder einen Sonderfall.', False)]]),
+    (pz(sonder_zellen, ABW), TEALD, [[(f'{sonder_zellen} Abweichungen auf {sonder_zeilen} Deckblättern ', True), ('tragen einen solchen Hinweis (MFA, Kündigung oder Widerruf der Vollmacht, Reminder, ERGO-Absender). Das ist die Obergrenze dessen, was die Presets erklären können.', False)]]),
+    (pz(leer_zellen, ABW), ROT, [[(f'{leer_zellen} Abweichungen lauten „leer“, ', True), (f'darunter {MZ["agentur_leer"][0]}-mal die Agentur-Nr. Die Presets erklären sie nur, wenn das Deckblatt „N/A“ als leeres Feld ausgibt.', False)]]),
+]):
+    y = 1.95 + i * 1.2
+    text(s, 8.3, y, 0.95, 0.4, zahl, size=22, bold=True, color=farbe)
+    text(s, 9.45, y, 3.32, 1.0, t, size=9.5, color=GRAUD)
+fazit(s, 'Für eine saubere Trennung braucht es je laufender Nummer Klassifikation und Preset aus den Celonis-Rohdaten.')
+quelle(s, QUELLE + ' Presets: „BÜ Klassifikation“ aus Celonis, Stand 11.11.2026.')
+
+# ------------------------------------------------------------------ 8 Einordnung
 s = neue_folie('Für den Deep Dive: Was die Matrix nicht beantwortet und was zu klären ist', KICKER)
 abschnitt(s, 0.56, 1.5, 5.9, 'Grenzen der Datengrundlage')
 text(s, 0.56, 1.95, 5.9, 4.6, [
@@ -380,15 +438,18 @@ text(s, 0.56, 1.95, 5.9, 4.6, [
     [('Freitext statt fester Ausprägungen. ', True), ('„falsch: … / richtig: …“ ist uneinheitlich geschrieben; die Fehlerart ist deshalb über Textregeln zugeordnet.', False)],
     [('Status und Einträge passen nicht immer. ', True), (f'{WIDERSPRUCH_OK} Deckblätter stehen auf „Keine Abweichung“ und tragen dennoch Einträge, {WIDERSPRUCH_AB} auf „Abweichung festgestellt“ ohne Feldeintrag; {DOPPELT} Kennungen kommen doppelt vor.', False)],
     [('MFA ist ausgeklammert. ', True), (f'{MFA_ALLE} Deckblätter betreffen MFA, {MFA_OFFEN} davon sind deshalb offen.', False)],
-], size=9.5, bullets=True, space_after=7, color=GRAUD)
+    [('Kein Preset je Deckblatt. ', True), ('Ohne Klassifikation lässt sich „gewollt nicht abgefragt“ nicht von „nicht ausgelesen“ trennen.', False)],
+], size=10.5, bullets=True, space_after=10, color=GRAUD)
 abschnitt(s, 6.87, 1.5, 5.9, 'Offene Fragen')
 text(s, 6.87, 1.95, 5.9, 4.6, [
     [('Welche Felder braucht die Prüfung zwingend? ', True), ('Daran entscheidet sich, ab welcher Quote das Deckblatt einsetzbar ist und welche Muster zuerst behoben werden.', False)],
     [('Welches Format gilt für Agentur- und Vermittlernummer? ', True), ('Mit oder ohne „A“ und „P“, mit oder ohne führende Nullen.', False)],
     [('Wann gilt ein Einreicher als Pool, und welche Adresse wird ausgegeben? ', True), ('DEMA, blau direkt, Fonds Finanz und Jung DMS decken den Großteil der Fälle.', False)],
     [('Wie streng ist die Maklervollmacht zu bewerten? ', True), ('Vollumfänglich, Untervollmacht und Unterschrift brauchen Regeln mit Beispielen.', False)],
+    [('Wie erscheint „N/A“ auf dem Deckblatt? ', True), ('Als Text „N/A“ oder als leeres Feld? Davon hängt ab, wie die Prüfer „leer“ bewerten sollen.', False)],
     [('Abgleich mit den Celonis-Rohdaten. ', True), ('Die Einwertung je Action-Flow-Vorgang zeigt, ob sich die Muster über alle Vorgänge bestätigen und welche Fehler nach den Regeländerungen noch auftreten.', False)],
-], size=9.5, bullets=True, space_after=7, color=GRAUD)
+], size=10.5, bullets=True, space_after=10, color=GRAUD)
+fazit(s, 'Die Matrix zeigt, wo die Deckblätter falsch sind; welche Felder die Prüfung zwingend braucht, entscheidet über die Reihenfolge.')
 quelle(s, QUELLE)
 
 prs.save(OUT); print('ok', OUT)

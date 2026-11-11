@@ -1,0 +1,22 @@
+An: Schwarz, Stefan <Stefan.Schwarz@ergo.de>
+Cc: Abend, Dirk <Dirk.Abend@ergo.de>
+Betreff: BÜ | Deckblatt-Qualität: Rohdaten aus Celonis und QS-Datei für den Deep Dive
+
+Hallo Stefan, hallo Dirk,
+
+heute gab es einen Führungskräfte-Austausch, in dem insbesondere Klemens Steiner langsam unruhig wird. Wir haben mittlerweile 14.000 BÜ Rückstand, und sein Anspruch an die Qualität der Deckblätter ist entsprechend hoch. Aktuell können die Deckblätter noch nicht für die Prüfung verwendet werden, weil sie noch Fehler enthalten. Dazu soll es nächste Woche einen Deep Dive geben.
+
+Dafür zwei Bitten:
+
+Stefan: Rohdaten aus Celonis
+
+Ich habe verstanden, dass es in Celonis zu jedem Action-Flow-Vorgang einen Datenbankeintrag gibt, auch mit der Einwertung, was richtig und was falsch ist. Kannst du mir diese Rohdaten schicken, gern als Excel? Dann bereite ich das einmal auf.
+
+Dirk: aktuelle QS-Datei
+
+Schickst du mir bitte die aktuelle QS-Datei aus dem Fachbereich? Ich konsolidiere sie dann mit den Rohdaten aus Celonis.
+
+Danke euch.
+
+Beste Grüße
+Eike

@@ -10,8 +10,8 @@ OUT = P + '/Mail_Entwurf_Schwarz_Abend_Deckblatt_Rohdaten_111126'
 
 absaetze = [
  'Hallo Stefan, hallo Dirk,',
- 'heute gab es einen Führungskräfte-Austausch, in dem insbesondere Klemens Steiner langsam unruhig wird. '
- 'Wir haben mittlerweile 14.000 BÜ Rückstand, und sein Anspruch an die Qualität der Deckblätter ist '
+ 'heute gab es einen Führungskräfte-Austausch, und die Führungskräfte werden langsam unruhig. '
+ 'Wir haben mittlerweile 14.000 BÜ Rückstand, und der Anspruch an die Qualität der Deckblätter ist '
  'entsprechend hoch. Aktuell können die Deckblätter noch nicht für die Prüfung verwendet werden, weil sie '
  'noch Fehler enthalten. Dazu soll es nächste Woche einen Deep Dive geben.',
  'Dafür zwei Bitten:',

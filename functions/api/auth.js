@@ -7,8 +7,7 @@
 //
 //   scope: 'app'      -> env.ACCESS_PASSWORD    (Root-Landing / Plattform)
 //   scope: 'workshop' -> env.WORKSHOP_PASSWORD  (Bank der Zukunft Workshop)
-//   scope: 'rbs'      -> Kennwort der Regionalbankenstudie 2026 (Hash in
-//                        _lib/authToken.js, optional env.RBS_PASSWORD)
+//   scope: 'rbs'      -> env.RBS_PASSWORD       (Regionalbankenstudie 2026)
 //
 // Ist kein Scope gesetzt oder unbekannt, wird 'app' verwendet. Die
 // plattformweite Sperre in _middleware.js prüft den 'app'-Scope.
@@ -53,8 +52,14 @@ export async function onRequestPost({ request, env }) {
 
   const rawScope = typeof body?.scope === 'string' ? body.scope.toLowerCase() : 'app';
 
-  // Regionalbankenstudie: eigenes Kennwort, braucht kein Secret.
+  // Regionalbankenstudie: eigenes Kennwort aus dem Secret RBS_PASSWORD.
   if (rawScope === 'rbs') {
+    if (!env.RBS_PASSWORD) {
+      return new Response(
+        JSON.stringify({ error: 'RBS_PASSWORD-Secret ist in Cloudflare Pages nicht gesetzt.', scope: 'rbs' }),
+        { status: 500, headers }
+      );
+    }
     const rbsOk = await pruefeRbsKennwort(body?.password, env);
     if (!rbsOk) {
       return new Response(JSON.stringify({ ok: false, scope: 'rbs' }), { status: 401, headers });

@@ -65,7 +65,8 @@ export async function onRequest(context) {
   if (isRbsPath(url.pathname)) {
     const c = parseCookies(request.headers.get('Cookie'));
     const rbsCookie = c[RBS_AUTH_COOKIE];
-    if (rbsCookie && constantTimeEquals(rbsCookie, await rbsToken(env))) return next();
+    const rbsExpected = await rbsToken(env);
+    if (rbsExpected && rbsCookie && constantTimeEquals(rbsCookie, rbsExpected)) return next();
     const appCookie = c[APP_AUTH_COOKIE];
     if (secret && appCookie && constantTimeEquals(appCookie, await deriveToken(secret))) return next();
     return new Response(loginPage(RBS_LOGIN), {
@@ -217,7 +218,7 @@ ${cfg.zugangsHinweis ? `    <div class="info">
       credentials: 'same-origin',
     }).then(function (res) {
       if (res.status === 401) throw new Error('Falsches Passwort.');
-      if (res.status === 500) throw new Error('ACCESS_PASSWORD-Secret ist noch nicht in Cloudflare hinterlegt.');
+      if (res.status === 500) throw new Error('Das Passwort ist noch nicht in Cloudflare hinterlegt.');
       if (!res.ok) throw new Error('Fehler ' + res.status + ' beim Anmelden.');
       return res.json();
     }).then(function (data) {

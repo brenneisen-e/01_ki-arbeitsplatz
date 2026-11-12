@@ -263,7 +263,7 @@ const USE_CASES = [
     tagline: 'Analyse commission data and find the silent errors in the book.',
     story:
       'An analysis tool for commission data: it recalculates reported commissions against the configured model and shows ' +
-      'where the two diverge. A standalone application outside this platform.',
+      'where the two diverge.',
     field: 'operations',
     industries: ['insurance'],
     maturity: 'demo',
@@ -271,9 +271,8 @@ const USE_CASES = [
     highlights: [
       'Reported commission recalculated against the model',
       'Conspicuous contracts and patterns surfaced',
-      'Standalone application',
     ],
-    link: { href: 'https://provisions-analyzer.pages.dev/', external: true },
+    link: { href: '/26_provisionsvalidierung/dist/index.html' },
     preview: 'live',
   },
   /* ---------------------------------------------------------------- */

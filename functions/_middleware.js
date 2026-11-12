@@ -16,6 +16,11 @@
 //      die Apps der Plattform laden, bekommt jede Galerie-Antwort das
 //      Plattform-Cookie mit — der Galerie-Link ist damit zugleich der Zugang
 //      zur Plattform. Bewusst so gewollt.
+//   6. /24_regionalbankenstudie (Kurzform /regionalbankenstudie): die
+//      Regionalbankenstudie 2026 hat ein eigenes Kennwort (Scope 'rbs'),
+//      damit ihr Link ohne das Plattform-Passwort weitergegeben werden kann.
+//      Wer an der Plattform angemeldet ist, kommt ohne zweite Abfrage hinein;
+//      das Studien-Kennwort oeffnet nur die Studie, nicht die Plattform.
 
 import {
   APP_AUTH_COOKIE,
@@ -23,7 +28,15 @@ import {
   constantTimeEquals,
   parseCookies,
   buildAuthCookie,
+  RBS_AUTH_COOKIE,
+  rbsToken,
 } from './_lib/authToken.js';
+
+// Regionalbankenstudie 2026 mit eigenem Kennwort (siehe Punkt 6 oben).
+const RBS_PREFIXE = ['/24_regionalbankenstudie', '/regionalbankenstudie'];
+function isRbsPath(pathname) {
+  return RBS_PREFIXE.some((p) => pathname === p || pathname.startsWith(p + '/'));
+}
 
 // Ohne Passwort erreichbar (siehe Punkt 5 oben). Die Galerie liegt seit der
 // Nummerierung der Ordner unter /11_galerie; /galerie und die Kurzform
@@ -46,6 +59,21 @@ export async function onRequest(context) {
   if (url.pathname === '/api/auth') return next();
 
   const secret = env.ACCESS_PASSWORD;
+
+  // Regionalbankenstudie: Plattform-Cookie oder Studien-Cookie genuegt. Steht
+  // vor dem fail-open, damit die Studie auch ohne ACCESS_PASSWORD gesperrt ist.
+  if (isRbsPath(url.pathname)) {
+    const c = parseCookies(request.headers.get('Cookie'));
+    const rbsCookie = c[RBS_AUTH_COOKIE];
+    if (rbsCookie && constantTimeEquals(rbsCookie, await rbsToken(env))) return next();
+    const appCookie = c[APP_AUTH_COOKIE];
+    if (secret && appCookie && constantTimeEquals(appCookie, await deriveToken(secret))) return next();
+    return new Response(loginPage(RBS_LOGIN), {
+      status: 401,
+      headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' },
+    });
+  }
+
   if (!secret) {
     // Sperre deaktiviert, solange kein Secret hinterlegt ist.
     console.warn('[auth] ACCESS_PASSWORD nicht gesetzt – Zugriffssperre inaktiv.');
@@ -79,14 +107,30 @@ export async function onRequest(context) {
   });
 }
 
-function loginPage() {
+// Texte der Login-Seite: Plattform (Standard) und Regionalbankenstudie.
+const APP_LOGIN = {
+  scope: 'app',
+  titel: 'Zugriff geschützt · Financial Services AI Use Case Platform',
+  text: 'Diese Plattform ist passwortgeschützt. Bitte gib dein Zugangspasswort ein.',
+  fuss: 'Financial Services AI Use Case Platform &middot; Eike Brenneisen (BCMT)',
+  zugangsHinweis: true,
+};
+const RBS_LOGIN = {
+  scope: 'rbs',
+  titel: 'Zugriff geschützt · Regionalbankenstudie 2026',
+  text: 'Die interaktive Fassung der Deloitte Regionalbankenstudie 2026 ist passwortgeschützt. Bitte geben Sie das Kennwort ein.',
+  fuss: 'Deloitte Regionalbankenstudie 2026 &middot; interaktive Fassung',
+  zugangsHinweis: false,
+};
+
+function loginPage(cfg = APP_LOGIN) {
   return `<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Zugriff geschützt · Financial Services AI Use Case Platform</title>
+<title>${cfg.titel}</title>
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -138,17 +182,17 @@ function loginPage() {
       </svg>
     </div>
     <h1>Zugriff geschützt</h1>
-    <p class="sub">Diese Plattform ist passwortgeschützt. Bitte gib dein Zugangspasswort ein.</p>
+    <p class="sub">${cfg.text}</p>
     <label for="auth-password">Passwort</label>
     <input id="auth-password" type="password" autocomplete="current-password" autofocus />
     <button id="auth-submit" type="submit">Entsperren</button>
     <div class="error" id="auth-error"></div>
-    <div class="info">
+${cfg.zugangsHinweis ? `    <div class="info">
       Zugriff kannst du per E-Mail bei
       <a href="mailto:ebrenneisen@deloitte.de?subject=Zugriff%20Financial%20Services%20AI%20Use%20Case%20Platform">ebrenneisen@deloitte.de</a>
       anfragen.
-    </div>
-    <div class="footer">Financial Services AI Use Case Platform &middot; Eike Brenneisen (BCMT)</div>
+    </div>` : ''}
+    <div class="footer">${cfg.fuss}</div>
   </form>
 <script>
 (function () {
@@ -169,7 +213,7 @@ function loginPage() {
     fetch('/api/auth', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ password: value, scope: 'app' }),
+      body: JSON.stringify({ password: value, scope: '${cfg.scope}' }),
       credentials: 'same-origin',
     }).then(function (res) {
       if (res.status === 401) throw new Error('Falsches Passwort.');
@@ -180,7 +224,7 @@ function loginPage() {
       if (!data || !data.ok) throw new Error('Falsches Passwort.');
       // Root-Landing (index.html) nutzt localStorage – setzen, damit dort
       // kein zweiter Prompt erscheint.
-      try { localStorage.setItem('${LEGACY_LS_KEY}', 'ok'); } catch (e) {}
+      ${cfg.scope === 'app' ? `try { localStorage.setItem('${LEGACY_LS_KEY}', 'ok'); } catch (e) {}` : ''}
       // Neu laden: der ursprüngliche Deeplink wird jetzt mit Cookie bedient.
       window.location.reload();
     }).catch(function (e2) {

@@ -149,3 +149,7 @@
 /v07 /03_banking-horizon/dist/#/operations 301
 /v08/ /03_banking-horizon/dist/#/operations 301
 /v08 /03_banking-horizon/dist/#/operations 301
+
+# Regionalbankenstudie 2026 (eigenes Kennwort, siehe functions/_middleware.js)
+/regionalbankenstudie/ /24_regionalbankenstudie/ 301
+/regionalbankenstudie /24_regionalbankenstudie/ 301

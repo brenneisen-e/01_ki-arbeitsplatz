@@ -13,7 +13,35 @@
 // Cookie-Name je Scope. Die Middleware schützt die gesamte Plattform mit dem
 // 'app'-Scope (Secret ACCESS_PASSWORD).
 export function cookieNameForScope(scope) {
-  return scope === 'workshop' ? 'kia_auth_workshop' : 'kia_auth_app';
+  if (scope === 'workshop') return 'kia_auth_workshop';
+  if (scope === 'rbs') return RBS_AUTH_COOKIE;
+  return 'kia_auth_app';
+}
+
+// Regionalbankenstudie 2026 (/24_regionalbankenstudie): eigenes Kennwort,
+// damit der Link ohne das Plattform-Passwort weitergegeben werden kann.
+// Im Code steht nur der SHA-256 des Kennworts (neu: printf '%s' 'neu' |
+// sha256sum); ein Secret RBS_PASSWORD in Cloudflare hat Vorrang. Die Studie
+// ist veroeffentlicht und enthaelt keine Mandantendaten – das Kennwort ist
+// eine Schwelle, kein Datenschutz.
+export const RBS_AUTH_COOKIE = 'kia_auth_rbs';
+const RBS_KENNWORT_SHA256 = '3f98fec8c8655153d233b2946d6e67c078eb02fa7113863105b22ed22823841b';
+
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Prueft das eingegebene Kennwort der Studie.
+export async function pruefeRbsKennwort(password, env) {
+  if (typeof password !== 'string') return false;
+  if (env && env.RBS_PASSWORD) return constantTimeEquals(password, env.RBS_PASSWORD);
+  return constantTimeEquals(await sha256Hex(password), RBS_KENNWORT_SHA256);
+}
+
+// Erwarteter Cookie-Wert der Studie (aendert sich mit dem Kennwort).
+export function rbsToken(env) {
+  return deriveToken((env && env.RBS_PASSWORD) || RBS_KENNWORT_SHA256);
 }
 
 export const APP_AUTH_COOKIE = 'kia_auth_app';

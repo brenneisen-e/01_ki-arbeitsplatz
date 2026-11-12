@@ -19,8 +19,9 @@
 //   6. /24_regionalbankenstudie (Kurzform /regionalbankenstudie): die
 //      Regionalbankenstudie 2026 hat ein eigenes Kennwort (Scope 'rbs'),
 //      damit ihr Link ohne das Plattform-Passwort weitergegeben werden kann.
-//      Wer an der Plattform angemeldet ist, kommt ohne zweite Abfrage hinein;
-//      das Studien-Kennwort oeffnet nur die Studie, nicht die Plattform.
+//      Das Kennwort wird immer abgefragt, auch von angemeldeten
+//      Plattform-Nutzern (Klick auf die Kachel); es oeffnet nur die Studie,
+//      nicht die Plattform.
 
 import {
   APP_AUTH_COOKIE,
@@ -60,15 +61,14 @@ export async function onRequest(context) {
 
   const secret = env.ACCESS_PASSWORD;
 
-  // Regionalbankenstudie: Plattform-Cookie oder Studien-Cookie genuegt. Steht
-  // vor dem fail-open, damit die Studie auch ohne ACCESS_PASSWORD gesperrt ist.
+  // Regionalbankenstudie: nur das Studien-Cookie zaehlt, das Plattform-Cookie
+  // genuegt nicht. Steht vor dem fail-open, damit die Studie auch ohne
+  // ACCESS_PASSWORD gesperrt ist.
   if (isRbsPath(url.pathname)) {
     const c = parseCookies(request.headers.get('Cookie'));
     const rbsCookie = c[RBS_AUTH_COOKIE];
     const rbsExpected = await rbsToken(env);
     if (rbsExpected && rbsCookie && constantTimeEquals(rbsCookie, rbsExpected)) return next();
-    const appCookie = c[APP_AUTH_COOKIE];
-    if (secret && appCookie && constantTimeEquals(appCookie, await deriveToken(secret))) return next();
     return new Response(loginPage(RBS_LOGIN), {
       status: 401,
       headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' },

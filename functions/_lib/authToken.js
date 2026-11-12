@@ -22,8 +22,7 @@ export function cookieNameForScope(scope) {
 // damit der Link ohne das Plattform-Passwort weitergegeben werden kann.
 // Das Kennwort steht nur als Secret RBS_PASSWORD in Cloudflare (Workers &
 // Pages -> kiarbeitsplatz -> Settings -> Variables and Secrets), nicht im
-// Code. Fehlt das Secret, bleibt die Studie fuer Fremde gesperrt; nur wer an
-// der Plattform angemeldet ist, kommt hinein.
+// Code. Fehlt das Secret, bleibt die Studie fuer alle gesperrt.
 export const RBS_AUTH_COOKIE = 'kia_auth_rbs';
 
 // Prueft das eingegebene Kennwort der Studie.

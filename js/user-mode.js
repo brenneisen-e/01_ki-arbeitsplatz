@@ -352,14 +352,14 @@ function openOffeneVorgaenge() {
     alert('Übersicht offene Vorgänge - In Entwicklung');
 }
 
-// Abrechnungsprüfung - Opens in new tab (iframe blocked by target site)
+// Abrechnungsprüfung - Opens in new tab
 function openAbrechnungspruefung() {
-    window.open('https://billingcheck.pages.dev/app', '_blank');
+    window.open('25_abrechnungspruefung/app.html', '_blank');
 }
 
 // Validierung Provisionsberechnung - Opens in new tab
 function openValidierungProvision() {
-    window.open('https://provisions-analyzer.pages.dev/', '_blank');
+    window.open('26_provisionsvalidierung/dist/index.html', '_blank');
 }
 
 // ========================================

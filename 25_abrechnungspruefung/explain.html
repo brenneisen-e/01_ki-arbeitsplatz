@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Alpha Abrechnungserläuterung - KI-gestützte Erklärung von Provisionsabrechnungen">
+    <link rel="icon" href="data:,">
+    <title>Alpha Abrechnungserläuterung</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/billing-explainer.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">ALPHA</div>
+                <h1>Abrechnungserläuterung</h1>
+                <span class="version-badge">v1.0 KI-Erklärer</span>
+            </div>
+            <div class="header-actions">
+                <a href="app.html" class="btn-secondary">
+                    <span class="icon">←</span> Zur Hauptanwendung
+                </a>
+                <button id="settings-btn" class="btn-icon" title="Einstellungen">
+                    <span class="icon">⚙️</span>
+                </button>
+                <button id="theme-toggle" class="btn-icon" title="Theme wechseln">
+                    <span class="icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main explainer-main">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#generator" class="nav-item active" data-section="generator">
+                    <span class="icon">🔧</span> Generator
+                </a>
+                <a href="#explain" class="nav-item" data-section="explain">
+                    <span class="icon">💡</span> Erläuterung
+                </a>
+                <a href="#documents" class="nav-item" data-section="documents">
+                    <span class="icon">📄</span> Dokumente
+                </a>
+                <a href="#contracts" class="nav-item" data-section="contracts">
+                    <span class="icon">📋</span> Verträge
+                </a>
+                <a href="#rules" class="nav-item" data-section="rules">
+                    <span class="icon">📖</span> Provisionsregeln
+                </a>
+            </nav>
+
+            <div class="sidebar-stats">
+                <div class="stat-item">
+                    <span class="stat-label">D1 Status</span>
+                    <span class="stat-value" id="d1-status">Offline</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Dokumente</span>
+                    <span class="stat-value" id="total-documents">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Verträge</span>
+                    <span class="stat-value" id="total-contracts">0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- ============================================== -->
+            <!-- DOCUMENTS SECTION -->
+            <!-- ============================================== -->
+            <section id="documents-section" class="section">
+                <div class="section-header">
+                    <h2>Dokumente - Provisionsbestimmungen hochladen</h2>
+                    <p class="section-description">
+                        Lade deine Provisionsbestimmungen hoch. Der Text wird extrahiert und in der Datenbank gespeichert.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Provisionsbestimmungen hinzufügen</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="provisions-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="prov-name">Bezeichnung *</label>
+                                    <input type="text" id="prov-name" class="form-control" required
+                                           placeholder="z.B. Alpha Versicherung AG - Provisionsordnung 2024">
+                                </div>
+                                <div class="form-group">
+                                    <label for="prov-versicherer">Versicherer *</label>
+                                    <input type="text" id="prov-versicherer" class="form-control" required
+                                           placeholder="z.B. Alpha Versicherung AG">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="prov-gueltig-ab">Gültig ab *</label>
+                                    <input type="date" id="prov-gueltig-ab" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prov-gueltig-bis">Gültig bis</label>
+                                    <input type="date" id="prov-gueltig-bis" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="prov-version">Version</label>
+                                    <input type="text" id="prov-version" class="form-control"
+                                           placeholder="z.B. 2024.1">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>PDF-Dokument hochladen</label>
+                                <div id="prov-dropzone" class="dropzone">
+                                    <div class="dropzone-content">
+                                        <span class="dropzone-icon">📄</span>
+                                        <p>PDF hier ablegen oder klicken zum Auswählen</p>
+                                        <p class="dropzone-hint">Das Dokument wird verarbeitet und der Text extrahiert.</p>
+                                    </div>
+                                    <input type="file" id="prov-file" accept=".pdf" hidden>
+                                </div>
+                                <div id="prov-file-info" class="file-info" style="display: none;"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="prov-text">Oder: Text direkt eingeben/einfügen</label>
+                                <textarea id="prov-text" class="form-control" rows="10"
+                                          placeholder="Fügen Sie hier den Text der Provisionsbestimmungen ein..."></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <span class="icon">💾</span> Provisionsbestimmung speichern
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3>Gespeicherte Provisionsbestimmungen</h3>
+                        <button id="refresh-provisions" class="btn-icon" title="Aktualisieren">🔄</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="provisions-list" class="documents-list">
+                            <p class="empty-state">Keine Provisionsbestimmungen gespeichert. Füge oben eine neue hinzu.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- GENERATOR SECTION -->
+            <!-- ============================================== -->
+            <section id="generator-section" class="section active">
+                <div class="section-header">
+                    <h2>Abrechnungs-Generator</h2>
+                    <p class="section-description">
+                        Generiere realistische Provisionsabrechnungen zum Testen und Demonstrieren des Erläuterungs-Tools.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Generator-Einstellungen</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="generator-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="gen-monat">Monat</label>
+                                    <select id="gen-monat" class="form-control">
+                                        <option value="1">Januar</option>
+                                        <option value="2">Februar</option>
+                                        <option value="3">März</option>
+                                        <option value="4">April</option>
+                                        <option value="5">Mai</option>
+                                        <option value="6">Juni</option>
+                                        <option value="7">Juli</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11" selected>November</option>
+                                        <option value="12">Dezember</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gen-jahr">Jahr</label>
+                                    <input type="number" id="gen-jahr" class="form-control" value="2025" min="2020" max="2030">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gen-positionen">Anzahl Positionen</label>
+                                    <input type="number" id="gen-positionen" class="form-control" value="25" min="5" max="100">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="gen-vermittler">Vermittler-Nummer</label>
+                                    <input type="text" id="gen-vermittler" class="form-control" value="0300/0187">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gen-name">Vermittler-Name</label>
+                                    <input type="text" id="gen-name" class="form-control" value="Maximilian Berger">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gen-agentur">Agentur</label>
+                                    <input type="text" id="gen-agentur" class="form-control" value="Alpha Finanzservice GmbH">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Enthaltene Positionsarten</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="gen-mit-stornos" checked> Stornos
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="gen-mit-dynamik" checked> Dynamik
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="gen-mit-super" checked> Superprovisionen
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="gen-mit-bestand" checked> Bestandsprovisionen
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary btn-large">
+                                    <span class="icon">🎲</span> Abrechnung generieren
+                                </button>
+                                <button type="button" id="gen-save-d1" class="btn-secondary" disabled>
+                                    <span class="icon">💾</span> In D1 speichern
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Generierte Abrechnung Vorschau -->
+                <div id="generated-billing" class="card" style="margin-top: 1.5rem; display: none;">
+                    <div class="card-header">
+                        <h3>Generierte Abrechnung</h3>
+                        <div class="header-actions">
+                            <button id="gen-export-json" class="btn-secondary btn-sm">JSON Export</button>
+                            <button id="gen-explain" class="btn-primary btn-sm">Jetzt erläutern</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Zusammenfassung -->
+                        <div id="gen-summary" class="billing-summary"></div>
+
+                        <!-- Positionen Tabelle -->
+                        <div class="table-container" style="margin-top: 1.5rem;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Pos.</th>
+                                        <th>Art</th>
+                                        <th>Sparte</th>
+                                        <th>Produkt</th>
+                                        <th>VN</th>
+                                        <th>Bezugsgröße</th>
+                                        <th>Satz</th>
+                                        <th class="text-right">Betrag</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gen-positions-table">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- EXPLAIN SECTION -->
+            <!-- ============================================== -->
+            <section id="explain-section" class="section">
+                <div class="section-header">
+                    <h2>Abrechnung erläutern</h2>
+                    <p class="section-description">
+                        Lade eine Provisionsabrechnung hoch und erhalte eine detaillierte Erläuterung jeder Position.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Abrechnung auswählen</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="upload-options">
+                            <!-- Option 1: Aus D1 laden -->
+                            <div class="upload-option">
+                                <h4>Aus Datenbank laden</h4>
+                                <div class="form-group">
+                                    <select id="select-abrechnung" class="form-control">
+                                        <option value="">-- Abrechnung auswählen --</option>
+                                    </select>
+                                </div>
+                                <button id="load-from-d1" class="btn-secondary">Laden</button>
+                            </div>
+
+                            <div class="upload-divider">oder</div>
+
+                            <!-- Option 2: PDF hochladen -->
+                            <div class="upload-option">
+                                <h4>PDF hochladen</h4>
+                                <div id="explain-dropzone" class="dropzone dropzone-small">
+                                    <div class="dropzone-content">
+                                        <span class="dropzone-icon">📄</span>
+                                        <p>PDF hier ablegen</p>
+                                    </div>
+                                    <input type="file" id="explain-file" accept=".pdf" hidden>
+                                </div>
+                            </div>
+
+                            <div class="upload-divider">oder</div>
+
+                            <!-- Option 3: Generierte verwenden -->
+                            <div class="upload-option">
+                                <h4>Generierte Abrechnung</h4>
+                                <button id="use-generated" class="btn-secondary" disabled>
+                                    Zuletzt generierte verwenden
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Erläuterung Ergebnis -->
+                <div id="explanation-result" class="card" style="margin-top: 1.5rem; display: none;">
+                    <div class="card-header">
+                        <h3>Erläuterung</h3>
+                        <div class="header-actions">
+                            <button id="explain-export-pdf" class="btn-secondary btn-sm">Als PDF exportieren</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Zusammenfassung -->
+                        <div id="explain-summary" class="explanation-summary"></div>
+
+                        <!-- Positionen mit Erläuterungen -->
+                        <div id="explain-positions" class="explanation-positions"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- CONTRACTS SECTION -->
+            <!-- ============================================== -->
+            <section id="contracts-section" class="section">
+                <div class="section-header">
+                    <h2>Verträge</h2>
+                    <p class="section-description">
+                        Verwalte die Verträge, die als Referenz für die Abrechnungserläuterung dienen.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Vertrag hinzufügen</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="contract-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="con-id">Vertragsnummer *</label>
+                                    <input type="text" id="con-id" class="form-control" required
+                                           placeholder="z.B. VN-12345678-01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="con-vn">Versicherungsnehmer</label>
+                                    <input type="text" id="con-vn" class="form-control"
+                                           placeholder="z.B. Max Mustermann">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="con-sparte">Sparte *</label>
+                                    <select id="con-sparte" class="form-control" required>
+                                        <option value="">-- Auswählen --</option>
+                                        <option value="Leben">Leben</option>
+                                        <option value="Kranken">Kranken</option>
+                                        <option value="Sach">Sach</option>
+                                        <option value="Kfz">Kfz</option>
+                                        <option value="Gewerbe">Gewerbe</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="con-produkt">Produkt *</label>
+                                    <input type="text" id="con-produkt" class="form-control" required
+                                           placeholder="z.B. Kapitallebensversicherung">
+                                </div>
+                                <div class="form-group">
+                                    <label for="con-versicherer">Versicherer *</label>
+                                    <input type="text" id="con-versicherer" class="form-control" required
+                                           placeholder="z.B. Alpha Versicherung AG">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="con-beginn">Vertragsbeginn *</label>
+                                    <input type="date" id="con-beginn" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="con-beitrag">Beitrag (€) *</label>
+                                    <input type="number" id="con-beitrag" class="form-control" required
+                                           step="0.01" min="0" placeholder="z.B. 150.00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="con-zahlweise">Zahlweise</label>
+                                    <select id="con-zahlweise" class="form-control">
+                                        <option value="monatlich">monatlich</option>
+                                        <option value="vierteljährlich">vierteljährlich</option>
+                                        <option value="halbjährlich">halbjährlich</option>
+                                        <option value="jährlich">jährlich</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="con-laufzeit">Laufzeit (Jahre)</label>
+                                    <input type="number" id="con-laufzeit" class="form-control"
+                                           min="1" max="50" placeholder="z.B. 25">
+                                </div>
+                                <div class="form-group">
+                                    <label for="con-vermittler">Vermittler-Nr.</label>
+                                    <input type="text" id="con-vermittler" class="form-control"
+                                           placeholder="z.B. 0300/0187">
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label" style="margin-top: 2rem;">
+                                        <input type="checkbox" id="con-dynamik"> Hat Dynamik
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <span class="icon">💾</span> Vertrag speichern
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3>Gespeicherte Verträge</h3>
+                        <div class="header-actions">
+                            <input type="text" id="contract-search" class="form-control form-control-sm"
+                                   placeholder="Suchen..." style="width: 200px;">
+                            <button id="refresh-contracts" class="btn-icon" title="Aktualisieren">🔄</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Vertragsnr.</th>
+                                        <th>VN</th>
+                                        <th>Sparte</th>
+                                        <th>Produkt</th>
+                                        <th>Versicherer</th>
+                                        <th>Beginn</th>
+                                        <th class="text-right">Beitrag</th>
+                                        <th>Status</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contracts-table">
+                                    <tr>
+                                        <td colspan="9" class="empty-state">Keine Verträge vorhanden.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- RULES SECTION -->
+            <!-- ============================================== -->
+            <section id="rules-section" class="section">
+                <div class="section-header">
+                    <h2>Provisionsregeln</h2>
+                    <p class="section-description">
+                        Definiere die einzelnen Provisionsregeln aus deinen Provisionsbestimmungen.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Neue Regel hinzufügen</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="rule-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="rule-bestimmung">Provisionsbestimmung *</label>
+                                    <select id="rule-bestimmung" class="form-control" required>
+                                        <option value="">-- Auswählen --</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rule-sparte">Sparte *</label>
+                                    <select id="rule-sparte" class="form-control" required>
+                                        <option value="">-- Auswählen --</option>
+                                        <option value="Leben">Leben</option>
+                                        <option value="Kranken">Kranken</option>
+                                        <option value="Sach">Sach</option>
+                                        <option value="Kfz">Kfz</option>
+                                        <option value="Gewerbe">Gewerbe</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rule-produkt">Produkt-Typ</label>
+                                    <input type="text" id="rule-produkt" class="form-control"
+                                           placeholder="z.B. Kapitallebensversicherung">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="rule-art">Provisionsart *</label>
+                                    <select id="rule-art" class="form-control" required>
+                                        <option value="">-- Auswählen --</option>
+                                        <option value="AP">Abschlussprovision (AP)</option>
+                                        <option value="BP">Bestandsprovision (BP)</option>
+                                        <option value="DP">Dynamikprovision (DP)</option>
+                                        <option value="SP">Superprovision (SP)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rule-bezug">Bezugsgröße *</label>
+                                    <select id="rule-bezug" class="form-control" required>
+                                        <option value="">-- Auswählen --</option>
+                                        <option value="Beitragssumme">Beitragssumme</option>
+                                        <option value="Jahresbeitrag">Jahresbeitrag</option>
+                                        <option value="BWS">Bewertungssumme (BWS)</option>
+                                        <option value="Versicherungssumme">Versicherungssumme</option>
+                                        <option value="Erhöhungssumme">Erhöhungssumme (Dynamik)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rule-satz">Provisionssatz (%) *</label>
+                                    <input type="number" id="rule-satz" class="form-control" required
+                                           step="0.01" min="0" max="100" placeholder="z.B. 4.0">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="rule-haftung">Haftungszeit (Monate)</label>
+                                    <input type="number" id="rule-haftung" class="form-control"
+                                           min="0" max="120" placeholder="z.B. 60">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rule-paragraph">Paragraph-Referenz</label>
+                                    <input type="text" id="rule-paragraph" class="form-control"
+                                           placeholder="z.B. § 5 Abs. 2 lit. a)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rule-seite">Seiten-Referenz</label>
+                                    <input type="text" id="rule-seite" class="form-control"
+                                           placeholder="z.B. Seite 12-14">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="rule-bedingungen">Besondere Bedingungen</label>
+                                <textarea id="rule-bedingungen" class="form-control" rows="3"
+                                          placeholder="Sonderbedingungen, Staffelungen, etc."></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <span class="icon">💾</span> Regel speichern
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3>Gespeicherte Regeln</h3>
+                        <div class="header-actions">
+                            <select id="filter-rules-bestimmung" class="form-control form-control-sm" style="width: 200px;">
+                                <option value="">Alle Bestimmungen</option>
+                            </select>
+                            <button id="refresh-rules" class="btn-icon" title="Aktualisieren">🔄</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Bestimmung</th>
+                                        <th>Sparte</th>
+                                        <th>Produkt</th>
+                                        <th>Art</th>
+                                        <th>Bezugsgröße</th>
+                                        <th class="text-right">Satz</th>
+                                        <th>Haftung</th>
+                                        <th>§-Ref.</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rules-table">
+                                    <tr>
+                                        <td colspan="9" class="empty-state">Keine Regeln vorhanden.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Einstellungen</h2>
+                <button class="modal-close" id="close-settings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="modal-api-url">Cloudflare Worker URL</label>
+                    <input type="url" id="modal-api-url" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="modal-openai-key">OpenAI API Key</label>
+                    <input type="password" id="modal-openai-key" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-settings" class="btn-primary">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Position Detail Modal -->
+    <div id="position-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>Position Details</h2>
+                <button class="modal-close" id="close-position-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="position-detail-content">
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+    <script src="js/config.js"></script>
+    <script src="js/local-database.js"></script>
+    <script src="js/billing-generator.js"></script>
+    <script src="js/billing-explainer.js"></script>
+    <script src="js/explain-app.js"></script>
+</body>
+</html>

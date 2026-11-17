@@ -476,6 +476,7 @@ const translationsOverview = {
   'geplantBadge': { de: 'Geplant', en: 'Planned' },
   'kampagneOeffnen': { de: 'Kampagne öffnen', en: 'Open campaign' },
   'passendeKundenTitle': { de: '{count} passende Kunden', en: '{count} matching clients' },
+  'passendeKundenWort': { de: 'passende Kunden', en: 'matching clients' },
   'trefferFuer': { de: 'Treffer für', en: 'Matches for' },
   'treffer': { de: 'Treffer', en: 'Matches' },
   'avgMatch': { de: 'Ø Match', en: 'Avg. Match' },

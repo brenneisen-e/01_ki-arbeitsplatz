@@ -1469,9 +1469,10 @@ export default function UebersichtTab() {
           </div>
         ) : null}
 
-        {/* Marketingkampagnen (Banking + Versicherung): vier weiße Kacheln
-            ohne Farbband und ohne Icon. Status als Wort, Zeitraum, Titel,
-            Zielgruppe, Zahl der passenden Kunden. Der Content stammt aus
+        {/* Marketingkampagnen (Banking + Versicherung): vier flächige Kacheln
+            in der zarten Modusfarbe, ohne Farbband und ohne Icon; geplante
+            Kampagnen stehen als gestrichelter Umriss. Status als Wort,
+            Zeitraum, Titel, Zielgruppe, Zahl der passenden Kunden groß. Der Content stammt aus
             buildBankingKampagnen / buildVersicherungsKampagnen und passt
             sich an das Institut an. */}
         {showRadarUndKampagnen && (
@@ -1483,7 +1484,7 @@ export default function UebersichtTab() {
                 {kampagnenAktiv} {t('aktivLabel')} · {marketingKampagnen.filter(k => k.status === 'geplant').length} {t('geplantLabel')}
               </span>
             </div>
-            <div className="grid grid-cols-4 gap-2.5 pointer-events-auto">
+            <div className="grid grid-cols-4 gap-3 pointer-events-auto">
               {marketingKampagnen.map((kampagne) => {
                 const istAktiv = kampagne.status === 'aktiv';
                 const titel = lang === 'en' ? kampagne.titelEn : kampagne.titel;
@@ -1493,22 +1494,28 @@ export default function UebersichtTab() {
                     key={kampagne.id}
                     role="button"
                     tabIndex={0}
-                    className="row-hover rounded-xl cursor-pointer flex flex-col p-3.5 pointer-events-auto min-w-0"
-                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)' }}
+                    className="kampagne-kachel rounded-xl cursor-pointer flex flex-col p-4 pointer-events-auto min-w-0"
+                    style={istAktiv
+                      ? { background: 'var(--mode-primary-soft)', border: '1px solid transparent' }
+                      : { background: 'transparent', border: '1px dashed var(--border-strong)' }}
                     onClick={() => setKampagneModal(kampagne)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setKampagneModal(kampagne); }}
                     title={t('kampagneOeffnen')}
                   >
                     <div className="flex items-baseline justify-between gap-2 text-[11px]">
-                      <span className="font-semibold shrink-0" style={{ color: istAktiv ? 'var(--color-success)' : 'var(--text-tertiary)' }}>
+                      <span className="font-semibold uppercase tracking-wider shrink-0" style={{ color: istAktiv ? 'var(--mode-primary)' : 'var(--text-tertiary)' }}>
                         {istAktiv ? t('aktivBadge') : t('geplantBadge')}
                       </span>
-                      <span className="font-mono truncate" style={{ color: 'var(--text-tertiary)' }}>{kampagne.zeitraum}</span>
+                      <span className="font-mono truncate" style={{ color: 'var(--text-secondary)' }}>{kampagne.zeitraum}</span>
                     </div>
-                    <div className="text-sm font-semibold leading-snug line-clamp-2 mt-2" style={{ color: 'var(--text-primary)' }}>{titel}</div>
+                    <div className="text-[15px] font-semibold leading-snug line-clamp-2 mt-2.5" style={{ color: 'var(--text-primary)' }}>{titel}</div>
                     <div className="text-xs mt-1 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{zielgruppe}</div>
-                    <div className="mt-auto pt-3 text-xs" style={{ color: 'var(--text-secondary)' }}>
-                      {t('passendeKundenTitle', { count: kampagne.passendeKunden.length })}
+                    {/* Kennzahl groß: wie viele Kunden die Kampagne trifft */}
+                    <div className="mt-auto pt-4 flex items-baseline gap-2">
+                      <span className="font-mono text-[28px] font-semibold leading-none" style={{ color: istAktiv ? 'var(--mode-primary)' : 'var(--text-secondary)' }}>
+                        {kampagne.passendeKunden.length}
+                      </span>
+                      <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>{t('passendeKundenWort')}</span>
                     </div>
                   </div>
                 );

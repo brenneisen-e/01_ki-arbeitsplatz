@@ -934,18 +934,6 @@ const HYPERPERSONALISIERTE_PRODUKTE = {
 
 const PRODUKT_ICONS = { Gem, Heart, Layers, Rocket, Plane, Hourglass, GitMerge, Users, Shield, Briefcase, Activity, Sparkles };
 
-// Kategoriefarbe der Marketingkampagnen: ein Farbband oben mit dem Icon,
-// darunter eine zart getönte Fläche in derselben Farbe, damit die vier
-// Kacheln als Farbtupfer im hellen Cockpit stehen (keine Verläufe).
-const KAMPAGNEN_KATEGORIE_FARBEN = {
-  immobilie:   'var(--color-success)',
-  familie:     'var(--color-info)',
-  depot:       'var(--quelle-kommunikation)',
-  vorsorge:    'var(--quelle-kommunikation)',
-  absicherung: 'var(--quelle-lebensereignis)',
-  gesundheit:  'var(--color-warning)',
-};
-
 // Uhrzeit des nächtlichen Agentenlaufs (Demo). demoClock liefert nur den
 // „Nacht simulieren"-Zustand und keinen Zeitstempel, deshalb steht die
 // Uhrzeit hier; das Datum kommt aus dem aktuellen Tag.
@@ -1481,10 +1469,11 @@ export default function UebersichtTab() {
           </div>
         ) : null}
 
-        {/* Marketingkampagnen (Banking + Versicherung): vier farbige Kacheln,
-            Farbband mit Icon oben, getönte Fläche darunter, Status-Chip.
-            Der Content stammt aus buildBankingKampagnen /
-            buildVersicherungsKampagnen und passt sich an das Institut an. */}
+        {/* Marketingkampagnen (Banking + Versicherung): vier weiße Kacheln
+            ohne Farbband und ohne Icon. Status als Wort, Zeitraum, Titel,
+            Zielgruppe, Zahl der passenden Kunden. Der Content stammt aus
+            buildBankingKampagnen / buildVersicherungsKampagnen und passt
+            sich an das Institut an. */}
         {showRadarUndKampagnen && (
           <div id="ueb-kampagnen">
           <Card hover={false}>
@@ -1494,56 +1483,32 @@ export default function UebersichtTab() {
                 {kampagnenAktiv} {t('aktivLabel')} · {marketingKampagnen.filter(k => k.status === 'geplant').length} {t('geplantLabel')}
               </span>
             </div>
-            <div className="grid grid-cols-4 gap-4 pointer-events-auto">
+            <div className="grid grid-cols-4 gap-2.5 pointer-events-auto">
               {marketingKampagnen.map((kampagne) => {
                 const istAktiv = kampagne.status === 'aktiv';
                 const titel = lang === 'en' ? kampagne.titelEn : kampagne.titel;
                 const zielgruppe = lang === 'en' ? kampagne.zielgruppeEn : kampagne.zielgruppe;
-                const farbe = KAMPAGNEN_KATEGORIE_FARBEN[kampagne.kategorie] || 'var(--text-tertiary)';
-                const PhotoIcon = CAMPAIGN_ICONS[kampagne.photoIcon] || Megaphone;
                 return (
                   <div
                     key={kampagne.id}
                     role="button"
                     tabIndex={0}
-                    className="group relative rounded-(--card-radius) card-hover overflow-hidden cursor-pointer flex flex-col pointer-events-auto border"
-                    style={{
-                      background: `color-mix(in oklab, ${farbe} 7%, var(--bg-card))`,
-                      borderColor: `color-mix(in oklab, ${farbe} 30%, transparent)`,
-                      boxShadow: 'var(--card-shadow)',
-                    }}
+                    className="row-hover rounded-xl cursor-pointer flex flex-col p-3.5 pointer-events-auto min-w-0"
+                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)' }}
                     onClick={() => setKampagneModal(kampagne)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setKampagneModal(kampagne); }}
                     title={t('kampagneOeffnen')}
                   >
-                    {/* Farbband mit Icon und Status */}
-                    <div className="flex items-center justify-between gap-2 px-3.5 py-2.5 shrink-0" style={{ background: farbe }}>
-                      <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(255, 255, 255, 0.2)' }}>
-                        <PhotoIcon size={18} className="text-white" strokeWidth={1.75} />
-                      </div>
-                      <span
-                        className="rh-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider text-white"
-                        style={{ background: 'rgba(255, 255, 255, 0.22)' }}
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                    <div className="flex items-baseline justify-between gap-2 text-[11px]">
+                      <span className="font-semibold shrink-0" style={{ color: istAktiv ? 'var(--color-success)' : 'var(--text-tertiary)' }}>
                         {istAktiv ? t('aktivBadge') : t('geplantBadge')}
                       </span>
+                      <span className="font-mono truncate" style={{ color: 'var(--text-tertiary)' }}>{kampagne.zeitraum}</span>
                     </div>
-                    <div className="p-3.5 flex-1 flex flex-col">
-                      <div className="text-sm font-semibold leading-snug line-clamp-2" style={{ color: 'var(--text-primary)' }}>{titel}</div>
-                      <div className="text-[11px] mt-1 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{zielgruppe}</div>
-                      <div className="mt-auto pt-2.5 flex items-center justify-between gap-2 border-t" style={{ borderColor: `color-mix(in oklab, ${farbe} 22%, transparent)` }}>
-                        <span className="font-mono text-[10px] truncate" style={{ color: 'var(--text-tertiary)' }}>{kampagne.zeitraum}</span>
-                        <span
-                          className="font-mono text-xs font-semibold inline-flex items-center gap-1 shrink-0"
-                          style={{ color: 'var(--text-primary)' }}
-                          title={t('passendeKundenTitle', { count: kampagne.passendeKunden.length })}
-                        >
-                          <Users size={11} style={{ color: 'var(--text-tertiary)' }} strokeWidth={2} />
-                          {kampagne.passendeKunden.length}
-                          <ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--mode-primary)' }} strokeWidth={2.5} />
-                        </span>
-                      </div>
+                    <div className="text-sm font-semibold leading-snug line-clamp-2 mt-2" style={{ color: 'var(--text-primary)' }}>{titel}</div>
+                    <div className="text-xs mt-1 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{zielgruppe}</div>
+                    <div className="mt-auto pt-3 text-xs" style={{ color: 'var(--text-secondary)' }}>
+                      {t('passendeKundenTitle', { count: kampagne.passendeKunden.length })}
                     </div>
                   </div>
                 );

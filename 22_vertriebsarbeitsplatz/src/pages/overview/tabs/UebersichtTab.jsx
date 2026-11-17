@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, AlertCircle, CheckCircle, Check, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Megaphone, ChevronRight, Users, TrendingUp, X, Mail, Target, ListChecks, BarChart, PlayCircle, Copy, Rocket, Shield, Gem, Plane, GitMerge, Hourglass, Layers, Briefcase, Activity, Radar, CalendarCheck, FileCheck, Bot, ArrowUpRight, ArrowDownRight, ArrowRight } from 'lucide-react';
+import { AlertTriangle, ShieldAlert, Zap, Calendar, Phone, CheckCircle, Check, FileText, Heart, Car, Home, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Megaphone, ChevronRight, Users, TrendingUp, X, Mail, Target, ListChecks, BarChart, PlayCircle, Copy, Rocket, Shield, Gem, Plane, GitMerge, Hourglass, Layers, Briefcase, Activity } from 'lucide-react';
 
 const CAMPAIGN_ICONS = { Home, Users, TrendingUp, Heart, Sparkles };
 import Card from '../../../components/ui/Card';
@@ -387,16 +387,6 @@ function buildVersicherungsKampagnen(institut) {
 }
 
 /* ── Lebenslagen-Radar (banking) ──────────────────────────────── */
-// Kategoriefarben: gedämpft, nur als schmaler Streifen und Punkt (Tokens).
-const LEBENSLAGEN_KATEGORIE_FARBEN = {
-  immobilie: 'var(--color-success)',
-  familie:   'var(--color-info)',
-  beruf:     'var(--color-warning)',
-  trennung:  'var(--color-info)',
-  ruhestand: 'var(--quelle-kommunikation)',
-  erbschaft: 'var(--text-tertiary)',
-};
-
 const LEBENSLAGEN_RADAR_BANKING = [
   {
     kundeId: 'BK00004',
@@ -691,10 +681,11 @@ const ABWANDERUNGS_RADAR_VERSICHERUNG = [
   },
 ];
 
+// Risikostufe: nur die Schriftfarbe des Worts, kein Streifen, keine Pille.
 const RISK_LEVEL_FARBEN = {
-  high:   { stripe: 'var(--color-danger)',  bg: 'var(--tint-danger)',  text: 'var(--color-danger)',   labelKey: 'risikoHoch' },
-  medium: { stripe: 'var(--color-warning)', bg: 'var(--tint-warning)', text: 'var(--color-warning)',  labelKey: 'risikoMittel' },
-  low:    { stripe: 'var(--text-tertiary)', bg: 'var(--bg-inset)',     text: 'var(--text-secondary)', labelKey: 'risikoNiedrig' },
+  high:   { text: 'var(--color-danger)',   labelKey: 'risikoHoch' },
+  medium: { text: 'var(--color-warning)',  labelKey: 'risikoMittel' },
+  low:    { text: 'var(--text-secondary)', labelKey: 'risikoNiedrig' },
 };
 
 const PROVISIONSABRECHNUNGEN = {
@@ -1031,20 +1022,21 @@ function TintBadge({ tone = 'info', icon: Icon, children, className = '', small 
   );
 }
 
-// Kartenkopf: einfarbiges Icon in zart getönter Modusfläche + Titel.
-function CardTitle({ icon: Icon, children, badge, dot }) {
+// Kartenkopf: nur der Titel, ohne Icon-Kachel. Die Karten unterscheiden sich
+// durch ihren Inhalt, nicht durch ein Symbol je Überschrift.
+function CardTitle({ children, badge }) {
   return (
     <div className="flex items-center gap-2.5 min-w-0">
-      <div
-        className="relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-        style={{ background: 'var(--mode-primary-soft)' }}
-      >
-        <Icon size={16} style={{ color: 'var(--mode-primary)' }} strokeWidth={1.75} />
-        {dot}
-      </div>
       <h3 className="font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{children}</h3>
       {badge}
     </div>
+  );
+}
+
+// Ruhige Randnotiz rechts im Kartenkopf (Zähler, Zeitraum) statt Badge.
+function KopfNotiz({ children, tone }) {
+  return (
+    <span className="text-sm whitespace-nowrap shrink-0" style={{ color: tone || 'var(--text-tertiary)' }}>{children}</span>
   );
 }
 
@@ -1269,14 +1261,14 @@ export default function UebersichtTab() {
   const agenten = [
     ...(showRadarUndKampagnen ? [
       {
-        id: 'signal', icon: Radar, target: 'ueb-lebenslagen', tone: 'success',
+        id: 'signal', target: 'ueb-lebenslagen', tone: 'success',
         name: L('Signal-Agent', 'Signal agent'),
         value: lebenslagenRadar.length,
         text: L('Lebenslagen erkannt', 'life events detected'),
         sub: neueLebenslagen > 0 ? L(`${neueLebenslagen} neu`, `${neueLebenslagen} new`) : null,
       },
       {
-        id: 'abwanderung', icon: ShieldAlert, target: 'ueb-abwanderung',
+        id: 'abwanderung', target: 'ueb-abwanderung',
         tone: abwanderungsRadar.length > 0 ? 'danger' : 'success',
         name: L('Abwanderungs-Agent', 'Churn agent'),
         value: abwanderungsRadar.length,
@@ -1284,7 +1276,7 @@ export default function UebersichtTab() {
         sub: null,
       },
       {
-        id: 'kampagnen', icon: Megaphone, target: 'ueb-kampagnen', tone: 'success',
+        id: 'kampagnen', target: 'ueb-kampagnen', tone: 'success',
         name: L('Kampagnen-Agent', 'Campaign agent'),
         value: kampagnenTreffer,
         text: L('Treffer', 'matches'),
@@ -1292,7 +1284,7 @@ export default function UebersichtTab() {
       },
     ] : [
       {
-        id: 'mandate', icon: Briefcase, target: 'ueb-mandate', tone: 'success',
+        id: 'mandate', target: 'ueb-mandate', tone: 'success',
         name: L('Mandats-Agent', 'Mandate agent'),
         value: vvKunden.length,
         text: L('Mandate geprüft', 'mandates reviewed'),
@@ -1300,14 +1292,14 @@ export default function UebersichtTab() {
       },
     ]),
     {
-      id: 'termine', icon: CalendarCheck, target: 'ueb-termine', tone: 'success',
+      id: 'termine', target: 'ueb-termine', tone: 'success',
       name: L('Termin-Agent', 'Meeting agent'),
       value: termine.length,
       text: L('Termine vorbereitet', 'meetings prepared'),
       sub: heroTermin ? L('+1 neu zugesagt', '+1 newly confirmed') : null,
     },
     {
-      id: 'aufgaben', icon: ListChecks, target: 'ueb-aufgaben',
+      id: 'aufgaben', target: 'ueb-aufgaben',
       tone: aufgabenHeute > 0 ? 'warning' : 'success',
       name: L('Aufgaben-Agent', 'Task agent'),
       value: aufgaben.length,
@@ -1315,7 +1307,7 @@ export default function UebersichtTab() {
       sub: aufgabenHeute > 0 ? L(`${aufgabenHeute} heute fällig`, `${aufgabenHeute} due today`) : null,
     },
     ...(!showRadarUndKampagnen ? [{
-      id: 'abschluesse', icon: FileCheck, target: 'ueb-abschluesse', tone: 'success',
+      id: 'abschluesse', target: 'ueb-abschluesse', tone: 'success',
       name: L('Reporting-Agent', 'Reporting agent'),
       value: abschluesse.length,
       text: L('Abschlüsse dokumentiert', 'deals documented'),
@@ -1330,8 +1322,7 @@ export default function UebersichtTab() {
       <section data-praes="agenten" className="col-span-3 surface-card px-4 py-3" aria-label={L('KI-Agenten', 'AI agents')}>
         <div className="flex items-center gap-4">
           <div className="shrink-0 pr-4 border-r" style={{ borderColor: 'var(--border-light)', minWidth: 196 }}>
-            <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-              <Bot size={14} style={{ color: 'var(--mode-primary)' }} strokeWidth={2} />
+            <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
               {L('Agenten heute Nacht', 'Agents last night')}
             </div>
             <div className="text-sm mt-0.5 font-mono" style={{ color: 'var(--text-secondary)' }}>
@@ -1340,7 +1331,6 @@ export default function UebersichtTab() {
           </div>
           <div className="flex-1 grid gap-2 min-w-0" style={{ gridTemplateColumns: `repeat(${agenten.length}, minmax(0, 1fr))` }}>
             {agenten.map((a) => {
-              const Icon = a.icon;
               return (
                 <button
                   key={a.id}
@@ -1350,9 +1340,6 @@ export default function UebersichtTab() {
                   style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)' }}
                   title={`${a.name}: ${a.value} ${a.text}${a.sub ? ` · ${a.sub}` : ''}`}
                 >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--mode-primary-soft)' }}>
-                    <Icon size={17} style={{ color: 'var(--mode-primary)' }} strokeWidth={1.75} />
-                  </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 text-xs font-medium leading-tight" style={{ color: 'var(--text-secondary)' }}>
                       <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: AGENT_TONE[a.tone] || AGENT_TONE.success }} />
@@ -1393,7 +1380,7 @@ export default function UebersichtTab() {
           <div id="ueb-mandate">
           <Card hover={false}>
             <div className="flex items-center justify-between mb-4">
-              <CardTitle icon={Zap}>{t('mandatePotenziale')}</CardTitle>
+              <CardTitle>{t('mandatePotenziale')}</CardTitle>
               <div className="flex gap-1.5">
                 {[
                   { key: 'alle', label: t('alle') },
@@ -1502,7 +1489,7 @@ export default function UebersichtTab() {
           <div id="ueb-kampagnen">
           <Card hover={false}>
             <div className="flex items-center justify-between mb-4">
-              <CardTitle icon={Megaphone}>{t('marketingkampagnen')}</CardTitle>
+              <CardTitle>{t('marketingkampagnen')}</CardTitle>
               <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
                 {kampagnenAktiv} {t('aktivLabel')} · {marketingKampagnen.filter(k => k.status === 'geplant').length} {t('geplantLabel')}
               </span>
@@ -1625,62 +1612,40 @@ export default function UebersichtTab() {
             {/* Lebenslagen-Radar */}
             <div id="ueb-lebenslagen" className="min-w-0">
             <Card hover={false}>
-              <div className="flex items-center justify-between mb-3">
-                <CardTitle
-                  icon={Radar}
-                  dot={lebenslagenRadar.some((l) => l.isNew) && (
-                    <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: 'var(--color-success)' }} />
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5" style={{ background: 'var(--color-success)', boxShadow: '0 0 0 2px var(--bg-card)' }} />
-                    </span>
-                  )}
-                >
-                  {t('lebenslagenRadar')}
-                </CardTitle>
-                <TintBadge tone="success" icon={Sparkles}>
-                  {t('neueSignale', { count: neueLebenslagen })}
-                </TintBadge>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <CardTitle>{t('lebenslagenRadar')}</CardTitle>
+                {neueLebenslagen > 0 && <KopfNotiz>{t('neueSignale', { count: neueLebenslagen })}</KopfNotiz>}
               </div>
-              <div className="space-y-2">
-                {lebenslagenRadar.slice(0, 3).map((l) => {
-                  const stripe = LEBENSLAGEN_KATEGORIE_FARBEN[l.category] || 'var(--text-tertiary)';
-                  return (
-                    <div
-                      key={l.kundeId + l.event}
-                      className="row-hover relative flex items-start gap-3 p-3 pl-4 rounded-xl cursor-pointer transition-all"
-                      style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)' }}
-                      onClick={() => setRadarModal({ type: 'lebenslage', entry: l })}
-                    >
-                      <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: stripe }} />
-                      <Avatar name={l.customerName} foto={getKundeFoto(l.kundeId)} size={36} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-0.5">
-                          <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{l.customerName}</span>
-                          <span className="text-xs font-semibold whitespace-nowrap inline-flex items-center gap-1.5" style={{ color: stripe }}>
-                            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'currentColor' }} />
-                            {L(l.event, l.eventEn)}
-                          </span>
-                        </div>
-                        <div className="text-[11px] flex items-center gap-1 min-w-0" style={{ color: 'var(--text-secondary)' }}>
-                          <span className="truncate">{L(l.signals, l.signalsEn)[0]}</span>
-                          <ArrowRight size={10} className="shrink-0" style={{ color: 'var(--text-tertiary)' }} strokeWidth={2.5} />
-                          <span className="shrink-0" style={{ color: 'var(--text-tertiary)' }}>{t('quellenAnzahl', { count: l.signalCount })}</span>
-                        </div>
-                        <div className="flex items-center justify-between gap-2 mt-1.5">
-                          <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                            {t('potenzialLabel')}: <span className="font-mono font-semibold" style={{ color: 'var(--text-primary)' }}>{l.revenue.toLocaleString(numberLocale)}€</span>
-                          </span>
-                          <div className="flex items-center gap-1.5">
-                            <div className="progress-track w-16 h-1.5 rounded-full overflow-hidden">
-                              <div className="progress-fill h-full rounded-full" style={{ width: `${l.confidence}%` }} />
-                            </div>
-                            <span className="text-[10px] font-mono font-semibold" style={{ color: 'var(--text-secondary)' }}>{l.confidence}%</span>
-                          </div>
-                        </div>
+              {/* Schlichte Zeilenliste mit Haarlinien: keine Karte in der Karte,
+                  kein Farbstreifen. Die Lebenslage steht als Text rechts. */}
+              <div>
+                {lebenslagenRadar.slice(0, 3).map((l) => (
+                  <div
+                    key={l.kundeId + l.event}
+                    className="row-hover flex items-start gap-3 py-3 -mx-2 px-2 rounded-lg border-b last:border-0 cursor-pointer"
+                    style={{ borderColor: 'var(--border-light)' }}
+                    onClick={() => setRadarModal({ type: 'lebenslage', entry: l })}
+                  >
+                    <Avatar name={l.customerName} foto={getKundeFoto(l.kundeId)} size={36} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{l.customerName}</span>
+                        <span className="text-xs font-medium whitespace-nowrap" style={{ color: 'var(--text-secondary)' }}>{L(l.event, l.eventEn)}</span>
+                      </div>
+                      <div className="text-xs truncate mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
+                        {L(l.signals, l.signalsEn)[0]}
+                      </div>
+                      <div className="flex items-baseline justify-between gap-3 mt-1.5 text-xs" style={{ color: 'var(--text-secondary)' }}>
+                        <span>
+                          {t('potenzialLabel')}: <span className="font-mono font-semibold" style={{ color: 'var(--text-primary)' }}>{l.revenue.toLocaleString(numberLocale)}€</span>
+                        </span>
+                        <span className="whitespace-nowrap" style={{ color: 'var(--text-tertiary)' }}>
+                          {t('quellenAnzahl', { count: l.signalCount })} · <span className="font-mono">{l.confidence}%</span>
+                        </span>
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
               <div className="mt-3 pt-2 border-t flex items-center justify-between text-xs" style={{ borderColor: 'var(--border-light)' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>{lebenslagenRadar.length} {t('erkannt')}</span>
@@ -1694,52 +1659,35 @@ export default function UebersichtTab() {
             {/* Abwanderungsradar */}
             <div id="ueb-abwanderung" className="min-w-0">
             <Card hover={false}>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--tint-danger)' }}>
-                    <ShieldAlert size={16} style={{ color: 'var(--color-danger)' }} strokeWidth={1.75} />
-                  </div>
-                  <h3 className="font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{t('abwanderungsradar')}</h3>
-                </div>
-                <TintBadge tone="danger" icon={AlertTriangle}>
-                  {t('risikokunden', { count: abwanderungsRadar.length })}
-                </TintBadge>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <CardTitle>{t('abwanderungsradar')}</CardTitle>
+                <KopfNotiz>{t('risikokunden', { count: abwanderungsRadar.length })}</KopfNotiz>
               </div>
-              <div className="space-y-2">
+              <div>
                 {abwanderungsRadar.map((r) => {
                   const risk = RISK_LEVEL_FARBEN[r.riskLevel] || RISK_LEVEL_FARBEN.medium;
-                  const RiskIcon = r.riskLevel === 'high' ? AlertTriangle : AlertCircle;
-                  const TrendIcon = r.trend === 'steigend' ? ArrowUpRight : r.trend === 'fallend' ? ArrowDownRight : ArrowRight;
-                  const trendColor = r.trend === 'steigend' ? 'var(--color-danger)' : r.trend === 'fallend' ? 'var(--color-success)' : 'var(--color-warning)';
-                  const trendLabel = r.trend === 'steigend' ? t('radar.trendSteigend') : r.trend === 'fallend' ? t('radar.trendFallend') : t('radar.trendStabil');
+                  const trendLabel = (r.trend === 'steigend' ? t('radar.trendSteigend') : r.trend === 'fallend' ? t('radar.trendFallend') : t('radar.trendStabil')).replace(/^[↑↓]\s*/, '');
                   return (
                     <div
                       key={r.kundeId}
-                      className="row-hover relative flex items-start gap-3 p-3 pl-4 rounded-xl cursor-pointer transition-all"
-                      style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)' }}
+                      className="row-hover flex items-start gap-3 py-3 -mx-2 px-2 rounded-lg border-b last:border-0 cursor-pointer"
+                      style={{ borderColor: 'var(--border-light)' }}
                       onClick={() => setRadarModal({ type: 'abwanderung', entry: r })}
                     >
-                      <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: risk.stripe }} />
                       <Avatar name={r.customerName} foto={getKundeFoto(r.kundeId)} size={36} />
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-0.5">
+                        <div className="flex items-baseline justify-between gap-3">
                           <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{r.customerName}</span>
-                          <span
-                            className="rh-badge text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap inline-flex items-center gap-1"
-                            style={{ background: risk.bg, color: risk.text }}
-                          >
-                            <RiskIcon size={11} strokeWidth={2.25} />
-                            {t(risk.labelKey)}
-                            <span title={trendLabel} className="inline-flex" style={{ color: trendColor }}>
-                              <TrendIcon size={11} strokeWidth={2.5} />
-                            </span>
+                          <span className="text-xs whitespace-nowrap" style={{ color: 'var(--text-tertiary)' }}>
+                            <span className="font-semibold" style={{ color: risk.text }}>{t(risk.labelKey)}</span> · {trendLabel}
                           </span>
                         </div>
-                        <div className="text-[11px] truncate" style={{ color: 'var(--text-secondary)' }}>{L(r.summary, r.summaryEn)}</div>
-                        <div className="text-[11px] italic truncate" style={{ color: 'var(--text-tertiary)' }}>{L(r.riskType, r.riskTypeEn)} {t('wahrscheinlich')}</div>
-                        <div className="text-xs mt-1.5">
-                          <span style={{ color: 'var(--text-secondary)' }}>{t('clvAtRisk')}: </span>
-                          <span className="font-mono font-semibold" style={{ color: 'var(--color-danger)' }}>{r.clvAtRisk.toLocaleString(numberLocale)}€</span>
+                        <div className="text-xs truncate mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{L(r.summary, r.summaryEn)}</div>
+                        <div className="flex items-baseline justify-between gap-3 mt-1.5 text-xs" style={{ color: 'var(--text-secondary)' }}>
+                          <span className="whitespace-nowrap shrink-0">
+                            {t('clvAtRisk')}: <span className="font-mono font-semibold" style={{ color: 'var(--text-primary)' }}>{r.clvAtRisk.toLocaleString(numberLocale)}€</span>
+                          </span>
+                          <span className="truncate min-w-0" style={{ color: 'var(--text-tertiary)' }}>{L(r.riskType, r.riskTypeEn)} {t('wahrscheinlich')}</span>
                         </div>
                       </div>
                     </div>
@@ -1765,20 +1713,13 @@ export default function UebersichtTab() {
         {showHyperProdukte && (
           <Card hover={false}>
             <div className="flex items-center justify-between mb-4">
-              <CardTitle
-                icon={Rocket}
-                badge={<TintBadge tone="mode" small className="ml-1">{t('hyperpersonalisiert')}</TintBadge>}
-              >
-                {t('individuelleProduktbausteine')}
-              </CardTitle>
+              <CardTitle>{t('individuelleProduktbausteine')}</CardTitle>
               <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
                 {t('produktbausteineHeader', { count: hyperPersonalisierteProdukte.length })}
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {hyperPersonalisierteProdukte.map((produkt) => {
-                const Icon = PRODUKT_ICONS[produkt.icon] || Sparkles;
-                const BausteinIcon = PRODUKT_ICONS[produkt.bausteinIcon] || Sparkles;
                 return (
                   <div
                     key={produkt.id}
@@ -1788,13 +1729,9 @@ export default function UebersichtTab() {
                     onClick={() => setProduktModal(produkt)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setProduktModal(produkt); }}
                   >
-                    <div className="h-[3px] w-full shrink-0" style={{ background: 'var(--mode-chart)' }} />
                     <div className="p-4 flex-1 flex flex-col">
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--mode-primary-soft)' }}>
-                            <Icon size={22} style={{ color: 'var(--mode-primary)' }} strokeWidth={1.75} />
-                          </div>
                           <div className="min-w-0">
                             <div className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
                               {t('timeToMarketLabel')}
@@ -1821,8 +1758,7 @@ export default function UebersichtTab() {
 
                       <div className="rounded-lg p-2.5 mb-3" style={{ background: 'var(--bg-inset)', border: '1px solid var(--border-light)' }}>
                         <div className="flex items-center gap-1.5 mb-1">
-                          <BausteinIcon size={13} style={{ color: 'var(--mode-primary)' }} strokeWidth={2} />
-                          <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--mode-primary)' }}>{t('uspBaustein')}</span>
+                          <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>{t('uspBaustein')}</span>
                         </div>
                         <div className="text-xs font-semibold leading-snug line-clamp-2" style={{ color: 'var(--text-primary)' }}>{L(produkt.bausteinTitel, produkt.bausteinTitelEn)}</div>
                       </div>
@@ -1847,37 +1783,23 @@ export default function UebersichtTab() {
         <div id="ueb-aufgaben">
         <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
-            <CardTitle icon={CheckSquare}>{t('aktuelleAufgaben')}</CardTitle>
-            <TintBadge tone={aufgabenHeute > 0 ? 'danger' : 'neutral'}>
-              {aufgaben.length} {t('aufgabeOpen')}
-            </TintBadge>
+            <CardTitle>{t('aktuelleAufgaben')}</CardTitle>
+            <KopfNotiz>{aufgaben.length} {t('aufgabeOpen')}</KopfNotiz>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
             {aufgaben.map((a, i) => {
               const fSlug = String(a.faellig || '').toLowerCase();
               const isToday = fSlug === 'heute' || fSlug === 'today';
               const isTomorrow = fSlug === 'morgen' || fSlug === 'tomorrow';
-              const urgency = isToday
-                ? { color: 'var(--color-danger)', bg: 'var(--tint-danger)' }
-                : isTomorrow
-                  ? { color: 'var(--color-warning)', bg: 'var(--tint-warning)' }
-                  : { color: 'var(--color-info)', bg: 'var(--tint-info)' };
+              const faelligFarbe = isToday ? 'var(--color-danger)' : isTomorrow ? 'var(--color-warning)' : 'var(--text-tertiary)';
               const text = a.text || '';
-              const TaskIcon = /fida|consent|dokument|unterlage|formular|vertrag|plan|analyse/i.test(text) ? FileText
-                : /anruf|call|nachfass|kontakt|ruf/i.test(text) ? Phone
-                : /termin|meeting|gespraech|gespräch/i.test(text) ? Calendar
-                : /vorbereit|erstellen|prep/i.test(text) ? Sparkles
-                : CheckSquare;
               return (
                 <div
                   key={i}
-                  className="row-hover group aufgabe-tile relative flex items-center gap-3 p-3 pl-4 rounded-xl cursor-pointer transition-all overflow-hidden"
+                  className="row-hover group flex items-center gap-3 p-3 rounded-xl cursor-pointer"
                   style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)' }}
                   onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}
                 >
-                  {/* Priority stripe */}
-                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: urgency.color }} />
-
                   {/* Checkbox */}
                   <button
                     className="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0"
@@ -1888,11 +1810,6 @@ export default function UebersichtTab() {
                     <Check size={12} strokeWidth={3} className="scale-0 group-hover:scale-100 transition-transform" style={{ color: 'var(--color-success)' }} />
                   </button>
 
-                  {/* Icon tile */}
-                  <div className="aufgabe-icon-tile w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: urgency.bg }}>
-                    <TaskIcon size={16} className="aufgabe-icon" style={{ color: urgency.color }} strokeWidth={2} />
-                  </div>
-
                   {/* Text */}
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{text}</div>
@@ -1901,13 +1818,8 @@ export default function UebersichtTab() {
                     </div>
                   </div>
 
-                  {/* Date badge */}
-                  <span
-                    className="aufgabe-date-badge text-[10px] px-2.5 py-1 rounded-full font-semibold whitespace-nowrap uppercase tracking-wider shrink-0 inline-flex items-center gap-1"
-                    style={{ backgroundColor: urgency.bg, color: urgency.color }}
-                  >
-                    <Clock size={10} strokeWidth={2.5} /> {a.faellig}
-                  </span>
+                  {/* Fälligkeit als Text, nur heute und morgen farbig */}
+                  <span className="text-xs font-semibold whitespace-nowrap shrink-0" style={{ color: faelligFarbe }}>{a.faellig}</span>
                 </div>
               );
             })}
@@ -1919,8 +1831,8 @@ export default function UebersichtTab() {
         <div id="ueb-abschluesse">
         <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
-            <CardTitle icon={CheckCircle}>{t('letzteAbschluesse')}</CardTitle>
-            <TintBadge tone="neutral">{t('dieseWoche')}</TintBadge>
+            <CardTitle>{t('letzteAbschluesse')}</CardTitle>
+            <KopfNotiz>{t('dieseWoche')}</KopfNotiz>
           </div>
           <div className="space-y-2">
             {abschluesse.map((a, i) => (
@@ -1960,7 +1872,7 @@ export default function UebersichtTab() {
         <div id="ueb-termine" data-praes="termine">
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
-            <CardTitle icon={Clock}>{t('anstehendeTermine')}</CardTitle>
+            <CardTitle>{t('anstehendeTermine')}</CardTitle>
           </div>
           <div className="space-y-1">
             {termine.map((termin, i) => {
@@ -1996,7 +1908,7 @@ export default function UebersichtTab() {
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{termin.kunde}</span>
                       {isNeu && (
-                        <TintBadge tone="success" icon={Sparkles} small>{t('plusEinsNeu')}</TintBadge>
+                        <TintBadge tone="success" small>{t('plusEinsNeu')}</TintBadge>
                       )}
                     </div>
                     <div className="text-xs truncate" style={{ color: 'var(--text-secondary)' }}>{termin.betreff}</div>
@@ -2030,7 +1942,7 @@ export default function UebersichtTab() {
         {/* Schnellzugriff Formulare */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
-            <CardTitle icon={FileText}>{t('schnellzugriffFormulare')}</CardTitle>
+            <CardTitle>{t('schnellzugriffFormulare')}</CardTitle>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {schnellzugriff.map((item, i) => {
@@ -2052,7 +1964,7 @@ export default function UebersichtTab() {
         {/* Provisionsabrechnungen */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
-            <CardTitle icon={Euro}>
+            <CardTitle>
               {modeId === 'vermoegensverwaltung' ? t('ertragsabrechnungen') : t('provisionsabrechnungen')}
             </CardTitle>
           </div>
@@ -2082,7 +1994,7 @@ export default function UebersichtTab() {
         {/* Geburtstage diese Woche */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
-            <CardTitle icon={Cake}>{t('geburtstagsWoche')}</CardTitle>
+            <CardTitle>{t('geburtstagsWoche')}</CardTitle>
           </div>
           <div className="space-y-3">
             {geburtstage.map((g, i) => (

@@ -67,6 +67,11 @@ Was in den Komponenten zu ändern ist:
    Streifen oder Punkt in einer gedämpften Kategoriefarbe und einem
    einfarbigen Lucide-Icon; nur die Hero-Kachel darf den `--mode-gradient`
    tragen (dunkel, Schrift weiß).
+   Auf der Übersicht gilt strenger: Kartenköpfe tragen nur den Titel (keine
+   Icon-Kachel), rechts eine ruhige Randnotiz statt Badge; Listen in Karten
+   (Lebenslagen-Radar, Abwanderungsradar) sind Zeilen mit Haarlinie, ohne
+   Karte in der Karte, ohne senkrechten Farbstreifen und ohne Icon je Zeile.
+   Status steht als Wort in der Statusfarbe („Hoch · steigend“, „Heute“).
 3. **Dunkle Tooltips/Knöpfe** (`bg-slate-800/900 text-white`): auf
    `surface-elevated` mit `text-(--text-primary)` umstellen; primäre Knöpfe
    auf `bg-(--mode-primary) text-white`.

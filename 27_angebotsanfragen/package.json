@@ -1,0 +1,36 @@
+{
+  "name": "angebotsanfragen",
+  "version": "1.0.0",
+  "description": "Angebotsanfragen: unstrukturierte Anfragen der Vermittler per KI in ein einheitliches Deckblatt überführen",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "vorschau": "vite preview --port 4327 --strictPort --host 127.0.0.1",
+    "datenpruefung": "node scripts/datenpruefung.mjs",
+    "rauchtest": "node scripts/rauchtest.mjs",
+    "pruefen": "npm run datenpruefung && npm run build && npm run rauchtest",
+    "pack": "node ../tools/dex/pack.mjs 27_angebotsanfragen"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.10.0",
+    "@tailwindcss/vite": "^4.2.2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.577.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.2.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.2.0",
+    "vite": "^7.3.1"
+  }
+}

@@ -30,10 +30,11 @@ def regel(name, reihe, bed=(), aus=(), akt=(('In Ordner verschieben', 'Ordner ' 
     return g
 
 
-def liste(paare, gewollt=()):
+def liste(paare, gewollt=(), loeschen=()):
     n = a.Namensliste()
     n['bestand'] = list(paare)
     n.gewollt['bestand'] = set(gewollt)
+    n.loeschen['bestand'] = set(loeschen)
     return n
 
 
@@ -207,16 +208,80 @@ ohne = a.auftrag(PF, regeln, liste([(g['name'], g['name']) for g in regeln if g[
 pruefe([(p['aktion'], p['neu']) for p in ohne['plan']] == [('LOESCHEN', 'Duplikate')] and not ohne['nach_nummer'],
        'Namen unverändert, keine Nummern: Der Plan löscht nur die Duplikate')
 
+# ---------------------------------------------------------------- Einzelne Regeln löschen
+print('\n== Löschen')
+weg = a.auftrag(PF, regeln, liste(namen, loeschen=['Alt', 'Verteilung']))
+plan = [(p['aktion'], p['regel'], p['neu']) for p in weg['plan']]
+pruefe(plan[:3] == [('LOESCHEN', 'Fehler', 'Duplikate'), ('LOESCHEN', 'Alt', 'ohne Ersatz'), ('LOESCHEN', 'Verteilung', 'ohne Ersatz')]
+       and [p[0] for p in plan[3:]] == ['UMBENENNEN'] * 4,
+       'Plan: erst Duplikate, dann „ohne Ersatz“, dann umbenennen – gelöschte Regeln werden nicht umbenannt oder umgestellt', plan)
+pruefe([(z['name'], z['weg_stufe']) for z in weg['weg']] == [('Alt', a.OHNE), ('Verteilung', a.OHNE)]
+       and 'ausgeschaltet' in weg['weg'][0]['weg_grund'] and 'greift heute nie – „31 Kennzeichnung“' in weg['weg'][1]['weg_grund'],
+       'Urteil: ausgeschaltete Regel und Regel, die nie greift – Löschen ohne Wirkung', [z['weg_grund'] for z in weg['weg']])
+pruefe((weg['n_heute'], weg['n_duplikate'], weg['n_danach'], len(weg['umstellungen'])) == (8, 2, 4, 0)
+       and [z['neu'] for z in weg['zeilen']] == ['11 Aussortieren – Abwesend', '12 Aussortieren – Fehler', '31 Kennzeichnung', '91 Rest']
+       and not weg['verdeckt'],
+       'Danach: 4 Regeln in der neuen Reihenfolge, nichts umzustellen, nichts mehr verdeckt')
+pruefe('Ohne Wirkung: sie ist ausgeschaltet' in weg['plan'][1]['warum'] and 'Löschen geprüft: 2 ohne Wirkung' in a.pruef_text(weg)
+       and a.hinweise(weg['weg'][0]) == ['Wird gelöscht (ohne Ersatz) – ohne Wirkung: sie ist ausgeschaltet.'],
+       'Begründung, Zusammenfassung und Hinweis nennen das Urteil', weg['plan'][1]['warum'])
+lebt = a.auftrag(PF, regeln, liste(namen, loeschen=['Abwesend']))
+pruefe(lebt['weg'][0]['weg_stufe'] == a.AENDERT and 'laufen danach in die späteren Regeln' in lebt['weg'][0]['weg_grund']
+       and a._achtung(lebt['weg'][0]) and 'Löschen geprüft: 1 ändert die Wirkung' in a.pruef_text(lebt),
+       'Eingeschaltete Regel, die greift: Löschen ändert die Wirkung – gebaut wird trotzdem, mit deutlichem Hinweis')
+m = abbruch(lambda: a.auftrag(PF, regeln, liste(namen, loeschen=['Fehler'])))
+pruefe('soll gelöscht werden, ist aber 3-mal vorhanden' in m, 'Regel mit Duplikaten ganz löschen: Abbruch (nicht in einem Zug)', m)
+pruefe(a.auftrag(PF, regeln, liste(namen[:2] + [('Alt', '')] + namen[3:], loeschen=['Alt']))['n_danach'] == 5,
+       'Bei einer Regel, die gelöscht wird, darf der neue Name fehlen')
+pruefe(a.ziel_namen(liste(namen, loeschen=['Alt']), 'bestand') == [x for x in sorted(namen, key=lambda x: int(x[1].split()[0])) if x[0] != 'Alt'],
+       'ziel_namen: die Regeln, die bleiben, in der neuen Reihenfolge')
+ohne_nr = a.auftrag(PF, regeln, liste([(x, 'Name ' + x) for x, _ in namen[:5]] + [('Rest', '99 Rest')], loeschen=['Rest']))
+pruefe(not ohne_nr['nach_nummer'] and ohne_nr['n_danach'] == 5, 'Die Nummern-Regel zählt nur die Regeln, die bleiben')
+
+# ---------------------------------------------------------------- Vereinfachen
+print('\n== Vereinfachen')
+w = regel('Wörter', 1, bed=[('Betreff oder Mailtext enthält', '"FL0", "FL1", "FL"'), (B, '"Achtung Papierakte – kein Vorgang", "Achtung Papierakte"')],
+          aus=[(B, '"AW:", "RE:"')])
+f = a.suchwoerter(w)
+pruefe([(x[1], [u[0] for u in x[2]], x[3]) for x in f] == [('Betreff oder Mailtext enthält', ['FL0', 'FL1'], ['FL']),
+                                                          (B, ['Achtung Papierakte – kein Vorgang'], [])],
+       'Suchwörter: überflüssig, wenn ein kürzeres darin steckt; sehr kurze Wörter eigens genannt (Ausnahmen nicht)', f)
+pruefe(a.suchwoerter(regel('Gleich', 1, bed=[(B, '"Prio", "prio", "Beschwerde"')]))[0][2] == [('prio', 'Prio')],
+       'Suchwörter: dasselbe Wort zweimal – das zweite ist überflüssig')
+pruefe(a.suchwoerter(regel('Gut', 1, bed=[(B, '"Adresse", "Adressänderung"'), ('Absender ist', 'A; B')])) == [],
+       'Suchwörter: „Adresse“ steckt nicht in „Adressänderung“ – kein Befund; Personenlisten zählen nicht')
+z1 = regel('Z1', 1, bed=[('Absenderadresse enthält', '"eins"'), (B, '"Erinnerung"')], akt=ordner('E'))
+z2 = regel('Z2', 2, bed=[('Absenderadresse enthält', '"zwei"'), (B, '"Erinnerung"')], akt=ordner('E'))
+pruefe(a.zusammenlegbar(z1, z2) == 'Absenderadresse enthält', 'Zusammenlegbar: gleiche Aktionen, Unterschied nur in einer Bedingung')
+pruefe(a.zusammenlegbar(z1, dict(z2, akt=list(ordner('F')) + [('Keine weiteren Regeln anwenden', '')])) is None,
+       'Verschiedene Zielordner: nicht zusammenlegbar')
+pruefe(a.zusammenlegbar(z1, dict(z2, bed=[('Absenderadresse enthält', '"zwei"'), (B, '"Mahnung"')])) is None
+       and a.zusammenlegbar(z1, dict(z2, bed=[('Absenderadresse enthält', '"zwei"')])) is None
+       and a.zusammenlegbar(z1, dict(z2, aus=[(B, '"AW:"')])) is None and a.zusammenlegbar(z1, dict(z2, aktiv='Nein')) is None,
+       'Zwei Unterschiede, andere Bedingungsarten, andere Ausnahmen, ein/aus verschieden: nicht zusammenlegbar')
+pruefe(a.zusammenlegbar(z1, dict(z1, name='Z1b')) == '', 'Gleiche Bedingungen und Aktionen unter anderem Namen: überflüssig')
+opt_regeln = [z1, regel('Quer', 2, bed=[(B, '"Erinnerung an zwei"')], akt=ordner('Q')), dict(z2, reihe=3),
+              regel('Aus', 4, bed=[(B, '"KV", "DKV"')], aktiv='Nein')]
+opt = a.optimierung(a.auftrag(PF, opt_regeln, liste([(g['name'], g['name']) for g in opt_regeln])))
+arten = [(f['art'], f['regel']) for f in opt]
+pruefe(('Zusammenlegen', 'Z1  +  Z2') in arten and ('Ausgeschaltet', 'Aus') in arten and ('Suchwörter', 'Aus') in arten,
+       'Befunde: zusammenlegbare Regeln, ausgeschaltete Regel, Suchwörter', arten)
+pruefe('Dazwischen steht „Quer“' in [f for f in opt if f['art'] == 'Zusammenlegen'][0]['befund'],
+       'Zusammenlegen: nennt die Regel dazwischen, die dieselben Mails treffen kann')
+pruefe([f['art'] for f in a.optimierung(auf)].count('Greift nie') == 1 and not [f for f in a.optimierung(weg) if f['art'] == 'Greift nie'],
+       'Befund „Greift nie“ verschwindet, sobald die Regel gelöscht wird')
+
 # ---------------------------------------------------------------- Namensliste schreiben und lesen
 print('\n== Namensliste')
 neu, hin = a.namensliste_aus_regeln({'bestand': regeln})
 pruefe(neu['bestand'] == [(g['name'], g['name']) for g in regeln if g['reihe'] not in (3, 4)] and not hin,
        'Aus dem Export: jeder Name einmal, in der Reihenfolge von heute')
-alt = liste(namen[:3] + [('Früher', '70 Früher')], gewollt=['Alt', 'Früher'])
+alt = liste(namen[:3] + [('Früher', '70 Früher')], gewollt=['Alt', 'Früher'], loeschen=['Alt', 'Früher'])
 neu, hin = a.namensliste_aus_regeln({'bestand': regeln}, alt)
 pruefe(neu['bestand'][:3] == [('Abwesend', '11 Aussortieren – Abwesend'), ('Fehler', '12 Aussortieren – Fehler'), ('Alt', '81 Alt')]
-       and neu['bestand'][3] == ('Kennzeichnung', 'Kennzeichnung') and neu.gewollt['bestand'] == {'Alt'},
-       'Mit älterer Liste: übernimmt deren Namen und Bestätigungen, Unbekanntes behält den Namen')
+       and neu['bestand'][3] == ('Kennzeichnung', 'Kennzeichnung') and neu.gewollt['bestand'] == {'Alt'}
+       and neu.loeschen['bestand'] == {'Alt'},
+       'Mit älterer Liste: übernimmt deren Namen, Bestätigungen und Löschvermerke, Unbekanntes behält den Namen')
 pruefe(len(hin) == 4 and any('„Früher“' in h and 'nicht mehr' in h for h in hin), 'Meldet, was nicht zusammenpasst', hin)
 
 arbeit = sys.argv[1] if len(sys.argv) > 1 else tempfile.mkdtemp(prefix='aufraeumen_')
@@ -225,18 +290,26 @@ pfad = os.path.join(arbeit, 'Namensliste_Test.xlsx')
 import xlsxwriter                      # noqa: E402
 wb = xlsxwriter.Workbook(pfad)
 mak = [dict(g, postfach='Maklerauftraege@example.org') for g in regeln[:2]]
-a.liste_schreiben(wb, [a.auftrag(PF, regeln, liste(tausch, gewollt=['Verteilung']), streng=False),
+a.liste_schreiben(wb, [a.auftrag(PF, regeln, liste(tausch, gewollt=['Verteilung'], loeschen=['Alt']), streng=False),
                        a.auftrag('Maklerauftraege@example.org', mak,
                                  a.namensliste_aus_regeln({'makler': mak})[0], streng=False)], stand='01.01.2026 12:00')
 wb.close()
 gelesen = a.namensliste_lesen(pfad)
-erwartet = sorted(tausch, key=lambda x: int(x[1].split()[0]))
-pruefe(gelesen['bestand'] == erwartet and gelesen.gewollt['bestand'] == {'Verteilung'},
-       'Geschriebene Liste wird wieder gelesen: Namen in neuer Reihenfolge, Bestätigung erhalten', gelesen['bestand'])
-pruefe(gelesen['makler'] == [('Abwesend', 'Abwesend'), ('Fehler', 'Fehler')], 'Zweites Postfach im eigenen Blatt')
+erwartet = [x for x in sorted(tausch, key=lambda x: int(x[1].split()[0])) if x[0] != 'Alt'] + [('Alt', '81 Alt')]
+pruefe(gelesen['bestand'] == erwartet and gelesen.gewollt['bestand'] == {'Verteilung'} and gelesen.loeschen['bestand'] == {'Alt'},
+       'Geschriebene Liste wird wieder gelesen: Namen in neuer Reihenfolge, Bestätigung und Löschvermerk erhalten', gelesen['bestand'])
+pruefe(gelesen['makler'] == [('Abwesend', 'Abwesend'), ('Fehler', 'Fehler')] and set(gelesen) == {'bestand', 'makler'},
+       'Zweites Postfach im eigenen Blatt; das Blatt „Optimierung“ wird nicht als Postfach gelesen')
 nochmal = a.auftrag(PF, regeln, gelesen)
-pruefe([p['regel'] for p in nochmal['plan'] if p['aktion'] == 'POSITION'] == [p['regel'] for p in ok['plan'] if p['aktion'] == 'POSITION'],
+vorher = a.auftrag(PF, regeln, liste(tausch, gewollt=['Verteilung'], loeschen=['Alt']))
+pruefe([(p['aktion'], p['regel'], p['neu']) for p in nochmal['plan']] == [(p['aktion'], p['regel'], p['neu']) for p in vorher['plan']]
+       and any(p['neu'] == 'ohne Ersatz' for p in nochmal['plan']),
        'Aus der gelesenen Liste entsteht derselbe Plan')
+import openpyxl                        # noqa: E402
+opt_blatt = openpyxl.load_workbook(pfad)['Optimierung']
+texte = [str(opt_blatt.cell(r, 2).value) + '|' + str(opt_blatt.cell(r, 3).value) for r in range(5, opt_blatt.max_row + 1)]
+pruefe(any(t.startswith('Zusammenlegen|–') for t in texte) and len(texte) >= 3,
+       'Blatt „Optimierung“: Befunde je Postfach, mit der Auskunft, dass sich nichts zusammenlegen lässt', texte)
 
 n_ok = sum(1 for o, _ in ERGEBNISSE if o)
 print('\nErgebnis: %d von %d Prüfungen bestanden' % (n_ok, len(ERGEBNISSE)))

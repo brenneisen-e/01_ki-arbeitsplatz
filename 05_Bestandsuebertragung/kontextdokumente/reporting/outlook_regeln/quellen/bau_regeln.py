@@ -897,7 +897,8 @@ if AUFRAEUMEN:
             _t += ', davon %d Duplikate – werden gelöscht' % _a['n_duplikate']
         _t += '  ·  %d umbenennen  ·  %d umstellen' % (_a['n_umbenannt'], len(_a['umstellungen']))
         if _a['verdeckt']:
-            _t += '  ·  %d greift nie (Blatt Aufräumen)' % len(_a['verdeckt'])
+            _t += '  ·  %s (Blatt Aufräumen)' % ('1 Regel greift nie' if len(_a['verdeckt']) == 1 else
+                                                  '%d Regeln greifen nie' % len(_a['verdeckt']))
         st.merge_range(r, 1, r, 2, KURZ[_a['postfach']], F(bg_color=GRUENL, font_color=GRUEN, bold=True, indent=1,
                                                             border=2, border_color=WEISS))
         st.merge_range(r, 3, r, 4, _a['n_danach'], zelle_fmt('center', num_format='#,##0'))

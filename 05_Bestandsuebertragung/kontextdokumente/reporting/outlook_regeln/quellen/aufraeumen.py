@@ -341,7 +341,7 @@ def auftrag(postfach, regeln, namensliste, streng=True):
     offen = [t for t in tausche if t['stufe'] == PRUEFEN and not t['bestaetigt']]
     if offen and streng:
         raise SystemExit(
-            'Reihenfolge (%s): %d Umstellung(en) können die Wirkung ändern und sind in der Namensliste nicht bestätigt:\n  - %s\n'
+            'Reihenfolge (%s): %d Umstellung(en) – sie können die Wirkung ändern und sind in der Namensliste nicht bestätigt:\n  - %s\n'
             'Entweder bei einer der beiden Regeln in der Spalte „Umstellung gewollt“ ein „ja“ eintragen oder die beiden '
             'in ihrer Reihenfolge lassen.'
             % (kurz, len(offen), '\n  - '.join('„%s“ läuft künftig vor „%s“: %s' % (t['b']['neu'], t['a']['neu'], t['grund'])
@@ -415,10 +415,11 @@ def pruef_text(a):
     if not a['tausche']:
         t = 'Reihenfolge geprüft: kein Platztausch'
     else:
-        t = 'Reihenfolge geprüft: %d Platztausch(e) – %s' % (len(a['tausche']), ', '.join(
-            '%d %s' % (n[k], k) for k in (OHNE, PRAKTISCH, PRUEFEN) if n[k]))
+        t = 'Reihenfolge geprüft: %d %s – %s' % (len(a['tausche']), 'Platztausch' if len(a['tausche']) == 1 else 'Platztausche',
+                                                  ', '.join('%d %s' % (n[k], k) for k in (OHNE, PRAKTISCH, PRUEFEN) if n[k]))
     if a['verdeckt']:
-        t += '  ·  %d Regel(n) greifen nie (siehe Hinweis)' % len(a['verdeckt'])
+        t += '  ·  %s (siehe Hinweis)' % ('1 Regel greift nie' if len(a['verdeckt']) == 1 else
+                                          '%d Regeln greifen nie' % len(a['verdeckt']))
     return t
 
 

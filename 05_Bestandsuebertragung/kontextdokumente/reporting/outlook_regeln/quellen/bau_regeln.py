@@ -8,10 +8,13 @@ Gliederung in der Regel-Logik.
 
 Aufruf: python3 -I bau_regeln.py <eingabe.xlsx> <ausgabe.xlsx|ausgabe.xlsm> [--test] [--plan <namensliste.xlsx>]
         [--ziel makler]
+        python3 -I bau_regeln.py <eingabe.xlsx> <namensliste_neu.xlsx> --liste [--plan <namensliste_alt.xlsx>]
 
 --plan baut den Auftrag „Aufräumen“ (Duplikate löschen, umbenennen, Reihenfolge; siehe aufraeumen.py) statt des Plans
 v2 und der Liste „Anlegen“. --ziel makler baut die Mappe für Maklerauftraege: Zielpostfach ist dann Maklerauftraege,
 Bestandsuebertragungen wird nur gelesen.
+--liste schreibt statt der Mappe die Namensliste für --plan: je Postfach die Regeln mit Name, Platz, Inhalt und dem
+Ergebnis der Reihenfolge-Prüfung; mit --plan übernimmt sie die neuen Namen einer älteren Liste.
 
 Mit Ziel .xlsm entsteht die Makro-Mappe (Regeln_Umbau.xlsm): zusaetzlich das Blatt "Umsetzung" (Plan, Vorschau,
 Ausfuehren) als zweites Blatt, "Ordner" (Ordner-Umstellung) als drittes sowie "Live", "Sicherung", "Ordner-Sicherung" und
@@ -44,11 +47,14 @@ def _option(name):
 # Auftrag „Aufräumen“ (Duplikate löschen, umbenennen, Reihenfolge): --plan <namensliste.xlsx>, siehe aufraeumen.py.
 # --ziel makler baut die Mappe für Maklerauftraege (Rollen getauscht: Bestandsuebertragungen wird nur gelesen).
 PLAN_DATEI = _option('--plan')
-AUFRAEUMEN = PLAN_DATEI is not None
+LISTE = '--liste' in sys.argv[3:]
+AUFRAEUMEN = PLAN_DATEI is not None or LISTE
 ZIEL_ARG = (_option('--ziel') or 'bestand').lower()
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 if TEST and not MAKRO:
     raise SystemExit('--test nur mit Ziel .xlsm')
+if LISTE and (MAKRO or TEST):
+    raise SystemExit('--liste schreibt eine .xlsx (ohne --test)')
 
 # ---------------------------------------------------------------- Palette
 INK = '#1F2933'      # Kopfzeilen, Titel
@@ -579,6 +585,27 @@ if AUFRAEUMEN:
     # Auftrag „Aufräumen“ (--plan): Duplikate löschen, umbenennen, Reihenfolge - siehe aufraeumen.py. Die Liste
     # „Anlegen“ und der Plan v2 (Bestand nach Vorbild Makler) entfallen.
     import aufraeumen
+    if LISTE:
+        # Namensliste schreiben statt der Mappe: Namen von heute, mit --plan die neuen Namen der älteren Liste
+        NAMENSLISTE, _hinweise = aufraeumen.namensliste_aus_regeln(
+            {'bestand': bes_regeln, 'makler': mak_regeln}, aufraeumen.namensliste_lesen(PLAN_DATEI) if PLAN_DATEI else None)
+        _auftraege = [aufraeumen.auftrag(BES, bes_regeln, NAMENSLISTE, streng=False),
+                      aufraeumen.auftrag(MAK, mak_regeln, NAMENSLISTE, streng=False)]
+        _stand = next((str(wert(UE, _r, _c)) for _r in range(1, 12) if str(wert(UE, _r, 1) or '').startswith('Erstellt')
+                       for _c in range(2, 7) if wert(UE, _r, _c) is not None), '')
+        aufraeumen.liste_schreiben(wb, _auftraege, stand=_stand)
+        wb.close()
+        for _h in _hinweise:
+            print('Hinweis:', _h)
+        for _a in _auftraege:
+            print('%s: %d Regeln heute, %d danach · %s' % (KURZ[_a['postfach']], _a['n_heute'], _a['n_danach'],
+                                                           aufraeumen.pruef_text(_a)))
+            for _t in _a['offen']:
+                print('   bitte prüfen: „%s“ läuft künftig vor „%s“ – %s' % (_t['b']['neu'], _t['a']['neu'], _t['grund']))
+            for _z in _a['verdeckt']:
+                print('   greift nie: „%s“ (verdeckt von „%s“)' % (_z['neu'], _z['verdeckt_von']['neu']))
+        print('geschrieben:', OUT)
+        raise SystemExit(0)
     NAMENSLISTE = aufraeumen.namensliste_lesen(PLAN_DATEI)
     AUFRAEUM = {BES: aufraeumen.auftrag(BES, bes_regeln, NAMENSLISTE), MAK: aufraeumen.auftrag(MAK, mak_regeln, NAMENSLISTE)}
     AUFRAEUM_PLAN = AUFRAEUM[ZIEL_PF]['plan']
@@ -869,6 +896,8 @@ if AUFRAEUMEN:
         if _a['n_duplikate']:
             _t += ', davon %d Duplikate – werden gelöscht' % _a['n_duplikate']
         _t += '  ·  %d umbenennen  ·  %d umstellen' % (_a['n_umbenannt'], len(_a['umstellungen']))
+        if _a['verdeckt']:
+            _t += '  ·  %d greift nie (Blatt Aufräumen)' % len(_a['verdeckt'])
         st.merge_range(r, 1, r, 2, KURZ[_a['postfach']], F(bg_color=GRUENL, font_color=GRUEN, bold=True, indent=1,
                                                             border=2, border_color=WEISS))
         st.merge_range(r, 3, r, 4, _a['n_danach'], zelle_fmt('center', num_format='#,##0'))

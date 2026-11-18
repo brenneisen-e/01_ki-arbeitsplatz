@@ -101,7 +101,7 @@ def main():
     listen = aufraeumen.namensliste_lesen(liste)
     for ziel, schl in ((BES, 'bestand'), (MAK, 'makler')):
         try:
-            lauf(export, liste, arbeit, ziel, listen[schl])
+            lauf(export, liste, arbeit, ziel, aufraeumen.zielfolge(listen[schl], schl)[0])
         except Exception as e:
             t.pruefe(False, 'Probelauf %s abgebrochen: %s' % (ziel.split('@')[0], str(e)[:500]))
     n_ok = sum(1 for ok, _ in t.ERGEBNISSE if ok)

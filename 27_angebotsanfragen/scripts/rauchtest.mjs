@@ -17,6 +17,11 @@
 //     und das Whitelabel zeigt die Fassung ohne Hausbegriffe (Seitenbild „….neutral“)
 //   · die Präsentation: jede Beispielanfrage in allen sechs Szenen bei
 //     1920 × 1080; außer dem Deckblatt (Szene 3) passt jede Szene ohne Scrollen
+//   · „KI liest“: Wer einen Punkt der Liste überfährt, sieht im Original die Fundstelle (das Blatt
+//     rollt dorthin, die übrigen Markierungen treten zurück); der Blick bleibt, wenn der Zeiger ins
+//     Original wandert, und endet, wenn er die Tafeln verlässt
+//   · „KI-Deckblatt“: zugeklappt steht keine Herleitung im Blatt, ein Klick klappt Herleitung und
+//     Fundstelle der Zeile auf
 //   · Begriffe: Im Whitelabel steht kein Hausbegriff eines Kunden, in der
 //     Kundenmarke kein Platzhalterbegriff des Whitelabels
 //   · keine Emojis im sichtbaren Text, in title, placeholder und alt
@@ -160,6 +165,49 @@ async function detailansichten(marke) {
   return anzahl
 }
 
+// Mouse-over in „KI liest“: Wer einen Punkt der Liste überfährt, sieht im Original die Fundstelle.
+async function fundstellenBlick(seite, p, marke, wo) {
+  const mit = await p.locator('[data-lesezeile][data-fundstelle]').evaluateAll(els => els.map(z => z.getAttribute('data-lesezeile')))
+  if (!mit.length) { melde(marke, wo, 'kein Punkt mit Fundstelle in der Liste'); return }
+  // Angekommen ist der Blick, wenn die Zeile getönt ist, die Fundstelle umrandet im Bild steht und der Hinweis die Seite nennt.
+  const angekommen = (key) => seite.waitForFunction((key) => {
+    const el = document.querySelector('[data-praesentation]')
+    const m = el.querySelector('.fs-fokus mark.fs.aktiv')
+    if (!m || el.querySelector('[data-im-blick]')?.getAttribute('data-lesezeile') !== key) return false
+    const r = m.closest('.overflow-y-auto').getBoundingClientRect()
+    const k = m.getBoundingClientRect()
+    return k.top >= r.top - 1 && k.bottom <= r.bottom + 1 && /^Seite \d/.test(el.querySelector('[data-fundstelle-hinweis]')?.textContent.trim() || '')
+  }, key, { timeout: 4000 }).then(() => true, () => false)
+
+  let zeile
+  for (const key of [...new Set([mit[0], mit[Math.floor(mit.length / 2)], mit[mit.length - 1]])]) {
+    zeile = p.locator(`[data-lesezeile="${key}"]`)
+    await zeile.scrollIntoViewIfNeeded()
+    await zeile.hover()
+    if (!(await angekommen(key))) melde(marke, wo, `Mouse-over auf „${key}“ zeigt die Fundstelle nicht im Original`)
+  }
+  // Waagerecht hinüber ins Original (an den Rand neben dem Blatt): Der Blick bleibt. Außerhalb der Tafeln endet er.
+  const kasten = await zeile.boundingBox()
+  const links = await p.locator('[data-fundstelle-hinweis]').evaluate(el => el.closest('.rounded-2xl').getBoundingClientRect().x)
+  await seite.mouse.move(links + 8, kasten.y + kasten.height / 2, { steps: 10 }); await seite.waitForTimeout(250)
+  if (!(await p.locator('.fs-fokus mark.fs.aktiv').count())) melde(marke, wo, 'der Blick auf die Fundstelle geht verloren, sobald der Zeiger ins Original wandert')
+  await seite.mouse.move(960, 1060, { steps: 4 }); await seite.waitForTimeout(250)
+  if (await p.locator('.fs-fokus, [data-im-blick]').count()) melde(marke, wo, 'der Blick endet nicht, wenn der Zeiger die Tafeln verlässt')
+}
+
+// Deckblatt: zugeklappt steht keine Herleitung im Blatt; ein Klick klappt Herleitung und Fundstelle der Zeile auf.
+async function deckblattAufklappen(seite, p, marke, wo) {
+  if (await p.locator('[data-herleitung]').count()) melde(marke, wo, 'eine Herleitung steht im zugeklappten Deckblatt')
+  const zeilen = p.locator('[data-zeile][data-art="interpretiert"]')
+  let herleitungen = 0
+  for (let i = 0; i < Math.min(await zeilen.count(), 4); i++) {
+    await zeilen.nth(i).click(); await seite.waitForTimeout(150)
+    if (!(await zeilen.nth(i).locator('[data-aufgeklappt]').count())) melde(marke, wo, 'ein Klick klappt die Zeile nicht auf')
+    herleitungen += await zeilen.nth(i).locator('[data-herleitung]').count()
+  }
+  return herleitungen
+}
+
 async function praesentation(marke) {
   const { ctx, seite } = await neueSeite(marke, 1920, 1080)
   await seite.goto(BASIS, { waitUntil: 'networkidle' })
@@ -167,6 +215,7 @@ async function praesentation(marke) {
   await seite.waitForTimeout(400)
   const p = seite.locator('[data-praesentation]')
   const beispiele = await seite.locator('header [title^="Beispiel "]').count()
+  let herleitungen = 0
   for (let nr = 1; nr <= beispiele; nr++) {
     await seite.keyboard.press(String(nr))
     await seite.waitForTimeout(250)
@@ -182,8 +231,11 @@ async function praesentation(marke) {
         const mass = await seite.locator('[data-szene]').evaluate(el => ({ inhalt: el.scrollHeight, platz: el.clientHeight }))
         if (mass.inhalt > mass.platz + 2) melde(marke, wo, `passt nicht auf den Bildschirm (${mass.inhalt} px bei ${mass.platz} px)`)
       }
+      if (sz === 1) await fundstellenBlick(seite, p, marke, wo)
+      if (sz === 2) herleitungen += await deckblattAufklappen(seite, p, marke, wo)
     }
   }
+  if (!herleitungen) melde(marke, 'Präsentation, Deckblatt', 'in keinem Beispiel klappt eine Herleitung auf')
   // Schlussszene: die übrigen Beispielanfragen als Kacheln, ansehen und im Fenster weiterblättern
   const kacheln = p.locator('[data-schluss-beispiele] .beispiel-kachel')
   const anzahl = await kacheln.count()

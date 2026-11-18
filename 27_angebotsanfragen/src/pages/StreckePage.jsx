@@ -88,8 +88,7 @@ function Katalog({ offenInitial = false }) {
             {STUFEN.map(stufe => {
               const hart = stufe.art === 'hart'
               return (
-                <div key={stufe.id} className="relative rounded-xl border border-slate-200 bg-white p-4 pl-5 overflow-hidden">
-                  <span className="absolute left-0 top-0 bottom-0 w-1" style={{ background: hart ? '#0f172a' : 'var(--mode-primary-light)' }} />
+                <div key={stufe.id} className="rounded-xl border border-slate-200 bg-white p-4">
                   <div className="flex items-center gap-2.5">
                     <span className={`w-7 h-7 rounded-lg text-sm font-semibold flex items-center justify-center shrink-0 ${hart ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'}`}>{stufe.nr}</span>
                     <span className="block text-sm font-semibold text-slate-900 leading-tight">{stufe.titel}</span>
@@ -477,8 +476,9 @@ function SchrittErgebnis({ laeufe, fehler, neuStarten, onOpenVorgang }) {
       </div>
 
       {fehler.length > 0 && (
-        <div className="card-base p-4 border-l-4 border-l-amber-400">
-          <div className="text-sm font-medium text-slate-800 mb-1.5">
+        <div className="card-base p-4">
+          <div className="text-sm font-medium text-slate-800 mb-1.5 flex items-center gap-2">
+            <AlertTriangle size={15} className="text-amber-500 shrink-0" />
             {fehler.length} {fehler.length === 1 ? 'Datei konnte' : 'Dateien konnten'} nicht ausgewertet werden
           </div>
           {fehler.map((f, i) => <div key={i} className="text-xs text-slate-500"><span className="font-mono">{f.datei}</span> – {f.text}</div>)}

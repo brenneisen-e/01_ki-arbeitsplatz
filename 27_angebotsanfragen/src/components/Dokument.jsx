@@ -21,6 +21,8 @@
  *   laufend   Feld, das die KI gerade liest (pulsiert)
  *   stark     kräftige statt zarter Farbe
  *   ziffern   Abschnittsziffern zeigen
+ *   fokus     zusammen mit `aktiv`: Die übrigen Fundstellen treten zurück, damit die
+ *             eine ins Auge fällt (Mouse-over in der Leseliste der Präsentation)
  */
 
 import { createContext, useContext, useMemo, Fragment } from 'react'
@@ -264,11 +266,12 @@ export default function Dokument({ dok, info, markierung = {}, onFeld, seitenlab
   }), [info, markierung.an, markierung.aktiv, markierung.sichtbar, markierung.laufend, markierung.stark, markierung.ziffern, onFeld])
 
   const anzahl = dok.seiten.length
+  const huelle = clsx('space-y-4', markierung.fokus && markierung.aktiv && 'fs-fokus')
 
   if (seitenbilder) {
     return (
       <Kontext.Provider value={kontext}>
-        <div className="space-y-4">
+        <div className={huelle}>
           {seitenbilder.map(seite => (
             <div key={seite.nr} data-seite={seite.nr}>
               {seitenlabel && (
@@ -292,7 +295,7 @@ export default function Dokument({ dok, info, markierung = {}, onFeld, seitenlab
 
   return (
     <Kontext.Provider value={kontext}>
-      <div className="space-y-4">
+      <div className={huelle}>
         {dok.seiten.map((bloecke, i) => (
           <div key={i} data-seite={i + 1}>
             {seitenlabel && (

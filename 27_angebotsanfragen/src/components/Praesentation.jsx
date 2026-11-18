@@ -27,7 +27,7 @@ import {
   X, ChevronLeft, ChevronRight, Maximize2, Minimize2, Inbox, Mail, Paperclip, Sparkles,
   AlertTriangle, Lightbulb, ArrowRight, Check, Minus, CheckCircle2, FileText, Loader2,
   RotateCcw, Search, Send, Archive, FolderOpen, ListChecks, TextSearch, UserCheck, Columns2,
-  Database, MailQuestion, Keyboard, Bot, FileSpreadsheet, Play
+  Database, MailQuestion, Keyboard, Bot, FileSpreadsheet, Play, LocateFixed, MousePointer2
 } from 'lucide-react'
 import { VORGAENGE, BEISPIELE, DEMO_VORGANG_ID, herkunft } from '../daten/vorgaenge'
 import { pruefe, auswertung, STUFEN } from '../utils/pruefengine'
@@ -136,12 +136,9 @@ function Postfachzeile({ vorgang, neu, gelesen, kompakt, ausgewaehlt, onClick })
   return (
     <div
       onClick={onClick}
-      className={clsx('flex items-center gap-3 px-4 py-3 border-b border-slate-100 border-l-4 transition-colors duration-300 cursor-pointer',
+      className={clsx('flex items-center gap-3 px-4 py-3 border-b border-slate-100 transition-colors duration-300 cursor-pointer',
         neu && 'animate-mail-eingang', ausgewaehlt && !neu ? 'bg-slate-100' : !neu && 'hover:bg-slate-50')}
-      style={{
-        backgroundColor: neu ? 'var(--mode-pastel)' : undefined,
-        borderLeftColor: ausgewaehlt ? 'var(--mode-primary-light)' : 'transparent'
-      }}>
+      style={{ backgroundColor: neu ? 'var(--mode-pastel)' : undefined }}>
       <span className="w-2 shrink-0 flex justify-center">
         {!gelesen && <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--mode-primary-light)' }} />}
       </span>
@@ -337,12 +334,13 @@ function SzeneEingang({ vorgang, phase, weiter }) {
 // Szene 2 – KI liest
 // ============================================================
 
+// Die Art eines Punktes steht als Wort im Chip, in der Farbe der Fundstelle (keine Farbleiste an der Zeile).
 const ART_STIL = {
-  gelesen: { leiste: 'bg-yellow-400', chip: 'bg-yellow-100 text-yellow-900', wort: 'gelesen' },
-  interpretiert: { leiste: 'bg-violet-400', chip: 'bg-violet-100 text-violet-900', wort: 'interpretiert' },
-  auffaellig: { leiste: 'bg-orange-400', chip: 'bg-orange-100 text-orange-900', wort: 'Auffälligkeit' },
-  fehlt: { leiste: 'bg-red-400', chip: 'bg-red-100 text-red-800', wort: 'fehlt' },
-  recherche: { leiste: 'bg-sky-400', chip: 'bg-sky-100 text-sky-800', wort: 'Recherche' }
+  gelesen: { chip: 'bg-yellow-100 text-yellow-900', wort: 'gelesen' },
+  interpretiert: { chip: 'bg-violet-100 text-violet-900', wort: 'interpretiert' },
+  auffaellig: { chip: 'bg-orange-100 text-orange-900', wort: 'Auffälligkeit' },
+  fehlt: { chip: 'bg-red-100 text-red-800', wort: 'fehlt' },
+  recherche: { chip: 'bg-sky-100 text-sky-800', wort: 'Recherche' }
 }
 
 /** Was die KI vor den Augen des Publikums liest, in der Reihenfolge des Deckblatts. */
@@ -378,6 +376,16 @@ function dauernLesen(anzahl) {
   return [900, ...Array.from({ length: anzahl }, () => jeFeld), 700]
 }
 
+// So lange ruht der Zeiger auf einem Punkt oder einer Fundstelle, bevor der Blick dorthin wechselt.
+const RUHE_MS = 110
+
+// Was der Hinweis im Kopf des Originals sagt, wenn ein Punkt keine Fundstelle hat.
+const OHNE_FUNDSTELLE = {
+  fehlt: 'Steht nicht im Eingang',
+  recherche: 'Steht nicht im Eingang, wird im eigenen Haus nachgeschlagen',
+  auffaellig: 'Betrifft den Eingang als Ganzes'
+}
+
 function SzeneLesen({ vorgang, verknuepfung, liste, phase }) {
   const links = useRef(null)
   const rechts = useRef(null)
@@ -405,6 +413,60 @@ function SzeneLesen({ vorgang, verknuepfung, liste, phase }) {
     return () => clearTimeout(t)
   }, [aktuell, dokNr])
 
+  // Ist alles gelesen, zeigt der Mauszeiger die Verbindung. Wer in der Liste einen Punkt überfährt, sieht
+  // im Original die Fundstelle: Das Blatt rollt weich dorthin, die übrigen Markierungen treten zurück.
+  // Der Blick bleibt stehen, bis der Zeiger auf einem anderen Punkt ruht oder beide Tafeln verlässt – so
+  // lässt sich mit der Maus hinüberwandern und auf die Stelle zeigen. Wer umgekehrt im Original eine
+  // Fundstelle überfährt, sieht in der Liste den Punkt dazu. Während die KI liest, führt die Animation.
+  const [blick, setBlick] = useState(null) // Punkt der Liste, dessen Fundstelle im Blick ist
+  const [schwebe, setSchwebe] = useState(null) // Fundstelle im Original unter dem Zeiger
+  // Erst wenn der Zeiger kurz ruht, wechselt der Blick: Wer nur über Liste oder Blatt streicht, löst nichts aus.
+  const absicht = useRef({ liste: null, original: null })
+  const ohneAbsicht = () => { clearTimeout(absicht.current.liste); clearTimeout(absicht.current.original) }
+  useEffect(() => ohneAbsicht, [])
+  // Neuer Eingang oder neuer Lesedurchlauf: Der Blick beginnt leer.
+  useEffect(() => { ohneAbsicht(); setBlick(null); setSchwebe(null) }, [vorgang, fertig])
+
+  const aufPunkt = (key, sofort = false) => {
+    clearTimeout(absicht.current.liste)
+    if (sofort) setBlick(key)
+    else absicht.current.liste = setTimeout(() => setBlick(key), RUHE_MS)
+  }
+  // Ein Punkt ohne Fundstelle hält den Blick nicht fest: Es gibt im Original nichts zu zeigen.
+  const vomPunkt = (key, haelt) => {
+    clearTimeout(absicht.current.liste)
+    if (!haelt) setBlick(b => (b === key ? null : b))
+  }
+  const ausDenTafeln = () => { ohneAbsicht(); setBlick(null); setSchwebe(null) }
+  const vonOriginal = useCallback((key, art) => {
+    if (art !== 'hover') return
+    clearTimeout(absicht.current.original)
+    if (key) absicht.current.original = setTimeout(() => setSchwebe(key), RUHE_MS)
+    else setSchwebe(null)
+  }, [])
+
+  const blickEintrag = fertig && blick ? liste.find(e => e.key === blick) || null : null
+  const blickStelle = blickEintrag?.stelle || null
+  const schwebeKey = fertig ? schwebe : null
+  const gezeigtKey = schwebeKey || blickEintrag?.key || null
+  const imFokus = !schwebeKey && Boolean(blickStelle)
+
+  const blickKey = blickStelle ? blickEintrag.key : null
+  const blickDokNr = blickStelle ? blickStelle.dokNr : null
+  useEffect(() => {
+    if (!blickKey) return
+    // Steht die Fundstelle im anderen Dokument (Mail oder Anhang), erst dorthin wechseln.
+    if (blickDokNr !== dokNr) { setDokNr(blickDokNr); return }
+    const t = setTimeout(() => rolleZu(findeMarke(links.current, blickKey), { anteil: 0.3 }), 30)
+    return () => clearTimeout(t)
+  }, [blickKey, blickDokNr, dokNr])
+
+  useEffect(() => {
+    if (!schwebeKey) return
+    const t = setTimeout(() => rolleZu(rechts.current?.querySelector(`[data-lesezeile="${CSS.escape(schwebeKey)}"]`), { anteil: 0.4 }), 30)
+    return () => clearTimeout(t)
+  }, [schwebeKey])
+
   const zaehle = (art) => liste.slice(0, gelesen).filter(e => e.art === art).length
   const anteil = Math.round((gelesen / liste.length) * 100)
   const dok = vorgang.dokumente[dokNr] || vorgang.dokumente[0]
@@ -417,15 +479,39 @@ function SzeneLesen({ vorgang, verknuepfung, liste, phase }) {
   })
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,11fr)_minmax(0,10fr)] gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,11fr)_minmax(0,10fr)] gap-6"
+      onMouseLeave={fertig ? ausDenTafeln : undefined}>
       {/* Das Original mit den Fundstellen */}
       <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col" style={TAFELHOEHE}>
         <div className="px-5 py-3 border-b border-slate-200 bg-slate-50 flex items-center gap-3 shrink-0">
           <Mail size={15} className="text-slate-500 shrink-0" />
-          <span className="text-sm font-semibold text-slate-800">Eingang im Original</span>
-          <span className="text-xs text-slate-500 truncate">{dok.titel} · {dok.art}</span>
+          <span className="text-sm font-semibold text-slate-800 whitespace-nowrap shrink-0">Eingang im Original</span>
+          <span className="text-xs text-slate-500 truncate min-w-0 flex-1">{dok.titel} · {dok.art}</span>
+          {/* Wo die überfahrene Zeile im Original steht */}
+          {fertig && (
+            <span data-fundstelle-hinweis className={clsx('shrink-0 max-w-[62%] text-xs px-2.5 py-1 rounded-lg border inline-flex items-center gap-1.5 transition-colors duration-300',
+              imFokus ? 'text-white border-transparent' : 'bg-white border-slate-200 text-slate-500')}
+              style={imFokus ? { backgroundColor: 'var(--mode-primary-light)' } : undefined}>
+              {imFokus ? (
+                <>
+                  <LocateFixed size={13} className="shrink-0" />
+                  <span className="truncate">
+                    Seite {blickStelle.seite}{blickStelle.ort ? ` · ${blickStelle.ort}` : ''}
+                    {blickEintrag.anzahlStellen > 1 ? ` · ${blickEintrag.anzahlStellen} Stellen` : ''}
+                  </span>
+                </>
+              ) : !schwebeKey && blickEintrag ? (
+                <span className="truncate">{OHNE_FUNDSTELLE[blickEintrag.art] || OHNE_FUNDSTELLE.fehlt}</span>
+              ) : (
+                <>
+                  <MousePointer2 size={13} className="shrink-0" />
+                  <span className="truncate">Punkt in der Liste überfahren: Die Fundstelle erscheint hier</span>
+                </>
+              )}
+            </span>
+          )}
           {vorgang.dokumente.length > 1 && (
-            <span className="ml-auto flex items-center gap-1.5 shrink-0">
+            <span className="flex items-center gap-1.5 shrink-0">
               {vorgang.dokumente.map((d, i) => (
                 <span key={d.id} className={clsx('text-2xs px-2 py-1 rounded-md border', i === dokNr ? 'text-white border-transparent' : 'bg-white border-slate-200 text-slate-500')}
                   style={i === dokNr ? { backgroundColor: 'var(--mode-primary-light)' } : undefined}>{d.titel}</span>
@@ -434,9 +520,13 @@ function SzeneLesen({ vorgang, verknuepfung, liste, phase }) {
           )}
         </div>
         <div ref={links} className="flex-1 min-h-0 overflow-y-auto bg-slate-100 p-5">
-          <Dokument dok={dok} info={verknuepfung.info}
-            markierung={{ sichtbar, laufend: aktuell?.key, stark: true }}
-            seitenbilder={originalseiten(vorgang, dokNr)} />
+          {/* Wechselt das Dokument (Mail oder Anhang), blendet das neue weich ein. */}
+          <div key={`${vorgang.id}-${dok.id}`} className="animate-fade-in">
+            <Dokument dok={dok} info={verknuepfung.info}
+              markierung={{ sichtbar, laufend: aktuell?.key, aktiv: gezeigtKey, fokus: imFokus, stark: true }}
+              onFeld={fertig ? vonOriginal : undefined}
+              seitenbilder={originalseiten(vorgang, dokNr)} />
+          </div>
         </div>
         <div className="px-5 py-2 border-t border-slate-200 bg-white shrink-0"><Legende /></div>
       </div>
@@ -469,10 +559,14 @@ function SzeneLesen({ vorgang, verknuepfung, liste, phase }) {
                   const ist = e.index < gelesen
                   const jetzt = e.index === gelesen && laeuft
                   const stil = ART_STIL[e.art] || ART_STIL.gelesen
+                  const imBlick = gezeigtKey === e.key
                   return (
-                    <div key={e.key} data-lesezeile={e.key}
-                      className={clsx('relative pl-3.5 pr-3 py-1.5 transition-colors duration-300', jetzt && 'bg-(--mode-pastel)')}>
-                      <span className={clsx('absolute left-0 top-0 bottom-0 w-1 transition-opacity duration-300', stil.leiste, ist ? 'opacity-100' : 'opacity-0')} />
+                    <div key={e.key} data-lesezeile={e.key} data-fundstelle={e.stelle ? e.stelle.seite : undefined} data-im-blick={imBlick || undefined}
+                      onMouseEnter={fertig ? () => aufPunkt(e.key) : undefined}
+                      onMouseLeave={fertig ? () => vomPunkt(e.key, Boolean(e.stelle)) : undefined}
+                      onClick={fertig ? () => aufPunkt(e.key, true) : undefined}
+                      className={clsx('px-3 py-1.5 transition-colors duration-300',
+                        jetzt || imBlick ? 'bg-(--mode-pastel)' : fertig && 'hover:bg-slate-50')}>
                       <div className="grid grid-cols-[minmax(0,38%)_minmax(0,1fr)_auto] gap-2 items-baseline">
                         <span className={clsx('text-sm leading-snug', ist || jetzt ? 'text-slate-600' : 'text-slate-300')}>{e.label}</span>
                         <span className="text-sm min-w-0 leading-snug">
@@ -535,8 +629,8 @@ function SzeneDeckblatt({ vorgang, lauf, verknuepfung, phase, aufVergleich }) {
           {layout.id === 'sonstig' ? '.' : <>: die acht Abschnitte der Sparte {layout.name}, in der Reihenfolge der Erfassung {B.imSystem}.</>}
         </p>
         <ul className="space-y-3 text-base text-slate-700">
-          <li className="flex gap-3">{haken} Jede Zeile nennt ihre Quelle. Ein Klick zeigt die Fundstelle mit Seite und Wortlaut</li>
-          <li className="flex gap-3">{haken} Interpretierte Werte tragen ihre Herleitung, etwa „8 Vollzeit + 2 Geschäftsführer“</li>
+          <li className="flex gap-3">{haken} Jede Zeile nennt ihre Quelle. Ein Klick klappt sie auf: Fundstelle mit Seite und Wortlaut</li>
+          <li className="flex gap-3">{haken} Bei interpretierten Werten steht dort auch die Herleitung, etwa „8 Vollzeit + 2 Geschäftsführer“</li>
           <li className="flex gap-3">{haken} Was fehlt, bleibt sichtbar leer und ist als Rückfrage vorgemerkt</li>
           <li className="flex gap-3">{haken} Unten stehen die fachliche Gesamteinschätzung und die Auffälligkeiten</li>
         </ul>
@@ -618,9 +712,8 @@ function SzenePruefung({ lauf, phase }) {
           // Die Pflichtangaben sind die längste Stufe: doppelte Breite, zwei Spalten.
           const breit = stufe.id === 'pflicht'
           return (
-            <div key={stufe.id} className={clsx('relative rounded-2xl border bg-white shadow-sm overflow-hidden transition-colors duration-300', breit && 'lg:col-span-2', aktiv ? 'border-slate-400' : 'border-slate-200')}>
-              <span className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: hart ? '#0f172a' : 'var(--mode-primary-light)' }} />
-              <div className="pl-4 pr-3 py-2.5 border-b border-slate-100 flex items-center gap-2.5">
+            <div key={stufe.id} className={clsx('rounded-2xl border bg-white shadow-sm overflow-hidden transition-colors duration-300', breit && 'lg:col-span-2', aktiv ? 'border-slate-400' : 'border-slate-200')}>
+              <div className="px-3.5 py-2.5 border-b border-slate-100 flex items-center gap-2.5">
                 <span className={clsx('w-8 h-8 rounded-lg text-sm font-semibold flex items-center justify-center shrink-0', hart ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700')}>{stufe.nr}</span>
                 <span className="min-w-0">
                   <span className="block text-base font-semibold text-slate-900 leading-tight">{stufe.titel}</span>
@@ -630,7 +723,7 @@ function SzenePruefung({ lauf, phase }) {
                   {erledigt ? <CheckCircle2 size={18} className="text-emerald-500" /> : aktiv ? <Loader2 size={18} className="animate-spin text-slate-500" /> : null}
                 </span>
               </div>
-              <div className={clsx('pl-4 pr-3 py-1.5', breit ? 'pruef-zweispaltig' : 'divide-y divide-slate-100')}>
+              <div className={clsx('px-3.5 py-1.5', breit ? 'pruef-zweispaltig' : 'divide-y divide-slate-100')}>
                 {schritte.length === 0 && <p className="py-2 text-sm text-slate-400">Entfällt: Der Eingang ist kein Angebotsvorgang.</p>}
                 {schritte.map((s, i) => {
                   const ist = s.index < ausgefuehrt

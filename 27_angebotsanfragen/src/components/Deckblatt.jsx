@@ -7,6 +7,12 @@
  * Auffälligkeiten. Jede Zeile nennt ihre Quelle; ein Klick darauf springt im
  * Original zur Fundstelle.
  *
+ * Das Blatt bleibt ruhig: Eine Zeile zeigt Bezeichnung, Wert und Quelle. Wie
+ * die KI auf einen Wert kommt (Herleitung) und der Wortlaut der Fundstelle
+ * stehen im aufgeklappten Teil der Zeile, der sich per Klick öffnet. Nur was
+ * fehlt, erklärt sich gleich in der Zeile. Der Status steht als Wort und als
+ * Tönung der Zeile, nicht als Farbkante.
+ *
  * Die Marke steckt ausschließlich in den CSS-Variablen und in branding.js –
  * das Deckblatt kennt keinen Versicherernamen.
  */
@@ -15,7 +21,6 @@ import { useEffect, useRef, useState } from 'react'
 import { clsx } from 'clsx'
 import { FileSpreadsheet, HelpCircle, Sparkles, TextSearch, Database, MailQuestion, AlertTriangle, Info } from 'lucide-react'
 import { abschnitteFuer, feld, layoutVon, VORGANGSFELDER, TREFFER } from '../utils/layouts'
-import { statusJeFeld } from '../utils/pruefengine'
 import { quelleKurz, quelleLang } from '../utils/markierung'
 import { getMarke, begriffe } from '../utils/branding'
 import { ERGEBNIS } from '../utils/ergebnis'
@@ -52,42 +57,53 @@ function Quelle({ feldKey, farbe, stellen, mehrere, onFeld }) {
   )
 }
 
-function Fundstellen({ stellen }) {
-  if (!stellen?.length) return null
+/**
+ * Der aufgeklappte Teil einer Zeile: erst die Herleitung der KI (violett, wenn der Wert interpretiert
+ * ist), dann die Fundstellen mit Seite und Wortlaut.
+ */
+function Aufgeklappt({ herleitung, interpretiert = false, stellen }) {
+  if (!herleitung && !stellen?.length) return null
   return (
-    <div className="mt-1 space-y-0.5">
-      {stellen.slice(0, 4).map((s, i) => (
+    <div data-aufgeklappt className="mt-1 space-y-0.5 animate-fade-in">
+      {herleitung && (
+        <div data-herleitung className={clsx('text-2xs leading-snug flex gap-1.5', interpretiert ? 'text-violet-800' : 'text-slate-600')}>
+          {interpretiert && <Sparkles size={11} className="shrink-0 mt-0.5" />}
+          <span>{herleitung}</span>
+        </div>
+      )}
+      {(stellen || []).slice(0, 4).map((s, i) => (
         <div key={i} className="text-2xs leading-snug text-slate-500">
           <span className="text-slate-400">{quelleLang(s)}: </span>
           <span className="text-slate-700">„{s.text.length > 90 ? s.text.slice(0, 88) + ' …' : s.text}“</span>
         </div>
       ))}
-      {stellen.length > 4 && <div className="text-2xs text-slate-400">und {stellen.length - 4} weitere Fundstellen</div>}
+      {stellen?.length > 4 && <div className="text-2xs text-slate-400">und {stellen.length - 4} weitere Fundstellen</div>}
     </div>
   )
 }
 
-function Zeile({ f, status, v, zeigtHilfe }) {
+function Zeile({ f, v, zeigtHilfe }) {
   const stellen = v.fundstellen[f.key]
   const aktiv = v.aktiv === f.key
   const fehlt = f.art === 'fehlt'
   const recherche = f.art === 'recherche'
   const leer = f.art === 'leer'
   const farbe = f.art === 'interpretiert' ? 'interpretiert' : fehlt ? 'auffaellig' : 'gelesen'
+  // Die Herleitung eines gefundenen Wertes wandert in den aufgeklappten Teil.
+  const einklappbar = Boolean(stellen) && !fehlt
 
   return (
     <div
-      data-zeile={f.key}
+      data-zeile={f.key} data-art={f.art}
       onMouseEnter={() => v.onFeld?.(stellen ? f.key : null, 'hover')}
       onMouseLeave={() => v.onFeld?.(null, 'hover')}
       onClick={() => stellen && v.onFeld?.(f.key, 'klick')}
-      className={clsx('border-l-[3px] pl-2.5 pr-2.5 py-1.5 transition-colors',
+      className={clsx('px-3 py-1.5 transition-colors',
         stellen && 'cursor-pointer',
-        aktiv ? 'border-l-(--mode-primary-light) bg-(--mode-pastel)'
-          : fehlt ? 'border-l-red-400 bg-red-50/60'
-          : recherche ? 'border-l-sky-400 bg-sky-50/60'
-          : status === 'hinweis' ? 'border-l-sky-300'
-          : 'border-l-transparent hover:bg-slate-50')}
+        aktiv ? 'bg-(--mode-pastel)'
+          : fehlt ? 'bg-red-50/60'
+          : recherche ? 'bg-sky-50/60'
+          : 'hover:bg-slate-50')}
     >
       <div className="grid grid-cols-[minmax(0,40%)_minmax(0,1fr)_auto] gap-2 items-baseline">
         <span className="text-xs text-slate-500 leading-snug">
@@ -104,14 +120,14 @@ function Zeile({ f, status, v, zeigtHilfe }) {
           : recherche ? <span className="text-3xs px-1.5 py-0.5 rounded border border-sky-200 bg-white text-sky-700 whitespace-nowrap inline-flex items-center gap-1"><Database size={10} /> Recherche</span>
           : null}
       </div>
-      {f.herleitung && (
-        <div className={clsx('mt-0.5 text-2xs leading-snug flex gap-1.5', f.art === 'interpretiert' ? 'text-violet-800' : fehlt ? 'text-red-700' : 'text-slate-500')}>
-          {f.art === 'interpretiert' && <Sparkles size={11} className="shrink-0 mt-0.5" />}
-          <span>{f.herleitung}</span>
-        </div>
+      {/* Was fehlt, erklärt sich gleich; ebenso eine Herleitung, die sich mangels Fundstelle nicht aufklappen ließe. */}
+      {f.herleitung && !einklappbar && (
+        <div className={clsx('mt-0.5 text-2xs leading-snug', fehlt ? 'text-red-700' : 'text-slate-500')}>{f.herleitung}</div>
       )}
       {zeigtHilfe && f.hilfe && <div className="mt-0.5 text-2xs leading-snug text-slate-400">{f.hilfe}</div>}
-      {v.fest === f.key && <Fundstellen stellen={stellen} />}
+      {v.fest === f.key && (
+        <Aufgeklappt herleitung={einklappbar ? f.herleitung : ''} interpretiert={f.art === 'interpretiert'} stellen={stellen} />
+      )}
     </div>
   )
 }
@@ -143,8 +159,8 @@ function Betriebsarten({ vorgang, v }) {
             onMouseEnter={() => v.onFeld?.(b.key, 'hover')}
             onMouseLeave={() => v.onFeld?.(null, 'hover')}
             onClick={() => v.onFeld?.(b.key, 'klick')}
-            className={clsx('border-l-[3px] pl-2.5 pr-2.5 py-1.5 cursor-pointer transition-colors',
-              aktiv ? 'border-l-(--mode-primary-light) bg-(--mode-pastel)' : b.treffer === 'offen' ? 'border-l-red-400 bg-red-50/60' : 'border-l-transparent hover:bg-slate-50')}>
+            className={clsx('px-3 py-1.5 cursor-pointer transition-colors',
+              aktiv ? 'bg-(--mode-pastel)' : b.treffer === 'offen' ? 'bg-red-50/60' : 'hover:bg-slate-50')}>
             <div className="flex items-baseline gap-2">
               <span className="text-xs font-medium text-slate-900 leading-snug min-w-0 flex-1">{b.bezeichnung}</span>
               {(b.anteil || liste.length > 1) && (
@@ -156,15 +172,11 @@ function Betriebsarten({ vorgang, v }) {
               <span className={clsx('text-3xs px-1.5 py-0.5 rounded border whitespace-nowrap shrink-0', toene[t.ton])}>{t.label}</span>
               <span className="text-2xs leading-snug text-slate-500">{b.begruendung}</span>
             </div>
-            {v.fest === b.key && <Fundstellen stellen={stellen} />}
+            {/* Die Notiz der KI zur Einordnung insgesamt steht bei jeder aufgeklappten Betriebsart. */}
+            {v.fest === b.key && <Aufgeklappt herleitung={vorgang.betriebsartNotiz} interpretiert stellen={stellen} />}
           </div>
         )
       })}
-      {vorgang.betriebsartNotiz && (
-        <div className="px-3 py-1.5 text-2xs leading-snug text-violet-800 flex gap-1.5">
-          <Sparkles size={11} className="shrink-0 mt-0.5" /> {vorgang.betriebsartNotiz}
-        </div>
-      )}
     </div>
   )
 }
@@ -186,14 +198,14 @@ function Risikofragen({ vorgang, v }) {
                   onMouseEnter={() => v.onFeld?.(r.key, 'hover')}
                   onMouseLeave={() => v.onFeld?.(null, 'hover')}
                   onClick={() => v.onFeld?.(r.key, 'klick')}
-                  className={clsx('border-l-[3px] pl-2.5 pr-2.5 py-1 cursor-pointer transition-colors',
-                    aktiv ? 'border-l-(--mode-primary-light) bg-(--mode-pastel)' : 'border-l-transparent hover:bg-slate-50')}>
+                  className={clsx('px-3 py-1 cursor-pointer transition-colors',
+                    aktiv ? 'bg-(--mode-pastel)' : 'hover:bg-slate-50')}>
                   <div className="grid grid-cols-[minmax(0,55%)_minmax(0,1fr)_auto] gap-2 items-baseline">
                     <span className="text-2xs text-slate-500 leading-snug">{r.frage}</span>
                     <span className="text-2xs font-medium text-slate-900 leading-snug break-words">{r.antwort}</span>
                     <Quelle feldKey={r.key} farbe="gelesen" stellen={stellen} mehrere={v.mehrere} onFeld={v.onFeld} />
                   </div>
-                  {v.fest === r.key && <Fundstellen stellen={stellen} />}
+                  {v.fest === r.key && <Aufgeklappt stellen={stellen} />}
                 </div>
               )
             })}
@@ -222,7 +234,6 @@ export default function Deckblatt({ vorgang, lauf, verknuepfung, aktiv = null, f
   const B = begriffe()
   const layout = layoutVon(vorgang)
   const abschnitte = abschnitteFuer(vorgang)
-  const status = statusJeFeld(lauf)
   const e = ERGEBNIS[lauf.ergebnis.art]
   // aktiv: hervorgehobene Zeile (auch beim Überfahren). fest: angeklickte Zeile, nur sie klappt ihre
   // Fundstellen auf – beim bloßen Überfahren darf keine Zeile wachsen, sonst springt der Inhalt unter dem Zeiger weg.
@@ -281,7 +292,7 @@ export default function Deckblatt({ vorgang, lauf, verknuepfung, aktiv = null, f
       </div>
 
       <div className="divide-y divide-slate-100">
-        {VORGANGSFELDER.map(k => <Zeile key={k} f={feld(vorgang, k)} status={status[k]} v={v} zeigtHilfe={zeigtHilfe} />)}
+        {VORGANGSFELDER.map(k => <Zeile key={k} f={feld(vorgang, k)} v={v} zeigtHilfe={zeigtHilfe} />)}
       </div>
 
       {/* Abschnitte in der Reihenfolge der Vorgabe */}
@@ -293,13 +304,13 @@ export default function Deckblatt({ vorgang, lauf, verknuepfung, aktiv = null, f
             : (
               <>
                 <div className="divide-y divide-slate-100">
-                  {a.zeilen.map(f => <Zeile key={f.key} f={f} status={status[f.key]} v={v} zeigtHilfe={zeigtHilfe} />)}
+                  {a.zeilen.map(f => <Zeile key={f.key} f={f} v={v} zeigtHilfe={zeigtHilfe} />)}
                 </div>
                 {a.gruppen.map(g => (
                   <div key={g.titel}>
                     <div className="px-3 py-1 text-2xs font-semibold text-slate-700 bg-slate-100 border-y border-slate-200">{g.titel}</div>
                     <div className="divide-y divide-slate-100">
-                      {g.zeilen.map(f => <Zeile key={f.key} f={f} status={status[f.key]} v={v} zeigtHilfe={zeigtHilfe} />)}
+                      {g.zeilen.map(f => <Zeile key={f.key} f={f} v={v} zeigtHilfe={zeigtHilfe} />)}
                     </div>
                   </div>
                 ))}
@@ -344,7 +355,7 @@ export default function Deckblatt({ vorgang, lauf, verknuepfung, aktiv = null, f
                           <Quelle feldKey={a.key} farbe="auffaellig" stellen={stellen} mehrere={v.mehrere} onFeld={onFeld} />
                         </div>
                         <p className="mt-1 text-2xs leading-snug text-slate-600">{a.text}</p>
-                        {fest === a.key && <Fundstellen stellen={stellen} />}
+                        {fest === a.key && <Aufgeklappt stellen={stellen} />}
                       </div>
                     )
                   })}

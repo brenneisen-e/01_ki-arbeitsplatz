@@ -788,5 +788,91 @@
    ],
    "pt": 7
   }
+ ],
+ "b6-5": [
+  {
+   "rect": [
+    0.519,
+    0.1497,
+    0.6323,
+    0.1682
+   ],
+   "text": "123 45 6789",
+   "x": 0.523,
+   "y": 0.1629,
+   "schrift": "inter",
+   "px": 21,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1053,
+   "kasten": [
+    0.523,
+    0.1537,
+    0.6283,
+    0.1642
+   ],
+   "pt": 0,
+   "weich": 0.8,
+   "farbe": [
+    96,
+    96,
+    96
+   ]
+  },
+  {
+   "rect": [
+    0.519,
+    0.1781,
+    0.809,
+    0.199
+   ],
+   "text": "makler-sach@example.com",
+   "x": 0.523,
+   "y": 0.1919,
+   "schrift": "inter",
+   "px": 21,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.282,
+   "kasten": [
+    0.523,
+    0.1821,
+    0.805,
+    0.195
+   ],
+   "pt": 0,
+   "weich": 0.8,
+   "farbe": [
+    96,
+    96,
+    96
+   ]
+  }
+ ],
+ "b6-1": [
+  {
+   "rect": [
+    0.738,
+    0.158,
+    0.978,
+    0.208
+   ],
+   "text": "ZUKUNFT|VERSICHERUNG",
+   "x": 0.738,
+   "y": 0.183,
+   "schrift": "logo",
+   "px": 27,
+   "variante": "neutral",
+   "frei": false,
+   "breite": 0.24,
+   "kasten": [
+    0.738,
+    0.158,
+    0.978,
+    0.208
+   ],
+   "pt": 0,
+   "weich": 0.8
+  }
  ]
 }

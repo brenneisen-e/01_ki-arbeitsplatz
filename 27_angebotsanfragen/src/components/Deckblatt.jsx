@@ -270,7 +270,7 @@ export default function Deckblatt({ vorgang, lauf, verknuepfung, aktiv = null, f
       <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-slate-200 border-b border-slate-200">
         <Kopfzelle label="Lfd-Nr" wert={vorgang.id} />
         <Kopfzelle label="Status" wert={e.titel} ton={e.text} punkt={e.punkt} />
-        <Kopfzelle label="Layout" wert={layout.id === 'sonstig' ? 'kein Angebotslayout' : `${layout.kurz} · ${layout.name}`} />
+        <Kopfzelle label="Layout" wert={layout.id === 'sonstig' ? 'kein Angebotslayout' : layout.kurz === layout.name ? layout.name : `${layout.kurz} · ${layout.name}`} />
         <Kopfzelle label="Eingang" wert={`${vorgang.eingang}, ${vorgang.uhrzeit} Uhr`} />
         <Kopfzelle label="Kanal" wert={vorgang.kanal} />
         <Kopfzelle label="Herkunft" wert={`${herkunft(vorgang)} · ${vorgang.form}`} />

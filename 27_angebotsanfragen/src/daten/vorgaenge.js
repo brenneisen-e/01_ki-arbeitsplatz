@@ -1,8 +1,8 @@
 /**
  * Alle Eingänge des Demo-Postfachs.
  *
- * Fünf davon sind die verfremdeten Beispielanfragen aus dem Fachbereich
- * (beispiel 1–5), die übrigen sind frei erfunden. Jeder Eingang besteht aus
+ * Sechs davon sind die verfremdeten Beispielanfragen aus dem Fachbereich
+ * (beispiel 1–6), die übrigen sind frei erfunden. Jeder Eingang besteht aus
  *   mail        Absender, Betreff und Anhänge, wie sie im Postfach stehen
  *   dokumente   der Eingang als nachgebaute Seiten (zugleich die Abschrift), mit den
  *               Fundstellen der KI als Markierungen im Text
@@ -23,6 +23,7 @@ import beispiel2 from './beispiel2.js'
 import beispiel3 from './beispiel3.js'
 import beispiel4 from './beispiel4.js'
 import beispiel5 from './beispiel5.js'
+import beispiel6 from './beispiel6.js'
 import { SYNTHETISCH } from './synthetisch.js'
 
 const isoDatum = (v) => {
@@ -30,7 +31,7 @@ const isoDatum = (v) => {
   return `${j}-${m}-${t}T${v.uhrzeit || '00:00'}`
 }
 
-const ROH = [beispiel1, beispiel2, beispiel3, beispiel4, beispiel5, ...SYNTHETISCH].map(v => ({
+const ROH = [beispiel1, beispiel2, beispiel3, beispiel4, beispiel5, beispiel6, ...SYNTHETISCH].map(v => ({
   risikofragen: [],
   auffaelligkeiten: [],
   betriebsarten: [],
@@ -41,7 +42,7 @@ const ROH = [beispiel1, beispiel2, beispiel3, beispiel4, beispiel5, ...SYNTHETIS
 /** Neueste zuerst, wie in einem Postfach. */
 export const VORGAENGE = markenObjekt(ROH).sort((a, b) => b.sortierung.localeCompare(a.sortierung))
 
-/** Die fünf Beispielanfragen in ihrer Nummernfolge. */
+/** Die Beispielanfragen in ihrer Nummernfolge. */
 export const BEISPIELE = VORGAENGE.filter(v => v.beispiel).sort((a, b) => a.beispiel - b.beispiel)
 
 export const vorgangNachId = (id) => VORGAENGE.find(v => v.id === id) || null

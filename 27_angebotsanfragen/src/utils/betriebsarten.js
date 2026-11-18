@@ -50,7 +50,9 @@ export const BETRIEBSARTEN = [
       'Café',
       'Restaurant',
       'Imbiss',
-      'Shisha-Bar, Shisha-Café'
+      'Shisha-Bar, Shisha-Café',
+      'Gasthof (mit Übernachtung)',
+      'Hotel (mit Restaurant)'
     ]
   },
   {

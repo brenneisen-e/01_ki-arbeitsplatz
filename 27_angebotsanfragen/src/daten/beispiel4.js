@@ -6,6 +6,10 @@
  * Plattform hat die Anfrage selbst ausgesteuert. Inhalt wie in der
  * verfremdeten Beispielanfrage; die Agenturnummer ist an beiden Stellen
  * derselbe Platzhalter.
+ *
+ * „Ihre Daten“ auf Seite 6 sind die Daten des Versicherers, wie sie der
+ * Vertriebspartner hinterlegt hat. Der Kontakt für Rückfragen steht auf
+ * Seite 1 beim Vertriebspartner.
  */
 
 import { p, titel, untertitel, h, h2, linie, liste, kontakt, spalten, tabelle, abschnitt, zeile, wahl, an, aus } from './bausteine.js'
@@ -32,10 +36,10 @@ const seite1 = [
   ]),
   h('Vertriebspartner', { ort: 'Vertriebspartner' }),
   p('BCA-Gewerbe    (Agenturnummer [[agenturnummer|123.45.6789]])', 'fett'),
-  p('Musteragentur Gewerbeabteilung\nMusterallee 10\n12345 Musterstadt', 'winzig'),
+  p('[[ansprechpartner|Musteragentur Gewerbeabteilung]]\nMusterallee 10\n12345 Musterstadt', 'winzig'),
   kontakt([
-    { icon: 'mail', text: 'kontakt@musteragentur.de' },
-    { icon: 'telefon', text: '01234567891' }
+    { icon: 'mail', text: '[[vermittlerEmail|kontakt@musteragentur.de]]' },
+    { icon: 'telefon', text: '[[vermittlerTelefon|01234567891]]' }
   ]),
   h2('Aussteuerungsgründe', { ort: 'Aussteuerungsgründe' }),
   liste([
@@ -117,13 +121,13 @@ const seite4 = [
 const seite5 = [h('Interne Notizen', { ort: 'Interne Notizen' })]
 
 const seite6 = [
-  h('Ihre Daten', { ort: 'Ihre Daten (Kontakt beim Vertriebspartner)' }),
+  h('Ihre Daten', { ort: 'Ihre Daten (vom Vertriebspartner hinterlegt)' }),
   tabelle([
-    zeile('Kontakt Ausschreibung', '[[ansprechpartner|Max Mustermann]]'),
+    zeile('Kontakt Ausschreibung', 'Max Mustermann'),
     zeile('Betreute Sparten', 'Betriebshaftpflichtversicherung'),
     zeile('Agenturnummer', '[[agenturnummer|123.45.6789]]'),
-    zeile('E-Mail', '[[vermittlerEmail|max.mustermann@example.com]]'),
-    zeile('Telefonnummer', '[[vermittlerTelefon|01234567890]]')
+    zeile('E-Mail', 'max.mustermann@example.com'),
+    zeile('Telefonnummer', '01234567890')
   ]),
   p('Hinweis: Diese Angaben wurden vom Partner hinterlegt. Eine notwendige Änderung der Angaben kann über diesen angestoßen werden. Die Kontaktdaten des Vertragsansprechpartner befinden sich oben in der Anfrage.')
 ]
@@ -157,9 +161,9 @@ export default {
     vorgangsart: { w: 'Angebotsanfrage', art: 'interpretiert', h: 'Manuelle Anfrage über die Vermittlerplattform mit Risikoangaben und gewünschtem Versicherungsschutz' },
     sparte: 'Betriebshaftpflicht',
     vermittler: 'BCA-Gewerbe',
-    ansprechpartner: 'Max Mustermann',
-    vermittlerEmail: 'max.mustermann@example.com',
-    vermittlerTelefon: '01234567890',
+    ansprechpartner: { w: 'Musteragentur Gewerbeabteilung', art: 'interpretiert', h: 'Abteilung des Vertriebspartners; eine Person ist nicht genannt' },
+    vermittlerEmail: 'kontakt@musteragentur.de',
+    vermittlerTelefon: '01234567891',
     anfrageId: 'ID 9876543',
     agenturnummer: { w: '123.45.6789', h: 'Steht auf Seite 1 beim Vertriebspartner und auf Seite 6 unter „Ihre Daten“' },
     beginn: '14.11.2026',

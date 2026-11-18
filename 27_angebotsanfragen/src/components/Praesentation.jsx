@@ -12,7 +12,7 @@
  *   5  Nächster Schritt   Rückfrage, Erfassung oder Fachspezialist – mit Freigabe
  *   6  Alle Eingänge      derselbe Weg für das ganze Postfach
  *
- * Oben rechts lässt sich der Eingang wechseln: die fünf Beispielanfragen und
+ * Oben rechts lässt sich der Eingang wechseln: die Beispielanfragen und
  * die synthetischen Eingänge laufen durch dieselben Szenen.
  *
  * Innerhalb einer Szene laufen die Animationen von selbst (Phasen mit festen
@@ -693,7 +693,7 @@ function SzeneSchritt({ vorgang, lauf, verknuepfung, phase }) {
     art: a,
     text: a === 'bereit' ? `Alle Pflichtangaben liegen vor. Die Sachbearbeitung erfasst ${B.imSystem} direkt vom Deckblatt.`
       : a === 'rueckfrage' ? 'Angaben fehlen. Die Rückfrage an den Vermittler ist vorformuliert, gesendet wird nach Freigabe.'
-      : 'Kein Angebotsvorgang oder keine eindeutige Betriebsart. Der Fall geht mit dem Deckblatt an den Menschen, der ihn entscheidet.'
+      : 'Kein Angebotsvorgang, keine eindeutige Betriebsart oder ein Fall außerhalb des Tarifs. Er geht mit dem Deckblatt an den Menschen, der ihn entscheidet.'
   }))
 
   return (
@@ -976,11 +976,11 @@ function SzeneAlle({ vorgang, phase, aufAuswertung, vonVorn, aufVorgang, aufWahl
                   </div>
                   <div className="mt-2 grid grid-cols-2 gap-1.5">
                     <button onClick={() => aufVorgang?.(v)}
-                      className="px-2 py-1.5 rounded-lg text-xs font-medium text-white inline-flex items-center justify-center gap-1.5 whitespace-nowrap" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
+                      className="px-1.5 py-1.5 rounded-lg text-xs font-medium text-white inline-flex items-center justify-center gap-1 whitespace-nowrap" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
                       <Columns2 size={13} /> Ansehen
                     </button>
                     <button onClick={() => aufWahl?.(v.id)} title={`Die Strecke mit Beispiel ${v.beispiel} durchspielen`}
-                      className="px-2 py-1.5 rounded-lg text-xs font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 inline-flex items-center justify-center gap-1.5 whitespace-nowrap">
+                      className="px-1.5 py-1.5 rounded-lg text-xs font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 inline-flex items-center justify-center gap-1 whitespace-nowrap">
                       <Play size={12} /> Durchspielen
                     </button>
                   </div>

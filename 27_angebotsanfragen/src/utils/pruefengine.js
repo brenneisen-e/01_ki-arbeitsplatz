@@ -272,7 +272,7 @@ export function pruefe(vorgang) {
       art: 'sonderfall', hart: false,
       titel: 'Sonderfall für die Fachspezialisten',
       kurz: sonder.map(s => s.grund).join('; '),
-      aktion: 'Aussteuerung mit Deckblatt an die Fachspezialisten, die Einstufung bleibt beim Menschen',
+      aktion: 'Aussteuerung mit Deckblatt an die Fachspezialisten, die Entscheidung bleibt beim Menschen',
       gruende: sonder.map(s => s.grund)
     }
   } else if (fragen.length) {

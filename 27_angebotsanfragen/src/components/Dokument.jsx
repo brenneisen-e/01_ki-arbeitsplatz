@@ -278,7 +278,7 @@ export default function Dokument({ dok, info, markierung = {}, onFeld, seitenlab
                 </div>
               )}
               <div className="dok-seite">
-                <div className="dok-bildseite" style={{ aspectRatio: `${SEITENFORMAT.breite} / ${SEITENFORMAT.hoehe}` }}>
+                <div className="dok-bildseite" style={{ aspectRatio: `${seite.breite || SEITENFORMAT.breite} / ${seite.hoehe || SEITENFORMAT.hoehe}` }}>
                   <img src={seite.url} alt={`Seite ${seite.nr} des Eingangs im Original`} decoding="async" draggable={false} />
                   {seite.marken.map((m, i) => <Bildmarke key={i} marke={m} />)}
                 </div>

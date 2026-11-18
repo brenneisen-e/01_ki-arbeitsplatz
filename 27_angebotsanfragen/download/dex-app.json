@@ -3,11 +3,11 @@
   "id": "27_angebotsanfragen",
   "titel": "Angebotsanfragen",
   "beschreibung": "Vom Vermittlerschreiben zum Deckblatt: Die KI liest Angebotsanfragen samt Anhängen, zeigt zu jedem Wert die Fundstelle im Original, erkennt Fehlendes und formuliert die Rückfrage vor.",
-  "version": "1.0.1",
-  "gebaut": "2026-11-18T16:46:07Z",
+  "version": "1.0.2",
+  "gebaut": "2026-11-18T17:22:54Z",
   "quelle": {
     "repo": "brenneisen-e/01_ki-arbeitsplatz",
-    "commit": "8071642e45f52d0c961571146720986dc6cbddc9"
+    "commit": "045e4082f5adbb8531cb416dd612688cac846a46"
   },
   "start": "index.html",
   "single": true,

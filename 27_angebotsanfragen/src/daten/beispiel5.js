@@ -149,7 +149,7 @@ const seite5 = [
 const seite6 = [h('Interne Notizen', { ort: 'Interne Notizen' })]
 
 const seite7 = [
-  h('Ihre Daten', { ort: 'Ihre Daten (Kontakt beim Vertriebspartner)' }),
+  h('Ihre Daten', { ort: 'Ihre Daten (vom Vertriebspartner hinterlegt)' }),
   tabelle([
     zeile('Kontakt Ausschreibung', 'Thomas Beispiel'),
     zeile('Betreute Sparten', 'Gebäudeversicherung für Wohnimmobilien'),

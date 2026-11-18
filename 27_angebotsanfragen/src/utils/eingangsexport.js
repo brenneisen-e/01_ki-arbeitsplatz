@@ -7,7 +7,7 @@
  * X-Vorgang-Id, damit ein hochgeladener Eingang seiner hinterlegten
  * Auswertung zugeordnet werden kann.
  *
- * Die fünf Beispielanfragen liegen dem Fachbereich als PDF vor. Werden diese
+ * Die Beispielanfragen liegen dem Fachbereich als PDF vor. Werden diese
  * PDF hochgeladen, erkennt das Werkzeug sie an ihrer Prüfsumme (ersatzweise
  * am Dateinamen „Beispiel 1.pdf“ …) und zeigt die hinterlegte Auswertung –
  * die Dateien selbst sind nicht Teil des Werkzeugs.
@@ -131,13 +131,14 @@ export function leseVorgangId(roh) {
   return roh.match(/^X-Vorgang-Id:\s*(\S+)/mi)?.[1] || null
 }
 
-// SHA-256 der fünf Beispiel-PDF, wie sie der Fachbereich geliefert hat.
+// SHA-256 der Beispiel-PDF, wie sie der Fachbereich geliefert hat.
 const BEISPIEL_PRUEFSUMMEN = {
   f45a72fbaf16763bd40fddea50dc347594a53324f787055743b7d8d088d0633b: 1,
   '6cf628292134734906af80281ecf0db5a28527adfbd895db1f9e0e0a3abca1c3': 2,
   '5eec1b5e8f8ab50644805f49e57066f7f8b4dc1b66d9bcc8a9c6443c60f97250': 3,
   '8428f2a78aaa6304abbb4867306da32b261b4f744b780b64148b6f31c87a44a4': 4,
-  c73ffda76eaf900e415b60790070254fae2f50a2f116cfaf7f18d25b6c9f082a: 5
+  c73ffda76eaf900e415b60790070254fae2f50a2f116cfaf7f18d25b6c9f082a: 5,
+  '95462dabbfa0d455afe98603cc08f6d8ef1e28eeabadedf353bfa225b661cfb9': 6
 }
 
 async function pruefsumme(bytes) {
@@ -150,7 +151,7 @@ async function pruefsumme(bytes) {
 }
 
 function beispielAusName(name) {
-  const nr = name.match(/beispiel[\s_-]*([1-5])(?!\d)/i)?.[1]
+  const nr = name.match(/beispiel[\s_-]*([1-9])(?!\d)/i)?.[1]
   return nr ? Number(nr) : null
 }
 

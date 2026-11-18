@@ -11,7 +11,7 @@
  * Nur in der Oberfläche verwenden: `import.meta.glob` kennt nur der Bundler.
  */
 
-import { ORIGINALE } from '../daten/originale.js'
+import { ORIGINALE, SEITENFORMAT } from '../daten/originale.js'
 import { getMarke } from './branding.js'
 
 const DATEIEN = import.meta.glob('../assets/originale/*.webp', { eager: true, query: '?url', import: 'default' })
@@ -23,7 +23,8 @@ const adresse = (name) => DATEIEN[`../assets/originale/${name}.webp`] || null
 export const hatOriginal = (vorgang, dokNr = 0) => dokNr === 0 && Boolean(ORIGINALE[vorgang?.id])
 
 /**
- * Die Originalseiten eines Vorgangs: [{ nr, url, marken: [{ f: Felder, r: Rechtecke in Prozent }] }].
+ * Die Originalseiten eines Vorgangs: [{ nr, url, breite, hoehe, marken: [{ f: Felder, r: Rechtecke in Prozent }] }].
+ * Breite und Höhe in Pixeln geben das Seitenverhältnis vor; nicht jede Seite ist A4 (Bildschirmfotos).
  * Ohne Originalseiten (synthetische und live gelesene Eingänge, Anhänge): null.
  */
 export function originalseiten(vorgang, dokNr = 0) {
@@ -33,7 +34,11 @@ export function originalseiten(vorgang, dokNr = 0) {
   const seiten = o.seiten.map((marken, i) => {
     const nr = i + 1
     const name = `${o.kennung}-${nr}`
-    return { nr, url: (neutral && o.neutral.includes(nr) && adresse(`${name}.neutral`)) || adresse(name), marken }
+    return {
+      nr, marken,
+      url: (neutral && o.neutral.includes(nr) && adresse(`${name}.neutral`)) || adresse(name),
+      breite: SEITENFORMAT.breite, hoehe: o.hoehen?.[i] || SEITENFORMAT.hoehe
+    }
   })
   // Fehlt ein Bild, gilt der Nachbau: lieber die ganze Abschrift als eine Lücke.
   return seiten.every(s => s.url) ? seiten : null

@@ -8,11 +8,14 @@ Aus den PDF der Beispielanfragen (liegen NICHT im Repo) entstehen
 
 Aufruf, aus dem Ordner der App:
 
-  python3 scripts/originale/originale.py <Ordner mit Beispiel_1.pdf … Beispiel_5.pdf> [--kontrolle]
+  python3 scripts/originale/originale.py <Ordner mit Beispiel_1.pdf, Beispiel_2.pdf …> [--kontrolle]
 
 Ablauf
-  1. Seiten rendern (pdftoppm, 150 dpi) und auf 1240 × 1754 px bringen.
-  2. Wörter mit Position lesen: aus der Textebene (pdfplumber) oder, bei Scans, per Texterkennung (tesseract).
+  1. Seiten rendern (pdftoppm, 150 dpi) und auf 1240 px Breite bringen. Seiten im A4-Format werden
+     1754 px hoch; andere Formate behalten ihr Seitenverhältnis, ihre Höhe steht in originale.js.
+  2. Wörter mit Position lesen: aus der Textebene (pdfplumber) oder, bei Scans, per Texterkennung
+     (tesseract). Kleine Scans (eingebettetes Bild unter 1000 px Breite) werden vorher sauber
+     verdreifacht und in zwei Durchgängen gelesen, siehe lies_scan.
   3. Retuschen anwenden (retuschen.json): Reste echter Angaben, spätere Bearbeitungsvermerke und übereinander
      gedruckte Ersatzwerte; in der Fassung „neutral“ zusätzlich Hausbegriffe und Logo. Die Datei nennt nur
      Rechtecke und Ersatztexte, keine echten Angaben.
@@ -31,7 +34,7 @@ Carlito, Liberation Sans, DejaVu Sans und Inter (für die Ersatztexte).
 import csv, glob, io, json, os, re, statistics, subprocess, sys, tempfile
 
 import pdfplumber
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HIER = os.path.dirname(os.path.abspath(__file__))
 APP = os.path.abspath(os.path.join(HIER, '..', '..'))
@@ -54,34 +57,82 @@ def schrift(name, px):
 
 # ============================================================ 1 und 2: Seiten und Wörter
 
+def seitenhoehe(breite_pt, hoehe_pt):
+    """Höhe des Seitenbildes bei 1240 px Breite. A4 und was davon kaum abweicht, wird 1754 px hoch."""
+    verhaeltnis = hoehe_pt / breite_pt
+    return HOEHE if abs(verhaeltnis - HOEHE / BREITE) / (HOEHE / BREITE) < 0.012 else round(BREITE * verhaeltnis)
+
+
+def texterkennung(bild, psm):
+    """Wörter eines Bildes: [text, x0, y0, x1, y1, sicherheit] in Bildanteilen."""
+    im = Image.open(bild)
+    tsv = subprocess.run(['tesseract', bild, 'stdout', '-l', 'deu', '--psm', str(psm), 'tsv'], capture_output=True, text=True, check=True).stdout
+    woerter = []
+    for z in csv.DictReader(io.StringIO(tsv), delimiter='\t', quoting=csv.QUOTE_NONE):
+        if z['level'] != '5' or not z['text'].strip():
+            continue
+        l, t, b, h = int(z['left']), int(z['top']), int(z['width']), int(z['height'])
+        woerter.append([z['text'], l / im.width, t / im.height, (l + b) / im.width, (t + h) / im.height, float(z['conf'])])
+    return woerter
+
+
+def mische(basis, zusatz):
+    """Führt zwei Lesedurchgänge zusammen: Wo sich Wörter überdecken, gewinnt die sicherere Lesart."""
+    def ueberdeckung(a, b):
+        ix, iy = min(a[3], b[3]) - max(a[1], b[1]), min(a[4], b[4]) - max(a[2], b[2])
+        if ix <= 0 or iy <= 0:
+            return 0
+        return ix * iy / min((a[3] - a[1]) * (a[4] - a[2]), (b[3] - b[1]) * (b[4] - b[2]))
+    aus = list(basis)
+    for w in zusatz:
+        treffer = [b for b in aus if ueberdeckung(w, b) > 0.35]
+        if not treffer:
+            aus.append(w)
+        elif w[5] > max(b[5] for b in treffer) + 5 and len(w[0]) >= 2:
+            for b in treffer:
+                aus.remove(b)
+            aus.append(w)
+    return aus
+
+
+def lies_scan(pfad, seite, nr, name, arbeit):
+    """Liest eine Seite ohne Textebene.
+
+    Normale Scans: mit 300 dpi rendern, ein Durchgang.
+    Kleine Scans (eingebettetes Bild unter 1000 px Breite, etwa Bildschirmfotos): in ihrer eigenen
+    Auflösung rendern, sauber verdreifachen und zweimal lesen. Der zeilenweise Durchgang (psm 6) liest
+    die Beschriftungen zuverlässig, der Durchgang für verstreuten Text (psm 11) die Werte, die mittig
+    neben mehrzeiligen Beschriftungen stehen.
+    """
+    ziel = os.path.join(arbeit, f'ocr-{name}-{nr}')
+    quelle_px = max((b['srcsize'][0] for b in seite.images if b.get('srcsize')), default=0)
+    if 0 < quelle_px < 1000:
+        dpi = quelle_px / (seite.width / 72)
+        subprocess.run(['pdftoppm', '-r', f'{dpi:.3f}', '-f', str(nr), '-l', str(nr), '-png', '-singlefile', pfad, ziel], check=True)
+        klein = Image.open(ziel + '.png').convert('RGB')
+        klein.resize((klein.width * 3, klein.height * 3), Image.LANCZOS).save(ziel + '.png')
+        return mische(texterkennung(ziel + '.png', 6), texterkennung(ziel + '.png', 11))
+    subprocess.run(['pdftoppm', '-r', '300', '-f', str(nr), '-l', str(nr), '-png', '-singlefile', pfad, ziel], check=True)
+    return texterkennung(ziel + '.png', 6 if Image.open(ziel + '.png').width < 3000 else 3)
+
+
 def lies_pdf(pfad, name, arbeit):
-    """Rendert die Seiten und liefert je Seite { quelle, woerter: [[text, x0, y0, x1, y1], …] } in Seitenanteilen."""
+    """Rendert die Seiten und liefert je Seite { quelle, hoehe, woerter: [[text, x0, y0, x1, y1], …] } in Seitenanteilen."""
     seiten = []
     with pdfplumber.open(pfad) as pdf:
         for i, p in enumerate(pdf.pages, 1):
             bild = os.path.join(arbeit, f'{name}-{i}.png')
             subprocess.run(['pdftoppm', '-r', '150', '-f', str(i), '-l', str(i), '-png', '-singlefile', pfad, bild[:-4]], check=True)
+            hoehe = seitenhoehe(p.width, p.height)
             im = Image.open(bild).convert('RGB')
-            if im.size != (BREITE, HOEHE):
-                im = im.resize((BREITE, HOEHE), Image.LANCZOS)
+            if im.size != (BREITE, hoehe):
+                im = im.resize((BREITE, hoehe), Image.LANCZOS)
             im.save(bild)
             w = p.extract_words(x_tolerance=1.5, y_tolerance=2, keep_blank_chars=False)
             if w:
-                seiten.append({'quelle': 'text', 'woerter': [[x['text'], x['x0'] / p.width, x['top'] / p.height, x['x1'] / p.width, x['bottom'] / p.height] for x in w]})
-                continue
-            # Scan: höher aufgelöst rendern und erkennen
-            gross = os.path.join(arbeit, f'ocr-{name}-{i}')
-            subprocess.run(['pdftoppm', '-r', '300', '-f', str(i), '-l', str(i), '-png', '-singlefile', pfad, gross], check=True)
-            scan = Image.open(gross + '.png')
-            tsv = subprocess.run(['tesseract', gross + '.png', 'stdout', '-l', 'deu', '--psm', '6' if scan.width < 3000 else '3', 'tsv'],
-                                 capture_output=True, text=True, check=True).stdout
-            woerter = []
-            for z in csv.DictReader(io.StringIO(tsv), delimiter='\t', quoting=csv.QUOTE_NONE):
-                if z['level'] != '5' or not z['text'].strip():
-                    continue
-                l, t, b, h = int(z['left']), int(z['top']), int(z['width']), int(z['height'])
-                woerter.append([z['text'], l / scan.width, t / scan.height, (l + b) / scan.width, (t + h) / scan.height])
-            seiten.append({'quelle': 'ocr', 'woerter': woerter})
+                seiten.append({'quelle': 'text', 'hoehe': hoehe, 'woerter': [[x['text'], x['x0'] / p.width, x['top'] / p.height, x['x1'] / p.width, x['bottom'] / p.height] for x in w]})
+            else:
+                seiten.append({'quelle': 'ocr', 'hoehe': hoehe, 'woerter': [x[:5] for x in lies_scan(pfad, p, i, name, arbeit)]})
     return seiten
 
 
@@ -165,6 +216,7 @@ def retusche_bild(im, op):
         for c in klein:
             d.text((x, mitte + op['px'] * 0.52), c, font=f2, fill=farbe, anchor='lm')
             x += f2.getlength(c) + frei / max(1, len(klein) - 1)
+        weichzeichnen(im, box, op)
         return
     groesse = op['px']
     f = schrift(op['schrift'], groesse)
@@ -174,6 +226,13 @@ def retusche_bild(im, op):
             groesse -= 0.5
             f = schrift(op['schrift'], groesse)
     d.text((op['x'] * im.width, op['y'] * im.height), op['text'], font=f, fill=text, anchor='ls')
+    weichzeichnen(im, box, op)
+
+
+def weichzeichnen(im, box, op):
+    """Unscharfe Scans: Der Ersatztext wird leicht weichgezeichnet, damit er sich nicht scharf abhebt."""
+    if op.get('weich'):
+        im.paste(im.crop(box).filter(ImageFilter.GaussianBlur(op['weich'])), box)
 
 
 # ============================================================ 5: Fundstellen verorten
@@ -307,9 +366,9 @@ SATZZEICHEN = set('.,;:!?()[]/-%€<>')
 
 def verorte(seite, marken, name, korrektur):
     """Je Markierung, in dieser Reihenfolge:
-      1. Der Text kommt auf der Seite genau einmal vor (an Wortgrenzen).
-      2. Der Text zusammen mit dem Text davor oder danach ist eindeutig.
-      3. Tabellenzeile: Die Bezeichnung der Zeile wird gesucht, der Wert steht in ihrem Band rechts daneben.
+      1. Tabellenzeile: Die Bezeichnung der Zeile wird gesucht, der Wert steht in ihrem Band rechts daneben.
+      2. Der Text kommt auf der Seite genau einmal vor (an Wortgrenzen).
+      3. Der Text zusammen mit dem Text davor oder danach ist eindeutig.
       4. Die nächste Stelle nach der zuletzt gefundenen; bei Scans mit Toleranz für Erkennungsfehler.
     """
     woerter = bloecke(seite)
@@ -334,6 +393,33 @@ def verorte(seite, marken, name, korrektur):
                 orte = [(t[0], t[1])]
         return orte
 
+    def in_zeile(m, ziel, label):
+        """Sucht den Wert im Band seiner Bezeichnung (rechts daneben, auf Höhe ihrer Zeilen). → Rechtecke oder None"""
+        lorte = finde(label) or finde(label[:28])
+        if not lorte:
+            return None
+        lo = lorte[m.get('labelNr', 0)] if len(lorte) > m.get('labelNr', 0) else lorte[-1]
+        lk = huelle(rechtecke(woerter, karte, *lo))
+        band = [(i, w) for i, w in enumerate(woerter)
+                if w[1] > lk[0] + 0.05 and lk[1] - 0.006 < (w[2] + w[4]) / 2 < lk[3] + 0.006 and not (w[1] < lk[2] and w[3] <= lk[2] + 0.002)]
+        if not band:
+            return None
+        btext, bkarte = [], []
+        for i, w in band:
+            n = norm(w[0])
+            for ci, c in enumerate(n):
+                btext.append(c)
+                bkarte.append((i, ci, len(n)))
+        btext, bwoerter = ''.join(btext), {i: w for i, w in band}
+        # Nur ganze Wörter: „Jährlich“ darf nicht in „Halbjährlich“ gefunden werden, wenn das Band die
+        # gewählte Option nicht erfasst. Dann greifen die übrigen Wege.
+        stellen = [o for o in ((j, j + len(ziel)) for j in alle_exakt(ziel, btext)) if wortgenau(o, bkarte, bwoerter)]
+        t = (stellen[0][0], stellen[0][1]) if stellen else None
+        if not t and ocr:
+            u = unscharf(ziel, btext, max(1, len(ziel) // 5))
+            t = (u[0], u[1]) if u else None
+        return rechtecke(woerter, bkarte, *t) if t else None
+
     for nr, m in enumerate(marken):
         ziel, vor, nach, label = norm(m['text']), norm(m['vor']), norm(m['nach']), norm(m['label'])
         fest = korrektur.get(f'{name}#{nr}')
@@ -348,6 +434,15 @@ def verorte(seite, marken, name, korrektur):
                     rs += rechtecke(woerter, karte, *orte[0])
             aus.append({**m, 'weg': 'teile', 'rects': rs})
             continue
+
+        # Tabellenzeile zuerst: Steht der Wert im Band seiner Bezeichnung, gilt diese Stelle. Sonst könnte ein
+        # kurzer Wert wie „Nein“ als einzig gelten, nur weil die Texterkennung sein zweites Vorkommen verlesen hat.
+        if label:
+            rs = in_zeile(m, ziel, label)
+            if rs:
+                aus.append({**m, 'weg': 'zeile', 'rects': rs})
+                letzte_y = rs[0][1]
+                continue
 
         treffer, weg = None, ''
         orte = finde(ziel)
@@ -365,31 +460,6 @@ def verorte(seite, marken, name, korrektur):
                 if len(o) == 1:
                     treffer, weg = (o[0][0], o[0][0] + len(ziel)), 'nach'
                     break
-        if not treffer and label:
-            lorte = finde(label) or finde(label[:28])
-            if lorte:
-                lo = lorte[m.get('labelNr', 0)] if len(lorte) > m.get('labelNr', 0) else lorte[-1]
-                lk = huelle(rechtecke(woerter, karte, *lo))
-                band = [(i, w) for i, w in enumerate(woerter)
-                        if w[1] > lk[0] + 0.05 and lk[1] - 0.006 < (w[2] + w[4]) / 2 < lk[3] + 0.006 and not (w[1] < lk[2] and w[3] <= lk[2] + 0.002)]
-                if band:
-                    btext, bkarte = [], []
-                    for i, w in band:
-                        n = norm(w[0])
-                        for ci, c in enumerate(n):
-                            btext.append(c)
-                            bkarte.append((i, ci, len(n)))
-                    btext, bwoerter = ''.join(btext), {i: w for i, w in band}
-                    stellen = [(j, j + len(ziel)) for j in alle_exakt(ziel, btext)]
-                    stellen = [o for o in stellen if wortgenau(o, bkarte, bwoerter)] or stellen
-                    t = (stellen[0][0], stellen[0][1]) if stellen else None
-                    if not t and ocr:
-                        u = unscharf(ziel, btext, max(1, len(ziel) // 5))
-                        t = (u[0], u[1]) if u else None
-                    if t:
-                        aus.append({**m, 'weg': 'zeile', 'rects': rechtecke(woerter, bkarte, *t)})
-                        letzte_y = aus[-1]['rects'][0][1]
-                        continue
         if not treffer and orte:
             kand = [(o, huelle(rechtecke(woerter, karte, *o))[1]) for o in orte]
             danach = [k for k in kand if k[1] >= letzte_y - 0.004]
@@ -478,8 +548,10 @@ def main():
             fehlt += 1
         prozent = lambda v: round(v * 100, 2)
         rx, ry = 0.0022, 0.0016
+        hoehen = [seite['hoehe'] for seite in seiten]
         daten[marken[name]['id']] = {
             'kennung': name, 'neutral': neutral,
+            **({'hoehen': hoehen} if any(h != HOEHE for h in hoehen) else {}),
             'seiten': [[{'f': x['felder'], 'r': [[prozent(max(0, r[0] - rx)), prozent(max(0, r[1] - ry)), prozent(r[2] - r[0] + 2 * rx), prozent(r[3] - r[1] + 2 * ry)] for r in x['rects']]} for x in t] for t in je_seite]
         }
         print(f"{name}: {len(seiten)} Seiten, {sum(len(t) for t in je_seite)} Fundstellen")
@@ -496,6 +568,7 @@ def main():
  * nachgebauten Dokument (src/daten/beispielN.js):
  *   f  Feldschlüssel der Markierung
  *   r  Rechtecke [links, oben, Breite, Höhe] in Prozent der Seite, eines je Zeile
+ * `hoehen` nennt die Höhe je Seite in Pixeln, wenn eine Seite vom üblichen Format abweicht.
  */
 
 export const SEITENFORMAT = { breite: %d, hoehe: %d }

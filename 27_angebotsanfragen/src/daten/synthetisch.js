@@ -1,7 +1,7 @@
 /**
  * Synthetische Eingänge.
  *
- * Neben den fünf Beispielanfragen liegen weitere, frei erfundene Anfragen im
+ * Neben den Beispielanfragen liegen weitere, frei erfundene Anfragen im
  * Postfach. Sie zeigen die Layouts Geschäftsinhalt und Elektronik, eine Mail
  * mit dem Versicherungsschein des Vorversicherers als Anhang („analog
  * Vorvertrag“), einen Dreizeiler mit vielen Lücken und einen Eingang, der gar

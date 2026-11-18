@@ -60,34 +60,34 @@ function Beispielleiste({ laeufe, onOpenVorgang, onPraesentation }) {
           {BEISPIELE.length} verfremdete Anfragen im Original, mit den Fundstellen der KI auf den Seiten. Direkter Aufruf auch über die Ziffern im Kopf.
         </span>
       </div>
-      <div className="mt-4 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))' }}>
+      {/* Sechs Beispiele stehen in zwei Reihen zu dreien; jede Kachel ist eine Zeile mit den Knöpfen rechts. */}
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 min-[106.25rem]:grid-cols-3 gap-3">
         {BEISPIELE.map(v => {
           const lauf = laufZu.get(v.id)
           return (
-            <div key={v.id} className="beispiel-kachel rounded-2xl p-4 flex flex-col">
-              <button onClick={() => onOpenVorgang(v)} className="text-left flex items-start gap-3" title="Original und Deckblatt öffnen">
+            <div key={v.id} className="beispiel-kachel rounded-2xl p-3.5 flex items-center gap-3">
+              <button onClick={() => onOpenVorgang(v)} className="text-left flex items-start gap-3 min-w-0 flex-1" title="Original und Deckblatt öffnen">
                 <BeispielNummer nr={v.beispiel} gross />
-                <span className="min-w-0">
-                  <span className="block text-xs uppercase tracking-wide text-slate-500">Beispiel {v.beispiel}</span>
+                <span className="min-w-0 flex-1">
                   <span className="block text-base font-semibold text-slate-900 leading-snug">{v.kunde}</span>
+                  <span className="block text-sm text-slate-600 leading-snug truncate" title={v.form}>{v.form}</span>
+                  <span className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                    <LayoutChip vorgang={v} />
+                    {lauf && <ErgebnisBadge art={lauf.ergebnis.art} />}
+                  </span>
                 </span>
               </button>
-              <p className="mt-2.5 text-sm text-slate-600 leading-snug">{v.form}</p>
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                <LayoutChip vorgang={v} />
-                {lauf && <ErgebnisBadge art={lauf.ergebnis.art} />}
-              </div>
-              <div className="mt-auto pt-3.5 flex items-center gap-2">
+              <span className="flex flex-col gap-1.5 shrink-0">
                 <button onClick={() => onOpenVorgang(v)}
-                  className="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-white inline-flex items-center justify-center gap-2 whitespace-nowrap"
+                  className="px-3 py-1.5 rounded-lg text-sm font-medium text-white inline-flex items-center justify-center gap-2 whitespace-nowrap"
                   style={{ backgroundColor: 'var(--mode-primary-light)' }}>
                   <Columns2 size={15} /> Öffnen
                 </button>
                 <button onClick={() => onPraesentation(0, v.id)} title={`Präsentation mit Beispiel ${v.beispiel} starten`}
-                  className="flex-1 px-3 py-2 rounded-lg text-sm font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 inline-flex items-center justify-center gap-2 whitespace-nowrap">
+                  className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 inline-flex items-center justify-center gap-2 whitespace-nowrap">
                   <Play size={14} /> Präsentieren
                 </button>
-              </div>
+              </span>
             </div>
           )
         })}

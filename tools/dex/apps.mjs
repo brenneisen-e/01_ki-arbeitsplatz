@@ -122,6 +122,12 @@ const LISTE = [
     beschreibung: 'Vertriebssteuerung mit Live-Strom der Abschlüsse, Kennzahlen zu Bestand und Neugeschäft und einem KI-Assistenten, der Dashboards baut.',
     start: 'index.html', benoetigtInternet: true, api: [],
   },
+  {
+    ordner: '27_angebotsanfragen', art: 'vite', version: '1.0.0',
+    titel: 'Angebotsanfragen',
+    beschreibung: 'Vom Vermittlerschreiben zum Deckblatt: Die KI liest Angebotsanfragen samt Anhängen, zeigt zu jedem Wert die Fundstelle im Original, erkennt Fehlendes und formuliert die Rückfrage vor.',
+    start: 'index.html', benoetigtInternet: true, api: [],
+  },
 ]
 
 export const APPS = LISTE.map((a) => ({ ...a, id: a.ordner.toLowerCase() }))

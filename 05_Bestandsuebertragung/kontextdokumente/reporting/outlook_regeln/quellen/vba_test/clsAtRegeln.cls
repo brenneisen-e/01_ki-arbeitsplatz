@@ -5,7 +5,10 @@ Option Explicit
 ' (gAtOrdnung): "einfuegen" (herausnehmen und einfuegen) und "tauschen" (die Regel auf dem Zielplatz bekommt den
 ' alten Platz). Save prueft wie Outlook auf unvollstaendige Regeln (Ordneraktion ohne Ordner: Outlooks Meldung, wie
 ' beim Einschalten einer Regel, clsAtRegel.Enabled); Schalter "verlust" laesst beim Speichern die
-' Bedingungen einer Regel verschwinden (wie ein Outlook, das eine Bedingung nicht mitspeichert). (nur Testvariante)
+' Bedingungen einer Regel verschwinden (wie ein Outlook, das eine Bedingung nicht mitspeichert). Remove nimmt die
+' Regel am Platz (Index = ExecutionOrder) heraus, die uebrigen ruecken auf; Schalter "removeluecke": aufgerueckt wird
+' erst beim Speichern (wie Outlook im Speicher nummeriert, ist nicht belegt), "removefehler": Remove scheitert fuer
+' diese Regel. (nur Testvariante)
 Private mStore As Object
 Private mItems() As Object
 Private mAnz As Long
@@ -76,9 +79,37 @@ Public Sub AnhaengenKlon(ByVal r As Object)
     Set mItems(mAnz) = r
 End Sub
 
+' Wie Outlook (Microsoft Learn, Rules.Remove): Index = Platz oder Name; Fehler, wenn es die Regel nicht gibt.
 Public Sub Remove(ByVal i As Variant)
+    Dim ids As Variant, pos As Long, k As Long, p As Long, nm As String
     AtSchreib "Rules.Remove " & i
-    Err.Raise 5211, "Attrappe", "Remove wird vom Makro nie benutzt"
+    If TypeName(i) = "String" Then
+        For k = 1 To mAnz
+            If pos = 0 And mItems(k).Name = i Then pos = k
+        Next k
+        If pos = 0 Then Err.Raise 5210, "Attrappe", "Regel nicht gefunden: " & i
+    Else
+        If i < 1 Or i > mAnz Then Err.Raise 5210, "Attrappe", "Index außerhalb der Regeln"
+        ids = NachReihenfolge()
+        pos = ids(i)
+    End If
+    nm = mItems(pos).Name
+    If gAtFehlerRemove <> "" And nm = gAtFehlerRemove Then
+        Err.Raise 5214, "Attrappe", "Die Regel kann nicht entfernt werden (Attrappe)"
+    End If
+    gAtRemove = gAtRemove + 1
+    p = mItems(pos).OrderIntern
+    For k = pos To mAnz - 1
+        Set mItems(k) = mItems(k + 1)
+    Next k
+    Set mItems(mAnz) = Nothing
+    mAnz = mAnz - 1
+    ReDim Preserve mItems(0 To mAnz)
+    If Not gAtRemoveLuecke Then
+        For k = 1 To mAnz
+            If mItems(k).OrderIntern > p Then mItems(k).OrderIntern = mItems(k).OrderIntern - 1
+        Next k
+    End If
 End Sub
 
 Public Sub Umordnen(ByVal r As Object, ByVal p As Long)

@@ -55,6 +55,12 @@ Public mOrdner As String
 ' Namen wie in Outlook (vor dem Durchspielen des Plans festgehalten, fuer Meldungen); IDs ueber mAnzAlt sind neu
 Public mNameAlt() As String
 Public mAnzAlt As Long
+' Platz wie in Outlook (ebenfalls vor dem Durchspielen festgehalten), fuer den Bezug "Name #n/m" bei gleichnamigen Regeln
+Public mPlatzAlt() As Long
+' Laut Plan geloeschte Regeln (LOESCHEN): Sie behalten ihre ID im Abbild (mWeg), fallen aber aus der Reihenfolge -
+' Plaetze gibt es dann nur noch mPl (mOrd(1..mPl)). Outlook entfernt sie erst unmittelbar vor dem Speichern.
+Public mWeg() As Boolean
+Public mPl As Long
 ' Trennzeichen der Werte-Datensaetze (selten benutzte, druckbare Zeichen aus cp1252)
 Public Const W_SEP As String = "¦"
 Public Const W_FELD As String = "¤"
@@ -62,19 +68,22 @@ Public Const W_REC As String = "¶"
 
 Public Sub ModellLeeren()
     mAnz = 0
+    mPl = 0
     mOrdner = "|"
     mAnzAlt = 0
-    ReDim mNameAlt(0 To 0)
+    ReDim mNameAlt(0 To 0): ReDim mPlatzAlt(0 To 0)
     ModellGroesse 0, False
 End Sub
 
-' Namen wie in Outlook festhalten (vor dem Durchspielen des Plans, der Regeln im Abbild umbenennt).
+' Namen und Plaetze wie in Outlook festhalten (vor dem Durchspielen des Plans, der Regeln im Abbild umbenennt,
+' umsetzt und loescht).
 Public Sub NamenFesthalten()
     Dim i As Long
     mAnzAlt = mAnz
-    ReDim mNameAlt(0 To mAnz)
+    ReDim mNameAlt(0 To mAnz): ReDim mPlatzAlt(0 To mAnz)
     For i = 1 To mAnz
         mNameAlt(i) = mName(i)
+        mPlatzAlt(i) = Platz(i)
     Next i
 End Sub
 
@@ -97,10 +106,11 @@ Public Function AbfangDahinter(ByVal id As Long, ByRef erste As Long) As Long
     Dim i As Long, j As Long, n As Long, faengt As Boolean
     erste = 0
     If id < 1 Or id > mAnz Then Exit Function
+    If mWeg(id) Then Exit Function
     faengt = mOhneBed(id) And mAktiv(id)
     If faengt Then faengt = (mVerAn(id) Or mHalt(id))
     If Not faengt Then Exit Function
-    For i = Platz(id) + 1 To mAnz
+    For i = Platz(id) + 1 To mPl
         j = mOrd(i)
         If mAktiv(j) And mLesbar(j) And mTyp(j) = mTyp(id) Then
             n = n + 1
@@ -112,7 +122,7 @@ End Function
 
 Public Function AbfangAnzahl() As Long
     Dim i As Long, e As Long
-    For i = 1 To mAnz
+    For i = 1 To mPl
         If AbfangDahinter(mOrd(i), e) > 0 Then AbfangAnzahl = AbfangAnzahl + 1
     Next i
 End Function
@@ -120,7 +130,7 @@ End Function
 ' "„A“ vor 2 aktiven Regeln (zuerst „B“)"; je abfangende Regel ein Eintrag, hoechstens so viele, Rest "und n weitere".
 Public Function AbfangNamen(ByVal hoechstens As Long) As String
     Dim i As Long, id As Long, n As Long, erste As Long, k As Long, s As String
-    For i = 1 To mAnz
+    For i = 1 To mPl
         id = mOrd(i)
         n = AbfangDahinter(id, erste)
         If n > 0 Then
@@ -153,6 +163,7 @@ Public Sub ModellGroesse(ByVal n As Long, ByVal erhalten As Boolean)
         ReDim Preserve mUmlFehlt(0 To n): ReDim Preserve mHalt(0 To n)
         ReDim Preserve mFremd(0 To n): ReDim Preserve mAktFremd(0 To n): ReDim Preserve mNeu(0 To n)
         ReDim Preserve mBeruehrt(0 To n): ReDim Preserve mObj(0 To n): ReDim Preserve mOrd(0 To n)
+        ReDim Preserve mWeg(0 To n)
     Else
         ReDim mName(0 To n): ReDim mAktiv(0 To n): ReDim mLokal(0 To n)
         ReDim mTyp(0 To n): ReDim mReihe(0 To n): ReDim mBed(0 To n)
@@ -167,6 +178,7 @@ Public Sub ModellGroesse(ByVal n As Long, ByVal erhalten As Boolean)
         ReDim mUmlFehlt(0 To n): ReDim mHalt(0 To n)
         ReDim mFremd(0 To n): ReDim mAktFremd(0 To n): ReDim mNeu(0 To n)
         ReDim mBeruehrt(0 To n): ReDim mObj(0 To n): ReDim mOrd(0 To n)
+        ReDim mWeg(0 To n)
     End If
 End Sub
 
@@ -187,7 +199,8 @@ Public Function RegelAnhaengen(ByVal regelName As String) As Long
     mLesbar(mAnz) = True
     mNeu(mAnz) = True
     mBeruehrt(mAnz) = True
-    mOrd(mAnz) = mAnz
+    mPl = mPl + 1
+    mOrd(mPl) = mAnz
     RegelAnhaengen = mAnz
 End Function
 
@@ -207,11 +220,13 @@ Public Sub ReihenfolgeAusWerten()
         Loop
         mOrd(j + 1) = t
     Next i
+    mPl = mAnz
 End Sub
 
+' Platz einer Regel in der Reihenfolge (0 = laut Plan geloescht).
 Public Function Platz(ByVal id As Long) As Long
     Dim i As Long
-    For i = 1 To mAnz
+    For i = 1 To mPl
         If mOrd(i) = id Then
             Platz = i
             Exit Function
@@ -223,7 +238,7 @@ End Function
 Public Sub Umsetzen(ByVal id As Long, ByVal ziel As Long)
     Dim i As Long, von As Long
     von = Platz(id)
-    If von = 0 Or ziel < 1 Or ziel > mAnz Or von = ziel Then Exit Sub
+    If von = 0 Or ziel < 1 Or ziel > mPl Or von = ziel Then Exit Sub
     If von < ziel Then
         For i = von To ziel - 1
             mOrd(i) = mOrd(i + 1)
@@ -236,22 +251,27 @@ Public Sub Umsetzen(ByVal id As Long, ByVal ziel As Long)
     mOrd(ziel) = id
 End Sub
 
-' Regel nach Namen: erst exakt, dann ohne Gross-/Kleinschreibung. 0 = keine, -1 = mehrdeutig.
+' Regel nach Namen: erst exakt, dann ohne Gross-/Kleinschreibung. 0 = keine, -1 = mehrdeutig. Laut Plan geloeschte
+' Regeln zaehlen nicht mit.
 Public Function SucheName(ByVal regelName As String) As Long
     Dim i As Long, treffer As Long, anzahl As Long
     regelName = Trim(regelName)
     If regelName = "" Then Exit Function
     For i = 1 To mAnz
-        If Trim(mName(i)) = regelName Then
-            anzahl = anzahl + 1
-            treffer = i
+        If Not mWeg(i) Then
+            If Trim(mName(i)) = regelName Then
+                anzahl = anzahl + 1
+                treffer = i
+            End If
         End If
     Next i
     If anzahl = 0 Then
         For i = 1 To mAnz
-            If LCase(Trim(mName(i))) = LCase(regelName) Then
-                anzahl = anzahl + 1
-                treffer = i
+            If Not mWeg(i) Then
+                If LCase(Trim(mName(i))) = LCase(regelName) Then
+                    anzahl = anzahl + 1
+                    treffer = i
+                End If
             End If
         Next i
     End If
@@ -259,6 +279,119 @@ Public Function SucheName(ByVal regelName As String) As Long
         SucheName = -1
     Else
         SucheName = treffer
+    End If
+End Function
+
+' Regel laut Plan loeschen: Sie behaelt ihre ID im Abbild (mWeg), faellt aber aus der Reihenfolge.
+Public Sub RegelEntfernen(ByVal id As Long)
+    Dim p As Long, i As Long
+    If id < 1 Or id > mAnz Then Exit Sub
+    If mWeg(id) Then Exit Sub
+    p = Platz(id)
+    mWeg(id) = True
+    mBeruehrt(id) = True
+    If p = 0 Then Exit Sub
+    For i = p To mPl - 1
+        mOrd(i) = mOrd(i + 1)
+    Next i
+    mOrd(mPl) = 0
+    mPl = mPl - 1
+End Sub
+
+' Zerlegt einen Bezug "Name #n/m" (die n-te von m Regeln dieses Namens). Rueckgabe True, wenn der Text so endet.
+Public Function VorkommenTeile(ByVal bezug As String, ByRef basis As String, ByRef nr As Long, ByRef gesamt As Long) As Boolean
+    Dim p As Long, q As Long, rest As String, a As String, b As String, i As Long
+    basis = "": nr = 0: gesamt = 0
+    bezug = Trim(bezug)
+    p = InStrRev(bezug, "#")
+    If p < 2 Then Exit Function
+    rest = Trim(Mid(bezug, p + 1))
+    q = InStr(rest, "/")
+    If q < 2 Then Exit Function
+    a = Trim(Left(rest, q - 1))
+    b = Trim(Mid(rest, q + 1))
+    If a = "" Or b = "" Or Len(a) > 4 Or Len(b) > 4 Then Exit Function
+    For i = 1 To Len(a)
+        If InStr("0123456789", Mid(a, i, 1)) = 0 Then Exit Function
+    Next i
+    For i = 1 To Len(b)
+        If InStr("0123456789", Mid(b, i, 1)) = 0 Then Exit Function
+    Next i
+    basis = Trim(Left(bezug, p - 1))
+    If basis = "" Then Exit Function
+    nr = CLng(a)
+    gesamt = CLng(b)
+    VorkommenTeile = (nr >= 1 And gesamt >= 1)
+End Function
+
+' Anzahl der Regeln, die beim Lesen so hiessen (exakt; sonst ohne Gross-/Kleinschreibung). exakt: welcher Vergleich galt.
+Public Function NameAnzahlAlt(ByVal regelName As String, ByRef exakt As Boolean) As Long
+    Dim i As Long, n As Long
+    regelName = Trim(regelName)
+    exakt = True
+    For i = 1 To mAnzAlt
+        If Trim(mNameAlt(i)) = regelName Then n = n + 1
+    Next i
+    If n = 0 Then
+        exakt = False
+        For i = 1 To mAnzAlt
+            If LCase(Trim(mNameAlt(i))) = LCase(regelName) Then n = n + 1
+        Next i
+    End If
+    NameAnzahlAlt = n
+End Function
+
+' Bezug "Name #n/m": die n-te der m Regeln dieses Namens - Namen und Reihenfolge, wie Outlook sie beim Lesen hatte
+' (vor dem Durchspielen des Plans). Fuer gleichnamige Regeln, die der Name allein nicht unterscheidet. Der Bezug gilt
+' nur, solange es genau m Regeln dieses Namens gibt; sonst passt der Plan nicht mehr zum Stand in Outlook.
+' Rueckgabe: ID (auch einer laut Plan inzwischen umbenannten oder geloeschten Regel - mWeg prueft der Aufrufer),
+' 0 = kein solcher Bezug oder es gibt nicht genau m Regeln dieses Namens.
+Public Function SucheVorkommen(ByVal bezug As String) As Long
+    Dim basis As String, nr As Long, gesamt As Long, exakt As Boolean, platz As Long, i As Long, n As Long, passt As Boolean
+    If Not VorkommenTeile(bezug, basis, nr, gesamt) Then Exit Function
+    If nr > gesamt Then Exit Function
+    If NameAnzahlAlt(basis, exakt) <> gesamt Then Exit Function
+    For platz = 1 To mAnzAlt
+        For i = 1 To mAnzAlt
+            If mPlatzAlt(i) = platz Then
+                If exakt Then
+                    passt = (Trim(mNameAlt(i)) = basis)
+                Else
+                    passt = (LCase(Trim(mNameAlt(i))) = LCase(basis))
+                End If
+                If passt Then
+                    n = n + 1
+                    If n = nr Then
+                        SucheVorkommen = i
+                        Exit Function
+                    End If
+                End If
+            End If
+        Next i
+    Next platz
+End Function
+
+' Bezug, unter dem der Plan Regel id anspricht: der Name, bei mehrfach vergebenem Namen "Name #n/m" (Reihenfolge wie
+' beim Lesen). mehrfach: der Name ist mehrfach vergeben.
+Public Function BezugText(ByVal id As Long, ByRef mehrfach As Boolean) As String
+    Dim i As Long, n As Long, nr As Long, nm As String
+    mehrfach = False
+    If id < 1 Or id > mAnzAlt Then
+        If id >= 1 And id <= mAnz Then BezugText = mName(id)
+        Exit Function
+    End If
+    nm = Trim(mNameAlt(id))
+    For i = 1 To mAnzAlt
+        If Trim(mNameAlt(i)) = nm Then
+            n = n + 1
+            If mPlatzAlt(i) < mPlatzAlt(id) Or (mPlatzAlt(i) = mPlatzAlt(id) And i <= id) Then nr = nr + 1
+        End If
+    Next i
+    If n > 1 Then
+        mehrfach = True
+        BezugText = nm & " #" & nr & "/" & n
+    Else
+        BezugText = nm
     End If
 End Function
 
@@ -278,7 +411,7 @@ End Function
 
 Public Function NamenNichtLesbar(ByVal hoechstens As Long) As String
     Dim i As Long, n As Long, s As String
-    For i = 1 To mAnz
+    For i = 1 To mPl
         If Not mLesbar(mOrd(i)) Then
             n = n + 1
             If n <= hoechstens Then s = s & IIf(s = "", "", "; ") & Zitat(mName(mOrd(i)))
@@ -291,7 +424,7 @@ End Function
 ' Regeln ohne sichtbare Bedingung (lesbar, aber keine aktive Bedingung), deaktivierte mit "(aus)".
 Public Function NamenOhneBed(ByVal hoechstens As Long) As String
     Dim i As Long, n As Long, s As String, id As Long
-    For i = 1 To mAnz
+    For i = 1 To mPl
         id = mOrd(i)
         If mOhneBed(id) Then
             n = n + 1
@@ -648,11 +781,10 @@ Private Function SigTeil(ByVal titel As String, ByVal wert As String) As String
     SigTeil = titel & "=" & wert
 End Function
 
-' Alles, was eine Regel ausmacht (ausser Name und Platz), in festen Teilen, getrennt durch W_REC.
-Public Function Signatur(ByVal id As Long) As String
+' Teile der Signatur ohne "Aktiv" (gemeinsam fuer Signatur und InhaltSignatur).
+Private Function SigKern(ByVal id As Long) As String
     Dim s As String
-    s = SigTeil("Aktiv", IIf(mAktiv(id), "Ja", "Nein"))
-    s = s & W_REC & SigTeil("Nur lokal", IIf(mLokal(id), "Ja", "Nein"))
+    s = SigTeil("Nur lokal", IIf(mLokal(id), "Ja", "Nein"))
     s = s & W_REC & SigTeil("Bedingungen", TypenSortiert(mTypen(id)) & " # " & WNorm(mBedW(id)))
     s = s & W_REC & SigTeil("Ausnahmen", TypenSortiert(mAusTypen(id)) & " # " & WNorm(mAusW(id)))
     s = s & W_REC & SigTeil("Verschieben", IIf(mVerAn(id), PfadNorm(mVerPfad(id)), "-"))
@@ -661,7 +793,36 @@ Public Function Signatur(ByVal id As Long) As String
     s = s & W_REC & SigTeil("Umleiten", IIf(mUmlAn(id), WListeNorm(Replace(mUmlEmpf(id), "; ", W_SEP)), "-"))
     s = s & W_REC & SigTeil("Keine weiteren Regeln", IIf(mHalt(id), "Ja", "Nein"))
     s = s & W_REC & SigTeil("weitere Aktionen", TypenSortiert(mAktFremd(id)))
-    Signatur = s
+    SigKern = s
+End Function
+
+' Alles, was eine Regel ausmacht (ausser Name und Platz), in festen Teilen, getrennt durch W_REC.
+Public Function Signatur(ByVal id As Long) As String
+    Signatur = SigTeil("Aktiv", IIf(mAktiv(id), "Ja", "Nein")) & W_REC & SigKern(id)
+End Function
+
+' Inhalt einer Regel fuer den Vergleich zweier Regeln desselben Postfachs (LOESCHEN "gleich: ..."): alles ausser Name,
+' Platz und Aktiv - Regeltyp, Nur lokal, Bedingungen und Ausnahmen mit Werten, Ziele, Empfaenger, Stopp, Typen weiterer
+' Aktionen und der Aktionstext (er nennt auch Kategorien und die Empfaenger von "Als Anlage weiterleiten").
+Public Function InhaltSignatur(ByVal id As Long) As String
+    InhaltSignatur = SigTeil("Regeltyp", CStr(mTyp(id))) & W_REC & SigKern(id) & W_REC & _
+                     SigTeil("Aktionen", LCase(Trim(mAkt(id))))
+End Function
+
+' Titel der Teile, in denen sich zwei Signaturen unterscheiden ("Bedingungen, Verschieben"); "" = gleich.
+Public Function SignaturTeile(ByVal a As String, ByVal b As String) As String
+    Dim ta As Variant, tb As Variant, i As Long, s As String, x As String, y As String
+    If a = b Then Exit Function
+    ta = Split(a, W_REC)
+    tb = Split(b, W_REC)
+    For i = LBound(ta) To UBound(ta)
+        x = CStr(ta(i))
+        y = ""
+        If i <= UBound(tb) Then y = CStr(tb(i))
+        If x <> y Then s = Anhaengen(s, Left(x, InStr(x & "=", "=") - 1), ", ")
+    Next i
+    If s = "" Then s = "Aufbau"
+    SignaturTeile = s
 End Function
 
 ' Welche Teile zweier Signaturen unterscheiden sich? Rueckgabe z. B. "Bedingungen (soll: ..., ist: ...)"

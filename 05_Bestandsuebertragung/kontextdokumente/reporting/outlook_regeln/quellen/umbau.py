@@ -30,7 +30,7 @@ import vba_pruefung
 HIER = os.path.dirname(os.path.abspath(__file__))
 
 AKTIONEN = ['ORDNER_ANLEGEN', 'ZIELORDNER', 'UMBENENNEN', 'UMLEITEN_STATT_WEITERLEITEN', 'POSITION', 'KOPIEREN',
-            'BEDINGUNG_WORT_ERGAENZEN', 'AUSNAHMEN_UEBERNEHMEN', 'DEAKTIVIEREN']
+            'BEDINGUNG_WORT_ERGAENZEN', 'AUSNAHMEN_UEBERNEHMEN', 'DEAKTIVIEREN', 'LOESCHEN']
 AKTION_TEXT = [
     ('ORDNER_ANLEGEN', 'I', 'Legt den Ordner aus Spalte I (samt fehlender Elternordner) im Zielpostfach an – erst '
                             'unmittelbar vor dem Speichern.'),
@@ -55,7 +55,15 @@ AKTION_TEXT = [
                                          'Exchange-Adresse oder Namen aufgelöst; nicht auflösbar = blockiert (die '
                                          'Vorschau nennt Typ und Adresse). Nur wer in L namentlich steht, wird dann '
                                          'übersprungen – für ihn bleibt der alte Stand; Rückfrage vor dem Ausführen.'),
-    ('DEAKTIVIEREN', 'E', 'Schaltet die Regel aus. Regeln löscht das Makro nie.'),
+    ('DEAKTIVIEREN', 'E', 'Schaltet die Regel aus.'),
+    ('LOESCHEN', 'E, F', 'Löscht Regeln – nur mit Begründung in F. „Duplikate“: von allen Regeln mit dem Namen aus E '
+                         'bleibt die erste, die übrigen werden gelöscht. „gleich: Regel“: löscht die Regel aus E als '
+                         'Duplikat der genannten. In beiden Fällen löscht das Makro nur, wenn es selbst belegen kann, '
+                         'dass die bleibende Regel denselben Inhalt hat (Bedingungen, Ausnahmen, Aktionen) und bei '
+                         'einer eingeschalteten Regel eingeschaltet davor steht; sonst blockiert. „ohne Ersatz“: '
+                         'löscht ohne diesen Vergleich. Vor dem Ausführen kommt eine eigene Rückfrage mit allen '
+                         'Regeln, die gelöscht werden. Einzelne gleichnamige Regeln in E und F als „Name #n/m“ '
+                         'ansprechen (die n-te von m, wie im Blatt Live).'),
 ]
 
 VBA_NAMEN = {'Auf einen Blick': 'shBlick', 'Umsetzung': 'shUmsetzung', 'Vergleich': 'shVergleich',
@@ -524,8 +532,8 @@ def umsetzung_blatt(g, ws, P):
     ws.write(1, 1, 'Regeln in Outlook umsetzen', F(font_name=FONT_TITEL, font_size=20, bold=True, valign='bottom'))
     ws.set_row(1, 32)
     ws.write(2, 1, 'Das Makro passt die Regeln des Zielpostfachs nach dem Plan unten an – nach Vorbild des '
-                   'Quellpostfachs. Es löscht keine Regeln und speichert die Regeln des Quellpostfachs nie (Ordner stellt '
-                   'das Blatt Ordner um).', F(font_color=MUTED))
+                   'Quellpostfachs. Es löscht eine Regel nur, wenn eine Zeile LOESCHEN das ausdrücklich vorsieht, und '
+                   'speichert die Regeln des Quellpostfachs nie (Ordner stellt das Blatt Ordner um).', F(font_color=MUTED))
     ws.set_row(2, 18)
     ws.set_row(3, 6)
 

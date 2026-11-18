@@ -23,12 +23,15 @@ Option Explicit
 '   - Nach dem Speichern alles neu lesen und jede Regel mit dem erwarteten Abbild vergleichen (Name, Platz,
 '     Bedingungen, Ausnahmen, Aktionen); Abweichung bei Bedingungen (bei neu angelegten Regeln auch bei
 '     Ausnahmen): Angebot, die Regel sofort zu deaktivieren.
+'   - Loeschen (LOESCHEN, seit 3.1): nur Regeln aus Planzeilen, mit Begruendung in der Zeile ("gleich: ..." - das
+'     Makro belegt selbst, dass die bleibende Regel denselben Inhalt hat und davor steht - oder "ohne Ersatz"), eigene
+'     Rueckfrage (Vorgabe Nein), Entfernen erst unmittelbar vor dem Speichern (modOlSchreiben.RegelnEntfernen).
 '   - Regeln des Quellpostfachs werden nur gelesen (gQuellRegeln); gespeichert wird nur das Rules-Objekt des
 '     Zielpostfachs; das Quellpostfach dieser Mappe (QUELLE_STANDARD) wird als Ziel abgelehnt. Ordner beider Postfaecher
 '     stellt das Blatt Ordner um (modOrdner) - ohne Regeln zu speichern.
 ' ============================================================================
 
-Public Const UMBAU_VERSION As String = "3.0"
+Public Const UMBAU_VERSION As String = "3.1"
 ' Hoechstlaenge eines MsgBox-Texts (Excel zeigt etwa 1024 Zeichen)
 Public Const MSGBOX_MAX As Long = 1000
 Public gLauf As String
@@ -110,7 +113,7 @@ Private Function JaNein(ByVal b As Boolean) As String
 End Function
 
 Private Function Diagnose(ByVal id As Long) As String
-    Dim n As Long, erste As Long
+    Dim n As Long, erste As Long, mehrfach As Boolean, bz As String
     If Not mLesbar(id) Then
         Diagnose = mGrund(id)
     ElseIf mOhneBed(id) Then
@@ -123,6 +126,11 @@ Private Function Diagnose(ByVal id As Long) As String
             Diagnose = "keine sichtbare Bedingung – greift bei allen Mails, die bis zu ihr kommen (Sammelregel), oder " & _
                        "in Outlook im Web angelegt"
         End If
+    End If
+    ' Gleichnamige Regeln: So spricht der Plan diese Regel an
+    bz = BezugText(id, mehrfach)
+    If mehrfach Then
+        Diagnose = Anhaengen(Diagnose, "Name mehrfach vergeben – im Plan als " & Zitat(bz) & " ansprechen", " · ")
     End If
 End Function
 
@@ -160,7 +168,7 @@ End Function
 Private Function StandSchreiben(ByVal ws As Object, ByVal r As Long, ByVal postfach As String, ByVal zeit As String, _
                                 ByVal sicherung As Boolean) As Long
     Dim i As Long, id As Long, c As Long
-    For i = 1 To mAnz
+    For i = 1 To mPl
         id = mOrd(i)
         c = 1
         If sicherung Then
@@ -435,6 +443,7 @@ Private Function AktionKurz(ByVal akt As String) As String
         Case "AUSNAHMEN_UEBERNEHMEN": AktionKurz = "Ausnahmen"
         Case "ORDNER_ANLEGEN": AktionKurz = "Ordner"
         Case "DEAKTIVIEREN": AktionKurz = "Aus"
+        Case "LOESCHEN": AktionKurz = "Löschen"
         Case Else: AktionKurz = akt
     End Select
 End Function
@@ -511,10 +520,26 @@ Private Function UeberspringenListe() As String
     UeberspringenListe = s
 End Function
 
+' Bereite LOESCHEN-Zeilen fuer die eigene Rueckfrage: je Zeile "• Nr „Regel“ – löschen ..." ("" = keine).
+' anzahl: Zahl der Regeln; ohneAktiv: eingeschaltete Regeln, die ohne Ersatz geloescht werden.
+Private Function LoeschListe(ByRef anzahl As Long, ByRef ohneAktiv As Long) As String
+    Dim k As Long, s As String
+    anzahl = 0: ohneAktiv = 0
+    For k = 1 To pAnz
+        If pAusf(k) And Left(pStatus(k), 6) = "bereit" And pFall(k) = "WEG" Then
+            anzahl = anzahl + pWegAnz(k)
+            s = Anhaengen(s, "• " & pNr(k) & " " & Zitat(KurzName(pRegel(k), 40)) & " – " & pKurz(k), vbLf)
+            If InStr(pKurz(k), "ohne Ersatz (Regel ist eingeschaltet)") > 0 Then ohneAktiv = ohneAktiv + 1
+        End If
+    Next k
+    LoeschListe = s
+End Function
+
 Public Function AusfuehrenLauf() As String
     Dim ws As Object, ol As Object, ziel As Object, regeln As Object, k As Long, f As String, blocker As Long
     Dim nBlock As Long, nBereit As Long, s As String, abw As String, zeit As String, msg As String
     Dim kopf As String, fuss As String, schluss As String, budget As Long, ueber As String, txt As String
+    Dim weg As String, nWeg As Long, nOhneAktiv As Long
     Set ws = Blatt(BLATT_UMSETZUNG)
     f = PlanLesen()
     If f <> "" Then
@@ -609,6 +634,23 @@ Public Function AusfuehrenLauf() As String
             Exit Function
         End If
     End If
+    ' Regeln, die geloescht werden: eigene Rueckfrage (Vorgabe Nein) mit jeder Regel und ihrer Begruendung
+    weg = LoeschListe(nWeg, nOhneAktiv)
+    If nWeg > 0 Then
+        txt = "Löschen: " & IIf(nWeg = 1, "1 Regel wird", nWeg & " Regeln werden") & " aus " & gZielAdr & " entfernt:" & _
+              vbLf & weg & vbLf & vbLf & "Eine gelöschte Regel steht danach nur noch als Text im Blatt Sicherung und in " & _
+              "der exportierten .rwz-Datei – nur über die .rwz lässt sie sich wiederherstellen."
+        If nOhneAktiv > 0 Then
+            txt = txt & " " & IIf(nOhneAktiv = 1, "1 eingeschaltete Regel wird", nOhneAktiv & " eingeschaltete Regeln " & _
+                  "werden") & " ohne Ersatz gelöscht und " & IIf(nOhneAktiv = 1, "greift", "greifen") & " danach nicht mehr."
+        End If
+        ProtokollSchreiben gLauf, gZielAdr, "", "RÜCKFRAGE", "", Replace(txt, vbLf, " | ")
+        If Not Frage(MeldungKurz(txt, vbLf & vbLf & IIf(nWeg = 1, "Diese Regel", "Diese Regeln") & " wirklich löschen?"), _
+                     "Regeln löschen") Then
+            AusfuehrenLauf = "Abgebrochen – nichts geändert. Löschen nicht bestätigt."
+            Exit Function
+        End If
+    End If
     kopf = nBereit & " " & IIf(nBereit = 1, "Änderung", "Änderungen") & " in " & gZielAdr & ":" & vbLf & vbLf
     ' Hinweise mit gekuerzten Namenslisten, damit die Warnungen (nicht lesbar, Freigabe) sichtbar bleiben
     fuss = RueckfrageFuss(Abschneiden(gNamenNichtLesbar, 160), Abschneiden(gNamenAbfang, 160))
@@ -670,6 +712,7 @@ Private Function PostfachAusfuehren(ByVal ol As Object, ByVal ziel As Object, By
     PostfachStandMerken
     nLes = gNichtLesbar
     VormerkungenLeeren
+    BezuegeLeeren
     ' Ausnahmen vor dem Lauf (Nachpruefung: fehlen nach dem Speichern nur neue Ausnahmen oder auch fruehere?)
     nAlt = mAnz
     ReDim altAus(0 To nAlt)
@@ -759,9 +802,10 @@ Private Function PostfachAusfuehren(ByVal ol As Object, ByVal ziel As Object, By
             End If
         End If
     End If
-    ' Erwarteter Stand nach dem Speichern: das Abbild nach allen Schritten; neu angelegte Regeln sind markiert (fuer
-    ' sie gibt es keinen alten Stand)
-    nSoll = mAnz
+    ' Erwarteter Stand nach dem Speichern: das Abbild nach allen Schritten (ohne die laut Plan geloeschten Regeln);
+    ' neu angelegte Regeln sind markiert (fuer sie gibt es keinen alten Stand)
+    BezuegePlaetze
+    nSoll = mPl
     ReDim sollName(0 To nSoll): ReDim sollSig(0 To nSoll): ReDim sollBeruehrt(0 To nSoll): ReDim sollAltAus(0 To nSoll)
     ReDim sollNeu(0 To nSoll)
     For i = 1 To nSoll
@@ -776,6 +820,11 @@ Private Function PostfachAusfuehren(ByVal ol As Object, ByVal ziel As Object, By
         f = OrdnerAnlegenUndZuweisen(ziel)
         ' Fehler beim Zuweisen eines vorgemerkten Zielordners oder beim spaeten Einschalten einer neuen Regel: der
         ' Planzeile zuordnen, die es vorgemerkt hat
+        If f <> "" And gFehlerZeile > 0 Then fehlerK = gFehlerZeile
+    End If
+    ' Zu loeschende Regeln entfernen: der letzte Zugriff vor dem Speichern
+    If f = "" And brauchtSave Then
+        f = RegelnEntfernen(regeln)
         If f <> "" And gFehlerZeile > 0 Then fehlerK = gFehlerZeile
     End If
     If f = "" And brauchtSave Then f = RegelnSpeichern(regeln)
@@ -799,6 +848,12 @@ Private Function PostfachAusfuehren(ByVal ol As Object, ByVal ziel As Object, By
                 "Regeln aus Outlook lesen“. Zeigt Outlook einen Dialog zu einem Regelkonflikt (z. B. weil " & _
                 "„Regeln und Benachrichtigungen“ noch offen ist), dort antworten bzw. den Dialog schließen und " & _
                 "erneut „Vorschau“ und „Ausführen“ starten. "
+        ElseIf gEntferntAnz > 0 Then
+            ' Microsoft Learn sagt nicht, ob Rules.Remove erst mit Rules.Save wirkt - darum keine Zusage "nichts gespeichert"
+            PostfachAusfuehren = "Nicht ausgeführt: " & f & vbLf & vbLf & "Gespeichert wurde nicht. Aus der Regelliste im " & _
+                "Speicher " & IIf(gEntferntAnz = 1, "war 1 Regel", "waren " & gEntferntAnz & " Regeln") & " schon entfernt – " & _
+                "ob Outlook das ohne Speichern übernommen hat, zeigt „Regeln aus Outlook lesen“. Fehlt dort eine Regel, " & _
+                "die .rwz-Datei importieren. "
         Else
             PostfachAusfuehren = "Nicht ausgeführt: " & f & vbLf & vbLf & "In Outlook wurde nichts gespeichert. "
         End If
@@ -809,15 +864,38 @@ Private Function PostfachAusfuehren(ByVal ol As Object, ByVal ziel As Object, By
     PostfachAusfuehren = Nachpruefen(ol, ziel, sollName, sollSig, sollBeruehrt, sollAltAus, sollNeu, nSoll, brauchtSave)
 End Function
 
-' Position einer Regel im erwarteten Stand (nach Namen), 0 wenn nicht vorhanden.
-Private Function SollIndex(sollName() As String, ByVal nSoll As Long, ByVal regelName As String) As Long
-    Dim i As Long
+' Platz im erwarteten Stand zur Regel auf Platz p des gelesenen Stands, 0 wenn nicht vorhanden. Zugeordnet wird ueber
+' den Namen und seine laufende Nummer: Die k-te Regel namens X im gelesenen Stand gehoert zur k-ten Regel namens X im
+' erwarteten Stand - gleichnamige Regeln lassen sich nur so zuordnen (bei eindeutigen Namen ist k immer 1).
+Private Function SollIndex(sollName() As String, ByVal nSoll As Long, ByVal p As Long) As Long
+    Dim i As Long, nm As String, vork As Long, n As Long
+    If p < 1 Or p > mPl Then Exit Function
+    nm = mName(mOrd(p))
+    For i = 1 To p
+        If mName(mOrd(i)) = nm Then vork = vork + 1
+    Next i
     For i = 1 To nSoll
-        If sollName(i) = regelName Then
-            SollIndex = i
-            Exit Function
+        If sollName(i) = nm Then
+            n = n + 1
+            If n = vork Then
+                SollIndex = i
+                Exit Function
+            End If
         End If
     Next i
+End Function
+
+' Fehlt im gelesenen Stand eine Regel des erwarteten Stands? Regel j ist die k-te ihres Namens im erwarteten Stand;
+' sie fehlt, wenn der gelesene Stand weniger als k Regeln dieses Namens hat.
+Private Function SollFehlt(sollName() As String, ByVal j As Long) As Boolean
+    Dim i As Long, vork As Long, ist As Long
+    For i = 1 To j
+        If sollName(i) = sollName(j) Then vork = vork + 1
+    Next i
+    For i = 1 To mPl
+        If mName(mOrd(i)) = sollName(j) Then ist = ist + 1
+    Next i
+    SollFehlt = (ist < vork)
 End Function
 
 ' Nach dem Speichern: alles neu lesen, jede Planzeile pruefen und jede Regel mit dem erwarteten Abbild vergleichen.
@@ -834,6 +912,7 @@ Private Function Nachpruefen(ByVal ol As Object, ByVal ziel As Object, sollName(
     Dim nUnb As Long, nUnbOk As Long, nachIds As String, bedIds As String, bedNamen As String
     Dim ausIds As String, ausNamen As String, sammel As String, ids As String, idsNamen As String, namen As String
     Dim wichtig As String, info As String, abwBed As Boolean, abwAus As Boolean, was As String, mitNeu As Boolean
+    Dim idsPlatz As String
     gProtK = 0
     If Not StandLesen(ziel, regeln, f) Then
         For k = 1 To pAnz
@@ -845,13 +924,13 @@ Private Function Nachpruefen(ByVal ol As Object, ByVal ziel As Object, sollName(
     PostfachStandMerken
     ' Reihenfolge und Regeln einzeln
     If mAnz <> nSoll Then reihe = "Anzahl der Regeln: soll " & nSoll & ", ist " & mAnz
-    For i = 1 To mAnz
+    For i = 1 To mPl
         id = mOrd(i)
         If i <= nSoll Then
             If mName(id) <> sollName(i) And reihe = "" Then reihe = "Reihenfolge weicht ab ab Platz " & i & " (soll " & _
                 Zitat(sollName(i)) & ", ist " & Zitat(mName(id)) & ")"
         End If
-        j = SollIndex(sollName, nSoll, mName(id))
+        j = SollIndex(sollName, nSoll, i)
         If j = 0 Then
             liste = Anhaengen(liste, Zitat(mName(id)) & " unerwartet vorhanden")
         Else
@@ -899,9 +978,11 @@ Private Function Nachpruefen(ByVal ol As Object, ByVal ziel As Object, sollName(
         End If
     Next i
     For j = 1 To nSoll
-        If SucheName(sollName(j)) <= 0 Then liste = Anhaengen(liste, Zitat(sollName(j)) & " fehlt")
+        If SollFehlt(sollName, j) Then liste = Anhaengen(liste, Zitat(sollName(j)) & " fehlt")
     Next j
-    ' Planzeilen
+    ' Planzeilen. Bezuege "Name #n/m" dieses Laufs gelten ueber den erwarteten Platz (modPlan.gBzNach): Im frisch
+    ' gelesenen Stand gibt es womoeglich nicht mehr m Regeln dieses Namens.
+    gBzNach = True
     For k = 1 To pAnz
         If Left(pErgebnis(k), 11) = "im Speicher" Then
             gProtK = k
@@ -909,10 +990,11 @@ Private Function Nachpruefen(ByVal ol As Object, ByVal ziel As Object, sollName(
             id = gRegelId
             abw = ""
             If id > 0 Then
-                j = SollIndex(sollName, nSoll, mName(id))
+                j = SollIndex(sollName, nSoll, Platz(id))
                 If j > 0 Then abw = SignaturAbweichung(sollSig(j), Signatur(id))
             End If
-            If Left(st, 14) = "schon erledigt" And abw = "" And (reihe = "" Or (pAktion(k) <> "POSITION" And pAktion(k) <> "KOPIEREN")) Then
+            If Left(st, 14) = "schon erledigt" And abw = "" And (reihe = "" Or (pAktion(k) <> "POSITION" And _
+               pAktion(k) <> "KOPIEREN" And pAktion(k) <> "LOESCHEN")) Then
                 pErgebnis(k) = "erledigt (geprüft)"
                 If id > 0 Then
                     If Not mLesbar(id) Then
@@ -935,6 +1017,7 @@ Private Function Nachpruefen(ByVal ol As Object, ByVal ziel As Object, sollName(
             End If
         End If
     Next k
+    gBzNach = False
     gProtK = 0
     If liste <> "" Then ProtokollZeile "Abweichungen nach dem Speichern: " & liste
     If reihe <> "" Then ProtokollZeile reihe
@@ -987,17 +1070,25 @@ Private Function Nachpruefen(ByVal ol As Object, ByVal ziel As Object, sollName(
         End If
     End If
     If ids <> "" Then
-        ' Namen der zu deaktivierenden Regeln (fuer die Kontrolle nach dem erneuten Lesen)
+        ' Namen und Plaetze der zu deaktivierenden Regeln (fuer die Kontrolle nach dem erneuten Lesen; der Platz
+        ' unterscheidet gleichnamige Regeln)
         idsNamen = "|"
+        idsPlatz = "|"
         For i = 1 To mAnz
-            If InStr(ids, "|" & i & "|") > 0 Then idsNamen = idsNamen & mName(i) & "|"
+            If InStr(ids, "|" & i & "|") > 0 Then
+                idsNamen = idsNamen & mName(i) & "|"
+                idsPlatz = idsPlatz & Platz(i) & "|"
+            End If
         Next i
         f = RegelnDeaktivierenUndSpeichern(regeln, ids)
         If f = "" Then
             nachIds = ""
             If StandLesen(ziel, regeln, f) Then
-                For i = 1 To mAnz
-                    If InStr(idsNamen, "|" & mName(i) & "|") > 0 And mAktiv(i) Then nachIds = Anhaengen(nachIds, Zitat(mName(i)))
+                For i = 1 To mPl
+                    id = mOrd(i)
+                    If InStr(idsPlatz, "|" & i & "|") > 0 And InStr(idsNamen, "|" & mName(id) & "|") > 0 And mAktiv(id) Then
+                        nachIds = Anhaengen(nachIds, Zitat(mName(id)))
+                    End If
                 Next i
                 If nachIds = "" Then
                     wichtig = Anhaengen(wichtig, "Deaktiviert und gespeichert: " & namen, vbLf)

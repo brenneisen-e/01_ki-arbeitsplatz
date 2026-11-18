@@ -16,7 +16,11 @@ Option Explicit
 '      danach die zurueckgestellten Regeln wie ihre Quelle einschalten. Fehler hier gehoeren zur Planzeile, die
 '      die Zuweisung vorgemerkt hat (gFehlerZeile).
 '   4. RegelnSpeichern: Rules.Save. Erst danach wirken die Aenderungen.
-' Jeder Fehler bricht ab; der Aufrufer speichert dann nicht. Regeln werden nie geloescht.
+'      Zu loeschende Regeln (LOESCHEN) werden hier nur vorgemerkt.
+'   3a. RegelnEntfernen: die vorgemerkten Regeln aus dem Rules-Objekt nehmen (Rules.Remove ueber den Platz) - als
+'      letzter Zugriff vor dem Speichern, mit Kontrolle vor und nach jedem Entfernen. Microsoft Learn sagt nicht,
+'      ob Remove erst mit Save wirkt; scheitert danach noch etwas, sagt die Meldung deshalb nicht "nichts gespeichert".
+' Jeder Fehler bricht ab; der Aufrufer speichert dann nicht. Geloescht werden nur Regeln aus LOESCHEN-Zeilen des Plans.
 '
 ' Ordner-Umstellung (Blatt Ordner, modOrdner): OrdnerNeuAnlegen, OrdnerVerschiebenNach, OrdnerNameSetzen - je genau ein
 ' Outlook-Zugriff ohne eigene Fehlerbehandlung (Fehler gehen an modOrdner, das sofort stoppt). Geloescht wird nie.
@@ -35,6 +39,14 @@ Private gEinRegel() As Object
 Private gEinZeile() As Long
 Private gOrdnerListe As String
 Public gOrdnerAngelegt As String
+' Laut Plan zu loeschende Regeln (LOESCHEN): ID im Abbild, Planzeile, Name und Inhalt beim Vormerken
+Private gWegAnz As Long
+Private gWegId() As Long
+Private gWegZeile() As Long
+Private gWegName() As String
+Private gWegSig() As String
+' Anzahl der in diesem Lauf schon aus dem Rules-Objekt entfernten Regeln (fuer die Meldung bei einem spaeteren Fehler)
+Public gEntferntAnz As Long
 ' Planzeile (Index k) eines Fehlers in OrdnerAnlegenUndZuweisen; 0 = keiner Zeile zuzuordnen
 Public gFehlerZeile As Long
 Private Const CBN_LET As Long = 4
@@ -42,7 +54,7 @@ Private Const CBN_LET As Long = 4
 Private Const FEHLER_NR As Long = -2147220991
 
 Public Function SchreibenVersion() As String
-    SchreibenVersion = "Schreiben 3.0"
+    SchreibenVersion = "Schreiben 3.1"
 End Function
 
 Public Sub VormerkungenLeeren()
@@ -54,6 +66,21 @@ Public Sub VormerkungenLeeren()
     gFehlerZeile = 0
     gOrdnerListe = ""
     gOrdnerAngelegt = ""
+    gWegAnz = 0
+    ReDim gWegId(0 To 0): ReDim gWegZeile(0 To 0): ReDim gWegName(0 To 0): ReDim gWegSig(0 To 0)
+    gEntferntAnz = 0
+End Sub
+
+' Regel zum Loeschen vormerken (k = Planzeile). Name und Inhalt, wie sie jetzt im Speicher stehen, werden festgehalten:
+' RegelnEntfernen vergleicht damit, bevor es die Regel aus dem Rules-Objekt nimmt.
+Private Sub LoeschenVormerken(ByVal id As Long, ByVal k As Long)
+    gWegAnz = gWegAnz + 1
+    ReDim Preserve gWegId(0 To gWegAnz): ReDim Preserve gWegZeile(0 To gWegAnz)
+    ReDim Preserve gWegName(0 To gWegAnz): ReDim Preserve gWegSig(0 To gWegAnz)
+    gWegId(gWegAnz) = id
+    gWegZeile(gWegAnz) = k
+    gWegName(gWegAnz) = mObj(id).Name
+    gWegSig(gWegAnz) = InhaltSignatur(id)
 End Sub
 
 Private Sub OrdnerVormerken(ByVal liste As String)
@@ -436,7 +463,7 @@ End Sub
 ' Fuehrt die Entscheidung des eben bewerteten Schritts (modPlan.SchrittPruefen) in Outlook aus - nur im Speicher.
 ' Rueckgabe: "" oder Fehlertext.
 Public Function SchrittAusfuehren(ByVal k As Long, ByVal regeln As Object, ByVal ziel As Object) As String
-    Dim rl As Object, neu As Object, n As Long, offen As Boolean, soll As Boolean
+    Dim rl As Object, neu As Object, n As Long, offen As Boolean, soll As Boolean, teile As Variant, i As Long
     On Error GoTo Fehlerfall
     Select Case eFall
         Case "ORDNER"
@@ -496,6 +523,22 @@ Public Function SchrittAusfuehren(ByVal k As Long, ByVal regeln As Object, ByVal
         Case "AUS"
             mObj(eId).Enabled = False
             ProtokollZeile "Deaktiviert"
+        Case "WEG"
+            If eWegIds <> "" Then
+                ' "Duplikate": alle gleichnamigen Regeln bis auf die erste
+                teile = Split(eWegIds, "|")
+                For i = LBound(teile) To UBound(teile)
+                    If teile(i) <> "" Then
+                        LoeschenVormerken CLng(teile(i)), k
+                        n = n + 1
+                    End If
+                Next i
+                ProtokollZeile "Zum Löschen vorgemerkt (werden unmittelbar vor dem Speichern entfernt): " & n & _
+                               IIf(n = 1, " Duplikat von ", " Duplikate von ") & Zitat(mObj(eAnker).Name)
+            Else
+                LoeschenVormerken eId, k
+                ProtokollZeile "Zum Löschen vorgemerkt (wird unmittelbar vor dem Speichern entfernt): " & Zitat(mObj(eId).Name)
+            End If
         Case Else
             Fehler "Unbekannte Entscheidung " & eFall
     End Select
@@ -533,15 +576,24 @@ Private Sub EmpfaengerUmleiten(ByVal rl As Object)
     rl.Actions.Forward.Enabled = False
 End Sub
 
-' Reihenfolge der Regeln im Speicher (nach ExecutionOrder) als ID-Liste "|3|1|2|"; gleiche Werte = "".
+' Reihenfolge der Regeln im Speicher (nach ExecutionOrder) als ID-Liste "|3|1|2|"; gleiche Werte = "". Regeln, die
+' der Plan loescht (mWeg), stehen bis zum Entfernen noch im Rules-Objekt; fuer die Reihenfolge der uebrigen zaehlen
+' sie nicht mit.
 Private Function IstReihenfolge() As String
-    Dim i As Long, j As Long, wert() As Long, ids() As Long, t As Long, s As String
+    Dim i As Long, j As Long, wert() As Long, ids() As Long, t As Long, s As String, n As Long
+    If mAnz = 0 Then
+        IstReihenfolge = "|"
+        Exit Function
+    End If
     ReDim wert(1 To mAnz): ReDim ids(1 To mAnz)
     For i = 1 To mAnz
-        wert(i) = mObj(i).ExecutionOrder
-        ids(i) = i
+        If Not mWeg(i) Then
+            wert(i) = mObj(i).ExecutionOrder
+            n = n + 1
+            ids(n) = i
+        End If
     Next i
-    For i = 2 To mAnz
+    For i = 2 To n
         t = ids(i)
         j = i - 1
         Do While j >= 1
@@ -552,7 +604,7 @@ Private Function IstReihenfolge() As String
         ids(j + 1) = t
     Next i
     s = "|"
-    For i = 1 To mAnz
+    For i = 1 To n
         If i > 1 Then
             If wert(ids(i)) = wert(ids(i - 1)) Then
                 IstReihenfolge = ""
@@ -567,7 +619,7 @@ End Function
 Private Function SollReihenfolge() As String
     Dim i As Long, s As String
     s = "|"
-    For i = 1 To mAnz
+    For i = 1 To mPl
         s = s & mOrd(i) & "|"
     Next i
     SollReihenfolge = s
@@ -579,7 +631,8 @@ Public Function ReihenfolgeAngleichen() As String
     Dim i As Long, id As Long, n As Long
     On Error GoTo Fehlerfall
     If IstReihenfolge() = SollReihenfolge() Then Exit Function
-    For i = 1 To mAnz
+    ' Die Regeln, die bleiben, kommen auf die Plaetze 1..mPl; zu loeschende ruecken dabei ans Ende
+    For i = 1 To mPl
         id = mOrd(i)
         If mObj(id).ExecutionOrder <> i Then
             mObj(id).ExecutionOrder = i
@@ -675,6 +728,73 @@ Private Sub OrdnerErzeugen(ByVal ziel As Object, ByVal pfad As String)
         Set f = kind
     Next k
 End Sub
+
+' Vorgemerkte Regeln (LOESCHEN) aus dem Rules-Objekt nehmen: Rules.Remove ueber den Platz - Rules.Item(i) ist die Regel
+' mit ExecutionOrder i (Microsoft Learn, Rule.ExecutionOrder); ueber den Namen ginge es bei gleichnamigen Regeln
+' nicht. Letzter Zugriff vor Rules.Save. Der hoechste Platz zuerst: Die Plaetze der uebrigen zu loeschenden Regeln
+' aendern sich dadurch nicht. Vor jedem Entfernen wird die Regel am Platz frisch gelesen und mit der vorgemerkten
+' verglichen (Name und Inhalt); danach muss genau eine Regel weniger da sein. Zum Schluss Anzahl und Namen der
+' Regeln, die bleiben, in der Reihenfolge des Abbilds - nur ueber frische Zugriffe (Rules.Count, Rules.Item).
+' Rueckgabe "" oder Fehlertext; gFehlerZeile = Planzeile der betroffenen Regel.
+Public Function RegelnEntfernen(ByVal regeln As Object) As String
+    Dim i As Long, j As Long, t As Long, n As Long, w As Long, pk As Long, platz() As Long, folge() As Long
+    Dim rl As Object, was As String, nm As String, anders As String
+    gFehlerZeile = 0
+    gEntferntAnz = 0
+    If gWegAnz = 0 Then Exit Function
+    pk = gProtK
+    On Error GoTo Fehlerfall
+    was = "Fehler vor dem Löschen: "
+    ReDim platz(0 To gWegAnz): ReDim folge(0 To gWegAnz)
+    For i = 1 To gWegAnz
+        platz(i) = mObj(gWegId(i)).ExecutionOrder
+        folge(i) = i
+    Next i
+    ' absteigend nach Platz
+    For i = 2 To gWegAnz
+        t = folge(i)
+        j = i - 1
+        Do While j >= 1
+            If platz(folge(j)) >= platz(t) Then Exit Do
+            folge(j + 1) = folge(j)
+            j = j - 1
+        Loop
+        folge(j + 1) = t
+    Next i
+    For j = 1 To gWegAnz
+        w = folge(j)
+        gFehlerZeile = gWegZeile(w)
+        gProtK = gWegZeile(w)
+        was = "Fehler beim Löschen der Regel " & Zitat(gWegName(w)) & ": "
+        n = regeln.Count
+        If platz(w) < 1 Or platz(w) > n Then Fehler "Platz " & platz(w) & " liegt außerhalb 1 bis " & n
+        Set rl = regeln.Item(platz(w))
+        nm = rl.Name
+        If nm <> gWegName(w) Then Fehler "an Platz " & platz(w) & " steht " & Zitat(nm) & " – nichts entfernt"
+        QuellPlatzLeeren
+        RegelLesen rl, 0
+        anders = SignaturTeile(gWegSig(w), InhaltSignatur(0))
+        If anders <> "" Then Fehler "die Regel an Platz " & platz(w) & " hat einen anderen Inhalt als vorgemerkt (" & anders & ") – nichts entfernt"
+        regeln.Remove platz(w)
+        gEntferntAnz = gEntferntAnz + 1
+        If regeln.Count <> n - 1 Then Fehler "Outlook nennt danach " & regeln.Count & " statt " & (n - 1) & " Regeln"
+        ProtokollZeile "Gelöscht: " & Zitat(gWegName(w)) & " (Platz " & platz(w) & ")"
+    Next j
+    gFehlerZeile = 0
+    gProtK = pk
+    was = "Fehler bei der Kontrolle nach dem Löschen: "
+    n = regeln.Count
+    If n <> mPl Then Fehler "Anzahl der Regeln: soll " & mPl & ", ist " & n
+    For i = 1 To mPl
+        nm = regeln.Item(i).Name
+        If nm <> mName(mOrd(i)) Then Fehler "Platz " & i & ": soll " & Zitat(mName(mOrd(i))) & ", ist " & Zitat(nm)
+    Next i
+    ProtokollZeile gWegAnz & IIf(gWegAnz = 1, " Regel", " Regeln") & " entfernt, " & mPl & " bleiben (Reihenfolge geprüft)"
+    Exit Function
+Fehlerfall:
+    gProtK = pk
+    RegelnEntfernen = was & Err.Description
+End Function
 
 Public Function RegelnSpeichern(ByVal regeln As Object) As String
     On Error GoTo Fehlerfall

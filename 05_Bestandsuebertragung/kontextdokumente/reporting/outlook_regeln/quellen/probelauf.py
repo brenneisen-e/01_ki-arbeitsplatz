@@ -7,8 +7,8 @@ Ausführen, zweite Vorschau. Die Attrappe ist mit den Regeln des Exports befüll
 aus genau diesem Stand macht, bevor er im echten Outlook läuft.
 
 Geprüft wird je Postfach: Vorschau ohne Blocker, alle Zeilen „erledigt (geprüft …)“, genau ein Save, so viele
-entfernte Regeln wie Duplikate, danach genau die Regeln der Namensliste in ihrer Reihenfolge, jede mit dem Inhalt,
-den sie vorher hatte, das andere Postfach unverändert, zweite Vorschau „schon erledigt“.
+entfernte Regeln wie Duplikate und zu löschende Regeln, danach genau die übrigen Regeln der Namensliste in ihrer
+Reihenfolge, jede mit dem Inhalt, den sie vorher hatte, das andere Postfach unverändert, zweite Vorschau „schon erledigt“.
 
 Aufruf: python3 probelauf.py <regel-export.xlsx> <namensliste.xlsx> <arbeitsordner>
 Ende mit Exitcode 1, wenn eine Prüfung fehlschlägt.
@@ -42,7 +42,8 @@ def lauf(export, liste, arbeit, ziel, namen):
         soll = [neu for _, neu in namen]
         alt_zu_neu = dict(namen)
         n_dopp = len(vor) - len(soll)
-        print('    Stand: %d Regeln, Namensliste: %d Regeln, also %d Duplikate' % (len(vor), len(soll), n_dopp))
+        print('    Stand: %d Regeln, danach laut Namensliste: %d – also %d zu entfernen (Duplikate und Regeln mit „Löschen“)'
+              % (len(vor), len(soll), n_dopp))
         msg = s.ruf('modUmbau.RegelnLesenLauf')
         t.pruefe(s.zaehler()['schreib'] == '0', 'Lesen schreibt nichts nach Outlook')
         live = [r for r in s.zeilen('Live', int(s.L['LIVE_ERSTE']), 14) if r[0] == ziel]
@@ -101,7 +102,7 @@ def main():
     listen = aufraeumen.namensliste_lesen(liste)
     for ziel, schl in ((BES, 'bestand'), (MAK, 'makler')):
         try:
-            lauf(export, liste, arbeit, ziel, aufraeumen.zielfolge(listen[schl], schl)[0])
+            lauf(export, liste, arbeit, ziel, aufraeumen.ziel_namen(listen, schl))
         except Exception as e:
             t.pruefe(False, 'Probelauf %s abgebrochen: %s' % (ziel.split('@')[0], str(e)[:500]))
     n_ok = sum(1 for ok, _ in t.ERGEBNISSE if ok)

@@ -9,7 +9,7 @@
 #    Anlegen der .xlsm stimmen mit der .xlsx ueberein - bis auf eine Liste erlaubter Zusaetze (Links und Zeilen zum
 #    Makro, erweiterter Hinweistext).
 # Mappen des Auftrags „Aufräumen“ (bau_regeln.py --plan, Blatt „Aufräumen“ statt „Anlegen“) erkennt das Skript am
-# Blatt: Dann prüft es statt des Plans v2 den Aufbau des Aufräum-Plans (erst LOESCHEN … Duplikate, dann UMBENENNEN,
+# Blatt: Dann prüft es statt des Plans v2 den Aufbau des Aufräum-Plans (erst LOESCHEN – Duplikate, dann ohne Ersatz –, dann UMBENENNEN,
 # dann POSITION) und lässt Ziel- und Quellpostfach in beiden Rollen zu (--ziel makler).
 # Aufruf: python3 -I pruefe.py <export.xlsx> <ausgabe.xlsx|ausgabe.xlsm> [<vergleich.xlsx>]
 import difflib, os, re, sys, zipfile, openpyxl, warnings
@@ -103,8 +103,14 @@ if out.lower().endswith('.xlsm'):
               'Aufräum-Plan: %d Zeilen – erst LOESCHEN, dann UMBENENNEN, dann POSITION' % len(plan))
         check(all(p[1] == 'Ja' for p in plan) and [p[0] for p in plan] == list(range(1, len(plan) + 1)),
               'Alle Zeilen auf Ja, fortlaufend nummeriert')
-        check(all(p[4] == 'Duplikate' and p[3] for p in plan if p[2] == 'LOESCHEN'),
-              'LOESCHEN nur als „Duplikate“ (%d Zeilen)' % aktionen.count('LOESCHEN'))
+        loe = [p[4] for p in plan if p[2] == 'LOESCHEN']
+        check(all(p[3] for p in plan if p[2] == 'LOESCHEN') and set(loe) <= {'Duplikate', 'ohne Ersatz'}
+              and loe == sorted(loe, key=lambda x: x != 'Duplikate'),
+              'LOESCHEN: erst „Duplikate“ (%d Zeilen), dann „ohne Ersatz“ (%d Zeilen)' % (loe.count('Duplikate'), loe.count('ohne Ersatz')))
+        weg_namen = [p[3] for p in plan if p[2] == 'LOESCHEN' and p[4] == 'ohne Ersatz']
+        check(not any(p[3] in weg_namen for p in plan if p[2] != 'LOESCHEN')
+              and not any(p[3] in weg_namen for p in plan if p[2] == 'LOESCHEN' and p[4] == 'Duplikate'),
+              'Regeln, die ohne Ersatz gelöscht werden, kommen in keiner anderen Zeile vor')
         neu = [p[4] for p in plan if p[2] == 'UMBENENNEN']
         check(all(p[3] and p[4] and p[3] != p[4] for p in plan if p[2] == 'UMBENENNEN') and len(set(x.lower() for x in neu)) == len(neu),
               'UMBENENNEN: alter und neuer Name, neue Namen eindeutig (%d Zeilen)' % len(neu))

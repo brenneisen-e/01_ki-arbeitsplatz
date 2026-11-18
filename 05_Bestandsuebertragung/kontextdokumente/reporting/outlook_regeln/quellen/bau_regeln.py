@@ -604,6 +604,10 @@ if AUFRAEUMEN:
                 print('   bitte prüfen: „%s“ läuft künftig vor „%s“ – %s' % (_t['b']['neu'], _t['a']['neu'], _t['grund']))
             for _z in _a['verdeckt']:
                 print('   greift nie: „%s“ (verdeckt von „%s“)' % (_z['neu'], _z['verdeckt_von']['neu']))
+            for _z in _a['weg']:
+                print('   wird gelöscht: „%s“ – %s: %s' % (_z['name'], _z['weg_stufe'], _z['weg_grund']))
+            for _f in aufraeumen.optimierung(_a):
+                print('   %s: %s – %s' % (_f['art'], _f['regel'], _f['befund']))
         print('geschrieben:', OUT)
         raise SystemExit(0)
     NAMENSLISTE = aufraeumen.namensliste_lesen(PLAN_DATEI)
@@ -895,6 +899,8 @@ if AUFRAEUMEN:
         _t = '%d Regeln heute' % _a['n_heute']
         if _a['n_duplikate']:
             _t += ', davon %d Duplikate – werden gelöscht' % _a['n_duplikate']
+        if _a['weg']:
+            _t += '  ·  %d weitere löschen' % len(_a['weg']) if _a['n_duplikate'] else '  ·  %d löschen' % len(_a['weg'])
         _t += '  ·  %d umbenennen  ·  %d umstellen' % (_a['n_umbenannt'], len(_a['umstellungen']))
         if _a['verdeckt']:
             _t += '  ·  %s (Blatt Aufräumen)' % ('1 Regel greift nie' if len(_a['verdeckt']) == 1 else

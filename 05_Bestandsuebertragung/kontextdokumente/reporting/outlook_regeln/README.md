@@ -20,8 +20,8 @@ python3 test_umbau.py <Export.xlsx> <arbeitsordner> [szenario ...]              
 Anlass (Export vom 18.11.2026): In Bestandsuebertragungen stehen fünf Regeln je neunmal (63 statt 23 Regeln), die Namen
 beider Postfächer sollen einheitlich werden. Dafür gibt es einen zweiten Auftrag neben „Bestand nach Vorbild Makler“
 (Plan v2). Er braucht den Export und eine **Namensliste** – eine Excel-Datei mit einem Blatt je Postfach (Blattname
-beginnt mit „Bestand…“/„Makler…“), Spalten „Name heute“ und „Neuer Name …“, wahlweise „Umstellung gewollt“. Export
-und Namensliste stehen nicht im Repository.
+beginnt mit „Bestand…“/„Makler…“), Spalten „Name heute“ und „Neuer Name …“, wahlweise „Umstellung gewollt“ und
+„Löschen“. Export und Namensliste stehen nicht im Repository.
 
 ```bash
 cd quellen
@@ -35,9 +35,22 @@ python3 probelauf.py <Export.xlsx> <Namensliste.xlsx> <arbeitsordner>      # Pro
 ```
 
 **Ablauf:** `--liste` schreibt die Namensliste (je Postfach: Platz neu/heute, Name heute, neuer Name, Umstellung
-gewollt, Aktiv, was die Regel macht, Hinweis) – erst mit den Namen von heute. Die gelben Spalten werden überschrieben;
-`--liste --plan <alte Liste>` rechnet Plätze und Hinweise mit den neuen Namen neu. Aus der fertigen Liste baut
-`--plan` die Mappen.
+gewollt, Löschen, Aktiv, was die Regel macht, Hinweis; dazu das Blatt „Optimierung“) – erst mit den Namen von heute.
+Die gelben Spalten werden überschrieben; `--liste --plan <alte Liste>` rechnet Plätze, Hinweise und Befunde mit den
+neuen Angaben neu. Aus der fertigen Liste baut `--plan` die Mappen.
+
+**Einzelne Regeln löschen:** „ja“ in der Spalte „Löschen“ ergibt `LOESCHEN <Name> | ohne Ersatz` (nach den
+Duplikat-Zeilen, vor dem Umbenennen). Der Bau nennt die Wirkung (`aufraeumen.loesch_urteil`): ohne Wirkung, wenn die
+Regel ausgeschaltet ist oder heute nie greift (eine frühere Regel, die bleibt, fängt jede ihrer Mails ab), sonst
+„ändert die Wirkung“ – gebaut wird dann trotzdem, das „ja“ ist die Entscheidung, und das Makro fragt vor dem Löschen
+noch einmal. Eine Regel, die es mehrfach gibt, lässt sich so nicht in einem Zug ganz löschen (Abbruch).
+
+**Vereinfachen (Blatt „Optimierung“ der Namensliste, `aufraeumen.optimierung`):** Befunde aus den Regeln, die bleiben –
+Suchwörter, die ein kürzeres Wort derselben Bedingung schon abdeckt; sehr kurze Suchwörter (höchstens drei Zeichen:
+Outlook sucht die Zeichenfolge, nicht das ganze Wort – Microsoft beschreibt das für den Betreff in KB Q257960);
+Regeln, die sich ohne Änderung zu einer zusammenlegen ließen (gleiche Aktionen und Ausnahmen, Unterschied nur in den
+Werten einer Bedingung; mit Hinweis, wenn dazwischen eine Regel steht, die dieselben Mails treffen kann); Regeln, die
+nie greifen; ausgeschaltete Regeln. Das sind Befunde zum Entscheiden: Am Inhalt einer Regel ändert der Plan nichts.
 
 **Reihenfolge – die Nummer im Namen bestimmt den Platz.** Tragen alle neuen Namen eines Postfachs vorn eine Nummer
 („41 Prio – …“), sortiert der Bau danach; wer eine Nummer ändert, stellt die Regel um. Ohne Nummern gilt die
@@ -69,18 +82,19 @@ ist bei einer Regel etwas „nicht lesbar“, gibt es kein „ohne Wirkung“ au
   neu/heute, Name heute, neuer Name, was die Regel macht, Hinweis); „Auf einen Blick“ nennt je Postfach Regeln danach,
   Duplikate, Umbenennungen, Umstellungen und Regeln, die nie greifen. Vergleich, Export-Blätter, Ordner, Live,
   Sicherung und Protokoll wie bisher.
-- `test_aufraeumen.py` prüft Zielreihenfolge, Urteile, verdeckte Regeln, Plan und das Schreiben und Lesen der
-  Namensliste mit erfundenen Regeln (62 Prüfungen, läuft in Sekunden).
+- `test_aufraeumen.py` prüft Zielreihenfolge, Urteile, verdeckte Regeln, Plan, Löschen, die Befunde zum Vereinfachen
+  und das Schreiben und Lesen der Namensliste mit erfundenen Regeln (82 Prüfungen, läuft in Sekunden).
 - `pruefe.py` erkennt den Auftrag am Blatt „Aufräumen“ und prüft dann den Aufbau des Aufräum-Plans statt des Plans v2.
 - `probelauf.py` baut beide Mappen als Testvariante (Attrappe mit den Regeln **dieses** Exports) und ruft Lesen,
   Vorschau, Ausführen und die zweite Vorschau auf. Geprüft: Vorschau ohne Blocker, alle Zeilen „erledigt (geprüft)“,
-  ein Save, so viele entfernte Regeln wie Duplikate, danach genau die Regeln der Namensliste in ihrer Reihenfolge und
-  mit unverändertem Inhalt, anderes Postfach unverändert, Sicherung vollständig, zweiter Lauf „schon erledigt“.
-  Stand 18.11.2026 (Export vom selben Tag, Vorschlag der Namensliste): 28 von 28 Prüfungen – Bestandsuebertragungen
-  63 → 23 Regeln (40 Duplikate entfernt, 28 Planzeilen, keine Umstellung nötig), Maklerauftraege 25 Regeln (27
-  Planzeilen, 2 Umstellungen: 18 Platztausche ohne Wirkung, 1 praktisch ohne Wirkung). In beiden Postfächern meldet
-  die Prüfung dieselbe Regel, die nie greift (verdeckt von der Regel davor) – im Export-Werkzeug fiel sie nicht auf,
-  weil dort die Werte der Bedingung in anderer Reihenfolge stehen.
+  ein Save, so viele entfernte Regeln wie Duplikate und Regeln mit „Löschen“, danach genau die übrigen Regeln der
+  Namensliste in ihrer Reihenfolge und mit unverändertem Inhalt, anderes Postfach unverändert, Sicherung vollständig,
+  zweiter Lauf „schon erledigt“.
+  Stand 18.11.2026 (Export vom selben Tag): 28 von 28 Prüfungen – Bestandsuebertragungen 63 → 22 Regeln (40 Duplikate
+  und 1 Regel ohne Ersatz entfernt, 28 Planzeilen, keine Umstellung nötig), Maklerauftraege 25 → 23 Regeln (2 Regeln
+  ohne Ersatz entfernt, 26 Planzeilen, 1 Umstellung – praktisch ohne Wirkung). In beiden Postfächern meldete die
+  Prüfung dieselbe Regel, die nie greift (verdeckt von der Regel davor) – im Export-Werkzeug fiel sie nicht auf, weil
+  dort die Werte der Bedingung in anderer Reihenfolge stehen; sie wird jetzt gelöscht.
 - Folgt im Plan auf `LOESCHEN … Duplikate` ein `UMBENENNEN` derselben Regel, meldet die Lösch-Zeile im zweiten Lauf
   (und in der Nachprüfung) „schon erledigt · es gibt nur 1 Regel „<neuer Name>““ – sie findet die verbliebene Regel
   über die Umbenennen-Zeile.
@@ -346,7 +360,8 @@ outlook_regeln/
     bau_regeln.py        Auswertung (xlsx) bzw. Makro-Mappe (xlsm); --test baut die Testvariante; --plan/--ziel: Aufräumen;
                          --liste: Namensliste dafür
     aufraeumen.py        Auftrag „Aufräumen“: Namensliste schreiben, lesen und prüfen, Reihenfolge aus den Nummern,
-                         Urteil je Platztausch, verdeckte Regeln, Plan ableiten, Blatt Aufräumen
+                         Urteil je Platztausch und je gelöschter Regel, verdeckte Regeln, Befunde zum Vereinfachen,
+                         Plan ableiten, Blatt Aufräumen
     test_aufraeumen.py   Tests dazu mit erfundenen Regeln (ohne LibreOffice)
     probelauf.py         Probelauf der Aufräum-Mappen beider Postfächer gegen die Attrappe (Regeln des Exports)
     umbau.py             Makro-Teil: Plan v2 aus den Daten, Blatt Umsetzung, Live/Sicherung/Protokoll, VBA-Projekt

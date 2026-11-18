@@ -8,6 +8,9 @@
 # 3. Mit drittem Argument (die .xlsx aus demselben Export): die erzeugten Blaetter Auf einen Blick, Vergleich und
 #    Anlegen der .xlsm stimmen mit der .xlsx ueberein - bis auf eine Liste erlaubter Zusaetze (Links und Zeilen zum
 #    Makro, erweiterter Hinweistext).
+# Mappen des Auftrags „Aufräumen“ (bau_regeln.py --plan, Blatt „Aufräumen“ statt „Anlegen“) erkennt das Skript am
+# Blatt: Dann prüft es statt des Plans v2 den Aufbau des Aufräum-Plans (erst LOESCHEN … Duplikate, dann UMBENENNEN,
+# dann POSITION) und lässt Ziel- und Quellpostfach in beiden Rollen zu (--ziel makler).
 # Aufruf: python3 -I pruefe.py <export.xlsx> <ausgabe.xlsx|ausgabe.xlsm> [<vergleich.xlsx>]
 import difflib, os, re, sys, zipfile, openpyxl, warnings
 warnings.simplefilter('ignore')
@@ -79,22 +82,50 @@ if out.lower().endswith('.xlsm'):
     print('    Kopf:', kopfzeile)
     check(kopfzeile[:7] == ['Nr', 'Ausführen', 'Aktion', 'Regel (im Zielpostfach)', 'Neuer Name / Position / Wert',
                             'Vorschau', 'Ergebnis'], 'Vorschau und Ergebnis direkt hinter Regel/Position (Spalten G, H)')
+    aufr = 'Aufräumen' in b.sheetnames
     plan = []
-    for r in range(kopf + 1, kopf + 40):
+    for r in range(kopf + 1, ws.max_row + 1):
+        if not ws.cell(r, 2).value and not ws.cell(r, 4).value and ws.cell(r, 3).value not in ('Ja', 'Nein'):
+            if r > kopf + 1 + len(plan) + 6:
+                break
+            continue
+        if ws.cell(r, 4).value in ('Aktion', 'Aktionen') or str(ws.cell(r, 2).value) == 'Aktionen':
+            break
         if ws.cell(r, 4).value:
             plan.append([ws.cell(r, c).value for c in range(2, 14)])
     for p in plan:
         print('    %2s %-4s %-27s %-44s | %s | %s | %s' % (p[0], p[1], p[2], str(p[3])[:44], str(p[4] or '')[:46],
                                                          str(p[7] or '')[:46], str(p[8] or '')[:30]))
     aktionen = [p[2] for p in plan]
-    check(len(plan) == 14, 'Plan: 14 Zeilen')
-    check([p[1] for p in plan] == ['Ja'] * 11 + ['Nein'] * 3, 'Ausführen: 1–11 Ja, 12–14 Nein')
-    check(aktionen == ['ZIELORDNER', 'UMBENENNEN', 'KOPIEREN', 'POSITION', 'POSITION', 'KOPIEREN', 'POSITION',
-                       'BEDINGUNG_WORT_ERGAENZEN', 'UMLEITEN_STATT_WEITERLEITEN', 'AUSNAHMEN_UEBERNEHMEN',
-                       'AUSNAHMEN_UEBERNEHMEN', 'KOPIEREN', 'KOPIEREN', 'KOPIEREN'], 'Aktionen in Planreihenfolge (Plan v2)')
-    check(not any('KV@Qualitypool' in str(p[3]) for p in plan), 'KV@Qualitypool nicht im Plan')
-    check(all('||' in str(p[4]) for p in plan[12:]) and '||' in str(plan[4][4]),
-          'Ausweich-Bezüge mit „||“ (Zeile 5 und Erinnerungsregeln)')
+    if aufr:
+        rang = {'LOESCHEN': 0, 'UMBENENNEN': 1, 'POSITION': 2}
+        check(plan and set(aktionen) <= set(rang) and [rang[x] for x in aktionen] == sorted(rang[x] for x in aktionen),
+              'Aufräum-Plan: %d Zeilen – erst LOESCHEN, dann UMBENENNEN, dann POSITION' % len(plan))
+        check(all(p[1] == 'Ja' for p in plan) and [p[0] for p in plan] == list(range(1, len(plan) + 1)),
+              'Alle Zeilen auf Ja, fortlaufend nummeriert')
+        check(all(p[4] == 'Duplikate' and p[3] for p in plan if p[2] == 'LOESCHEN'),
+              'LOESCHEN nur als „Duplikate“ (%d Zeilen)' % aktionen.count('LOESCHEN'))
+        neu = [p[4] for p in plan if p[2] == 'UMBENENNEN']
+        check(all(p[3] and p[4] and p[3] != p[4] for p in plan if p[2] == 'UMBENENNEN') and len(set(x.lower() for x in neu)) == len(neu),
+              'UMBENENNEN: alter und neuer Name, neue Namen eindeutig (%d Zeilen)' % len(neu))
+        check(all(str(p[4]).startswith('nach: ') or p[4] == 'Platz 1' for p in plan if p[2] == 'POSITION'),
+              'POSITION: „nach: Regel“ bzw. „Platz 1“ (%d Zeilen)' % aktionen.count('POSITION'))
+        auf = b['Aufräumen']
+        namen_neu = set()
+        for r in range(1, auf.max_row + 1):
+            if isinstance(auf.cell(r, 1).value, int) and auf.cell(r, 4).value:
+                namen_neu.add(auf.cell(r, 4).value)
+        check(all(x in namen_neu for x in neu) and all(p[3] in namen_neu for p in plan if p[2] == 'POSITION'),
+              'Neue Namen des Plans stehen im Blatt Aufräumen')
+    else:
+        check(len(plan) == 14, 'Plan: 14 Zeilen')
+        check([p[1] for p in plan] == ['Ja'] * 11 + ['Nein'] * 3, 'Ausführen: 1–11 Ja, 12–14 Nein')
+        check(aktionen == ['ZIELORDNER', 'UMBENENNEN', 'KOPIEREN', 'POSITION', 'POSITION', 'KOPIEREN', 'POSITION',
+                           'BEDINGUNG_WORT_ERGAENZEN', 'UMLEITEN_STATT_WEITERLEITEN', 'AUSNAHMEN_UEBERNEHMEN',
+                           'AUSNAHMEN_UEBERNEHMEN', 'KOPIEREN', 'KOPIEREN', 'KOPIEREN'], 'Aktionen in Planreihenfolge (Plan v2)')
+        check(not any('KV@Qualitypool' in str(p[3]) for p in plan), 'KV@Qualitypool nicht im Plan')
+        check(all('||' in str(p[4]) for p in plan[12:]) and '||' in str(plan[4][4]),
+              'Ausweich-Bezüge mit „||“ (Zeile 5 und Erinnerungsregeln)')
     # Namen und Beschriftungen
     wbx = zb.read('xl/workbook.xml').decode('utf-8')
     namen = dict(re.findall(r'<definedName name="(U[MO]_[A-Z_]+)">([^<]+)</definedName>', wbx))
@@ -105,13 +136,19 @@ if out.lower().endswith('.xlsm'):
     def zelle(name):
         m = re.match(r"'?([^'!]+)'?!\$([A-Z]+)\$(\d+)", namen[name])
         return m.group(1), m.group(2), int(m.group(3))
-    for nm, label, wert in (('UM_ZIEL', 'Zielpostfach (wird geändert)', 'Bestandsuebertragungen@ergo.de'),
-                            ('UM_QUELLE', 'Quellpostfach (Regeln nur gelesen)', 'Maklerauftraege@ergo.de'),
+    ziel_soll, quelle_soll = 'Bestandsuebertragungen@ergo.de', 'Maklerauftraege@ergo.de'
+    if aufr:
+        # Aufräumen gibt es je Postfach: Zielpostfach ist das eine, Quellpostfach das andere
+        blatt, sp, zl = zelle('UM_ZIEL')
+        if b[blatt]['%s%d' % (sp, zl)].value == quelle_soll:
+            ziel_soll, quelle_soll = quelle_soll, ziel_soll
+    for nm, label, wert in (('UM_ZIEL', 'Zielpostfach (wird geändert)', ziel_soll),
+                            ('UM_QUELLE', 'Quellpostfach (Regeln nur gelesen)', quelle_soll),
                             ('UM_TROTZ', 'Trotz nicht lesbarer Bedingungen speichern (Sicherung als .rwz vorhanden)', 'Nein')):
         blatt, sp, zl = zelle(nm)
         check(b[blatt]['B%d' % zl].value == label and b[blatt]['%s%d' % (sp, zl)].value == wert,
               '%s: Beschriftung und Wert (%s)' % (nm, wert))
-    check(re.match(r"'Umsetzung'!\$B\$%d:\$M\$%d" % (kopf + 1, kopf + 1 + 19), namen['UM_PLAN']) is not None
+    check(re.match(r"'Umsetzung'!\$B\$%d:\$M\$%d" % (kopf + 1, kopf + len(plan) + 6), namen['UM_PLAN']) is not None
           and namen['UM_PLANKOPF'] == "'Umsetzung'!$B$%d:$M$%d" % (kopf, kopf), 'Plan-Bereich direkt unter der Kopfzeile')
     check(ws.cell(kopf, 12).value == 'Überspringen: nicht auflösbare Absender' and ws.cell(kopf, 13).value == 'Warum'
           and not any(p[10] for p in plan), 'Spalte L „Überspringen“ vorhanden und im Plan leer (Standard: blockieren)')
@@ -124,7 +161,7 @@ if out.lower().endswith('.xlsm'):
         blattdatei[name.replace('&amp;', '&')] = 'xl/' + ziel
     roh = {k: zb.read(v).decode('utf-8') for k, v in blattdatei.items()}
     check('state="frozen"' not in roh['Umsetzung'], 'Blatt Umsetzung ohne fixierte Zeilen')
-    for blatt in ('Auf einen Blick', 'Anlegen'):
+    for blatt in (('Auf einen Blick',) if aufr else ('Auf einen Blick', 'Anlegen')):
         check("location=\"'Umsetzung'!A1\"" in roh[blatt], 'Link auf Umsetzung in %s' % blatt)
     # Knoepfe je Blatt: Makros und Lage (Spalten B-D, oberhalb des Plans)
     wo = b['Ordner']
@@ -218,7 +255,7 @@ if ref:
             return True                                    # Hinweistext in der .xlsm ergaenzt
         return False
 
-    for blatt in ('Auf einen Blick', 'Vergleich', 'Anlegen'):
+    for blatt in ('Auf einen Blick', 'Vergleich', 'Aufräumen' if 'Aufräumen' in b.sheetnames else 'Anlegen'):
         za_, zb_ = zeilen(c[blatt]), zeilen(b[blatt])
         sa = [tuple(sorted(z.items(), key=lambda kv: kv[0])) for z in za_]
         sb = [tuple(sorted(z.items(), key=lambda kv: kv[0])) for z in zb_]

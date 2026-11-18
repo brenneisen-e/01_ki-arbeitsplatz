@@ -15,6 +15,46 @@ python3 -I pruefe.py <Export.xlsx> <ziel>/Regeln_Umbau.xlsm <ziel>/Regeln_Vergle
 python3 test_umbau.py <Export.xlsx> <arbeitsordner> [szenario ...]                     # Ablauftest in LibreOffice
 ```
 
+## Auftrag „Aufräumen“ (seit Plan 3.1): Duplikate löschen, umbenennen, Reihenfolge
+
+Anlass (Export vom 18.11.2026): In Bestandsuebertragungen stehen fünf Regeln je neunmal (63 statt 23 Regeln), die Namen
+beider Postfächer sollen einheitlich werden. Dafür gibt es einen zweiten Auftrag neben „Bestand nach Vorbild Makler“
+(Plan v2). Er braucht den Export und eine **Namensliste** – eine Excel-Datei mit einem Blatt je Postfach (Blattname
+beginnt mit „Bestand…“/„Makler…“), Spalten „Name heute“ und „Neuer Name …“; die Zeilenreihenfolge ist die gewünschte
+Reihenfolge der Regeln. Export und Namensliste stehen nicht im Repository.
+
+```bash
+cd quellen
+python3 -I bau_regeln.py <Export.xlsx> <ziel>/Regeln_Aufraeumen_Bestand.xlsm --plan <Namensliste.xlsx>
+python3 -I bau_regeln.py <Export.xlsx> <ziel>/Regeln_Aufraeumen_Makler.xlsm --plan <Namensliste.xlsx> --ziel makler
+python3 -I pruefe.py <Export.xlsx> <ziel>/Regeln_Aufraeumen_Bestand.xlsm
+python3 probelauf.py <Export.xlsx> <Namensliste.xlsx> <arbeitsordner>      # Probelauf beider Mappen gegen die Attrappe
+```
+
+- **Eine Mappe je Postfach.** `--ziel makler` tauscht die Rollen: Zielpostfach ist Maklerauftraege, Quellpostfach (nur
+  gelesen, als Ziel abgelehnt – `QUELLE_STANDARD`) ist Bestandsuebertragungen. Am Makro ändert das nichts; die
+  Sicherung „das Quellpostfach dieser Mappe wird nie geändert“ gilt in jeder Mappe für das jeweils andere Postfach.
+- `aufraeumen.py` leitet den Plan ab: erst `LOESCHEN <Name> | Duplikate` je mehrfach vorhandenem Namen, dann
+  `UMBENENNEN` je Regel mit neuem Namen, dann `POSITION <neuer Name> | nach: <Vorgängerin>` nur für die Regeln, die
+  ihren Platz wechseln müssen (die längste Teilfolge, die ihre Reihenfolge behält, bleibt stehen). Passt die
+  Namensliste nicht zum Export (Regel fehlt oder ist unbekannt, neuer Name doppelt oder gleich einem Namen von heute,
+  gleicher Name mit verschiedenem Inhalt), bricht der Bau mit einer Meldung ab – er rät nicht.
+- Die Mappe hat statt „Anlegen“ das Blatt **Aufräumen** (je Postfach: Platz neu/heute, Name heute, neuer Name, was
+  die Regel macht, Hinweis); „Auf einen Blick“ nennt je Postfach Regeln danach, Duplikate, Umbenennungen und
+  Umstellungen. Vergleich, Export-Blätter, Ordner, Live, Sicherung und Protokoll wie bisher.
+- `pruefe.py` erkennt den Auftrag am Blatt „Aufräumen“ und prüft dann den Aufbau des Aufräum-Plans statt des Plans v2.
+- `probelauf.py` baut beide Mappen als Testvariante (Attrappe mit den Regeln **dieses** Exports) und ruft Lesen,
+  Vorschau, Ausführen und die zweite Vorschau auf. Geprüft: Vorschau ohne Blocker, alle Zeilen „erledigt (geprüft)“,
+  ein Save, so viele entfernte Regeln wie Duplikate, danach genau die Regeln der Namensliste in ihrer Reihenfolge und
+  mit unverändertem Inhalt, anderes Postfach unverändert, Sicherung vollständig, zweiter Lauf „schon erledigt“.
+  Stand 18.11.2026 (Export vom selben Tag, Vorschlag der Namensliste): 28 von 28 Prüfungen – Bestandsuebertragungen
+  63 → 23 Regeln (40 Duplikate entfernt, 29 Planzeilen), Maklerauftraege 25 Regeln (27 Planzeilen).
+- Folgt im Plan auf `LOESCHEN … Duplikate` ein `UMBENENNEN` derselben Regel, meldet die Lösch-Zeile im zweiten Lauf
+  (und in der Nachprüfung) „schon erledigt · es gibt nur 1 Regel „<neuer Name>““ – sie findet die verbliebene Regel
+  über die Umbenennen-Zeile.
+- Meldungen zum Löschen nennen die Plätze, wie sie in Outlook stehen (Blatt Live), nicht die Plätze im Abbild nach
+  den Lösch-Zeilen davor.
+
 ## Exportformat
 
 `bau_regeln.py` findet die Spalten der Übersicht über die Kopfzeile. Es liest das neue Format des
@@ -271,7 +311,9 @@ getestet). Belegt (Microsoft Learn): `Rules.Create` setzt die neue Regel auf Pla
 outlook_regeln/
   README.md, .gitignore
   quellen/
-    bau_regeln.py        Auswertung (xlsx) bzw. Makro-Mappe (xlsm); --test baut die Testvariante
+    bau_regeln.py        Auswertung (xlsx) bzw. Makro-Mappe (xlsm); --test baut die Testvariante; --plan/--ziel: Aufräumen
+    aufraeumen.py        Auftrag „Aufräumen“: Namensliste lesen und prüfen, Plan ableiten, Blatt Aufräumen
+    probelauf.py         Probelauf der Aufräum-Mappen beider Postfächer gegen die Attrappe (Regeln des Exports)
     umbau.py             Makro-Teil: Plan v2 aus den Daten, Blatt Umsetzung, Live/Sicherung/Protokoll, VBA-Projekt
     pruefe.py            Wertetreue, Prüfung des Makro-Teils, Vergleich mit der .xlsx
     test_umbau.py        Ablauftest in LibreOffice gegen die Outlook-Attrappe

@@ -737,7 +737,7 @@ End Sub
 ' Regeln, die bleiben, in der Reihenfolge des Abbilds - nur ueber frische Zugriffe (Rules.Count, Rules.Item).
 ' Rueckgabe "" oder Fehlertext; gFehlerZeile = Planzeile der betroffenen Regel.
 Public Function RegelnEntfernen(ByVal regeln As Object) As String
-    Dim i As Long, j As Long, t As Long, n As Long, w As Long, pk As Long, platz() As Long, folge() As Long
+    Dim i As Long, j As Long, t As Long, n As Long, w As Long, pk As Long, plaetze() As Long, folge() As Long
     Dim rl As Object, was As String, nm As String, anders As String
     gFehlerZeile = 0
     gEntferntAnz = 0
@@ -745,9 +745,9 @@ Public Function RegelnEntfernen(ByVal regeln As Object) As String
     pk = gProtK
     On Error GoTo Fehlerfall
     was = "Fehler vor dem Löschen: "
-    ReDim platz(0 To gWegAnz): ReDim folge(0 To gWegAnz)
+    ReDim plaetze(0 To gWegAnz): ReDim folge(0 To gWegAnz)
     For i = 1 To gWegAnz
-        platz(i) = mObj(gWegId(i)).ExecutionOrder
+        plaetze(i) = mObj(gWegId(i)).ExecutionOrder
         folge(i) = i
     Next i
     ' absteigend nach Platz
@@ -755,7 +755,7 @@ Public Function RegelnEntfernen(ByVal regeln As Object) As String
         t = folge(i)
         j = i - 1
         Do While j >= 1
-            If platz(folge(j)) >= platz(t) Then Exit Do
+            If plaetze(folge(j)) >= plaetze(t) Then Exit Do
             folge(j + 1) = folge(j)
             j = j - 1
         Loop
@@ -767,18 +767,18 @@ Public Function RegelnEntfernen(ByVal regeln As Object) As String
         gProtK = gWegZeile(w)
         was = "Fehler beim Löschen der Regel " & Zitat(gWegName(w)) & ": "
         n = regeln.Count
-        If platz(w) < 1 Or platz(w) > n Then Fehler "Platz " & platz(w) & " liegt außerhalb 1 bis " & n
-        Set rl = regeln.Item(platz(w))
+        If plaetze(w) < 1 Or plaetze(w) > n Then Fehler "Platz " & plaetze(w) & " liegt außerhalb 1 bis " & n
+        Set rl = regeln.Item(CLng(plaetze(w)))
         nm = rl.Name
-        If nm <> gWegName(w) Then Fehler "an Platz " & platz(w) & " steht " & Zitat(nm) & " – nichts entfernt"
+        If nm <> gWegName(w) Then Fehler "an Platz " & plaetze(w) & " steht " & Zitat(nm) & " – nichts entfernt"
         QuellPlatzLeeren
         RegelLesen rl, 0
         anders = SignaturTeile(gWegSig(w), InhaltSignatur(0))
-        If anders <> "" Then Fehler "die Regel an Platz " & platz(w) & " hat einen anderen Inhalt als vorgemerkt (" & anders & ") – nichts entfernt"
-        regeln.Remove platz(w)
+        If anders <> "" Then Fehler "die Regel an Platz " & plaetze(w) & " hat einen anderen Inhalt als vorgemerkt (" & anders & ") – nichts entfernt"
+        regeln.Remove CLng(plaetze(w))
         gEntferntAnz = gEntferntAnz + 1
         If regeln.Count <> n - 1 Then Fehler "Outlook nennt danach " & regeln.Count & " statt " & (n - 1) & " Regeln"
-        ProtokollZeile "Gelöscht: " & Zitat(gWegName(w)) & " (Platz " & platz(w) & ")"
+        ProtokollZeile "Gelöscht: " & Zitat(gWegName(w)) & " (Platz " & plaetze(w) & ")"
     Next j
     gFehlerZeile = 0
     gProtK = pk

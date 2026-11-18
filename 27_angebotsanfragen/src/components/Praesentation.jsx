@@ -27,7 +27,7 @@ import {
   X, ChevronLeft, ChevronRight, Maximize2, Minimize2, Inbox, Mail, Paperclip, Sparkles,
   AlertTriangle, Lightbulb, ArrowRight, Check, Minus, CheckCircle2, FileText, Loader2,
   RotateCcw, Search, Send, Archive, FolderOpen, ListChecks, TextSearch, UserCheck, Columns2,
-  Database, MailQuestion, Keyboard, Bot, FileSpreadsheet
+  Database, MailQuestion, Keyboard, Bot, FileSpreadsheet, Play
 } from 'lucide-react'
 import { VORGAENGE, BEISPIELE, DEMO_VORGANG_ID, herkunft } from '../daten/vorgaenge'
 import { pruefe, auswertung, STUFEN } from '../utils/pruefengine'
@@ -38,10 +38,12 @@ import { baueRueckfrage } from '../utils/rueckfrage'
 import { PROZESS } from '../utils/prozess'
 import { ERGEBNIS, ERGEBNIS_FOLGE, PRUEF_STATUS } from '../utils/ergebnis'
 import { begriffe } from '../utils/branding'
+import { BeispielNummer } from './Bausteine'
 import { rolleZu, findeMarke } from '../utils/rollen'
 import { auszug } from './Bausteine'
 import Deckblatt from './Deckblatt'
 import Dokument from './Dokument'
+import { originalseiten } from '../utils/originalbild'
 import Legende from './Legende'
 
 // ============================================================
@@ -191,7 +193,7 @@ function Lesebereich({ vorgang }) {
         )}
       </div>
       <div className="p-5">
-        <Dokument dok={dok} info={{}} markierung={{ an: false }} />
+        <Dokument dok={dok} info={{}} markierung={{ an: false }} seitenbilder={originalseiten(vorgang)} />
       </div>
     </div>
   )
@@ -433,7 +435,8 @@ function SzeneLesen({ vorgang, verknuepfung, liste, phase }) {
         </div>
         <div ref={links} className="flex-1 min-h-0 overflow-y-auto bg-slate-100 p-5">
           <Dokument dok={dok} info={verknuepfung.info}
-            markierung={{ sichtbar, laufend: aktuell?.key, stark: true }} />
+            markierung={{ sichtbar, laufend: aktuell?.key, stark: true }}
+            seitenbilder={originalseiten(vorgang, dokNr)} />
         </div>
         <div className="px-5 py-2 border-t border-slate-200 bg-white shrink-0"><Legende /></div>
       </div>
@@ -846,7 +849,7 @@ function SzeneSchritt({ vorgang, lauf, verknuepfung, phase }) {
 
 const MAIL_STROM = 12
 
-function SzeneAlle({ phase, aufAuswertung, vonVorn }) {
+function SzeneAlle({ vorgang, phase, aufAuswertung, vonVorn, aufVorgang, aufWahl }) {
   const gesamt = useMemo(() => auswertung(VORGAENGE), [])
   const laeuft = phase >= 1
   const zaehler = useZaehler(gesamt.gesamt, laeuft)
@@ -861,20 +864,23 @@ function SzeneAlle({ phase, aufAuswertung, vonVorn }) {
     rueckfrage: 'Rückfrage vorformuliert, wartet auf Freigabe',
     sonderfall: 'mit Deckblatt bei den Fachspezialisten'
   }
+  // Zum Schluss stehen die übrigen Beispielanfragen bereit: ansehen oder die Strecke damit durchspielen.
+  const uebrige = BEISPIELE.filter(v => v.id !== vorgang.id)
+  const laufZu = useMemo(() => new Map(gesamt.laeufe.map(({ vorgang: v, lauf }) => [v.id, lauf])), [gesamt])
 
   return (
-    <div className="flex flex-col justify-center gap-8 max-w-7xl mx-auto w-full" style={{ minHeight: 'calc(100vh - 17rem)' }}>
+    <div className="flex flex-col justify-center gap-5 max-w-7xl mx-auto w-full" style={{ minHeight: 'calc(100vh - 17rem)' }}>
       <div className="text-center">
-        <h3 className="text-4xl font-semibold text-slate-900">Und das für jede Anfrage</h3>
-        <p className="mt-3 text-xl text-slate-600 max-w-3xl mx-auto">
+        <h3 className="text-3xl font-semibold text-slate-900">Und das für jede Anfrage</h3>
+        <p className="mt-1 text-lg text-slate-600">
           Ein Postfach, {gesamt.gesamt} Eingänge, eine Strecke. Jeder Eingang bekommt dasselbe Deckblatt, egal wie er geschrieben ist.
         </p>
       </div>
 
       <div className="grid grid-cols-[11rem_minmax(0,1fr)_13rem_minmax(0,1fr)_23.5rem] items-center gap-0">
-        <div className="rounded-2xl border-2 border-slate-200 bg-white px-5 py-5 text-center">
-          <Inbox size={36} className="mx-auto text-slate-500" strokeWidth={1.5} />
-          <div className="mt-2 text-4xl font-semibold text-slate-900 font-mono">{zaehler}</div>
+        <div className="rounded-2xl border-2 border-slate-200 bg-white px-5 py-4 text-center">
+          <Inbox size={32} className="mx-auto text-slate-500" strokeWidth={1.5} />
+          <div className="mt-1.5 text-3xl font-semibold text-slate-900 font-mono">{zaehler}</div>
           <div className="text-sm text-slate-500">Eingänge</div>
         </div>
 
@@ -887,9 +893,9 @@ function SzeneAlle({ phase, aufAuswertung, vonVorn }) {
           ))}
         </div>
 
-        <div className="rounded-2xl border-2 px-5 py-5 text-center text-white shadow-lg" style={{ background: 'var(--mode-gradient)', borderColor: 'var(--mode-primary)' }}>
-          <Sparkles size={36} className="mx-auto" strokeWidth={1.5} />
-          <div className="mt-2 text-lg font-semibold leading-tight">KI-Strecke</div>
+        <div className="rounded-2xl border-2 px-5 py-4 text-center text-white shadow-lg" style={{ background: 'var(--mode-gradient)', borderColor: 'var(--mode-primary)' }}>
+          <Sparkles size={32} className="mx-auto" strokeWidth={1.5} />
+          <div className="mt-1.5 text-lg font-semibold leading-tight">KI-Strecke</div>
           <div className="text-sm text-white/80">Lesen · Deckblatt · Prüfung</div>
         </div>
 
@@ -902,20 +908,20 @@ function SzeneAlle({ phase, aufAuswertung, vonVorn }) {
           ))}
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {ERGEBNIS_FOLGE.map(art => {
             const ae = ERGEBNIS[art]
             const anteil = gesamt.gesamt ? Math.round((werte[art] / gesamt.gesamt) * 100) : 0
             return (
-              <div key={art} className={clsx('rounded-2xl border-2 bg-white px-4 py-3 flex items-center gap-3', ae.rand)}>
-                <span className={clsx('w-11 h-11 rounded-xl flex items-center justify-center shrink-0', ae.bg, ae.ton)}><ae.Icon size={22} strokeWidth={1.75} /></span>
+              <div key={art} className={clsx('rounded-2xl border-2 bg-white px-3.5 py-2 flex items-center gap-3', ae.rand)}>
+                <span className={clsx('w-9 h-9 rounded-xl flex items-center justify-center shrink-0', ae.bg, ae.ton)}><ae.Icon size={19} strokeWidth={1.75} /></span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline gap-2">
-                    <span className="text-2xl font-semibold text-slate-900 font-mono leading-none">{werte[art]}</span>
-                    <span className="text-base font-semibold text-slate-800">{ae.titel}</span>
+                    <span className="text-xl font-semibold text-slate-900 font-mono leading-none">{werte[art]}</span>
+                    <span className="text-sm font-semibold text-slate-800">{ae.titel}</span>
                   </span>
-                  <span className="block text-xs text-slate-500">{texte[art]}</span>
-                  <span className="block mt-1.5 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                  <span className="block text-2xs text-slate-500 leading-snug">{texte[art]}</span>
+                  <span className="block mt-1 h-1 rounded-full bg-slate-100 overflow-hidden">
                     <span className={clsx('block h-full transition-all duration-200', ae.balken)} style={{ width: `${anteil}%` }} />
                   </span>
                 </span>
@@ -925,26 +931,65 @@ function SzeneAlle({ phase, aufAuswertung, vonVorn }) {
         </div>
       </div>
 
-      <div className={clsx('grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_auto] gap-6 items-center transition-all duration-700', fertig ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4')}>
-        <div className="rounded-2xl border-2 bg-white px-6 py-5 flex items-center gap-6" style={{ borderColor: 'var(--mode-primary-light)' }}>
-          <FileSpreadsheet size={44} className="shrink-0" strokeWidth={1.5} style={{ color: 'var(--mode-primary-light)' }} />
+      <div className={clsx('grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_auto] gap-5 items-center transition-all duration-700', fertig ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4')}>
+        <div className="rounded-2xl border-2 bg-white px-5 py-3 flex items-center gap-5" style={{ borderColor: 'var(--mode-primary-light)' }}>
+          <FileSpreadsheet size={34} className="shrink-0" strokeWidth={1.5} style={{ color: 'var(--mode-primary-light)' }} />
+          <span className="text-3xl font-semibold font-mono leading-none whitespace-nowrap shrink-0" style={{ color: 'var(--mode-primary)' }}>{gesamt.gesamt} von {gesamt.gesamt}</span>
           <span>
-            <span className="block text-4xl font-semibold font-mono leading-none" style={{ color: 'var(--mode-primary)' }}>{gesamt.gesamt} von {gesamt.gesamt}</span>
-            <span className="block text-base text-slate-700 mt-1.5">
+            <span className="block text-sm text-slate-700 leading-snug">
               Eingängen haben ein Deckblatt in derselben Struktur. Das Lesen und Strukturieren entfällt,
               Entscheidung und Freigabe bleiben bei der Sachbearbeitung.
             </span>
           </span>
         </div>
-        <div className="flex flex-col gap-2.5">
-          <button onClick={aufAuswertung} className="px-5 py-3 rounded-xl text-base font-medium text-white flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
-            <ListChecks size={18} /> Auswertung aller {gesamt.gesamt} Eingänge öffnen
+        <div className="flex flex-col gap-2">
+          <button onClick={aufAuswertung} className="px-4 py-2 rounded-xl text-sm font-medium text-white flex items-center justify-center gap-2" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
+            <ListChecks size={16} /> Auswertung aller {gesamt.gesamt} Eingänge öffnen
           </button>
-          <button onClick={vonVorn} className="px-5 py-3 rounded-xl text-base border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center gap-2">
-            <RotateCcw size={17} /> Von vorn beginnen
+          <button onClick={vonVorn} className="px-4 py-2 rounded-xl text-sm border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center gap-2">
+            <RotateCcw size={15} /> Von vorn beginnen
           </button>
         </div>
       </div>
+
+      {uebrige.length > 0 && (
+        <div className={clsx('transition-all duration-700 delay-150', fertig ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4')} data-schluss-beispiele>
+          <div className="flex items-baseline gap-3 mb-2">
+            <h4 className="text-lg font-semibold text-slate-900">Die anderen Beispielanfragen zum Durchklicken</h4>
+            <span className="text-sm text-slate-500">Ansehen öffnet Original und Deckblatt nebeneinander, im Fenster geht es weiter zum nächsten Beispiel.</span>
+          </div>
+          <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${uebrige.length}, minmax(0, 1fr))` }}>
+            {uebrige.map(v => {
+              const lauf = laufZu.get(v.id)
+              const ae = lauf ? ERGEBNIS[lauf.ergebnis.art] : null
+              return (
+                <div key={v.id} className="beispiel-kachel rounded-2xl px-3.5 py-3 flex flex-col">
+                  <button onClick={() => aufVorgang?.(v)} className="text-left flex items-start gap-3" title="Original und Deckblatt ansehen">
+                    <BeispielNummer nr={v.beispiel} gross />
+                    <span className="min-w-0">
+                      <span className="block text-base font-semibold text-slate-900 leading-snug truncate">{v.kunde}</span>
+                      <span className="block text-xs text-slate-600 leading-snug truncate">{v.form}</span>
+                    </span>
+                  </button>
+                  <div className="mt-2 flex">
+                    {ae && <span className={clsx('text-2xs px-2 py-0.5 rounded-full border inline-flex items-center gap-1 whitespace-nowrap', ae.badge)}><ae.Icon size={11} /> {ae.titel}</span>}
+                  </div>
+                  <div className="mt-2 grid grid-cols-2 gap-1.5">
+                    <button onClick={() => aufVorgang?.(v)}
+                      className="px-2 py-1.5 rounded-lg text-xs font-medium text-white inline-flex items-center justify-center gap-1.5 whitespace-nowrap" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
+                      <Columns2 size={13} /> Ansehen
+                    </button>
+                    <button onClick={() => aufWahl?.(v.id)} title={`Die Strecke mit Beispiel ${v.beispiel} durchspielen`}
+                      className="px-2 py-1.5 rounded-lg text-xs font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 inline-flex items-center justify-center gap-1.5 whitespace-nowrap">
+                      <Play size={12} /> Durchspielen
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -1149,7 +1194,8 @@ export default function Praesentation({ offen, startSchritt = 0, startVorgangId 
     <SzeneDeckblatt key="3" vorgang={vorgang} lauf={lauf} verknuepfung={verknuepfung} phase={phase} aufVergleich={() => aufVorgang?.(vorgang)} />,
     <SzenePruefung key="4" lauf={lauf} phase={phase} />,
     <SzeneSchritt key="5" vorgang={vorgang} lauf={lauf} verknuepfung={verknuepfung} phase={phase} />,
-    <SzeneAlle key="6" phase={phase} vonVorn={vonVorn} aufAuswertung={() => { schliessen(); aufAuswertung?.() }} />
+    <SzeneAlle key="6" vorgang={vorgang} phase={phase} vonVorn={vonVorn} aufAuswertung={() => { schliessen(); aufAuswertung?.() }}
+      aufVorgang={aufVorgang} aufWahl={waehleEingang} />
   ][schritt]
 
   return createPortal((

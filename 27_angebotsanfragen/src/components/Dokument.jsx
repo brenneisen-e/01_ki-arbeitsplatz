@@ -1,5 +1,10 @@
 /**
- * Der Eingang im Original: Seiten eines Dokuments als Nachbau.
+ * Der Eingang im Original: Seiten eines Dokuments.
+ *
+ * Für die Beispielanfragen gibt es die Seiten des PDF als Bild (`seitenbilder`,
+ * siehe utils/originalbild.js); die Fundstellen liegen dann als Leuchtstift
+ * über dem Bild. Alle anderen Eingänge und die Abschrift entstehen als Nachbau
+ * aus Blöcken, die Fundstellen stehen dort im Text.
  *
  * Jede Stelle, an der die KI einen Wert gelesen hat, ist im Text markiert
  * (gelb: wörtlich gelesen, violett: interpretiert, orange: Auffälligkeit).
@@ -22,6 +27,7 @@ import { createContext, useContext, useMemo, Fragment } from 'react'
 import { clsx } from 'clsx'
 import { Check, X, Mail, Phone, CalendarDays, ShieldCheck, Building2, Dot } from 'lucide-react'
 import { zerlege } from '../utils/markierung'
+import { SEITENFORMAT } from '../daten/originale'
 
 const Kontext = createContext(null)
 
@@ -54,6 +60,47 @@ function Marke({ teil }) {
       {/* Wortverbinder davor: die Ziffer bricht nie allein in die nächste Zeile um */}
       {k.ziffern && info.nr !== '' && <>{'\u2060'}<sup className="fs-nr">{info.nr}</sup></>}
     </mark>
+  )
+}
+
+/**
+ * Fundstelle auf einer Originalseite: je Textzeile ein Rechteck über dem Bild.
+ * Verhält sich wie `Marke`, nur dass der Text schon im Bild steht.
+ */
+function Bildmarke({ marke }) {
+  const k = useContext(Kontext)
+  const bekannt = marke.f.filter(f => k.info[f])
+  if (!k.an || bekannt.length === 0 || marke.r.length === 0) return null
+
+  const sichtbare = k.sichtbar ? bekannt.filter(f => k.sichtbar.has(f)) : bekannt
+  const laufend = k.laufend && bekannt.includes(k.laufend)
+  const aktiv = !laufend && k.aktiv && sichtbare.includes(k.aktiv)
+  const fuehrend = laufend ? k.laufend : aktiv ? k.aktiv : sichtbare[0]
+  const an = sichtbare.length > 0 || laufend
+  const info = an ? k.info[fuehrend] : null
+  const bedienbar = an && Boolean(k.onFeld)
+  const letztes = marke.r[marke.r.length - 1]
+
+  return (
+    <>
+      {marke.r.map((r, i) => (
+        <mark
+          key={i}
+          className={clsx('fs bild', an && 'an', an && `art-${info.farbe}`, (aktiv || laufend) && 'aktiv')}
+          data-felder={bekannt.join(' ')}
+          title={an ? info.titel : undefined}
+          style={{ left: `${r[0]}%`, top: `${r[1]}%`, width: `${r[2]}%`, height: `${r[3]}%` }}
+          onMouseEnter={bedienbar ? () => k.onFeld(fuehrend, 'hover') : undefined}
+          onMouseLeave={bedienbar ? () => k.onFeld(null, 'hover') : undefined}
+          onClick={bedienbar ? (e) => { e.stopPropagation(); k.onFeld(fuehrend, 'klick') } : undefined}
+        />
+      ))}
+      {/* Die Abschnittsziffer sitzt als eigenes Element an der letzten Zeile: Im Leuchtstift selbst
+          würde sie mit dem Blatt verrechnet und verschwände. */}
+      {an && k.ziffern && info.nr !== '' && (
+        <span className="fs-nr bild" style={{ left: `${letztes[0] + letztes[2]}%`, top: `${letztes[1]}%` }}>{info.nr}</span>
+      )}
+    </>
   )
 }
 
@@ -204,7 +251,7 @@ function Block({ block }) {
   }
 }
 
-export default function Dokument({ dok, info, markierung = {}, onFeld, seitenlabel = true }) {
+export default function Dokument({ dok, info, markierung = {}, onFeld, seitenlabel = true, seitenbilder = null }) {
   const kontext = useMemo(() => ({
     info,
     an: markierung.an !== false,
@@ -217,6 +264,31 @@ export default function Dokument({ dok, info, markierung = {}, onFeld, seitenlab
   }), [info, markierung.an, markierung.aktiv, markierung.sichtbar, markierung.laufend, markierung.stark, markierung.ziffern, onFeld])
 
   const anzahl = dok.seiten.length
+
+  if (seitenbilder) {
+    return (
+      <Kontext.Provider value={kontext}>
+        <div className="space-y-4">
+          {seitenbilder.map(seite => (
+            <div key={seite.nr} data-seite={seite.nr}>
+              {seitenlabel && (
+                <div className="mb-1 flex items-center justify-between text-2xs text-slate-400">
+                  <span>Seite {seite.nr} von {seitenbilder.length}</span>
+                  {dok.scan && <span>Scan, per Texterkennung gelesen</span>}
+                </div>
+              )}
+              <div className="dok-seite">
+                <div className="dok-bildseite" style={{ aspectRatio: `${SEITENFORMAT.breite} / ${SEITENFORMAT.hoehe}` }}>
+                  <img src={seite.url} alt={`Seite ${seite.nr} des Eingangs im Original`} decoding="async" draggable={false} />
+                  {seite.marken.map((m, i) => <Bildmarke key={i} marke={m} />)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Kontext.Provider>
+    )
+  }
 
   return (
     <Kontext.Provider value={kontext}>

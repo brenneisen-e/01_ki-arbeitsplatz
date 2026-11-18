@@ -4,6 +4,9 @@
 //   – jedes gefüllte Feld, jede Betriebsart, Risikofrage und Auffälligkeit hat eine Fundstelle
 //   – Betriebsarten stehen in der Demo-Liste (außer „nicht eindeutig zuordenbar“)
 //   – keine Emojis, keine englischen Datumsformate in den Texten
+//   – Originalseiten der Beispielanfragen (src/daten/originale.js): Seitenzahl, Zahl und Felder der
+//     Markierungen je Seite stimmen mit dem nachgebauten Dokument überein, jede Markierung hat ein
+//     Rechteck, zu jeder Seite liegt das Bild vor
 // und gibt das Prüfergebnis je Eingang aus.
 
 import { VORGAENGE } from '../src/daten/vorgaenge.js'
@@ -12,6 +15,10 @@ import { feldfolge, feld, abschnitteFuer, VORGANGSFELDER, layoutVon } from '../s
 import { pruefe, auswertung, haeufigFehlend } from '../src/utils/pruefengine.js'
 import { baueRueckfrage } from '../src/utils/rueckfrage.js'
 import { ALLE_BETRIEBSARTEN } from '../src/utils/betriebsarten.js'
+import { zerlege } from '../src/utils/markierung.js'
+import { ORIGINALE } from '../src/daten/originale.js'
+import { existsSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 
 const ausfuehrlich = process.argv.includes('--alles')
 let fehler = 0
@@ -47,6 +54,36 @@ for (const v of VORGAENGE) {
   if (EMOJI.test(text)) melde(v, 'Emoji oder Symbolzeichen in den Daten')
   if (/\{[a-zA-Z]+\}/.test(text)) melde(v, `Platzhalter nicht aufgelöst: ${text.match(/\{[a-zA-Z]+\}/)[0]}`)
   if (!v.gesamteinschaetzung) melde(v, 'Gesamteinschätzung fehlt')
+}
+
+// Originalseiten: Wer ein nachgebautes Dokument ändert, muss scripts/originale/originale.py neu laufen lassen.
+function markenJeSeite(v) {
+  const sammle = (wert, aus) => {
+    if (typeof wert === 'string') { for (const t of zerlege(wert)) if (t.felder) aus.push(t.felder.join(',')) }
+    else if (Array.isArray(wert)) wert.forEach(w => sammle(w, aus))
+    else if (wert && typeof wert === 'object') for (const [k, w] of Object.entries(wert)) if (!['t', 'ort', 'stil', 'icon'].includes(k)) sammle(w, aus)
+    return aus
+  }
+  return v.dokumente[0].seiten.map(bloecke => sammle(bloecke, []))
+}
+const bildordner = fileURLToPath(new URL('../src/assets/originale/', import.meta.url))
+for (const v of VORGAENGE.filter(x => x.beispiel)) {
+  const o = ORIGINALE[v.id]
+  if (!o) { melde(v, 'Beispielanfrage ohne Originalseiten in originale.js'); continue }
+  const soll = markenJeSeite(v)
+  if (o.seiten.length !== soll.length) { melde(v, `Originalseiten: ${o.seiten.length} Seiten, im Nachbau ${soll.length}`); continue }
+  o.seiten.forEach((marken, i) => {
+    // Im Nachbau zählt jede Stelle einmal; die Reihenfolge der Tabellenzellen weicht dort von der des Werkzeugs ab.
+    const ist = marken.map(m => m.f.join(',')).sort().join(' | ')
+    if (ist !== [...soll[i]].sort().join(' | ')) melde(v, `Originalseite ${i + 1}: Markierungen passen nicht zum Nachbau (${marken.length} statt ${soll[i].length}); scripts/originale/originale.py neu laufen lassen`)
+    marken.forEach((m, k) => { if (!m.r.length) melde(v, `Originalseite ${i + 1}: Markierung ${k} (${m.f.join(',')}) ohne Rechteck`) })
+    for (const name of [`${o.kennung}-${i + 1}`, ...(o.neutral.includes(i + 1) ? [`${o.kennung}-${i + 1}.neutral`] : [])]) {
+      if (!existsSync(`${bildordner}${name}.webp`)) melde(v, `Seitenbild ${name}.webp fehlt`)
+    }
+  })
+}
+for (const id of Object.keys(ORIGINALE)) {
+  if (!VORGAENGE.some(v => v.id === id)) { fehler++; console.log(`  ✗ originale.js nennt ${id}, den es nicht gibt`) }
 }
 
 console.log('\nErgebnis je Eingang')

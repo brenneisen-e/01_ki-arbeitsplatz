@@ -271,7 +271,7 @@ export default function ProzessPage({ onPraesentation }) {
           <h3 className="font-semibold text-base text-slate-800">Worauf diese Demo beruht</h3>
           <div className="mt-3">
             <Punktliste Icon={Check} ton="text-slate-400" punkte={[
-              `${beispiele} Beispielanfragen des Fachbereichs, verfremdet und Seite für Seite nachgebaut`,
+              `${beispiele} Beispielanfragen des Fachbereichs, verfremdet und als Originalseiten gezeigt`,
               `${erfunden} erfundene Eingänge, damit alle ${ANGEBOTSLAYOUTS.length} Layouts und alle drei Ergebnisse vorkommen`,
               `Gliederung der Deckblätter aus der ${B.layoutQuelle}`,
               'Pflichtangaben je Sparte sind eine Annahme, die Betriebsartenliste ist ein Auszug',

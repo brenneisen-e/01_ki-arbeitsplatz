@@ -2276,7 +2276,7 @@ def sz_loeschen_duplikat(s):
     st = s.plan('VORSCHAU')
     for k in (n, n + 1, n + 2):
         print('    %d  %s' % (k, st[k]))
-    pruefe(st[n] == 'bereit · löschen – Duplikat von „%s“ (Platz %d, bleibt)' % (PVB, p1), 'Vorschau: Duplikat erkannt, bereit', st[n])
+    pruefe(st[n] == 'bereit · löschen – Duplikat von „%s“ (in Outlook Platz %d, bleibt)' % (PVB, p1), 'Vorschau: Duplikat erkannt, bereit', st[n])
     pruefe(st[n + 1] == 'bereit · neuer Name „%s“' % neu_name, 'Umbenennen über „#1/2“: bereit', st[n + 1])
     pruefe(st[n + 2] == 'blockiert: Regel „%s #2/2“ wird laut Plan gelöscht (Zeile %d)' % (PVB, n),
            'Spätere Zeile an der gelöschten Regel: blockiert mit Zeilennummer', st[n + 2])
@@ -2304,7 +2304,7 @@ def sz_loeschen_duplikat(s):
     t = fr[2][1]
     print('    Rückfrage Löschen:\n      %s' % t.replace('\n', '\n      '))
     pruefe(t.startswith('Löschen: 1 Regel wird aus %s entfernt:' % BES)
-           and '• %d „%s #2/2“ – löschen – Duplikat von „%s“ (Platz %d, bleibt)' % (n, PVB, PVB, p1) in t
+           and '• %d „%s #2/2“ – löschen – Duplikat von „%s“ (in Outlook Platz %d, bleibt)' % (n, PVB, PVB, p1) in t
            and '.rwz' in t and t.endswith('Diese Regel wirklich löschen?') and 'ohne Ersatz' not in t,
            'Rückfrage nennt Regel, Begründung und die .rwz als einzigen Rückweg')
     log = [x for x in s.ruf('modAttrappe.AtSchreibLog').split('\n') if x]
@@ -2367,7 +2367,7 @@ def sz_loeschen_pruefung(s):
     pruefe(st[5] == 'blockiert: Regel, die bleiben soll, nicht gefunden: „Gibt es nicht“', 'Bleibende Regel fehlt: blockiert', st[5])
     st = vorschau((kop, 'gleich: ' + PVB), (EKWAD, 'gleich: ' + PVB), ('Gibt es nicht', 'ohne Ersatz'), (PVB + ' #2/3', 'gleich: ' + PVB),
                   (PVB + ' #3/2', 'ohne Ersatz'), (kop, 'Gleich ' + PVB))
-    pruefe(st[0] == 'bereit · löschen – Duplikat von „%s“ (Platz %d, bleibt)' % (PVB, p1),
+    pruefe(st[0] == 'bereit · löschen – Duplikat von „%s“ (in Outlook Platz %d, bleibt)' % (PVB, p1),
            'Anderer Name, gleicher Inhalt, bleibende Regel davor: bereit', st[0])
     pruefe(st[1].startswith('blockiert: Gleichheit nicht belegbar – „%s“ hat keine sichtbare Bedingung' % EKWAD) and '„ohne Ersatz“' in st[1],
            'Regel ohne sichtbare Bedingung: Gleichheit nicht belegbar, Hinweis auf „ohne Ersatz“', st[1])
@@ -2381,7 +2381,7 @@ def sz_loeschen_pruefung(s):
     pruefe(st[0].startswith('blockiert: die Regel, die bleibt (Platz %d), ist ausgeschaltet, die zu löschende eingeschaltet' % p1),
            'Bleibende Regel ausgeschaltet, zu löschende eingeschaltet: blockiert', st[0])
     # die ausgeschaltete vordere Regel loeschen aendert nichts - Platz spielt keine Rolle (Abbild: Zeile 1 blockiert, also noch da)
-    pruefe(st[1] == 'bereit · löschen – Duplikat von „%s“ (Platz %d, bleibt)' % (kop, p2),
+    pruefe(st[1] == 'bereit · löschen – Duplikat von „%s“ (in Outlook Platz %d, bleibt)' % (kop, p2),
            'Ausgeschaltete Regel löschen: bereit, auch wenn die bleibende dahinter steht', st[1])
     pruefe(s.zaehler()['schreib'] == '0' and s.zaehler()['remove'] == '0', 'Alle Vorschauen: nichts nach Outlook geschrieben', str(s.zaehler()))
 
@@ -2540,12 +2540,12 @@ def sz_loeschen_duplikate(s):
     st = s.plan('VORSCHAU')
     for k in range(n, n + 5):
         print('    %d  %s' % (k, st[k]))
-    pruefe(st[n] == 'bereit · löschen: 2 Duplikate (Plätze %d, %d), es bleibt die Regel auf Platz %d' % (pl_pvb[1], pl_pvb[2], pl_pvb[0]),
+    pruefe(st[n] == 'bereit · löschen: 2 Duplikate (in Outlook Plätze %d, %d), es bleibt die Regel auf Platz %d' % (pl_pvb[1], pl_pvb[2], pl_pvb[0]),
            'Verstreute Duplikate: bereit, nennt die Plätze und die Regel, die bleibt', st[n])
-    # Abbild nach Zeile n: zwei Regeln weniger vor KV Solo
-    kv1 = pl_kv[0] - 2
-    pruefe(st[n + 1] == 'bereit · löschen: 2 Duplikate (Platz %d bis %d), es bleibt die Regel auf Platz %d' % (kv1 + 1, kv1 + 2, kv1),
-           'Duplikate hintereinander: „Platz a bis b“ (Plätze nach den Zeilen davor)', st[n + 1])
+    # Plaetze wie in Outlook (Blatt Live), nicht wie im Abbild nach den Zeilen davor
+    kv1 = pl_kv[0]
+    pruefe(st[n + 1] == 'bereit · löschen: 2 Duplikate (in Outlook Platz %d bis %d), es bleibt die Regel auf Platz %d' % (kv1 + 1, kv1 + 2, kv1),
+           'Duplikate hintereinander: „Platz a bis b“, Plätze wie in Outlook – auch nach einer Lösch-Zeile davor', st[n + 1])
     pruefe(st[n + 2].startswith('blockiert: Regel auf Platz ') and 'kein Duplikat' in st[n + 2] and 'Bedingungen' in st[n + 2]
            and st[n + 2].endswith('Einzelne Regeln lassen sich als „Name #n/m“ ansprechen'),
            'Gleichnamig, aber anderer Inhalt: ganze Zeile blockiert, nennt Platz und Unterschied', st[n + 2])
@@ -2569,8 +2569,8 @@ def sz_loeschen_duplikate(s):
     t = fr[2][1]
     print('    Rückfrage Löschen:\n      %s' % t.replace('\n', '\n      '))
     pruefe(fr[2][0].startswith(TITEL_WEG) and t.startswith('Löschen: 4 Regeln werden aus %s entfernt:' % BES)
-           and '• %d „%s“ – löschen: 2 Duplikate (Plätze %d, %d), es bleibt die Regel auf Platz %d' % (n, PVB, pl_pvb[1], pl_pvb[2], pl_pvb[0]) in t
-           and '• %d „%s“ – löschen: 2 Duplikate (Platz %d bis %d), es bleibt die Regel auf Platz %d' % (n + 1, KVSOLO, kv1 + 1, kv1 + 2, kv1) in t
+           and '• %d „%s“ – löschen: 2 Duplikate (in Outlook Plätze %d, %d), es bleibt die Regel auf Platz %d' % (n, PVB, pl_pvb[1], pl_pvb[2], pl_pvb[0]) in t
+           and '• %d „%s“ – löschen: 2 Duplikate (in Outlook Platz %d bis %d), es bleibt die Regel auf Platz %d' % (n + 1, KVSOLO, kv1 + 1, kv1 + 2, kv1) in t
            and t.endswith('Diese Regeln wirklich löschen?'), 'Rückfrage: zählt vier Regeln, je Name eine Zeile')
     log = [x for x in s.ruf('modAttrappe.AtSchreibLog').split('\n') if x]
     erwartet = ['Rules.Remove %d' % p for p in sorted(pl_pvb[1:] + pl_kv[1:], reverse=True)] + ['Rules.Save']

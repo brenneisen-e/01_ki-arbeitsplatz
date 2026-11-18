@@ -67,7 +67,8 @@ AKTION_TEXT = [
 ]
 
 VBA_NAMEN = {'Auf einen Blick': 'shBlick', 'Umsetzung': 'shUmsetzung', 'Vergleich': 'shVergleich',
-             'Anlegen': 'shAnlegen', 'Übersicht': 'shUebersicht', 'Regel-Logik': 'shLogik', 'Elemente': 'shElemente',
+             'Anlegen': 'shAnlegen', 'Aufräumen': 'shAufraeumen', 'Übersicht': 'shUebersicht', 'Regel-Logik': 'shLogik',
+             'Elemente': 'shElemente',
              'Zielordner': 'shZielordner', 'Prüfhinweise': 'shHinweise', 'Diagnose': 'shDiagnose', 'Live': 'shLive',
              'Sicherung': 'shSicherung', 'Protokoll': 'shProtokoll', 'Ordner': 'shOrdner',
              'Ordner-Sicherung': 'shOrdnerSich'}
@@ -514,6 +515,10 @@ def umsetzung_blatt(g, ws, P):
     GELBD, GELBL, GRAUD, GRAUL, FONT_TITEL = g['GELBD'], g['GELBL'], g['GRAUD'], g['GRAUL'], g['FONT_TITEL']
     ORANGED, ORANGEL = g['ORANGED'], g['ORANGEL']
     BES, MAK, CF = g['BES'], g['MAK'], g['CF']
+    # Ziel- und Quellpostfach dieser Mappe (--ziel makler tauscht die Rollen) und Auftrag (--plan: Aufräumen)
+    ZIEL, QUELLE = g.get('ZIEL_PF', BES), g.get('QUELLE_PF', MAK)
+    aufr = bool(g.get('AUFRAEUMEN'))
+    ziel_regeln = g['mak_regeln'] if ZIEL == MAK else g['bes_regeln']
     L = {}
     blatt = "'%s'" % ws.name
 
@@ -531,9 +536,14 @@ def umsetzung_blatt(g, ws, P):
     ws.set_row(0, 8)
     ws.write(1, 1, 'Regeln in Outlook umsetzen', F(font_name=FONT_TITEL, font_size=20, bold=True, valign='bottom'))
     ws.set_row(1, 32)
-    ws.write(2, 1, 'Das Makro passt die Regeln des Zielpostfachs nach dem Plan unten an – nach Vorbild des '
-                   'Quellpostfachs. Es löscht eine Regel nur, wenn eine Zeile LOESCHEN das ausdrücklich vorsieht, und '
-                   'speichert die Regeln des Quellpostfachs nie (Ordner stellt das Blatt Ordner um).', F(font_color=MUTED))
+    if aufr:
+        ws.write(2, 1, 'Das Makro räumt die Regeln des Zielpostfachs nach dem Plan unten auf: Duplikate löschen, umbenennen, '
+                       'Reihenfolge herstellen (Blatt Aufräumen). Es löscht nur, was eine Zeile LOESCHEN ausdrücklich '
+                       'vorsieht, und speichert die Regeln des Quellpostfachs nie.', F(font_color=MUTED))
+    else:
+        ws.write(2, 1, 'Das Makro passt die Regeln des Zielpostfachs nach dem Plan unten an – nach Vorbild des '
+                       'Quellpostfachs. Es löscht eine Regel nur, wenn eine Zeile LOESCHEN das ausdrücklich vorsieht, und '
+                       'speichert die Regeln des Quellpostfachs nie (Ordner stellt das Blatt Ordner um).', F(font_color=MUTED))
     ws.set_row(2, 18)
     ws.set_row(3, 6)
 
@@ -574,10 +584,10 @@ def umsetzung_blatt(g, ws, P):
     ws.write(8, 1, 'Einstellungen', F(font_name=FONT_TITEL, font_size=12, bold=True, valign='bottom'))
     ws.set_row(8, 22)
     einst = [
-        ('ZIEL', BES, 'Postfach, dessen Regeln das Makro ändert. Muss im Outlook-Profil eingebunden sein (im '
-                      'Regel-Dialog „Posteingang [%s]“).' % BES.lower()),
-        ('QUELLE', MAK, 'Vorbild für KOPIEREN und AUSNAHMEN_UEBERNEHMEN. Seine Regeln werden nur gelesen und nie '
-                        'gespeichert; seine Ordner ändert nur das Blatt Ordner.'),
+        ('ZIEL', ZIEL, 'Postfach, dessen Regeln das Makro ändert. Muss im Outlook-Profil eingebunden sein (im '
+                       'Regel-Dialog „Posteingang [%s]“).' % ZIEL.lower()),
+        ('QUELLE', QUELLE, 'Vorbild für KOPIEREN und AUSNAHMEN_UEBERNEHMEN. Seine Regeln werden nur gelesen und nie '
+                           'gespeichert; seine Ordner ändert nur das Blatt Ordner.'),
         ('TROTZ', 'Nein', 'Standard Nein. Nur nötig, wenn Regeln im Zielpostfach nicht lesbar sind – Begründung unter '
                           'dem Plan.'),
     ]
@@ -695,8 +705,8 @@ def umsetzung_blatt(g, ws, P):
                           zeilenhoehe(zeilen(akt, sum(BREITEN[1:4]) - 2, pt=8.5, fett=True), pt=8.5)))
     r += 2
     # --- Hinweise: Sperre, Regeln ohne Bedingung, Ablauf
-    n_unles = sum(1 for x in g['bes_regeln'] if x['status'] in ('nein', 'teilweise', 'unbekannt'))
-    keine = [x for x in g['bes_regeln'] if x['status'] == 'keine']
+    n_unles = sum(1 for x in ziel_regeln if x['status'] in ('nein', 'teilweise', 'unbekannt'))
+    keine = [x for x in ziel_regeln if x['status'] == 'keine']
     hinweise = [
         ('Warum gesperrt?', GELBL, GELBD,
          'Outlook speichert beim Sichern immer alle Regeln eines Postfachs neu – auch die, die der Plan nicht berührt. '
@@ -704,7 +714,7 @@ def umsetzung_blatt(g, ws, P):
          'lesbar), könnte sie dabei verloren gehen; die Regel griffe dann womöglich bei jeder Mail. Dann speichert das '
          'Makro nur, wenn in den Einstellungen „Ja“ steht (erst nach dem Export als .rwz). Dasselbe gilt für eine Regel '
          'ohne sichtbare Bedingung vor aktiven Regeln (unten). Laut Export: %s.'
-         % ('alle Bedingungen in %s lesbar' % BES if not n_unles else '%d Regel(n) in %s nicht lesbar' % (n_unles, BES))),
+         % ('alle Bedingungen in %s lesbar' % ZIEL if not n_unles else '%d Regel(n) in %s nicht lesbar' % (n_unles, ZIEL))),
         ('Regeln ohne Bedingung', ORANGEL, ORANGED,
          'Eine Regel, für die Outlook gar keine Bedingung liefert, ist lesbar und greift bei allen Mails, die bis zu ihr '
          'kommen (Sammelregel), oder ihre Bedingung wurde in Outlook im Web angelegt. Ist sie ausgeschaltet oder die '
@@ -713,7 +723,7 @@ def umsetzung_blatt(g, ws, P):
          'und steht vor anderen aktiven Regeln – geprüft wird der Stand nach dem Plan, auch eine neue Regel dahinter '
          'zählt –, würde sie alles Folgende abfangen. Das ist unplausibel; das Makro sperrt dann das Speichern (Freigabe '
          'wie oben nur mit „Ja“; besser per Plan ans Ende setzen oder deaktivieren). Laut Export in %s: %s.'
-         % (BES, '; '.join('„%s“%s' % (x['name'], ' (aus)' if x['aktiv'] == 'Nein' else '') for x in keine)
+         % (ZIEL, '; '.join('„%s“%s' % (x['name'], ' (aus)' if x['aktiv'] == 'Nein' else '') for x in keine)
             or 'keine')),
         ('Ablauf', TILE, INK,
          'Blockiert eine ausgewählte Zeile, führt das Makro gar nichts aus. Fehler beim Ausführen: nichts wird '
@@ -772,7 +782,7 @@ def layout_modul(L, g):
          'Public Const BLATT_LIVE As String = "Live"',
          'Public Const BLATT_SICHERUNG As String = "Sicherung"',
          'Public Const BLATT_PROTOKOLL As String = "Protokoll"',
-         'Public Const QUELLE_STANDARD As String = %s' % vba_text(g['MAK'])]
+         'Public Const QUELLE_STANDARD As String = %s' % vba_text(g.get('QUELLE_PF', g['MAK']))]
     for k in ('UM_ZIEL', 'UM_QUELLE', 'UM_TROTZ', 'UM_STATUS', 'UM_VORSCHAU_ZEIT', 'UM_PRUEFWERT', 'UM_AUSF_ZEIT',
               'UM_PLANKOPF', 'UM_PLAN', 'UM_LIVE_ZEIT'):
         z.append('Public Const N_%s As String = "%s"' % (k[3:], k))
@@ -945,7 +955,8 @@ def vba_projekt(g, L, blattnamen):
 # ------------------------------------------------------------------ Einstieg
 def bauen(g):
     wb = g['wb']
-    P = plan_ableiten(g)
+    # Auftrag „Aufräumen“ (--plan): Plan aus Export und Namensliste (aufraeumen.py); sonst Plan v2 aus der Auswertung
+    P = g['AUFRAEUM_PLAN'] if g.get('AUFRAEUMEN') else plan_ableiten(g)
     g['PLAN'] = P
     L = umsetzung_blatt(g, g['WS_UMSETZUNG'], P)
     OP = ordner_plan(g)

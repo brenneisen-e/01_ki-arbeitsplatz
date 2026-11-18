@@ -6,7 +6,12 @@ nur Darstellung, Schrift (Aptos) und Farben aendern sich. Neu: Blatt
 "Auf einen Blick" mit Kennzahlen (Formeln mit vorberechnetem Wert), Legende,
 Gliederung in der Regel-Logik.
 
-Aufruf: python3 -I bau_regeln.py <eingabe.xlsx> <ausgabe.xlsx|ausgabe.xlsm> [--test]
+Aufruf: python3 -I bau_regeln.py <eingabe.xlsx> <ausgabe.xlsx|ausgabe.xlsm> [--test] [--plan <namensliste.xlsx>]
+        [--ziel makler]
+
+--plan baut den Auftrag „Aufräumen“ (Duplikate löschen, umbenennen, Reihenfolge; siehe aufraeumen.py) statt des Plans
+v2 und der Liste „Anlegen“. --ziel makler baut die Mappe für Maklerauftraege: Zielpostfach ist dann Maklerauftraege,
+Bestandsuebertragungen wird nur gelesen.
 
 Mit Ziel .xlsm entsteht die Makro-Mappe (Regeln_Umbau.xlsm): zusaetzlich das Blatt "Umsetzung" (Plan, Vorschau,
 Ausfuehren) als zweites Blatt, "Ordner" (Ordner-Umstellung) als drittes sowie "Live", "Sicherung", "Ordner-Sicherung" und
@@ -28,6 +33,20 @@ from PIL import ImageFont
 SRC, OUT = sys.argv[1], sys.argv[2]
 MAKRO = OUT.lower().endswith('.xlsm')
 TEST = '--test' in sys.argv[3:]
+
+
+def _option(name):
+    """Wert hinter einer Option (--plan <datei>, --ziel makler); None, wenn sie fehlt."""
+    a = sys.argv[3:]
+    return a[a.index(name) + 1] if name in a and a.index(name) + 1 < len(a) else None
+
+
+# Auftrag „Aufräumen“ (Duplikate löschen, umbenennen, Reihenfolge): --plan <namensliste.xlsx>, siehe aufraeumen.py.
+# --ziel makler baut die Mappe für Maklerauftraege (Rollen getauscht: Bestandsuebertragungen wird nur gelesen).
+PLAN_DATEI = _option('--plan')
+AUFRAEUMEN = PLAN_DATEI is not None
+ZIEL_ARG = (_option('--ziel') or 'bestand').lower()
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 if TEST and not MAKRO:
     raise SystemExit('--test nur mit Ziel .xlsm')
 
@@ -279,6 +298,9 @@ EL = 'Elemente'
 BES = [p for p in postfaecher if p.lower().startswith('bestand')][0]
 MAK = [p for p in postfaecher if p.lower().startswith('makler')][0]
 KURZ = {BES: 'Bestand', MAK: 'Makler'}
+# Zielpostfach der Makro-Mappe (wird geändert) und Quellpostfach (nur gelesen); --ziel makler tauscht die Rollen
+ZIEL_PF = MAK if ZIEL_ARG.startswith('makler') else BES
+QUELLE_PF = BES if ZIEL_PF == MAK else MAK
 
 REGEL = {}
 for g in regeln:
@@ -553,161 +575,170 @@ def ordner_von(g, aktion='In Ordner verschieben'):
     return next((d for b, d in g['akt'] if b == aktion), None)
 
 
-B_AA = finde(BES, 'Kopie von Automatische Antworten aussortieren')
-B_AA2 = finde(BES, 'Automatische Antworten aussortieren (2)')
-M_AA = finde(MAK, 'Automatische Antworten aussortieren')
-M_AA2 = finde(MAK, 'Automatische Antworten 1zu1 aussortieren')
-M_ESK = finde(MAK, 'Eskalations-GPF in den Prio-Ordner')
-B_PRIO = finde(BES, 'Beschwerden/Prio in den Prio-Ordner')
-M_PRIO = finde(MAK, 'Beschwerden/Prio in den Prio-Ordner')
-B_KVS = finde(BES, 'KV Solo')
-M_KVS = finde(MAK, 'KV Solo')
-B_EKWAD = finde(BES, 'E - KWAD – Gruppenpostfach')
-M_EKWAD = finde(MAK, 'E - KWAD – Gruppenpostfach')
-B_FL = finde(BES, 'Umleitung FL Verträge an VSLV3D')
-B_CCPI = finde(BES, 'CCPI mit Anlagen "hell"')
-M_CCPI = [g for g in mak_regeln if any(x in g['bed'] for x in B_CCPI['bed'] if x[0] == 'Absender ist')][0]
-M_ERINN = [g for g in mak_regeln if g['name'].startswith('Erinnerungen')]
-M_KVQP = finde(MAK, 'KV@Qualitypool in einen Unterordner')
-M_VERW = [g for g in nur_m if any('Vermittlerverwaltung' in (d or '') for b, d in g['akt'] if b == 'Umleiten an')
-          and g is not M_CCPI]
-B_SERVICE = finde(BES, 'Service Team Vermittlerverwaltung - Makler u Koop - Gruppenpostfach')
-B_PVB = finde(BES, 'PVB, Bot 1 (PVBHH-EXTERN)')
-B_BOT = finde(BES, 'Mails von BÜ-Bot, Robert (ODPB2D-EXTERN)')
-M_BOT = finde(MAK, 'Mails von BÜ-Bot, Robert (ODPB2D-EXTERN)')
-M_TECH = finde(MAK, 'Umleitung - Technische Fehler')
+if AUFRAEUMEN:
+    # Auftrag „Aufräumen“ (--plan): Duplikate löschen, umbenennen, Reihenfolge - siehe aufraeumen.py. Die Liste
+    # „Anlegen“ und der Plan v2 (Bestand nach Vorbild Makler) entfallen.
+    import aufraeumen
+    NAMENSLISTE = aufraeumen.namensliste_lesen(PLAN_DATEI)
+    AUFRAEUM = {BES: aufraeumen.auftrag(BES, bes_regeln, NAMENSLISTE), MAK: aufraeumen.auftrag(MAK, mak_regeln, NAMENSLISTE)}
+    AUFRAEUM_PLAN = AUFRAEUM[ZIEL_PF]['plan']
+    AUFGABEN, SOLL, MAKLER_HINWEISE, WAS_FARBE = [], [], [], {}
+else:
+    B_AA = finde(BES, 'Kopie von Automatische Antworten aussortieren')
+    B_AA2 = finde(BES, 'Automatische Antworten aussortieren (2)')
+    M_AA = finde(MAK, 'Automatische Antworten aussortieren')
+    M_AA2 = finde(MAK, 'Automatische Antworten 1zu1 aussortieren')
+    M_ESK = finde(MAK, 'Eskalations-GPF in den Prio-Ordner')
+    B_PRIO = finde(BES, 'Beschwerden/Prio in den Prio-Ordner')
+    M_PRIO = finde(MAK, 'Beschwerden/Prio in den Prio-Ordner')
+    B_KVS = finde(BES, 'KV Solo')
+    M_KVS = finde(MAK, 'KV Solo')
+    B_EKWAD = finde(BES, 'E - KWAD – Gruppenpostfach')
+    M_EKWAD = finde(MAK, 'E - KWAD – Gruppenpostfach')
+    B_FL = finde(BES, 'Umleitung FL Verträge an VSLV3D')
+    B_CCPI = finde(BES, 'CCPI mit Anlagen "hell"')
+    M_CCPI = [g for g in mak_regeln if any(x in g['bed'] for x in B_CCPI['bed'] if x[0] == 'Absender ist')][0]
+    M_ERINN = [g for g in mak_regeln if g['name'].startswith('Erinnerungen')]
+    M_KVQP = finde(MAK, 'KV@Qualitypool in einen Unterordner')
+    M_VERW = [g for g in nur_m if any('Vermittlerverwaltung' in (d or '') for b, d in g['akt'] if b == 'Umleiten an')
+              and g is not M_CCPI]
+    B_SERVICE = finde(BES, 'Service Team Vermittlerverwaltung - Makler u Koop - Gruppenpostfach')
+    B_PVB = finde(BES, 'PVB, Bot 1 (PVBHH-EXTERN)')
+    B_BOT = finde(BES, 'Mails von BÜ-Bot, Robert (ODPB2D-EXTERN)')
+    M_BOT = finde(MAK, 'Mails von BÜ-Bot, Robert (ODPB2D-EXTERN)')
+    M_TECH = finde(MAK, 'Umleitung - Technische Fehler')
 
-# Zielordner fuer automatische Antworten in Bestand: neuer Ordner (Entscheidung des Fachbereichs), richtig geschrieben.
-# Der Makler-Ordner heisst mit Tippfehler "Auotmatische Antworten" - wird nicht uebernommen.
-AA_ORDNER_REL = 'Archiv\\Automatische Antworten'
-aa_ziel = b_pfad(AA_ORDNER_REL)
-aa_alt = ordner_von(B_AA)
-aa_makler_rel = pfad_teile(ordner_von(M_AA))[1]
-prio_ordner = {b: d for b, d in B_PRIO['akt'] if b in ('In Ordner verschieben', 'In Ordner kopieren')}
-prio_fehlend = [w for w in woerter(bed_det(M_PRIO, 'Betreff enthält'))
-                if w.lower() not in {x.lower() for x in woerter(bed_det(B_PRIO, 'Betreff enthält'))}]
-KOPIE = 'kommt beim Kopieren mit (wie Makler #%d) – nicht abtippen'
-KOPIERT = 'aus Makler kopieren'
+    # Zielordner fuer automatische Antworten in Bestand: neuer Ordner (Entscheidung des Fachbereichs), richtig geschrieben.
+    # Der Makler-Ordner heisst mit Tippfehler "Auotmatische Antworten" - wird nicht uebernommen.
+    AA_ORDNER_REL = 'Archiv\\Automatische Antworten'
+    aa_ziel = b_pfad(AA_ORDNER_REL)
+    aa_alt = ordner_von(B_AA)
+    aa_makler_rel = pfad_teile(ordner_von(M_AA))[1]
+    prio_ordner = {b: d for b, d in B_PRIO['akt'] if b in ('In Ordner verschieben', 'In Ordner kopieren')}
+    prio_fehlend = [w for w in woerter(bed_det(M_PRIO, 'Betreff enthält'))
+                    if w.lower() not in {x.lower() for x in woerter(bed_det(B_PRIO, 'Betreff enthält'))}]
+    KOPIE = 'kommt beim Kopieren mit (wie Makler #%d) – nicht abtippen'
+    KOPIERT = 'aus Makler kopieren'
 
-# Soll-Reihenfolge Bestand: (Regelname, Aenderung, bisher #)
-SOLL = []
-SOLL.append(('Automatische Antworten aussortieren', 'angepasst', B_AA['reihe']))
-SOLL.append((M_AA2['name'], KOPIERT, None))
-SOLL.append((B_AA2['name'], 'verschoben', B_AA2['reihe']))
-erledigt_b = {B_AA['reihe'], B_AA2['reihe']}
-for g in bes_regeln:
-    if g['reihe'] in erledigt_b:
-        continue
-    if g is B_PRIO:
-        SOLL.append((M_ESK['name'], KOPIERT, None))
-    if g is B_PRIO or g is B_KVS or g is B_EKWAD:
-        SOLL.append((g['name'], 'angepasst', g['reihe']))
-    else:
-        SOLL.append((g['name'], 'deaktiviert, unverändert' if g['aktiv'] == 'Nein' else 'unverändert', g['reihe']))
-    if g is B_FL:
-        for e in M_ERINN:
-            SOLL.append((e['name'], 'kopieren, falls benötigt', None))
-SOLL_POS = {name: i + 1 for i, (name, _, _) in enumerate(SOLL)}
+    # Soll-Reihenfolge Bestand: (Regelname, Aenderung, bisher #)
+    SOLL = []
+    SOLL.append(('Automatische Antworten aussortieren', 'angepasst', B_AA['reihe']))
+    SOLL.append((M_AA2['name'], KOPIERT, None))
+    SOLL.append((B_AA2['name'], 'verschoben', B_AA2['reihe']))
+    erledigt_b = {B_AA['reihe'], B_AA2['reihe']}
+    for g in bes_regeln:
+        if g['reihe'] in erledigt_b:
+            continue
+        if g is B_PRIO:
+            SOLL.append((M_ESK['name'], KOPIERT, None))
+        if g is B_PRIO or g is B_KVS or g is B_EKWAD:
+            SOLL.append((g['name'], 'angepasst', g['reihe']))
+        else:
+            SOLL.append((g['name'], 'deaktiviert, unverändert' if g['aktiv'] == 'Nein' else 'unverändert', g['reihe']))
+        if g is B_FL:
+            for e in M_ERINN:
+                SOLL.append((e['name'], 'kopieren, falls benötigt', None))
+    SOLL_POS = {name: i + 1 for i, (name, _, _) in enumerate(SOLL)}
 
-AUFGABEN = []   # dict(was, regel, pos, vorbild, wenn, ausser, dann, ordner, warum)
-AUFGABEN.append(dict(
-    was='Anpassen', regel='Automatische Antworten aussortieren\n(bisher #%d %s)' % (B_AA['reihe'], q(B_AA['name'])),
-    pos=SOLL_POS['Automatische Antworten aussortieren'], vorbild=vorbild(M_AA),
-    wenn=('bleibt – schon identisch mit Makler #%d:\n%s' % (M_AA['reihe'], bed_zeilen(B_AA['bed']))
-          if B_AA['bed'] == M_AA['bed'] else 'Bestand: %s\nMakler: %s' % (bed_text(B_AA['bed']), bed_text(M_AA['bed']))),
-    ausser=bed_zeilen(B_AA['aus']) or '–',
-    dann=akt_text(B_AA, {'In Ordner verschieben': aa_ziel}),
-    ordner=aa_ziel,
-    warum='Das Ziel zeigt noch ins Postfach Maklerauftraege (%s) – beim Kopieren nicht umgestellt. Neues Ziel ist der '
-          'Bestand-Ordner %s (wird angelegt, bewusst richtig geschrieben; der Makler-Ordner heißt „%s“). „Kopie von“ '
-          'aus dem Namen streichen.' % (aa_alt, AA_ORDNER_REL, aa_makler_rel.split('\\')[-1])))
-AUFGABEN.append(dict(
-    was='Aus Makler kopieren', regel=M_AA2['name'], pos=SOLL_POS[M_AA2['name']], vorbild=vorbild(M_AA2),
-    wenn=bed_zeilen(M_AA2['bed']) + '\n(kommt beim Kopieren mit)', ausser=bed_zeilen(M_AA2['aus']) or '–',
-    dann=akt_text(M_AA2, {'In Ordner verschieben': aa_ziel}), ordner='– (wie oben)',
-    warum='Fehlt in Bestand. Bei Makler steht sie direkt hinter %s; gleicher Zielordner wie dort.' % q(M_AA['name'])))
-AUFGABEN.append(dict(
-    was='Anpassen', regel='%s\n(bisher #%d)' % (B_AA2['name'], B_AA2['reihe']), pos=SOLL_POS[B_AA2['name']],
-    vorbild='– (gibt es nur in Bestand)', wenn='unverändert:\n' + bed_zeilen(B_AA2['bed']),
-    ausser=bed_zeilen(B_AA2['aus']) or '–', dann=akt_text(B_AA2), ordner='–',
-    warum='Regel bleibt (eigene Bedingung, Ziel unverändert) – nur direkt hinter %s schieben. Bisher laufen #%d %s und '
-          '#%d %s vorher, beide mit „Keine weiteren Regeln anwenden“.' % (
-              q(M_AA2['name']), B_SERVICE['reihe'], q(B_SERVICE['name']), B_PVB['reihe'], q(B_PVB['name']))))
-AUFGABEN.append(dict(
-    was='Aus Makler kopieren', regel=M_ESK['name'], pos=SOLL_POS[M_ESK['name']], vorbild=vorbild(M_ESK),
-    wenn=bed_zeilen(M_ESK['bed']) + '\n(kommt beim Kopieren mit)', ausser=bed_zeilen(M_ESK['aus']) or '–',
-    dann=akt_text(M_ESK, prio_ordner), ordner='– (Ordner bestehen, Regel #%d %s nutzt sie)' % (B_PRIO['reihe'], q(B_PRIO['name'])),
-    warum='Eskalationen aus diesem Gruppenpostfach landen bei Makler direkt im Prio-Ordner; bei Bestand fehlt die '
-          'Regel. Zielordner wie bei Bestand #%d. Position direkt vor %s, wie bei Makler.' % (B_PRIO['reihe'], q(B_PRIO['name']))))
-AUFGABEN.append(dict(
-    was='Anpassen', regel='%s\n(bisher #%d)' % (B_PRIO['name'], B_PRIO['reihe']), pos=SOLL_POS[B_PRIO['name']],
-    vorbild=vorbild(M_PRIO),
-    wenn='Betreff enthält %s\n+ %s' % (bed_det(B_PRIO, 'Betreff enthält'), ', '.join('"%s"' % w for w in prio_fehlend)),
-    ausser=bed_zeilen(B_PRIO['aus']) or '–', dann=akt_text(B_PRIO), ordner='–',
-    warum='Makler #%d prüft im Betreff zusätzlich %s. Fehlende Wörter anhängen, vorhandene bleiben unverändert.' % (
-        M_PRIO['reihe'], ', '.join(q(w) for w in prio_fehlend))))
-AUFGABEN.append(dict(
-    was='Anpassen', regel='%s\n(bisher #%d)' % (B_KVS['name'], B_KVS['reihe']), pos=SOLL_POS[B_KVS['name']],
-    vorbild=vorbild(M_KVS), wenn='unverändert:\n' + bed_zeilen(B_KVS['bed']),
-    ausser='neu wie Makler #%d:\n%s' % (M_KVS['reihe'], bed_zeilen(M_KVS['aus'], kurz=True)),
-    dann=akt_text(B_KVS).replace('Weiterleiten an', 'Umleiten an'), ordner='–',
-    warum='Bestand leitet weiter, Makler leitet um – wie Bestand #%d %s. Umleiten behält den ursprünglichen Absender. '
-          'Dazu die Ausnahmen von Makler #%d übernehmen; Bestand hat bisher %s.' % (
-              B_EKWAD['reihe'], q(B_EKWAD['name']), M_KVS['reihe'],
-              'keine' if not B_KVS['aus'] else bed_text(B_KVS['aus']))))
-AUFGABEN.append(dict(
-    was='Anpassen', regel='%s\n(bisher #%d)' % (B_EKWAD['name'], B_EKWAD['reihe']), pos=SOLL_POS[B_EKWAD['name']],
-    vorbild=vorbild(M_EKWAD),
-    wenn='keine Bedingung – Sammelregel für alle übrigen Mails' if B_EKWAD['status'] == 'keine' else bed_zeilen(B_EKWAD['bed']),
-    ausser='neu wie Makler #%d:\n%s' % (M_EKWAD['reihe'], bed_zeilen(M_EKWAD['aus'], kurz=True)),
-    dann=akt_text(B_EKWAD), ordner='–',
-    warum='Makler #%d nimmt Unzustellbar-Meldungen, Nachrichtenrückrufe und Papierakten aus; Bestand leitet bisher %s an '
-          'KWAD um. Ausnahmen übernehmen, vorhandene bleiben.' % (
-              M_EKWAD['reihe'], 'alle übrigen Mails' if not B_EKWAD['aus'] else 'fast alle Mails')))
-for e in M_ERINN:
-    rel = pfad_teile(ordner_von(e))[1]
+    AUFGABEN = []   # dict(was, regel, pos, vorbild, wenn, ausser, dann, ordner, warum)
     AUFGABEN.append(dict(
-        was='Prüfen', regel=e['name'], pos=SOLL_POS[e['name']], vorbild=vorbild(e),
-        wenn=bed_zeilen(e['bed']) + '\n(kommt beim Kopieren mit)', ausser=bed_zeilen(e['aus']) or '–',
-        dann=akt_text(e, {'In Ordner verschieben': b_pfad(rel)}), ordner=b_pfad(rel),
-        warum='Nur kopieren, wenn diese Erinnerungen auch im Postfach Bestandsuebertragungen eingehen (im Plan auf '
-              'Ausführen = Nein).'))
-AUFGABEN.append(dict(
-    was='Klären', regel=M_KVQP['name'], pos='–', vorbild=vorbild(M_KVQP),
-    wenn=bed_zeilen(M_KVQP['bed']), ausser=bed_zeilen(M_KVQP['aus']) or '–', dann=akt_text(M_KVQP), ordner='–',
-    warum='Schiebt ALLE Mails dieses Absenders ins Archiv, nicht nur Erinnerungen. Nur übernehmen, wenn das für '
-          'Bestand gewollt ist – deshalb nicht im Plan.'))
-AUFGABEN.append(dict(
-    was='Klären', regel='%s\n(bisher #%d)' % (B_CCPI['name'], B_CCPI['reihe']), pos=SOLL_POS[B_CCPI['name']],
-    vorbild=vorbild(M_CCPI), wenn='Bestand: ' + bed_text(B_CCPI['bed']) + '\nMakler: ' + bed_text(M_CCPI['bed']),
-    ausser='–', dann='Bestand: ' + akt_text(B_CCPI).replace('\n', ' ') + '\nMakler: ' + akt_text(M_CCPI).replace('\n', ' '),
-    ordner='–',
-    warum='Gleicher Absender, andere Behandlung: Bestand legt Mails mit Anhang im Ordner CCPI ab, Makler leitet alle '
-          'Mails an die Vermittlerverwaltung um. Fachlich entscheiden, was für Bestand gelten soll.'))
-for g in M_VERW:
+        was='Anpassen', regel='Automatische Antworten aussortieren\n(bisher #%d %s)' % (B_AA['reihe'], q(B_AA['name'])),
+        pos=SOLL_POS['Automatische Antworten aussortieren'], vorbild=vorbild(M_AA),
+        wenn=('bleibt – schon identisch mit Makler #%d:\n%s' % (M_AA['reihe'], bed_zeilen(B_AA['bed']))
+              if B_AA['bed'] == M_AA['bed'] else 'Bestand: %s\nMakler: %s' % (bed_text(B_AA['bed']), bed_text(M_AA['bed']))),
+        ausser=bed_zeilen(B_AA['aus']) or '–',
+        dann=akt_text(B_AA, {'In Ordner verschieben': aa_ziel}),
+        ordner=aa_ziel,
+        warum='Das Ziel zeigt noch ins Postfach Maklerauftraege (%s) – beim Kopieren nicht umgestellt. Neues Ziel ist der '
+              'Bestand-Ordner %s (wird angelegt, bewusst richtig geschrieben; der Makler-Ordner heißt „%s“). „Kopie von“ '
+              'aus dem Namen streichen.' % (aa_alt, AA_ORDNER_REL, aa_makler_rel.split('\\')[-1])))
     AUFGABEN.append(dict(
-        was='Klären', regel=g['name'], pos='–', vorbild=vorbild(g),
-        wenn=bed_zeilen(g['bed'], kurz=True), ausser=bed_zeilen(g['aus']) or '–', dann=akt_text(g), ordner='–',
-        warum='Makler leitet diese Mails an die Vermittlerverwaltung um; bei Bestand gibt es kein Gegenstück. '
-              'Fachlich klären, ob Bestand das braucht.'))
-AUFGABEN.append(dict(
-    was='Info', regel='%s\n(bisher #%d)' % (B_BOT['name'], B_BOT['reihe']), pos=SOLL_POS[B_BOT['name']],
-    vorbild=vorbild(M_BOT), wenn='Bestand: ' + bed_text(B_BOT['bed']) + '\nMakler: ' + bed_text(M_BOT['bed']),
-    ausser='–', dann=akt_text(B_BOT), ordner='–',
-    warum='Bestand ist bewusst breiter: %d Absender, ohne Betreff-Filter. Kein Handlungsbedarf.' % (
-        len([x for x in bed_det(B_BOT, 'Absender ist').split(';') if x.strip()]))))
-WAS_FARBE = {'Aus Makler kopieren': (GRUENL, GRUEN), 'Anpassen': (INDIGOL, INDIGO), 'Prüfen': (GELBL, GELBD),
-             'Klären': (ORANGEL, ORANGED), 'Info': (GRAUL, GRAUD)}
-# Hinweise fuer Maklerauftraege (nicht Teil des Plans)
-MAKLER_HINWEISE = []
-if M_TECH['aktiv'] == 'Nein' or M_TECH['gueltig'] == 'Nur auf diesem Client' or not ordner_von(M_TECH):
-    MAKLER_HINWEISE.append('Makler #%d %s ist %s, läuft %s und hat %s (Outlook zeigt „(Fehler)“).' % (
-        M_TECH['reihe'], q(M_TECH['name']), 'deaktiviert' if M_TECH['aktiv'] == 'Nein' else 'aktiv',
-        'nur auf einem Client' if M_TECH['gueltig'] == 'Nur auf diesem Client' else 'auf dem Server',
-        'keinen Zielordner' if not ordner_von(M_TECH) else 'einen Zielordner'))
-if norm_name(B_AA2['name']) not in idx_m:
-    MAKLER_HINWEISE.append('Makler fehlt die Bestand-Regel %s (%s, außer %s).' % (
-        q(B_AA2['name']), bed_text(B_AA2['bed']), bed_text(B_AA2['aus'], 'keine')))
+        was='Aus Makler kopieren', regel=M_AA2['name'], pos=SOLL_POS[M_AA2['name']], vorbild=vorbild(M_AA2),
+        wenn=bed_zeilen(M_AA2['bed']) + '\n(kommt beim Kopieren mit)', ausser=bed_zeilen(M_AA2['aus']) or '–',
+        dann=akt_text(M_AA2, {'In Ordner verschieben': aa_ziel}), ordner='– (wie oben)',
+        warum='Fehlt in Bestand. Bei Makler steht sie direkt hinter %s; gleicher Zielordner wie dort.' % q(M_AA['name'])))
+    AUFGABEN.append(dict(
+        was='Anpassen', regel='%s\n(bisher #%d)' % (B_AA2['name'], B_AA2['reihe']), pos=SOLL_POS[B_AA2['name']],
+        vorbild='– (gibt es nur in Bestand)', wenn='unverändert:\n' + bed_zeilen(B_AA2['bed']),
+        ausser=bed_zeilen(B_AA2['aus']) or '–', dann=akt_text(B_AA2), ordner='–',
+        warum='Regel bleibt (eigene Bedingung, Ziel unverändert) – nur direkt hinter %s schieben. Bisher laufen #%d %s und '
+              '#%d %s vorher, beide mit „Keine weiteren Regeln anwenden“.' % (
+                  q(M_AA2['name']), B_SERVICE['reihe'], q(B_SERVICE['name']), B_PVB['reihe'], q(B_PVB['name']))))
+    AUFGABEN.append(dict(
+        was='Aus Makler kopieren', regel=M_ESK['name'], pos=SOLL_POS[M_ESK['name']], vorbild=vorbild(M_ESK),
+        wenn=bed_zeilen(M_ESK['bed']) + '\n(kommt beim Kopieren mit)', ausser=bed_zeilen(M_ESK['aus']) or '–',
+        dann=akt_text(M_ESK, prio_ordner), ordner='– (Ordner bestehen, Regel #%d %s nutzt sie)' % (B_PRIO['reihe'], q(B_PRIO['name'])),
+        warum='Eskalationen aus diesem Gruppenpostfach landen bei Makler direkt im Prio-Ordner; bei Bestand fehlt die '
+              'Regel. Zielordner wie bei Bestand #%d. Position direkt vor %s, wie bei Makler.' % (B_PRIO['reihe'], q(B_PRIO['name']))))
+    AUFGABEN.append(dict(
+        was='Anpassen', regel='%s\n(bisher #%d)' % (B_PRIO['name'], B_PRIO['reihe']), pos=SOLL_POS[B_PRIO['name']],
+        vorbild=vorbild(M_PRIO),
+        wenn='Betreff enthält %s\n+ %s' % (bed_det(B_PRIO, 'Betreff enthält'), ', '.join('"%s"' % w for w in prio_fehlend)),
+        ausser=bed_zeilen(B_PRIO['aus']) or '–', dann=akt_text(B_PRIO), ordner='–',
+        warum='Makler #%d prüft im Betreff zusätzlich %s. Fehlende Wörter anhängen, vorhandene bleiben unverändert.' % (
+            M_PRIO['reihe'], ', '.join(q(w) for w in prio_fehlend))))
+    AUFGABEN.append(dict(
+        was='Anpassen', regel='%s\n(bisher #%d)' % (B_KVS['name'], B_KVS['reihe']), pos=SOLL_POS[B_KVS['name']],
+        vorbild=vorbild(M_KVS), wenn='unverändert:\n' + bed_zeilen(B_KVS['bed']),
+        ausser='neu wie Makler #%d:\n%s' % (M_KVS['reihe'], bed_zeilen(M_KVS['aus'], kurz=True)),
+        dann=akt_text(B_KVS).replace('Weiterleiten an', 'Umleiten an'), ordner='–',
+        warum='Bestand leitet weiter, Makler leitet um – wie Bestand #%d %s. Umleiten behält den ursprünglichen Absender. '
+              'Dazu die Ausnahmen von Makler #%d übernehmen; Bestand hat bisher %s.' % (
+                  B_EKWAD['reihe'], q(B_EKWAD['name']), M_KVS['reihe'],
+                  'keine' if not B_KVS['aus'] else bed_text(B_KVS['aus']))))
+    AUFGABEN.append(dict(
+        was='Anpassen', regel='%s\n(bisher #%d)' % (B_EKWAD['name'], B_EKWAD['reihe']), pos=SOLL_POS[B_EKWAD['name']],
+        vorbild=vorbild(M_EKWAD),
+        wenn='keine Bedingung – Sammelregel für alle übrigen Mails' if B_EKWAD['status'] == 'keine' else bed_zeilen(B_EKWAD['bed']),
+        ausser='neu wie Makler #%d:\n%s' % (M_EKWAD['reihe'], bed_zeilen(M_EKWAD['aus'], kurz=True)),
+        dann=akt_text(B_EKWAD), ordner='–',
+        warum='Makler #%d nimmt Unzustellbar-Meldungen, Nachrichtenrückrufe und Papierakten aus; Bestand leitet bisher %s an '
+              'KWAD um. Ausnahmen übernehmen, vorhandene bleiben.' % (
+                  M_EKWAD['reihe'], 'alle übrigen Mails' if not B_EKWAD['aus'] else 'fast alle Mails')))
+    for e in M_ERINN:
+        rel = pfad_teile(ordner_von(e))[1]
+        AUFGABEN.append(dict(
+            was='Prüfen', regel=e['name'], pos=SOLL_POS[e['name']], vorbild=vorbild(e),
+            wenn=bed_zeilen(e['bed']) + '\n(kommt beim Kopieren mit)', ausser=bed_zeilen(e['aus']) or '–',
+            dann=akt_text(e, {'In Ordner verschieben': b_pfad(rel)}), ordner=b_pfad(rel),
+            warum='Nur kopieren, wenn diese Erinnerungen auch im Postfach Bestandsuebertragungen eingehen (im Plan auf '
+                  'Ausführen = Nein).'))
+    AUFGABEN.append(dict(
+        was='Klären', regel=M_KVQP['name'], pos='–', vorbild=vorbild(M_KVQP),
+        wenn=bed_zeilen(M_KVQP['bed']), ausser=bed_zeilen(M_KVQP['aus']) or '–', dann=akt_text(M_KVQP), ordner='–',
+        warum='Schiebt ALLE Mails dieses Absenders ins Archiv, nicht nur Erinnerungen. Nur übernehmen, wenn das für '
+              'Bestand gewollt ist – deshalb nicht im Plan.'))
+    AUFGABEN.append(dict(
+        was='Klären', regel='%s\n(bisher #%d)' % (B_CCPI['name'], B_CCPI['reihe']), pos=SOLL_POS[B_CCPI['name']],
+        vorbild=vorbild(M_CCPI), wenn='Bestand: ' + bed_text(B_CCPI['bed']) + '\nMakler: ' + bed_text(M_CCPI['bed']),
+        ausser='–', dann='Bestand: ' + akt_text(B_CCPI).replace('\n', ' ') + '\nMakler: ' + akt_text(M_CCPI).replace('\n', ' '),
+        ordner='–',
+        warum='Gleicher Absender, andere Behandlung: Bestand legt Mails mit Anhang im Ordner CCPI ab, Makler leitet alle '
+              'Mails an die Vermittlerverwaltung um. Fachlich entscheiden, was für Bestand gelten soll.'))
+    for g in M_VERW:
+        AUFGABEN.append(dict(
+            was='Klären', regel=g['name'], pos='–', vorbild=vorbild(g),
+            wenn=bed_zeilen(g['bed'], kurz=True), ausser=bed_zeilen(g['aus']) or '–', dann=akt_text(g), ordner='–',
+            warum='Makler leitet diese Mails an die Vermittlerverwaltung um; bei Bestand gibt es kein Gegenstück. '
+                  'Fachlich klären, ob Bestand das braucht.'))
+    AUFGABEN.append(dict(
+        was='Info', regel='%s\n(bisher #%d)' % (B_BOT['name'], B_BOT['reihe']), pos=SOLL_POS[B_BOT['name']],
+        vorbild=vorbild(M_BOT), wenn='Bestand: ' + bed_text(B_BOT['bed']) + '\nMakler: ' + bed_text(M_BOT['bed']),
+        ausser='–', dann=akt_text(B_BOT), ordner='–',
+        warum='Bestand ist bewusst breiter: %d Absender, ohne Betreff-Filter. Kein Handlungsbedarf.' % (
+            len([x for x in bed_det(B_BOT, 'Absender ist').split(';') if x.strip()]))))
+    WAS_FARBE = {'Aus Makler kopieren': (GRUENL, GRUEN), 'Anpassen': (INDIGOL, INDIGO), 'Prüfen': (GELBL, GELBD),
+                 'Klären': (ORANGEL, ORANGED), 'Info': (GRAUL, GRAUD)}
+    # Hinweise fuer Maklerauftraege (nicht Teil des Plans)
+    MAKLER_HINWEISE = []
+    if M_TECH['aktiv'] == 'Nein' or M_TECH['gueltig'] == 'Nur auf diesem Client' or not ordner_von(M_TECH):
+        MAKLER_HINWEISE.append('Makler #%d %s ist %s, läuft %s und hat %s (Outlook zeigt „(Fehler)“).' % (
+            M_TECH['reihe'], q(M_TECH['name']), 'deaktiviert' if M_TECH['aktiv'] == 'Nein' else 'aktiv',
+            'nur auf einem Client' if M_TECH['gueltig'] == 'Nur auf diesem Client' else 'auf dem Server',
+            'keinen Zielordner' if not ordner_von(M_TECH) else 'einen Zielordner'))
+    if norm_name(B_AA2['name']) not in idx_m:
+        MAKLER_HINWEISE.append('Makler fehlt die Bestand-Regel %s (%s, außer %s).' % (
+            q(B_AA2['name']), bed_text(B_AA2['bed']), bed_text(B_AA2['aus'], 'keine')))
 
 # ================================================================ Auf einen Blick
 st = wb.add_worksheet('Auf einen Blick')
@@ -827,27 +858,48 @@ r += 1
 st.set_row(r, 8)
 r += 1
 # Umsetzung
-merge_kopf(r, 1, 2, 'Umsetzung in Bestand')
-merge_kopf(r, 3, 4, 'Aufgaben', 'center')
-merge_kopf(r, 5, 12, 'Was heißt das?')
-st.set_row(r, 24)
-r += 1
-WAS_TEXT = {'Aus Makler kopieren': 'Fehlt in Bestand – bei Makler markieren, „Kopieren…“ nach Bestand, dann Zielordner, Name und Position anpassen.',
-            'Anpassen': 'Regel gibt es in Bestand schon – Ziel, Aktion oder Position ändern.',
-            'Prüfen': 'Erst vergleichen oder klären, ob solche Mails in Bestand eingehen – dann kopieren oder löschen.',
-            'Klären': 'Unterschiedliche Behandlung – fachlich entscheiden, bevor etwas angelegt wird.',
-            'Info': 'Unterschied ist gewollt – kein Handlungsbedarf, nur zur Einordnung.'}
-for was in WAS_FARBE:
-    bg, fg = WAS_FARBE[was]
-    st.merge_range(r, 1, r, 2, was, F(bg_color=bg, font_color=fg, bold=True, indent=1, border=2, border_color=WEISS))
-    st.merge_range(r, 3, r, 4, None, zelle_fmt('center', num_format='#,##0'))
-    st.write_formula(r, 3, '=COUNTIF(%s,$B%d)' % (an('B'), r + 1), zelle_fmt('center', num_format='#,##0'),
-                     sum(1 for a in AUFGABEN if a['was'] == was))
-    st.merge_range(r, 5, r, 12, WAS_TEXT[was], zelle_fmt(font_color=MUTED))
-    st.set_row(r, 22)
+if AUFRAEUMEN:
+    merge_kopf(r, 1, 2, 'Aufräumen')
+    merge_kopf(r, 3, 4, 'Regeln danach', 'center')
+    merge_kopf(r, 5, 12, 'Was der Plan tut')
+    st.set_row(r, 24)
     r += 1
+    for _a in (AUFRAEUM[BES], AUFRAEUM[MAK]):
+        _t = '%d Regeln heute' % _a['n_heute']
+        if _a['n_duplikate']:
+            _t += ', davon %d Duplikate – werden gelöscht' % _a['n_duplikate']
+        _t += '  ·  %d umbenennen  ·  %d umstellen' % (_a['n_umbenannt'], len(_a['umstellungen']))
+        st.merge_range(r, 1, r, 2, KURZ[_a['postfach']], F(bg_color=GRUENL, font_color=GRUEN, bold=True, indent=1,
+                                                            border=2, border_color=WEISS))
+        st.merge_range(r, 3, r, 4, _a['n_danach'], zelle_fmt('center', num_format='#,##0'))
+        st.merge_range(r, 5, r, 12, _t, zelle_fmt(font_color=MUTED))
+        st.set_row(r, 22)
+        r += 1
+else:
+    merge_kopf(r, 1, 2, 'Umsetzung in Bestand')
+    merge_kopf(r, 3, 4, 'Aufgaben', 'center')
+    merge_kopf(r, 5, 12, 'Was heißt das?')
+    st.set_row(r, 24)
+    r += 1
+    WAS_TEXT = {'Aus Makler kopieren': 'Fehlt in Bestand – bei Makler markieren, „Kopieren…“ nach Bestand, dann Zielordner, Name und Position anpassen.',
+                'Anpassen': 'Regel gibt es in Bestand schon – Ziel, Aktion oder Position ändern.',
+                'Prüfen': 'Erst vergleichen oder klären, ob solche Mails in Bestand eingehen – dann kopieren oder löschen.',
+                'Klären': 'Unterschiedliche Behandlung – fachlich entscheiden, bevor etwas angelegt wird.',
+                'Info': 'Unterschied ist gewollt – kein Handlungsbedarf, nur zur Einordnung.'}
+    for was in WAS_FARBE:
+        bg, fg = WAS_FARBE[was]
+        st.merge_range(r, 1, r, 2, was, F(bg_color=bg, font_color=fg, bold=True, indent=1, border=2, border_color=WEISS))
+        st.merge_range(r, 3, r, 4, None, zelle_fmt('center', num_format='#,##0'))
+        st.write_formula(r, 3, '=COUNTIF(%s,$B%d)' % (an('B'), r + 1), zelle_fmt('center', num_format='#,##0'),
+                         sum(1 for a in AUFGABEN if a['was'] == was))
+        st.merge_range(r, 5, r, 12, WAS_TEXT[was], zelle_fmt(font_color=MUTED))
+        st.set_row(r, 22)
+        r += 1
 link(r, 1, 4, 'Vergleich', 'Zum Vergleich', 'Blatt Vergleich öffnen')
-link(r, 5, 8, 'Anlegen', 'Zur Liste „Anlegen“', 'Blatt Anlegen öffnen')
+if AUFRAEUMEN:
+    link(r, 5, 8, 'Aufräumen', 'Zu den neuen Namen', 'Blatt Aufräumen öffnen')
+else:
+    link(r, 5, 8, 'Anlegen', 'Zur Liste „Anlegen“', 'Blatt Anlegen öffnen')
 if MAKRO:
     link(r, 9, 12, 'Umsetzung', 'Automatisch umsetzen (Makro)', 'Blatt Umsetzung öffnen: Vorschau und Ausführen in Outlook')
 st.set_row(r, 24)
@@ -914,6 +966,8 @@ st.set_row(r, 24)
 r += 1
 BLAETTER = [
     ('Vergleich', 'Bestandsuebertragungen und Maklerauftraege nebeneinander – je Regel, was gleich und was anders ist.'),
+    ('Aufräumen', 'Neue Namen und Reihenfolge je Postfach, Duplikate – Grundlage des Plans im Blatt Umsetzung.')
+    if AUFRAEUMEN else
     ('Anlegen', 'Was in Bestandsuebertragungen neu anzulegen oder anzupassen ist, mit Soll-Reihenfolge und Abhakspalte.'),
 ] + ([
     ('Umsetzung', 'Makro: Plan der Änderungen in Outlook – Vorschau (ändert nichts), Ausführen mit Sicherung, Sperre und Prüfung.'),
@@ -1026,118 +1080,124 @@ ws.freeze_panes(V_KOPF + 1, 0)
 druck(ws, (V_KOPF, V_KOPF))
 
 # ================================================================ Anlegen
-ws = wb.add_worksheet('Anlegen')
-ws.hide_gridlines(2)
-ws.set_tab_color(GRUEN)
-BREITEN_A = [5, 19, 34, 8, 30, 38, 20, 52, 32, 52, 12]
-for i, b in enumerate(BREITEN_A):
-    ws.set_column(i, i, b)
-titel(ws, 'Was ist in Bestandsuebertragungen anzulegen?')
-ws.write(1, 0, 'Vorschläge aus dem Vergleich mit Maklerauftraege (Export vom %s). Pfade sind schon auf %s umgestellt.'
-         % (wert(UE, 2, 2), BES), F(font_color=MUTED, font_size=9.5))
-ws.set_row(1, 18)
-ws.merge_range(2, 0, 2, 10, 'Bedingungen nicht abtippen: Regeln bei Maklerauftraege mit „Kopieren…“ nach '
-               'Bestandsuebertragungen kopieren – Bedingungen und Ausnahmen kommen vollständig mit (auch die, die der '
-               'Export nicht zeigt). Danach nur Zielordner, Name und Position anpassen.',
-               F(bg_color=GRUENL, font_color=GRUEN, font_size=9.5, indent=1, text_wrap=True, bold=True))
-ws.set_row(2, 30)
-ws.write(3, 0, 'So geht’s (Outlook: Datei › Regeln und Benachrichtigungen verwalten)', F(bold=True, font_size=10.5, valign='bottom'))
-ws.set_row(3, 22)
-SCHRITTE = [
-    '1.  Oben „Änderungen in diesem Ordner anwenden: Posteingang [maklerauftraege@ergo.de]“ wählen, die Vorbild-Regel '
-    'markieren, „Kopieren…“ klicken und als Ziel „Posteingang [bestandsuebertragungen@ergo.de]“ wählen.',
-    '2.  Oben auf „Posteingang [bestandsuebertragungen@ergo.de]“ wechseln, die Kopie markieren, „Regel ändern“: Zielordner '
-    'wie in Spalte DANN setzen (Ordner aus „Ordner vorher anlegen“ zuerst anlegen), „Kopie von“ aus dem Namen streichen.',
-    '3.  Mit den Pfeilen auf die Soll-Position schieben – die Reihenfolge zählt, weil alle Regeln „Keine weiteren Regeln '
-    'anwenden“ setzen (Soll-Reihenfolge unten).',
-    '4.  In Spalte „Erledigt“ den Stand eintragen.',
-]
-for i, t in enumerate(SCHRITTE):
-    ws.write(4 + i, 0, t, F(font_color=TEXT, font_size=9.5))
-    ws.set_row(4 + i, 16)
-ws.set_row(8, 10)
-if MAKRO:
-    ws.write_url(8, 0, "internal:'Umsetzung'!A1", F(font_color=ROT, bold=True, underline=1, font_size=9.5),
-                 'Automatisch umsetzen: Blatt „Umsetzung“ (Makro) – die Vorschau zeigt jeden Schritt, bevor etwas geändert wird.',
-                 'Blatt Umsetzung öffnen')
-    ws.set_row(8, 22)
-KOPF_A = ['Nr', 'Was', 'Regel in Bestandsuebertragungen', 'Soll-Pos.', 'Vorbild in Maklerauftraege', 'WENN (Bedingung)',
-          'AUSSER WENN', 'DANN (Aktionen)', 'Ordner vorher anlegen', 'Warum', 'Erledigt']
-AL_A = ['center', 'left', 'left', 'center', 'left', 'left', 'left', 'left', 'left', 'left', 'center']
-for c, t in enumerate(KOPF_A):
-    ws.write(A_KOPF, c, t, kopf_fmt(AL_A[c]))
-ws.set_row(A_KOPF, 30)
-for i, a in enumerate(AUFGABEN):
-    z = A_KOPF + 1 + i
-    bg, fg = WAS_FARBE[a['was']]
-    ws.write(z, 0, i + 1, zelle_fmt('center', font_color=MUTED, valign='top'))
-    ws.write(z, 1, a['was'], F(bg_color=bg, font_color=fg, bold=True, indent=1, font_size=9, border=2,
-                               border_color=WEISS, valign='top'))
-    texte = [(2, a['regel'], dict(bold=True)), (4, a['vorbild'], {}), (5, a['wenn'], {}), (6, a['ausser'], {}),
-             (7, a['dann'], {}), (8, a['ordner'], {}), (9, a['warum'], dict(font_color=MUTED))]
-    for c, t, ex in texte:
-        if c == 5 and ('Kopieren mit' in str(t) or str(t).startswith('bleibt')):
-            ex = dict(font_color=GRUEN, italic=True)
-        ws.write(z, c, t, zelle_fmt(wrap=True, valign='top', **ex))
-    ws.write(z, 3, a['pos'], zelle_fmt('center', bold=True, valign='top'))
-    ws.write(z, 10, 'offen', zelle_fmt('center', valign='top', font_color=MUTED))
-    n = max(zeilen(a['regel'], BREITEN_A[2], fett=True), zeilen(a['vorbild'], BREITEN_A[4]),
-            zeilen(a['wenn'], BREITEN_A[5]), zeilen(a['ausser'], BREITEN_A[6]), zeilen(a['dann'], BREITEN_A[7]),
-            zeilen(a['ordner'], BREITEN_A[8]), zeilen(a['warum'], BREITEN_A[9]))
-    ws.set_row(z, zeilenhoehe(n, polster=10))
-erl = 'K%d:K%d' % (A_ERSTE, A_LETZTE)
-ws.data_validation(erl, {'validate': 'list', 'source': ['offen', 'erledigt', 'verworfen'],
-                         'input_title': 'Stand', 'input_message': 'offen, erledigt oder verworfen'})
-ws.conditional_format(erl, {'type': 'cell', 'criteria': '==', 'value': '"erledigt"',
-                            'format': CF(bg_color=GRUENL, font_color=GRUEN, bold=True)})
-ws.conditional_format(erl, {'type': 'cell', 'criteria': '==', 'value': '"verworfen"',
-                            'format': CF(bg_color=GRAUL, font_color=GRAUD, italic=True)})
-ws.conditional_format('A%d:J%d' % (A_ERSTE, A_LETZTE), {'type': 'formula', 'criteria': '=$K%d="erledigt"' % A_ERSTE,
-                                                        'format': CF(font_color=FAINT)})
+if not AUFRAEUMEN:
+    ws = wb.add_worksheet('Anlegen')
+    ws.hide_gridlines(2)
+    ws.set_tab_color(GRUEN)
+    BREITEN_A = [5, 19, 34, 8, 30, 38, 20, 52, 32, 52, 12]
+    for i, b in enumerate(BREITEN_A):
+        ws.set_column(i, i, b)
+    titel(ws, 'Was ist in Bestandsuebertragungen anzulegen?')
+    ws.write(1, 0, 'Vorschläge aus dem Vergleich mit Maklerauftraege (Export vom %s). Pfade sind schon auf %s umgestellt.'
+             % (wert(UE, 2, 2), BES), F(font_color=MUTED, font_size=9.5))
+    ws.set_row(1, 18)
+    ws.merge_range(2, 0, 2, 10, 'Bedingungen nicht abtippen: Regeln bei Maklerauftraege mit „Kopieren…“ nach '
+                   'Bestandsuebertragungen kopieren – Bedingungen und Ausnahmen kommen vollständig mit (auch die, die der '
+                   'Export nicht zeigt). Danach nur Zielordner, Name und Position anpassen.',
+                   F(bg_color=GRUENL, font_color=GRUEN, font_size=9.5, indent=1, text_wrap=True, bold=True))
+    ws.set_row(2, 30)
+    ws.write(3, 0, 'So geht’s (Outlook: Datei › Regeln und Benachrichtigungen verwalten)', F(bold=True, font_size=10.5, valign='bottom'))
+    ws.set_row(3, 22)
+    SCHRITTE = [
+        '1.  Oben „Änderungen in diesem Ordner anwenden: Posteingang [maklerauftraege@ergo.de]“ wählen, die Vorbild-Regel '
+        'markieren, „Kopieren…“ klicken und als Ziel „Posteingang [bestandsuebertragungen@ergo.de]“ wählen.',
+        '2.  Oben auf „Posteingang [bestandsuebertragungen@ergo.de]“ wechseln, die Kopie markieren, „Regel ändern“: Zielordner '
+        'wie in Spalte DANN setzen (Ordner aus „Ordner vorher anlegen“ zuerst anlegen), „Kopie von“ aus dem Namen streichen.',
+        '3.  Mit den Pfeilen auf die Soll-Position schieben – die Reihenfolge zählt, weil alle Regeln „Keine weiteren Regeln '
+        'anwenden“ setzen (Soll-Reihenfolge unten).',
+        '4.  In Spalte „Erledigt“ den Stand eintragen.',
+    ]
+    for i, t in enumerate(SCHRITTE):
+        ws.write(4 + i, 0, t, F(font_color=TEXT, font_size=9.5))
+        ws.set_row(4 + i, 16)
+    ws.set_row(8, 10)
+    if MAKRO:
+        ws.write_url(8, 0, "internal:'Umsetzung'!A1", F(font_color=ROT, bold=True, underline=1, font_size=9.5),
+                     'Automatisch umsetzen: Blatt „Umsetzung“ (Makro) – die Vorschau zeigt jeden Schritt, bevor etwas geändert wird.',
+                     'Blatt Umsetzung öffnen')
+        ws.set_row(8, 22)
+    KOPF_A = ['Nr', 'Was', 'Regel in Bestandsuebertragungen', 'Soll-Pos.', 'Vorbild in Maklerauftraege', 'WENN (Bedingung)',
+              'AUSSER WENN', 'DANN (Aktionen)', 'Ordner vorher anlegen', 'Warum', 'Erledigt']
+    AL_A = ['center', 'left', 'left', 'center', 'left', 'left', 'left', 'left', 'left', 'left', 'center']
+    for c, t in enumerate(KOPF_A):
+        ws.write(A_KOPF, c, t, kopf_fmt(AL_A[c]))
+    ws.set_row(A_KOPF, 30)
+    for i, a in enumerate(AUFGABEN):
+        z = A_KOPF + 1 + i
+        bg, fg = WAS_FARBE[a['was']]
+        ws.write(z, 0, i + 1, zelle_fmt('center', font_color=MUTED, valign='top'))
+        ws.write(z, 1, a['was'], F(bg_color=bg, font_color=fg, bold=True, indent=1, font_size=9, border=2,
+                                   border_color=WEISS, valign='top'))
+        texte = [(2, a['regel'], dict(bold=True)), (4, a['vorbild'], {}), (5, a['wenn'], {}), (6, a['ausser'], {}),
+                 (7, a['dann'], {}), (8, a['ordner'], {}), (9, a['warum'], dict(font_color=MUTED))]
+        for c, t, ex in texte:
+            if c == 5 and ('Kopieren mit' in str(t) or str(t).startswith('bleibt')):
+                ex = dict(font_color=GRUEN, italic=True)
+            ws.write(z, c, t, zelle_fmt(wrap=True, valign='top', **ex))
+        ws.write(z, 3, a['pos'], zelle_fmt('center', bold=True, valign='top'))
+        ws.write(z, 10, 'offen', zelle_fmt('center', valign='top', font_color=MUTED))
+        n = max(zeilen(a['regel'], BREITEN_A[2], fett=True), zeilen(a['vorbild'], BREITEN_A[4]),
+                zeilen(a['wenn'], BREITEN_A[5]), zeilen(a['ausser'], BREITEN_A[6]), zeilen(a['dann'], BREITEN_A[7]),
+                zeilen(a['ordner'], BREITEN_A[8]), zeilen(a['warum'], BREITEN_A[9]))
+        ws.set_row(z, zeilenhoehe(n, polster=10))
+    erl = 'K%d:K%d' % (A_ERSTE, A_LETZTE)
+    ws.data_validation(erl, {'validate': 'list', 'source': ['offen', 'erledigt', 'verworfen'],
+                             'input_title': 'Stand', 'input_message': 'offen, erledigt oder verworfen'})
+    ws.conditional_format(erl, {'type': 'cell', 'criteria': '==', 'value': '"erledigt"',
+                                'format': CF(bg_color=GRUENL, font_color=GRUEN, bold=True)})
+    ws.conditional_format(erl, {'type': 'cell', 'criteria': '==', 'value': '"verworfen"',
+                                'format': CF(bg_color=GRAUL, font_color=GRAUD, italic=True)})
+    ws.conditional_format('A%d:J%d' % (A_ERSTE, A_LETZTE), {'type': 'formula', 'criteria': '=$K%d="erledigt"' % A_ERSTE,
+                                                            'format': CF(font_color=FAINT)})
 
-# Soll-Reihenfolge
-z = A_LETZTE + 1
-ws.set_row(z - 1, 14)
-ws.write(z, 0, 'Soll-Reihenfolge in Bestandsuebertragungen nach der Umsetzung',
-         F(font_name=FONT_TITEL, font_size=13, bold=True, valign='bottom'))
-ws.set_row(z, 30)
-z += 1
-ws.write(z, 0, 'Pos.', kopf_fmt('center'))
-ws.write(z, 1, 'Änderung', kopf_fmt())
-ws.merge_range(z, 2, z, 4, 'Regel', kopf_fmt())
-ws.write(z, 5, 'bisher #', kopf_fmt())
-ws.set_row(z, 26)
-SOLL_FARBE = {KOPIERT: (GRUENL, GRUEN), 'kopieren, falls benötigt': (GELBL, GELBD), 'angepasst': (INDIGOL, INDIGO),
-              'prüfen, ggf. löschen': (GELBL, GELBD), 'deaktiviert, unverändert': (GRAUL, GRAUD),
-              'verschoben': (INDIGOL, INDIGO)}
-for i, (name, aend, bisher) in enumerate(SOLL):
-    z += 1
-    ws.write(z, 0, i + 1, zelle_fmt('center', bold=True))
-    if aend in SOLL_FARBE:
-        bg, fg = SOLL_FARBE[aend]
-        ws.write(z, 1, aend, F(bg_color=bg, font_color=fg, bold=True, indent=1, font_size=8.5, border=2,
-                               border_color=WEISS, text_wrap=True))
-    else:
-        ws.write(z, 1, aend, zelle_fmt(font_color='#9AA3AD', font_size=9))
-    ws.merge_range(z, 2, z, 4, name, zelle_fmt(bold=aend != 'unverändert' and not aend.startswith('deaktiviert'),
-                                               font_color=FAINT if aend.startswith('deaktiviert') else TEXT))
-    ws.write(z, 5, bisher if bisher is not None else '–', zelle_fmt(font_color=MUTED))
-    ws.set_row(z, 22 if len(aend) < 15 else 26)
-z += 1
-ws.write(z, 0, 'Werden die Erinnerungsregeln nicht gebraucht, rücken die folgenden Regeln entsprechend nach oben.',
-         F(font_color=MUTED, font_size=9.5, italic=True))
-if MAKLER_HINWEISE:
-    z += 2
-    ws.write(z, 0, 'Hinweise für Maklerauftraege (nicht Teil des Plans)', F(font_name=FONT_TITEL, font_size=13, bold=True,
-                                                                          valign='bottom'))
+    # Soll-Reihenfolge
+    z = A_LETZTE + 1
+    ws.set_row(z - 1, 14)
+    ws.write(z, 0, 'Soll-Reihenfolge in Bestandsuebertragungen nach der Umsetzung',
+             F(font_name=FONT_TITEL, font_size=13, bold=True, valign='bottom'))
     ws.set_row(z, 30)
-    for t in MAKLER_HINWEISE:
+    z += 1
+    ws.write(z, 0, 'Pos.', kopf_fmt('center'))
+    ws.write(z, 1, 'Änderung', kopf_fmt())
+    ws.merge_range(z, 2, z, 4, 'Regel', kopf_fmt())
+    ws.write(z, 5, 'bisher #', kopf_fmt())
+    ws.set_row(z, 26)
+    SOLL_FARBE = {KOPIERT: (GRUENL, GRUEN), 'kopieren, falls benötigt': (GELBL, GELBD), 'angepasst': (INDIGOL, INDIGO),
+                  'prüfen, ggf. löschen': (GELBL, GELBD), 'deaktiviert, unverändert': (GRAUL, GRAUD),
+                  'verschoben': (INDIGOL, INDIGO)}
+    for i, (name, aend, bisher) in enumerate(SOLL):
         z += 1
-        ws.write(z, 0, '–', zelle_fmt('center', font_color=MUTED))
-        ws.merge_range(z, 1, z, 7, t, zelle_fmt(wrap=True))
-        ws.set_row(z, zeilenhoehe(zeilen(t, sum(BREITEN_A[1:8]))))
-ws.freeze_panes(A_KOPF + 1, 0)
-druck(ws, (A_KOPF, A_KOPF))
+        ws.write(z, 0, i + 1, zelle_fmt('center', bold=True))
+        if aend in SOLL_FARBE:
+            bg, fg = SOLL_FARBE[aend]
+            ws.write(z, 1, aend, F(bg_color=bg, font_color=fg, bold=True, indent=1, font_size=8.5, border=2,
+                                   border_color=WEISS, text_wrap=True))
+        else:
+            ws.write(z, 1, aend, zelle_fmt(font_color='#9AA3AD', font_size=9))
+        ws.merge_range(z, 2, z, 4, name, zelle_fmt(bold=aend != 'unverändert' and not aend.startswith('deaktiviert'),
+                                                   font_color=FAINT if aend.startswith('deaktiviert') else TEXT))
+        ws.write(z, 5, bisher if bisher is not None else '–', zelle_fmt(font_color=MUTED))
+        ws.set_row(z, 22 if len(aend) < 15 else 26)
+    z += 1
+    ws.write(z, 0, 'Werden die Erinnerungsregeln nicht gebraucht, rücken die folgenden Regeln entsprechend nach oben.',
+             F(font_color=MUTED, font_size=9.5, italic=True))
+    if MAKLER_HINWEISE:
+        z += 2
+        ws.write(z, 0, 'Hinweise für Maklerauftraege (nicht Teil des Plans)', F(font_name=FONT_TITEL, font_size=13, bold=True,
+                                                                              valign='bottom'))
+        ws.set_row(z, 30)
+        for t in MAKLER_HINWEISE:
+            z += 1
+            ws.write(z, 0, '–', zelle_fmt('center', font_color=MUTED))
+            ws.merge_range(z, 1, z, 7, t, zelle_fmt(wrap=True))
+            ws.set_row(z, zeilenhoehe(zeilen(t, sum(BREITEN_A[1:8]))))
+    ws.freeze_panes(A_KOPF + 1, 0)
+    druck(ws, (A_KOPF, A_KOPF))
+
+else:
+    # Auftrag „Aufräumen“: statt der Liste „Anlegen“ die neuen Namen und die Reihenfolge je Postfach
+    ws = wb.add_worksheet('Aufräumen')
+    aufraeumen.blatt(globals(), ws, [AUFRAEUM[BES], AUFRAEUM[MAK]])
 
 # ================================================================ Übersicht
 ws = wb.add_worksheet(UE)

@@ -347,13 +347,13 @@ End Function
 ' Rueckgabe: ID (auch einer laut Plan inzwischen umbenannten oder geloeschten Regel - mWeg prueft der Aufrufer),
 ' 0 = kein solcher Bezug oder es gibt nicht genau m Regeln dieses Namens.
 Public Function SucheVorkommen(ByVal bezug As String) As Long
-    Dim basis As String, nr As Long, gesamt As Long, exakt As Boolean, platz As Long, i As Long, n As Long, passt As Boolean
+    Dim basis As String, nr As Long, gesamt As Long, exakt As Boolean, pl As Long, i As Long, n As Long, passt As Boolean
     If Not VorkommenTeile(bezug, basis, nr, gesamt) Then Exit Function
     If nr > gesamt Then Exit Function
     If NameAnzahlAlt(basis, exakt) <> gesamt Then Exit Function
-    For platz = 1 To mAnzAlt
+    For pl = 1 To mAnzAlt
         For i = 1 To mAnzAlt
-            If mPlatzAlt(i) = platz Then
+            If mPlatzAlt(i) = pl Then
                 If exakt Then
                     passt = (Trim(mNameAlt(i)) = basis)
                 Else
@@ -368,7 +368,7 @@ Public Function SucheVorkommen(ByVal bezug As String) As Long
                 End If
             End If
         Next i
-    Next platz
+    Next pl
 End Function
 
 ' Bezug, unter dem der Plan Regel id anspricht: der Name, bei mehrfach vergebenem Namen "Name #n/m" (Reihenfolge wie

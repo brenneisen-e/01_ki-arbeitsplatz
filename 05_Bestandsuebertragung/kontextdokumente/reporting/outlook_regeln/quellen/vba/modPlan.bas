@@ -549,13 +549,24 @@ Private Function NamensGruppe(ByVal regelName As String, ByRef anzahl As Long) A
     NamensGruppe = s
 End Function
 
-' Plaetze einer ID-Liste ("|7|8|9|") als Text: "Platz 7 bis 9" bzw. "Plätze 7, 9, 12" (ab der sechsten "und n weitere").
+' Platz, auf dem eine Regel in Outlook steht (Stand beim Lesen, wie im Blatt Live) - fuer Meldungen zum Loeschen: Im
+' Abbild ruecken die Plaetze nach jeder geloeschten Regel auf, in Outlook stehen bis zum Speichern noch alle da.
+Private Function PlatzOutlook(ByVal id As Long) As Long
+    If id >= 1 And id <= mAnzAlt Then
+        PlatzOutlook = mPlatzAlt(id)
+    Else
+        PlatzOutlook = Platz(id)
+    End If
+End Function
+
+' Plaetze einer ID-Liste ("|7|8|9|") als Text: "Platz 7 bis 9" bzw. "Plätze 7, 9, 12" (ab der sechsten "und n weitere");
+' gemeint sind die Plaetze in Outlook (PlatzOutlook).
 Private Function PlatzText(ByVal ids As String) As String
     Dim teile As Variant, i As Long, n As Long, p As Long, erster As Long, letzter As Long, luecke As Boolean, s As String
     teile = Split(ids, "|")
     For i = LBound(teile) To UBound(teile)
         If teile(i) <> "" Then
-            p = Platz(CLng(teile(i)))
+            p = PlatzOutlook(CLng(teile(i)))
             n = n + 1
             If n = 1 Then
                 erster = p
@@ -1565,7 +1576,13 @@ Public Function SchrittPruefen(ByVal k As Long, ByVal anwenden As Boolean, ByVal
             ' Alle Regeln dieses Namens bis auf die erste: jede muss ein belegbares Duplikat der ersten sein
             nmListe = NamensGruppe(pRegel(k), j)
             If j = 0 Then
+                ' Kein Treffer unter diesem Namen: Hat eine spaetere Zeile die verbliebene Regel umbenannt (UMBENENNEN mit
+                ' demselben Namen in der Regel-Spalte), zaehlen die Regeln unter dem neuen Namen - sonst meldete ein
+                ' zweiter Lauf (und die Nachpruefung) "nicht gefunden", obwohl alles erledigt ist
                 id = RegelFinden(pRegel(k))
+                If id > 0 Then nmListe = NamensGruppe(mName(id), j)
+            End If
+            If j = 0 Then
                 If id = -2 Then
                     SchrittPruefen = NichtGefunden(k, pRegel(k), id)
                 Else
@@ -1594,8 +1611,8 @@ Public Function SchrittPruefen(ByVal k As Long, ByVal anwenden As Boolean, ByVal
             eWegIds = eWegIds & "|"
             eWegAnz = j - 1
             eFall = "WEG": eId = 0: eAnker = id
-            eKurz = "löschen: " & eWegAnz & IIf(eWegAnz = 1, " Duplikat (", " Duplikate (") & PlatzText(eWegIds) & _
-                    "), es bleibt die Regel auf Platz " & Platz(id)
+            eKurz = "löschen: " & eWegAnz & IIf(eWegAnz = 1, " Duplikat (in Outlook ", " Duplikate (in Outlook ") & _
+                    PlatzText(eWegIds) & "), es bleibt die Regel auf Platz " & PlatzOutlook(id)
             If anwenden Then
                 For i = 2 To j
                     RegelEntfernen CLng(typen(i))
@@ -1656,7 +1673,7 @@ Public Function SchrittPruefen(ByVal k As Long, ByVal anwenden As Boolean, ByVal
                 Exit Function
             End If
             eFall = "WEG": eId = id: eAnker = idNeu: eWegAnz = 1
-            eKurz = "löschen – Duplikat von " & Zitat(mName(idNeu)) & " (Platz " & Platz(idNeu) & ", bleibt)"
+            eKurz = "löschen – Duplikat von " & Zitat(mName(idNeu)) & " (in Outlook Platz " & PlatzOutlook(idNeu) & ", bleibt)"
         End If
         If anwenden Then RegelEntfernen id
         pSpeichern(k) = True

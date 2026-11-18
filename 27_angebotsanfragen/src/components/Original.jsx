@@ -2,23 +2,25 @@
  * Der Eingang im Original samt Fundstellen.
  *
  * Oben steht, wie der Eingang im Postfach liegt (Absender, Betreff,
- * Anhänge). Darunter die Dokumente als Nachbau; hat der Eingang mehrere
- * (Mail und Anhang), wechselt man über die Reiter. Wird im Deckblatt ein Feld
+ * Anhänge). Darunter die Dokumente: bei den Beispielanfragen die Seiten des
+ * Original-PDF mit den Fundstellen darauf, wahlweise die Abschrift; sonst der
+ * Nachbau aus Blöcken. Hat der Eingang mehrere Dokumente (Mail und Anhang),
+ * wechselt man über die Reiter. Wird im Deckblatt ein Feld
  * angeklickt, springt die Ansicht zur ersten Fundstelle – auch über den
  * Reiter hinweg.
  */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { clsx } from 'clsx'
 import { Mail, Paperclip, FileText, Highlighter, ScanLine, ExternalLink } from 'lucide-react'
 import Dokument from './Dokument'
 import Legende from './Legende'
 import { rolleZu, findeMarke } from '../utils/rollen'
+import { originalseiten } from '../utils/originalbild'
 
 export default function Original({ vorgang, verknuepfung, aktiv, sprung, onFeld, kopf = true }) {
   const [dokNr, setDokNr] = useState(0)
   const [marken, setMarken] = useState(true)
-  // Bei einem hochgeladenen PDF lässt sich neben der Abschrift die Datei selbst ansehen.
   const rahmen = useRef(null)
   const { info, fundstellen } = verknuepfung
   const dokumente = vorgang.dokumente
@@ -37,6 +39,11 @@ export default function Original({ vorgang, verknuepfung, aktiv, sprung, onFeld,
 
   const dok = dokumente[dokNr] || dokumente[0]
   const { mail } = vorgang
+  // Beispielanfragen gibt es als Seiten des Original-PDF; die Abschrift bleibt daneben erreichbar.
+  const bilder = useMemo(() => originalseiten(vorgang, dokNr), [vorgang, dokNr])
+  const [abschrift, setAbschrift] = useState(false)
+  useEffect(() => { setAbschrift(false) }, [vorgang])
+  const zeigtBild = Boolean(bilder) && !abschrift
   const anzahlMarken = Object.values(fundstellen).reduce((n, liste) => n + liste.length, 0)
 
   return (
@@ -84,6 +91,17 @@ export default function Original({ vorgang, verknuepfung, aktiv, sprung, onFeld,
           {dok.scan ? <ScanLine size={13} className="text-slate-400" /> : <FileText size={13} className="text-slate-400" />}
           {dok.art}
         </span>
+        {bilder && (
+          <span className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5" title="Seiten des Originals oder der daraus gelesene Text">
+            {[[false, 'Originalseiten'], [true, 'Abschrift']].map(([wert, label]) => (
+              <button key={label} onClick={() => setAbschrift(wert)}
+                className={clsx('px-2 py-1 rounded-md text-xs transition-colors', abschrift === wert ? 'text-white' : 'text-slate-600 hover:bg-slate-50')}
+                style={abschrift === wert ? { backgroundColor: 'var(--mode-primary-light)' } : undefined}>
+                {label}
+              </button>
+            ))}
+          </span>
+        )}
         <button onClick={() => setMarken(m => !m)}
           className={clsx('ml-auto px-2.5 py-1.5 rounded-lg text-xs border flex items-center gap-1.5 transition-colors',
             marken ? 'border-slate-300 bg-slate-100 text-slate-700' : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50')}
@@ -93,7 +111,8 @@ export default function Original({ vorgang, verknuepfung, aktiv, sprung, onFeld,
       </div>
 
       {marken && <Legende />}
-      <Dokument dok={dok} info={info} onFeld={marken ? onFeld : undefined} markierung={{ an: marken, aktiv }} />
+      <Dokument dok={dok} info={info} onFeld={marken ? onFeld : undefined} markierung={{ an: marken, aktiv }}
+        seitenbilder={zeigtBild ? bilder : null} />
     </div>
   )
 }

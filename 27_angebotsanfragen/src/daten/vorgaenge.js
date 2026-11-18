@@ -4,10 +4,14 @@
  * Fünf davon sind die verfremdeten Beispielanfragen aus dem Fachbereich
  * (beispiel 1–5), die übrigen sind frei erfunden. Jeder Eingang besteht aus
  *   mail        Absender, Betreff und Anhänge, wie sie im Postfach stehen
- *   dokumente   der Eingang im Original als nachgebaute Seiten, mit den
+ *   dokumente   der Eingang als nachgebaute Seiten (zugleich die Abschrift), mit den
  *               Fundstellen der KI als Markierungen im Text
  *   felder      die daraus gelesenen Werte des Deckblatts
  *   betriebsarten, risikofragen, auffaelligkeiten, gesamteinschaetzung
+ *
+ * Die Beispielanfragen erscheinen in der Oberfläche als Seiten des gelieferten
+ * PDF; die Lage ihrer Fundstellen steht in originale.js (erzeugt, siehe
+ * scripts/originale/). Der Nachbau hier bleibt die Quelle der Markierungen.
  *
  * Hausbegriffe stehen als Platzhalter ({postfach}, {linie} …) in den Texten
  * und werden hier einmal für die aktive Marke aufgelöst.

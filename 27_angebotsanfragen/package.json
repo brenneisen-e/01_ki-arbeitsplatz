@@ -12,7 +12,8 @@
     "datenpruefung": "node scripts/datenpruefung.mjs",
     "rauchtest": "node scripts/rauchtest.mjs",
     "pruefen": "npm run datenpruefung && npm run build && npm run rauchtest",
-    "pack": "node ../tools/dex/pack.mjs 27_angebotsanfragen"
+    "pack": "node ../tools/dex/pack.mjs 27_angebotsanfragen",
+    "originale": "python3 scripts/originale/originale.py"
   },
   "keywords": [],
   "author": "",

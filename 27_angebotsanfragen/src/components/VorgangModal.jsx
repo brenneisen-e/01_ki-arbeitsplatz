@@ -15,12 +15,12 @@
 import { useMemo, useState, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { clsx } from 'clsx'
-import { X, Mail, ArrowRight, ArrowLeft, ChevronRight, ListChecks, FileSpreadsheet, Columns3 } from 'lucide-react'
+import { X, Mail, ArrowRight, ArrowLeft, ChevronLeft, ChevronRight, ListChecks, FileSpreadsheet, Columns3 } from 'lucide-react'
 import { pruefe } from '../utils/pruefengine'
 import { baueVerknuepfung } from '../utils/feldinfo'
 import { layoutVon } from '../utils/layouts'
 import { ERGEBNIS } from '../utils/ergebnis'
-import { herkunft } from '../daten/vorgaenge'
+import { herkunft, BEISPIELE } from '../daten/vorgaenge'
 import { HerkunftChip } from './Bausteine'
 import Deckblatt from './Deckblatt'
 import Original from './Original'
@@ -114,7 +114,7 @@ function startAnsicht(startSchritt) {
   return typeof window !== 'undefined' && window.innerWidth >= 1280 ? [1, 2] : [1]
 }
 
-export default function VorgangModal({ vorgang, onClose, startSchritt = 0 }) {
+export default function VorgangModal({ vorgang, onClose, startSchritt = 0, onWechsel }) {
   const lauf = useMemo(() => (vorgang ? pruefe(vorgang) : null), [vorgang])
   const verknuepfung = useMemo(() => (vorgang ? baueVerknuepfung(vorgang) : null), [vorgang])
   const [sichtbar, setSichtbar] = useState(() => startAnsicht(startSchritt))
@@ -199,6 +199,23 @@ export default function VorgangModal({ vorgang, onClose, startSchritt = 0 }) {
               {vorgang.beispiel
                 ? <HerkunftChip vorgang={vorgang} />
                 : <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{herkunft(vorgang)}</span>}
+              {/* Durch die Beispielanfragen blättern, ohne das Fenster zu schließen */}
+              {vorgang.beispiel && onWechsel && BEISPIELE.length > 1 && (() => {
+                const i = BEISPIELE.findIndex(v => v.id === vorgang.id)
+                const vor = BEISPIELE[(i - 1 + BEISPIELE.length) % BEISPIELE.length]
+                const nach = BEISPIELE[(i + 1) % BEISPIELE.length]
+                const knopf = 'h-7 px-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-600 hover:bg-slate-50 inline-flex items-center gap-1 whitespace-nowrap'
+                return (
+                  <span className="inline-flex items-center gap-1.5" data-blaettern>
+                    <button onClick={() => onWechsel(vor)} className={knopf} title={`Beispiel ${vor.beispiel}: ${vor.kunde}`}>
+                      <ChevronLeft size={13} /> Beispiel {vor.beispiel}
+                    </button>
+                    <button onClick={() => onWechsel(nach)} className={knopf} title={`Beispiel ${nach.beispiel}: ${nach.kunde}`}>
+                      Beispiel {nach.beispiel} <ChevronRight size={13} />
+                    </button>
+                  </span>
+                )
+              })()}
             </div>
             <div className="text-sm text-slate-500 mt-0.5">
               {layout.id === 'sonstig' ? vorgang.vorgangsart : layout.name} · {vorgang.mail.vonName} · Eingang {vorgang.eingang}, {vorgang.uhrzeit} Uhr · {vorgang.form}

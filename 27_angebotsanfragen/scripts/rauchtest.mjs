@@ -12,7 +12,9 @@
 //   · Laufzeit- und Konsolenfehler, HTTP-Antworten ab 400 vom eigenen Server
 //   · die vier Seiten bei 1600, 1280 und 1024 px: kein waagerechter Überlauf,
 //     der Kopf ist 163 px hoch (einheitlicher Kopf der Plattform)
-//   · jede Detailansicht eines Eingangs mit Original, Deckblatt und Prüfung
+//   · jede Detailansicht eines Eingangs mit Original, Deckblatt und Prüfung; bei den Beispielanfragen
+//     laden alle Originalseiten als Bild, die Fundstellen liegen darauf, die Abschrift ist erreichbar,
+//     und das Whitelabel zeigt die Fassung ohne Hausbegriffe (Seitenbild „….neutral“)
 //   · die Präsentation: jede Beispielanfrage in allen sechs Szenen bei
 //     1920 × 1080; außer dem Deckblatt (Szene 3) passt jede Szene ohne Scrollen
 //   · Begriffe: Im Whitelabel steht kein Hausbegriff eines Kunden, in der
@@ -21,7 +23,8 @@
 //
 // Dazu einmal die Direktaufrufe der Beispielanfragen: Ziffern im Kopf,
 // Kacheln der Übersicht, Direktlinks #beispiel-n und #praesentation-n,
-// Zifferntasten in der Präsentation.
+// Zifferntasten in der Präsentation, die Kacheln der Schlussszene und das
+// Blättern von Beispiel zu Beispiel im Detailfenster.
 //
 // Braucht Playwright (im Projekt oder global installiert). Ein eigener
 // Browser lässt sich über CHROMIUM=/pfad/zu/chrome vorgeben.
@@ -51,6 +54,8 @@ const BUCHSTABE = 'A-Za-zÄÖÜäöüß'
 
 const befunde = []
 const melde = (marke, wo, text) => befunde.push(`[${marke}] ${wo}: ${text}`)
+// Je Beispielanfrage: wie viele Seiten das Whitelabel in neutraler Fassung zeigt
+const beispieleMitNeutral = new Map()
 
 const browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {})
 
@@ -132,6 +137,22 @@ async function detailansichten(marke) {
     if (await alleDrei.count()) { await alleDrei.click(); await seite.waitForTimeout(250) }
     if (!(await fenster.locator('mark.fs').count())) melde(marke, `Detail ${id}`, 'keine Fundstelle im Original')
     await pruefeText(seite, marke, `Detail ${id}`)
+    // Beispielanfragen: Originalseiten als Bild, Fundstellen darauf, Abschrift erreichbar
+    const abschrift = fenster.getByRole('button', { name: 'Abschrift', exact: true })
+    if (await abschrift.count()) {
+      await seite.waitForFunction(() => [...document.querySelectorAll('[data-modal] .dok-bildseite img')].every(b => b.complete), null, { timeout: 8000 }).catch(() => {})
+      const bilder = await fenster.locator('.dok-bildseite img').evaluateAll(els => els.map(b => ({ ok: b.complete && b.naturalWidth > 0, src: b.getAttribute('src') || '' })))
+      if (!bilder.length) melde(marke, `Detail ${id}`, 'keine Originalseite')
+      if (bilder.some(b => !b.ok)) melde(marke, `Detail ${id}`, `${bilder.filter(b => !b.ok).length} von ${bilder.length} Originalseiten laden nicht`)
+      if (!(await fenster.locator('mark.fs.bild.an').count())) melde(marke, `Detail ${id}`, 'keine Fundstelle auf den Originalseiten')
+      // Hausbegriffe und Logo stehen nur in der Marke des Hauses auf den Seiten.
+      const neutrale = bilder.filter(b => /\.neutral-/.test(b.src)).length
+      if (marke === 'nuernberger' && neutrale) melde(marke, `Detail ${id}`, 'zeigt Seitenbilder der neutralen Fassung')
+      beispieleMitNeutral.set(id, (beispieleMitNeutral.get(id) || 0) + (marke === 'neutral' ? neutrale : 0))
+      await abschrift.click(); await seite.waitForTimeout(250)
+      if (await fenster.locator('.dok-bildseite').count()) melde(marke, `Detail ${id}`, 'Abschrift zeigt weiter das Seitenbild')
+      if (!(await fenster.locator('mark.fs:not(.bild)').count())) melde(marke, `Detail ${id}`, 'Abschrift ohne Fundstellen')
+    }
     await seite.keyboard.press('Escape')
     await seite.waitForTimeout(200)
   }
@@ -162,6 +183,23 @@ async function praesentation(marke) {
         if (mass.inhalt > mass.platz + 2) melde(marke, wo, `passt nicht auf den Bildschirm (${mass.inhalt} px bei ${mass.platz} px)`)
       }
     }
+  }
+  // Schlussszene: die übrigen Beispielanfragen als Kacheln, ansehen und im Fenster weiterblättern
+  const kacheln = p.locator('[data-schluss-beispiele] .beispiel-kachel')
+  const anzahl = await kacheln.count()
+  if (anzahl !== beispiele - 1) melde(marke, 'Schlussszene', `${anzahl} Beispielkacheln, erwartet ${beispiele - 1}`)
+  if (anzahl) {
+    const titel = async () => ((await seite.locator('[data-modal] h2, [data-modal] h3').first().textContent().catch(() => '')) || '').trim()
+    await kacheln.first().getByRole('button', { name: 'Ansehen' }).click(); await seite.waitForTimeout(450)
+    const erster = await titel()
+    if (!erster) melde(marke, 'Schlussszene', 'Ansehen öffnet kein Fenster')
+    const weiter = seite.locator('[data-modal] [data-blaettern] button').nth(1)
+    if (await weiter.count()) {
+      await weiter.click(); await seite.waitForTimeout(450)
+      if ((await titel()) === erster) melde(marke, 'Schlussszene', 'Blättern wechselt das Beispiel nicht')
+    } else melde(marke, 'Schlussszene', 'kein Blättern im Detailfenster')
+    await seite.keyboard.press('Escape'); await seite.waitForTimeout(300)
+    if (!(await p.count())) melde(marke, 'Schlussszene', 'Präsentation ist nach dem Schließen des Fensters weg')
   }
   await seite.keyboard.press('Escape')
   await ctx.close()
@@ -229,6 +267,11 @@ for (const marke of Object.keys(VERBOTEN)) {
 }
 
 await browser.close()
+
+// Mindestens eine Beispielanfrage muss im Whitelabel eine neutrale Seite zeigen, sonst greift die Auswahl nicht.
+if (beispieleMitNeutral.size && ![...beispieleMitNeutral.values()].some(n => n > 0)) {
+  melde('neutral', 'Originalseiten', 'keine Seite in neutraler Fassung gefunden')
+}
 
 if (befunde.length) {
   console.log('\nBefunde:')

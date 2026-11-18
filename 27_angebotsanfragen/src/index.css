@@ -398,6 +398,50 @@ sup.fs-nr {
   white-space: nowrap;
 }
 
+/* Originalseite als Bild: Die Fundstellen liegen wie ein Leuchtstift über dem
+   Blatt (multiply), die Schrift darunter bleibt scharf. Maße in cqw, damit sie
+   mit der Seitenbreite wachsen. */
+.dok-bildseite {
+  position: relative;
+  container-type: inline-size;
+  background: #ffffff;
+  overflow: hidden;
+}
+.dok-bildseite img { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+mark.fs.bild {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  font-size: 1.6cqw;
+  border-radius: 0.28cqw;
+  mix-blend-mode: multiply;
+  box-shadow: none;
+}
+mark.fs.bild.an.art-gelesen { background-color: var(--fs-gelesen); box-shadow: none; }
+mark.fs.bild.an.art-interpretiert { background-color: var(--fs-interpretiert); box-shadow: none; }
+mark.fs.bild.an.art-auffaellig { background-color: var(--fs-auffaellig); box-shadow: none; }
+mark.fs.bild.an:hover { filter: saturate(1.5) brightness(0.96); }
+mark.fs.bild.aktiv {
+  outline: 0.24cqw solid var(--mode-primary-light);
+  outline-offset: 0.1cqw;
+  filter: saturate(1.6) brightness(0.94);
+}
+.fs-nr.bild {
+  position: absolute;
+  transform: translate(-45%, -55%);
+  font-family: 'DM Sans', sans-serif;
+  font-size: max(8px, 1.12cqw);
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.16em 0.4em;
+  border-radius: 999px;
+  background: var(--mode-primary);
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Kleine Farbproben in Legenden */
 .probe-gelesen { background-color: var(--fs-gelesen); }
 .probe-interpretiert { background-color: var(--fs-interpretiert); }

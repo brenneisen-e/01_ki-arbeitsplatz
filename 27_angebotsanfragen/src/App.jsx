@@ -97,7 +97,7 @@ function AppContent() {
         {activeView === 'prozess' && <ProzessPage onPraesentation={() => startePraesentation(0)} />}
       </main>
 
-      <VorgangModal vorgang={offen.vorgang} startSchritt={offen.schritt} onClose={schliesseVorgang} />
+      <VorgangModal vorgang={offen.vorgang} startSchritt={offen.schritt} onClose={schliesseVorgang} onWechsel={oeffneVorgang} />
       <Praesentation
         offen={praesentation.offen}
         startSchritt={praesentation.start}

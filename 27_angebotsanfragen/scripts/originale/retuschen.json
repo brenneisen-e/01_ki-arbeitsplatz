@@ -1,0 +1,792 @@
+{
+ "b1-1": [
+  {
+   "rect": [
+    0.814,
+    0.967,
+    0.9497,
+    0.9817
+   ],
+   "text": "089 123 456 789",
+   "x": 0.817,
+   "y": 0.9774,
+   "schrift": "dejavu",
+   "px": 18.75,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1297,
+   "kasten": [
+    0.817,
+    0.969,
+    0.9467,
+    0.9797
+   ],
+   "pt": 9
+  }
+ ],
+ "b1-2": [
+  {
+   "rect": [
+    0.814,
+    0.967,
+    0.9497,
+    0.9817
+   ],
+   "text": "089 123 456 789",
+   "x": 0.817,
+   "y": 0.9774,
+   "schrift": "dejavu",
+   "px": 18.75,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1297,
+   "kasten": [
+    0.817,
+    0.969,
+    0.9467,
+    0.9797
+   ],
+   "pt": 9
+  }
+ ],
+ "b1-3": [
+  {
+   "rect": [
+    0.814,
+    0.967,
+    0.9497,
+    0.9817
+   ],
+   "text": "089 123 456 789",
+   "x": 0.817,
+   "y": 0.9774,
+   "schrift": "dejavu",
+   "px": 18.75,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1297,
+   "kasten": [
+    0.817,
+    0.969,
+    0.9467,
+    0.9797
+   ],
+   "pt": 9
+  }
+ ],
+ "b1-4": [
+  {
+   "rect": [
+    0.814,
+    0.967,
+    0.9497,
+    0.9817
+   ],
+   "text": "089 123 456 789",
+   "x": 0.817,
+   "y": 0.9774,
+   "schrift": "dejavu",
+   "px": 18.75,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1297,
+   "kasten": [
+    0.817,
+    0.969,
+    0.9467,
+    0.9797
+   ],
+   "pt": 9
+  }
+ ],
+ "b2-1": [
+  {
+   "rect": [
+    0.595,
+    0.1427,
+    0.738,
+    0.1586
+   ],
+   "text": "/123-45-6789 MFD",
+   "x": 0.598,
+   "y": 0.1541,
+   "schrift": "carlito",
+   "px": 21.67,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.137,
+   "kasten": [
+    0.598,
+    0.1447,
+    0.735,
+    0.1566
+   ],
+   "pt": 10.4
+  },
+  {
+   "rect": [
+    0.7608,
+    0.1741,
+    0.9038,
+    0.1899
+   ],
+   "text": "/123-45-6789 MFD",
+   "x": 0.7638,
+   "y": 0.1854,
+   "schrift": "carlito",
+   "px": 21.67,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.137,
+   "kasten": [
+    0.7638,
+    0.1761,
+    0.9008,
+    0.1879
+   ],
+   "pt": 10.4
+  },
+  {
+   "rect": [
+    0.3487,
+    0.7327,
+    0.4926,
+    0.7498
+   ],
+   "text": "/123-45-6789 MFD",
+   "x": 0.3517,
+   "y": 0.7451,
+   "schrift": "carlito",
+   "px": 22.92,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1379,
+   "kasten": [
+    0.3517,
+    0.7347,
+    0.4896,
+    0.7478
+   ],
+   "pt": 11
+  },
+  {
+   "rect": [
+    0.0589,
+    0.2525,
+    0.4276,
+    0.2683
+   ],
+   "text": "",
+   "x": 0.0619,
+   "y": 0.2638,
+   "schrift": "liberation",
+   "px": 20.83,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.3626,
+   "kasten": [
+    0.0619,
+    0.2545,
+    0.4246,
+    0.2663
+   ],
+   "pt": 0
+  },
+  {
+   "rect": [
+    0.0579,
+    0.2956,
+    0.4679,
+    0.3179
+   ],
+   "text": "",
+   "x": 0.0619,
+   "y": 0.3109,
+   "schrift": "liberation",
+   "px": 25.0,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.402,
+   "kasten": [
+    0.0619,
+    0.2996,
+    0.4639,
+    0.3139
+   ],
+   "pt": 0
+  },
+  {
+   "rect": [
+    0.0988,
+    0.685,
+    0.217,
+    0.7021
+   ],
+   "text": "Muster, Erika",
+   "x": 0.1018,
+   "y": 0.6973,
+   "schrift": "carlito",
+   "px": 22.92,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1122,
+   "kasten": [
+    0.1018,
+    0.687,
+    0.214,
+    0.7001
+   ],
+   "pt": 11
+  },
+  {
+   "rect": [
+    0.3752,
+    0.127,
+    0.5749,
+    0.1429
+   ],
+   "text": "Angebote Gewerbe Prio3",
+   "x": 0.3782,
+   "y": 0.1384,
+   "schrift": "carlito",
+   "px": 21.67,
+   "variante": "neutral",
+   "frei": true,
+   "breite": 0.1938,
+   "kasten": [
+    0.3782,
+    0.129,
+    0.5719,
+    0.1409
+   ],
+   "pt": 10.4
+  },
+  {
+   "rect": [
+    0.2602,
+    0.8171,
+    0.2884,
+    0.8354
+   ],
+   "text": "GL",
+   "x": 0.2632,
+   "y": 0.8304,
+   "schrift": "carlito",
+   "px": 25.0,
+   "variante": "neutral",
+   "frei": false,
+   "breite": 0.0222,
+   "kasten": [
+    0.2632,
+    0.8191,
+    0.2854,
+    0.8334
+   ],
+   "pt": 12
+  }
+ ],
+ "b2-2": [
+  {
+   "rect": [
+    0.3058,
+    0.1654,
+    0.3825,
+    0.1836
+   ],
+   "text": "",
+   "x": 0.3088,
+   "y": 0.1786,
+   "schrift": "liberation",
+   "px": 25.0,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.0707,
+   "kasten": [
+    0.3088,
+    0.1674,
+    0.3795,
+    0.1816
+   ],
+   "pt": 0
+  },
+  {
+   "rect": [
+    0.0894,
+    0.493,
+    0.2074,
+    0.5101
+   ],
+   "text": "Muster, Erika",
+   "x": 0.0924,
+   "y": 0.5054,
+   "schrift": "carlito",
+   "px": 22.92,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.112,
+   "kasten": [
+    0.0924,
+    0.495,
+    0.2044,
+    0.5081
+   ],
+   "pt": 11
+  },
+  {
+   "rect": [
+    0.1043,
+    0.5433,
+    0.1974,
+    0.5591
+   ],
+   "text": "Frau Muster,",
+   "x": 0.1073,
+   "y": 0.5547,
+   "schrift": "liberation",
+   "px": 20.0,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.0871,
+   "kasten": [
+    0.1073,
+    0.5453,
+    0.1944,
+    0.5571
+   ],
+   "pt": 9.6
+  },
+  {
+   "rect": [
+    0.258,
+    0.3013,
+    0.4617,
+    0.3196
+   ],
+   "text": "Servicecenter:",
+   "x": 0.261,
+   "y": 0.3146,
+   "schrift": "carlito",
+   "px": 25.0,
+   "variante": "neutral",
+   "frei": true,
+   "breite": 0.1978,
+   "kasten": [
+    0.261,
+    0.3033,
+    0.4587,
+    0.3176
+   ],
+   "pt": 12
+  }
+ ],
+ "b2-3": [
+  {
+   "rect": [
+    0.4238,
+    0.1608,
+    0.7442,
+    0.1766
+   ],
+   "text": ", Sitz Musterstadt, HR AG Musterstadt, HRA 1234",
+   "x": 0.4268,
+   "y": 0.1721,
+   "schrift": "liberation",
+   "px": 19.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.3144,
+   "kasten": [
+    0.4268,
+    0.1628,
+    0.7412,
+    0.1746
+   ],
+   "pt": 9.4
+  },
+  {
+   "rect": [
+    0.2033,
+    0.1755,
+    0.7296,
+    0.1913
+   ],
+   "text": "Muster Verwaltungs-GmbH, Sitz: Musterstadt, HR AG Musterstadt, HRB 5678",
+   "x": 0.2063,
+   "y": 0.1868,
+   "schrift": "liberation",
+   "px": 19.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.5203,
+   "kasten": [
+    0.2063,
+    0.1775,
+    0.7266,
+    0.1893
+   ],
+   "pt": 9.4
+  },
+  {
+   "rect": [
+    0.3701,
+    0.2191,
+    0.671,
+    0.2349
+   ],
+   "text": "Musterstadt unter Registriernummer:",
+   "x": 0.3731,
+   "y": 0.2304,
+   "schrift": "liberation",
+   "px": 19.58,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.2949,
+   "kasten": [
+    0.3731,
+    0.2211,
+    0.668,
+    0.2329
+   ],
+   "pt": 9.4
+  }
+ ],
+ "b3-1": [
+  {
+   "rect": [
+    0.7203,
+    0.098,
+    0.8339,
+    0.1209
+   ],
+   "text": "",
+   "x": 0.7263,
+   "y": 0.1126,
+   "schrift": "liberation",
+   "px": 167.1,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1016,
+   "kasten": [
+    0.7263,
+    0.104,
+    0.8279,
+    0.1149
+   ],
+   "pt": 0
+  }
+ ],
+ "b3-3": [
+  {
+   "rect": [
+    0.17,
+    0.035,
+    0.97,
+    0.205
+   ],
+   "text": "",
+   "x": 0.17,
+   "y": 0.1693,
+   "schrift": "liberation",
+   "px": 20.83,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.8,
+   "kasten": [
+    0.17,
+    0.035,
+    0.97,
+    0.205
+   ],
+   "pt": 0
+  }
+ ],
+ "b4-1": [
+  {
+   "rect": [
+    0.3981,
+    0.4925,
+    0.5145,
+    0.5079
+   ],
+   "text": "123.45.6789)",
+   "x": 0.4011,
+   "y": 0.5037,
+   "schrift": "inter",
+   "px": 22.5,
+   "variante": "alle",
+   "frei": false,
+   "breite": 0.1104,
+   "kasten": [
+    0.4011,
+    0.4945,
+    0.5115,
+    0.5059
+   ],
+   "pt": 0,
+   "farbe": [
+    72,
+    72,
+    72
+   ]
+  },
+  {
+   "rect": [
+    0.742,
+    0.213,
+    0.935,
+    0.258
+   ],
+   "text": "ZUKUNFT|VERSICHERUNG",
+   "x": 0.742,
+   "y": 0.2485,
+   "schrift": "logo",
+   "px": 24,
+   "variante": "neutral",
+   "frei": false,
+   "breite": 0.193,
+   "kasten": [
+    0.742,
+    0.213,
+    0.935,
+    0.258
+   ],
+   "pt": 0
+  }
+ ],
+ "b5-1": [
+  {
+   "rect": [
+    0.1165,
+    0.2836,
+    0.2545,
+    0.2969
+   ],
+   "text": "WEG Musterstraße 10-12",
+   "x": 0.1185,
+   "y": 0.2927,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.134,
+   "kasten": [
+    0.1185,
+    0.2861,
+    0.2525,
+    0.2944
+   ],
+   "pt": 7
+  },
+  {
+   "rect": [
+    0.1165,
+    0.3228,
+    0.2061,
+    0.3361
+   ],
+   "text": "Musterstraße 10",
+   "x": 0.1185,
+   "y": 0.3319,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.0856,
+   "kasten": [
+    0.1185,
+    0.3253,
+    0.2041,
+    0.3336
+   ],
+   "pt": 7
+  },
+  {
+   "rect": [
+    0.1165,
+    0.3388,
+    0.2403,
+    0.3522
+   ],
+   "text": "12345 Musterstadt",
+   "x": 0.1185,
+   "y": 0.3479,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.1198,
+   "kasten": [
+    0.1185,
+    0.3413,
+    0.2383,
+    0.3497
+   ],
+   "pt": 7
+  },
+  {
+   "rect": [
+    0.765,
+    0.172,
+    0.96,
+    0.216
+   ],
+   "text": "ZUKUNFT|VERSICHERUNG",
+   "x": 0.765,
+   "y": 0.2068,
+   "schrift": "logo",
+   "px": 22,
+   "variante": "neutral",
+   "frei": false,
+   "breite": 0.195,
+   "kasten": [
+    0.765,
+    0.172,
+    0.96,
+    0.216
+   ],
+   "pt": 0
+  }
+ ],
+ "b5-2": [
+  {
+   "rect": [
+    0.5193,
+    0.3682,
+    0.6089,
+    0.3816
+   ],
+   "text": "Musterstraße 10",
+   "x": 0.5213,
+   "y": 0.3773,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.0856,
+   "kasten": [
+    0.5213,
+    0.3707,
+    0.6069,
+    0.3791
+   ],
+   "pt": 7
+  },
+  {
+   "rect": [
+    0.5193,
+    0.422,
+    0.562,
+    0.4397
+   ],
+   "text": "12345",
+   "x": 0.5213,
+   "y": 0.4345,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.0387,
+   "kasten": [
+    0.5213,
+    0.4245,
+    0.56,
+    0.4372
+   ],
+   "pt": 7
+  },
+  {
+   "rect": [
+    0.5193,
+    0.4538,
+    0.6207,
+    0.4671
+   ],
+   "text": "Musterstadt",
+   "x": 0.5213,
+   "y": 0.4629,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.0974,
+   "kasten": [
+    0.5213,
+    0.4563,
+    0.6187,
+    0.4646
+   ],
+   "pt": 7
+  }
+ ],
+ "b5-3": [
+  {
+   "rect": [
+    0.5193,
+    0.6952,
+    0.6089,
+    0.7086
+   ],
+   "text": "Musterstraße 10",
+   "x": 0.5213,
+   "y": 0.7043,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.0856,
+   "kasten": [
+    0.5213,
+    0.6977,
+    0.6069,
+    0.7061
+   ],
+   "pt": 7
+  },
+  {
+   "rect": [
+    0.5193,
+    0.749,
+    0.562,
+    0.7667
+   ],
+   "text": "12345",
+   "x": 0.5213,
+   "y": 0.7615,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.0387,
+   "kasten": [
+    0.5213,
+    0.7515,
+    0.56,
+    0.7642
+   ],
+   "pt": 7
+  },
+  {
+   "rect": [
+    0.5193,
+    0.7808,
+    0.6207,
+    0.7941
+   ],
+   "text": "Musterstadt",
+   "x": 0.5213,
+   "y": 0.7899,
+   "schrift": "liberation",
+   "px": 14.58,
+   "variante": "alle",
+   "frei": true,
+   "breite": 0.0974,
+   "kasten": [
+    0.5213,
+    0.7833,
+    0.6187,
+    0.7916
+   ],
+   "pt": 7
+  }
+ ]
+}

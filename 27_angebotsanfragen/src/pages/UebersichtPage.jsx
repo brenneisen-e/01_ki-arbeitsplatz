@@ -57,7 +57,7 @@ function Beispielleiste({ laeufe, onOpenVorgang, onPraesentation }) {
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h3 className="font-semibold text-lg text-slate-900">Beispielanfragen aus dem Fachbereich</h3>
         <span className="text-sm text-slate-500">
-          {BEISPIELE.length} verfremdete Anfragen, Seite für Seite nachgebaut. Direkter Aufruf auch über die Ziffern im Kopf.
+          {BEISPIELE.length} verfremdete Anfragen im Original, mit den Fundstellen der KI auf den Seiten. Direkter Aufruf auch über die Ziffern im Kopf.
         </span>
       </div>
       <div className="mt-4 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))' }}>

@@ -301,16 +301,6 @@ export function pruefe(vorgang) {
   }
 }
 
-/** Status eines Deckblattfeldes aus dem Prüflauf (für die Randmarkierung im Deckblatt). */
-export function statusJeFeld(lauf) {
-  const je = {}
-  for (const s of lauf.schritte) {
-    const key = s.pruefung.feldKey
-    if (!key) continue
-    if (s.status === 'fehlt' || s.status === 'sonderfall' || s.status === 'hinweis' || s.status === 'recherche') je[key] = s.status
-  }
-  return je
-}
 
 /** Fasst eine Liste von Vorgängen für Kennzahlen und Schlussszene zusammen. */
 export function auswertung(vorgaenge) {

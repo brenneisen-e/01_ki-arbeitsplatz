@@ -7,6 +7,7 @@
 //   – Originalseiten der Beispielanfragen (src/daten/originale.js): Seitenzahl, Zahl und Felder der
 //     Markierungen je Seite stimmen mit dem nachgebauten Dokument überein, jede Markierung hat ein
 //     Rechteck, zu jeder Seite liegt das Bild vor
+//   – Gestaltung: keine senkrechten Farbkanten an Karten und Zeilen (Status steht als Wort und Tönung)
 // und gibt das Prüfergebnis je Eingang aus.
 
 import { VORGAENGE } from '../src/daten/vorgaenge.js'
@@ -17,7 +18,7 @@ import { baueRueckfrage } from '../src/utils/rueckfrage.js'
 import { ALLE_BETRIEBSARTEN } from '../src/utils/betriebsarten.js'
 import { zerlege } from '../src/utils/markierung.js'
 import { ORIGINALE } from '../src/daten/originale.js'
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 const ausfuehrlich = process.argv.includes('--alles')
@@ -84,6 +85,15 @@ for (const v of VORGAENGE.filter(x => x.beispiel)) {
 }
 for (const id of Object.keys(ORIGINALE)) {
   if (!VORGAENGE.some(v => v.id === id)) { fehler++; console.log(`  ✗ originale.js nennt ${id}, den es nicht gibt`) }
+}
+
+// Gestaltung: Karten und Zeilen tragen keine senkrechte Farbkante. Eine Haarlinie als Trenner (border-l) ist erlaubt.
+const FARBKANTE = /\bborder-l-(?:\d|\[|\(|(?:red|amber|sky|emerald|violet|yellow|orange|indigo|teal)-)|borderLeft|absolute left-0 top-0 bottom-0 w-|inset [1-9][0-9.]*(?:px|rem|em) 0 0/
+const quellordner = fileURLToPath(new URL('../src/', import.meta.url))
+for (const datei of readdirSync(quellordner, { recursive: true }).filter(d => /\.(jsx|css)$/.test(d))) {
+  readFileSync(quellordner + datei, 'utf8').split('\n').forEach((zeile, i) => {
+    if (FARBKANTE.test(zeile)) { fehler++; console.log(`  ✗ src/${datei}:${i + 1}: senkrechte Farbkante (${zeile.match(FARBKANTE)[0]})`) }
+  })
 }
 
 console.log('\nErgebnis je Eingang')

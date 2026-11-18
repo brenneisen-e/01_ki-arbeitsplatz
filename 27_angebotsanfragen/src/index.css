@@ -367,7 +367,7 @@ mark.fs {
   -webkit-box-decoration-break: clone;
   transition: background-color 350ms ease, box-shadow 350ms ease;
 }
-mark.fs.an { cursor: pointer; }
+mark.fs.an { cursor: pointer; outline: 0.14em solid transparent; outline-offset: 0.06em; transition: background-color 350ms ease, box-shadow 350ms ease, outline-color 350ms ease; }
 mark.fs.an.art-gelesen { background-color: var(--fs-gelesen-zart); box-shadow: inset 0 -0.12em 0 var(--fs-gelesen); }
 mark.fs.an.art-interpretiert { background-color: var(--fs-interpretiert-zart); box-shadow: inset 0 -0.12em 0 var(--fs-interpretiert); }
 mark.fs.an.art-auffaellig { background-color: var(--fs-auffaellig-zart); box-shadow: inset 0 -0.12em 0 var(--fs-auffaellig); }
@@ -375,8 +375,7 @@ mark.fs.an.stark.art-gelesen { background-color: var(--fs-gelesen); }
 mark.fs.an.stark.art-interpretiert { background-color: var(--fs-interpretiert); }
 mark.fs.an.stark.art-auffaellig { background-color: var(--fs-auffaellig); }
 mark.fs.aktiv {
-  outline: 0.14em solid var(--mode-primary-light);
-  outline-offset: 0.06em;
+  outline-color: var(--mode-primary-light);
   animation: fundstellePuls 1300ms ease-out 2;
 }
 mark.fs.aktiv.art-gelesen { background-color: var(--fs-gelesen); }
@@ -416,14 +415,16 @@ mark.fs.bild {
   border-radius: 0.28cqw;
   mix-blend-mode: multiply;
   box-shadow: none;
+  outline: 0.24cqw solid transparent;
+  outline-offset: 0.1cqw;
+  transition: background-color 350ms ease, opacity 350ms ease, filter 350ms ease, outline-color 350ms ease;
 }
 mark.fs.bild.an.art-gelesen { background-color: var(--fs-gelesen); box-shadow: none; }
 mark.fs.bild.an.art-interpretiert { background-color: var(--fs-interpretiert); box-shadow: none; }
 mark.fs.bild.an.art-auffaellig { background-color: var(--fs-auffaellig); box-shadow: none; }
 mark.fs.bild.an:hover { filter: saturate(1.5) brightness(0.96); }
 mark.fs.bild.aktiv {
-  outline: 0.24cqw solid var(--mode-primary-light);
-  outline-offset: 0.1cqw;
+  outline-color: var(--mode-primary-light);
   filter: saturate(1.6) brightness(0.94);
 }
 .fs-nr.bild {
@@ -440,7 +441,19 @@ mark.fs.bild.aktiv {
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
+  transition: opacity 350ms ease;
 }
+
+/* Eine Fundstelle im Blick (Mouse-over in der Leseliste): Die übrigen treten
+   zurück, die gesuchte bleibt kräftig und trägt den Rahmen. */
+.fs-fokus mark.fs.bild.an:not(.aktiv) { opacity: 0.22; }
+.fs-fokus .fs-nr.bild { opacity: 0.25; }
+.fs-fokus mark.fs.bild.aktiv + .fs-nr.bild { opacity: 1; }
+.fs-fokus mark.fs.an.art-gelesen:not(.aktiv):not(.bild) { background-color: var(--fs-gelesen-zart); box-shadow: none; }
+.fs-fokus mark.fs.an.art-interpretiert:not(.aktiv):not(.bild) { background-color: var(--fs-interpretiert-zart); box-shadow: none; }
+.fs-fokus mark.fs.an.art-auffaellig:not(.aktiv):not(.bild) { background-color: var(--fs-auffaellig-zart); box-shadow: none; }
+.fs-fokus mark.fs.an:not(.aktiv):not(.bild) sup.fs-nr { opacity: 0.35; }
+sup.fs-nr { transition: opacity 350ms ease; }
 
 /* Kleine Farbproben in Legenden */
 .probe-gelesen { background-color: var(--fs-gelesen); }

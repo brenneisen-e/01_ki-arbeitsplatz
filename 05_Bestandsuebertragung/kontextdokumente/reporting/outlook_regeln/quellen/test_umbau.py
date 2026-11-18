@@ -377,7 +377,7 @@ def sz_lesen(s):
     pruefe(s.status() == erwartet, 'Stand Zielpostfach: voller Text', '\n      ist:  %s\n      soll: %s' % (s.status(), erwartet))
     prot = s.zeilen('Protokoll', int(s.L['PROT_ERSTE']), 7)
     pruefe(any(p[4] == 'LESEN' for p in prot), 'Protokoll: Leseversuch eingetragen')
-    pruefe(s.ruf('modPlan.PlanVersion') == 'Plan 3.0', 'PlanVersion „Plan 3.0“', s.ruf('modPlan.PlanVersion'))
+    pruefe(s.ruf('modPlan.PlanVersion') == 'Plan 3.1', 'PlanVersion „Plan 3.1“', s.ruf('modPlan.PlanVersion'))
 
 
 def sz_vorschau(s):
@@ -972,7 +972,7 @@ def sz_weitere(s):
     s.ruf('modAttrappe.AtAusSetzen', BES, 'KV Solo', 2, 'Alt|Unzustellbar', False)
     s.nur([plan_nr('AUSNAHMEN_UEBERNEHMEN', 'KV Solo')])
     s.planzeile_setzen(n, aktion='AUSNAHMEN_UEBERNEHMEN', regel='Papierakten (keine eAkte)', quelle='Papierakten (keine eAkte)')
-    s.planzeile_setzen(n + 1, aktion='LOESCHEN', regel='KV Solo')
+    s.planzeile_setzen(n + 1, aktion='VERSCHMELZEN', regel='KV Solo')
     s.ruf('modUmbau.VorschauLauf')
     st = s.plan('VORSCHAU')
     na = plan_nr('AUSNAHMEN_UEBERNEHMEN', 'KV Solo')
@@ -981,7 +981,7 @@ def sz_weitere(s):
     pruefe(st[na].startswith('blockiert: Ausnahme „Betreff enthält“ ist ausgeschaltet, enthält aber andere Einträge („Alt“)'),
            'Ausgeschaltete Ausnahme mit fremden Einträgen blockiert', st[na])
     pruefe(st[n].startswith('blockiert: Quellregel „Papierakten (keine eAkte)“ hat keine Ausnahmen'), 'Quelle ohne Ausnahmen blockiert')
-    pruefe(st[n + 1].startswith('blockiert: Aktion „LOESCHEN“ unbekannt'), 'Unbekannte Aktion (z. B. Löschen) blockiert')
+    pruefe(st[n + 1].startswith('blockiert: Aktion „VERSCHMELZEN“ unbekannt'), 'Unbekannte Aktion blockiert', st[n + 1])
 
 
 def sz_kopie_outlook(s):
@@ -2214,6 +2214,461 @@ def sz_ordner_ablauf(s):
            'Spalte gelöscht: Vorschau verweigert', kurz(msg, 200))
 
 
+# ------------------------------------------------------------------ Loeschen und gleichnamige Regeln (Plan 3.1)
+
+PVB = 'PVB, Bot 1 (PVBHH-EXTERN)'
+PAPIER = 'Papierakten (keine eAkte)'
+KVSOLO = 'KV Solo'
+TITEL_WEG = 'FRAGE [Regeln löschen] (Vorgabe Nein)'
+
+
+def bes_namen():
+    """Regeln des Bestands laut Export in Ausfuehrungsreihenfolge (Namen)."""
+    return [r['name'] for r in sorted([r for r in EXPORT['regeln'] if r['pf'] == BES], key=lambda r: r['nr'])]
+
+
+def platz_von(name):
+    return bes_namen().index(name) + 1
+
+
+def ohne_spalten(zustand, *spalten):
+    """Zustandszeilen ohne die genannten Spalten (0 = R, 1 = Platz, 2 = Name, 3 = Aktiv, 4..6 = Inhalt)."""
+    return [[w for i, w in enumerate(z) if i not in spalten] for z in zustand]
+
+
+def protokoll(s):
+    return s.zeilen('Protokoll', int(s.L['PROT_ERSTE']), 7)
+
+
+def sz_loeschen_duplikat(s):
+    print('\n== 50  Löschen: gleichnamiges Duplikat – Bezug „Name #n/m“, Rückfrage, Entfernen vor dem Speichern, zweiter Lauf')
+    s.laden()
+    s.ruf('modAttrappe.AtStart', 'export')
+    vorher = s.zustand(BES)
+    p1 = platz_von(PVB)
+    p2 = p1 + 4
+    print('   ', s.ruf('modAttrappe.AtDoppeln', BES, PVB, '', p2))
+    mit_doppel = s.zustand(BES)
+    pruefe(len(mit_doppel) == len(vorher) + 1 and [r[2] for r in mit_doppel].count(PVB) == 2 and mit_doppel[p2 - 1][2] == PVB
+           and mit_doppel[p2 - 1][3:] == mit_doppel[p1 - 1][3:], 'Ausgangslage: „%s“ steht doppelt (Platz %d und %d), gleicher Inhalt' % (PVB, p1, p2))
+    # Lesen: Blatt Live nennt den Bezug fuer gleichnamige Regeln
+    s.ruf('modUmbau.RegelnLesenLauf')
+    live = [r for r in s.zeilen('Live', int(s.L['LIVE_ERSTE']), 14) if r[0] == BES]
+    hin = {r[1]: r[13] for r in live if r[2] == PVB}
+    pruefe(hin == {str(p1): 'Name mehrfach vergeben – im Plan als „%s #1/2“ ansprechen' % PVB,
+                   str(p2): 'Name mehrfach vergeben – im Plan als „%s #2/2“ ansprechen' % PVB},
+           'Live: Diagnose nennt den Bezug „#1/2“ bzw. „#2/2“', str(hin))
+    pruefe(not any('mehrfach vergeben' in r[13] for r in live if r[2] != PVB), 'Live: kein Hinweis bei eindeutigen Namen')
+    s.nur([])
+    n = len(EXPORT['plan']) + 1
+    # Name allein reicht bei gleichnamigen Regeln nicht
+    s.planzeile_setzen(n, aktion='LOESCHEN', regel=PVB, neu='gleich: ' + PVB)
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    print('    %d  %s' % (n, st[n]))
+    pruefe(st[n] == 'blockiert: Regelname „%s“ ist im Zielpostfach mehrfach vergeben – bitte als „%s #n/m“ ansprechen '
+                    '(die n-te von m, Reihenfolge wie im Blatt Live)' % (PVB, PVB), 'Name allein: blockiert mit Hinweis auf „#n/m“', st[n])
+    neu_name = 'PVB Bot 1 – Vorabinfo'
+    s.planzeile_setzen(n, aktion='LOESCHEN', regel=PVB + ' #2/2', neu='gleich: %s #1/2' % PVB)
+    s.planzeile_setzen(n + 1, aktion='UMBENENNEN', regel=PVB + ' #1/2', neu=neu_name)
+    s.planzeile_setzen(n + 2, aktion='DEAKTIVIEREN', regel=PVB + ' #2/2')
+    msg = s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    for k in (n, n + 1, n + 2):
+        print('    %d  %s' % (k, st[k]))
+    pruefe(st[n] == 'bereit · löschen – Duplikat von „%s“ (Platz %d, bleibt)' % (PVB, p1), 'Vorschau: Duplikat erkannt, bereit', st[n])
+    pruefe(st[n + 1] == 'bereit · neuer Name „%s“' % neu_name, 'Umbenennen über „#1/2“: bereit', st[n + 1])
+    pruefe(st[n + 2] == 'blockiert: Regel „%s #2/2“ wird laut Plan gelöscht (Zeile %d)' % (PVB, n),
+           'Spätere Zeile an der gelöschten Regel: blockiert mit Zeilennummer', st[n + 2])
+    pruefe(s.zaehler()['schreib'] == '0', 'Vorschau schreibt nichts nach Outlook', str(s.zaehler()))
+    s.planzeile_setzen(n + 2, ausf='Nein', aktion='DEAKTIVIEREN', regel=PVB + ' #2/2')
+    s.ruf('modUmbau.VorschauLauf')
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    print('    Ausführen:', kurz(msg, 400))
+    erg = s.plan('ERGEBNIS')
+    z = s.zaehler()
+    print('    Zähler:', z)
+    pruefe(erg[n] == ERG_OK and erg[n + 1] == ERG_OK, 'Beide Zeilen erledigt (geprüft)', str({k: erg[k] for k in (n, n + 1)}))
+    pruefe(z['save'] == '1' and z['remove'] == '1' and z['create'] == '0', 'Ein Save, eine Regel entfernt, keine neue Regel', str(z))
+    nach = s.zustand(BES)
+    soll = [list(r) for r in vorher]
+    soll[p1 - 1][2] = neu_name
+    pruefe(nach == soll, 'Gespeichert: Duplikat weg, erste Regel umbenannt, alles andere wie vor der Verdopplung',
+           '\n      ist:  %s\n      soll: %s' % ([r[2] for r in nach], [r[2] for r in soll]))
+    pruefe('Unberührte Regeln: %d von %d unverändert' % (len(vorher) - 1, len(vorher) - 1) in msg and 'Abweichung' not in msg.replace('0 mit Abweichung', ''),
+           'Nachprüfung: alle unberührten Regeln unverändert, keine Abweichung', kurz(msg, 400))
+    fr = s.fragen()
+    pruefe(len(fr) == 4 and [f[0] for f in fr][2].startswith(TITEL_WEG), 'Vier Rückfragen; die dritte ist „Regeln löschen“ (Vorgabe Nein)',
+           str([f[0] for f in fr]))
+    t = fr[2][1]
+    print('    Rückfrage Löschen:\n      %s' % t.replace('\n', '\n      '))
+    pruefe(t.startswith('Löschen: 1 Regel wird aus %s entfernt:' % BES)
+           and '• %d „%s #2/2“ – löschen – Duplikat von „%s“ (Platz %d, bleibt)' % (n, PVB, PVB, p1) in t
+           and '.rwz' in t and t.endswith('Diese Regel wirklich löschen?') and 'ohne Ersatz' not in t,
+           'Rückfrage nennt Regel, Begründung und die .rwz als einzigen Rückweg')
+    log = [x for x in s.ruf('modAttrappe.AtSchreibLog').split('\n') if x]
+    pruefe('Rules.Remove %d' % p2 in log and log.index('Rules.Remove %d' % p2) == log.index('Rules.Save') - 1,
+           'Entfernen über den Platz (%d) ist der letzte Zugriff vor Rules.Save' % p2, str(log))
+    sich = s.zeilen('Sicherung', int(s.L['SICH_ERSTE']), 12)
+    pruefe(len(sich) == len(vorher) + 1 and [r[3] for r in sich].count(PVB) == 2, 'Sicherung enthält beide Regeln (vor dem Löschen)')
+    prot = protokoll(s)
+    pruefe(any(p[6].startswith('Zum Löschen vorgemerkt') and p[3] == str(n) for p in prot)
+           and any(p[6] == 'Gelöscht: „%s“ (Platz %d)' % (PVB, p2) and p[3] == str(n) for p in prot)
+           and any(p[6] == '1 Regel entfernt, %d bleiben (Reihenfolge geprüft)' % len(vorher) for p in prot)
+           and any(p[4] == 'RÜCKFRAGE' and p[6].startswith('Löschen: 1 Regel wird') for p in prot),
+           'Protokoll: vorgemerkt, gelöscht (bei der Planzeile), Kontrolle, Rückfrage')
+    # zweiter Lauf
+    msg = s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    print('    Zweite Vorschau: %d  %s | %d  %s' % (n, st[n], n + 1, st[n + 1]))
+    pruefe(st[n].startswith('schon erledigt') and st[n + 1] == 'schon erledigt', 'Zweiter Lauf: beide Zeilen schon erledigt', str(st[n]))
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    pruefe(msg.startswith('Nichts zu tun') and s.zaehler()['save'] == '1' and s.zaehler()['remove'] == '1',
+           'Zweites Ausführen: nichts zu tun, kein Save, kein Entfernen', msg)
+
+
+def sz_loeschen_pruefung(s):
+    print('\n== 51  Löschen: was die Vorschau verlangt (Begründung, gleicher Inhalt, Platz, Zustand, belegbar)')
+    s.laden()
+    s.ruf('modAttrappe.AtStart', 'export')
+    p1 = platz_von(PVB)
+    p2 = p1 + 4
+    kop = 'PVB Kopie'
+    print('   ', s.ruf('modAttrappe.AtDoppeln', BES, PVB, kop, p2))
+    service = bes_namen()[p1 - 2]
+    s.nur([])
+    n = len(EXPORT['plan']) + 1
+
+    def vorschau(*zeilen):
+        for i in range(6):
+            if i < len(zeilen):
+                s.planzeile_setzen(n + i, aktion='LOESCHEN', regel=zeilen[i][0], neu=zeilen[i][1])
+            else:
+                s.planzeile_setzen(n + i, ausf='Nein', aktion='LOESCHEN', regel='x', neu='ohne Ersatz')
+        s.ruf('modUmbau.VorschauLauf')
+        st = s.plan('VORSCHAU')
+        for i in range(len(zeilen)):
+            print('    %-34s | %-22s -> %s' % (zeilen[i][0][:34], zeilen[i][1][:22], kurz(st[n + i], 150)))
+        return [st[n + i] for i in range(len(zeilen))]
+
+    sp_neu = s.spalte('NEU')
+    st = vorschau((kop, ''), (kop, 'weg damit'), (PVB, 'gleich: ' + kop), (kop, 'gleich: ' + service), (PVB, 'gleich: ' + PVB),
+                  (kop, 'gleich: Gibt es nicht'))
+    grund = ('blockiert: Begründung fehlt (Spalte %s): „Duplikate“ (alle gleichnamigen bis auf die erste), „gleich: <Regel, die '
+             'bleibt>“ oder „ohne Ersatz“' % sp_neu)
+    pruefe(st[0] == grund and st[1] == grund, 'Ohne Begründung (leer oder anderer Text): blockiert', st[0])
+    pruefe(st[2].startswith('blockiert: die Regel, die bleibt, steht hinter der zu löschenden (Platz %d nach Platz %d)' % (p2, p1))
+           and 'die hintere löschen' in st[2], 'Vordere Regel löschen, hintere behalten: blockiert (Regeln dazwischen könnten abfangen)', st[2])
+    pruefe(st[3].startswith('blockiert: kein Duplikat – „%s“ (Platz %d) und „%s“ (Platz %d) unterscheiden sich in: ' % (kop, p2, service, p1 - 1))
+           and 'Bedingungen' in st[3] and 'Verschieben' in st[3], 'Anderer Inhalt: blockiert, nennt die Unterschiede', st[3])
+    pruefe(st[4] == 'blockiert: „%s“ ist dieselbe Regel – eine Regel ist nicht ihr eigenes Duplikat' % PVB, 'Dieselbe Regel: blockiert', st[4])
+    pruefe(st[5] == 'blockiert: Regel, die bleiben soll, nicht gefunden: „Gibt es nicht“', 'Bleibende Regel fehlt: blockiert', st[5])
+    st = vorschau((kop, 'gleich: ' + PVB), (EKWAD, 'gleich: ' + PVB), ('Gibt es nicht', 'ohne Ersatz'), (PVB + ' #2/3', 'gleich: ' + PVB),
+                  (PVB + ' #3/2', 'ohne Ersatz'), (kop, 'Gleich ' + PVB))
+    pruefe(st[0] == 'bereit · löschen – Duplikat von „%s“ (Platz %d, bleibt)' % (PVB, p1),
+           'Anderer Name, gleicher Inhalt, bleibende Regel davor: bereit', st[0])
+    pruefe(st[1].startswith('blockiert: Gleichheit nicht belegbar – „%s“ hat keine sichtbare Bedingung' % EKWAD) and '„ohne Ersatz“' in st[1],
+           'Regel ohne sichtbare Bedingung: Gleichheit nicht belegbar, Hinweis auf „ohne Ersatz“', st[1])
+    pruefe(st[2] == 'schon erledigt · Regel „Gibt es nicht“ gibt es nicht (mehr)', 'Regel nicht vorhanden: schon erledigt, mit Hinweis', st[2])
+    pruefe(st[3] == 'schon erledigt · es gibt nur noch 1 Regel „%s“ (statt 3)' % PVB, 'Bezug „#2/3“ bei nur einer Regel: schon erledigt', st[3])
+    pruefe(st[4] == 'blockiert: Bezug „%s #3/2“ ist nicht möglich (n größer als m)' % PVB, 'Bezug „#3/2“: blockiert', st[4])
+    pruefe(st[5] == 'blockiert: Regel „%s“ wird laut Plan gelöscht (Zeile %d)' % (kop, n), 'Zweimal dieselbe Regel löschen: zweite Zeile blockiert', st[5])
+    # Zustand: bleibende Regel ausgeschaltet
+    print('   ', s.ruf('modAttrappe.AtAktiv', BES, PVB, False))
+    st = vorschau((kop, 'gleich: ' + PVB), (PVB, 'gleich: ' + kop))
+    pruefe(st[0].startswith('blockiert: die Regel, die bleibt (Platz %d), ist ausgeschaltet, die zu löschende eingeschaltet' % p1),
+           'Bleibende Regel ausgeschaltet, zu löschende eingeschaltet: blockiert', st[0])
+    # die ausgeschaltete vordere Regel loeschen aendert nichts - Platz spielt keine Rolle (Abbild: Zeile 1 blockiert, also noch da)
+    pruefe(st[1] == 'bereit · löschen – Duplikat von „%s“ (Platz %d, bleibt)' % (kop, p2),
+           'Ausgeschaltete Regel löschen: bereit, auch wenn die bleibende dahinter steht', st[1])
+    pruefe(s.zaehler()['schreib'] == '0' and s.zaehler()['remove'] == '0', 'Alle Vorschauen: nichts nach Outlook geschrieben', str(s.zaehler()))
+
+
+def sz_loeschen_ohne_ersatz(s):
+    print('\n== 52  Löschen ohne Ersatz: eigene Rückfrage (verneint: nichts geändert; bejaht: gelöscht), zweiter Lauf')
+    s.laden()
+    s.ruf('modAttrappe.AtStart', 'export')
+    vorher = s.zustand(BES)
+    test_name = [r['name'] for r in EXPORT['regeln'] if r['pf'] == BES and '|' in r['name']][0]
+    pt, pp = platz_von(test_name), platz_von(PAPIER)
+    s.nur([])
+    n = len(EXPORT['plan']) + 1
+    s.planzeile_setzen(n, aktion='LOESCHEN', regel=test_name, neu='ohne Ersatz')
+    s.planzeile_setzen(n + 1, aktion='LOESCHEN', regel=PAPIER, neu='Ohne Ersatz')
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    print('    %d  %s\n    %d  %s' % (n, st[n], n + 1, st[n + 1]))
+    pruefe(st[n] == 'bereit · löschen ohne Ersatz (Regel ist ausgeschaltet)' + OHNE_HINWEIS,
+           'Ausgeschaltete Regel ohne sichtbare Bedingung: bereit, gekennzeichnet', st[n])
+    pruefe(st[n + 1] == 'bereit · löschen ohne Ersatz (Regel ist eingeschaltet)', 'Eingeschaltete Regel: bereit, Zustand genannt', st[n + 1])
+    # Rueckfrage zum Loeschen verneint
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJN')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    fr = s.fragen()
+    pruefe(msg == 'Abgebrochen – nichts geändert. Löschen nicht bestätigt.' and len(fr) == 3 and fr[2][0].startswith(TITEL_WEG),
+           'Rückfrage „Regeln löschen“ verneint: abgebrochen', msg)
+    pruefe(s.zaehler()['schreib'] == '0' and s.zustand(BES) == vorher, 'Nichts geschrieben, Stand unverändert', str(s.zaehler()))
+    t = fr[2][1]
+    print('    Rückfrage Löschen:\n      %s' % t.replace('\n', '\n      '))
+    pruefe(t.startswith('Löschen: 2 Regeln werden aus %s entfernt:' % BES)
+           and '• %d „%s“ – löschen ohne Ersatz (Regel ist ausgeschaltet)' % (n, test_name) in t
+           and '• %d „%s“ – löschen ohne Ersatz (Regel ist eingeschaltet)' % (n + 1, PAPIER) in t
+           and '1 eingeschaltete Regel wird ohne Ersatz gelöscht und greift danach nicht mehr.' in t
+           and t.endswith('Diese Regeln wirklich löschen?') and len(t) < 1024,
+           'Rückfrage: beide Regeln mit Zustand, Warnung zur eingeschalteten Regel, passt in eine MsgBox')
+    # bejaht
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    print('    Ausführen:', kurz(msg, 300))
+    erg = s.plan('ERGEBNIS')
+    z = s.zaehler()
+    pruefe(erg[n] == ERG_OK and erg[n + 1] == ERG_OK, 'Beide Zeilen erledigt (geprüft)', str({k: erg[k] for k in (n, n + 1)}))
+    pruefe(z['save'] == '1' and z['remove'] == '2', 'Ein Save, zwei Regeln entfernt', str(z))
+    nach = s.zustand(BES)
+    soll = [r for r in vorher if r[2] not in (test_name, PAPIER)]
+    pruefe(ohne_spalten(nach, 1) == ohne_spalten(soll, 1) and [r[1] for r in nach] == [str(i + 1) for i in range(len(soll))],
+           'Gespeichert: beide Regeln weg, übrige unverändert in gleicher Reihenfolge, Plätze 1 bis %d' % len(soll))
+    log = [x for x in s.ruf('modAttrappe.AtSchreibLog').split('\n') if x]
+    pruefe(log[-3:] == ['Rules.Remove %d' % pt, 'Rules.Remove %d' % pp, 'Rules.Save'],
+           'Entfernt wird vom höchsten Platz her (%d, dann %d), direkt vor Rules.Save' % (pt, pp), str(log))
+    pruefe('Unberührte Regeln: %d von %d unverändert' % (len(soll), len(soll)) in msg, 'Nachprüfung: alle übrigen Regeln unverändert', kurz(msg, 300))
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    pruefe(st[n] == 'schon erledigt · Regel „%s“ gibt es nicht (mehr)' % test_name and st[n + 1].startswith('schon erledigt'),
+           'Zweiter Lauf: schon erledigt', st[n])
+
+
+def sz_gleichnamig(s):
+    print('\n== 53  Gleichnamige Regeln mit verschiedenem Inhalt: Nachprüfung ohne Fehlalarm, Bezüge „#n/m“ über den Lauf hinweg')
+    s.laden()
+    s.ruf('modAttrappe.AtStart', 'export')
+    p1 = platz_von(PVB)
+    p2 = p1 + 4
+    s.ruf('modAttrappe.AtDoppeln', BES, PVB, 'tmp', p2)
+    s.ruf('modAttrappe.AtBedSetzen', BES, 'tmp', 2, 'Anderes Wort')
+    print('   ', s.ruf('modAttrappe.AtName', BES, 'tmp', PVB))
+    vorher = s.zustand(BES)
+    pruefe([r[2] for r in vorher].count(PVB) == 2 and vorher[p1 - 1][4] != vorher[p2 - 1][4],
+           'Ausgangslage: zwei Regeln „%s“ (Platz %d und %d) mit verschiedenen Bedingungen' % (PVB, p1, p2))
+    s.nur([])
+    n = len(EXPORT['plan']) + 1
+    # 1) Eine Zeile an einer anderen Regel: Die Nachpruefung darf die gleichnamigen Regeln nicht verwechseln
+    s.planzeile_setzen(n, aktion='UMBENENNEN', regel=KVSOLO, neu=KVSOLO + ' (neu)')
+    s.ruf('modUmbau.VorschauLauf')
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    print('    Ausführen (andere Regel):', kurz(msg, 300))
+    erg = s.plan('ERGEBNIS')
+    fr = s.fragen()
+    pruefe(erg[n] == ERG_OK and 'Achtung' not in msg and 'fehlt' not in msg and len(fr) == 3
+           and 'Unberührte Regeln: %d von %d unverändert' % (len(vorher) - 1, len(vorher) - 1) in msg,
+           'Nachprüfung bei gleichnamigen Regeln: keine Abweichung, kein „fehlt“, keine Rückfrage zum Deaktivieren', kurz(msg, 400))
+    prot = protokoll(s)
+    pruefe(not any(p[6].startswith('Abweichungen nach dem Speichern') for p in prot), 'Protokoll ohne Abweichungen')
+    # 2) Bezuege "#n/m": erste umbenennen, zweite ausschalten, Name allein blockiert
+    neu_name = 'PVB Vorabinfo (alt)'
+    s.planzeile_setzen(n, ausf='Nein', aktion='UMBENENNEN', regel=KVSOLO, neu=KVSOLO + ' (neu)')
+    s.planzeile_setzen(n + 1, aktion='POSITION', regel=PVB, neu='Platz 1')
+    s.planzeile_setzen(n + 2, aktion='UMBENENNEN', regel=PVB + ' #1/2', neu=neu_name)
+    s.planzeile_setzen(n + 3, aktion='DEAKTIVIEREN', regel=PVB + ' #2/2')
+    s.planzeile_setzen(n + 4, aktion='POSITION', regel=KVSOLO + ' (neu)', neu='nach: %s #2/2' % PVB)
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    for k in range(n + 1, n + 5):
+        print('    %d  %s' % (k, st[k]))
+    pruefe(st[n + 1].startswith('blockiert: Regelname „%s“ ist im Zielpostfach mehrfach vergeben – bitte als „%s #n/m“' % (PVB, PVB)),
+           'Name allein bei gleichnamigen Regeln: blockiert', st[n + 1])
+    pruefe(st[n + 2] == 'bereit · neuer Name „%s“' % neu_name and st[n + 3] == 'bereit · deaktivieren'
+           and st[n + 4] == 'bereit · direkt nach „%s“' % PVB, 'Bezüge „#1/2“ und „#2/2“ (auch als Bezugsregel einer Position): bereit', str([st[k] for k in (n + 2, n + 3, n + 4)]))
+    s.planzeile_setzen(n + 1, ausf='Nein', aktion='POSITION', regel=PVB, neu='Platz 1')
+    s.ruf('modUmbau.VorschauLauf')
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    print('    Ausführen (#n/m):', kurz(msg, 300))
+    erg = s.plan('ERGEBNIS')
+    pruefe(all(erg[k] == ERG_OK for k in (n + 2, n + 3, n + 4)),
+           'Alle drei Zeilen erledigt (geprüft) – auch „#2/2“, obwohl es nach dem Umbenennen nur noch eine Regel dieses Namens gibt',
+           str({k: erg[k] for k in (n + 2, n + 3, n + 4)}))
+    nach = s.zustand(BES)
+    namen = [r[2] for r in nach]
+    pruefe(nach[p1 - 1][2] == neu_name and nach[p1 - 1][3] == 'Ja' and nach[p2 - 1][2] == PVB and nach[p2 - 1][3] == 'Nein'
+           and namen.index(KVSOLO + ' (neu)') == p2, 'Gespeichert: erste umbenannt, zweite ausgeschaltet, „%s (neu)“ direkt dahinter' % KVSOLO,
+           str(namen))
+    pruefe('Achtung' not in msg and len(s.fragen()) == 6, 'Keine Abweichung, keine weitere Rückfrage', kurz(msg, 300))
+    # zweite Vorschau: "#2/2" laesst sich nicht mehr zuordnen (nur noch eine Regel dieses Namens) - klare Meldung
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    print('    Zweite Vorschau: %d  %s | %d  %s' % (n + 2, st[n + 2], n + 3, st[n + 3]))
+    pruefe(st[n + 2] == 'schon erledigt', 'Zweiter Lauf: Umbenennen schon erledigt', st[n + 2])
+    pruefe(st[n + 3] == 'blockiert: Regel „%s #2/2“ nicht gefunden – es gibt 1 Regel „%s“ statt 2; der Plan passt nicht mehr zum '
+                        'Stand in Outlook (Regeln neu lesen)' % (PVB, PVB), 'Zweiter Lauf: „#2/2“ passt nicht mehr – blockiert mit Erklärung', st[n + 3])
+
+
+def sz_loeschen_duplikate(s):
+    print('\n== 56  Löschen „Duplikate“: alle gleichnamigen, inhaltsgleichen Regeln bis auf die erste (eine Planzeile je Name)')
+    s.laden()
+    s.ruf('modAttrappe.AtStart', 'export')
+    # gleichnamige Regel mit anderem Inhalt (bleibt bis zum Schluss stehen)
+    s.ruf('modAttrappe.AtDoppeln', BES, PAPIER, 'tmp', platz_von(PAPIER) + 1)
+    s.ruf('modAttrappe.AtBedSetzen', BES, 'tmp', 2, 'Anderes Wort')
+    s.ruf('modAttrappe.AtName', BES, 'tmp', PAPIER)
+    basis = s.zustand(BES)
+    # PVB dreifach (verstreut), KV Solo dreifach (hintereinander)
+    p1 = platz_von(PVB)
+    s.ruf('modAttrappe.AtDoppeln', BES, PVB, '', p1 + 4)
+    s.ruf('modAttrappe.AtDoppeln', BES, PVB, '', p1 + 9)
+    pk = [r[2] for r in s.zustand(BES)].index(KVSOLO) + 1
+    s.ruf('modAttrappe.AtDoppeln', BES, KVSOLO, '', pk + 1)
+    s.ruf('modAttrappe.AtDoppeln', BES, KVSOLO, '', pk + 1)
+    namen = [r[2] for r in s.zustand(BES)]
+    pl_pvb = [i + 1 for i, x in enumerate(namen) if x == PVB]
+    pl_kv = [i + 1 for i, x in enumerate(namen) if x == KVSOLO]
+    pl_pap = [i + 1 for i, x in enumerate(namen) if x == PAPIER]
+    pruefe(pl_pvb == [p1, p1 + 4, p1 + 9] and pl_kv == [pk, pk + 1, pk + 2] and len(pl_pap) == 2,
+           'Ausgangslage: „%s“ auf %s, „%s“ auf %s, „%s“ zweimal mit verschiedenem Inhalt' % (PVB, pl_pvb, KVSOLO, pl_kv, PAPIER))
+    einzeln = 'CCPI mit Anlagen "hell"'
+    s.nur([])
+    n = len(EXPORT['plan']) + 1
+    s.planzeile_setzen(n, aktion='LOESCHEN', regel=PVB, neu='Duplikate')
+    s.planzeile_setzen(n + 1, aktion='LOESCHEN', regel=KVSOLO, neu='duplikate')
+    s.planzeile_setzen(n + 2, aktion='LOESCHEN', regel=PAPIER, neu='Duplikate')
+    s.planzeile_setzen(n + 3, aktion='LOESCHEN', regel='Gibt es nicht', neu='Duplikate')
+    s.planzeile_setzen(n + 4, aktion='LOESCHEN', regel=einzeln, neu='Duplikate')
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    for k in range(n, n + 5):
+        print('    %d  %s' % (k, st[k]))
+    pruefe(st[n] == 'bereit · löschen: 2 Duplikate (Plätze %d, %d), es bleibt die Regel auf Platz %d' % (pl_pvb[1], pl_pvb[2], pl_pvb[0]),
+           'Verstreute Duplikate: bereit, nennt die Plätze und die Regel, die bleibt', st[n])
+    # Abbild nach Zeile n: zwei Regeln weniger vor KV Solo
+    kv1 = pl_kv[0] - 2
+    pruefe(st[n + 1] == 'bereit · löschen: 2 Duplikate (Platz %d bis %d), es bleibt die Regel auf Platz %d' % (kv1 + 1, kv1 + 2, kv1),
+           'Duplikate hintereinander: „Platz a bis b“ (Plätze nach den Zeilen davor)', st[n + 1])
+    pruefe(st[n + 2].startswith('blockiert: Regel auf Platz ') and 'kein Duplikat' in st[n + 2] and 'Bedingungen' in st[n + 2]
+           and st[n + 2].endswith('Einzelne Regeln lassen sich als „Name #n/m“ ansprechen'),
+           'Gleichnamig, aber anderer Inhalt: ganze Zeile blockiert, nennt Platz und Unterschied', st[n + 2])
+    sp_regel = s.spalte('REGEL')
+    pruefe(st[n + 3] == 'blockiert: Regel „Gibt es nicht“ nicht gefunden – bei „Duplikate“ steht in Spalte %s der Name, den alle '
+                        'Duplikate tragen' % sp_regel, 'Unbekannter Name: blockiert (kein stilles „erledigt“)', st[n + 3])
+    pruefe(st[n + 4] == 'schon erledigt · es gibt nur 1 Regel „%s“ (kein Duplikat)' % einzeln, 'Nur eine Regel dieses Namens: schon erledigt', st[n + 4])
+    for k in (n + 2, n + 3):
+        s.planzeile_setzen(k, ausf='Nein', aktion='LOESCHEN', regel='x', neu='Duplikate')
+    s.ruf('modUmbau.VorschauLauf')
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    print('    Ausführen:', kurz(msg, 300))
+    erg = s.plan('ERGEBNIS')
+    z = s.zaehler()
+    pruefe(erg[n] == ERG_OK and erg[n + 1] == ERG_OK and erg[n + 4] == 'schon erledigt', 'Ergebnis je Zeile', str({k: erg[k] for k in (n, n + 1, n + 4)}))
+    pruefe(z['save'] == '1' and z['remove'] == '4', 'Ein Save, vier Regeln entfernt', str(z))
+    pruefe(s.zustand(BES) == basis, 'Gespeichert: genau der Stand vor den Verdopplungen (die erste Regel je Name bleibt, die andersartige '
+           'gleichnamige Regel auch)')
+    fr = s.fragen()
+    t = fr[2][1]
+    print('    Rückfrage Löschen:\n      %s' % t.replace('\n', '\n      '))
+    pruefe(fr[2][0].startswith(TITEL_WEG) and t.startswith('Löschen: 4 Regeln werden aus %s entfernt:' % BES)
+           and '• %d „%s“ – löschen: 2 Duplikate (Plätze %d, %d), es bleibt die Regel auf Platz %d' % (n, PVB, pl_pvb[1], pl_pvb[2], pl_pvb[0]) in t
+           and '• %d „%s“ – löschen: 2 Duplikate (Platz %d bis %d), es bleibt die Regel auf Platz %d' % (n + 1, KVSOLO, kv1 + 1, kv1 + 2, kv1) in t
+           and t.endswith('Diese Regeln wirklich löschen?'), 'Rückfrage: zählt vier Regeln, je Name eine Zeile')
+    log = [x for x in s.ruf('modAttrappe.AtSchreibLog').split('\n') if x]
+    erwartet = ['Rules.Remove %d' % p for p in sorted(pl_pvb[1:] + pl_kv[1:], reverse=True)] + ['Rules.Save']
+    pruefe(log == erwartet, 'Geschrieben wird nur: Entfernen vom höchsten Platz her, dann Rules.Save', '%s statt %s' % (log, erwartet))
+    prot = protokoll(s)
+    pruefe(any(p[6] == 'Zum Löschen vorgemerkt (werden unmittelbar vor dem Speichern entfernt): 2 Duplikate von „%s“' % PVB and p[3] == str(n) for p in prot)
+           and any(p[6] == '4 Regeln entfernt, %d bleiben (Reihenfolge geprüft)' % len(basis) for p in prot),
+           'Protokoll: vorgemerkt je Zeile, Kontrolle am Ende')
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    pruefe(st[n] == 'schon erledigt · es gibt nur 1 Regel „%s“ (kein Duplikat)' % PVB and st[n + 1].startswith('schon erledigt'),
+           'Zweiter Lauf: schon erledigt', st[n])
+
+
+def sz_loeschen_fehler(s):
+    print('\n== 54  Löschen: Entfernen scheitert – kein Save, Meldung ohne falsche Zusage; Plätze rücken erst beim Speichern auf')
+    s.laden()
+    s.ruf('modAttrappe.AtStart', 'export')
+    vor = s.zustand(BES)
+    p1 = platz_von(PVB)
+    k1, k2 = 'PVB Kopie', 'PVB Kopie 2'
+    s.ruf('modAttrappe.AtDoppeln', BES, PVB, k1, p1 + 4)
+    s.ruf('modAttrappe.AtDoppeln', BES, PVB, k2, p1 + 9)
+    vorher = s.zustand(BES)
+    s.nur([])
+    n = len(EXPORT['plan']) + 1
+    s.planzeile_setzen(n, aktion='LOESCHEN', regel=k1, neu='gleich: ' + PVB)
+    s.planzeile_setzen(n + 1, aktion='LOESCHEN', regel=k2, neu='gleich: ' + PVB)
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    pruefe(st[n].startswith('bereit · löschen – Duplikat') and st[n + 1].startswith('bereit · löschen – Duplikat'), 'Vorschau: beide bereit', str(st[n]))
+    s.ruf('modAttrappe.AtSchalter', 'removefehler', k1)
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    print('    Ausführen:', kurz(msg, 500))
+    erg = s.plan('ERGEBNIS')
+    z = s.zaehler()
+    pruefe(erg[n].startswith('nicht ausgeführt: Fehler beim Löschen der Regel „%s“' % k1)
+           and erg[n + 1].startswith('nicht ausgeführt: abgebrochen wegen Fehler in Zeile %d' % n),
+           'Fehler bei der Zeile der Regel, die sich nicht entfernen ließ; die andere abgebrochen', str({k: erg[k] for k in (n, n + 1)}))
+    pruefe(z['save'] == '0' and z['remove'] == '1' and s.zustand(BES) == vorher, 'Kein Save; gespeicherter Stand unverändert', str(z))
+    pruefe(msg.startswith('Nicht ausgeführt: Fehler beim Löschen der Regel „%s“' % k1) and 'Gespeichert wurde nicht' in msg
+           and 'war 1 Regel schon entfernt' in msg and 'Regeln aus Outlook lesen' in msg and '.rwz' in msg
+           and 'In Outlook wurde nichts gespeichert' not in msg,
+           'Meldung: nicht gespeichert, eine Regel war im Speicher schon entfernt, Kontrolle über „Regeln aus Outlook lesen“')
+    # ohne Fehler; die Attrappe rueckt die Plaetze nach Remove erst beim Speichern auf
+    s.ruf('modAttrappe.AtSchalter', 'removefehler', '')
+    s.ruf('modAttrappe.AtSchalter', 'removeluecke', '1')
+    s.ruf('modUmbau.VorschauLauf')
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    print('    Ausführen (Plätze rücken erst beim Speichern auf):', kurz(msg, 300))
+    erg = s.plan('ERGEBNIS')
+    z = s.zaehler()
+    pruefe(erg[n] == ERG_OK and erg[n + 1] == ERG_OK and z['save'] == '1' and z['remove'] == '3',
+           'Beide Duplikate gelöscht, auch wenn Outlook im Speicher nicht sofort neu nummeriert', str(z))
+    pruefe(s.zustand(BES) == vor, 'Gespeichert: genau der Stand vor den Verdopplungen')
+
+
+def sz_loeschen_position(s, ordnung):
+    print('\n== 55  Löschen und Position in einem Lauf – Reihenfolge-Art der Attrappe: %s' % ordnung)
+    s.laden()
+    s.ruf('modAttrappe.AtStart', 'export')
+    s.ruf('modAttrappe.AtSchalter', 'ordnung', ordnung)
+    vor = s.zustand(BES)
+    p1 = platz_von(PVB)
+    kop = 'PVB Kopie'
+    s.ruf('modAttrappe.AtDoppeln', BES, PVB, kop, p1 + 4)
+    s.nur([])
+    n = len(EXPORT['plan']) + 1
+    s.planzeile_setzen(n, aktion='LOESCHEN', regel=kop, neu='gleich: ' + PVB)
+    s.planzeile_setzen(n + 1, aktion='POSITION', regel=KVSOLO, neu='Platz 2')
+    s.planzeile_setzen(n + 2, aktion='POSITION', regel=PAPIER, neu='nach: ' + PVB)
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    pruefe(st[n].startswith('bereit') and st[n + 1] == 'bereit · auf Platz 2' and st[n + 2] == 'bereit · direkt nach „%s“' % PVB,
+           'Vorschau: alle drei bereit', str([st[k] for k in (n, n + 1, n + 2)]))
+    s.ruf('modAttrappe.AtSchalter', 'antworten', 'JJJJ')
+    msg = s.ruf('modUmbau.AusfuehrenLauf')
+    print('    Ausführen:', kurz(msg, 300))
+    erg = s.plan('ERGEBNIS')
+    pruefe(all(erg[k] == ERG_OK for k in (n, n + 1, n + 2)), 'Alle drei Zeilen erledigt (geprüft)', str({k: erg[k] for k in (n, n + 1, n + 2)}))
+    soll = [r[2] for r in vor]
+    soll.remove(KVSOLO)
+    soll.insert(1, KVSOLO)
+    soll.remove(PAPIER)
+    soll.insert(soll.index(PVB) + 1, PAPIER)
+    ist = [r[2] for r in s.zustand(BES)]
+    pruefe(ist == soll, 'Gespeicherte Reihenfolge: Duplikat weg, Plätze zählen ohne die gelöschte Regel',
+           '\n      ist:  %s\n      soll: %s' % (ist, soll))
+    z = s.zaehler()
+    pruefe(z['save'] == '1' and z['remove'] == '1', 'Ein Save, eine Regel entfernt', str(z))
+    s.ruf('modUmbau.VorschauLauf')
+    st = s.plan('VORSCHAU')
+    pruefe(all(st[k].startswith('schon erledigt') for k in (n, n + 1, n + 2)), 'Zweiter Lauf: alles schon erledigt', str([st[k] for k in (n, n + 1, n + 2)]))
+
+
+
 SZENARIEN = [('lesen', sz_lesen), ('vorschau', sz_vorschau), ('ohne_vorschau', sz_ohne_vorschau), ('voll', sz_voll),
              ('erinnerungen_einfuegen', lambda s: sz_erinnerungen(s, 'einfuegen')),
              ('erinnerungen_tauschen', lambda s: sz_erinnerungen(s, 'tauschen')),
@@ -2233,7 +2688,13 @@ SZENARIEN = [('lesen', sz_lesen), ('vorschau', sz_vorschau), ('ohne_vorschau', s
              ('aufloesen', sz_aufloesen), ('ziel_dn', sz_ziel_dn), ('ueberspringen', sz_ueberspringen),
              ('einschalten', sz_einschalten), ('ordner_vorschau', sz_ordner_vorschau), ('ordner_voll', sz_ordner_voll),
              ('ordner_name', sz_ordner_name), ('ordner_konflikt', sz_ordner_konflikt), ('ordner_fehler', sz_ordner_fehler),
-             ('ordner_zurueck', sz_ordner_zurueck), ('ordner_eid', sz_ordner_eid), ('ordner_ablauf', sz_ordner_ablauf)]
+             ('ordner_zurueck', sz_ordner_zurueck), ('ordner_eid', sz_ordner_eid), ('ordner_ablauf', sz_ordner_ablauf),
+             ('loeschen_duplikat', sz_loeschen_duplikat), ('loeschen_duplikate', sz_loeschen_duplikate),
+             ('loeschen_pruefung', sz_loeschen_pruefung),
+             ('loeschen_ohne_ersatz', sz_loeschen_ohne_ersatz), ('gleichnamig', sz_gleichnamig),
+             ('loeschen_fehler', sz_loeschen_fehler),
+             ('loeschen_position_einfuegen', lambda s: sz_loeschen_position(s, 'einfuegen')),
+             ('loeschen_position_tauschen', lambda s: sz_loeschen_position(s, 'tauschen'))]
 
 
 def main():

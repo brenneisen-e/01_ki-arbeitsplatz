@@ -131,7 +131,38 @@ Planzeilen. Aktionen (Spalten E–L):
   Mails wie bisher (das Ziel hatte die Ausnahme vorher nicht) – sie greift nie breiter als heute. Darum gibt es L nur
   hier; bei `KOPIEREN` (die Kopie muss gleich der Quelle sein) und `UMLEITEN_STATT_WEITERLEITEN` (ein fehlender
   Empfänger bekäme keine Mails mehr) blockiert ein Eintrag in L die Zeile.
-- `DEAKTIVIEREN` (E). Löschen gibt es nicht.
+- `DEAKTIVIEREN` (E).
+- `LOESCHEN` (E, F; seit Plan 3.1) – löscht Regeln, nur mit Begründung in F:
+  - `Duplikate` – E nennt den Namen, den alle Duplikate tragen. Die erste Regel dieses Namens bleibt, jede weitere wird
+    gelöscht – aber nur, wenn das Makro für jede einzelne belegen kann, dass sie ein Duplikat der ersten ist (siehe
+    unten); weicht eine ab, ist die ganze Zeile blockiert (mit Platz und Unterschied). Nur eine Regel dieses Namens:
+    „schon erledigt“; kein solcher Name: blockiert (kein stilles „erledigt“ bei einem Tippfehler).
+  - `gleich: <Regel, die bleibt>` – löscht die Regel aus E als Duplikat der genannten (andere Namen möglich).
+  - `ohne Ersatz` – löscht ohne Vergleich (z. B. eine alte Testregel). Die Vorschau nennt, ob die Regel ein- oder
+    ausgeschaltet ist.
+  **Duplikat heißt** (`modPlan.DuplikatPruefen`): gleicher Inhalt (`modModell.InhaltSignatur`: Regeltyp, Nur lokal,
+  Bedingungen und Ausnahmen mit Werten, Verschieben-/Kopieren-Ziel, Empfänger von Weiterleiten/Umleiten, Stopp, Typen
+  weiterer Aktionen und der Aktionstext mit Kategorien) – Name, Platz und Aktiv zählen nicht. Beide Regeln müssen sich
+  vollständig vergleichen lassen: lesbar, mit sichtbarer Bedingung, nur Bedingungstypen ohne Wert oder mit Werten, die
+  das Makro liest (`BedVergleichbar`), nur weitere Aktionen ohne Wert (`AktVergleichbar`); sonst „Gleichheit nicht
+  belegbar“ mit Hinweis auf „ohne Ersatz“. Ist die zu löschende Regel eingeschaltet, muss die bleibende eingeschaltet
+  sein und **vor** ihr stehen: Dann hat sie jede Mail, die die gelöschte träfe, schon genauso behandelt. Stünde sie
+  dahinter, könnte eine Regel dazwischen diese Mails vorher abfangen – blockiert („die hintere löschen und die vordere
+  bei Bedarf umbenennen“). Eine ausgeschaltete Regel greift nie; bei ihr spielen Platz und Zustand der bleibenden
+  keine Rolle.
+  Ist die Regel aus E nicht (mehr) da, meldet die Zeile „schon erledigt · …“ mit dem Stand (zweiter Lauf). Spätere
+  Zeilen an einer gelöschten Regel sind blockiert („wird laut Plan gelöscht (Zeile n)“). Plätze (`POSITION … Platz n`)
+  zählen ohne die gelöschten Regeln.
+- **Gleichnamige Regeln** (seit Plan 3.1): Ein mehrfach vergebener Name allein blockiert weiterhin. Einzelne Regeln
+  spricht der Plan in E und in Bezügen (F: `gleich:`, `nach:`, `vor:`) als `Name #n/m` an – die n-te von m Regeln
+  dieses Namens in der Reihenfolge, wie Outlook sie beim Lesen hat; das Blatt Live nennt den Bezug in der Spalte
+  Diagnose („Name mehrfach vergeben – im Plan als „… #2/3“ ansprechen“). Der ganze Text zählt zuerst als Regelname.
+  Der Bezug gilt nur, solange es genau m Regeln dieses Namens gibt: Hat sich das geändert (eine wurde gelöscht oder
+  umbenannt), bindet er nicht neu an eine andere Regel, sondern meldet „… nicht gefunden – es gibt 1 Regel „…“ statt
+  2; der Plan passt nicht mehr zum Stand in Outlook“ (`LOESCHEN`: „schon erledigt · es gibt nur noch …“, `UMBENENNEN`:
+  „schon erledigt“, wenn der neue Name da ist). Innerhalb eines Laufs bleiben die Bezüge an ihrer Regel (feste ID im
+  Abbild), auch wenn eine Zeile davor eine gleichnamige Regel umbenennt oder löscht; die Nachprüfung löst sie über den
+  erwarteten Platz auf (`modPlan.gBzNach`), nicht über den frisch gelesenen Stand.
 
 Ordner, die das Blatt Ordner umgestellt hat: Nennt eine Zeile in I/J einen alten Pfad, den es nicht mehr gibt, und ist
 der Ordner laut Blatt Ordner (Zeilen `ORDNER_VERSCHIEBEN`/`ORDNER_UMBENENNEN`) unter dem neuen Pfad da, gilt der neue Pfad
@@ -221,6 +252,8 @@ macht die Vorschau unmöglich (Meldung mit Zeile); auf Nein bleibt sie außen vo
 | Nach dem Save prüfen | `Nachpruefen`: Regeln neu lesen; jede Regel wird mit dem erwarteten Abbild verglichen (Name, Platz, Aktiv, Bedingungen und Ausnahmen mit Werten, Ziele, Empfänger, Stopp); jede ausgeführte Zeile muss „schon erledigt“ melden. Weichen bei einer aktiven Regel die Bedingungen ab (z. B. neue Regel ohne Bedingung), bietet das Makro an, sie sofort zu deaktivieren und erneut zu speichern (Vorgabe Ja). Weichen **nur** Ausnahmen ab, fragt es eigens mit Vorgabe Nein: Fehlen nur die neu übernommenen Ausnahmen, gilt der alte Zustand weiter (die Meldung sagt, ob die früheren Ausnahmen alle da sind), und Deaktivieren würde die ganze Regel abschalten – bei einer Sammelregel die Umleitung aller übrigen Mails. Eine im Lauf **neu angelegte** Regel (`KOPIEREN` Fall c) hat keinen alten Stand: Jede Abweichung bei Bedingungen **oder** Ausnahmen zählt wie eine Abweichung der Bedingungen (Vorgabe Ja, Text „neu angelegte Regel greift breiter als die Vorlage“); `PostfachAusfuehren` markiert dafür die neuen Regeln im erwarteten Stand (`sollNeu`). Bei nicht lesbaren Regeln sagt die Meldung, dass deren Bedingung nicht prüfbar war. |
 | Nur Plan-Regeln anfassen | Geändert werden nur Regeln aus Planzeilen. Ausnahme: Ordnet Outlook ExecutionOrder anders als „herausnehmen und einfügen“, stellt `ReihenfolgeAngleichen` die Soll-Reihenfolge Platz für Platz her (wird protokolliert). |
 | Regeln des Quellpostfachs nur lesen | `gQuellRegeln` wird nur gelesen; gespeichert wird ausschließlich das Rules-Objekt des Zielpostfachs. Das Blatt Ordner speichert keine Regeln (auch nicht im Zielpostfach). |
+| Löschen (Plan 3.1) | Nur Regeln aus `LOESCHEN`-Zeilen, nur mit Begründung in der Zeile; bei `Duplikate`/`gleich:` belegt das Makro die Gleichheit selbst (siehe Aktionen), sonst blockiert. Eigene Rückfrage vor dem Ausführen (`AusfuehrenLauf`, Titel „Regeln löschen“, Vorgabe Nein): Anzahl, je Zeile Regel und Begründung, Warnung zu eingeschalteten Regeln ohne Ersatz, die .rwz als einziger Rückweg; voller Text im Protokoll. `SchrittAusfuehren` merkt nur vor (Name und Inhalt, wie sie im Speicher stehen). **Entfernt wird als letzter Zugriff vor `Rules.Save`** (`modOlSchreiben.RegelnEntfernen`, nach Reihenfolge, Ordnern und Einschalten): `Rules.Remove` über den Platz – `Rules.Item(i)` ist die Regel mit ExecutionOrder i (Microsoft Learn, Rule.ExecutionOrder); über den Namen ginge es bei gleichnamigen Regeln nicht. Höchster Platz zuerst (die Plätze der übrigen zu löschenden Regeln ändern sich nicht). Vor jedem Entfernen wird die Regel am Platz frisch gelesen und mit der vorgemerkten verglichen (Name, Inhalt), danach muss genau eine Regel weniger da sein; zum Schluss Anzahl und Namen der bleibenden Regeln in der Reihenfolge des Abbilds über frische Zugriffe. Jeder Fehler: kein Save, Fehler bei der Planzeile der Regel. Microsoft Learn sagt nicht, ob `Remove` erst mit `Save` wirkt – war schon eine Regel entfernt, sagt die Meldung deshalb nicht „nichts gespeichert“, sondern verweist auf „Regeln aus Outlook lesen“ und die .rwz. Die Sicherung (Blatt Sicherung) enthält die Regeln vor dem Löschen. |
+| Gleichnamige Regeln in der Nachprüfung | `modUmbau.SollIndex`/`SollFehlt` ordnen den gelesenen Stand dem erwarteten über Name **und laufende Nummer** zu (die k-te Regel namens X hier ist die k-te dort). Bis Plan 3.0 lief die Zuordnung nur über den Namen: Bei zwei gleichnamigen Regeln meldete die Nachprüfung beide als „fehlt“, verglich die zweite mit dem Inhalt der ersten und bot bei verschiedenem Inhalt an, sie zu deaktivieren (Vorgabe Ja) – auch wenn der Plan sie gar nicht berührt hatte. Die Kontrolle nach „deaktivieren und erneut speichern“ geht über Platz und Name. |
 | Ordner: Vorschau schreibt nichts | `modOrdner.OrdnerVorschauLauf` liest nur (Ordnerbaum, `GetRules`, Aktionen); geschrieben wird nur über `modOlSchreiben.OrdnerNeuAnlegen`, `OrdnerVerschiebenNach`, `OrdnerNameSetzen`. `umbau.nur_lesend_pruefen` kennt `.MoveTo` und `.Name =`; der Test zählt jedes `Folders.Add`, `MoveTo` und Umbenennen der Attrappe. |
 | Ordner: Ausführen | Prüfwert des Plans, keine blockierte Zeile, erneute Berechnung mit gleichem Ergebnis, Rückfrage (Vorgabe Nein), Sicherung, Schritte in Planreihenfolge. Vor jedem Schritt wird der Ordner frisch über den Pfad gesucht und seine EntryID mit der Vorschau verglichen; nach jedem Schritt: Ordner am neuen Platz, alter Platz leer, gleiche EntryID. Bekommt der Ordner beim Verschieben eine neue EntryID, stoppt der Lauf (Regeln, die per EntryID dorthin zeigen, fänden ihn womöglich nicht mehr), die neue EntryID wird in der Ordner-Sicherung nachgetragen. |
 | Ordner: nichts löschen, rückgängig | Es gibt kein Löschen. Jeder Schritt steht sofort in der Ordner-Sicherung; „Ordner zurück“ prüft alle Rückschritte vorab im Abbild und ändert sonst nichts. Erwarteter Stand der Regeln = Ziele vor dem Lauf, Pfade über die ausgeführten Schritte abgebildet (`OAbbilden`) – nach einem Abbruch also genau der Teil, der umgezogen ist. |
@@ -243,7 +276,7 @@ outlook_regeln/
     pruefe.py            Wertetreue, Prüfung des Makro-Teils, Vergleich mit der .xlsx
     test_umbau.py        Ablauftest in LibreOffice gegen die Outlook-Attrappe
     ovba.py              vbaProject.bin aus Quelltext (Kopie aus pruefbot_testing, um Klassenmodule erweitert)
-    vba_pruefung.py      statische VBA-Prüfung (Kopie)
+    vba_pruefung.py      statische VBA-Prüfung (Kopie; hier zusätzlich: Namen, die benutzt, aber nicht deklariert sind)
     lo_pruefen.py        Makros in LibreOffice aufrufen (Kopie, Port/Profil angepasst)
     rendern.py           PDF/PNG über LibreOffice (Kopie)
     vba/                 Produktivmodule
@@ -272,7 +305,10 @@ Knöpfe (Formen mit Makro): „Regeln aus Outlook lesen“ → `modUmbau.RegelnL
 
 - Bei jedem Build: `vba_pruefung` (Excel-Kompilierfehler), cp1252, Option Explicit, Zeilenlänge, „nur lesend außerhalb
   modOlSchreiben“ und Einzeilen-`If … Else` mit Prozeduraufruf (kompiliert LibreOffice nicht und legt dann das ganze
-  Projekt still). Ein Befund bricht den Build ab.
+  Projekt still). Ein Befund bricht den Build ab. Seit Plan 3.1 prüft `vba_pruefung.undeklariert` außerdem jeden Namen
+  in jeder Prozedur gegen lokale, Modul- und öffentliche Deklarationen: Excel prüft mit Option Explicit beim Kompilieren
+  das ganze Modul (ein nicht deklarierter Name legt alle Makros lahm), LibreOffice merkt es erst, wenn die Zeile läuft
+  – ein Tippfehler in einem selten durchlaufenen Zweig fiele im Ablauftest also nicht auf.
 - `test_umbau.py` baut `Regeln_Umbau_Test.xlsm` und ruft in LibreOffice die echten Makros auf. Die Attrappe bildet
   Stores, Folders (FolderPath mit %2F, Item, Add), Rules (Item nach ExecutionOrder, Create auf Platz 1, Save mit Prüfung
   wie Outlook, ExecutionOrder „einfügen“ oder „tauschen“), Rule, RuleConditions (31 Einträge in nicht sortierter
@@ -348,7 +384,28 @@ Knöpfe (Formen mit Makro): „Regeln aus Outlook lesen“ → `modUmbau.RegelnL
   Vorschau, Plan bzw. Outlook nach der Vorschau geändert, Blatt umgebaut). Gegenprobe: ohne den Aufruf von
   `UmzugPfad` in `modPlan` scheitert `ordner_voll` – der Regelplan will nach der Umstellung `Archiv\Automatische
   Antworten` neu anlegen.
-  Stand: 49 Szenarien, 361 Prüfungen. LibreOffice gibt beim Schließen einer Mappe mit VBA-Projekt nicht allen
+  Löschen und gleichnamige Regeln (Plan 3.1): Die Attrappe kann Regeln entfernen (`Rules.Remove` über Platz oder
+  Name, Zähler `remove`; Schalter `removefehler` – das Entfernen einer Regel scheitert –, `removeluecke` – die Plätze
+  rücken erst beim Speichern auf, falls Outlook im Speicher nicht sofort neu nummeriert) und gespeicherte Regeln
+  verdoppeln, umbenennen und schalten (`AtDoppeln`, `AtName`, `AtAktiv`). Szenarien: `loeschen_duplikat` (gleichnamiges
+  Duplikat: Live nennt „#1/2“/„#2/2“, Name allein blockiert, Löschen und Umbenennen über „#n/m“, spätere Zeile an der
+  gelöschten Regel blockiert, Rückfrage „Regeln löschen“, `Rules.Remove` über den Platz als letzter Zugriff vor
+  `Rules.Save`, Sicherung mit beiden Regeln, Protokoll, zweiter Lauf), `loeschen_duplikate` (drei gleichnamige Regeln
+  verstreut und hintereinander, eine Zeile je Name; gleichnamige Regel mit anderem Inhalt blockiert die Zeile;
+  unbekannter Name blockiert; vier Regeln entfernt, Stand danach genau wie vor den Verdopplungen), `loeschen_pruefung`
+  (ohne Begründung, vordere löschen und hintere behalten, anderer Inhalt, dieselbe Regel, bleibende fehlt, Regel ohne
+  sichtbare Bedingung, „#2/3“ bei einer Regel, „#3/2“, zweimal dieselbe Regel, bleibende ausgeschaltet, ausgeschaltete
+  vordere Regel – alles ohne Schreibzugriff), `loeschen_ohne_ersatz` (Rückfrage verneint: nichts geändert; bejaht:
+  zwei Regeln weg, Entfernen vom höchsten Platz her), `gleichnamig` (zwei gleichnamige Regeln mit verschiedenem Inhalt:
+  eine Zeile an einer dritten Regel läuft ohne Fehlalarm; „#1/2“ umbenennen, „#2/2“ ausschalten und als Bezugsregel
+  einer Position – alle „erledigt (geprüft)“, obwohl es danach nur noch eine Regel dieses Namens gibt; zweite Vorschau:
+  „#2/2“ blockiert mit Erklärung), `loeschen_fehler` (Entfernen scheitert bei der zweiten Regel: kein Save, Fehler bei
+  ihrer Zeile, Meldung ohne „nichts gespeichert“; danach mit `removeluecke` erfolgreich) und `loeschen_position_*`
+  (Löschen, „Platz 2“ und „nach:“ in einem Lauf, in beiden Reihenfolge-Arten der Attrappe). Gegenprobe: Mit den
+  VBA-Modulen von Plan 3.0 scheitert `gleichnamig` schon im ersten Schritt – die Nachprüfung meldet für die zweite der
+  gleichnamigen Regeln „Achtung, Abweichungen: … Bedingungen (soll: …; ist: …)“ und bietet an, sie zu deaktivieren,
+  obwohl der Plan nur eine dritte Regel umbenannt hat.
+  Stand: 57 Szenarien, 444 Prüfungen. LibreOffice gibt beim Schließen einer Mappe mit VBA-Projekt nicht allen
   Speicher frei (etwa 160 MB je Laden; nach rund 70 Ladevorgängen beendet der Speicherwächter `soffice.bin`), darum
   startet `test_umbau.py` LibreOffice nach je 20 Ladevorgängen neu (`LADUNGEN_JE_START`).
 
@@ -358,6 +415,12 @@ Knöpfe (Formen mit Makro): „Regeln aus Outlook lesen“ → `modUmbau.RegelnL
   lässt – deshalb Export, Sperre bzw. Bestätigung.
 - Ob das Setzen von `ExecutionOrder` einfügt oder tauscht (beides nachgebildet; das Makro setzt die Reihenfolge
   ausdrücklich und prüft sie).
+- Löschen (Plan 3.1), nur gegen die Attrappe geprüft: ob `Rules.Remove` erst mit `Rules.Save` wirkt (Microsoft Learn
+  nennt nur den Parameter – Platz oder Name – und „Returns an error when the rule cannot be found in the collection“);
+  wie Outlook die übrigen Regeln danach im Speicher nummeriert (sofort aufrücken oder erst beim Speichern – beides
+  nachgebildet, das Makro entfernt vom höchsten Platz her und kontrolliert danach nur über `Rules.Count` und
+  `Rules.Item`); ob Verweise auf die übrigen Regeln nach einem `Remove` gültig bleiben (das Makro benutzt danach keine
+  mehr); wie lange `Rules.Save` bei vielen Regeln im Gruppenpostfach braucht.
 - Ob `.Folder` spät gebunden per Set oder per Let angenommen wird (beides eingebaut und gegen die Attrappe getestet).
 - Welche Zugriffe außer `Rule.Enabled = True` und `Rules.Save` Outlook eine Regel prüfen lassen (etwa das Setzen von
   `ExecutionOrder` oder von `MoveToFolder.Enabled` ohne Ordner). Microsofts Beispiel zu `Rules.Create` schaltet die

@@ -44,6 +44,11 @@ Public gAtFehlerVerschieben As String
 Public gAtFehlerUmbenennen As String
 Public gAtEidWechsel As Boolean
 Private gAtEidNr As Long
+' Regeln loeschen (Plan 3.1): Zaehler der entfernten Regeln, Schalter "removefehler" (Regelname, dessen Entfernen
+' scheitert) und "removeluecke" (nach Remove ruecken die uebrigen erst beim Speichern auf)
+Public gAtRemove As Long
+Public gAtFehlerRemove As String
+Public gAtRemoveLuecke As Boolean
 
 Private gVzName() As String
 Private gVzSmtp() As String
@@ -58,7 +63,7 @@ Private gAktStore As Object
 Public Const AT_OL_UNGUELTIG_NR As Long = -2147467259
 
 Public Function AttrappeVersion() As String
-    AttrappeVersion = "Attrappe 3.0"
+    AttrappeVersion = "Attrappe 3.1"
 End Function
 
 ' Outlooks Meldung (deutsch) beim Einschalten bzw. Speichern einer Regel mit ungueltiger Aktion
@@ -289,6 +294,7 @@ Public Function AtStart(ByVal variante As String) As String
     gAtAusVerlust = "": gAtFehlerEinschalten = "": gAtBeiFrage = "": gAtFragenNr = 0
     gAtOrdnerMove = 0: gAtOrdnerName = 0: gAtFehlerVerschieben = "": gAtFehlerUmbenennen = "": gAtEidWechsel = False
     gAtEidNr = 0
+    gAtRemove = 0: gAtFehlerRemove = "": gAtRemoveLuecke = False
     gVzAnz = 0
     gDlgAntworten = "": gDlgLog = ""
     Set gAtApp = New clsAtApp
@@ -325,6 +331,8 @@ Public Function AtSchalter(ByVal schalter As String, ByVal wert As String) As St
         Case "verschiebefehler": gAtFehlerVerschieben = wert
         Case "umbenennfehler": gAtFehlerUmbenennen = wert
         Case "eidwechsel": gAtEidWechsel = (wert = "1")
+        Case "removefehler": gAtFehlerRemove = wert
+        Case "removeluecke": gAtRemoveLuecke = (wert = "1")
         Case "beifrage"
             gAtBeiFrage = wert
             gAtFragenNr = 0
@@ -525,10 +533,61 @@ Public Function AtPlatz(ByVal adresse As String, ByVal regelName As String, ByVa
     gAtScharf = scharf
 End Function
 
+' Gespeicherte Regel verdoppeln (wie ein zweiter Import derselben .rwz oder "Kopieren..." im selben Postfach): gleiche
+' Bedingungen, Ausnahmen und Aktionen; neuerName "" = gleicher Name; Platz p (0 = ans Ende). Ohne Zaehlung.
+Public Function AtDoppeln(ByVal adresse As String, ByVal regelName As String, ByVal neuerName As String, _
+                          ByVal p As Long) As String
+    Dim scharf As Boolean, rg As Object, n As Object, ordnung As String
+    scharf = gAtScharf
+    If OhneZaehlen(adresse, regelName) Then
+        Set rg = AtStoreNach(adresse).Gespeichert
+        Set n = gAktRegel.Klon(rg)
+        If neuerName <> "" Then n.NameIntern = neuerName
+        rg.AnhaengenKlon n
+        n.OrderIntern = rg.Count
+        If p >= 1 And p < rg.Count Then
+            ordnung = gAtOrdnung
+            gAtOrdnung = "einfuegen"
+            rg.Umordnen n, p
+            gAtOrdnung = ordnung
+        End If
+        AtDoppeln = "verdoppelt: " & n.Name & " auf Platz " & n.OrderIntern
+    Else
+        AtDoppeln = "Regel fehlt: " & regelName
+    End If
+    gAtScharf = scharf
+End Function
+
+' Gespeicherte Regel umbenennen, ohne Zaehlung (die erste Regel dieses Namens)
+Public Function AtName(ByVal adresse As String, ByVal regelName As String, ByVal neuerName As String) As String
+    Dim scharf As Boolean
+    scharf = gAtScharf
+    If OhneZaehlen(adresse, regelName) Then
+        gAktRegel.NameIntern = neuerName
+        AtName = regelName & " heisst jetzt " & neuerName
+    Else
+        AtName = "Regel fehlt: " & regelName
+    End If
+    gAtScharf = scharf
+End Function
+
+' Gespeicherte Regel ein- oder ausschalten, ohne Zaehlung (die erste Regel dieses Namens)
+Public Function AtAktiv(ByVal adresse As String, ByVal regelName As String, ByVal aktiv As Boolean) As String
+    Dim scharf As Boolean
+    scharf = gAtScharf
+    If OhneZaehlen(adresse, regelName) Then
+        gAktRegel.AktivIntern = aktiv
+        AtAktiv = regelName & IIf(aktiv, " eingeschaltet", " ausgeschaltet")
+    Else
+        AtAktiv = "Regel fehlt: " & regelName
+    End If
+    gAtScharf = scharf
+End Function
+
 Public Function AtZaehler() As String
     AtZaehler = "schreib=" & gAtSchreib & ";save=" & gAtSaves & ";create=" & gAtCreate & ";ordneradd=" & gAtOrdnerAdd & _
                 ";getrules=" & gAtGetRules & ";let=" & gAtLetZuweisungen & ";move=" & gAtOrdnerMove & _
-                ";umbenennen=" & gAtOrdnerName
+                ";umbenennen=" & gAtOrdnerName & ";remove=" & gAtRemove
 End Function
 
 Public Function AtSchreibLog() As String

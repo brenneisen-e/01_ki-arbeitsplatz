@@ -38,6 +38,8 @@ Public pKurz() As String
 Public pFall() As String
 ' Schritt aendert eine Regel ohne sichtbare Bedingung (Vorschauzeile endet auf HINWEIS_OHNE)
 Public pOhne() As Boolean
+' Anzahl der Regeln, die eine LOESCHEN-Zeile loescht (fuer die Rueckfrage)
+Public pWegAnz() As Long
 Public Const HINWEIS_OHNE As String = " · Regel ohne sichtbare Bedingung"
 
 Public gZielAdr As String
@@ -82,14 +84,27 @@ Public eOhneSchl As String
 Public eOhneNamen As String
 ' Ausnahmetypen ("|1|"), die ganz wegfallen: alle neuen Absender uebersprungen, im Ziel bisher keine (bleibt aus)
 Public eOhneTypen As String
+' LOESCHEN: Anzahl der Regeln, die die Zeile loescht; bei "Duplikate" ihre IDs ("|7|8|", sonst "" - dann gilt eId)
+Public eWegAnz As Long
+Public eWegIds As String
 ' Hinweis der Ordner-Umstellung zum zuletzt bewerteten Schritt (Pfad in Spalte I/J laut Blatt Ordner umgezogen)
 Public gUmzugHinweis As String
+
+' Bezuege "Name #n/m" (gleichnamige Regeln) eines Laufs: Text -> ID im Abbild und erwarteter Platz nach dem Plan
+' (0 = laut Plan geloescht). Die Nachpruefung liest Outlook neu; dort gibt es womoeglich nicht mehr m Regeln dieses
+' Namens (eine wurde geloescht oder umbenannt), "#n/m" liesse sich dann nicht mehr zuordnen. Sie loest die Bezuege
+' des Laufs deshalb ueber den erwarteten Platz auf (gBzNach = True, gesetzt und zurueckgesetzt in modUmbau.Nachpruefen).
+Public gBzAnz As Long
+Public gBzText() As String
+Public gBzId() As Long
+Public gBzPlatz() As Long
+Public gBzNach As Boolean
 
 Private gPosText As String
 Private gAktK As Long
 
 Public Function PlanVersion() As String
-    PlanVersion = "Plan 3.0"
+    PlanVersion = "Plan 3.1"
 End Function
 
 Public Function ZellText(ByVal ws As Object, ByVal r As Long, ByVal c As Long) As String
@@ -221,6 +236,7 @@ Public Function PlanLesen() As String
     ReDim pNeu(0 To n): ReDim pVer(0 To n): ReDim pKop(0 To n): ReDim pQuelle(0 To n): ReDim pStatus(0 To n)
     ReDim pUeber(0 To n): ReDim pOhneNamen(0 To n)
     ReDim pErgebnis(0 To n): ReDim pSpeichern(0 To n): ReDim pKurz(0 To n): ReDim pFall(0 To n): ReDim pOhne(0 To n)
+    ReDim pWegAnz(0 To n)
     For r = erste To letzte
         akt = UCase(ZellText(ws, r, SP_AKTION))
         If akt <> "" Then
@@ -244,6 +260,7 @@ Private Sub EntscheidungLeeren()
     eFall = "": eId = 0: eName = "": eVer = "": eKop = "": eVerSetzen = False: eKopSetzen = False
     eEmpf = "": ePos = False: eAnker = 0: eNach = False: ePlatzNr = 0: eNeueOrdner = "": eKurz = ""
     eTyp = 0: eWerte = "": eOhneSchl = "": eOhneNamen = "": eOhneTypen = ""
+    eWegAnz = 0: eWegIds = ""
     Set eQuelle = Nothing
     gPosText = ""
     gRegelId = 0
@@ -286,10 +303,85 @@ Private Function ZielOrdnerPruefen(ByVal ziel As Object, ByVal pfad As String, B
     End If
 End Function
 
-' Regel im Abbild; findet auch eine Regel, die laut Plan (UMBENENNEN) schon umbenannt wurde.
+Public Sub BezuegeLeeren()
+    gBzAnz = 0
+    gBzNach = False
+    ReDim gBzText(0 To 0): ReDim gBzId(0 To 0): ReDim gBzPlatz(0 To 0)
+End Sub
+
+Private Function BezugIndex(ByVal bezug As String) As Long
+    Dim i As Long
+    For i = 1 To gBzAnz
+        If gBzText(i) = LCase(Trim(bezug)) Then
+            BezugIndex = i
+            Exit Function
+        End If
+    Next i
+End Function
+
+Private Sub BezugMerken(ByVal bezug As String, ByVal id As Long)
+    If BezugIndex(bezug) > 0 Then Exit Sub
+    gBzAnz = gBzAnz + 1
+    ReDim Preserve gBzText(0 To gBzAnz): ReDim Preserve gBzId(0 To gBzAnz): ReDim Preserve gBzPlatz(0 To gBzAnz)
+    gBzText(gBzAnz) = LCase(Trim(bezug))
+    gBzId(gBzAnz) = id
+End Sub
+
+' Erwartete Plaetze der gemerkten Bezuege nach allen Schritten (0 = laut Plan geloescht); fuer die Nachpruefung.
+Public Sub BezuegePlaetze()
+    Dim i As Long
+    For i = 1 To gBzAnz
+        gBzPlatz(i) = Platz(gBzId(i))
+    Next i
+End Sub
+
+' Regel zu einem Bezug aus dem Plan: der Name, bei gleichnamigen Regeln "Name #n/m" (die n-te von m, Reihenfolge wie
+' beim Lesen; modModell.SucheVorkommen). Der ganze Text zaehlt zuerst als Regelname.
+' Rueckgabe: ID, 0 = keine, -1 = Name mehrfach vergeben, -2 = laut Plan geloescht.
+Public Function RegelBezug(ByVal bezug As String) As Long
+    Dim id As Long, id2 As Long, i As Long, k As Long
+    If gBzNach Then
+        i = BezugIndex(bezug)
+        If i > 0 Then
+            If gBzPlatz(i) >= 1 And gBzPlatz(i) <= mPl Then RegelBezug = mOrd(gBzPlatz(i))
+            Exit Function
+        End If
+    End If
+    id = SucheName(bezug)
+    If id > 0 Then
+        RegelBezug = id
+        Exit Function
+    End If
+    id2 = SucheVorkommen(bezug)
+    If id2 > 0 Then
+        If Not gBzNach Then BezugMerken bezug, id2
+        If mWeg(id2) Then
+            RegelBezug = -2
+        Else
+            RegelBezug = id2
+        End If
+        Exit Function
+    End If
+    If id = -1 Then
+        RegelBezug = -1
+        Exit Function
+    End If
+    ' laut Plan geloeschte Regel, angesprochen ueber ihren Namen
+    For k = 1 To mAnz
+        If mWeg(k) Then
+            If LCase(Trim(mName(k))) = LCase(Trim(bezug)) Then
+                RegelBezug = -2
+                Exit Function
+            End If
+        End If
+    Next k
+End Function
+
+' Regel im Abbild; findet auch eine Regel, die laut Plan (UMBENENNEN) schon umbenannt wurde, und gleichnamige Regeln
+' ueber "Name #n/m". Rueckgabe wie RegelBezug.
 Public Function RegelFinden(ByVal regelName As String) As Long
     Dim id As Long, k As Long, id2 As Long
-    id = SucheName(regelName)
+    id = RegelBezug(regelName)
     If id <> 0 Then
         RegelFinden = id
         Exit Function
@@ -310,10 +402,197 @@ Public Function RegelFinden(ByVal regelName As String) As Long
 End Function
 
 Private Function NichtGefunden(ByVal k As Long, ByVal regelName As String, ByVal id As Long) As String
+    Dim basis As String, nr As Long, gesamt As Long, n As Long, exakt As Boolean, j As Long
     If id = -1 Then
-        NichtGefunden = "blockiert: Regelname " & Zitat(regelName) & " ist im Zielpostfach mehrfach vergeben"
+        NichtGefunden = "blockiert: Regelname " & Zitat(regelName) & " ist im Zielpostfach mehrfach vergeben – bitte als " & _
+                        Zitat(Trim(regelName) & " #n/m") & " ansprechen (die n-te von m, Reihenfolge wie im Blatt Live)"
+    ElseIf id = -2 Then
+        NichtGefunden = "blockiert: Regel " & Zitat(regelName) & " wird laut Plan gelöscht"
+        For j = 1 To pAnz
+            If j <> k And pAktion(j) = "LOESCHEN" And LCase(Trim(pRegel(j))) = LCase(Trim(regelName)) Then
+                NichtGefunden = NichtGefunden & " (Zeile " & pNr(j) & ")"
+                Exit For
+            End If
+        Next j
+    ElseIf VorkommenTeile(regelName, basis, nr, gesamt) Then
+        n = NameAnzahlAlt(basis, exakt)
+        If n <> gesamt And nr <= gesamt Then
+            NichtGefunden = "blockiert: Regel " & Zitat(regelName) & " nicht gefunden – es gibt " & _
+                            IIf(n = 0, "keine Regel ", IIf(n = 1, "1 Regel ", n & " Regeln ")) & Zitat(basis) & _
+                            " statt " & gesamt & "; der Plan passt nicht mehr zum Stand in Outlook (Regeln neu lesen)"
+        Else
+            NichtGefunden = "blockiert: Regel " & Zitat(regelName) & " nicht gefunden" & EntstehtDurch(k, regelName)
+        End If
     Else
         NichtGefunden = "blockiert: Regel " & Zitat(regelName) & " nicht gefunden" & EntstehtDurch(k, regelName)
+    End If
+End Function
+
+' Bedingungstypen ohne Wert (der Typ allein sagt alles) bzw. mit Werten, die das Makro liest (BedWerte) - nur solche
+' Regeln lassen sich als Duplikat belegen.
+Private Function BedVergleichbar(ByVal t As Long) As Boolean
+    Select Case t
+        Case 4, 5, 9, 10, 19, 20, 26, 27, 28, 29, 31
+            BedVergleichbar = True
+        Case 1, 2, 6, 12, 13, 14, 15, 16, 17, 18, 23
+            BedVergleichbar = True
+    End Select
+End Function
+
+' Aktionstypen ohne Wert, die das Makro nur ueber den Typ kennt (Loeschen, Endgueltig loeschen, Kennzeichnung
+' entfernen, Drucken, Als gelesen markieren, Lese-/Uebermittlungsbestaetigung).
+Private Function AktVergleichbar(ByVal t As Long) As Boolean
+    Select Case t
+        Case 3, 4, 13, 16, 19, 25, 26
+            AktVergleichbar = True
+    End Select
+End Function
+
+' Erster Typ aus einer Typenliste ("13, 1"), den der Vergleich nicht abdeckt (0 = keiner).
+Private Function NichtVergleichbar(ByVal liste As String, ByVal aktionen As Boolean) As Long
+    Dim teile As Variant, i As Long, t As Long, ok As Boolean
+    If Trim(liste) = "" Then Exit Function
+    teile = Split(liste, ",")
+    For i = LBound(teile) To UBound(teile)
+        If Trim(teile(i)) <> "" Then
+            t = CLng(Trim(teile(i)))
+            If aktionen Then
+                ok = AktVergleichbar(t)
+            Else
+                ok = BedVergleichbar(t)
+            End If
+            If Not ok Then
+                NichtVergleichbar = t
+                Exit Function
+            End If
+        End If
+    Next i
+End Function
+
+' Laesst sich der Inhalt von Regel id vollstaendig vergleichen? "" = ja, sonst Grund.
+Private Function VergleichbarGrund(ByVal id As Long) As String
+    Dim t As Long
+    If Not mLesbar(id) Then
+        VergleichbarGrund = Zitat(mName(id)) & " ist nicht lesbar"
+        Exit Function
+    End If
+    If mOhneBed(id) Then
+        VergleichbarGrund = Zitat(mName(id)) & " hat keine sichtbare Bedingung (sie ist womöglich nur in Outlook im Web " & _
+                            "zu sehen)"
+        Exit Function
+    End If
+    t = NichtVergleichbar(mTypen(id), False)
+    If t > 0 Then
+        VergleichbarGrund = Zitat(mName(id)) & " hat die Bedingung " & Zitat(BedTypName(t)) & ", deren Wert das Makro nicht liest"
+        Exit Function
+    End If
+    t = NichtVergleichbar(mAusTypen(id), False)
+    If t > 0 Then
+        VergleichbarGrund = Zitat(mName(id)) & " hat die Ausnahme " & Zitat(BedTypName(t)) & ", deren Wert das Makro nicht liest"
+        Exit Function
+    End If
+    t = NichtVergleichbar(mAktFremd(id), True)
+    If t > 0 Then VergleichbarGrund = Zitat(mName(id)) & " hat eine Aktion (Typ " & t & "), deren Wert das Makro nicht liest"
+End Function
+
+' LOESCHEN "gleich: ...": Ist Regel id ein Duplikat von Regel b, dessen Loeschen nichts aendert? "" = ja, sonst Grund.
+' Gleich heisst gleicher Inhalt (modModell.InhaltSignatur: Regeltyp, Nur lokal, Bedingungen und Ausnahmen mit Werten,
+' Ziele, Empfaenger, Stopp, Aktionen) - und beide Regeln muessen sich vollstaendig vergleichen lassen. Ist die zu
+' loeschende Regel eingeschaltet, muss die bleibende eingeschaltet sein und vor ihr stehen: Dann hat sie jede Mail,
+' die die geloeschte traefe, schon genauso behandelt. Stuende sie dahinter, koennte eine Regel dazwischen diese Mails
+' vorher abfangen. Eine ausgeschaltete Regel greift nie - bei ihr spielen Platz und Zustand der bleibenden keine Rolle.
+Private Function DuplikatPruefen(ByVal id As Long, ByVal b As Long) As String
+    Dim g As String, t As String
+    g = VergleichbarGrund(id)
+    If g = "" Then g = VergleichbarGrund(b)
+    If g <> "" Then
+        DuplikatPruefen = "Gleichheit nicht belegbar – " & g & ". Soll die Regel trotzdem weg: in Spalte " & _
+                          SpaltenBuchstabe(SP_NEU) & " „ohne Ersatz“"
+        Exit Function
+    End If
+    t = SignaturTeile(InhaltSignatur(id), InhaltSignatur(b))
+    If t <> "" Then
+        DuplikatPruefen = "kein Duplikat – " & Zitat(mName(id)) & " (Platz " & Platz(id) & ") und " & Zitat(mName(b)) & _
+                          " (Platz " & Platz(b) & ") unterscheiden sich in: " & t
+    ElseIf mAktiv(id) And Not mAktiv(b) Then
+        DuplikatPruefen = "die Regel, die bleibt (Platz " & Platz(b) & "), ist ausgeschaltet, die zu löschende " & _
+                          "eingeschaltet – danach griffe keine von beiden"
+    ElseIf mAktiv(id) And Platz(b) > Platz(id) Then
+        DuplikatPruefen = "die Regel, die bleibt, steht hinter der zu löschenden (Platz " & Platz(b) & " nach Platz " & _
+                          Platz(id) & ") – eine Regel dazwischen könnte die Mails vorher abfangen. Bitte die hintere " & _
+                          "löschen und die vordere bei Bedarf umbenennen"
+    End If
+End Function
+
+' IDs aller Regeln mit diesem Namen im Abbild (ohne die laut Plan geloeschten), nach Platz geordnet, als "|3|7|9|";
+' erst exakt, sonst ohne Gross-/Kleinschreibung. anzahl: wie viele.
+Private Function NamensGruppe(ByVal regelName As String, ByRef anzahl As Long) As String
+    Dim p As Long, id As Long, s As String, durchgang As Long, passt As Boolean
+    regelName = Trim(regelName)
+    For durchgang = 1 To 2
+        s = "|"
+        anzahl = 0
+        For p = 1 To mPl
+            id = mOrd(p)
+            If durchgang = 1 Then
+                passt = (Trim(mName(id)) = regelName)
+            Else
+                passt = (LCase(Trim(mName(id))) = LCase(regelName))
+            End If
+            If passt Then
+                anzahl = anzahl + 1
+                s = s & id & "|"
+            End If
+        Next p
+        If anzahl > 0 Then Exit For
+    Next durchgang
+    NamensGruppe = s
+End Function
+
+' Plaetze einer ID-Liste ("|7|8|9|") als Text: "Platz 7 bis 9" bzw. "Plätze 7, 9, 12" (ab der sechsten "und n weitere").
+Private Function PlatzText(ByVal ids As String) As String
+    Dim teile As Variant, i As Long, n As Long, p As Long, erster As Long, letzter As Long, luecke As Boolean, s As String
+    teile = Split(ids, "|")
+    For i = LBound(teile) To UBound(teile)
+        If teile(i) <> "" Then
+            p = Platz(CLng(teile(i)))
+            n = n + 1
+            If n = 1 Then
+                erster = p
+            ElseIf p <> letzter + 1 Then
+                luecke = True
+            End If
+            letzter = p
+            If n <= 5 Then s = Anhaengen(s, CStr(p), ", ")
+        End If
+    Next i
+    If n = 1 Then
+        PlatzText = "Platz " & erster
+    ElseIf Not luecke Then
+        PlatzText = "Platz " & erster & " bis " & letzter
+    Else
+        PlatzText = "Plätze " & s & IIf(n > 5, " und " & (n - 5) & " weitere", "")
+    End If
+End Function
+
+' LOESCHEN: Die Regel ist nicht (mehr) da. "" = gilt als erledigt (hinweis nennt den Stand), sonst Grund fuer "blockiert".
+Private Function WegPruefen(ByVal bezug As String, ByRef hinweis As String) As String
+    Dim basis As String, nr As Long, gesamt As Long, n As Long, exakt As Boolean
+    hinweis = "Regel " & Zitat(Trim(bezug)) & " gibt es nicht (mehr)"
+    If Not VorkommenTeile(bezug, basis, nr, gesamt) Then Exit Function
+    ' Nachpruefung: im selben Lauf geloescht
+    If gBzNach Then
+        If BezugIndex(bezug) > 0 Then Exit Function
+    End If
+    n = NameAnzahlAlt(basis, exakt)
+    If nr > gesamt Then
+        WegPruefen = "Bezug " & Zitat(Trim(bezug)) & " ist nicht möglich (n größer als m)"
+    ElseIf n > gesamt Then
+        WegPruefen = "es gibt " & n & " Regeln " & Zitat(basis) & " statt " & gesamt & " – der Plan passt nicht mehr zum " & _
+                     "Stand in Outlook (Regeln neu lesen)"
+    ElseIf n < gesamt Then
+        hinweis = "es gibt " & IIf(n = 0, "keine Regel ", IIf(n = 1, "nur noch 1 Regel ", "nur noch " & n & " Regeln ")) & _
+                  Zitat(basis) & IIf(n = 0, " mehr", "") & " (statt " & gesamt & ")"
     End If
 End Function
 
@@ -358,7 +637,9 @@ Private Function BezugFinden(ByVal rest As String, ByRef ausweich As Boolean, By
     ersterBezug = Trim(rest)
     kandidat = RegelFinden(rest)
     If kandidat <> 0 Then
-        If kandidat = -1 Then grund = "Bezugsregel " & Zitat(Trim(rest)) & " ist mehrfach vergeben"
+        If kandidat = -1 Then grund = "Bezugsregel " & Zitat(Trim(rest)) & " ist mehrfach vergeben (als „Name #n/m“ ansprechen)"
+        If kandidat = -2 Then grund = "Bezugsregel " & Zitat(Trim(rest)) & " wird laut Plan gelöscht"
+        If kandidat < 0 Then kandidat = -1
         BezugFinden = kandidat
         Exit Function
     End If
@@ -374,8 +655,12 @@ Private Function BezugFinden(ByVal rest As String, ByRef ausweich As Boolean, By
         End If
         If erster Then ersterBezug = t
         kandidat = RegelFinden(t)
-        If kandidat = -1 Then
-            grund = "Bezugsregel " & Zitat(t) & " ist mehrfach vergeben"
+        If kandidat < 0 Then
+            If kandidat = -2 Then
+                grund = "Bezugsregel " & Zitat(t) & " wird laut Plan gelöscht"
+            Else
+                grund = "Bezugsregel " & Zitat(t) & " ist mehrfach vergeben (als „Name #n/m“ ansprechen)"
+            End If
             BezugFinden = -1
             Exit Function
         End If
@@ -409,8 +694,8 @@ Private Function PositionPruefen(ByVal id As Long, ByVal spec As String, ByVal a
     If Left(rest, 1) = ":" Then rest = Trim(Mid(rest, 2))
     If art = "platz" Then
         n = Val(rest)
-        If n < 1 Or n > mAnz Then
-            PositionPruefen = "Platz " & rest & " liegt außerhalb 1 bis " & mAnz
+        If n < 1 Or n > mPl Then
+            PositionPruefen = "Platz " & rest & " liegt außerhalb 1 bis " & mPl
             Exit Function
         End If
         erledigt = (Platz(id) = n)
@@ -768,11 +1053,13 @@ Public Function SchrittPruefen(ByVal k As Long, ByVal anwenden As Boolean, ByVal
             SchrittPruefen = "blockiert: neuer Name fehlt (Spalte " & SpaltenBuchstabe(SP_NEU) & ")"
             Exit Function
         End If
-        id = SucheName(pRegel(k))
+        id = RegelBezug(pRegel(k))
         idNeu = SucheName(nm)
         eKurz = "neuer Name " & Zitat(nm)
-        If id = -1 Or idNeu = -1 Then
-            SchrittPruefen = "blockiert: Regelname im Zielpostfach mehrfach vergeben"
+        If id < 0 Then
+            SchrittPruefen = NichtGefunden(k, pRegel(k), id)
+        ElseIf idNeu = -1 Then
+            SchrittPruefen = "blockiert: Regelname " & Zitat(nm) & " ist im Zielpostfach mehrfach vergeben"
         ElseIf id > 0 And idNeu = id Then
             gRegelId = id
             If mName(id) = nm Then
@@ -1270,6 +1557,111 @@ Public Function SchrittPruefen(ByVal k As Long, ByVal anwenden As Boolean, ByVal
             SchrittPruefen = "bereit · deaktivieren"
         End If
 
+    Case "LOESCHEN"
+        ' Spalte "Neuer Name / Position / Wert": "gleich: <Regel, die bleibt>" (Duplikat) oder "ohne Ersatz"
+        nm = Trim(pNeu(k))
+        qn = ""
+        If LCase(nm) = "duplikate" Then
+            ' Alle Regeln dieses Namens bis auf die erste: jede muss ein belegbares Duplikat der ersten sein
+            nmListe = NamensGruppe(pRegel(k), j)
+            If j = 0 Then
+                id = RegelFinden(pRegel(k))
+                If id = -2 Then
+                    SchrittPruefen = NichtGefunden(k, pRegel(k), id)
+                Else
+                    SchrittPruefen = "blockiert: Regel " & Zitat(pRegel(k)) & " nicht gefunden – bei „Duplikate“ steht in Spalte " & _
+                                     SpaltenBuchstabe(SP_REGEL) & " der Name, den alle Duplikate tragen"
+                End If
+                Exit Function
+            End If
+            typen = Split(nmListe, "|")
+            id = CLng(typen(1))
+            gRegelId = id
+            If j = 1 Then
+                SchrittPruefen = "schon erledigt · es gibt nur 1 Regel " & Zitat(mName(id)) & " (kein Duplikat)"
+                Exit Function
+            End If
+            For i = 2 To j
+                idNeu = CLng(typen(i))
+                b = DuplikatPruefen(idNeu, id)
+                If b <> "" Then
+                    SchrittPruefen = "blockiert: Regel auf Platz " & Platz(idNeu) & ": " & b & ". Einzelne Regeln lassen sich als " & _
+                                     Zitat("Name #n/m") & " ansprechen"
+                    Exit Function
+                End If
+                eWegIds = eWegIds & "|" & idNeu
+            Next i
+            eWegIds = eWegIds & "|"
+            eWegAnz = j - 1
+            eFall = "WEG": eId = 0: eAnker = id
+            eKurz = "löschen: " & eWegAnz & IIf(eWegAnz = 1, " Duplikat (", " Duplikate (") & PlatzText(eWegIds) & _
+                    "), es bleibt die Regel auf Platz " & Platz(id)
+            If anwenden Then
+                For i = 2 To j
+                    RegelEntfernen CLng(typen(i))
+                Next i
+            End If
+            pSpeichern(k) = True
+            SchrittPruefen = "bereit · " & eKurz
+            Exit Function
+        End If
+        If LCase(nm) <> "ohne ersatz" Then
+            If LCase(Left(nm, 6)) = "gleich" Then
+                qn = Trim(Mid(nm, 7))
+                If Left(qn, 1) = ":" Then qn = Trim(Mid(qn, 2))
+            End If
+            If qn = "" Then
+                SchrittPruefen = "blockiert: Begründung fehlt (Spalte " & SpaltenBuchstabe(SP_NEU) & "): „Duplikate“ (alle " & _
+                                 "gleichnamigen bis auf die erste), „gleich: <Regel, die bleibt>“ oder „ohne Ersatz“"
+                Exit Function
+            End If
+        End If
+        id = RegelFinden(pRegel(k))
+        If id < 0 Then
+            SchrittPruefen = NichtGefunden(k, pRegel(k), id)
+            Exit Function
+        End If
+        If id = 0 Then
+            b = WegPruefen(pRegel(k), hinweis)
+            If b <> "" Then
+                SchrittPruefen = "blockiert: " & b
+            Else
+                SchrittPruefen = "schon erledigt · " & hinweis
+            End If
+            Exit Function
+        End If
+        gRegelId = id
+        hinweis = ""
+        If qn = "" Then
+            eFall = "WEG": eId = id: eAnker = 0: eWegAnz = 1
+            eKurz = "löschen ohne Ersatz (Regel ist " & IIf(mAktiv(id), "eingeschaltet", "ausgeschaltet") & ")"
+            If Not mLesbar(id) Then hinweis = " · Regel nicht lesbar"
+        Else
+            idNeu = RegelFinden(qn)
+            If idNeu < 0 Then
+                SchrittPruefen = NichtGefunden(k, qn, idNeu)
+                Exit Function
+            End If
+            If idNeu = 0 Then
+                SchrittPruefen = "blockiert: Regel, die bleiben soll, nicht gefunden: " & Zitat(qn)
+                Exit Function
+            End If
+            If idNeu = id Then
+                SchrittPruefen = "blockiert: " & Zitat(qn) & " ist dieselbe Regel – eine Regel ist nicht ihr eigenes Duplikat"
+                Exit Function
+            End If
+            b = DuplikatPruefen(id, idNeu)
+            If b <> "" Then
+                SchrittPruefen = "blockiert: " & b
+                Exit Function
+            End If
+            eFall = "WEG": eId = id: eAnker = idNeu: eWegAnz = 1
+            eKurz = "löschen – Duplikat von " & Zitat(mName(idNeu)) & " (Platz " & Platz(idNeu) & ", bleibt)"
+        End If
+        If anwenden Then RegelEntfernen id
+        pSpeichern(k) = True
+        SchrittPruefen = "bereit · " & eKurz & hinweis
+
     Case Else
         SchrittPruefen = "blockiert: Aktion " & Zitat(pAktion(k)) & " unbekannt"
     End Select
@@ -1296,6 +1688,7 @@ End Function
 ' Rueckgabe: Anzahl blockierter Zeilen.
 Public Function Simulieren(ByVal ol As Object, ByVal ziel As Object) As Long
     Dim k As Long, n As Long
+    BezuegeLeeren
     ' Namen vor dem Durchspielen festhalten (der Plan benennt Regeln im Abbild um)
     gNichtLesbar = AnzahlNichtLesbar()
     gNamenNichtLesbar = NamenNichtLesbar(3)
@@ -1306,7 +1699,7 @@ Public Function Simulieren(ByVal ol As Object, ByVal ziel As Object) As Long
     gAbfangVorher = AbfangAnzahl()
     gNamenAbfangVorher = AbfangNamen(2)
     For k = 1 To pAnz
-        pStatus(k) = "": pKurz(k) = "": pFall(k) = "": pOhne(k) = False: pOhneNamen(k) = ""
+        pStatus(k) = "": pKurz(k) = "": pFall(k) = "": pOhne(k) = False: pOhneNamen(k) = "": pWegAnz(k) = 0
     Next k
     For k = 1 To pAnz
         If pAusf(k) Then
@@ -1314,6 +1707,7 @@ Public Function Simulieren(ByVal ol As Object, ByVal ziel As Object) As Long
             If gUmzugHinweis <> "" Then pStatus(k) = pStatus(k) & gUmzugHinweis
             pKurz(k) = eKurz
             pFall(k) = eFall
+            pWegAnz(k) = eWegAnz
             If Left(pStatus(k), 6) = "bereit" Then pOhneNamen(k) = eOhneNamen
             ' Aendert der Schritt eine Regel ohne sichtbare Bedingung, steht das in seiner Zeile (und in der Liste
             ' der Aenderungen vor dem Ausfuehren)

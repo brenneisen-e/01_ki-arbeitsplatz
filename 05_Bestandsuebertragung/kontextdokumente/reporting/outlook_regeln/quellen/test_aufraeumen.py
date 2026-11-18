@@ -166,7 +166,7 @@ pruefe('ohne Wirkung' in auf['plan'][-1]['warum'] and 'Nummer im Namen' in auf['
        'Begründung der Umstellung nennt das Urteil', auf['plan'][-1]['warum'])
 pruefe([z['neu'] for z in auf['verdeckt']] == ['32 Verteilung'] and auf['verdeckt'][0]['verdeckt_von']['neu'] == '31 Kennzeichnung',
        'Meldet die Regel, die nie greift, und von wem sie verdeckt wird')
-pruefe('Greift nie' in ' '.join(a.hinweise(auf['verdeckt'][0])) and 'Reihenfolge geprüft: 2 Platztausch(e) – 2 ohne Wirkung' in a.pruef_text(auf),
+pruefe('Greift nie' in ' '.join(a.hinweise(auf['verdeckt'][0])) and a.pruef_text(auf) == 'Reihenfolge geprüft: 2 Platztausche – 2 ohne Wirkung  ·  1 Regel greift nie (siehe Hinweis)',
        'Hinweis und Zusammenfassung in Worten', a.pruef_text(auf))
 
 # Verdeckte Regel nach vorn holen: nur mit Bestätigung

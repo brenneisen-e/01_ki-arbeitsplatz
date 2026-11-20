@@ -16,14 +16,15 @@ const ANSICHTEN = REITER.map(r => r.id)
  * Ziel aus dem URL-Hash, damit sich jede Stelle direkt verlinken lässt:
  *   #strecke            eine Ansicht
  *   #beispiel-3         Beispielanfrage 3, Original und Deckblatt nebeneinander
- *   #praesentation      die Präsentation, mit #praesentation-3 an Beispiel 3
+ *   #praesentation      die Präsentation, mit #praesentation-3 an Beispiel 3,
+ *                       mit #praesentation-3-2 gleich in Schritt 2 (fertig gelesen)
  */
 function zielAusHash() {
   const hash = window.location.hash.replace(/^#\/?/, '')
-  const treffer = /^(beispiel|praesentation)(?:-?(\d+))?$/.exec(hash)
+  const treffer = /^(beispiel|praesentation)(?:-?(\d+))?(?:-([1-6]))?$/.exec(hash)
   if (treffer) {
     const beispiel = treffer[2] ? BEISPIELE.find(v => v.beispiel === Number(treffer[2])) || null : null
-    return { ansicht: 'uebersicht', art: treffer[1], beispiel }
+    return { ansicht: 'uebersicht', art: treffer[1], beispiel, schritt: treffer[3] ? Number(treffer[3]) - 1 : 0 }
   }
   return { ansicht: ANSICHTEN.includes(hash) ? hash : 'uebersicht', art: null, beispiel: null }
 }
@@ -42,7 +43,7 @@ function AppContent() {
       const ziel = zielAusHash()
       setActiveView(ziel.ansicht)
       if (ziel.art === 'beispiel' && ziel.beispiel) setOffen({ vorgang: ziel.beispiel, schritt: 0 })
-      if (ziel.art === 'praesentation') setPraesentation({ offen: true, start: 0, vorgangId: ziel.beispiel?.id || null })
+      if (ziel.art === 'praesentation') setPraesentation({ offen: true, start: ziel.schritt, vorgangId: ziel.beispiel?.id || null })
     }
     // Ein Direktlink auf ein Beispiel oder die Präsentation gilt auch beim ersten Laden.
     if (zielAusHash().art) ausHash()

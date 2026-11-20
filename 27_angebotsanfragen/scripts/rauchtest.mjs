@@ -298,6 +298,25 @@ async function direktaufrufe(marke) {
   erwarte(await aktiv(), '1', 'Präsentation, Taste 1')
   await seite.keyboard.press('Escape'); await seite.waitForTimeout(300)
 
+  // Direktlink gleich in Schritt 2: fertig gelesen, ohne Animation; die Pfeile blättern im selben Schritt weiter
+  const gelesen = () => seite.locator('[data-praesentation] [data-fundstelle-hinweis]').count()
+  await seite.goto('about:blank')
+  await seite.goto(`${BASIS}#praesentation-4-2`, { waitUntil: 'networkidle' }); await seite.waitForTimeout(500)
+  erwarte(await aktiv(), '4', 'Direktlink #praesentation-4-2')
+  if (!(await gelesen())) melde(marke, 'Direktlink #praesentation-4-2', 'Schritt 2 steht nicht im fertig gelesenen Stand')
+  await seite.locator('[data-praesentation] [data-beispiel-weiter]').click(); await seite.waitForTimeout(400)
+  erwarte(await aktiv(), '5', 'Pfeil „Nächstes Beispiel“ in Schritt 2')
+  if (!(await gelesen())) melde(marke, 'Pfeil „Nächstes Beispiel“', 'das nächste Beispiel steht nicht im fertig gelesenen Stand')
+  await seite.keyboard.press('Escape'); await seite.waitForTimeout(300)
+
+  // Kachel „Ab Schritt 2“ der Übersicht
+  await seite.goto('about:blank')
+  await seite.goto(BASIS, { waitUntil: 'networkidle' })
+  await seite.locator('[data-ab-schritt-2]').nth(2).click(); await seite.waitForTimeout(500)
+  erwarte(await aktiv(), '3', 'Kachel „Ab Schritt 2“ von Beispiel 3')
+  if (!(await gelesen())) melde(marke, 'Kachel „Ab Schritt 2“', 'öffnet nicht den fertig gelesenen Schritt 2')
+  await seite.keyboard.press('Escape'); await seite.waitForTimeout(300)
+
   // Kacheln der Übersicht
   await seite.goto('about:blank')
   await seite.goto(BASIS, { waitUntil: 'networkidle' })

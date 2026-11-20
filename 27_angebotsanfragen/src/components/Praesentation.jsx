@@ -54,7 +54,7 @@ import Legende from './Legende'
  * Läuft die Phasen einer Szene ab: `dauern[i]` ist die Zeit von Phase i nach
  * i+1. Ein Wechsel des Schlüssels beginnt von vorn.
  */
-function useAblauf(dauern, schluessel) {
+function useAblauf(dauern, schluessel, sofort = false) {
   const [phase, setPhase] = useState(0)
   const timer = useRef([])
 
@@ -64,6 +64,8 @@ function useAblauf(dauern, schluessel) {
   }, [])
 
   useEffect(() => {
+    // Ohne Animation: Die Szene steht gleich im fertigen Stand (Wechsel des Eingangs, Direktlink in einen Schritt).
+    if (sofort) { setPhase(dauern.length); return stopp }
     setPhase(0)
     let summe = 0
     timer.current = dauern.map((ms, i) => {
@@ -1120,10 +1122,19 @@ function Prozessleiste({ aktiv, aufSchritt }) {
 function Eingangswahl({ vorgang, aufWahl }) {
   const [offen, setOffen] = useState(false)
   const uebrige = VORGAENGE.filter(v => !v.beispiel)
+  // Pfeile blättern durch die Beispielanfragen, nach der letzten wieder zur ersten.
+  const stelle = BEISPIELE.findIndex(v => v.id === vorgang.id)
+  const blaettere = (richtung) => {
+    const n = BEISPIELE.length
+    const ziel = stelle < 0 ? (richtung > 0 ? 0 : n - 1) : (stelle + richtung + n) % n
+    aufWahl(BEISPIELE[ziel].id)
+  }
+  const pfeil = 'w-8 h-8 rounded-lg text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-colors'
   return (
     <div className="relative shrink-0">
       <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white p-1">
-        <span className="px-2 text-2xs uppercase tracking-wide text-slate-400">Beispiel</span>
+        <button data-beispiel-zurueck onClick={() => blaettere(-1)} title="Vorheriges Beispiel" className={pfeil}><ChevronLeft size={16} /></button>
+        <span className="px-1 text-2xs uppercase tracking-wide text-slate-400">Beispiel</span>
         {BEISPIELE.map(v => (
           <button key={v.id} onClick={() => aufWahl(v.id)} title={`${v.kunde} · ${v.form}`}
             className={clsx('w-8 h-8 rounded-lg text-sm font-semibold transition-colors', v.id === vorgang.id ? 'text-white' : 'text-slate-600 hover:bg-slate-100')}
@@ -1131,6 +1142,7 @@ function Eingangswahl({ vorgang, aufWahl }) {
             {v.beispiel}
           </button>
         ))}
+        <button data-beispiel-weiter onClick={() => blaettere(1)} title="Nächstes Beispiel" className={pfeil}><ChevronRight size={16} /></button>
         <button onClick={() => setOffen(o => !o)} title="Weitere Eingänge"
           className={clsx('h-8 px-2 rounded-lg text-xs transition-colors flex items-center gap-1', !vorgang.beispiel ? 'text-white' : 'text-slate-500 hover:bg-slate-100')}
           style={!vorgang.beispiel ? { backgroundColor: 'var(--mode-primary-light)' } : undefined}>
@@ -1182,13 +1194,18 @@ export default function Praesentation({ offen, startSchritt = 0, startVorgangId 
     [500, 3400]
   ], [lauf, leseliste])
 
-  const { phase, fertig, abschliessen } = useAblauf(dauern[schritt], `${durchlauf}-${schritt}-${vorgangId}`)
+  // Für diesen Schritt und Eingang entfällt die Animation: Wer mitten in der Strecke den Eingang wechselt
+  // oder per Direktlink in einen Schritt springt, will das Ergebnis sehen, nicht noch einmal den Aufbau.
+  const [sofortFuer, setSofortFuer] = useState(null)
+  const { phase, fertig, abschliessen } = useAblauf(dauern[schritt], `${durchlauf}-${schritt}-${vorgangId}`, sofortFuer === `${schritt}-${vorgangId}`)
 
   useEffect(() => {
     if (!offen) return
     // Wer die Präsentation an einer Beispielanfrage startet, sieht genau diese.
     if (startVorgangId) setVorgangId(startVorgangId)
+    setSofortFuer(startSchritt > 0 ? `${startSchritt}-${startVorgangId || vorgangId}` : null)
     setSchritt(startSchritt); setGestartet(startSchritt > 0); setDurchlauf(d => d + 1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offen, startSchritt, startVorgangId])
 
   const start = useCallback(() => { setGestartet(true); setDurchlauf(d => d + 1) }, [])
@@ -1218,10 +1235,20 @@ export default function Praesentation({ offen, startSchritt = 0, startVorgangId 
 
   const waehleEingang = useCallback((id) => {
     setVorgangId(id)
+    setSofortFuer(null)
     setSchritt(0)
     setGestartet(false)
     setDurchlauf(d => d + 1)
   }, [])
+
+  // Eingang wechseln, ohne die Strecke zu verlassen: Ab Schritt 2 bleibt der Schritt stehen und zeigt den
+  // anderen Eingang gleich im fertigen Stand. Davor beginnt der neue Eingang wie gewohnt von vorn.
+  const wechsleEingang = useCallback((id) => {
+    if (!gestartet || schritt === 0) { waehleEingang(id); return }
+    setSofortFuer(`${schritt}-${id}`)
+    setVorgangId(id)
+    setDurchlauf(d => d + 1)
+  }, [gestartet, schritt, waehleEingang])
 
   useEffect(() => {
     if (!offen) return
@@ -1236,12 +1263,12 @@ export default function Praesentation({ offen, startSchritt = 0, startVorgangId 
       // Ziffern rufen die Beispielanfragen direkt auf: 1 für Beispiel 1 und so weiter.
       else if (/^[1-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
         const ziel = BEISPIELE.find(v => v.beispiel === Number(e.key))
-        if (ziel) { e.preventDefault(); waehleEingang(ziel.id) }
+        if (ziel) { e.preventDefault(); wechsleEingang(ziel.id) }
       }
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [offen, weiter, zurueck, vonVorn, schliessen, waehleEingang])
+  }, [offen, weiter, zurueck, vonVorn, schliessen, wechsleEingang])
 
   // Die Präsentation ist für 1920 × 1080 gebaut und skaliert wie eine Folie:
   // Auf kleineren und größeren Fenstern (Laptop, Bildschirmfreigabe, großer
@@ -1320,7 +1347,7 @@ export default function Praesentation({ offen, startSchritt = 0, startVorgangId 
             <span className="ml-auto flex items-center gap-2.5 shrink-0">
               {schritt >= 3 && <span className={clsx('text-xs px-2.5 py-1 rounded-full border inline-flex items-center gap-1.5', e.badge)}><e.Icon size={12} /> {e.titel}</span>}
               <span className="text-sm text-slate-600 max-w-[15rem] truncate max-xl:hidden" title={`${herkunft(vorgang)} · ${vorgang.kunde}`}>{vorgang.kunde}</span>
-              <Eingangswahl vorgang={vorgang} aufWahl={waehleEingang} />
+              <Eingangswahl vorgang={vorgang} aufWahl={wechsleEingang} />
             </span>
           </div>
           {gestartet ? szene : <Startseite vorgang={vorgang} />}

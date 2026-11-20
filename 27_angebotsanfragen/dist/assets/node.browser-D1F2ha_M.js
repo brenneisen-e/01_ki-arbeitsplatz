@@ -1,0 +1,1 @@
+import{A as o}from"./ai-anfrage-hr9wNDE0.js";import"./index-Cp9So7Hy.js";import"./vendor-lucide-BjRG2t-W.js";import"./vendor-react-DbHbq1Sd.js";function n(e){return new Proxy({},{get(i,t){if(typeof t!="symbol")throw new o(`\`${e}.${t}\` is not available in this environment; it needs a Node.js-compatible runtime`)}})}const p=n("fs"),f=n("path");export{p as fs,f as path};

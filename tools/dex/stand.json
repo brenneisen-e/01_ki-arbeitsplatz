@@ -359,19 +359,19 @@
   },
   "27_angebotsanfragen": {
     "ordner": "27_angebotsanfragen",
-    "pruefsumme": "6a7a8d079d755c210b1473700f8bc76011f57dcf0982f239a9d97c91128336b5",
-    "groesse": 4039030,
+    "pruefsumme": "a81f82ce7620b0077f813addbca694979bf6afd82393fdda8d317f43b16c2578",
+    "groesse": 4039918,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "27_angebotsanfragen",
       "titel": "Angebotsanfragen",
       "beschreibung": "Vom Vermittlerschreiben zum Deckblatt: Die KI liest Angebotsanfragen samt Anhängen, zeigt zu jedem Wert die Fundstelle im Original, erkennt Fehlendes und formuliert die Rückfrage vor.",
-      "version": "1.0.3",
-      "gebaut": "2026-11-18T18:10:23Z",
+      "version": "1.0.4",
+      "gebaut": "2026-11-20T09:05:35Z",
       "quelle": {
         "repo": "brenneisen-e/01_ki-arbeitsplatz",
-        "commit": "703041de0ee49200f2b325d7f68aa906f204dca0"
+        "commit": "08f45d543d225155b50b56285c02a25138a319f9"
       },
       "start": "index.html",
       "single": true,

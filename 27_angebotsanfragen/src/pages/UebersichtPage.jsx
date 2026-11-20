@@ -8,7 +8,7 @@
  */
 
 import { useMemo, useState } from 'react'
-import { Search, Inbox, FileSpreadsheet, Paperclip, ChevronRight, Presentation, Play, Columns2 } from 'lucide-react'
+import { Search, Inbox, FileSpreadsheet, Paperclip, ChevronRight, Presentation, Play, Columns2, FastForward } from 'lucide-react'
 import { VORGAENGE, BEISPIELE } from '../daten/vorgaenge'
 import { auswertung, haeufigFehlend } from '../utils/pruefengine'
 import { layoutVon, ANGEBOTSLAYOUTS } from '../utils/layouts'
@@ -47,7 +47,8 @@ function Balkenliste({ titel, hinweis, eintraege, einheit }) {
 /**
  * Die Beispielanfragen aus dem Fachbereich, jede direkt aufrufbar: Öffnen
  * zeigt Original und Deckblatt nebeneinander, Präsentieren führt die Strecke
- * an genau diesem Eingang vor.
+ * an genau diesem Eingang vor, „Ab Schritt 2“ überspringt den Einstieg und
+ * öffnet die Präsentation beim fertig gelesenen Eingang.
  */
 function Beispielleiste({ laeufe, onOpenVorgang, onPraesentation }) {
   if (BEISPIELE.length === 0) return null
@@ -86,6 +87,10 @@ function Beispielleiste({ laeufe, onOpenVorgang, onPraesentation }) {
                 <button onClick={() => onPraesentation(0, v.id)} title={`Präsentation mit Beispiel ${v.beispiel} starten`}
                   className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 inline-flex items-center justify-center gap-2 whitespace-nowrap">
                   <Play size={14} /> Präsentieren
+                </button>
+                <button data-ab-schritt-2 onClick={() => onPraesentation(1, v.id)} title="Präsentation gleich in Schritt 2 öffnen: Die KI hat den Eingang schon gelesen"
+                  className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 inline-flex items-center justify-center gap-2 whitespace-nowrap">
+                  <FastForward size={14} /> Ab Schritt 2
                 </button>
               </span>
             </div>

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { clsx } from 'clsx';
 import { AlertTriangle, Lightbulb, ArrowRight, ChevronLeft, ChevronDown, ChevronUp, X, Play } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
+import { useNotizenStelle } from '../../notizen/stand';
 import { SCHRITTE } from './schritte';
 
 // Präsentationsmodus: geführter Durchlauf durch die echte Oberfläche. Ein
@@ -63,6 +64,9 @@ export default function Praesentation() {
   const [schritt, setSchritt] = useState(0);
   const [minimiert, setMinimiert] = useState(false);
   const [rect, setRect] = useState(null);
+  // Das Notizfenster kennt den Schritt: am letzten (anstehende Termine) zeigt
+  // es den Abschnitt zur Gesprächsvorbereitung statt des Tagesstarts (src/notizen).
+  useNotizenStelle('praesSchritt', aktiv ? SCHRITTE[schritt].id : null);
 
   // Immer die aktuelle Navigation, auch aus Zeitgebern heraus.
   const apiRef = useRef(null);

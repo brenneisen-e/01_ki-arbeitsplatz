@@ -8,6 +8,9 @@
 //           größeren Sprung hier z. B. '1.1.0' eintragen.
 // start     Startadresse relativ zu app/ bzw. single.html
 // single    false, wenn single.html nicht sinnvoll baubar ist (Videos, > 25 MB)
+// ohne      Dateien aus dist/, die nicht ins Paket gehören (Pfade relativ zu dist/,
+//           * steht für beliebige Zeichen außer /), z. B. das Notizfenster mit den
+//           Speakernotes einer Vorführung
 // api       Server-Funktionen der Plattform (Cloudflare functions/), die lokal fehlen
 // benoetigtInternet  Schriften, Logos, Karten, CDNs oder direkte KI-Aufrufe aus dem Netz
 
@@ -115,6 +118,8 @@ const LISTE = [
     titel: 'KI-Vertriebsarbeitsplatz',
     beschreibung: 'Cockpit für Berater in Versicherung, Banking und Vermögensverwaltung: Kundenakte, KI-Leads, Termine und Vertriebsassistent.',
     start: 'index.html#/versicherung/landing', benoetigtInternet: true, api: ['/api/claude'],
+    // Das Notizfenster (eigener Build, vite.notizen.config.js) bleibt auf der Plattform.
+    ohne: ['speakernotes.html', 'assets/speakernotes-*'],
   },
   {
     ordner: '23_VSTCockpit', art: 'vite', version: '1.0.0',

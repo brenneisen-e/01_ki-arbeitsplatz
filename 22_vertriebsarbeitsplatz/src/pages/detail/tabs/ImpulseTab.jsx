@@ -12,6 +12,7 @@ import HerleitungBlock from '../../../components/ui/HerleitungBlocks';
 import { KiZusammenfassung, teileHerleitung, DatenquellenLeiste, FaktenPanel, AktionenLeiste } from '../../../components/ui/ImpulsHerleitung';
 import { interpolateDynamicDates } from '../../../utils/dynamicDates';
 import { getHaustierConfirmation } from '../../../utils/haustierConfirmation';
+import { useNotizenStelle } from '../../../notizen/stand';
 
 // Rekursive Interpolation für strukturierte Daten (Strings, Arrays, Objekte).
 // Der Kontext enthält insb. `institut`, damit Banking-Institut-spezifische
@@ -188,6 +189,11 @@ export default function ImpulseTab({ kunde }) {
     });
     return g;
   }, [potentiale]);
+
+  // Das Notizfenster springt weiter, sobald der Top-Lead aufgeklappt ist (src/notizen).
+  const [offeneKategorie, offenerIndex] = (expandedIndex || '').split('-');
+  const offenerLead = openCategories[offeneKategorie] ? gruppiert[offeneKategorie]?.[Number(offenerIndex)] : null;
+  useNotizenStelle('topLead', !!offenerLead && istTopLead(offenerLead, kunde.id, topLead));
 
   return (
     <div className="space-y-4">
@@ -416,7 +422,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
                       onAnschreiben={onAnschreiben}
                       anschreibenLabel={t('anschreibenFormulieren')}
                       aktionLabel={aktionLabel}
-                      produkt={p.produktEmpfehlung}
+                      produkt={interpolateDynamicDates(p.produktEmpfehlung, ctx)}
                     />
                   )}
                 />

@@ -1,0 +1,350 @@
+/* Notizfenster des Vertriebsarbeitsplatzes: dunkler Teleprompter, Sätze als
+   Stichpunkte, feste Kopfzeile. Schrift und Farben des Cockpits (Uniform, warme
+   Neutraltöne, Gold als Akzent, die Modusfarbe als Füllung), aber auf dunklem
+   Grund: das Fenster liegt beim Vortrag über anderen Bildschirmen und gehört
+   nicht zur gezeigten Oberfläche. Alle Farben als Tokens auf :root. */
+@font-face { font-family: 'Uniform'; src: url('../schrift/uniform-regular.woff2') format('woff2');
+             font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform'; src: url('../schrift/uniform-medium.woff2') format('woff2');
+             font-weight: 500 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('../schrift/uniformtab-regular.woff2') format('woff2');
+             font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Uniform Tab'; src: url('../schrift/uniformtab-medium.woff2') format('woff2');
+             font-weight: 500 900; font-style: normal; font-display: swap; }
+
+:root {
+  --bg: #121110;
+  --bg-2: #1c1a17;
+  --bg-kopf: rgba(18, 17, 16, 0.92);
+  --flaeche: rgba(250, 249, 247, 0.06);
+  --flaeche-hover: rgba(250, 249, 247, 0.12);
+  --ink: #faf9f7;
+  --ink-2: #d9d5cd;
+  --ink-3: #a39d94;
+  --linie: rgba(250, 249, 247, 0.12);
+  --linie-stark: rgba(250, 249, 247, 0.2);
+  --fehler: #e39a8c;
+  --fehler-linie: #c23b3b;
+  /* Versicherung: Gold auf Bordeaux */
+  --akzent: #c9a54a;
+  --akzent-tief: #6b1d2a;
+  --akzent-tief-hover: #8d2839;
+  /* Höhe der festen Kopfzeile, misst Notizen.jsx nach */
+  --kopf: 92px;
+  --schrift: 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --ziffern: 'Uniform Tab', 'Uniform', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Banking: Gold auf Oliv */
+:root[data-modus='banking'] {
+  --akzent: #c2ae48;
+  --akzent-tief: #46552b;
+  --akzent-tief-hover: #61753a;
+}
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--schrift);
+  font-weight: 400;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+
+.kopf {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 10px 14px 8px;
+  background: var(--bg-kopf);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--linie);
+}
+
+.kopfZeile {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.timer {
+  font-family: var(--ziffern);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  min-width: 2.7em;
+  padding-left: 2px;
+  color: var(--ink);
+}
+
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  min-width: 32px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--linie);
+  background: var(--flaeche);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.knopf:hover { background: var(--flaeche-hover); }
+.knopf:focus-visible, .chip:focus-visible, .skriptWahl:focus-visible { outline: 2px solid var(--akzent); outline-offset: 2px; }
+.knopf[data-an] { border-color: var(--akzent); color: var(--akzent); }
+.knopf:disabled { opacity: 0.35; cursor: default; }
+.knopf:disabled:hover { background: var(--flaeche); }
+.knopf[data-ruf] { background: var(--akzent-tief); border-color: var(--akzent-tief); color: var(--ink); }
+.knopf[data-ruf]:hover { background: var(--akzent-tief-hover); }
+
+/* Skriptwahl: dunkles Auswahlfeld im Stil der Knöpfe, ganz links im Kopf. */
+.skriptWahl {
+  max-width: 132px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: 8px;
+  border: 1px solid var(--linie-stark);
+  background: var(--flaeche);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.skriptWahl:hover { background: var(--flaeche-hover); }
+.skriptWahl option { background: var(--bg-2); color: var(--ink); }
+
+.schriftWert {
+  min-width: 1.6em;
+  text-align: center;
+  font-family: var(--ziffern);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.trenner { width: 1px; height: 22px; background: var(--linie); margin: 0 1px; }
+
+/* Sprungchips je Abschnitt: brechen in schmalen Fenstern um, statt
+   abgeschnitten zu werden; die Sprungziele rechnen mit der gemessenen Höhe. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--linie);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.chip:hover { color: var(--ink); border-color: var(--linie-stark); }
+.chip[data-aktiv] { background: var(--akzent-tief); border-color: var(--akzent-tief); color: var(--ink); }
+.chipMarke { font-family: var(--ziffern); font-size: 11px; opacity: 0.85; }
+
+main {
+  padding: 14px 18px 60vh;
+  max-width: 820px;
+  line-height: 1.45;
+}
+
+details {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+  background: var(--bg-2);
+  font-size: 0.72em;
+  color: var(--ink-2);
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+details ul { padding-left: 18px; }
+details li { margin: 0 0 6px; }
+details p { margin: 8px 0; }
+
+h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 26px 0 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--linie);
+  font-size: 1em;
+  font-weight: 500;
+  color: var(--akzent);
+  scroll-margin-top: calc(var(--kopf) + 6px);
+}
+
+h2 .marke {
+  font-family: var(--ziffern);
+  font-size: 0.85em;
+  color: var(--ink-3);
+}
+
+h2 .dauer { font-size: 0.7em; font-weight: 400; color: var(--ink-3); }
+
+/* Regieanweisung. Die Stelle, an der der Arbeitsplatz gerade steht, trägt die
+   Akzentfarbe an der Kante. */
+.regie {
+  margin: 14px 0 8px;
+  padding-left: 10px;
+  border-left: 2px solid var(--linie);
+  font-size: 0.74em;
+  color: var(--ink-3);
+  scroll-margin-top: calc(var(--kopf) + 14px);
+}
+
+.regie[data-aktiv] { border-left-color: var(--akzent); color: var(--ink-2); }
+
+ul.rede {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+ul.rede li {
+  position: relative;
+  padding-left: 20px;
+  margin: 0 0 24px;
+}
+
+ul.rede li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--akzent);
+}
+
+b { color: var(--ink); font-weight: 500; }
+ul.rede b { color: var(--akzent); }
+
+.kasten {
+  margin: 6px 0 12px;
+  padding: 10px 12px 4px;
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+  background: var(--bg-2);
+}
+
+.kasten.optional { background: transparent; border-style: dashed; }
+
+.etikett {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.62em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+
+table.zahlen { width: 100%; border-collapse: collapse; margin: 8px 0 12px; }
+table.zahlen th, table.zahlen td { padding: 4px 6px; border-bottom: 1px solid var(--linie); text-align: left; vertical-align: top; }
+table.zahlen th { font-weight: 500; color: var(--ink); }
+table.zahlen th:last-child, table.zahlen td:last-child { text-align: right; white-space: nowrap; font-family: var(--ziffern); }
+.quellen a { color: var(--akzent); word-break: break-all; }
+
+/* Zugang: Kennwortkarte, bevor die Notizen erscheinen (Zugang.jsx). */
+.zugang {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.zugangKarte {
+  width: min(360px, 100%);
+  padding: 24px 24px 22px;
+  border-radius: 14px;
+  border: 1px solid var(--linie);
+  background: var(--bg-2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.zugangIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in oklab, var(--akzent) 16%, transparent);
+  color: var(--akzent);
+}
+
+.zugangKarte h1 { margin: 4px 0 0; font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
+.zugangKarte p { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.5; }
+.zugangKarte p.zugangFehler { color: var(--fehler); }
+
+.zugangFeld {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.zugangFeld input {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 9px;
+  border: 1px solid var(--linie-stark);
+  background: var(--flaeche);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+}
+
+.zugangFeld input:focus { outline: none; border-color: var(--akzent); }
+.zugangFeld input[aria-invalid] { border-color: var(--fehler-linie); }
+
+.zugangKnopf {
+  height: 40px;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--akzent-tief);
+  border-color: var(--akzent-tief);
+  color: var(--ink);
+}
+
+.zugangKnopf:hover { background: var(--akzent-tief-hover); }
+.zugangKnopf:disabled { opacity: 0.5; cursor: default; }

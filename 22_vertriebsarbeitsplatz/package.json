@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --config vite.notizen.config.js",
     "preview": "vite preview",
+    "vorschau": "vite preview --port 4322 --strictPort --host 127.0.0.1",
+    "notizen-test": "node scripts/notizen-test.mjs",
     "pack": "node ../tools/dex/pack.mjs 22_vertriebsarbeitsplatz"
   },
   "dependencies": {

@@ -198,6 +198,21 @@ function ergaenzeEinzeldatei(html, id, tabelle) {
   return { html, ersetzt: r.ersetzt, dateien: r.genutzt.size, uebrig }
 }
 
+// Dateien, die eine App aus ihrem Paket heraushält (`ohne` in apps.mjs). Ein
+// Muster, das nichts trifft, ist ein Fehler: dann hieße die Datei inzwischen
+// anders und läge unbemerkt im Paket.
+function entferneAusgenommenes(ordner, muster = []) {
+  for (const m of muster) {
+    const re = new RegExp(`^${m.split('*').map(reEsc).join('[^/]*')}$`)
+    const treffer = alleDateien(ordner).filter((rel) => re.test(rel))
+    if (!treffer.length) fehler(`„ohne: ${m}“ trifft keine Datei in ${path.relative(WURZEL, ordner)}`)
+    for (const rel of treffer) {
+      fs.rmSync(path.join(ordner, rel))
+      log(`    nicht im Paket: ${rel}`)
+    }
+  }
+}
+
 function setzeFlag(html) {
   html = html.replace(KNOPF_SKRIPT_RE, '')
   if (html.includes(FLAG)) return html
@@ -223,6 +238,7 @@ async function packeVite(app, ziel) {
   // app/ = dist, Knopf aus, Merker an
   const appZiel = path.join(ziel, 'app')
   fs.cpSync(dist, appZiel, { recursive: true })
+  entferneAusgenommenes(appZiel, app.ohne)
   for (const rel of alleDateien(appZiel).filter((r) => r.endsWith('.html'))) {
     const p = path.join(appZiel, rel)
     fs.writeFileSync(p, setzeFlag(lies(p)))

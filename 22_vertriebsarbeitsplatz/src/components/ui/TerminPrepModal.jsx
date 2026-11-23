@@ -10,6 +10,7 @@ import { useMode } from '../../hooks/useMode';
 import LogoImg from './LogoImg';
 import { formatEur, berechneAnlagevolumen, berechneKreditvolumen, berechneHaushaltsnetto, berechneFrei } from '../../utils/formatters';
 import useTranslation from '../../i18n/useTranslation';
+import { useNotizenStelle } from '../../notizen/stand';
 import { tx } from '../../utils/langHelper';
 
 // Portal-Ziel für Modals: der Modus-Wrapper (data-mode), damit die
@@ -30,6 +31,8 @@ function portalRoot() {
  */
 export default function TerminPrepModal({ kunde, termin, onClose }) {
   const { t, lang } = useTranslation();
+  // Das Notizfenster springt mit, solange die Vorbereitung offen ist (src/notizen).
+  useNotizenStelle('vorbereitung');
   const [phase, setPhase] = useState('loading');
   const [kiOfferOpen, setKiOfferOpen] = useState(false);
   const [kiOfferMode, setKiOfferMode] = useState('avatar');

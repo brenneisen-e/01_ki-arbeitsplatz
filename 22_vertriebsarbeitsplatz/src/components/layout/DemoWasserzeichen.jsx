@@ -1,4 +1,6 @@
 import useTranslation from '../../i18n/useTranslation';
+import { NOTIZEN_MOEGLICH } from '../../notizen/stand';
+import { oeffneNotizen } from '../../notizen/kopplung';
 
 // Dieselbe Logo-Quelle wie die Landing Page (öffentlicher Publishable-Key von
 // logo.dev, wie in den übrigen Apps des Repos); fällt auf das lokale Logo zurück.
@@ -11,8 +13,21 @@ const DELOITTE_LOGO_LOKAL = 'images/6364529b74a1f1454594542e_Monitor Deloitte Lo
 // Zeigerereignisse an und liegt über dem Kopf, aber unter Modals. Die oberste
 // Zeile des GlobalHeader hält mit pt-14 den Streifen darunter frei, damit die
 // Lasche auch bei schmalen Fenstern keinen Knopf überdeckt.
+//
+// Einzige Ausnahme von „keine Zeigerereignisse“: Die Deloitte-Kachel öffnet
+// unauffällig das Notizfenster mit den Speakernotes (src/notizen), wie das
+// Deloitte-Logo im Strukturbild von Banking Horizon. Kein sichtbarer Knopf,
+// nicht in der Tab-Reihenfolge; im Rahmen und im DEX-Paket bleibt sie Bild.
 export default function DemoWasserzeichen() {
   const { t } = useTranslation();
+  const logo = (
+    <img
+      src={DELOITTE_LOGO}
+      alt="Deloitte"
+      className="h-6 w-auto object-contain rounded-[5px]"
+      onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = DELOITTE_LOGO_LOKAL; }}
+    />
+  );
   return (
     <div
       aria-hidden="true"
@@ -29,12 +44,18 @@ export default function DemoWasserzeichen() {
       <span className="flex items-center gap-2 leading-none">
         {/* Dunkle Deloitte-Kachel („D.“) wie auf der Landing Page, gleiche Quelle
             und gleicher Rückfall auf das lokale Logo. */}
-        <img
-          src={DELOITTE_LOGO}
-          alt="Deloitte"
-          className="h-6 w-auto object-contain rounded-[5px]"
-          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = DELOITTE_LOGO_LOKAL; }}
-        />
+        {NOTIZEN_MOEGLICH ? (
+          <button
+            type="button"
+            tabIndex={-1}
+            data-notizen-oeffnen
+            title={t('notizenOeffnen')}
+            onClick={(e) => { e.currentTarget.blur(); oeffneNotizen(); }}
+            className="pointer-events-auto cursor-pointer rounded-[5px] leading-none"
+          >
+            {logo}
+          </button>
+        ) : logo}
         <span className="text-[12px] font-semibold uppercase tracking-[0.2em] text-(--text-primary)">{t('wasserzeichenDemo')}</span>
       </span>
       <span className="mt-1.5 text-[10px] leading-none tracking-wide text-(--text-tertiary)">{t('wasserzeichenSynthetisch')}</span>

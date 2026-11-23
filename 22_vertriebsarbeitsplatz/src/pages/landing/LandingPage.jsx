@@ -13,6 +13,7 @@ import TerminPrepModal from '../../components/ui/TerminPrepModal';
 import LogoImg from '../../components/ui/LogoImg';
 import { PraesentationsKnopf } from '../../components/praesentation/Praesentation';
 import { NUR_WHITELABEL, RUECKWEG, sichtbareVarianten, whitelabelVariante, zurueckInDenRahmen } from '../../utils/einbettung';
+import { useNotizenStelle } from '../../notizen/stand';
 
 // Demo-Private-Banking-Ansprechpartner. Die Landing-Page kennt keine echten
 // Kollegen-Stammdaten, daher ein fester kleiner Pool – passt zur Demo-Logik
@@ -112,6 +113,9 @@ export default function LandingPage() {
     } catch {}
     return modeId || 'versicherung';
   });
+  // Das Notizfenster zeigt das Skript des hier gewählten Moduls: die Adresse
+  // bleibt auf der Landing Page beim Startmodus (src/notizen).
+  useNotizenStelle('landingModus', activeModule);
   const [selectedVariant, setSelectedVariant] = useState(() => {
     if (NUR_WHITELABEL) return whitelabelVariante(modeId || 'versicherung');
     try {

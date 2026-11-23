@@ -9,6 +9,7 @@ import DemoWasserzeichen from './components/layout/DemoWasserzeichen';
 import Praesentation from './components/praesentation/Praesentation';
 import { ScreenRecorderProvider } from './components/ScreenRecorder';
 import WhitelabelRahmen from './components/layout/WhitelabelRahmen';
+import NotizenKopplung from './notizen/kopplung';
 
 const AppFallback = (
   <div className="min-h-screen bg-(--bg-primary) flex items-center justify-center">
@@ -46,6 +47,8 @@ export default function App() {
             <DemoWasserzeichen />
             <Praesentation />
           </Suspense>
+          {/* Koppelt den Arbeitsplatz an das Notizfenster mit den Speakernotes (speakernotes.html) */}
+          <NotizenKopplung />
         </ScreenRecorderProvider>
       </WhitelabelRahmen>
     </ModeProvider>

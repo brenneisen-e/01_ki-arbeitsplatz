@@ -426,7 +426,7 @@ const translationsOverview = {
     en: 'The AI detected {count} signals that make a {riskType} likely. The stronger the combination of account activity, portfolio data and external requests, the higher the risk score.',
   },
   'radar.introLebenslage': {
-    de: 'Die KI hat {count} unabhängige Signale kombiniert und daraus die Lebenslage „{event}" abgeleitet. Jedes Signal steht hier mit seiner Datenquelle.',
+    de: 'Die KI hat {count} unabhängige Signale kombiniert und daraus die Lebenslage „{event}" abgeleitet. Jedes Signal steht hier mit seiner Datenquelle; ausgewertet wird nur, wofür der Kunde eingewilligt hat.',
     en: 'The AI combined {count} independent signals to infer the life event "{event}". Each signal is listed here with its data source.',
   },
   'radar.handlungsimpulsLabel': { de: 'Handlungsimpuls', en: 'Action prompt' },
@@ -444,7 +444,9 @@ const translationsOverview = {
   'radarSrc.bonitaet': { de: 'Bonität', en: 'Creditworthiness' },
   'radarSrc.marketingNewsletter': { de: 'Marketing · Newsletter', en: 'Marketing · newsletter' },
   'radarSrc.webTracking': { de: 'Web-Tracking', en: 'Web tracking' },
-  'radarSrc.linkedin': { de: 'LinkedIn', en: 'LinkedIn' },
+  'radarSrc.linkedin': { de: 'LinkedIn Sales Navigator · Unternehmensseite', en: 'LinkedIn Sales Navigator · company page' },
+  'radarSrc.performance': { de: 'Performance-Marketing · Anzeigenklick', en: 'Performance marketing · ad click' },
+  'radarSrc.kundenportal': { de: 'Kundenportal · eigene Angabe', en: 'Customer portal · own entry' },
   'radarSrc.register': { de: 'Öffentliche Register', en: 'Public registers' },
   'radarSrc.buchhaltung': { de: 'Bestand · Buchhaltung', en: 'Portfolio · accounting' },
   'radarSrc.familienkasse': { de: 'PSD2 · Familienkasse', en: 'PSD2 · family fund' },
@@ -476,7 +478,6 @@ const translationsOverview = {
   'geplantBadge': { de: 'Geplant', en: 'Planned' },
   'kampagneOeffnen': { de: 'Kampagne öffnen', en: 'Open campaign' },
   'passendeKundenTitle': { de: '{count} passende Kunden', en: '{count} matching clients' },
-  'passendeKundenWort': { de: 'passende Kunden', en: 'matching clients' },
   'trefferFuer': { de: 'Treffer für', en: 'Matches for' },
   'treffer': { de: 'Treffer', en: 'Matches' },
   'avgMatch': { de: 'Ø Match', en: 'Avg. Match' },
@@ -509,7 +510,7 @@ const translationsOverview = {
   // ─── Banking Übersicht: Termine ───
   'kreditgespraechImmoFinanzierung': { de: 'Kreditgespräch Immobilienfinanzierung', en: 'Property-financing meeting' },
   'buNachversicherungFamilienCheck': { de: 'BU-Nachversicherung & Familien-Check', en: 'DI top-up & family check' },
-  'versicherungsOptimierungstermin': { de: 'Versicherungs-Optimierung: KFZ, Haftpflicht-Bündel & Familienabsicherung', en: 'Insurance optimisation: motor, liability bundle & family cover' },
+  'versicherungsOptimierungstermin': { de: 'Beratungsgespräch: Berufsunfähigkeitsrente erhöhen', en: 'Advisory meeting: increasing the disability pension' },
 };
 
 export default translationsOverview;

@@ -1,4 +1,4 @@
-import { X, ExternalLink, Sparkles, AlertTriangle, TrendingUp, RefreshCw, CreditCard,
+import { X, ExternalLink, MousePointerClick, Sparkles, AlertTriangle, TrendingUp, RefreshCw, CreditCard,
   Receipt, Mail, Building2, FileText, Baby, Heart, Linkedin, Search,
   Globe, Briefcase, PiggyBank, LineChart, Info, ShieldAlert, CheckCircle2,
   ArrowUpRight, ArrowDownRight, ArrowRight, AlertCircle, Radar } from 'lucide-react';
@@ -34,6 +34,7 @@ function pickSignalIcon(text) {
   if (/newsletter|mail|e-?mail/.test(s)) return Mail;
   if (/recherche|such|webseite/.test(s)) return Search;
   if (/linkedin/.test(s)) return Linkedin;
+  if (/anzeige/.test(s)) return MousePointerClick;
   if (/gewerbeanmeldung|gmbh|gewerbe|m&a|nachfolge|ceo|gf\b|geschäftsf/.test(s)) return Building2;
   if (/umsatzsteuer|steuerberater|steuer/.test(s)) return FileText;
   if (/baby|kind|kinderarzt|hebamme|kindergeld|gynäkologen|vorsorge/.test(s)) return Baby;
@@ -48,16 +49,20 @@ function pickSignalIcon(text) {
 // Keyword-Erkennung stabil ist) den Übersetzungs-Key der „Quelle" herleiten.
 function pickSignalSourceKey(text) {
   const s = (text || '').toLowerCase();
+  if (/anzeige/.test(s)) return 'radarSrc.performance';
+  if (/linkedin/.test(s)) return 'radarSrc.linkedin';
   if (/dauerauftrag|lastschrift|übertrag|tagesgeld|girokonto|festgeld|sparkonto|konto\b/.test(s)) return 'radarSrc.psd2Konto';
   if (/sparplan|depot|wertpapier|aktien|etf|fonds/.test(s)) return 'radarSrc.openFinanceDepot';
   if (/kreditanfrage|schufa/.test(s)) return 'radarSrc.bonitaet';
+  if (/anzeige/.test(s)) return 'radarSrc.performance';
+  if (/kundenportal/.test(s)) return 'radarSrc.kundenportal';
   if (/newsletter|mail/.test(s)) return 'radarSrc.marketingNewsletter';
   if (/recherche|such|webseite/.test(s)) return 'radarSrc.webTracking';
   if (/linkedin/.test(s)) return 'radarSrc.linkedin';
   if (/gewerbeanmeldung|gmbh|handelsregister/.test(s)) return 'radarSrc.register';
   if (/umsatzsteuer|steuerberater|steuer/.test(s)) return 'radarSrc.buchhaltung';
   if (/kindergeld/.test(s)) return 'radarSrc.familienkasse';
-  if (/baby|kinderarzt|hebamme|gynäkologen/.test(s)) return 'radarSrc.psd2Konto';
+  if (/baby/.test(s)) return 'radarSrc.psd2Konto';
   return 'radarSrc.kiErkennung';
 }
 
@@ -109,11 +114,11 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
   const { t, lang } = useTranslation();
   if (!entry) return null;
   const isAbwanderung = type === 'abwanderung';
-  const foto = getKundeFoto(entry.kundeId);
+  const foto = entry.firma ? null : getKundeFoto(entry.kundeId);
   // Lokalisierte Anzeige-Werte: Erkennung läuft weiter auf dem deutschen
   // Originaltext, angezeigt wird die EN-Variante, sofern vorhanden.
   const L = (de, en) => (lang === 'en' && en != null ? en : de);
-  const displayEvent = L(entry.event, entry.eventEn);
+  const displayEvent = [L(entry.event, entry.eventEn), entry.kontakt && L(entry.kontakt, entry.kontaktEn)].filter(Boolean).join(' · ');
   const displayRiskType = L(entry.riskType, entry.riskTypeEn);
   const numberLocale = lang === 'en' ? 'en-GB' : 'de-DE';
   const riskBarColor = entry.riskLevel === 'high' ? 'var(--color-danger)' : entry.riskLevel === 'medium' ? 'var(--color-warning)' : 'var(--text-tertiary)';
@@ -247,7 +252,7 @@ export default function RadarExplanationModal({ type, entry, onClose, onOpenKund
               <div className="text-[13px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 {isAbwanderung
                   ? t('radar.introAbwanderung', { count: entry.signals?.length, riskType: displayRiskType?.toLowerCase() })
-                  : t('radar.introLebenslage', { count: entry.signalCount || entry.signals?.length, event: displayEvent })}
+                  : t('radar.introLebenslage', { count: entry.signalCount || entry.signals?.length, event: L(entry.event, entry.eventEn) })}
               </div>
             </div>
           </div>

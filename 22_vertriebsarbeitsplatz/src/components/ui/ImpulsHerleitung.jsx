@@ -8,19 +8,25 @@
 // Gestaltung (Cockpit 2026): weiße Karten mit Hairlines, Modusfarbe fuer
 // Nummern und Primaeraktion, Quellenfarben nur fuer die kleinen Chips.
 
-import { Sparkles, ArrowRight, Calendar, ExternalLink, Receipt, Landmark, Mail, Database } from 'lucide-react';
+import { Sparkles, ArrowRight, Calendar, ExternalLink, Receipt, Landmark, Mail, Database, Milestone } from 'lucide-react';
 import { tx } from '../../utils/langHelper';
 
-// ─── Quellen: Erkennung aus Freitext, Farbe und Icon ─────────────────────
+// ─── Quellen: Erkennung aus Freitext, Farbe, Icon und Name ───────────────
+// Die erste passende Zeile gewinnt. Das Lebensereignis steht vorn und zählt
+// nur, wenn der Text damit beginnt („Lebensereignis: Geburt …“): Ein Signal,
+// das sich selbst so nennt, soll nicht an einem späteren Stichwort im Satz bei
+// einer anderen Quelle landen, und „Bestandsanalyse – Lebensereignis“ bleibt
+// beim Bestand.
 const QUELLEN = [
-  { key: 'finanztransaktion', test: /psd2|konto|umsatz|umsätze|transaktion|transaction|fida|open finance/i, farbe: 'var(--quelle-finanztransaktion)', icon: Receipt },
-  { key: 'bestand',           test: /bestand|holding|vertrag|contract|depot|portfolio/i,                    farbe: 'var(--quelle-bestand)',           icon: Landmark },
-  { key: 'kommunikation',     test: /marketing|newsletter|kommunikation|mail|chat|website|klick|click/i,   farbe: 'var(--quelle-kommunikation)',     icon: Mail },
+  { key: 'lebensereignis',    test: /^\s*(lebensereignis|life event)\b/i,                                    farbe: 'var(--quelle-lebensereignis)',    icon: Milestone, name: () => tx('Lebensereignis', 'Life event') },
+  { key: 'finanztransaktion', test: /psd2|konto|umsatz|umsätze|transaktion|transaction|fida|open finance/i, farbe: 'var(--quelle-finanztransaktion)', icon: Receipt,   name: () => tx('Kontoumsätze', 'Account data') },
+  { key: 'bestand',           test: /bestand|holding|vertrag|contract|depot|portfolio/i,                    farbe: 'var(--quelle-bestand)',           icon: Landmark,  name: () => tx('Bestand', 'Holdings') },
+  { key: 'kommunikation',     test: /marketing|newsletter|kommunikation|mail|chat|website|klick|click/i,   farbe: 'var(--quelle-kommunikation)',     icon: Mail,      name: () => tx('Kommunikation', 'Communication') },
 ];
+const SONSTIGE = { key: 'sonstige', farbe: 'var(--text-tertiary)', icon: Database, name: () => tx('Quelle', 'Source') };
 
 export function erkenneQuelle(text) {
-  const q = QUELLEN.find((x) => x.test.test(text || ''));
-  return q || { key: 'sonstige', farbe: 'var(--text-tertiary)', icon: Database };
+  return QUELLEN.find((x) => x.test.test(text || '')) || SONSTIGE;
 }
 
 // ─── KI-Text gliedern ────────────────────────────────────────────────────
@@ -69,7 +75,7 @@ export function KiZusammenfassung({ text, titel }) {
                       <span className="text-sm leading-snug text-(--text-primary) block">{p}</span>
                       <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] font-semibold uppercase tracking-wider" style={{ color: q.farbe }}>
                         <Icon size={11} strokeWidth={2} />
-                        {q.key === 'finanztransaktion' ? tx('Kontoumsätze', 'Account data') : q.key === 'bestand' ? tx('Bestand', 'Holdings') : q.key === 'kommunikation' ? tx('Kommunikation', 'Communication') : tx('Quelle', 'Source')}
+                        {q.name()}
                       </span>
                     </span>
                   </li>

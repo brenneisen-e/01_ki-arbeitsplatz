@@ -115,11 +115,13 @@ const BELEGE = {
     kunde: 'KD00001',
     chip: 'Neue Leads anzeigen',
     uebersicht: ['Anna Hoffmann', 'Zweites Kind erwartet', 'Lisa Bauer'],
-    assistent: ['Klaus Fischer', 'Allgemeiner Versicherungscheck'],
+    assistent: ['Klaus Fischer', 'Erhöhung Abdeckung Berufsunfähigkeitsversicherung'],
     finanzuebersicht: [/GESAMT\s*7\b/i],
     leads: ['Versicherungsprodukte', 'Bankprodukte', 'Anlageprodukte'],
-    topLead: ['Allgemeiner Versicherungscheck', '69 %', '65 qm', '145 qm', '150k', '285k', /vier Fremd-Policen/],
-    termin: ['Klaus Fischer'],
+    topLead: ['Erhöhung Abdeckung Berufsunfähigkeitsversicherung', 'Lebensereignis', 'Max', /4\.200\s?€/, /1\.800\s?€/, '43', /2\.600\s?€/, '62', /80\s?€/],
+    anschreiben: ['Berufsunfähigkeitsrente', 'Max', '4.200 €', '1.800 €', '43 %', '2.600 €', '62 %', '80 €'],
+    termin: ['Klaus Fischer', 'Berufsunfähigkeitsrente'],
+    vorbereitung: ['Berufsunfähigkeitsrente', 'Agentur Köln', /1\.800 €\/Mon\./, '43 %', /2\.600 €\/Mon\./, /80 €\/Mon\./],
   },
   banking: {
     kunde: 'BK00001',
@@ -129,7 +131,9 @@ const BELEGE = {
     finanzuebersicht: [/GESAMT\s*7\b/i],
     leads: ['Bankprodukte', 'Anlageprodukte', 'Versicherungsprodukte'],
     topLead: ['Kreditgespräch Immobilienfinanzierung', 'in 2 Monaten', '30.000 €', 'Newsletter'],
+    anschreiben: ['Immobilienpläne', 'Commerzbank', '840 €', '30.000 €', 'Newsletter'],
     termin: ['Klaus Fischer', 'Kreditgespräch Immobilienfinanzierung'],
+    vorbereitung: ['Kreditgespräch Immobilienfinanzierung', 'Filiale Gießen', '840 €'],
   },
 };
 
@@ -345,6 +349,12 @@ for (const modus of ['versicherung', 'banking']) {
   pruefe(!/\{\{|\}\}/.test(await app.locator('[data-praes="top-lead"]').innerText()), `${modus} Top-Lead: kein offener Platzhalter {{…}} in der Karte`);
   await app.locator('[data-praes="top-lead"]').getByText('Anschreiben formulieren').first().click();
   l = await erwarteStelle(notizen, 'anschreiben', `${modus} Anschreiben`);
+  // Der Brief gehört zum Top-Lead: Betreff und Text nennen dessen Zahlen
+  const brief = app.locator('[data-modal="anschreiben"]');
+  await brief.locator('textarea').waitFor({ timeout: 8000 });
+  const briefText = `${await brief.locator('input[type=text]').inputValue()}\n${await brief.locator('textarea').inputValue()}`;
+  for (const b of B.anschreiben) pruefe(briefText.includes(b), `${modus} Anschreiben: „${b}“ fehlt im Brief zum Top-Lead`);
+  pruefe(!/\{\{|\}\}/.test(briefText), `${modus} Anschreiben: kein offener Platzhalter {{…}} im Brief`);
   await app.keyboard.press('Escape');
   l = await erwarteStelle(notizen, 'top-lead', `${modus} Anschreiben geschlossen`);
 
@@ -379,6 +389,8 @@ for (const modus of ['versicherung', 'banking']) {
   await termin.click();
   await app.waitForSelector('[data-modal="terminprep"]');
   l = await erwarteStelle(notizen, 'vorbereitung', `${modus} Gesprächsvorbereitung`);
+  await app.waitForSelector('[data-modal="terminprep"] section', { timeout: 8000 });
+  await sichtbar(app, B.vorbereitung, `${modus} Gesprächsvorbereitung`, '[data-modal="terminprep"]');
   await app.keyboard.press('Escape');
   await erwarteStelle(notizen, 'naechster-tag', `${modus} Vorbereitung geschlossen`);
   // Uhr zurückstellen
@@ -438,6 +450,43 @@ console.log('Rahmen');
   await rahmen.locator('[data-praes="landing-chat"]').waitFor();
   pruefe(await rahmen.locator('[data-notizen-oeffnen]').count() === 0, 'im Rahmen (iframe) ist die Deloitte-Kachel kein Knopf');
   pruefe(await rahmen.locator('img[alt="Deloitte"]').count() >= 1, 'im Rahmen steht die Deloitte-Kachel als Bild');
+  await ctx.close();
+}
+
+// ── Anschreiben: jeder Lead des Vorzeigekunden bekommt seinen eigenen Brief ──
+// (früher wählte ein Stichwort im Titel den Brief, die BU-Erhöhung bekam so
+// den Kfz-Brief)
+for (const modus of ['versicherung', 'banking']) {
+  console.log(`\nAnschreiben je Lead: ${modus}`);
+  const ctx = await neuerKontext();
+  const app = await ctx.newPage();
+  horche(app, `${modus} Anschreiben`);
+  await app.goto(`${BASIS}#/${modus}/detail/${BELEGE[modus].kunde}/impulse`);
+  await app.waitForSelector('[data-praes-toggle]');
+  await app.evaluate(() => window.dispatchEvent(new CustomEvent('kia-chatbot-close')));
+  await warte(600);
+  const anzahl = await app.locator('[data-praes-toggle]').count();
+  const betreffs = new Map();
+  for (let i = 0; i < anzahl; i++) {
+    const karte = app.locator('[data-praes-toggle]').nth(i);
+    const titel = (await karte.innerText()).split('\n').filter((z) => z && !/top-lead/i.test(z))[0];
+    await karte.click();
+    await app.getByRole('button', { name: 'Anschreiben formulieren' }).first().click();
+    const fenster = app.locator('[data-modal="anschreiben"]');
+    await fenster.locator('textarea').waitFor({ timeout: 8000 });
+    const betreff = await fenster.locator('input[type=text]').inputValue();
+    const text = await fenster.locator('textarea').inputValue();
+    const kopf = await fenster.innerText();
+    pruefe(!betreffs.has(betreff), `${modus} „${titel}“: Betreff „${betreff}“ steht schon über „${betreffs.get(betreff)}“`);
+    betreffs.set(betreff, titel);
+    pruefe(!/\{\{|\}\}/.test(`${betreff}${text}${kopf}`), `${modus} „${titel}“: offener Platzhalter {{…}} im Anschreiben`);
+    pruefe(/^Sehr geehrter Herr Fischer,/.test(text), `${modus} „${titel}“: Anrede fehlt`);
+    pruefe(!/Vorschlag für ein kurzes Gespräch/.test(betreff), `${modus} „${titel}“: nur der neutrale Brief, am Lead fehlt das Anschreiben`);
+    await app.keyboard.press('Escape');
+    await app.locator('[data-praes-toggle]').nth(i).click();
+    await warte(150);
+  }
+  pruefe(anzahl >= 10, `${modus}: ${anzahl} Leads mit Anschreiben geprüft`);
   await ctx.close();
 }
 

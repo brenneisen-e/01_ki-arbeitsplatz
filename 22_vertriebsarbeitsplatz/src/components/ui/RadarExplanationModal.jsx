@@ -50,6 +50,7 @@ function pickSignalIcon(text) {
 function pickSignalSourceKey(text) {
   const s = (text || '').toLowerCase();
   if (/anzeige/.test(s)) return 'radarSrc.performance';
+  if (/nps/.test(s)) return 'radarSrc.nps';
   if (/linkedin/.test(s)) return 'radarSrc.linkedin';
   if (/dauerauftrag|lastschrift|übertrag|tagesgeld|girokonto|festgeld|sparkonto|konto\b/.test(s)) return 'radarSrc.psd2Konto';
   if (/sparplan|depot|wertpapier|aktien|etf|fonds/.test(s)) return 'radarSrc.openFinanceDepot';

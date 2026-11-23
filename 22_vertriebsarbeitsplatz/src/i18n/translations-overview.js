@@ -445,6 +445,7 @@ const translationsOverview = {
   'radarSrc.marketingNewsletter': { de: 'Marketing · Newsletter', en: 'Marketing · newsletter' },
   'radarSrc.webTracking': { de: 'Web-Tracking', en: 'Web tracking' },
   'radarSrc.linkedin': { de: 'LinkedIn Sales Navigator · Unternehmensseite', en: 'LinkedIn Sales Navigator · company page' },
+  'radarSrc.nps': { de: 'Kundenfeedback · NPS', en: 'Customer feedback · NPS' },
   'radarSrc.performance': { de: 'Performance-Marketing · Anzeigenklick', en: 'Performance marketing · ad click' },
   'radarSrc.kundenportal': { de: 'Kundenportal · eigene Angabe', en: 'Customer portal · own entry' },
   'radarSrc.register': { de: 'Öffentliche Register', en: 'Public registers' },

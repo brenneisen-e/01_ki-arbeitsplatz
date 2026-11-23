@@ -313,19 +313,19 @@
   },
   "22_vertriebsarbeitsplatz": {
     "ordner": "22_vertriebsarbeitsplatz",
-    "pruefsumme": "23f5628ef87f5efe054a3a4d98e71659cb7639ca388888ecccf7c3a08ac56fbf",
-    "groesse": 5196482,
+    "pruefsumme": "0e4a814747357a0d5c36f7061fef986b8dec761bb4c740877fe558663766d856",
+    "groesse": 5196335,
     "veroeffentlicht": true,
     "steckbrief": {
       "format": "dex-app/1",
       "id": "22_vertriebsarbeitsplatz",
       "titel": "KI-Vertriebsarbeitsplatz",
       "beschreibung": "Cockpit für Berater in Versicherung, Banking und Vermögensverwaltung: Kundenakte, KI-Leads, Termine und Vertriebsassistent.",
-      "version": "1.0.8",
-      "gebaut": "2026-11-23T10:15:51Z",
+      "version": "1.0.9",
+      "gebaut": "2026-11-23T10:25:24Z",
       "quelle": {
         "repo": "brenneisen-e/01_ki-arbeitsplatz",
-        "commit": "9599753ee852d6a72936306141d486f8043d4199"
+        "commit": "3d1687be30945cbf3f87543b124ebaab266f54f3"
       },
       "start": "index.html#/versicherung/landing",
       "single": true,

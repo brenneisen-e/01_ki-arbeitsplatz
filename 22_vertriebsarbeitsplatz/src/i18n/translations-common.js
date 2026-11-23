@@ -273,6 +273,7 @@ const translationsCommon = {
   'demoUmgebungHinweis': { de: 'Demo-Umgebung: Rein synthetische Daten, keine echten Kundendaten', en: 'Demo environment: Purely synthetic data, no real client data' },
   'wasserzeichenDemo': { de: 'Demo', en: 'Demo' },
   'wasserzeichenSynthetisch': { de: 'Synthetische Daten', en: 'Synthetic data' },
+  'notizenOeffnen': { de: 'Speakernotes in eigenem Fenster öffnen', en: 'Open the speaker notes in a separate window' },
   'demoZeitmaschineTitle': { de: 'Demo-Zeitmaschine: einen Tag weiter springen', en: 'Demo time-machine: jump one day forward' },
   'demoDatenZuruecksetzenTitle': { de: 'Demo-Daten zurücksetzen (lokale Anpassungen löschen)', en: 'Reset demo data (clear local adjustments)' },
   'demoDatenZuruecksetzenConfirm': {

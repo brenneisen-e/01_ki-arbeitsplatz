@@ -12,6 +12,7 @@ import { formatEur } from '../../utils/formatters';
 import { interpolateDynamicDates } from '../../utils/dynamicDates';
 import { neutral } from '../../utils/whitelabel';
 import { NUR_WHITELABEL, whitelabelVariante } from '../../utils/einbettung';
+import { useNotizenStelle } from '../../notizen/stand';
 
 // Einfarbige Lucide-Pfade als Inline-SVG für die HTML-Antworten – ersetzen die
 // Unicode-Symbole (→ ↑ ↓) und erben die Textfarbe über currentColor.
@@ -408,6 +409,9 @@ function buildNeueLeadsAntwort(modeId, currentView, ctx = {}) {
     finanztransaktion: tx('Kontoumsätze', 'account data'), bestand: tx('Bestand', 'holdings'),
     kommunikation: tx('Kommunikation', 'communication'), lebensereignis: tx('Lebensereignis', 'life event'),
     wettbewerb: tx('Wettbewerb', 'competition'), direktvertrieb: tx('Direktvertrieb', 'direct channel'), markt: tx('Markt', 'market'),
+    // Ohne Beschriftung stünde der Schlüssel klein im Satz („… und risikosignal“).
+    risikosignal: tx('Risikosignal', 'risk signal'), kontoumsaetze: tx('Kontoumsätze', 'account data'),
+    produktabschluss: tx('Produktabschluss', 'product closing'), chatbot: tx('Chatbot', 'chatbot'),
   };
   const ZAHLWORT = getLang() === 'en' ? ['', 'one', 'two', 'three', 'four', 'five'] : ['', 'ein', 'zwei', 'drei', 'vier', 'fünf'];
   const quellen = (top.quellen || []).map(q => QUELLEN_LABEL[q] || q);
@@ -415,7 +419,8 @@ function buildNeueLeadsAntwort(modeId, currentView, ctx = {}) {
   const quellenText = quellen.length > 1 ? `${quellen.slice(0, -1).join(', ')} ${tx('und', 'and')} ${quellen[quellen.length - 1]}` : quellen[0] || '';
   const einordnung = anzahl > 1
     ? tx(
-        `Neuer Top-Lead: <strong>${top.kundeName}</strong>. Gleich ${ZAHLWORT[anzahl] || anzahl} unabhängige Signale, ${quellenText}, sprechen für „${top.titel}“${volumen ? ` mit einem Volumen von ${volumen}` : ''}. Hier die Zusammenfassung:`,
+        // Endet das Volumen auf „/J.“, schließt sein Punkt den Satz.
+        `Neuer Top-Lead: <strong>${top.kundeName}</strong>. Gleich ${ZAHLWORT[anzahl] || anzahl} unabhängige Signale, ${quellenText}, sprechen für „${top.titel}“${volumen ? ` mit einem Volumen von ${volumen}` : ''}${volumen.endsWith('.') ? '' : '.'} Hier die Zusammenfassung:`,
         `New top lead: <strong>${top.kundeName}</strong>. ${ZAHLWORT[anzahl] || anzahl} independent signals, ${quellenText}, point to "${top.titel}"${volumen ? ` with a volume of ${volumen}` : ''}. Here is the summary:`,
       )
     : tx(
@@ -869,6 +874,8 @@ export default function VertriebsAssistent() {
   useEffect(() => { invalidateLangCache(); }, [lang]);
   const { modeId, config, currentView, activeTab, setActiveTab, selectedKundeId, navigateTo } = useMode();
   const [isOpen, setIsOpen] = useState(false);
+  // Das Notizfenster springt zum Assistenten, sobald er offen ist (src/notizen).
+  useNotizenStelle('assistent', isOpen && currentView !== 'landing');
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);

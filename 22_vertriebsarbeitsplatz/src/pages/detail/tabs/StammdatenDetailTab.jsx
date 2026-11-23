@@ -14,6 +14,7 @@ import useTranslation from '../../../i18n/useTranslation';
 import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
 import { interpolateDynamicDates, resolveVersicherungspartner } from '../../../utils/dynamicDates';
 import { getHaustierConfirmation, setHaustierConfirmation } from '../../../utils/haustierConfirmation';
+import { findeTopLead, istTopLead } from '../../../utils/topLead';
 
 // ─── Translation helpers for data values ───
 const FAMILIENSTAND_EN = { verheiratet: 'Married', ledig: 'Single', geschieden: 'Divorced', verwitwet: 'Widowed' };
@@ -1147,13 +1148,13 @@ function RisikoSignale({ signale, institut }) {
 //   - 'finanzuebersicht': Fokus auf Bilanz, Liquidität, Open-Finance-Sicht
 export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'stammdaten' }) {
   const { t } = useTranslation();
-  const { config } = useMode();
+  const { config, modeId } = useMode();
   // Platzhalter wie {{versicherungspartner}} in Lead-Texten (Titel, Produkt)
   // auf das aktive Institut auflösen, sonst stünden sie wörtlich im Text.
   const ctx = { institut: config.institut };
   const roh = variant === 'finanzuebersicht'
     ? generateFinanzKISummary(kunde)
-    : generateKISummary(kunde);
+    : generateKISummary(kunde, findeTopLead(modeId));
   const summary = {
     text: interpolateDynamicDates(roh.text, ctx),
     recommendation: roh.recommendation ? interpolateDynamicDates(roh.recommendation, ctx) : roh.recommendation,
@@ -1226,7 +1227,7 @@ function generateFinanzKISummary(kunde) {
   return { text: text.trim(), recommendation };
 }
 
-function generateKISummary(kunde) {
+function generateKISummary(kunde, topLead = null) {
   // Die KI-Zusammenfassung zieht ihre Zahlen aus exakt denselben Quellen
   // wie Finanzübersicht + Leads-Tab, damit beide Sichten dieselbe Realität
   // erzählen. Das Top-Potenzial stammt aus `kunde.potentiale` (identische
@@ -1257,7 +1258,11 @@ function generateKISummary(kunde) {
   const sortedPot = [...offenePot].sort(
     (a, b) => (prioRank[b.prioritaet] || 0) - (prioRank[a.prioritaet] || 0)
   );
-  const topPot = sortedPot[0] || null;
+  // Trägt einer der Leads dieses Kunden das Badge „Top-Lead“ (utils/topLead.js,
+  // dieselbe Regel wie beim Assistenten), nennt ihn auch die Zusammenfassung;
+  // sonst das Potenzial mit der höchsten Priorität. Ohne das stünden beim
+  // Top-Lead-Kunden zwei verschiedene „Top-Leads“ nebeneinander.
+  const topPot = offenePot.find(p => istTopLead(p, kunde.id, topLead)) || sortedPot[0] || null;
 
   const fmtVol = (p) => {
     if (!p?.volumen) return '';

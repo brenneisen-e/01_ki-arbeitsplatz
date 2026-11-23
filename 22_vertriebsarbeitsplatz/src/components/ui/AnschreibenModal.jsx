@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X, Sparkles, Send, Mail, Loader2, Check } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import useTranslation from '../../i18n/useTranslation';
+import { useNotizenStelle } from '../../notizen/stand';
 
 // Liest die auf der Landing-Page hinterlegten Berater-Stammdaten aus dem
 // localStorage und ergänzt sie um den Mode-Default + ein passendes Anrede-
@@ -41,6 +42,8 @@ function getBeraterSignatur(modeConfig, isEn) {
  */
 export default function AnschreibenModal({ kunde, potential, onClose }) {
   const [phase, setPhase] = useState('generating'); // generating | ready | sending | sent
+  // Das Notizfenster springt mit, solange das Anschreiben offen ist (src/notizen).
+  useNotizenStelle('anschreiben');
   const { config } = useMode();
   const { t, lang } = useTranslation();
   const isEn = lang === 'en';

@@ -626,14 +626,9 @@ const LEBENSLAGEN_RADAR_VERSICHERUNG = [
 
 /* ── Abwanderungsradar (versicherung) ──────────────────────────── */
 // Wichtig: Nur Signale aus Datenquellen, auf die der Versicherer tatsächlich
-// Zugriff hat. Stärkstes öffentliches Signal ist eine FiDA-Datenanfrage
-// (Financial Data Access-Verordnung, EU 2024/..., Anwendung ab 2026): Wenn
-// ein Kunde einem konkurrierenden Versicherer oder einem FISP (Financial
-// Information Service Provider) per SCA Consent gibt, seine Vertrags-,
-// Schaden- und Prämiendaten abzurufen, sieht der haltende Versicherer diese
-// Datenübermittlungsanfrage mit Empfänger, Zweck und Umfang — ein deutlich
-// stärkeres Churn-Signal als Browser-/Vergleichsportal-Tracking
-// (Check24 etc., was für Versicherer gar nicht beobachtbar ist).
+// Zugriff hat: eigenes Kundenfeedback (NPS), das eigene Kundenportal, Service
+// und Schaden. Keine FiDA-Datenanfragen (die Verordnung gilt noch nicht) und
+// kein Tracking fremder Vergleichsportale.
 const ABWANDERUNGS_RADAR_VERSICHERUNG = [
   {
     kundeId: 'KD00006',
@@ -643,16 +638,16 @@ const ABWANDERUNGS_RADAR_VERSICHERUNG = [
     riskScore: 84,
     riskType: 'KFZ-Wechsel zum Online-Versicherer',
     riskTypeEn: 'Switch of motor cover to online insurer',
-    summary: 'FiDA-Datenanfrage von HUK24 · Portal-Kündigungsassistent geöffnet',
-    summaryEn: 'FiDA data request from HUK24 · portal cancellation assistant opened',
+    summary: 'Negativer NPS · Kündigung im Portal geöffnet',
+    summaryEn: 'Negative NPS · cancellation opened in the portal',
     signals: [
-      'FiDA-Datenübermittlungsanfrage von „HUK24 Versicherung AG" (Consent via SCA am 08.04.). Umfang: Kfz-Vertragsdaten, Schadenhistorie, aktuelle Prämie',
+      'NPS-Score von 8 auf 2 gefallen, Kommentar: „Online gibt es das günstiger"',
       'Kündigungsassistent im eigenen Kundenportal für Kfz-Vertrag 2× gestartet (keine Absendung)',
       'Kein Portal-Login seit 11 Wochen, E-Mail-Öffnungsrate auf 0 % gefallen',
       'Jahresgespräch 2× abgesagt, keine Reaktion auf letzte 3 Servicemails',
     ],
     signalsEn: [
-      'FiDA data-transfer request from "HUK24 Versicherung AG" (consent via SCA on 08.04.). Scope: motor policy data, claims history, current premium',
+      'NPS score dropped from 8 to 2, comment: "it is cheaper online"',
       'Cancellation assistant for motor policy started 2× in own customer portal (not submitted)',
       'No portal login for 11 weeks, email open rate dropped to 0%',
       'Annual review cancelled 2×, no response to last 3 service emails',
@@ -668,16 +663,16 @@ const ABWANDERUNGS_RADAR_VERSICHERUNG = [
     riskScore: 58,
     riskType: 'Betriebshaftpflicht-Verlagerung',
     riskTypeEn: 'Commercial liability migration',
-    summary: 'FiDA-Anfrage eines Maklers · negatives NPS · offener Großschaden',
-    summaryEn: 'FiDA request from a broker · negative NPS · open major claim',
+    summary: 'Negativer NPS · offener Großschaden · Beitragsrückerstattung angefragt',
+    summaryEn: 'Negative NPS · open major claim · premium refund requested',
     signals: [
-      'FiDA-Datenübermittlungsanfrage eines unabhängigen Maklers (FISP „AssekuranzFinder GmbH"). Umfang: Gewerbehaftpflicht, Prämienhistorie 3 Jahre',
+      'Im Servicegespräch einen Vergleich der Betriebshaftpflicht über einen Makler angekündigt',
       'NPS-Score von 8 auf 3 gefallen, Kommentar: „Beitrag unverhältnismäßig"',
       'Offener Betriebsschaden seit 6 Wochen nicht abschließend reguliert',
       'Beitragsrückerstattungsanfrage für Jahresprämie 2025 eingegangen',
     ],
     signalsEn: [
-      'FiDA data-transfer request from an independent broker (FISP "AssekuranzFinder GmbH"). Scope: commercial liability, 3-year premium history',
+      'Announced in a service call that a broker will compare the commercial liability cover',
       'NPS score dropped from 8 to 3, comment: "premium disproportionate"',
       'Open business claim not fully settled for 6 weeks',
       'Premium-refund request received for 2025 annual premium',

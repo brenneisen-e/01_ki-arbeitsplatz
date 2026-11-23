@@ -753,7 +753,7 @@ const translationsDetail = {
   'impulsPromotor': { de: 'Als Empfehlungsgeber aktivieren (Next-Gen / Bekanntenkreis einladen).', en: 'Activate as a referral source (invite next-gen / personal network).' },
   'positionLabel': { de: 'Position', en: 'Position' },
   'bestaetigtDurchKontoumsaetze': { de: 'bestätigt durch Kontoumsätze', en: 'confirmed via account activity' },
-  'durchLinkedInAbgleich': { de: 'Durch LinkedIn Abgleich', en: 'Via LinkedIn match' },
+  'durchLinkedInAbgleich': { de: 'Manuell ergänzt (LinkedIn)', en: 'Added manually (LinkedIn)' },
   'haustierFallback': { de: 'Haustier', en: 'Pet' },
   'ausKontoumsaetzenErkanntCaps': { de: 'Aus Kontoumsätzen erkannt', en: 'Detected from account activity' },
   'nameDesTieres': { de: 'Name des Tieres', en: 'Pet name' },

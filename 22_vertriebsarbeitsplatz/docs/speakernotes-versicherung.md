@@ -36,10 +36,11 @@ Vorbereitung:
   Abwanderungsradar), KI-Vertriebsassistent unten rechts, Chip „Neue Leads
   anzeigen“ (erst Denken, dann Zahl mit Sprung zu „Leads“, dann Klaus
   Fischer als Karte mit Foto), „Kunden öffnen“, Reiter „Finanzübersicht“
-  (externe Verknüpfungen mit Consent-Status), Reiter „Leads“, „Allgemeiner
-  Versicherungscheck“ aufklappen (KI-Zusammenfassung mit fünf Punkten,
-  Einzelvergleich je Versicherung, Auf einen Blick, Aktionen), „Anschreiben
-  formulieren“, Uhr im Kopf, neuer Termin oben in „Anstehende Termine“.
+  (externe Verknüpfungen mit Consent-Status), Reiter „Leads“, ganz oben
+  „Erhöhung Abdeckung Berufsunfähigkeitsversicherung“ aufklappen
+  (KI-Zusammenfassung mit drei Signalen, Deckungslücken-Analyse, Auf einen
+  Blick, Aktionen), „Anschreiben formulieren“, Uhr im Kopf, neuer Termin
+  oben in „Anstehende Termine“.
 
 ---
 
@@ -80,8 +81,9 @@ mit Ihnen: vom Assistenten zum Kunden zum Lead.
 [KI-Vertriebsassistent unten rechts öffnen, Chip „Neue Leads anzeigen“.] {#assistent}
 
 Ich frage den Assistenten nach meinen neuen Leads. Er nennt die Zahl aus dem
-nächtlichen Lauf und zeigt mir auch einen Top-Lead: Klaus Fischer,
-Versicherungscheck, mit Kurzfassung. Ein Klick, und ich bin in der Akte.
+nächtlichen Lauf und zeigt mir auch einen Top-Lead: Klaus Fischer, Erhöhung
+der Berufsunfähigkeitsversicherung, mit Kurzfassung. Ein Klick, und ich bin
+in der Akte.
 
 ## 1:30 Kundenakte: alle Datenpunkte an einer Stelle (50 Sekunden) {#akte}
 
@@ -115,27 +117,29 @@ vielleicht kein Problem, alle Daten im Blick zu haben. Als Vermittler hat
 man aber schnell eine drei-, wenn nicht vierstellige Anzahl von Kunden, und
 diese Datenmengen kann eigentlich nur noch eine KI sauber interpretieren.
 
-[„Allgemeiner Versicherungscheck – Bestand prüfen & konsolidieren“ mit dem
-Badge „Top-Lead“ aufklappen.] {#top-lead}
+[„Erhöhung Abdeckung Berufsunfähigkeitsversicherung“ mit dem Badge
+„Top-Lead“ aufklappen, der Lead steht ganz oben.] {#top-lead}
 
-Wir klappen nun den Lead „Allgemeiner Versicherungscheck“ auf und sehen, was
-die KI hergeleitet hat: fünf Punkte aus dem eigenen Bestand und aus vier
-Fremdverträgen. Die Berufsunfähigkeitsrente deckt nur 69 Prozent statt der
-empfohlenen 80. Der Hausrat ist seit dem Umzug noch auf 65 Quadratmeter
-versichert, tatsächlich sind es 145. Und die Risikolebensversicherung deckt
-150.000 Euro bei einer Restschuld von 285.000 Euro. Proaktiv erkannt und
+Wir klappen nun den Top-Lead auf, die Erhöhung der
+Berufsunfähigkeitsversicherung, und sehen, was die KI hergeleitet hat. Drei
+unabhängige Signale: ein Lebensereignis, die Geburt des zweiten Kindes Max.
+Aus den Kontoumsätzen ein gestiegenes Gehalt, 4.200 Euro netto. Und im
+Bestand eine Berufsunfähigkeitsrente, die unverändert bei 1.800 Euro liegt.
+Das sind nur noch 43 Prozent des Nettoeinkommens. Die Empfehlung: die Rente
+auf 2.600 Euro erhöhen, für rund 80 Euro mehr im Monat. Proaktiv erkannt und
 nicht reaktiv.
 
 [Aktion „Anschreiben formulieren“ zeigen.] {#anschreiben}
 
-Ich kann den Kunden nun mit KI direkt anschreiben lassen. Wer möchte, lässt
-so etwas natürlich über Agenten bereits automatisch laufen.
+Ich kann den Kunden nun mit KI direkt anschreiben lassen, und der Brief
+nennt genau diese drei Punkte. Wer möchte, lässt so etwas natürlich über
+Agenten bereits automatisch laufen.
 
 ## 3:20 Nächster Tag: der Kunde hat geantwortet (20 Sekunden) {#naechster-tag}
 
 [Die Uhr oben rechts im Kopf: einen Tag weiter. Der Arbeitsplatz springt auf
 die Übersicht, oben in „Anstehende Termine“ steht der neue Termin mit Klaus
-Fischer („+1 Neu“).]
+Fischer zur Berufsunfähigkeitsrente („+1 Neu“).]
 
 Und wenn ich jetzt auf den nächsten Tag gehe, sehe ich, dass mein Kunde auf
 meine Mail reagiert hat, und mit einem Klick kann ich mir das Gespräch auch

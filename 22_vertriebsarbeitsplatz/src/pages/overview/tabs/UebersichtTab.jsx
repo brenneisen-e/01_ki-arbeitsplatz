@@ -78,7 +78,8 @@ const LETZTE_ABSCHLUESSE = {
     { kunde: 'Sabine Danzig', kundeId: 'KD00008', produkt: 'ERGO Risikoleben', sparte: 'leben', betrag: 480, datum: '10.03.2026' },
     { kunde: 'Michael Braun', kundeId: 'KD00005', produkt: 'ERGO Kfz-Komfort', sparte: 'kfz', betrag: 890, datum: '09.03.2026' },
     { kunde: 'Anna Hoffmann', kundeId: 'KD00004', produkt: 'DKV Zahnzusatz', sparte: 'kranken', betrag: 35, datum: '08.03.2026' },
-    { kunde: 'Klaus Fischer', kundeId: 'KD00001', produkt: 'ERGO BU-Nachversicherung', sparte: 'leben', betrag: 1680, datum: '07.03.2026' },
+    // Kein Abschluss zur Berufsunfähigkeit von Klaus Fischer: Die Erhöhung seiner BU-Rente ist der offene Top-Lead.
+    { kunde: 'Thomas Weber', kundeId: 'KD00003', produkt: 'ERGO Kfz-Teilkasko', sparte: 'kfz', betrag: 280, datum: '07.03.2026' },
   ],
   banking: [
     { kunde: 'Andrea Lang', kundeId: 'BK00005', produkt: 'Praxiskredit', sparte: 'kredit', betrag: 85000, datum: '10.03.2026' },
@@ -397,13 +398,13 @@ const LEBENSLAGEN_RADAR_BANKING = [
     signals: [
       'Regelmäßige Transaktionen bei DM / Babymarkt seit 2 Mon.',
       'Kindergeld-Eingang Familienkasse neu erkannt',
-      'Ausgaben für Kinderarzt + Hebamme in Kontoumsätzen',
+      'Elternzeit-Rechner auf der Webseite genutzt',
       'Recherche: „Riester für Familien" (Newsletter-Klick)',
     ],
     signalsEn: [
       'Regular transactions at DM / baby store for 2 months',
       'New child-benefit credit from family fund detected',
-      'Pediatrician + midwife expenses in account activity',
+      'Parental-leave calculator used on the website',
       'Research: "Riester for families" (newsletter click)',
     ],
     signalCount: 4,
@@ -553,14 +554,14 @@ const LEBENSLAGEN_RADAR_VERSICHERUNG = [
     signals: [
       'Wiederkehrende Umsätze bei Babymarkt + DM seit 2 Mon.',
       'Newsletter „Familienabsicherung" angeklickt',
-      'Hebammen-Rechnungen in den Kontoumsätzen erkannt',
-      'Termin beim Gynäkologen ohne Reise-Muster (Vorsorge)',
+      'Im Kundenportal nach der Kindernachversicherung gefragt',
+      'Neuer Dauerauftrag für ein größeres Familienauto',
     ],
     signalsEn: [
       'Recurring purchases at baby store + DM for 2 months',
       'Newsletter "family protection" clicked',
-      'Midwife invoices detected in account activity',
-      'Gynecologist appointment without travel pattern (check-up)',
+      'Asked in the customer portal about adding a child to the cover',
+      'New standing order for a larger family car',
     ],
     signalCount: 4,
     confidence: 93,
@@ -569,20 +570,25 @@ const LEBENSLAGEN_RADAR_VERSICHERUNG = [
     isNew: true,
   },
   {
+    // Geschäftskunde: Die Signale betreffen das Unternehmen (B2B), nicht eine
+    // Privatperson; Thomas Weber ist der Ansprechpartner, die Akte ist seine.
     kundeId: 'KD00003',
-    customerName: 'Thomas Weber',
-    initials: 'TW',
+    customerName: 'Weber Sanitär & Heizung GmbH',
+    initials: 'WS',
+    firma: true,
+    kontakt: 'Geschäftskunde · Ansprechpartner Thomas Weber',
+    kontaktEn: 'Business customer · contact Thomas Weber',
     event: 'Betriebsübergabe Handwerk',
     eventEn: 'Trade business handover',
     signals: [
-      'Sohn Jan (25) tritt ins Unternehmen ein (LinkedIn)',
-      'Recherche „Betriebsnachfolge Handwerk" über die Webseite',
+      'Einstieg der nächsten Generation gemeldet (LinkedIn-Unternehmensseite)',
+      'Unternehmen hat die Anzeige „Betriebsnachfolge Handwerk" angeklickt',
       'Neuer Steuerberater-Dauerauftrag sichtbar',
       'Anfrage Betriebshaftpflicht-Anpassung',
     ],
     signalsEn: [
-      'Son Jan (25) joins the company (LinkedIn)',
-      'Research "trade business succession" via website',
+      'Next generation joining announced (LinkedIn company page)',
+      'The company clicked the ad "trade business succession"',
       'New tax-advisor standing order visible',
       'Request to adjust commercial liability cover',
     ],
@@ -934,6 +940,18 @@ const HYPERPERSONALISIERTE_PRODUKTE = {
 
 const PRODUKT_ICONS = { Gem, Heart, Layers, Rocket, Plane, Hourglass, GitMerge, Users, Shield, Briefcase, Activity, Sparkles };
 
+// Kategoriefarbe der Marketingkampagnen: ein Farbband oben mit dem Icon,
+// darunter eine zart getönte Fläche in derselben Farbe, damit die vier
+// Kacheln als Farbtupfer im hellen Cockpit stehen (keine Verläufe).
+const KAMPAGNEN_KATEGORIE_FARBEN = {
+  immobilie:   'var(--color-success)',
+  familie:     'var(--color-info)',
+  depot:       'var(--quelle-kommunikation)',
+  vorsorge:    'var(--quelle-kommunikation)',
+  absicherung: 'var(--quelle-lebensereignis)',
+  gesundheit:  'var(--color-warning)',
+};
+
 // Uhrzeit des nächtlichen Agentenlaufs (Demo). demoClock liefert nur den
 // „Nacht simulieren"-Zustand und keinen Zeitstempel, deshalb steht die
 // Uhrzeit hier; das Datum kommt aus dem aktuellen Tag.
@@ -1168,7 +1186,7 @@ export default function UebersichtTab() {
   // Demo-Zeitmaschine: nach „Nacht simulieren" wird der Beratungstermin der
   // Hero-Demo-Kundin bzw. des Hero-Demo-Kunden oben mit „+1"-Badge in die
   // Liste injiziert. Banking: Klaus Fischer (Kreditgespräch). Versicherung:
-  // Klaus Fischer (BU-Nachversicherung).
+  // Klaus Fischer (Erhöhung der Berufsunfähigkeitsrente, der Top-Lead).
   const dayAdvanced = useDayAdvanced();
   const baseTermine = TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung;
   // Kunden des aktiven Modus frühzeitig dereferenzieren, damit die Daten
@@ -1469,12 +1487,10 @@ export default function UebersichtTab() {
           </div>
         ) : null}
 
-        {/* Marketingkampagnen (Banking + Versicherung): vier flächige Kacheln
-            in der zarten Modusfarbe, ohne Farbband und ohne Icon; geplante
-            Kampagnen stehen als gestrichelter Umriss. Status als Wort,
-            Zeitraum, Titel, Zielgruppe, Zahl der passenden Kunden groß. Der Content stammt aus
-            buildBankingKampagnen / buildVersicherungsKampagnen und passt
-            sich an das Institut an. */}
+        {/* Marketingkampagnen (Banking + Versicherung): vier farbige Kacheln,
+            Farbband mit Icon oben, getönte Fläche darunter, Status-Chip.
+            Der Content stammt aus buildBankingKampagnen /
+            buildVersicherungsKampagnen und passt sich an das Institut an. */}
         {showRadarUndKampagnen && (
           <div id="ueb-kampagnen">
           <Card hover={false}>
@@ -1484,38 +1500,56 @@ export default function UebersichtTab() {
                 {kampagnenAktiv} {t('aktivLabel')} · {marketingKampagnen.filter(k => k.status === 'geplant').length} {t('geplantLabel')}
               </span>
             </div>
-            <div className="grid grid-cols-4 gap-3 pointer-events-auto">
+            <div className="grid grid-cols-4 gap-4 pointer-events-auto">
               {marketingKampagnen.map((kampagne) => {
                 const istAktiv = kampagne.status === 'aktiv';
                 const titel = lang === 'en' ? kampagne.titelEn : kampagne.titel;
                 const zielgruppe = lang === 'en' ? kampagne.zielgruppeEn : kampagne.zielgruppe;
+                const farbe = KAMPAGNEN_KATEGORIE_FARBEN[kampagne.kategorie] || 'var(--text-tertiary)';
+                const PhotoIcon = CAMPAIGN_ICONS[kampagne.photoIcon] || Megaphone;
                 return (
                   <div
                     key={kampagne.id}
                     role="button"
                     tabIndex={0}
-                    className="kampagne-kachel rounded-xl cursor-pointer flex flex-col p-4 pointer-events-auto min-w-0"
-                    style={istAktiv
-                      ? { background: 'var(--mode-primary-soft)', border: '1px solid transparent' }
-                      : { background: 'transparent', border: '1px dashed var(--border-strong)' }}
+                    className="group relative rounded-(--card-radius) card-hover overflow-hidden cursor-pointer flex flex-col pointer-events-auto border"
+                    style={{
+                      background: `color-mix(in oklab, ${farbe} 7%, var(--bg-card))`,
+                      borderColor: `color-mix(in oklab, ${farbe} 30%, transparent)`,
+                      boxShadow: 'var(--card-shadow)',
+                    }}
                     onClick={() => setKampagneModal(kampagne)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setKampagneModal(kampagne); }}
                     title={t('kampagneOeffnen')}
                   >
-                    <div className="flex items-baseline justify-between gap-2 text-[11px]">
-                      <span className="font-semibold uppercase tracking-wider shrink-0" style={{ color: istAktiv ? 'var(--mode-primary)' : 'var(--text-tertiary)' }}>
+                    {/* Farbband mit Icon und Status */}
+                    <div className="flex items-center justify-between gap-2 px-3.5 py-2.5 shrink-0" style={{ background: farbe }}>
+                      <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(255, 255, 255, 0.2)' }}>
+                        <PhotoIcon size={18} className="text-white" strokeWidth={1.75} />
+                      </div>
+                      <span
+                        className="rh-badge inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider text-white"
+                        style={{ background: 'rgba(255, 255, 255, 0.22)' }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-white" />
                         {istAktiv ? t('aktivBadge') : t('geplantBadge')}
                       </span>
-                      <span className="font-mono truncate" style={{ color: 'var(--text-secondary)' }}>{kampagne.zeitraum}</span>
                     </div>
-                    <div className="text-[15px] font-semibold leading-snug line-clamp-2 mt-2.5" style={{ color: 'var(--text-primary)' }}>{titel}</div>
-                    <div className="text-xs mt-1 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{zielgruppe}</div>
-                    {/* Kennzahl groß: wie viele Kunden die Kampagne trifft */}
-                    <div className="mt-auto pt-4 flex items-baseline gap-2">
-                      <span className="font-mono text-[28px] font-semibold leading-none" style={{ color: istAktiv ? 'var(--mode-primary)' : 'var(--text-secondary)' }}>
-                        {kampagne.passendeKunden.length}
-                      </span>
-                      <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>{t('passendeKundenWort')}</span>
+                    <div className="p-3.5 flex-1 flex flex-col">
+                      <div className="text-sm font-semibold leading-snug line-clamp-2" style={{ color: 'var(--text-primary)' }}>{titel}</div>
+                      <div className="text-[11px] mt-1 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{zielgruppe}</div>
+                      <div className="mt-auto pt-2.5 flex items-center justify-between gap-2 border-t" style={{ borderColor: `color-mix(in oklab, ${farbe} 22%, transparent)` }}>
+                        <span className="font-mono text-[10px] truncate" style={{ color: 'var(--text-tertiary)' }}>{kampagne.zeitraum}</span>
+                        <span
+                          className="font-mono text-xs font-semibold inline-flex items-center gap-1 shrink-0"
+                          style={{ color: 'var(--text-primary)' }}
+                          title={t('passendeKundenTitle', { count: kampagne.passendeKunden.length })}
+                        >
+                          <Users size={11} style={{ color: 'var(--text-tertiary)' }} strokeWidth={2} />
+                          {kampagne.passendeKunden.length}
+                          <ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--mode-primary)' }} strokeWidth={2.5} />
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
@@ -1598,7 +1632,7 @@ export default function UebersichtTab() {
                     style={{ borderColor: 'var(--border-light)' }}
                     onClick={() => setRadarModal({ type: 'lebenslage', entry: l })}
                   >
-                    <Avatar name={l.customerName} foto={getKundeFoto(l.kundeId)} size={36} />
+                    <Avatar name={l.customerName} foto={l.firma ? null : getKundeFoto(l.kundeId)} size={36} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-3">
                         <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{l.customerName}</span>

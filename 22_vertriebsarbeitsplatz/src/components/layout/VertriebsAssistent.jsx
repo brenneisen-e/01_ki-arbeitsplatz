@@ -13,6 +13,7 @@ import { interpolateDynamicDates } from '../../utils/dynamicDates';
 import { neutral } from '../../utils/whitelabel';
 import { NUR_WHITELABEL, whitelabelVariante } from '../../utils/einbettung';
 import { useNotizenStelle } from '../../notizen/stand';
+import { quellenAufzaehlung, quellenNamen } from '../../utils/quellen';
 
 // Einfarbige Lucide-Pfade als Inline-SVG für die HTML-Antworten – ersetzen die
 // Unicode-Symbole (→ ↑ ↓) und erben die Textfarbe über currentColor.
@@ -405,18 +406,9 @@ function buildNeueLeadsAntwort(modeId, currentView, ctx = {}) {
     ? `<img src="${foto}" alt="" class="w-12 h-12 rounded-full object-cover shrink-0" style="box-shadow: 0 0 0 2px var(--bg-card)">`
     : `<span class="w-12 h-12 rounded-full bg-(--mode-primary) text-white flex items-center justify-center font-semibold shrink-0">${initialen}</span>`;
   // Einordnung vor der Karte: warum gerade dieser Lead, und dass er neu ist.
-  const QUELLEN_LABEL = {
-    finanztransaktion: tx('Kontoumsätze', 'account data'), bestand: tx('Bestand', 'holdings'),
-    kommunikation: tx('Kommunikation', 'communication'), lebensereignis: tx('Lebensereignis', 'life event'),
-    wettbewerb: tx('Wettbewerb', 'competition'), direktvertrieb: tx('Direktvertrieb', 'direct channel'), markt: tx('Markt', 'market'),
-    // Ohne Beschriftung stünde der Schlüssel klein im Satz („… und risikosignal“).
-    risikosignal: tx('Risikosignal', 'risk signal'), kontoumsaetze: tx('Kontoumsätze', 'account data'),
-    produktabschluss: tx('Produktabschluss', 'product closing'), chatbot: tx('Chatbot', 'chatbot'),
-  };
   const ZAHLWORT = getLang() === 'en' ? ['', 'one', 'two', 'three', 'four', 'five'] : ['', 'ein', 'zwei', 'drei', 'vier', 'fünf'];
-  const quellen = (top.quellen || []).map(q => QUELLEN_LABEL[q] || q);
-  const anzahl = quellen.length;
-  const quellenText = quellen.length > 1 ? `${quellen.slice(0, -1).join(', ')} ${tx('und', 'and')} ${quellen[quellen.length - 1]}` : quellen[0] || '';
+  const anzahl = quellenNamen(top.quellen).length;
+  const quellenText = quellenAufzaehlung(top.quellen);
   const einordnung = anzahl > 1
     ? tx(
         // Endet das Volumen auf „/J.“, schließt sein Punkt den Satz.

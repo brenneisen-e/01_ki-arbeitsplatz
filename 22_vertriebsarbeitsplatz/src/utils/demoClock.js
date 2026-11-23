@@ -59,17 +59,23 @@ export function formatAppointmentTime(d) {
 
 // Die zusätzliche „Terminzusage"-Aktivität, die nach Weiterdrehen der Uhr
 // oben in Klaus Fischers Aktivitätenliste einfließt.
-export function buildKlausFischerAppointmentActivity() {
+// Banking: Kreditgespräch. Versicherung: Gespräch zur Berufsunfähigkeitsrente,
+// dem Top-Lead, zu dem am Vortag das Anschreiben ging.
+export function buildKlausFischerAppointmentActivity(modeId = 'banking') {
   const appointment = getSimulatedAppointment();
+  const wann = `${formatAppointmentDate(appointment)} um ${formatAppointmentTime(appointment)} Uhr`;
+  const versicherung = modeId === 'versicherung';
   return {
     id: 'demo-terminzusage-klaus-fischer',
     datum: new Date().toISOString().slice(0, 10),
     typ: 'termin',
     richtung: 'eingehend',
     betreff: 'Kunde hat Beratungstermin bestätigt',
-    zusammenfassung: `Klaus Fischer hat für ${formatAppointmentDate(appointment)} um ${formatAppointmentTime(appointment)} Uhr dem Kreditgespräch zur Immobilienfinanzierung zugestimmt.`,
+    zusammenfassung: versicherung
+      ? `Klaus Fischer hat auf das Anschreiben geantwortet und für ${wann} dem Beratungsgespräch zur Erhöhung seiner Berufsunfähigkeitsrente zugestimmt.`
+      : `Klaus Fischer hat für ${wann} dem Kreditgespräch zur Immobilienfinanzierung zugestimmt.`,
     appointmentAt: appointment.toISOString(),
-    potentialTitel: 'Kreditgespräch Immobilienfinanzierung',
+    potentialTitel: versicherung ? 'Erhöhung Abdeckung Berufsunfähigkeitsversicherung' : 'Kreditgespräch Immobilienfinanzierung',
     istNeuZugestimmt: true,
   };
 }

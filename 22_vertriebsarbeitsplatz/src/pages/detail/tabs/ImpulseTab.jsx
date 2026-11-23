@@ -178,17 +178,20 @@ export default function ImpulseTab({ kunde }) {
 
   // Gruppiere alle Potenziale nach Produktkategorie und sortiere innerhalb
   // jeder Gruppe nach Priorität (sehr_hoch → kritisch → hoch → mittel → niedrig).
+  // Der Top-Lead des Modus steht in seiner Gruppe ganz oben, auch vor einem
+  // Lead gleicher Priorität: Er ist der, auf den der Assistent zeigt.
   const gruppiert = useMemo(() => {
     const g = { bank: [], versicherung: [], anlage: [] };
     potentiale.forEach(p => {
       const kat = getProduktKategorie(p);
       g[kat].push(p);
     });
+    const rang = (p) => (istTopLead(p, kunde.id, topLead) ? -1 : (PRIO_ORDER[p.prioritaet] ?? 9));
     Object.keys(g).forEach(k => {
-      g[k].sort((a, b) => (PRIO_ORDER[a.prioritaet] ?? 9) - (PRIO_ORDER[b.prioritaet] ?? 9));
+      g[k].sort((a, b) => rang(a) - rang(b));
     });
     return g;
-  }, [potentiale]);
+  }, [potentiale, kunde.id, topLead]);
 
   // Das Notizfenster springt weiter, sobald der Top-Lead aufgeklappt ist (src/notizen).
   const [offeneKategorie, offenerIndex] = (expandedIndex || '').split('-');

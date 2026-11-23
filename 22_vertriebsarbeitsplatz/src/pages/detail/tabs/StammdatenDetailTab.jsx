@@ -1340,7 +1340,9 @@ function AktivitaetenCard({ kunde }) {
   // Für Klaus Fischer wird nach dem Weiterdrehen der Uhr eine neue
   // Terminzusage-Aktivität vorne angehängt.
   const base = (kunde.kommunikation || []).slice();
-  const extra = (dayAdvanced && kunde.id === 'BK00001') ? [buildKlausFischerAppointmentActivity()] : [];
+  const extra = (dayAdvanced && (kunde.id === 'BK00001' || kunde.id === 'KD00001'))
+    ? [buildKlausFischerAppointmentActivity(kunde.id === 'KD00001' ? 'versicherung' : 'banking')]
+    : [];
   const komms = [...extra, ...base]
     .sort((a, b) => {
       // Die neu erzeugte Terminzusage bleibt immer ganz oben

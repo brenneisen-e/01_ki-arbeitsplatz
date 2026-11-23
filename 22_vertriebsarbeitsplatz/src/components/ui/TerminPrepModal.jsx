@@ -41,13 +41,16 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
   const appointment = termin?.datum && termin?.zeit
     ? new Date(`${termin.datum}T${termin.zeit}:00`)
     : getSimulatedAppointment();
-  const { navigateTo } = useMode();
+  const { navigateTo, modeId } = useMode();
   const isKlausImmo = kunde?.id === 'BK00001' && (!termin?.betreff || /immobilien|kredit/i.test(termin.betreff));
-  // Insurance-Klaus-Showcase: Open-Finance-getriebene KFZ/Haftpflicht/Familienabsicherung-Demo.
-  // Greift, wenn der Kunde KD00001 (Versicherungs-Klaus) ist — der heroTermin
-  // bei „Nacht simulieren" trägt automatisch den Optimierungs-Betreff, kann
-  // aber auch fehlen, dann fallen wir auf einen sinnvollen Default zurück.
-  const isKlausVersicherung = kunde?.id === 'KD00001' && (!termin?.betreff || /optimierung|kfz|haftpflicht|familien|versicherung/i.test(termin.betreff));
+  // Versicherungsmodus: Der Termin des nächsten Tages gehört zum Top-Lead des
+  // Vorzeigekunden, der Erhöhung der Berufsunfähigkeitsrente. Die Kennzahlen
+  // kommen aus dem Lead selbst (deckungsluecke, volumen), damit Vorbereitung
+  // und Lead-Karte dieselben Zahlen zeigen.
+  const isKlausVersicherung = kunde?.id === 'KD00001' && (!termin?.betreff || /berufsunf|disability/i.test(termin.betreff));
+  const buLead = isKlausVersicherung ? (kunde?.potentiale || []).find(p => p.deckungsluecke && /berufsunf|disability/i.test(p.titel || '')) : null;
+  const bu = buLead?.deckungsluecke;
+  const zahl = (n) => Number(n).toLocaleString(lang === 'en' ? 'en-GB' : 'de-DE');
   const terminTitel = termin?.betreff || (isKlausImmo
     ? t('tpm.titelKreditgespraech')
     : (isKlausVersicherung ? t('tpm.titelVersicherung') : t('tpm.titelBeratungstermin')));
@@ -100,7 +103,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                   <Clock size={11} /> {formatAppointmentTime(appointment)}{lang === 'en' ? '' : ` ${t('tpm.uhr')}`}
                 </span>
                 <span className="inline-flex items-center gap-1 text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded-full">
-                  <MapPin size={11} /> {t('tpm.filialeGiessen')}
+                  <MapPin size={11} /> {modeId === 'versicherung' ? t('tpm.ortAgentur') : t('tpm.filialeGiessen')}
                 </span>
               </div>
             </div>
@@ -138,8 +141,8 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                   )}</>
                 ) : isKlausVersicherung ? (
                   <>{tx(
-                    'Klaus Fischer (42) ist seit 2018 Kunde, verheiratet mit Sarah, zwei Kinder (Lina, 7 und Max, 1), wohnt im EFH (145 m²) in Köln. Nettoeinkommen 4.200 €/Mon. Auslöser des Termins: Über die Open-Finance-Einwilligung wurden drei konkrete Optimierungsgelegenheiten erkannt: Die HUK-KFZ-Vollkasko liegt rund 160 €/J. über unserem Tarif, die Haftpflicht läuft separat bei einem Drittanbieter und ließe sich ohne Mehrkosten ins Bündel überführen, und die Familienabsicherung weist mehrere bekannte Lücken auf (BU 1.800 €/Mon. unter Bedarf, Hausrat unterversichert, keine Familien-Unfallversicherung).',
-                    'Klaus Fischer (42) has been a customer since 2018, married to Sarah, two children (Lina, 7 and Max, 1), living in a detached house (145 m²) in Cologne. Net income €4,200/mo. Trigger for the meeting: the Open Finance consent revealed three concrete optimization opportunities: the HUK comprehensive motor cover is around €160/yr above our tariff, the liability cover runs separately with a third-party provider and could be moved into the bundle at no extra cost, and the family protection shows several known gaps (occupational disability €1,800/mo. below requirement, home contents underinsured, no family accident insurance).'
+                    'Klaus Fischer (42) ist seit 2018 Kunde, verheiratet mit Sarah, zwei Kinder (Lina, 7 und Max, 1), wohnt im EFH (145 m²) in Köln. Nettoeinkommen 4.200 €/Mon. Auslöser des Termins: Er hat auf das Anschreiben zu seiner Berufsunfähigkeitsrente geantwortet. Drei Signale passen zusammen: die Geburt von Max, der gestiegene Gehaltseingang und die BU Comfort, die seit 2018 unverändert 1.800 €/Mon. leistet. Das sind 43 % des Nettoeinkommens; im Ernstfall fehlte der Familie mehr als die Hälfte, bei 285.000 € Restschuld der Baufinanzierung.',
+                    'Klaus Fischer (42) has been a customer since 2018, married to Sarah, two children (Lina, 7 and Max, 1), living in a detached house (145 m²) in Cologne. Net income €4,200/mo. Trigger for the meeting: he replied to the letter about his disability pension. Three signals fit together: the birth of Max, the higher salary credit and the Disability Comfort policy, which has paid an unchanged €1,800/mo. since 2018. That is 43% of net income; in the worst case the family would be missing more than half, with €285,000 of mortgage debt remaining.'
                   )}</>
                 ) : (
                   <>{kunde?.name}{kunde?.alter ? ` (${kunde.alter})` : ''}
@@ -170,15 +173,15 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               </Section>
             )}
 
-            {/* Kennzahlen — Klaus-Versicherung-Story (KFZ + Haftpflicht + Familie) */}
-            {isKlausVersicherung && (
+            {/* Kennzahlen zur Berufsunfähigkeitsrente, gerechnet aus dem Lead */}
+            {isKlausVersicherung && bu && (
               <Section color="slate">
                 <SectionTitle icon={FileText} label={t('tpm.sec.kennzahlen')} color="slate" />
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm pt-2">
-                  <KPI label={t('tpm.kpi.hukVollkasko')} value={t('tpm.val.proJahr780')} accent="text-amber-700" />
-                  <KPI label={t('tpm.kpi.partnerTarif')} value={t('tpm.val.proJahr620')} accent="text-emerald-600" />
-                  <KPI label={t('tpm.kpi.ersparnisKfz')} value={t('tpm.val.proJahrMinus160')} accent="text-emerald-700" />
-                  <KPI label={t('tpm.kpi.buendelHaftpflicht')} value={t('tpm.val.ohneMehrkosten')} accent="text-emerald-600" />
+                  <KPI label={t('tpm.kpi.buHeute')} value={`${zahl(bu.aktuelleAbsicherung)} ${t('tpm.proMon')}`} accent="text-amber-700" />
+                  <KPI label={t('tpm.kpi.buAnteil')} value={`${Math.round((bu.aktuelleAbsicherung / bu.gehalt) * 100)} %`} accent="text-amber-700" />
+                  <KPI label={t('tpm.kpi.buEmpfohlen')} value={`${zahl(bu.empfohleneAbsicherung)} ${t('tpm.proMon')}`} accent="text-emerald-600" />
+                  <KPI label={t('tpm.kpi.buMehrbeitrag')} value={`${tx('ca.', 'approx.')} ${zahl(Math.round((buLead.volumen || 0) / 12))} ${t('tpm.proMon')}`} />
                 </div>
               </Section>
             )}

@@ -617,17 +617,6 @@
 .card-hover:hover .metric-box {
   background-color: var(--mode-primary-soft) !important;
 }
-/* Kampagnen-Kachel der Übersicht: flächig in der zarten Modusfarbe, beim
-   Überfahren ein feiner Rand in der Modusfarbe statt Schatten. */
-.kampagne-kachel {
-  transition: border-color 140ms ease, background-color 140ms ease;
-}
-.kampagne-kachel:hover,
-.kampagne-kachel:focus-visible {
-  border-color: var(--mode-primary) !important;
-  border-style: solid !important;
-  outline: none;
-}
 /* Progress bars */
 .progress-track {
   background-color: var(--bg-inset);

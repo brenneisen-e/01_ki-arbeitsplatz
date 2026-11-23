@@ -66,13 +66,15 @@ Agenten gearbeitet: Signale zu Lebenslagen, Abwanderungsrisiken,
 Kampagnentreffer, vorbereitete Termine. Der Berater sieht Ergebnisse, nicht
 Rohdaten.
 
-[Lebenslagen-Radar: Anna Hoffmann, zweites Kind erwartet. Abwanderungsradar:
-Lisa Bauer.]
+[Lebenslagen-Radar: Weber Sanitär & Heizung GmbH, Betriebsübergabe Handwerk.
+Abwanderungsradar: Lisa Bauer.]
 
-Ich sehe hier zum Beispiel im Lebenslagen-Radar, dass meine Kundin Anna
-Hoffmann vermutlich ihr zweites Kind erwartet, mit den Datenpunkten, die zu
-dieser Einschätzung geführt haben. Oder bei meiner Kundin Lisa Bauer, dass
-es ein Abwanderungsrisiko gibt.
+Ich sehe hier zum Beispiel im Lebenslagen-Radar, dass bei meinem
+Geschäftskunden Weber Sanitär & Heizung vermutlich eine Betriebsübergabe
+ansteht, mit den Datenpunkten, die zu dieser Einschätzung geführt haben:
+die Unternehmensseite meldet den Einstieg der nächsten Generation, und das
+Unternehmen hat unsere Anzeige zur Betriebsnachfolge angeklickt. Oder bei
+meiner Kundin Lisa Bauer, dass es ein Abwanderungsrisiko gibt.
 
 Ich kann mir über KI aber auch grundsätzlich neue Vertriebsleads generieren
 lassen, und das mache ich hier über meinen KI-Chatbot. Ich gehe einen Weg

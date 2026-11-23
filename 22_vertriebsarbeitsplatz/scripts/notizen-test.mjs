@@ -114,7 +114,7 @@ const BELEGE = {
   versicherung: {
     kunde: 'KD00001',
     chip: 'Neue Leads anzeigen',
-    uebersicht: ['Anna Hoffmann', 'Zweites Kind erwartet', 'Lisa Bauer'],
+    uebersicht: ['Weber Sanitär & Heizung GmbH', 'Betriebsübergabe Handwerk', 'Lisa Bauer'],
     assistent: ['Klaus Fischer', 'Erhöhung Abdeckung Berufsunfähigkeitsversicherung'],
     finanzuebersicht: [/GESAMT\s*7\b/i],
     leads: ['Versicherungsprodukte', 'Bankprodukte', 'Anlageprodukte'],

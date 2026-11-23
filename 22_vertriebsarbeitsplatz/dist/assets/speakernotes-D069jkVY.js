@@ -172,8 +172,11 @@ Vorbereitung:
 
 [Landing Page mit „Willkommen zurück“.]
 
-Das hier ist unser KI-Vertriebsarbeitsplatz, eine Demo mit synthetischen
-Daten. Was wir hier gerade sehen, ist die Landing Page des Beraters. Hier
+Das hier ist unsere Deloitte-Demo eines KI-Vertriebsarbeitsplatzes, mit
+synthetischen Daten. Gebaut ist sie als sogenanntes Headless-CRM: Daten und
+Logik liegen im Hintergrund, die Oberfläche darüber ist frei gestaltbar. Sie
+bündelt bestehende Use Cases und macht sie an einer Stelle erlebbar. Was wir
+hier gerade sehen, ist die Landing Page des Beraters. Hier
 startet man nicht statisch, sondern flexibel: Mit Chat- oder Voice-Funktion
 stellt man sich seine Masken und Workflows dynamisch zusammen. Wir starten
 mit einer Zusammenfassung, deswegen gebe ich hier „Zusammenfassung heutiger
